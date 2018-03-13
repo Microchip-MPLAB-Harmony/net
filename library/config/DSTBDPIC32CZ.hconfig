@@ -1,0 +1,1 @@
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/tcpip_mac_pic32c.hconfig"

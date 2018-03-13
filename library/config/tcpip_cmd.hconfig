@@ -1,0 +1,74 @@
+config TCPIP_STACK_USE_COMMANDS
+    bool "Use TCP/IP Commands"
+    select USE_SYS_RESET_NEEDED
+    select USE_SYS_CONSOLE_NEEDED
+    select USE_SYS_COMMAND_NEEDED    
+    depends on USE_TCPIP_STACK
+    default n
+    ---help---
+    ---endhelp---
+
+
+config TCPIP_STACK_COMMANDS_STORAGE_ENABLE
+    bool "Enable Storage for Stack Commands"
+    depends on TCPIP_STACK_USE_COMMANDS && TCPIP_STACK_CONFIGURATION_SAVE_RESTORE
+    default n
+    ---help---
+    ---endhelp---
+
+
+config TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS
+    int "Number of ICMP Echo requests"
+    depends on TCPIP_STACK_USE_COMMANDS
+    default 4
+    ---help---
+    ---endhelp---
+
+config TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY
+    int "ICMP Reply Time-out, ms"
+    depends on TCPIP_STACK_USE_COMMANDS
+    default 1000
+    ---help---
+    ---endhelp---
+
+config TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT
+    int "ICMP Give Up Time-out, ms"
+    depends on TCPIP_STACK_USE_COMMANDS
+    default 5000
+    ---help---
+    ---endhelp---
+
+config TCPIP_STACK_COMMANDS_WIFI_ENABLE
+    bool "Enable Wi-Fi Related Commands"
+    depends on TCPIP_STACK_USE_COMMANDS
+    default n
+    ---help---
+    ---endhelp---
+    
+
+config TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE
+    int "Echo Request Data Buffer size - bytes"
+    depends on TCPIP_USE_TCP
+    default 2000
+    ---help---
+    IDH_HTML_TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE
+    int "Echo request Default Data Size - bytes"
+    depends on TCPIP_USE_TCP
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE
+    ---endhelp---
+
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_CMD_H "$HARMONY_VERSION_PATH/framework/tcpip/tcpip_commands.h" to "$PROJECT_HEADER_FILES/framework/tcpip/tcpip_commands.h"
+file TCPIP_CMD_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_commands_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcpip_commands_manager.h"
+endif
+    
+ifblock TCPIP_STACK_USE_COMMANDS
+file TCPIP_CMD_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_commands.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_commands.c"
+endif
+    

@@ -1,0 +1,776 @@
+menu "Internal Ethernet MAC Driver"
+	depends on HAVE_ETH
+	
+config TCPIP_USE_ETH_MAC
+    depends on HAVE_ETH
+    bool "Use Internal Ethernet MAC Driver?"
+    default y if USE_PIC32CINT_ETH_MAC_NEEDED
+    default n if !USE_PIC32CINT_ETH_MAC_NEEDED
+    ---help---
+    IDH_HTML_DRV_ETHMAC_Introduction
+    ---endhelp---
+
+config TCPIP_GMAC_QUEUE_0
+    depends on TCPIP_USE_ETH_MAC
+    bool "GMAC Queue 0"
+    default y if USE_PIC32CINT_ETH_MAC_NEEDED
+	
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0
+    int "Number of Tx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_0
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0
+    ---endhelp---
+
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0
+    int "Number of Rx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_0
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_QUE0
+    int "Size Of RX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_0
+    default 1536
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_QUE0
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_QUE0
+    int "Size Of TX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_0
+    default 1536
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_QUE0
+    ---endhelp---
+	
+config TCPIP_GMAC_QUEUE_1
+    depends on TCPIP_USE_ETH_MAC
+    bool "GMAC Queue 1"
+    default n 
+	
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1
+    int "Number of Tx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_1
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1
+    int "Number of Rx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_1
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_QUE1
+    int "Size Of RX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_1
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_QUE1
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_QUE1
+    int "Size Of TX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_1
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_QUE1
+    ---endhelp---
+
+config TCPIP_GMAC_QUEUE_2
+    depends on TCPIP_USE_ETH_MAC
+    bool "GMAC Queue 2"
+    default n 
+	
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2
+    int "Number of Tx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_2
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2
+    int "Number of Rx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_2
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_QUE2
+    int "Size Of RX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_2
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_QUE2
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_QUE2
+    int "Size Of TX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_2
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_QUE2
+    ---endhelp---
+
+config TCPIP_GMAC_QUEUE_3
+    depends on TCPIP_USE_ETH_MAC
+    bool "GMAC Queue 3"
+    default n 
+	
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3
+    int "Number of Tx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_3
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3
+    int "Number of Rx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_3
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_QUE3
+    int "Size Of RX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_3
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_QUE3
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_QUE3
+    int "Size Of TX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_3
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_QUE3
+    ---endhelp---
+
+config TCPIP_GMAC_QUEUE_4
+    depends on TCPIP_USE_ETH_MAC
+    bool "GMAC Queue 4"
+    default n 
+	
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4
+    int "Number of Tx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_4
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4
+    int "Number of Rx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_4
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_QUE4
+    int "Size Of RX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_4
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_QUE4
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_QUE4
+    int "Size Of TX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_4
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_QUE4
+    ---endhelp---
+
+config TCPIP_GMAC_QUEUE_5
+    depends on TCPIP_USE_ETH_MAC
+    bool "GMAC Queue 5"
+    default n 
+	
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5
+    int "Number of Tx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_5
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5
+    int "Number of Rx Descriptors To Be Created"
+    depends on TCPIP_GMAC_QUEUE_5
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_QUE5
+    int "Size Of RX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_5
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_QUE5
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_QUE5
+    int "Size Of TX Buffer. Should Be Multiple Of 16."
+    depends on TCPIP_GMAC_QUEUE_5
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_QUE5
+    ---endhelp---
+
+config TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+	int
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+	int
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+    ---endhelp---
+
+config TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+	int
+    depends on TCPIP_USE_ETH_MAC
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+    ---endhelp---
+
+config TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+	int
+    depends on TCPIP_USE_ETH_MAC
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+    ---endhelp---
+	
+config TCPIP_GMAC_RX_MAX_FRAME
+    int "Maximum MAC Supported RX Frame Size"
+    depends on TCPIP_USE_ETH_MAC
+    default 1536
+    ---help---
+    IDH_HTML_TCPIP_GMAC_RX_MAX_FRAME
+    ---endhelp---
+    
+config TCPIP_EMAC_RX_FRAGMENTS
+    int "MAC Maximum Number of Supported Fragments"
+    depends on TCPIP_USE_ETH_MAC
+    range 1 6
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FRAGMENTS
+    ---endhelp---
+
+menu "Ethernet RX Filters Selection"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_GMAC_ETH_FILTER_BCAST_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Broadcast Packets"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_FILTER_MCAST_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Multicast Packets"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_FILTER_UCAST_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Unicast Packets"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_FILTER_MCAST_HASH_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Multicast Packets matching Hash"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_FILTER_UCAST_HASH_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Unicast Packets matching Hash"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+	
+config TCPIP_GMAC_ETH_FILTER_CRC_ERROR_REJECT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Reject Packets with Wrong CRC"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_FILTER_CRC_ERROR_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Packets with Wrong CRC"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+	
+config TCPIP_GMAC_ETH_FILTER_MAX_FRAME_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Packets with Maximum Frame Size(1536 bytes)"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+	
+config TCPIP_GMAC_ETH_FILTER_ALL_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept All Packets (Promiscuous Mode)"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+	
+config TCPIP_GMAC_ETH_FILTER_FRAME_ERROR_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Packets with Frame Error"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_FILTER_JUMBO_FRAME_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Jumbo Packets (upto 10240 bytes)"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+	
+endmenu
+
+#TODO:   valid selection needed here!
+menu "Ethernet Connection Flags"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_GMAC_ETH_OF_AUTO_NEGOTIATION
+    depends on TCPIP_USE_ETH_MAC
+    bool "Use Auto Negotiation"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+    
+config TCPIP_GMAC_ETH_OF_FULL_DUPLEX
+    depends on TCPIP_USE_ETH_MAC
+    bool "Use Full Duplex"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_HALF_DUPLEX
+    bool "Use Half Duplex"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_100
+    bool "Use 100MBps"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+    
+config TCPIP_GMAC_ETH_OF_10
+    bool "Use 10MBps"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_HUGE_PKTS
+    bool "Allow Huge Packets"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_MAC_LOOPBACK
+    bool "Loopbacked At The MAC Level"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_PHY_LOOPBACK
+    bool "Loopbacked At The PHY Level"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_MDIX_AUTO
+    bool "Use Auto MDIX"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_MDIX_SWAP
+    bool "Use Swapped MDIX"
+    depends on !TCPIP_GMAC_ETH_OF_MDIX_AUTO
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_ETH_OF_RMII
+    bool "RMII Connection"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+    
+endmenu
+
+config TCPIP_EMAC_MODULE_ID
+    string "GMAC Module ID"
+    depends on TCPIP_USE_ETH_MAC
+    range GMAC_MODULE_ID
+    default "GMAC_ID_0"
+    ---help---
+    IDH_HTML_TCPIP_EMAC_MODULE_ID
+    ---endhelp---
+    
+config TCPIP_GMAC_INTERRUPT_MODE
+    bool
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    ---endhelp---
+
+
+config DRV_GMAC_INSTANCES_NUMBER
+    int "GMAC Instances Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_GMAC_INSTANCES_NUMBER
+    ---endhelp---
+
+config DRV_GMAC_CLIENTS_NUMBER
+    int "GMAC Clients Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_GMAC_CLIENTS_NUMBER
+    ---endhelp---
+
+config DRV_GMAC_INDEX
+    int "GMAC Clients Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_GMAC_INDEX
+    ---endhelp---
+
+
+config DRV_GMAC_PERIPHERAL_ID
+    int "GMAC Peripheral ID"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_PIC32CGMAC_PERIPHERAL_ID
+    ---endhelp---
+
+config DRV_GMAC_INTERRUPT_MODE
+    bool "GMAC Interrupt Mode"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_DRV_GMAC_INTERRUPT_MODE
+    ---endhelp---
+
+config DRV_GMAC_INTERRUPT_SOURCE
+    string
+    depends on DRV_GMAC_INTERRUPT_MODE
+    default "GMAC_IRQn" 
+    ---help---
+    IDH_HTML_DRV_GMAC_INTERRUPT_SOURCE
+    ---endhelp---
+
+config DRV_GMAC_INTERRUPT_VECTOR
+    string
+    depends on DRV_GMAC_INTERRUPT_MODE
+	default "GMAC_IRQn"
+    ---help---
+    IDH_HTML_DRV_GMAC_INTERRUPT_VECTOR
+    ---endhelp---
+	
+config TCPIP_GMAC_INTERRUPT_PRIORITY
+    string "Interrupt Priority"
+    depends on TCPIP_GMAC_INTERRUPT_MODE
+    range INT_PRIORITY_LEVEL
+    default "INT_PRIORITY_LEVEL1"
+    ---help---
+      IDH_HTML_INT_PRIORITY_LEVEL
+    ---endhelp---
+	
+config DRV_GMAC_POWER_STATE
+    depends on TCPIP_USE_ETH_MAC
+    string "Power State"
+    range SYS_MODULE_POWER_STATE
+    default "SYS_MODULE_POWER_RUN_FULL"
+    ---help---
+    IDH_HTML_SYSTEM_Library_Interface
+    ---endhelp---
+
+menu "External PHY Configuration"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_GMAC_PHY_LINK_INIT_DELAY
+    int "Delay for the Link Initialization - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 500
+    ---help---
+    IDH_HTML_TCPIP_EMAC_PHY_LINK_INIT_DELAY
+    ---endhelp---
+
+config TCPIP_GMAC_PHY_ADDRESS
+    int "PHY Address"
+    depends on TCPIP_USE_ETH_MAC
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8700"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8720"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8740"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "KSZ8061"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "IP_IP101GR"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "National_DP83640"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "National_DP83848"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "KSZ8041"
+    ---help---
+    IDH_HTML_TCPIP_GMAC_PHY_ADDRESS
+    ---endhelp---
+
+menu "External PHY Connection Flags"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_GMAC_PHY_CONFIG_RMII
+    depends on TCPIP_USE_ETH_MAC
+    bool "RMII Data Interface"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_GMAC_PHY_CONFIG_FLAGS
+    ---endhelp---
+    
+config TCPIP_GMAC_PHY_CONFIG_ALTERNATE
+    depends on TCPIP_USE_ETH_MAC
+    bool "Configuration Fuses Is ALT"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_GMAC_PHY_CONFIG_FLAGS
+    ---endhelp---
+
+config TCPIP_GMAC_PHY_CONFIG_AUTO
+    depends on TCPIP_USE_ETH_MAC
+    bool "Use The Fuses Configuration"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_GMAC_PHY_CONFIG_FLAGS
+    ---endhelp---
+    
+endmenu
+
+    
+config TCPIP_EMAC_PHY_TYPE
+    depends on TCPIP_USE_ETH_MAC
+    string "External PHY Type"
+    range TCPIP_STACK_PHY_TYPE
+	default "KSZ8061"
+    ---help---
+    External PHY Type connected on the board
+    ---endhelp---
+
+config DRV_ETHPHY_INSTANCES_NUMBER
+    int "PHY Instances Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_INSTANCES_NUMBER
+    ---endhelp---
+
+config DRV_ETHPHY_CLIENTS_NUMBER
+    int "PHY Clients Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_CLIENTS_NUMBER
+    ---endhelp---
+
+config DRV_ETHPHY_INDEX
+    int "PHY Peripheral Index Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_INDEX
+    ---endhelp---
+
+config DRV_ETHPHY_PERIPHERAL_ID
+    int "PHY Peripheral ID"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_PERIPHERAL_ID
+    ---endhelp---
+
+config DRV_ETHPHY_NEG_INIT_TMO
+    int "PHY Negotiation Time-out - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_NEG_INIT_TMO
+    ---endhelp---
+
+config DRV_ETHPHY_NEG_DONE_TMO
+    int "PHY Negotiation Done Time-out - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 2000
+    ---help---
+    IDH_HTML_DRV_ETHPHY_NEG_DONE_TMO
+    ---endhelp---
+
+config DRV_ETHPHY_RESET_CLR_TMO
+    int "PHY Reset Clear Time-out - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 500
+    ---help---
+    IDH_HTML_DRV_ETHPHY_RESET_CLR_TMO
+    ---endhelp---
+    
+config DRV_ETHPHY_USE_RESET_CALLBACK
+    bool "Use a Function to be called at PHY Reset"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    ---endhelp---
+
+config DRV_ETHPHY_RESET_CALLBACK
+    string "App Function"
+    depends on DRV_ETHPHY_USE_RESET_CALLBACK
+    default "AppPhyResetFunction"
+    ---help---
+    ---endhelp---
+    
+
+endmenu
+endmenu
+    
+ifblock TCPIP_USE_ETH_MAC
+file TCPIP_MAC_DRV_H "$HARMONY_VERSION_PATH/framework/driver/gmac/drv_gmac.h" to                     "$PROJECT_HEADER_FILES/framework/driver/gmac/drv_gmac.h"
+file TCPIP_MAC_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/gmac/src/drv_gmac_local.h" to         "$PROJECT_HEADER_FILES/framework/driver/gmac/src/drv_gmac_local.h"
+file TCPIP_MAC_DESC_H "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/_gmac_dcpt_lists.h" to "$PROJECT_HEADER_FILES/framework/driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
+file TCPIP_MAC_LIB_H "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/drv_gmac_lib.h" to     "$PROJECT_HEADER_FILES/framework/driver/gmac/src/dynamic/drv_gmac_lib.h"
+file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
+file TCPIP_ETH_PHY_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/drv_ethphy_local.h" to           "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/drv_ethphy_local.h"
+file TCPIP_ETH_EXT_PHY_REGS_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h"
+    
+file TCPIP_MAC_PHY_DP83640_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83640.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_dp83640.h"
+file TCPIP_MAC_PHY_DP83848_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83848.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_dp83848.h"
+file TCPIP_MAC_PHY_IP101GR_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ip101gr.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ip101gr.h"
+file TCPIP_MAC_PHY_LAN8700_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8700.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8700.h"
+file TCPIP_MAC_PHY_LAN8720_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8720.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8720.h"
+file TCPIP_MAC_PHY_LAN8740_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h"
+file TCPIP_MAC_PHY_LAN9303_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc9303.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc9303.h"
+file TCPIP_MAC_PHY_KSZ8061_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8061.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8061.h"
+file TCPIP_MAC_PHY_KSZ8041_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.h"
+endif
+
+ifblock TCPIP_USE_ETH_MAC
+
+file TCPIP_MAC_DRV_C "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/drv_gmac.c" to         "$PROJECT_SOURCE_FILES/framework/driver/gmac/drv_gmac.c"
+file TCPIP_MAC_LIB_C "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/drv_gmac_lib.c" to     "$PROJECT_SOURCE_FILES/framework/driver/gmac/drv_gmac_lib.c"
+
+file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
+
+ifblock TCPIP_EMAC_PHY_TYPE = "National_DP83640"
+file TCPIP_MAC_PHY_DP83640_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83640.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_dp83640.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "National_DP83848"
+file TCPIP_MAC_PHY_DP83848_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83848.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_dp83848.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "IP_IP101GR"
+file TCPIP_MAC_PHY_IP101GR_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ip101gr.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ip101gr.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8700"
+file TCPIP_MAC_PHY_LAN8700_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8700.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8700.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8720"
+file TCPIP_MAC_PHY_LAN8720_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8720.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8720.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8740"
+file TCPIP_MAC_PHY_LAN8740_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8740.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "KSZ8061"
+file TCPIP_MAC_PHY_KSZ8061_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8061.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ksz8061.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "KSZ8041"
+file TCPIP_MAC_PHY_KSZ8041_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ksz8041.c"
+endif
+
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+file TCPIP_MAC_PHY_LAN9303_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc9303.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc9303.c"
+endif
+
+ifblock TCPIP_GMAC_INTERRUPT_MODE = y
+add "pfnGMAC_Handler GMAC_Handler"  to list SYSTEM_STARTUP_PIC32C_INTERRUPT_HANDLERS
+endif
+
+
+
+endif
+    
+

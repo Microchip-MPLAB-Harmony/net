@@ -1,0 +1,152 @@
+config TCPIP_USE_SNMPv3
+    bool "Use SNMP Version 3"
+    depends on TCPIP_USE_SNMP
+    default n
+    ---help---
+    IDH_HTML_TCPIP_SNMP_Introduction
+    ---endhelp---
+
+config TCPIP_SNMPV3_USER_SECURITY_NAME_LEN
+    int "Security User Name Length"
+    depends on TCPIP_USE_SNMPv3
+    default 16
+    ---help---
+    IDH_HTML_TCPIP_SNMPV3_USER_SECURITY_NAME_LEN
+    ---endhelp---
+    
+config TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN
+    int "Localized Password Key Length"
+    depends on TCPIP_USE_SNMPv3
+    default 20
+    ---help---
+    IDH_HTML_TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN
+    ---endhelp---
+    
+config TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN
+    int "Privacy Password Key Length"
+    depends on TCPIP_USE_SNMPv3
+    default 20
+    ---help---
+    IDH_HTML_TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN
+    ---endhelp---
+    
+config TCPIP_SNMPV3_USM_MAX_USER
+    int "Max Users"
+    depends on TCPIP_USE_SNMPv3
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_SNMPV3_USM_MAX_USER
+    ---endhelp---
+	
+config TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_0
+	depends on TCPIP_USE_SNMPv3 
+    bool
+    default n if TCPIP_SNMPV3_USM_MAX_USER = 0
+    default y  
+
+config TCPIP_SNMPV3_STACK_CONFIG_IDX0
+    depends on TCPIP_USE_SNMPv3
+    depends on TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_0
+    bool "SNMPV3 Stack Configuration 0"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_SNMP_Introduction
+    ---endhelp---
+
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/snmpv3_stack_config_idx0.hconfig"
+
+config TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_1
+	depends on TCPIP_USE_SNMPv3 
+    bool
+    default n if TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_0 = n
+    default n if TCPIP_SNMPV3_USM_MAX_USER = 1
+	default y
+
+config TCPIP_SNMPV3_STACK_CONFIG_IDX1
+    depends on TCPIP_USE_SNMPv3
+    depends on TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_1
+    bool "SNMPV3 Stack Configuration 1"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_SNMP_Introduction
+    ---endhelp---
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/snmpv3_stack_config_idx1.hconfig"
+
+	
+config TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_2
+	depends on TCPIP_USE_SNMPv3 
+    bool
+    default n if TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_1 = n
+    default n if TCPIP_SNMPV3_USM_MAX_USER = 2
+	default y
+	
+config TCPIP_SNMPV3_STACK_CONFIG_IDX2
+    depends on TCPIP_USE_SNMPv3
+    depends on TCPIP_SNMPV3_STACK_CONFIG_NUMBER_GT_2
+    bool "SNMPV3 Stack Configuration 2"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_SNMP_Introduction
+    ---endhelp---
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/snmpv3_stack_config_idx2.hconfig"
+		
+config TCPIP_SNMPV3_STACK_USE_V1_V2_TRAP
+	depends on (TCPIP_USE_SNMPv3 && TCPIP_SNMP_USE_TRAP_SUPPORT && TCPIP_SNMP_STACK_USE_V2_TRAP)
+    bool "V1 and V2 Trap Support"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_SNMP_MODULE_CONFIG
+    ---endhelp---
+
+    
+enum TCPIP_SNMPV3_SECURITY_LEVEL
+	"NO_AUTH_NO_PRIV" ||
+	"AUTH_NO_PRIV" ||
+	"AUTH_PRIV"
+
+enum TCPIP_SNMPV3_PRIVACY_PROTOCOL_TYPE
+    "SNMPV3_DES_PRIV" ||
+	"SNMPV3_AES_PRIV" ||
+	"SNMPV3_NO_PRIV" 
+
+enum TCPIP_SNMPV3_AUTH_PROTOCOL_TYPE
+	"SNMPV3_HMAC_MD5" ||
+	"SNMPV3_HMAC_SHA1" ||
+	"SNMPV3_NO_HMAC_AUTH"
+	
+enum TCPIP_SNMPV3_MESSAGE_PROCESSING_MODEL_TYPE
+	"SNMPV1_MSG_PROCESSING_MODEL" ||
+	"SNMPV2C_MSG_PROCESSING_MODEL" ||
+	"SNMPV2U_V2_MSG_PROCESSING_MODEL" ||
+	"SNMPV3_MSG_PROCESSING_MODEL"
+	
+enum TCPIP_SNMPV3_SECURITY_MODEL_TYPE
+	"ANY_SECUTIRY_MODEL" ||
+	"SNMPV1_SECURITY_MODEL" ||
+	"SNMPV2C_SECURITY_MODEL" ||
+	"SNMPV3_USM_SECURITY_MODEL"
+
+ifblock USE_TCPIP_STACK
+file TCPIP_SNMPV3_H "$HARMONY_VERSION_PATH/framework/tcpip/snmpv3.h" to "$PROJECT_HEADER_FILES/framework/tcpip/snmpv3.h"
+file TCPIP_SNMPV3_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/snmpv3_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/snmpv3_private.h"
+file SNMPV3_AES_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes.h"
+file SNMPV3_AES_CBC_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cbc.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cbc.h"
+file SNMPV3_AES_CFB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cfb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cfb.h"
+file SNMPV3_AES_CTR_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ctr.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ctr.h"
+file SNMPV3_AES_ECB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ecb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ecb.h"
+file SNMPV3_AES_ECB_PIC32_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ecb_pic32.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ecb_pic32.h"
+file SNMPV3_AES_OFB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ofb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ofb.h"
+file SNMPV3_DES_H "$HARMONY_VERSION_PATH/framework/crypto/src/des3.h" to "$PROJECT_HEADER_FILES/framework/crypto/src/des3.h"
+endif
+    
+ifblock TCPIP_USE_SNMPv3
+file TCPIP_SNMPV3_C "$HARMONY_VERSION_PATH/framework/tcpip/src/snmpv3.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/snmpv3.c"
+file TCPIP_SNMPV3_USM_C "$HARMONY_VERSION_PATH/framework/tcpip/src/snmpv3_usm.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/snmpv3_usm.c"
+ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_AES_PRIV") 
+library TCPIP_SNMPV3_A "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_pic32mx.a"
+endif
+endif
+
+ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_DES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_DES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_DES_PRIV") 
+file SNMPV3_DES_C "$HARMONY_VERSION_PATH/framework/crypto/src/des3.c" to "$PROJECT_SOURCE_FILES/framework/crypto/src/des3.c"
+endif

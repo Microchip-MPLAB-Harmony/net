@@ -1,0 +1,40 @@
+config TCPIP_USE_REBOOT_SERVER
+    bool "Use Reboot Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_STACK_USE_IPV4  
+    default n
+    ---help---
+    IDH_HTML_TCPIP_REBOOT_Introduction
+    ---endhelp---
+
+    
+config TCPIP_REBOOT_SAME_SUBNET_ONLY
+    bool "Allow Only Same Subnet"
+    depends on TCPIP_USE_REBOOT_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_REBOOT_SAME_SUBNET_ONLY
+    ---endhelp---
+    
+config TCPIP_REBOOT_MESSAGE
+    string "Reboot Message"
+    depends on TCPIP_USE_REBOOT_SERVER
+    default "MCHP Reboot"
+    ---help---
+    IDH_HTML_TCPIP_REBOOT_MESSAGE
+    ---endhelp---
+    
+config TCPIP_REBOOT_TASK_TICK_RATE
+    int "Reboot Server Tick Rate - ms"
+    depends on TCPIP_USE_REBOOT_SERVER
+    default 1130
+    ---help---
+    IDH_HTML_TCPIP_REBOOT_TASK_TICK_RATE
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK    
+file TCPIP_REBOOT_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_reboot_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcpip_reboot_manager.h"
+endif    
+    
+ifblock TCPIP_USE_REBOOT_SERVER
+file TCPIP_REBOOT_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_reboot.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_reboot.c"
+endif    

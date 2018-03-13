@@ -1,0 +1,32 @@
+config TCPIP_USE_DDNS
+    bool "Dynamic DNS Module"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_STACK_USE_IPV4  
+    default n
+	---help---
+	IDH_HTML_TCPIP_DDNS_Introduction
+	---endhelp---
+    
+config TCPIP_DDNS_CHECKIP_SERVER
+    string "Default CheckIP server for Determining Current IP Address"
+    depends on TCPIP_USE_DDNS
+    default "checkip.dyndns.com"
+	---help---
+	IDH_HTML_TCPIP_DDNS_CHECKIP_SERVER
+	---endhelp---
+    
+config TCPIP_DDNS_TASK_TICK_RATE
+    int "dynDNS Task Rate in msec"
+    depends on TCPIP_USE_DDNS
+    default 777
+	---help---
+	IDH_HTML_TCPIP_DDNS_TASK_TICK_RATE
+	---endhelp---
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_DDNS_H "$HARMONY_VERSION_PATH/framework/tcpip/ddns.h" to "$PROJECT_HEADER_FILES/framework/tcpip/ddns.h"
+file TCPIP_DDNS_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ddns_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ddns_manager.h"
+endif
+
+ifblock TCPIP_USE_DDNS
+file TCPIP_DDNS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/ddns.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/ddns.c"
+endif

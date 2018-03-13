@@ -1,0 +1,22 @@
+ifblock TCPIP_SNMP_STACK_CONFIG_IDX2
+
+config TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX2
+    string "Read Community Name"
+	depends on TCPIP_USE_SNMP
+    range TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_1
+    default ""
+   ---help---
+IDH_HTML_TCPIP_SNMP_COMMUNITY_CONFIG
+    ---endhelp---
+	
+config TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX2
+    string "Write Community Name"
+	depends on TCPIP_USE_SNMP
+	range TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_1
+    default "public"
+    ---help---
+IDH_HTML_TCPIP_SNMP_COMMUNITY_CONFIG
+    ---endhelp---
+   
+endif
+

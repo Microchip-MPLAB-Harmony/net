@@ -1,0 +1,89 @@
+config TCPIP_UDP_MAX_SOCKETS
+    int "Max Sockets"
+    depends on TCPIP_USE_UDP
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_UDP_MAX_SOCKETS
+    ---endhelp---
+    
+config TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE
+    int "Default TX Buffer Size"    
+    depends on TCPIP_USE_UDP
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE
+    ---endhelp---
+    
+config TCPIP_UDP_USE_TX_CHECKSUM
+    bool "Calculate TX Checksum"
+    depends on TCPIP_USE_UDP
+    default y
+    ---help---
+    IDH_HTML_TCPIP_UDP_USE_TX_CHECKSUM
+    ---endhelp---
+    
+config TCPIP_UDP_USE_RX_CHECKSUM
+    bool "Calculate RX Checksum"
+    depends on TCPIP_USE_UDP
+    default y
+    ---help---
+    IDH_HTML_TCPIP_UDP_USE_RX_CHECKSUM
+    ---endhelp---
+    
+config TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT
+    int "TX Queue Limit"
+    depends on TCPIP_USE_UDP
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT
+    ---endhelp---
+    
+config TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT
+    int "RX Queue Limit"
+    depends on TCPIP_USE_UDP
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT
+    ---endhelp---
+    
+config TCPIP_UDP_USE_POOL_BUFFERS
+    bool "Enable Pool Buffers"
+    depends on TCPIP_USE_UDP
+    default n
+    ---help---
+    IDH_HTML_TCPIP_UDP_USE_POOL_BUFFERS
+    ---endhelp---
+    
+config TCPIP_UDP_SOCKET_POOL_BUFFERS
+    int "Pool Buffers"
+    depends on TCPIP_USE_UDP && TCPIP_UDP_USE_POOL_BUFFERS
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_UDP_SOCKET_POOL_BUFFERS
+    ---endhelp---
+    
+config TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE
+    int "Pool Buffer Size"
+    depends on TCPIP_USE_UDP && TCPIP_UDP_USE_POOL_BUFFERS
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE
+    ---endhelp---
+    
+config TCPIP_UDP_COMMANDS
+    bool "Enable UDP Commands"
+    depends on TCPIP_USE_UDP
+    default n
+    ---help---
+    IDH_HTML_TCPIP_UDP_COMMANDS
+    ---endhelp---
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_UDP_H "$HARMONY_VERSION_PATH/framework/tcpip/udp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/udp.h"
+file TCPIP_UDP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/udp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/udp_private.h"
+file TCPIP_UDP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/udp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/udp_manager.h"
+endif
+
+ifblock TCPIP_USE_UDP
+file TCPIP_UDP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/udp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/udp.c"
+endif

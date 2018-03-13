@@ -1,0 +1,65 @@
+config TCPIP_STACK_USE_DHCP_CLIENT
+    bool "DHCP Client"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_STACK_USE_IPV4  
+    default y
+    ---help---
+    IDH_HTML_TCPIP_DHCP_Introduction
+    ---endhelp---
+    
+
+config TCPIP_DHCP_TIMEOUT
+    int "DHCP Request Time-out (seconds)"
+    depends on TCPIP_STACK_USE_DHCP_CLIENT
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_DHCP_TIMEOUT
+    ---endhelp---
+
+config TCPIP_DHCP_TASK_TICK_RATE
+    int "DHCP Tick Rate (msec)"
+    depends on TCPIP_STACK_USE_DHCP_CLIENT
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_DHCP_TASK_TICK_RATE
+    ---endhelp---
+
+config TCPIP_DHCP_CLIENT_ENABLED
+    bool "DHCP Client enabled by default at Stack Start-up"
+    depends on TCPIP_STACK_USE_DHCP_CLIENT
+    default y
+    ---help---
+    IDH_HTML_TCPIP_DHCP_CLIENT_ENABLED
+    ---endhelp---
+
+config TCPIP_DHCP_HOST_NAME_SIZE
+    int "DHCP Host name maximum size"
+    depends on TCPIP_STACK_USE_DHCP_CLIENT
+    default 20
+    ---help---
+    IDH_HTML_TCPIP_DHCP_HOST_NAME_SIZE
+    ---endhelp---
+   
+    
+config TCPIP_DHCP_CLIENT_CONNECT_PORT
+    int "Client Port for DHCP Client Transactions"
+    depends on TCPIP_STACK_USE_DHCP_CLIENT
+    default 68
+    ---help---
+    IDH_HTML_TCPIP_DHCP_MODULE_CONFIG
+    ---endhelp---
+
+config TCPIP_DHCP_SERVER_LISTEN_PORT
+    int "Remote Server Port for DHCP Server Messages"
+    depends on TCPIP_STACK_USE_DHCP_CLIENT
+    default 67
+    ---help---
+    IDH_HTML_TCPIP_DHCP_MODULE_CONFIG
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_DHCP_H "$HARMONY_VERSION_PATH/framework/tcpip/dhcp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/dhcp.h"
+file TCPIP_DHCP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dhcp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dhcp_manager.h"
+file TCPIP_DHCP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dhcp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dhcp_private.h"
+    
+file TCPIP_DHCP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/dhcp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/dhcp.c"
+endif

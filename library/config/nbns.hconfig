@@ -1,0 +1,24 @@
+config TCPIP_USE_NBNS
+    bool "Use NetBIOS Name Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_STACK_USE_IPV4  
+    default y
+    ---help---
+    IDH_HTML_TCPIP_NBNS_Introduction
+    ---endhelp---
+    
+config TCPIP_NBNS_TASK_TICK_RATE
+    int "NetBIOS Task Rate - ms"
+    depends on TCPIP_USE_NBNS
+    default 110
+    ---help---
+    IDH_HTML_TCPIP_NBNS_TASK_TICK_RATE
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK    
+file TCPIP_NBNS_H "$HARMONY_VERSION_PATH/framework/tcpip/nbns.h" to "$PROJECT_HEADER_FILES/framework/tcpip/nbns.h"
+file TCPIP_NBNS_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/nbns_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/nbns_manager.h"
+endif
+
+ifblock TCPIP_USE_NBNS
+file TCPIP_NBNS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/nbns.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/nbns.c"
+endif

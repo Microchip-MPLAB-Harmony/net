@@ -1,0 +1,117 @@
+menu "ENCX24J600"
+    depends on HAVE_SPI
+
+enum DRV_ENCX24J600_MODE_ENUM
+    "DYNAMIC"
+
+enum DRV_ENCX24J600_BUS_ENUM
+	"SPI"
+    
+config DRV_ENCX24J600_USE_DRIVER_PRIV
+    bool
+    
+config DRV_ENCX24J600_USE_DRIVER
+    depends on HAVE_SPI
+    bool "Use ENCX24J600 Driver?"
+    #select DRV_SPI_USE_DRIVER_PRIV
+    #select USE_SYS_PORTS_PRIV
+    default n if !DRV_ENCX24J600_USE_DRIVER_PRIV
+    default y if DRV_ENCX24J600_USE_DRIVER_PRIV
+    ---help---
+    IDH_HTML_DRV_ENCX24J600_Introduction
+    ---endhelp---
+    
+
+config DRV_ENCX24J600_DRIVER_MODE
+	depends on DRV_ENCX24J600_USE_DRIVER
+	string 
+	range DRV_ENCX24J600_MODE_ENUM
+	default "DYNAMIC"
+	
+config DRV_ENCX24J600_INSTANCES_NUMBER
+	depends on DRV_ENCX24J600_USE_DRIVER
+	int "Number of Driver Instances"
+	default 1
+    ---help---
+    IDH_HTML_DRV_ENCX24J600_Introduction
+    ---endhelp---
+	
+config DRV_ENCX24J600_CLIENT_INSTANCES
+	depends on DRV_ENCX24J600_USE_DRIVER
+	int "Number of Client Instances"
+	default 1
+    ---help---
+    IDH_HTML_DRV_ENCX24J600_Introduction
+    ---endhelp---
+
+enum DRV_ENCX24J600_TYPE_ENUM
+	"Auto Negotiate" ||
+    "10base-T" ||
+    "100base-T"
+	
+
+enum DRV_ENCX24J600_DUPLEX_MODE_ENUM
+	"Auto Negotiate" ||
+    "Full Duplex" ||
+    "Half Duplex" 	
+	
+source "$HARMONY_VERSION_PATH/framework/driver/encx24j600/config/drv_encx24j600_idx.ftl" 1 instances
+
+    
+ifblock DRV_ENCX24J600_USE_DRIVER
+
+add "<#include \"/framework/driver/encx24j600/config/drv_encx24j600.c.ftl\">"  to list SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA
+add "<#include \"/framework/driver/encx24j600/config/drv_encx24j600.h.ftl\">"  to list SYSTEM_CONFIG_H_DRIVER_CONFIGURATION 
+
+file DRV_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/drv_encx24j600.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/drv_encx24j600.h"
+file DRV_ENCX24J600_API_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_api.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/drv_encx24j600_api.c"
+file DRV_ENCX24J600_DS_DEFS_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_ds_defs.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/drv_encx24j600_ds_defs.h"
+file DRV_ENCX24J600_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_local.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/drv_encx24j600_local.h"
+file DRV_ENCX24J600_MAIN_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_main_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/drv_encx24j600_main_state.c"
+file DRV_ENCX24J600_MAIN_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_main_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/drv_encx24j600_main_state.h"
+file DRV_ENCX24J600_UTILS_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_utils.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/drv_encx24j600_utils.c"
+file DRV_ENCX24J600_UTILS_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/drv_encx24j600_utils.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/drv_encx24j600_utils.h"
+file DRV_ENCX24J600_BUS_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/bus/drv_encx24j600_bus.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/bus/drv_encx24j600_bus.h"
+file DRV_ENCX24J600_SPI_BUS_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/bus/spi/drv_encx24j600_spi_bus.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/bus/spi/drv_encx24j600_spi_bus.c"
+file DRV_ENCX24J600_SPI_BUS_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/bus/spi/drv_encx24j600_spi_bus.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/bus/spi/drv_encx24j600_spi_bus.h"
+file DRV_ENCX24J600_CLOSED_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/closed_state/drv_encx24j600_closed_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/closed_state/drv_encx24j600_closed_state.c"
+file DRV_ENCX24J600_CLOSED_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/closed_state/drv_encx24j600_closed_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/closed_state/drv_encx24j600_closed_state.h"
+file DRV_ENCX24J600_INIT_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_initialization_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/initialization_state/drv_encx24j600_initialization_state.c"
+file DRV_ENCX24J600_INIT_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_initialization_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/initialization_state/drv_encx24j600_initialization_state.h"
+file DRV_ENCX24J600_CONFIG_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_configure_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/initialization_state/drv_encx24j600_configure_state.c"
+file DRV_ENCX24J600_CONFIG_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_configure_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/initialization_state/drv_encx24j600_configure_state.h"
+file DRV_ENCX24J600_DETECT_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_detect_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/initialization_state/drv_encx24j600_detect_state.c"
+file DRV_ENCX24J600_DETECT_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_detect_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/initialization_state/drv_encx24j600_detect_state.h"
+file DRV_ENCX24J600_RESET_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_reset_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/initialization_state/drv_encx24j600_reset_state.c"
+file DRV_ENCX24J600_RESET_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/initialization_state/drv_encx24j600_reset_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/initialization_state/drv_encx24j600_reset_state.h"
+file DRV_ENCX24J600_TX_PACKET_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/packet/drv_encx24j600_tx_packet.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/packet/drv_encx24j600_tx_packet.c"
+file DRV_ENCX24J600_TX_PACKET_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/packet/drv_encx24j600_tx_packet.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/packet/drv_encx24j600_tx_packet.h"
+file DRV_ENCX24J600_RX_PACKET_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/packet/drv_encx24j600_rx_packet.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/packet/drv_encx24j600_rx_packet.c"
+file DRV_ENCX24J600_RX_PACKET_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/packet/drv_encx24j600_rx_packet.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/packet/drv_encx24j600_rx_packet.h"
+file DRV_ENCX24J600_RUNNING_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_running_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/running_state/drv_encx24j600_running_state.c"
+file DRV_ENCX24J600_RUNNING_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_running_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/running_state/drv_encx24j600_running_state.h"
+file DRV_ENCX24J600_CHDUP_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_change_duplex_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/running_state/drv_encx24j600_change_duplex_state.c"
+file DRV_ENCX24J600_CHDUP_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_change_duplex_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/running_state/drv_encx24j600_change_duplex_state.h"
+file DRV_ENCX24J600_CHKINI_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_check_int_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/running_state/drv_encx24j600_check_int_state.c"
+file DRV_ENCX24J600_CHKINI_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_check_int_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/running_state/drv_encx24j600_check_int_state.h"
+file DRV_ENCX24J600_CHKSTA_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_check_status_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/running_state/drv_encx24j600_check_status_state.c"
+file DRV_ENCX24J600_CHKSTA_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_check_status_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/running_state/drv_encx24j600_check_tx_status_state.h"
+file DRV_ENCX24J600_CHKTXSTA_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_check_tx_status_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/running_state/drv_encx24j600_check_tx_status_state.c"
+file DRV_ENCX24J600_CHKTXSTA_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_check_tx_status_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/running_state/drv_encx24j600_check_status_state.h"
+file DRV_ENCX24J600_RESET_RX_STATE_C "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_reset_rx_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/encx24j600/running_state/drv_encx24j600_reset_rx_state.c"
+file DRV_ENCX24J600_RESET_RX_STATE_H "$HARMONY_VERSION_PATH/framework/driver/encx24j600/src/dynamic/running_state/drv_encx24j600_reset_rx_state.h" to "$PROJECT_HEADER_FILES/framework/driver/encx24j600/impl/running_state/drv_encx24j600_reset_rx_state.h"
+
+file DRV_SPI_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/spi/drv_spi.h" to "$PROJECT_HEADER_FILES/framework/driver/spi/drv_spi.h"
+file DRV_SPI_SYS_INT_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/system/int/sys_int.h" to "$PROJECT_HEADER_FILES/framework/system/int/sys_int.h"
+file DRV_SPI_SYS_INT_MAPPING_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/system/int/sys_int_mapping.h" to "$PROJECT_HEADER_FILES/framework/system/int/sys_int_mapping.h"
+file DRV_SPI_SYS_DMA_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/system/dma/sys_dma.h" to "$PROJECT_HEADER_FILES/framework/system/dma/sys_dma.h"
+file DRV_SPI_QUEUE_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/spi/src/drv_spi_sys_queue.h" to "$PROJECT_HEADER_FILES/framework/driver/spi/src/drv_spi_sys_queue.h"
+file DRV_SPI_QUEUE_FIFO_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/spi/src/drv_spi_sys_queue_local_fifo.h" to "$PROJECT_HEADER_FILES/framework/driver/spi/src/drv_spi_sys_queue_local_fifo.h"
+file DRV_SPI_INTERNAL_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/spi/src/dynamic/drv_spi_internal.h" to "$PROJECT_HEADER_FILES/framework/driver/spi/src/dynamic/drv_spi_internal.h"
+file DRV_SPI_VAR_MAPPING_ENCX24J600_H "$HARMONY_VERSION_PATH/framework/driver/spi/src/drv_spi_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/spi/src/drv_spi_variant_mapping.h"
+    
+endif
+
+    
+    
+endmenu

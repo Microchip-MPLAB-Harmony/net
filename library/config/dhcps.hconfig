@@ -1,0 +1,67 @@
+config TCPIP_STACK_USE_DHCP_SERVER
+    bool "DHCP Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_STACK_USE_IPV4  
+    default n
+	---help---
+    IDH_HTML_TCPIP_DHCPSERVER_Introduction
+	---endhelp---
+    
+config TCPIP_DHCPS_TASK_PROCESS_RATE
+    int "DHCP Server Update Rate in msec"
+    depends on TCPIP_STACK_USE_DHCP_SERVER
+    default 200
+	---help---
+	IDH_HTML_TCPIP_DHCPS_TASK_PROCESS_RATE
+	---endhelp---
+    
+config TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT
+    int "Maximum Number of Entries in the Lease Table"
+    depends on TCPIP_STACK_USE_DHCP_SERVER
+    default 15
+	---help---
+	IDH_HTML_TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT
+	---endhelp---
+
+config TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO
+    int "Time-out for a Solved Entry in the Cache in Seconds."
+    depends on TCPIP_STACK_USE_DHCP_SERVER
+    default 1200
+    ---help---
+	IDH_HTML_TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO
+    ---endhelp---
+
+config TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK
+    int "Time-out for an Unsolved Entry in Seconds"
+    depends on TCPIP_STACK_USE_DHCP_SERVER
+    default 5
+	---help---
+	IDH_HTML_TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK
+	---endhelp---
+
+config TCPIP_DHCP_SERVER_DELETE_OLD_ENTRIES
+    bool "Delete Old Entries"
+    depends on TCPIP_STACK_USE_DHCP_SERVER
+    default y
+	---help---
+	---endhelp---
+
+config TCPIP_DHCP_SERVER_INSTANCES_NUMBER
+    int "Number of DHCP Server Driver Instances"
+    depends on TCPIP_STACK_USE_DHCP_SERVER
+    range 1 TCPIP_STACK_NETWORK_CONFIG_NUMBER
+    default TCPIP_STACK_NETWORK_CONFIG_NUMBER
+    ---help---
+    The maximum Number of DHCP server is Equivalent to the number of network interfaces.
+    ---endhelp---
+
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/dhcps_idx.ftl" 2 instances
+
+ifblock USE_TCPIP_STACK    
+file TCPIP_DHCPS_H "$HARMONY_VERSION_PATH/framework/tcpip/dhcps.h" to "$PROJECT_HEADER_FILES/framework/tcpip/dhcps.h"
+file TCPIP_DHCPS_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dhcps_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dhcps_manager.h"
+file TCPIP_DHCPS_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dhcps_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dhcps_private.h"
+endif
+
+ifblock TCPIP_STACK_USE_DHCP_SERVER
+file TCPIP_DHCPS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/dhcps.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/dhcps.c"
+endif
