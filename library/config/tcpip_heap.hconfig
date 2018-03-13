@@ -1,0 +1,185 @@
+config TCPIP_USE_HEAP
+    bool "Select Heap Configuration"
+    depends on USE_TCPIP_STACK
+    default y
+    ---help---
+
+    ---endhelp---
+
+enum TCPIP_STACK_HEAP_TYPE
+    "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP" ||
+    "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP" ||
+    "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL"
+ 
+enum TCPIP_STACK_HEAP_FLAGS
+    "TCPIP_STACK_HEAP_FLAG_NONE" ||
+    "TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED" ||
+    "TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC" ||
+    "TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN" ||
+    "TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE"
+    
+
+enum TCPIP_STACK_HEAP_USAGE
+    "TCPIP_STACK_HEAP_USE_DEFAULT" ||
+    "TCPIP_STACK_HEAP_USE_GENERIC" ||
+    "TCPIP_STACK_HEAP_USE_PACKET" ||
+    "TCPIP_STACK_HEAP_USE_SOCKET_TCP" ||
+    "TCPIP_STACK_HEAP_USE_SOCKET_UDP" ||
+    "TCPIP_STACK_HEAP_USE_POOL_UDP"
+    
+    
+config TCPIP_STACK_USE_HEAP_CONFIG
+    string "Use Heap Config"
+    depends on TCPIP_USE_HEAP
+    range TCPIP_STACK_HEAP_TYPE
+    default "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP"
+    ---help---
+    
+    ---endhelp---
+
+config TCPIP_STACK_DRAM_SIZE
+    int "TCP/IP Stack Dynamic RAM Size"
+    depends on TCPIP_USE_HEAP && (TCPIP_STACK_USE_HEAP_CONFIG = "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP")
+    default 39250
+    ---help---
+    The amount of internal dynamic RAM that the TCP/IP stack uses
+    ---endhelp---
+
+config TCPIP_HEAP_POOL_ENTRIES_NUMBER
+    int "Number of Heap Pool Entries"
+    depends on TCPIP_USE_HEAP && (TCPIP_STACK_USE_HEAP_CONFIG = "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL")
+    range 1 20
+    default 9
+    ---help---
+    Sets up the entries for the Pool Heap. 
+    ---endhelp---
+
+config TCPIP_STACK_POOL_EXPANSION_SIZE
+    int "The Expansion Size for the Internal Heap Pool"
+    depends on TCPIP_USE_HEAP && (TCPIP_STACK_USE_HEAP_CONFIG = "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL")
+    default 51200 if(PIC32MZ)
+    default 51200 if(DSTBDPIC32CZ)
+    default 40960 if(PIC32MX)
+
+    ---help---
+    This is the amount of heap allocated besides the size resulting from the pool entries
+    and allows expanding at run time.
+    This parameter allows the auto configuration of the pool at run time.
+    ---endhelp---
+
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/tcpip_pool_idx.ftl" 20 instances
+
+config TCPIP_STACK_MALLOC_FUNC
+    string " Stack allocation function, malloc style"
+    depends on TCPIP_USE_HEAP
+    default "malloc"
+	---help---
+    This is the function the stack will call to allocate memory
+    Use standard C library 'malloc' as a default
+	---endhelp---
+    
+config TCPIP_STACK_CALLOC_FUNC
+    string " Stack allocation function, calloc style"
+    depends on TCPIP_USE_HEAP
+    default "calloc"
+	---help---
+    This is the function the stack will call to allocate memory
+    Use standard C library 'calloc' as a default
+	---endhelp---
+    
+config TCPIP_STACK_FREE_FUNC
+    string " Stack deallocation function, free style"
+    depends on TCPIP_USE_HEAP
+    default "free"
+	---help---
+    This is the function the stack will call for freeing the allocated memory
+    Use standard C library 'free' as a default
+	---endhelp---
+    
+config TCPIP_STACK_HEAP_USE_FLAGS
+    string "Flags supported for heap allocation"
+    depends on TCPIP_USE_HEAP
+    range TCPIP_STACK_HEAP_FLAGS
+    default "TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED"
+    ---help---
+    
+    ---endhelp---
+    
+config TCPIP_STACK_HEAP_USAGE_CONFIG
+    string "Heap area usage"
+    depends on TCPIP_USE_HEAP
+    range TCPIP_STACK_HEAP_USAGE
+    default "TCPIP_STACK_HEAP_USE_DEFAULT"
+    ---help---
+    
+    ---endhelp---
+    
+config TCPIP_STACK_SUPPORTED_HEAPS
+    int "Maximum heap types"
+    depends on TCPIP_USE_HEAP
+    default 1
+    ---help---
+
+    ---endhelp---
+
+    
+config TCPIP_STACK_DRAM_RUN_LIMIT
+    int "TCP/IP Stack Dynamic RAM Lower Limit"
+    depends on TCPIP_USE_HEAP && (TCPIP_STACK_USE_HEAP_CONFIG != "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP")
+    default 2048
+    ---help---
+    The minimum amount of internal dynamic memory left for run time allocation
+    by the stack (IP, UDP, etc).
+    This is just a warning threshold.
+    If after all the modules are initialized the amount of memory available in the TCPIP heap
+    is less then this limit then a warning will be displayed
+    (if the debug channel is enabled)
+    ---endhelp---
+
+
+config TCPIP_STACK_DRAM_DEBUG_ENABLE
+    bool "TCP/IP Stack Dynamic Allocation Debug"
+    depends on TCPIP_USE_HEAP
+    default n
+    ---help---
+    Enable debugging of an allocation call that failed.
+    If the system debug is enabled the stack will issue a
+    warning message on the system debug channel
+    ---endhelp---
+
+config TCPIP_STACK_DRAM_TRACE_ENABLE
+    bool "TCP/IP Stack Dynamic Allocation Trace"
+    depends on TCPIP_USE_HEAP && TCPIP_STACK_DRAM_DEBUG_ENABLE
+    default n
+    ---help---
+    Enable tracing of the allocated memory by each module
+    The stack will trace all the memory allocated by a module
+    and provide various statistics
+    ---endhelp---
+
+config TCPIP_STACK_DRAM_TRACE_SLOTS
+    int "TCP/IP Stack Number of Trace Slots"
+    depends on TCPIP_USE_HEAP && TCPIP_STACK_DRAM_TRACE_ENABLE
+    default 16
+    ---help---
+    This is the number of trace slots.
+    There is on slot needed per module that allocates memory from the heap
+    ---endhelp---
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_HEAP_ALLOC_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_heap_alloc.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcpip_heap_alloc.h"
+file TCPIP_HEAP_H "$HARMONY_VERSION_PATH/framework/tcpip/tcpip_heap.h" to "$PROJECT_HEADER_FILES/framework/tcpip/tcpip_heap.h"
+endif
+    
+ifblock TCPIP_USE_HEAP
+file TCPIP_HEAP_ALLOC_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_heap_alloc.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_heap_alloc.c"
+ifblock (TCPIP_STACK_USE_HEAP_CONFIG = "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP") 
+file TCPIP_HEAP_EXTERNAL_ALLOC_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_heap_external.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_heap_external.c"
+endif
+ifblock (TCPIP_STACK_USE_HEAP_CONFIG = "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP")
+file TCPIP_HEAP_INTERNAL_ALLOC_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_heap_internal.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_heap_internal.c"
+endif
+ifblock (TCPIP_STACK_USE_HEAP_CONFIG = "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL")
+file TCPIP_HEAP_POOL_ALLOC_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_heap_pool.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_heap_pool.c"
+endif
+endif

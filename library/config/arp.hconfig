@@ -1,0 +1,115 @@
+menu "ARP"
+    depends on USE_TCPIP_STACK && TCPIP_STACK_USE_IPV4
+    
+config TCPIP_USE_ARP
+    bool
+
+config TCPIP_ARP_CACHE_ENTRIES
+    depends on TCPIP_USE_ARP
+    int "Cache Entries for This Interface"
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_ENTRIES
+    ---endhelp---
+    
+config TCPIP_ARP_CACHE_DELETE_OLD
+    depends on TCPIP_USE_ARP
+    bool "Delete Old Cache if Still in Place"
+    default y
+    ---help---
+    IDH_HTML_ARP_CACHE_DELETE_OLD
+    ---endhelp---
+  
+config TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO
+    depends on TCPIP_USE_ARP
+    int "Time-Out for a Solved Entry to be Removed if not Referenced in Seconds"
+    default 1200
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO
+    ---endhelp---
+    
+config TCPIP_ARP_CACHE_PENDING_ENTRY_TMO
+    depends on TCPIP_USE_ARP
+    int "Time-Out for a Pending Cache Entry to be Solved in Seconds"
+    default 60
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_PENDING_ENTRY_TMO
+    ---endhelp---
+    
+config TCPIP_ARP_CACHE_PENDING_RETRY_TMO
+    depends on TCPIP_USE_ARP
+    int "Time-Out for Resending an ARP Request for a Pending Entry in Seconds"
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_PENDING_RETRY_TMO
+    ---endhelp---
+    
+config TCPIP_ARP_CACHE_PERMANENT_QUOTA
+    depends on TCPIP_USE_ARP
+    int "Maximum Percentage of Permanent Entries Allowed in the Cache"
+    default 50
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_PERMANENT_QUOTA
+    ---endhelp---
+
+config TCPIP_ARP_CACHE_PURGE_THRESHOLD
+    depends on TCPIP_USE_ARP
+    int "Purge Threshold Percentage"
+    default 75
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_PURGE_THRESHOLD
+    ---endhelp---
+
+config TCPIP_ARP_CACHE_PURGE_QUANTA
+    depends on TCPIP_USE_ARP
+    int "Number of Entries to Delete Once the Threshold is Reached"
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_PURGE_QUANTA
+    ---endhelp---
+    
+config TCPIP_ARP_CACHE_ENTRY_RETRIES
+    depends on TCPIP_USE_ARP
+    int "Number of Retries for Resolving an Entry"
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_ARP_CACHE_ENTRY_RETRIES
+    ---endhelp---
+    
+config TCPIP_ARP_GRATUITOUS_PROBE_COUNT
+    depends on TCPIP_USE_ARP
+    int "Number of Retries Done for a Gratuitous ARP Request"
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_ARP_GRATUITOUS_PROBE_COUNT
+    ---endhelp---
+
+config TCPIP_ARP_TASK_PROCESS_RATE
+    depends on TCPIP_USE_ARP
+    int "How Often to Process ARP in msec"
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_ARP_TASK_PROCESS_RATE
+    ---endhelp---
+    
+
+config TCPIP_ARP_PRIMARY_CACHE_ONLY
+    depends on TCPIP_USE_ARP
+    bool "Alias Interfaces Share One Cache"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_ARP_PRIMARY_CACHE_ONLY
+    ---endhelp---
+
+
+ifblock USE_TCPIP_STACK
+file TCPIP_ARP_H "$HARMONY_VERSION_PATH/framework/tcpip/arp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/arp.h"
+file TCPIP_ARP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/arp_manager.h"  to "$PROJECT_HEADER_FILES/framework/tcpip/src/arp_manager.h"
+file TCPIP_ARP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/arp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/arp_private.h"
+endif
+
+ifblock TCPIP_USE_ARP
+file TCPIP_ARP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/arp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/arp.c"
+endif
+    
+endmenu

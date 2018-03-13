@@ -1,0 +1,60 @@
+config TCPIP_USE_TELNET
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP
+    bool "Use Telnet Server"
+    select NET_PRES_NEEDED
+    select USE_SYS_COMMAND_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_TELNET_Introduction
+    ---endhelp---
+    
+config TCPIP_TELNET_MAX_CONNECTIONS
+    depends on TCPIP_USE_TELNET
+    int "Max Connections"
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_TELNET_MAX_CONNECTIONS
+    ---endhelp---
+    
+config TCPIP_TELNET_USERNAME
+    depends on TCPIP_USE_TELNET
+    string "User Name"
+    default "admin"
+    ---help---
+    IDH_HTML_TCPIP_TELNET_USERNAME
+    ---endhelp---
+    
+config TCPIP_TELNET_PASSWORD
+    depends on TCPIP_USE_TELNET
+    string "Password"
+    default "microchip"
+    ---help---
+    IDH_HTML_TCPIP_TELNET_PASSWORD
+    ---endhelp---
+    
+config TCPIP_TELNET_TASK_TICK_RATE
+    depends on TCPIP_USE_TELNET
+    int "Task Rate - ms"
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_TELNET_TASK_TICK_RATE
+    ---endhelp---
+    
+
+config TCPIP_TELNET_REJECT_UNSECURED
+    depends on TCPIP_USE_TELNET
+    bool "Reject Unsecure Connections"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_TELNET_REJECT_UNSECURED
+    ---endhelp---
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_TELNET_H "$HARMONY_VERSION_PATH/framework/tcpip/telnet.h" to "$PROJECT_HEADER_FILES/framework/tcpip/telnet.h"
+file TCPIP_TELNET_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/telnet_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/telnet_manager.h"
+endif    
+
+ifblock TCPIP_USE_TELNET
+file TCPIP_TELNET_C "$HARMONY_VERSION_PATH/framework/tcpip/src/telnet.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/telnet.c"
+endif    
+    

@@ -1,0 +1,169 @@
+config TCPIP_IPV6_DEFAULT_ALLOCATION_BLOCK_SIZE
+    int "Minimum Allocation Unit For The Payload"
+    depends on TCPIP_STACK_USE_IPV6
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_IPV6_DEFAULT_ALLOCATION_BLOCK_SIZE
+    ---endhelp---
+    
+config TCPIP_IPV6_MINIMUM_LINK_MTU
+    int "Lower Bounds Of The Maximum Transmission Unit"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1280
+    ---help---
+    IDH_HTML_TCPIP_IPV6_MINIMUM_LINK_MTU
+    ---endhelp---
+    
+config TCPIP_IPV6_DEFAULT_LINK_MTU
+    int "Maximum Transmission Unit"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1500
+    ---help---
+    IDH_HTML_TCPIP_IPV6_DEFAULT_LINK_MTU
+    ---endhelp---
+
+config TCPIP_IPV6_DEFAULT_CUR_HOP_LIMIT
+    int "IPv6 Default Hop Limit"
+    depends on TCPIP_STACK_USE_IPV6
+    default 64
+    ---help---
+    IDH_HTML_TCPIP_IPV6_DEFAULT_CUR_HOP_LIMIT
+    ---endhelp---
+    
+config TCPIP_IPV6_DEFAULT_BASE_REACHABLE_TIME
+    int "Router Advertisement Reachable Time in Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 30
+    ---help---
+    IDH_HTML_TCPIP_IPV6_DEFAULT_BASE_REACHABLE_TIME
+    ---endhelp---
+
+config TCPIP_IPV6_DEFAULT_RETRANSMIT_TIME
+    int "Router Advertisement's Retransmission Time in ms"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1000
+    ---help---
+    IDH_HTML_TCPIP_IPV6_DEFAULT_RETRANSMIT_TIME
+    ---endhelp---
+    
+config TCPIP_IPV6_QUEUE_NEIGHBOR_PACKET_LIMIT
+    int "Maximum Number of Queued Packets per Remote"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_IPV6_QUEUE_NEIGHBOR_PACKET_LIMIT
+    ---endhelp---
+    
+config TCPIP_IPV6_NEIGHBOR_CACHE_ENTRY_STALE_TIMEOUT
+    int "Stale Neighbor Discovery Packet Time-out"
+    depends on TCPIP_STACK_USE_IPV6
+    default 600
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NEIGHBOR_CACHE_ENTRY_STALE_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_IPV6_QUEUE_MCAST_PACKET_LIMIT
+    int "Maximum Number of Multicast Queued IPv6"
+    depends on TCPIP_STACK_USE_IPV6
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_IPV6_QUEUE_MCAST_PACKET_LIMIT
+    ---endhelp---
+
+config TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT
+    int "Multicast Packet Time-out - Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT
+    ---endhelp---
+
+config TCPIP_IPV6_TASK_PROCESS_RATE
+    int "IPv6 Task Processing Rate - ms"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1000
+    ---help---
+    IDH_HTML_TCPIP_IPV6_TASK_PROCESS_RATE
+    ---endhelp---
+
+config TCPIP_IPV6_INIT_TASK_PROCESS_RATE
+    int "IPv6 Init Task Processing Rate - ms"
+    depends on TCPIP_STACK_USE_IPV6
+    default 32
+    ---help---
+    IDH_HTML_TCPIP_IPV6_INIT_TASK_PROCESS_RATE
+    ---endhelp---
+
+config TCPIP_IPV6_ULA_NTP_ACCESS_TMO
+    int "NTP Access Time-out For The IPv6 ULA Address Generation - ms"
+    depends on TCPIP_STACK_USE_IPV6
+    default 12000
+    ---help---
+    IDH_HTML_TCPIP_IPV6_ULA_NTP_ACCESS_TMO
+    ---endhelp---
+
+config TCPIP_IPV6_ULA_NTP_VALID_WINDOW
+    int "NTP Time Stamp Validity Window - ms"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1000
+    ---help---
+    IDH_HTML_TCPIP_IPV6_ULA_NTP_VALID_WINDOW
+    ---endhelp---
+
+config TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT
+    int "Fragmentation Packet Time-out Value"
+    depends on TCPIP_STACK_USE_IPV6
+    default 60
+    ---help---
+    IDH_HTML_TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE
+    int "Maximum RX Fragmented Buffer Size"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1514
+    ---help---
+    IDH_HTML_TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_STACK_USE_ICMPV6_SERVER
+    bool "Use ICMPv6 Server"
+    depends on TCPIP_STACK_USE_IPV6
+    default y
+    ---help---
+    IDH_HTML_TCPIP_ICMPV6_Introduction
+    ---endhelp---
+
+config TCPIP_STACK_USE_ICMPV6_CLIENT
+    bool "Use ICMPv6 Client"
+    depends on TCPIP_STACK_USE_IPV6 
+    default n
+    ---help---
+    IDH_HTML_TCPIP_ICMPV6_Introduction
+    ---endhelp---
+
+config TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION
+    bool "Enable IPV6 User Notification"
+    depends on TCPIP_STACK_USE_ICMPV6_CLIENT
+    default y
+    ---help---
+    IDH_HTML_TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION
+    ---endhelp---
+
+    
+
+source "$HARMONY_VERSION_PATH/framework/tcpip/config/ndp.hconfig"
+
+ifblock USE_TCPIP_STACK
+file TCPIP_IPV6_H "$HARMONY_VERSION_PATH/framework/tcpip/ipv6.h" to "$PROJECT_HEADER_FILES/framework/tcpip/ipv6.h"
+file TCPIP_IPV6_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ipv6_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ipv6_manager.h"
+file TCPIP_IPV6_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ipv6_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ipv6_private.h"
+file TCPIP_ICMPV6_H "$HARMONY_VERSION_PATH/framework/tcpip/icmpv6.h" to "$PROJECT_HEADER_FILES/framework/tcpip/icmpv6.h"
+file TCPIP_ICMPV6_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/icmpv6_manager.h"  to "$PROJECT_HEADER_FILES/framework/tcpip/src/icmpv6_manager.h"
+endif
+
+ifblock TCPIP_STACK_USE_IPV6
+file TCPIP_IPV6_C "$HARMONY_VERSION_PATH/framework/tcpip/src/ipv6.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/ipv6.c"
+file TCPIP_ICMPV6_C "$HARMONY_VERSION_PATH/framework/tcpip/src/icmpv6.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/icmpv6.c"
+endif
+    

@@ -1,0 +1,92 @@
+config TCPIP_USE_IGMP
+    bool "Use IGMPv3 Module"
+    depends on USE_TCPIP_STACK && TCPIP_STACK_USE_IPV4
+    default n
+    ---help---
+    IDH_HTML_TCPIP_IGMP_Introduction
+    ---endhelp---
+
+config TCPIP_IGMP_INTERFACES
+    int "Number of IGMP Interfaces"
+    depends on TCPIP_USE_IGMP
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_STACK_USE_IGMP
+    ---endhelp---
+    
+config TCPIP_IGMP_MCAST_GROUPS
+    int "Number of Multicast Groups"
+    depends on TCPIP_USE_IGMP
+    default 7
+    ---help---
+    IDH_HTML_TCPIP_IGMP_MCAST_GROUPS
+    ---endhelp---
+    
+config TCPIP_IGMPV2_SUPPORT_ONLY
+    bool "IGMPv2 Support Only"
+    depends on TCPIP_USE_IGMP
+    default n
+    ---help---
+    IDH_HTML_TCPIP_IGMPV2_SUPPORT_ONLY
+    ---endhelp---
+
+config TCPIP_IGMP_SOURCES_PER_GROUP
+    int "Number of Sources in Each Group"
+    depends on TCPIP_USE_IGMP
+    default 11
+    ---help---
+    IDH_HTML_TCPIP_IGMP_SOURCES_PER_GROUP
+    ---endhelp---
+    
+config TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE
+    int "Number of Sockets per Source"
+    depends on TCPIP_USE_IGMP
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE
+    ---endhelp---
+    
+config TCPIP_IGMP_ROBUSTNESS_VARIABLE
+    int "Default Robustness Variable Value"
+    depends on TCPIP_USE_IGMP
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_IGMP_ROBUSTNESS_VARIABLE
+    ---endhelp---
+    
+config TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL
+    int "Default Unsolicited Report Interval - ms"
+    depends on TCPIP_USE_IGMP
+    default 1000
+    ---help---
+    IDH_HTML_TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL
+    ---endhelp---
+    
+config TCPIP_IGMP_USER_NOTIFICATION
+    bool "Enable User Notification Functions"
+    depends on TCPIP_USE_IGMP
+    default n
+    ---help---
+    IDH_HTML_TCPIP_IGMP_USER_NOTIFICATION
+    ---endhelp---
+    
+config TCPIP_IGMP_TASK_TICK_RATE
+    int "IGMP Task Rate"
+    depends on TCPIP_USE_IGMP
+    default 33
+    ---help---
+    IDH_HTML_TCPIP_IGMP_TASK_TICK_RATE
+    ---endhelp---
+
+
+ifblock USE_TCPIP_STACK    
+file TCPIP_IGMP_H "$HARMONY_VERSION_PATH/framework/tcpip/igmp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/igmp.h"
+file TCPIP_IGMP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/igmp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/igmp_private.h"
+file TCPIP_IGMP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/igmp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/igmp_manager.h"
+endif
+
+ifblock TCPIP_USE_IGMP
+file TCPIP_IGMP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/igmp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/igmp.c"
+endif
+    
+

@@ -1,0 +1,126 @@
+config TCPIP_USE_DNS_CLIENT
+    bool "DNS Client"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP
+    default y
+    ---help---
+    IDH_HTML_TCPIP_DNS_Introduction
+    ---endhelp---
+    
+config TCPIP_DNS_CLIENT_SERVER_TMO
+    int "Client-Server Time-out in Seconds"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 60
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_SERVER_TMO
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_TASK_PROCESS_RATE
+    int "Task Update Rate in msec"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 200
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_TASK_PROCESS_RATE
+    ---endhelp---
+    
+config TCPIP_DNS_CLIENT_CACHE_ENTRIES
+    int "Number of DNS Resolver Entries"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_CACHE_ENTRIES
+    ---endhelp---
+    
+config TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO
+    int "DNS Client Time-outs"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS
+    int "Maximum Number of IPv4 Answers to be Considered"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS
+    int "Maximum Number of IPv6 Answers to be Considered"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_ADDRESS_TYPE
+    string "DNS Connection Type"
+    depends on TCPIP_USE_DNS_CLIENT
+    range TCPIP_ADDRESS_TYPE_STRICT
+    default "IP_ADDRESS_TYPE_IPV4"
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_ADDRESS_TYPE 
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL
+    int "Default TTL time in Seconds"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 1200
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL
+    ---endhelp---
+  
+config TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO
+    int "Time-out for an Unsolved Entry in the Cache"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO
+    int "Retry Lookup Host name after Time-out"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO
+    ---endhelp---
+	
+config TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN
+    int "Host Name Length"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 32
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES
+    int "Maximum Number of Interfaces Considered for DNS resolution"
+    depends on TCPIP_USE_DNS_CLIENT
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES
+    bool "Delete Old Entries"
+    depends on TCPIP_USE_DNS_CLIENT
+    default y
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_MODULE_CONFIG
+    ---endhelp---
+
+config TCPIP_DNS_CLIENT_USER_NOTIFICATION
+    bool "Enable User Notification"
+    depends on TCPIP_USE_DNS_CLIENT
+    default n
+    ---help---
+    IDH_HTML_TCPIP_DNS_CLIENT_USER_NOTIFICATION
+    ---endhelp---
+ifblock USE_TCPIP_STACK 
+file TCPIP_DNS_H "$HARMONY_VERSION_PATH/framework/tcpip/dns.h" to "$PROJECT_HEADER_FILES/framework/tcpip/dns.h"
+file TCPIP_DNS_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dns_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dns_manager.h"
+file TCPIP_DNS_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dns_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dns_private.h"
+file TCPIP_DNS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/dns.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/dns.c"
+endif

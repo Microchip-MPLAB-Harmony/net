@@ -1,0 +1,56 @@
+config TCPIP_STACK_USE_ICMPV4
+    bool "ICMPv4 Client and Server"
+    depends on USE_TCPIP_STACK && TCPIP_STACK_USE_IPV4
+    default n
+    ---help---
+    IDH_HTML_TCPIP_ICMP_Introduction
+    ---endhelp---
+
+config TCPIP_STACK_USE_ICMP_SERVER
+    bool "Use ICMPv4 Server"
+    depends on TCPIP_STACK_USE_ICMPV4
+    default n
+    ---help---
+    IDH_HTML_TCPIP_ICMP_Introduction
+    ---endhelp---
+
+config TCPIP_STACK_USE_ICMP_CLIENT
+    bool "Use ICMPv4 Client"
+    depends on TCPIP_STACK_USE_ICMPV4
+    default n
+    ---help---
+    IDH_HTML_TCPIP_ICMP_Introduction
+    ---endhelp---
+
+config TCPIP_ICMP_CLIENT_USER_NOTIFICATION
+    bool "Enable User Notification"
+    depends on TCPIP_STACK_USE_ICMP_CLIENT
+    default y
+    ---help---
+    IDH_HTML_TCPIP_ICMP_CLIENT_USER_NOTIFICATION
+    ---endhelp---
+
+config TCPIP_ICMP_ECHO_REQUEST_TIMEOUT
+    int "Echo request timeout - ms"
+    depends on TCPIP_STACK_USE_ICMP_CLIENT
+    default 500
+    ---help---
+    IDH_HTML_TCPIP_ICMP_ECHO_REQUEST_TIMEOUT
+    ---endhelp---
+
+config TCPIP_ICMP_TASK_TICK_RATE
+    int "ICMP task rate - ms"
+    depends on TCPIP_STACK_USE_ICMP_CLIENT
+    default 33
+    ---help---
+    IDH_HTML_TCPIP_ICMP_TASK_TICK_RATE
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_ICMP_H "$HARMONY_VERSION_PATH/framework/tcpip/icmp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/icmp.h"
+file TCPIP_ICMP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/icmp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/icmp_manager.h"
+endif
+
+ifblock TCPIP_STACK_USE_ICMP_SERVER || TCPIP_STACK_USE_ICMP_CLIENT
+file TCPIP_ICMP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/icmp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/icmp.c"
+endif

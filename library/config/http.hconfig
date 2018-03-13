@@ -1,0 +1,253 @@
+config TCPIP_STACK_USE_HTTP_SERVER
+    bool "HTTP Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && !TCPIP_STACK_USE_HTTP_NET_SERVER
+    select USE_SYS_FS_NEEDED
+    select USE_CRYPTO_LIB_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_Introduction
+    ---endhelp---
+
+config TCPIP_HTTP_MAX_HEADER_LEN
+    int "Max Header Length"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 15
+    ---help---
+    IDH_HTML_TCPIP_HTTP_MAX_HEADER_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_CACHE_LEN
+    string "Max Lifetime of Static Responses in Seconds"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default "600"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_CACHE_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_TIMEOUT
+    int "Socket Disconnect Time-out"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 45
+    ---help---
+    IDH_HTML_TCPIP_HTTP_TIMEOUT
+    ---endhelp---
+
+config TCPIP_HTTP_MAX_CONNECTIONS
+    int "Max Number of Simultaneous Connections"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_HTTP_MAX_CONNECTIONS
+    ---endhelp---
+
+config TCPIP_HTTP_DEFAULT_FILE
+    string "Default HTTP File"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default "index.htm"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_DEFAULT_FILE
+    ---endhelp---
+
+config TCPIP_HTTPS_DEFAULT_FILE
+    string "Default HTTPS File"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default "index.htm"
+    ---help---
+    IDH_HTML_TCPIP_HTTPS_DEFAULT_FILE
+    ---endhelp---
+
+config TCPIP_HTTP_DEFAULT_LEN
+    int "Max Default File String Length"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_DEFAULT_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_FILE_UPLOAD_ENABLE
+    bool "Enable Update via HTTP"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_FILE_UPLOAD_ENABLE
+    ---endhelp---
+
+config TCPIP_HTTP_FILE_UPLOAD_NAME
+    depends on TCPIP_HTTP_FILE_UPLOAD_ENABLE && TCPIP_STACK_USE_HTTP_SERVER
+    string "MPFS Upload Page Name"
+    default "mpfsupload"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_FILE_UPLOAD_NAME
+    ---endhelp---
+
+config TCPIP_HTTP_USE_POST
+    bool "Enable POST Support"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_USE_POST
+    ---endhelp---
+
+config TCPIP_HTTP_USE_COOKIES
+    bool "Enable Cookie Support"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_USE_COOKIES
+    ---endhelp---
+
+config TCPIP_HTTP_USE_BASE64_DECODE
+    bool "Use Base 64 Decode"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_USE_BASE64_DECODE
+    ---endhelp---
+
+config TCPIP_HTTP_USE_AUTHENTICATION
+    bool "Enable Basic Authenication Support"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    select TCPIP_HTTP_USE_BASE64_DECODE
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_USE_AUTHENTICATION
+    ---endhelp---
+
+config TCPIP_HTTP_NO_AUTH_WITHOUT_SSL
+    bool "Require Secure Connection Before Requesting a Password"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NO_AUTH_WITHOUT_SSL
+    ---endhelp---
+
+config TCPIP_HTTP_MAX_DATA_LEN
+    int "Max Data Length (bytes) for Reading Cookie and GET/POST Arguments"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_HTTP_MAX_DATA_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_MIN_CALLBACK_FREE
+    int "Min Number of Bytes Free in TX FIFO Before Executing Callbacks"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 16
+    ---help---
+    IDH_HTML_TCPIP_HTTP_MIN_CALLBACK_FREE
+    ---endhelp---
+
+config TCPIP_HTTP_SKT_TX_BUFF_SIZE
+    int "HTTP Socket TX Buffer Size"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_HTTP_SKT_TX_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_SKT_RX_BUFF_SIZE
+    int "HTTP Socket RX Buffer Size"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_HTTP_SKT_RX_BUFF_SIZE
+    ---endhelp---
+
+enum TCPIP_HTTP_MODULE_FLAGS
+    "TCPIP_HTTP_MODULE_FLAG_DEFAULT"
+    || "TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS"
+    || "TCPIP_HTTP_MODULE_FLAG_NO_DELAY"
+
+config TCPIP_HTTP_CFG_FLAGS
+    string "HTTP Module Configuration Flags"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    range TCPIP_HTTP_MODULE_FLAGS
+    default "TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_CONFIG_FLAGS
+    ---endhelp---
+
+config TCPIP_HTTP_CONFIG_FLAGS
+    int
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 0 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_DEFAULT"
+    default 1 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS"
+    default 2 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_NO_DELAY"
+
+config TCPIP_HTTP_TASK_RATE
+    int "HTTP Task Rate - ms"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default 33
+    ---help---
+    IDH_HTML_TCPIP_HTTP_TASK_RATE
+    ---endhelp---
+
+config TCPIP_HTTP_MALLOC_FUNC
+    string " HTTP allocation function, malloc style"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    ---help---
+    This is the function HTTP will call to allocate memory
+    Use standard C library 'malloc' as a default
+    ---endhelp---
+
+config TCPIP_HTTP_FREE_FUNC
+    string " HTTP deallocation function, free style"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    ---help---
+    This is the function HTTP will call to deallocate memory
+    Use standard C library 'free' as a default
+    ---endhelp---
+
+config TCPIP_HTTP_CUSTOM_TEMPLATE
+    bool "Include HTTP Custom Template"
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    default y
+    ---help---
+    Includes http_print.c, custom_http_app.c and mpfs_img2.c in project
+    ---endhelp---
+
+config TCPIP_HTTP_CUSTOM_TEMPLATE_SL
+    depends on TCPIP_STACK_USE_HTTP_SERVER
+    bool
+    default y if (USE_SYS_FS = y) && (SYS_FS_MPFS = y)
+    default n
+
+config TCPIP_STACK_USE_HTTP_SERVER_DUMMY
+    bool "HTTP Server" 
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_STACK_USE_HTTP_NET_SERVER
+    default n
+    persistent
+    ---help---
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_HTTP_H "$HARMONY_VERSION_PATH/framework/tcpip/http.h"  to "$PROJECT_HEADER_FILES/framework/tcpip/http.h"
+file TCPIP_HTTP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/http_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/http_manager.h"
+file TCPIP_HTTP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/http_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/http_private.h"
+file SYS_FS_HTTP_H "$HARMONY_VERSION_PATH/framework/system/fs/sys_fs.h" to "$PROJECT_HEADER_FILES/framework/system/fs/sys_fs.h"
+endif
+
+ifblock TCPIP_STACK_USE_HTTP_SERVER
+
+file TCPIP_HTTP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/http.c"  to "$PROJECT_SOURCE_FILES/framework/tcpip/src/http.c"
+
+file DRV_NVM_STATIC_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
+file DRV_NVM_STATIC_LOCAL_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
+file DRV_NVM_STATIC_VAR_MAP_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
+
+file DRV_NVM_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
+file DRV_NVM_LOCAL_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
+file DRV_NVM_VAR_MAP_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
+
+ifblock TCPIP_HTTP_CUSTOM_TEMPLATE
+
+template HTTP_PRINT_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/http_print.c.ftl" to "$PROJECT_SOURCE_FILES/app/http_print.c"
+template HTTP_CUSTOM_APP_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/custom_http_app.c.ftl" to "$PROJECT_SOURCE_FILES/app/custom_http_app.c"
+
+ifblock TCPIP_HTTP_CUSTOM_TEMPLATE_SL
+template HTTP_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2.c"
+endif
+
+endif
+
+endif

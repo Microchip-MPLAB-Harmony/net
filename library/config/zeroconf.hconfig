@@ -1,0 +1,215 @@
+   
+config TCPIP_USE_LINK_ZERO_CONFIG
+    bool "Use Link Local Zero Config"
+    depends on USE_TCPIP_STACK && TCPIP_STACK_USE_IPV4
+    default n
+	---help---
+	IDH_HTML_TCPIP_ZEROCONF_Introduction
+	---endhelp---
+
+config TCPIP_ZC_WARN_ZCLL
+    bool "Enable Link Local Warning Messages"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default n
+    
+config TCPIP_ZC_INFO_ZCLL
+    bool "Enable Link Local Information Messages"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default n
+
+config TCPIP_ZC_DEBUG_ZCLL
+    bool "Enable Link Local Debug Messages"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default n
+
+config TCPIP_ZC_LL_PROBE_WAIT
+    int "Probe Wait (seconds)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 1
+    
+config TCPIP_ZC_LL_PROBE_MIN
+    int "Minimum Time Between Probes (seconds)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 1
+
+config TCPIP_ZC_LL_PROBE_MAX
+    int "Maxiumum Time Between Probes (seconds)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 2
+
+config TCPIP_ZC_LL_PROBE_NUM
+    int "Number of Probes"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 3
+    
+config TCPIP_ZC_LL_ANNOUNCE_WAIT
+    int "Delay Before Announcing"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 2
+    
+config TCPIP_ZC_LL_ANNOUNCE_NUM
+    int "Number of Announcement Packets"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 2
+
+config TCPIP_ZC_LL_ANNOUNCE_INTERVAL
+    int "Time Between Announcement Packets (seconds)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 2
+
+config TCPIP_ZC_LL_MAX_CONFLICTS
+    int "Maximum Conflicts Before Rate Limiting"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 10
+
+config TCPIP_ZC_LL_RATE_LIMIT_INTERVAL
+    int "Delay Between Attempts (seconds)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 60
+
+config TCPIP_ZC_LL_DEFEND_INTERVAL
+    int "Rate Between Defensive ARPs (seconds)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 10
+
+config TCPIP_ZC_LL_IPV4_LLBASE
+    hex "Base IP"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 0xa9fe0100
+    
+config TCPIP_ZC_LL_IPV4_LLBASE_MASK
+    hex "Base Netmask"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 0x0000FFFF
+
+config TCPIP_ZC_LL_TASK_TICK_RATE
+    int "Link Local Task Rate (ms)"
+    depends on TCPIP_USE_LINK_ZERO_CONFIG
+    default 333
+    
+config TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    bool "Use Multicast DNS Zero Config (Bonjour)"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_USE_LINK_ZERO_CONFIG
+    default n
+	---help---
+	IDH_HTML_TCPIP_ZEROCONF_Introduction
+	---endhelp---
+
+config TCPIP_ZC_INFO_MDNS
+    bool "Enable Multicast DNS Information Messages"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default n
+
+config TCPIP_ZC_WARN_MDNS
+    bool "Enable Multicast DNS Warning Messages"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default n
+    
+    
+config TCPIP_ZC_DEBUG_MDNS
+   bool "Enable Multicast DNS Debug Messages"
+   depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+   default n
+   
+config TCPIP_ZC_MDNS_TASK_TICK_RATE
+    int "Task Rate"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 63
+
+config TCPIP_ZC_MDNS_PORT
+    int "Port"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 5353
+
+config TCPIP_ZC_MDNS_MAX_HOST_NAME_SIZE
+    int "Max Host Name Size"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 32
+    
+config TCPIP_ZC_MDNS_MAX_LABEL_SIZE
+    int "Maximum Size Allowed For a Label"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 64
+    
+config TCPIP_ZC_MDNS_MAX_RR_NAME_SIZE
+    int "Max Resource Record Name Size"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 256
+    
+config TCPIP_ZC_MDNS_MAX_SRV_TYPE_SIZE
+    int "Max Server Type Size"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 32
+
+config TCPIP_ZC_MDNS_MAX_SRV_NAME_SIZE
+    int "Max Server Name Size"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 64
+
+config TCPIP_ZC_MDNS_MAX_TXT_DATA_SIZE
+    int "Max Text Data Size"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 128
+    
+config TCPIP_ZC_MDNS_RESOURCE_RECORD_TTL_VAL
+    int "Time-To-Live for a Resource-Record (seconds)"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 3600
+    
+config TCPIP_ZC_MDNS_MAX_RR_NUM
+    int "Max Number of Resource-Records/Service"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 4
+    
+config TCPIP_ZC_MDNS_PROBE_WAIT
+    int "Initial Random Delay (ms)"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 750
+
+config TCPIP_ZC_MDNS_PROBE_INTERVAL
+    int "Maximum Delay Till Repeated Probe (ms)"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 250
+
+config TCPIP_ZC_MDNS_PROBE_NUM
+    int "Number of Probes"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 3
+
+config TCPIP_ZC_MDNS_MAX_PROBE_CONFLICT_NUM
+    int "Max Num of Conflicts"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 30
+
+config TCPIP_ZC_MDNS_ANNOUNCE_NUM
+    int "Number of Announcement Packets"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 3
+
+config TCPIP_ZC_MDNS_ANNOUNCE_INTERVAL
+    int "Time Between Announcement Packets (ms)"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 250
+    
+config TCPIP_ZC_MDNS_ANNOUNCE_WAIT
+    int "Delay Before Announcing (ms)"
+    depends on TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+    default 250
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_ZERO_CONF_HELPER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/zero_conf_helper.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/zero_conf_helper.h"
+file TCPIP_ZERO_CONF_LINK_LOCAL_H "$HARMONY_VERSION_PATH/framework/tcpip/zero_conf_link_local.h" to "$PROJECT_HEADER_FILES/framework/tcpip/zero_conf_link_local.h"
+file TCPIP_ZERO_CONF_LINK_LOCAL_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/zero_conf_link_local_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/zero_conf_link_local_private.h"
+file TCPIP_ZERO_CONF_MULTI_CAST_H "$HARMONY_VERSION_PATH/framework/tcpip/zero_conf_multicast_dns.h" to "$PROJECT_HEADER_FILES/framework/tcpip/zero_conf_multicast_dns.h"
+file TCPIP_ZERO_CONF_MULTI_CAST_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/zero_conf_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/zero_conf_manager.h"
+endif
+        
+ifblock TCPIP_USE_LINK_ZERO_CONFIG
+file TCPIP_ZERO_CONF_HELPER_C "$HARMONY_VERSION_PATH/framework/tcpip/src/zero_conf_helper.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/zero_conf_helper.c"
+file TCPIP_ZERO_CONF_LINK_LOCAL_C "$HARMONY_VERSION_PATH/framework/tcpip/src/zero_conf_link_local.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/zero_conf_link_local.c"
+endif
+
+ifblock TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG
+file TCPIP_ZERO_CONF_MULTI_CAST_C "$HARMONY_VERSION_PATH/framework/tcpip/src/zero_conf_multicast_dns.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/zero_conf_multicast_dns.c"
+endif
+    

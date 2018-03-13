@@ -1,0 +1,73 @@
+config TCPIP_USE_DNSS
+    bool "DNS Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP
+    default n
+	---help---
+    IDH_HTML_TCPIP_DNSS_Introduction
+	---endhelp---
+    
+config TCPIP_DNSS_HOST_NAME_LEN
+    int "Default DNS Host Name Length"
+    depends on TCPIP_USE_DNSS
+    default 64
+	---help---
+    IDH_HTML_TCPIP_DNSS_HOST_NAME_LEN
+	---endhelp---
+    
+config TCPIP_DNSS_REPLY_BOARD_ADDR
+    bool "Reply DNS Info with Board Info"
+    depends on TCPIP_USE_DNSS
+    default y
+    ---help---
+    IDH_HTML_TCPIP_DNSS_REPLY_BOARD_ADDR
+	---endhelp---
+	
+config TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS
+    int "Maximum Number of IPv4 Entries"
+    depends on TCPIP_USE_DNSS
+    default 2
+	---help---
+    IDH_HTML_TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS
+	---endhelp---
+    
+config TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS
+    int "Maximum Number of IPv6 Entries"
+    depends on TCPIP_USE_DNSS && TCPIP_STACK_USE_IPV6
+    default 1
+	---help---
+    IDH_HTML_TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS
+	---endhelp---
+    
+config TCPIP_DNSS_TTL_TIME
+    int "Default TTL Time for an IP Address in Seconds"
+    depends on TCPIP_USE_DNSS
+    default 600
+    ---help---
+    IDH_HTML_TCPIP_DNSS_TTL_TIME
+	---endhelp---
+	
+config TCPIP_DNSS_TASK_PROCESS_RATE
+    int "DNS Server Time-Out Task Processing Rate in Milliseconds"
+    depends on TCPIP_USE_DNSS
+    default 33
+	---help---
+    IDH_HTML_TCPIP_DNSS_TASK_PROCESS_RATE
+	---endhelp---
+	
+config TCPIP_DNSS_DELETE_OLD_LEASE
+    bool "Delete Old Cache if Still in Place"
+    depends on TCPIP_USE_DNSS
+    default y
+	---help---
+	IDH_HTML_TCPIP_DNSS_MODULE_CONFIG
+	---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_DNSS_H "$HARMONY_VERSION_PATH/framework/tcpip/dnss.h" to "$PROJECT_HEADER_FILES/framework/tcpip/dnss.h"
+file TCPIP_DNSS_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dnss_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dnss_manager.h"
+file TCPIP_DNSS_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/dnss_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/dnss_private.h"
+endif
+
+ifblock TCPIP_USE_DNSS
+file TCPIP_DNSS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/dnss.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/dnss.c" 
+endif

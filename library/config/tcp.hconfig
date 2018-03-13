@@ -1,0 +1,163 @@
+config TCPIP_TCP_MAX_SEG_SIZE_TX
+    int "Max TX Segment Size"
+    depends on TCPIP_USE_TCP
+    default 1460
+    ---help---
+    IDH_HTML_TCPIP_TCP_MAX_SEG_SIZE_TX
+    ---endhelp---
+    
+config TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE
+    int "Default TX Size"
+    depends on TCPIP_USE_TCP
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE
+    ---endhelp---
+    
+config TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE
+    int "Default RX Size"
+    depends on TCPIP_USE_TCP
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE
+    ---endhelp---
+    
+config TCPIP_TCP_DYNAMIC_OPTIONS
+    bool "Enable TCP Sockets Dynamic Options"
+    depends on TCPIP_USE_TCP
+    default y
+    ---help---
+    IDH_HTML_TCPIP_TCP_DYNAMIC_OPTIONS
+    ---endhelp---
+    
+config TCPIP_TCP_START_TIMEOUT_VAL
+    int "Start Time-out - ms"
+    depends on TCPIP_USE_TCP
+    default 1000
+    ---help---
+    IDH_HTML_TCPIP_TCP_START_TIMEOUT_VAL
+    ---endhelp---
+    
+config TCPIP_TCP_DELAYED_ACK_TIMEOUT
+    int "Delayed Ack Time-out - ms"
+    depends on TCPIP_USE_TCP
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_TCP_DELAYED_ACK_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_TCP_FIN_WAIT_2_TIMEOUT
+    int "Fin Wait 2 Time-out - ms"
+    depends on TCPIP_USE_TCP
+    default 5000
+    ---help---
+    IDH_HTML_TCPIP_TCP_FIN_WAIT_2_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_TCP_KEEP_ALIVE_TIMEOUT
+    int "Keep Alive Time-out - ms"
+    depends on TCPIP_USE_TCP
+    default 10000
+    ---help---
+    IDH_HTML_TCPIP_TCP_KEEP_ALIVE_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_TCP_CLOSE_WAIT_TIMEOUT
+    int "Close Wait Time-out - ms"
+    depends on TCPIP_USE_TCP
+    default 200
+    ---help---
+    IDH_HTML_TCPIP_TCP_CLOSE_WAIT_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_TCP_MAX_RETRIES
+    int "Max Retries"
+    depends on TCPIP_USE_TCP
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_TCP_MAX_RETRIES
+    ---endhelp---
+    
+config TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES
+    int "Max Unacked Keep Alives"
+    depends on TCPIP_USE_TCP
+    default 6
+    ---help---
+    IDH_HTML_TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES
+    ---endhelp---
+    
+config TCPIP_TCP_MAX_SYN_RETRIES
+    int "Max SYN Retries"
+    depends on TCPIP_USE_TCP
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_TCP_MAX_SYN_RETRIES
+    ---endhelp---
+    
+config TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL
+    int "Auto Transmit Time-out - ms"
+    depends on TCPIP_USE_TCP
+    default 40
+    ---help---
+    IDH_HTML_TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL
+    ---endhelp---
+    
+config TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL
+    int "Window Update Time-out"
+    depends on TCPIP_USE_TCP
+    default 200
+    ---help---
+    IDH_HTML_TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL
+    ---endhelp---
+
+config TCPIP_TCP_MAX_SOCKETS
+    int "Max Sockets"
+    depends on TCPIP_USE_TCP
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_TCP_MAX_SOCKETS
+    ---endhelp---
+    
+config TCPIP_TCP_TASK_TICK_RATE
+    int "TCP Task Rate"
+    depends on TCPIP_USE_TCP
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_TCP_TASK_TICK_RATE
+    ---endhelp---
+
+config TCPIP_TCP_MSL_TIMEOUT
+    int "Maximum Segment Length (MSL) Timeout - seconds"
+    depends on TCPIP_USE_TCP
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_TCP_MSL_TIMEOUT
+    ---endhelp---
+
+config TCPIP_TCP_QUIET_TIME
+    int "TCP quiet time - seconds"
+    depends on TCPIP_USE_TCP
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_TCP_QUIET_TIME
+    ---endhelp---
+
+config TCPIP_TCP_COMMANDS
+    bool "Enable TCP Commands"
+    depends on TCPIP_USE_TCP
+    default n
+    ---help---
+    IDH_HTML_TCPIP_TCP_COMMANDS
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK    
+file TCPIP_TCP_H "$HARMONY_VERSION_PATH/framework/tcpip/tcp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/tcp.h"
+file TCPIP_TCP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcp_private.h"
+file TCPIP_TCP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcp_manager.h"
+endif
+
+ifblock TCPIP_USE_TCP
+file TCPIP_TCP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcp.c"
+endif
+    
+

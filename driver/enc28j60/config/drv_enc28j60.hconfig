@@ -1,0 +1,101 @@
+menu "ENC28J60"
+    depends on HAVE_SPI
+
+enum DRV_ENC28J60_MODE_ENUM
+    "DYNAMIC"
+
+enum DRV_ENC28J60_BUS_ENUM
+	"SPI"
+    
+config DRV_ENC28J60_USE_DRIVER_PRIV
+    bool
+    
+config DRV_ENC28J60_USE_DRIVER
+    depends on HAVE_SPI
+    bool "Use enc28j60 Driver?"
+    #select DRV_SPI_USE_DRIVER_PRIV
+    #select USE_SYS_PORTS_PRIV
+    default n if !DRV_ENC28J60_USE_DRIVER_PRIV
+    default y if DRV_ENC28J60_USE_DRIVER_PRIV
+    ---help---
+    IDH_HTML_DRV_ENC28J60_Introduction
+    ---endhelp---
+    
+
+config DRV_ENC28J60_DRIVER_MODE
+	depends on DRV_ENC28J60_USE_DRIVER
+	string "Driver Mode"
+	range DRV_ENC28J60_MODE_ENUM
+	default "DYNAMIC"
+	---help---
+    IDH_HTML_DRV_ENC28J60_Introduction
+    ---endhelp---
+	
+config DRV_ENC28J60_INSTANCES_NUMBER
+	depends on DRV_ENC28J60_USE_DRIVER
+	int "Number of Driver Instances"
+	default 1
+	---help---
+	IDH_HTML_DRV_ENC28J60_INSTANCES_NUMBER
+	---endhelp---
+	
+config DRV_ENC28J60_CLIENT_INSTANCES
+	depends on DRV_ENC28J60_USE_DRIVER
+	int "Number of Client Instances"
+	default 1
+	---help---
+	IDH_HTML_DRV_ENC28J60_CLIENT_INSTANCES
+	---endhelp---
+	
+source "$HARMONY_VERSION_PATH/framework/driver/enc28j60/config/drv_enc28j60_idx.ftl" 1 instances
+
+
+ifblock DRV_ENC28J60_USE_DRIVER
+add "<#include \"/framework/driver/enc28j60/config/drv_enc28j60.c.ftl\">"  to list SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA
+add "<#include \"/framework/driver/enc28j60/config/drv_enc28j60.h.ftl\">"  to list SYSTEM_CONFIG_H_DRIVER_CONFIGURATION 
+
+
+file DRV_ENC28J60_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/drv_enc28j60.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/drv_enc28j60.h"
+file DRV_ENC28J60_API_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_api.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/drv_enc28j60_api.c"
+file DRV_ENC28J60_DS_DEFS_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_ds_defs.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/drv_enc28j60_ds_defs.h"
+file DRV_ENC28J60_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_local.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/drv_enc28j60_local.h"
+file DRV_ENC28J60_MAIN_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_main_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/drv_enc28j60_main_state.c"
+file DRV_ENC28J60_MAIN_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_main_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/drv_enc28j60_main_state.h"
+file DRV_ENC28J60_UTILS_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_utils.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/drv_enc28j60_utils.c"
+file DRV_ENC28J60_UTILS_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/drv_enc28j60_utils.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/drv_enc28j60_utils.h"
+file DRV_ENC28J60_BUS_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/bus/drv_enc28j60_bus.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/bus/drv_enc28j60_bus.h"
+file DRV_ENC28J60_SPI_BUS_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/bus/spi/drv_enc28j60_spi_bus.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/bus/spi/drv_enc28j60_spi_bus.c"
+file DRV_ENC28J60_SPI_BUS_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/bus/spi/drv_enc28j60_spi_bus.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/bus/spi/drv_enc28j60_spi_bus.h"
+file DRV_ENC28J60_CLOSED_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/closed_state/drv_enc28j60_closed_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/closed_state/drv_enc28j60_closed_state.c"
+file DRV_ENC28J60_CLOSED_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/closed_state/drv_enc28j60_closed_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/closed_state/drv_enc28j60_closed_state.h"
+file DRV_ENC28J60_INIT_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_initialization_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/initialization_state/drv_enc28j60_initialization_state.c"
+file DRV_ENC28J60_INIT_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_initialization_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/initialization_state/drv_enc28j60_initialization_state.h"
+file DRV_ENC28J60_CONFIG_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_configure_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/initialization_state/drv_enc28j60_configure_state.c"
+file DRV_ENC28J60_CONFIG_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_configure_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/initialization_state/drv_enc28j60_configure_state.h"
+file DRV_ENC28J60_DETECT_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_detect_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/initialization_state/drv_enc28j60_detect_state.c"
+file DRV_ENC28J60_DETECT_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_detect_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/initialization_state/drv_enc28j60_detect_state.h"
+file DRV_ENC28J60_RESET_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_reset_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/initialization_state/drv_enc28j60_reset_state.c"
+file DRV_ENC28J60_RESET_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_reset_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/initialization_state/drv_enc28j60_reset_state.h"
+file DRV_ENC28J60_TX_PACKET_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/packet/drv_enc28j60_tx_packet.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/packet/drv_enc28j60_tx_packet.c"
+file DRV_ENC28J60_TX_PACKET_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/packet/drv_enc28j60_tx_packet.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/packet/drv_enc28j60_tx_packet.h"
+file DRV_ENC28J60_RX_PACKET_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/packet/drv_enc28j60_rx_packet.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/packet/drv_enc28j60_rx_packet.c"
+file DRV_ENC28J60_RX_PACKET_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/packet/drv_enc28j60_rx_packet.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/packet/drv_enc28j60_rx_packet.h"
+file DRV_ENC28J60_RUNNING_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_running_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/running_state/drv_enc28j60_running_state.c"
+file DRV_ENC28J60_RUNNING_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_running_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/running_state/drv_enc28j60_running_state.h"
+file DRV_ENC28J60_CHDUP_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_change_duplex_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/running_state/drv_enc28j60_change_duplex_state.c"
+file DRV_ENC28J60_CHDUP_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_change_duplex_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/running_state/drv_enc28j60_change_duplex_state.h"
+file DRV_ENC28J60_CHKINI_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_int_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/running_state/drv_enc28j60_check_int_state.c"
+file DRV_ENC28J60_CHKINI_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_int_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/running_state/drv_enc28j60_check_int_state.h"
+file DRV_ENC28J60_CHKSTA_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_status_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/running_state/drv_enc28j60_check_status_state.c"
+file DRV_ENC28J60_CHKSTA_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_status_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/running_state/drv_enc28j60_check_tx_status_state.h"
+file DRV_ENC28J60_CHKTXSTA_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_tx_status_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/running_state/drv_enc28j60_check_tx_status_state.c"
+file DRV_ENC28J60_CHKTXSTA_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_tx_status_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/running_state/drv_enc28j60_check_status_state.h"
+file DRV_ENC28J60_RESET_RX_STATE_C "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_reset_rx_state.c" to "$PROJECT_SOURCE_FILES/framework/driver/enc28j60/running_state/drv_enc28j60_reset_rx_state.c"
+file DRV_ENC28J60_RESET_RX_STATE_H "$HARMONY_VERSION_PATH/framework/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_reset_rx_state.h" to "$PROJECT_HEADER_FILES/framework/driver/enc28j60/impl/running_state/drv_enc28j60_reset_rx_state.h"
+    
+    
+endif
+
+    
+    
+endmenu

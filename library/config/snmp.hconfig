@@ -1,0 +1,171 @@
+config TCPIP_USE_SNMP
+    bool "Use SNMP"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP
+    select USE_SYS_FS_NEEDED
+    select USE_CRYPTO_LIB_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_SNMP_Introduction
+    ---endhelp---
+
+config TCPIP_SNMP_TASK_PROCESS_RATE
+	int "SNMP process rate"
+    depends on TCPIP_USE_SNMP
+    default 200
+---help---
+IDH_HTML_TCPIP_SNMP_TASK_PROCESS_RATE
+---endhelp---
+	
+config TCPIP_SNMP_BIB_FILE_NAME
+    string "BIB file name"
+    depends on TCPIP_USE_SNMP
+    default "snmp.bib"
+    ---help---
+IDH_HTML_TCPIP_SNMP_BIB_FILE_NAME
+    ---endhelp---
+    
+config TCPIP_SNMP_OID_MAX_LEN
+    int "Max OID Length"
+    depends on TCPIP_USE_SNMP
+    default 18
+    ---help---
+IDH_HTML_TCPIP_SNMP_OID_MAX_LEN
+    ---endhelp---
+    
+config TCPIP_SNMP_MAX_MSG_SIZE
+    int "Max SNMP message size"
+    depends on TCPIP_USE_SNMP
+    default 480
+    ---help---
+IDH_HTML_TCPIP_SNMP_MAX_MSG_SIZE
+    ---endhelp---
+    
+config TCPIP_SNMP_MAX_NON_REC_ID_OID
+    int "Max non record OID ID"
+    depends on TCPIP_USE_SNMP
+    default 3
+    ---help---
+IDH_HTML_TCPIP_SNMP_MAX_NON_REC_ID_OID 
+    ---endhelp---
+    
+config TCPIP_SNMP_COMMUNITY_MAX_LEN
+    int "Max Communitry Length"
+    depends on TCPIP_USE_SNMP
+    default 8
+    ---help---
+IDH_HTML_TCPIP_SNMP_COMMUNITY_MAX_LEN
+    ---endhelp---
+
+enum TCPIP_SNMP_VERSIONS
+    "SNMP_V1" || "SNMP_V2C" || "SNMP_V3" 
+	
+config TCPIP_SNMP_MAX_COMMUNITY_SUPPORT
+    int "Max Community Support"
+    depends on TCPIP_USE_SNMP
+    default 3
+    ---help---
+IDH_HTML_TCPIP_SNMP_MAX_COMMUNITY_SUPPORT
+    ---endhelp---
+
+config TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_0
+	depends on TCPIP_USE_SNMP 
+    bool
+    default n if TCPIP_SNMP_MAX_COMMUNITY_SUPPORT = 0
+    default y  
+
+config TCPIP_SNMP_STACK_CONFIG_IDX0
+    depends on TCPIP_USE_SNMP && TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_0
+    bool "SNMP Stack Configuration 0"
+    default y
+    source "$HARMONY_VERSION_PATH/framework/tcpip/config/snmp_stack_config_idx0.hconfig"
+	
+config TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_1
+	depends on TCPIP_USE_SNMP 
+    bool
+    default n if TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_0 = n
+    default n if TCPIP_SNMP_MAX_COMMUNITY_SUPPORT = 1
+	default y
+
+config TCPIP_SNMP_STACK_CONFIG_IDX1
+    depends on TCPIP_USE_SNMP && TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_1
+    bool "SNMP Stack Configuration 1"
+    default y
+    source "$HARMONY_VERSION_PATH/framework/tcpip/config/snmp_stack_config_idx1.hconfig"
+		
+config TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_2
+	depends on TCPIP_USE_SNMP 
+    bool
+    default n if TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_1 = n
+    default n if TCPIP_SNMP_MAX_COMMUNITY_SUPPORT = 2
+	default y
+	
+config TCPIP_SNMP_STACK_CONFIG_IDX2
+    depends on TCPIP_USE_SNMP && TCPIP_SNMP_STACK_CONFIG_NUMBER_GT_2
+    bool "SNMP Stack Configuration 2"
+    default y
+    source "$HARMONY_VERSION_PATH/framework/tcpip/config/snmp_stack_config_idx2.hconfig"
+    
+config TCPIP_SNMP_NOTIFY_COMMUNITY_LEN
+    int "Notify Community Length"
+    depends on TCPIP_USE_SNMP
+    default TCPIP_SNMP_COMMUNITY_MAX_LEN
+    ---help---
+    IDH_HTML_TCPIP_SNMP_NOTIFY_COMMUNITY_LEN
+    ---endhelp---
+    
+config TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN_MEM_USE
+    int "Trap community max length"
+    depends on TCPIP_USE_SNMP
+    default 8
+    ---help---
+IDH_HTML_TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN_MEM_USE
+    ---endhelp---
+    
+config TCPIP_SNMP_TRAP_TABLE_SIZE
+    int "Trap table size"
+    depends on TCPIP_USE_SNMP
+    default 2
+    ---help---
+IDH_HTML_TCPIP_SNMP_TRAP_TABLE_SIZE
+    ---endhelp---
+    
+config TCPIP_SNMP_USE_TRAP_SUPPORT
+    bool "Trap Support"
+    depends on TCPIP_USE_SNMP
+    default y
+	---help---
+IDH_HTML_TCPIP_SNMP_Introduction
+	---endhelp---
+
+config TCPIP_SNMP_STACK_USE_V2_TRAP
+    bool "V2 Trap Support"
+    depends on TCPIP_SNMP_USE_TRAP_SUPPORT
+    default y
+	---help---
+IDH_HTML_TCPIP_SNMP_Introduction
+	---endhelp---
+
+config TCPIP_SNMP_CUSTOM_TEMPLATE
+    bool "Include SNMP Custom Template"
+    depends on TCPIP_USE_SNMP
+    default y
+    ---help---
+IDH_HTML_TCPIP_SNMP_Introduction
+    ---endhelp---
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_SNMP_H "$HARMONY_VERSION_PATH/framework/tcpip/snmp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/snmp.h"
+file TCPIP_SNMP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/snmp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/snmp_private.h"
+file TCPIP_SNMP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/snmp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/snmp_manager.h"
+endif
+
+ifblock TCPIP_USE_SNMP
+file TCPIP_SNMP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/snmp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/snmp.c"
+ifblock TCPIP_SNMP_CUSTOM_TEMPLATE
+template SNMP_CUSTOM_APP_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/custom_snmp_app.c.ftl" to "$PROJECT_SOURCE_FILES/app/custom_snmp_app.c"
+template SNMP_MIB_H "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mib.h.ftl" to "$PROJECT_HEADER_FILES/app/mib.h"
+ifblock (USE_SYS_FS) && (SYS_FS_MPFS) && (!TCPIP_STACK_USE_HTTP_SERVER)
+template SNMP_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2.c"
+endif
+endif
+endif

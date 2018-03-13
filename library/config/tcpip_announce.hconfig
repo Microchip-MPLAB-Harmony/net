@@ -1,0 +1,41 @@
+config TCPIP_USE_ANNOUNCE
+    bool "Use Announce Discovery Tool"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP && TCPIP_STACK_USE_IPV4  
+    default y
+    ---help---
+    IDH_HTML_TCPIP_ANNOUNCE_Introduction
+    ---endhelp---
+
+    
+config TCPIP_ANNOUNCE_MAX_PAYLOAD
+    int "Maximum Payload Size"
+    depends on TCPIP_USE_ANNOUNCE
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_ANNOUNCE_MAX_PAYLOAD
+    ---endhelp---
+    
+config TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST
+    bool "Use Announce Network Directed Broadcast"
+    depends on TCPIP_USE_ANNOUNCE
+    default n
+    ---help---
+    IDH_HTML_TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST
+    ---endhelp---
+
+config TCPIP_ANNOUNCE_TASK_RATE
+    int "Announce Task Rate - ms"
+    depends on TCPIP_USE_ANNOUNCE
+    default 333
+    ---help---
+    IDH_HTML_TCPIP_ANNOUNCE_TASK_RATE
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_ANNOUNCE_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_announce_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcpip_announce_manager.h"
+endif    
+    
+ifblock TCPIP_USE_ANNOUNCE
+file TCPIP_ANNOUNCE_C "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_announce.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_announce.c"
+endif    
+    

@@ -1,0 +1,57 @@
+config TCPIP_IPV4_FRAGMENTATION
+    bool "Enable IPv4 Fragmentation Support"
+    depends on TCPIP_STACK_USE_IPV4
+    default n
+    ---help---
+    IDH_HTML_TCPIP_IPV4_FRAGMENTATION
+    ---endhelp---
+    
+
+menu "IPv4 Fragmentation Settings"
+    depends on TCPIP_IPV4_FRAGMENTATION
+
+
+config TCPIP_IPV4_FRAGMENT_TIMEOUT
+    depends on TCPIP_IPV4_FRAGMENTATION
+    int "Initial fragment timeout - seconds"
+    default 15
+    ---help---
+    IDH_HTML_TCPIP_IPV4_FRAGMENT_TIMEOUT
+    ---endhelp---
+
+config TCPIP_IPV4_FRAGMENT_MAX_STREAMS
+    depends on TCPIP_IPV4_FRAGMENTATION
+    int " Limit for the number of fragmented streams"
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_IPV4_FRAGMENT_MAX_STREAMS
+    ---endhelp---
+
+config TCPIP_IPV4_FRAGMENT_MAX_NUMBER
+    depends on TCPIP_IPV4_FRAGMENTATION
+    int " Limit for the number of fragments"
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_IPV4_FRAGMENT_MAX_NUMBER
+    ---endhelp---
+    
+config TCPIP_IPV4_TASK_TICK_RATE
+    depends on TCPIP_IPV4_FRAGMENTATION
+    int " IPv4 task rate - ms"
+    default 37
+    ---help---
+    IDH_HTML_TCPIP_IPV4_TASK_TICK_RATE
+    ---endhelp---
+
+endmenu
+
+ifblock USE_TCPIP_STACK
+file TCPIP_IPV4_H "$HARMONY_VERSION_PATH/framework/tcpip/ipv4.h" to "$PROJECT_HEADER_FILES/framework/tcpip/ipv4.h"
+file TCPIP_IPV4_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ipv4_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ipv4_manager.h"
+file TCPIP_IPV4_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ipv4_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ipv4_private.h"
+endif
+    
+ifblock TCPIP_STACK_USE_IPV4
+file TCPIP_IPV4_C "$HARMONY_VERSION_PATH/framework/tcpip/src/ipv4.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/ipv4.c"
+endif
+

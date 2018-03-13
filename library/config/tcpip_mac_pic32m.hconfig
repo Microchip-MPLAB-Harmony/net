@@ -1,0 +1,671 @@
+menu "Internal Ethernet MAC Driver"
+	depends on HAVE_ETH	
+
+config TCPIP_USE_ETH_MAC
+    depends on HAVE_ETH
+    bool "Use Internal Ethernet MAC Driver?"
+    default y if USE_PIC32INT_ETH_MAC_NEEDED
+    default n if !USE_PIC32INT_ETH_MAC_NEEDED
+    ---help---
+    IDH_HTML_DRV_ETHMAC_Introduction
+    ---endhelp---
+    
+config TCPIP_EMAC_USE_MII_PINS
+    bool
+    depends on TCPIP_USE_ETH_MAC
+    default y if FMIIEN = "ON" && FETHIO = "ON"
+
+config TCPIP_EMAC_USE_RMII_PINS
+    bool
+    depends on TCPIP_USE_ETH_MAC
+    default y if FMIIEN = "OFF" && FETHIO = "ON"
+
+config TCPIP_EMAC_USE_ALT_MII_PINS
+    bool
+    depends on TCPIP_USE_ETH_MAC
+    default y if FMIIEN = "ON" && FETHIO = "OFF"
+
+config TCPIP_EMAC_USE_ALT_RMII_PINS
+    bool
+    depends on TCPIP_USE_ETH_MAC
+    default y if FMIIEN = "OFF" && FETHIO = "OFF"
+
+config TCPIP_EMAC_TX_DESCRIPTORS
+    int "Number Of The TX Descriptors To Be Created"
+    depends on TCPIP_USE_ETH_MAC
+    default 8
+    ---help---
+    IDH_HTML_TCPIP_EMAC_TX_DESCRIPTORS
+    ---endhelp---
+
+config TCPIP_EMAC_RX_DESCRIPTORS
+    int "Number Of The RX Descriptors To Be Created"
+    depends on TCPIP_USE_ETH_MAC
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_DESCRIPTORS
+    ---endhelp---
+
+config TCPIP_EMAC_RX_DEDICATED_BUFFERS
+    int "Number of Dedicated MAC RX Buffers"
+    depends on TCPIP_USE_ETH_MAC
+    default 4
+    ---help---
+    IDH_HTML_EMAC_TCPIP_RX_DEDICATED_BUFFERS
+    ---endhelp---
+    
+config TCPIP_EMAC_RX_INIT_BUFFERS
+    int "Number of Non_Dedicated RX Buffers for MAC Initialization"
+    depends on TCPIP_USE_ETH_MAC
+    default 0
+    ---help---
+    IDH_HTML_EMAC_TCPIP_RX_INIT_BUFFERS
+    ---endhelp---
+    
+config TCPIP_EMAC_RX_LOW_THRESHOLD
+    int "Minimum Threshold for the Buffer Replenish Process"
+
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_EMAC_TCPIP_RX_LOW_THRESHOLD
+    ---endhelp---
+    
+config TCPIP_EMAC_RX_LOW_FILL
+    int "Number of RX Buffers to Allocate when Below Threshold Condition is Detected"
+
+    depends on TCPIP_USE_ETH_MAC
+    default 2
+    ---help---
+    IDH_HTML_EMAC_TCPIP_RX_LOW_FILL
+    ---endhelp---
+    
+config TCPIP_EMAC_MAX_FRAME
+    int "Maximum Frame Size - Longer Frames Will Be Discarded."
+
+
+
+    depends on TCPIP_USE_ETH_MAC
+    default 1536
+    ---help---
+    IDH_HTML_TCPIP_EMAC_MAX_FRAME
+    ---endhelp---
+  
+config TCPIP_EMAC_LINK_MTU
+    int "Link Maximum Transmission Unit - (576 - 1500)"
+    depends on TCPIP_USE_ETH_MAC
+    range 576 1500
+    default 1500
+    ---help---
+    IDH_HTML_TCPIP_EMAC_LINK_MTU
+
+    ---endhelp---
+
+config TCPIP_EMAC_RX_BUFF_SIZE
+    int "Size of a RX Buffer. Should Be Multiple of 16"
+
+
+    depends on TCPIP_USE_ETH_MAC
+    default 1536
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_BUFF_SIZE
+
+    ---endhelp---
+
+
+config TCPIP_EMAC_RX_FRAGMENTS
+    int "MAC Maximum Number of Supported RX Fragments"
+    depends on TCPIP_USE_ETH_MAC
+    range 1 6
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FRAGMENTS
+    ---endhelp---
+
+menu "Ethernet RX Filters Selection"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_EMAC_ETH_FILTER_BCAST_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Broadcast Packets"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_MCAST_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Multicast Packets"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_UCAST_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Unicast Packets"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_UCAST_OTHER_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Not Me Unicast Packets"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_RUNT_REJECT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Reject Runt Packets (< 64 bytes)"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_RUNT_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Runt Packets (< 64 bytes)"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_CRC_ERROR_REJECT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Reject Packets with Wrong CRC"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_FILTER_CRC_ERROR_ACCEPT
+    depends on TCPIP_USE_ETH_MAC
+    bool "Accept Packets with Wrong CRC"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_RX_FILTERS
+    ---endhelp---
+
+endmenu
+
+
+menu "Ethernet Auto Flow Control"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE
+    depends on TCPIP_USE_ETH_MAC
+    bool "Auto Flow Control Enable"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE
+    ---endhelp---
+
+config TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES
+    depends on TCPIP_USE_ETH_MAC && TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE
+    int "Pause Time Value for the Auto Flow Control, bytes"
+    range 64 4194240
+    default 3072
+    ---help---
+    IDH_HTML_TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES
+    ---endhelp---
+
+config TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK
+    depends on TCPIP_USE_ETH_MAC && TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE
+    int "The Full Water Mark, in Number of Packets"
+    range 1 255
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK
+    ---endhelp---
+
+config TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK
+    depends on TCPIP_USE_ETH_MAC && TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE
+    int "The Empty Water Mark, in Number of Packets"
+    range 0 TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK
+    ---endhelp---
+endmenu
+
+#TODO:   valid selection needed here!
+menu "Ethernet Connection Flags"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_EMAC_ETH_OF_AUTO_NEGOTIATION
+    depends on TCPIP_USE_ETH_MAC
+    bool "Use Auto Negotiation"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+    
+config TCPIP_EMAC_ETH_OF_FULL_DUPLEX
+    depends on TCPIP_USE_ETH_MAC
+    bool "Use Full Duplex"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_HALF_DUPLEX
+    bool "Use Half Duplex"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_100
+    bool "Use 100MBps"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+    
+config TCPIP_EMAC_ETH_OF_10
+    bool "Use 10MBps"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_HUGE_PKTS
+    bool "Allow Huge Packets"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_MAC_LOOPBACK
+    bool "Loopbacked At The MAC Level"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_PHY_LOOPBACK
+    bool "Loopbacked At The PHY Level"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_MDIX_AUTO
+    bool "Use Auto MDIX"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_MDIX_SWAP
+    bool "Use Swapped MDIX"
+    depends on !TCPIP_EMAC_ETH_OF_MDIX_AUTO
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_ETH_OF_RMII
+    bool "RMII Connection"
+    depends on TCPIP_USE_ETH_MAC
+    default y if FMIIEN = "OFF"
+    ---help---
+    IDH_HTML_TCPIP_EMAC_ETH_OPEN_FLAGS
+    ---endhelp---
+    
+endmenu
+
+config TCPIP_EMAC_MODULE_ID
+    string "ETH Module ID"
+    depends on TCPIP_USE_ETH_MAC
+    range ETH_MODULE_ID
+    default "ETH_ID_0"
+    ---help---
+    IDH_HTML_TCPIP_EMAC_MODULE_ID
+    ---endhelp---
+    
+config TCPIP_EMAC_INTERRUPT_MODE
+    bool
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    ---endhelp---
+
+config TCPIP_EMAC_INTERRUPT_VECTOR
+    string
+    depends on TCPIP_EMAC_INTERRUPT_MODE
+    default "INT_VECTOR_ETHERNET"
+    ---help---
+      IDH_HTML_INT_VECTOR
+    ---endhelp---
+    
+config TCPIP_EMAC_INTERRUPT_PRIORITY
+    string "Interrupt Priority"
+    depends on TCPIP_EMAC_INTERRUPT_MODE
+    range INT_PRIORITY_LEVEL
+    default "INT_PRIORITY_LEVEL5"
+    ---help---
+      IDH_HTML_INT_PRIORITY_LEVEL
+    ---endhelp---
+    
+config TCPIP_EMAC_INTERRUPT_SUB_PRIORITY
+    string "Interrupt Sub-priority"
+    depends on TCPIP_EMAC_INTERRUPT_MODE
+    range INT_SUBPRIORITY_LEVEL
+    default "INT_SUBPRIORITY_LEVEL3"
+    ---help---
+      IDH_HTML_INT_SUBPRIORITY_LEVEL
+    ---endhelp---
+   
+config DRV_ETHMAC_INSTANCES_NUMBER
+    int "ETH MAC Instances Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHMAC_INSTANCES_NUMBER
+    ---endhelp---
+
+config DRV_ETHMAC_CLIENTS_NUMBER
+    int "ETH MAC Clients Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHMAC_CLIENTS_NUMBER
+    ---endhelp---
+
+config DRV_ETHMAC_INDEX
+    int "ETH MAC Clients Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHMAC_INDEX
+    ---endhelp---
+
+
+config DRV_ETHMAC_PERIPHERAL_ID
+    int "ETH MAC Peripheral ID"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHMAC_PERIPHERAL_ID
+    ---endhelp---
+
+config DRV_ETHMAC_INTERRUPT_MODE
+    bool "ETH MAC Interrupt Mode"
+    depends on TCPIP_USE_ETH_MAC
+    default y
+    ---help---
+    IDH_HTML_DRV_ETHMAC_INTERRUPT_MODE
+    ---endhelp---
+
+
+config DRV_ETHMAC_POWER_STATE
+    depends on TCPIP_USE_ETH_MAC
+    string "Power State"
+    range SYS_MODULE_POWER_STATE
+    default "SYS_MODULE_POWER_RUN_FULL"
+    ---help---
+    IDH_HTML_SYSTEM_Library_Interface
+    ---endhelp---
+
+config TCPIP_EMAC_INT_PRIO_NUM
+    string
+    depends on TCPIP_EMAC_INTERRUPT_MODE
+    default "0" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_DISABLE_INTERRUPT"
+    default "1" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL1"
+    default "2" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL2"
+    default "3" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL3"
+    default "4" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL4"
+    default "5" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL5"
+    default "6" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL6"
+    default "7" if TCPIP_EMAC_INTERRUPT_PRIORITY = "INT_PRIORITY_LEVEL7"    
+    
+config TCPIP_EMAC_ISR_VECTOR
+    string
+    depends on TCPIP_EMAC_INTERRUPT_MODE
+    default "_ETHERNET_VECTOR" if ((TCPIP_EMAC_INTERRUPT_VECTOR = "INT_VECTOR_ETHERNET") && PIC32MZ)
+    default "_ETH_VECTOR" if ((TCPIP_EMAC_INTERRUPT_VECTOR = "INT_VECTOR_ETHERNET") && PIC32MX)
+
+config DRV_ETHMAC_INTERRUPT_VECTOR
+    string
+    depends on DRV_ETHMAC_INTERRUPT_MODE
+    default "INT_VECTOR_ETHERNET"
+    ---help---
+      IDH_HTML_INT_VECTOR
+    ---endhelp---
+
+config DRV_ETHMAC_INTERRUPT_SOURCE
+    string
+    depends on DRV_ETHMAC_INTERRUPT_MODE
+    default "INT_SOURCE_ETH_1"
+    ---help---
+    IDH_HTML_INT_SOURCE
+    ---endhelp---
+
+
+menu "External PHY Configuration"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_EMAC_PHY_LINK_INIT_DELAY
+    int "Delay for the Link Initialization - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 1000
+    ---help---
+    IDH_HTML_TCPIP_EMAC_PHY_LINK_INIT_DELAY
+    ---endhelp---
+
+config TCPIP_EMAC_PHY_ADDRESS
+    int "PHY Address"
+    depends on TCPIP_USE_ETH_MAC
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8700"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8720"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8740"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "KSZ8061"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "KSZ8041"
+    default 0 if TCPIP_EMAC_PHY_TYPE = "KSZ8863"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "IP_IP101GR"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "National_DP83640"
+    default 1 if TCPIP_EMAC_PHY_TYPE = "National_DP83848"
+    ---help---
+    IDH_HTML_TCPIP_EMAC_PHY_ADDRESS
+    ---endhelp---
+
+
+
+menu "External PHY Connection Flags"
+    depends on TCPIP_USE_ETH_MAC
+
+config TCPIP_EMAC_PHY_CONFIG_RMII
+    depends on TCPIP_USE_ETH_MAC
+    bool "RMII Data Interface"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_PHY_CONFIG_FLAGS
+    ---endhelp---
+    
+config TCPIP_EMAC_PHY_CONFIG_ALTERNATE
+    depends on TCPIP_USE_ETH_MAC
+    bool "Configuration Fuses Is ALT"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_EMAC_PHY_CONFIG_FLAGS
+    ---endhelp---
+
+config TCPIP_EMAC_PHY_CONFIG_AUTO
+    depends on TCPIP_USE_ETH_MAC
+    bool "Use The Fuses Configuration"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_EMAC_PHY_CONFIG_FLAGS
+    ---endhelp---
+    
+endmenu
+
+    
+config TCPIP_EMAC_PHY_TYPE
+    depends on TCPIP_USE_ETH_MAC
+    string "External PHY Type"
+    range TCPIP_STACK_PHY_TYPE
+    default "SMSC_LAN8740"
+    ---help---
+    External PHY Type connected on the board
+    ---endhelp---
+
+config DRV_ETHPHY_INSTANCES_NUMBER
+    int "PHY Instances Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_INSTANCES_NUMBER
+    ---endhelp---
+
+config DRV_ETHPHY_CLIENTS_NUMBER
+    int "PHY Clients Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_CLIENTS_NUMBER
+    ---endhelp---
+
+config DRV_ETHPHY_INDEX
+    int "PHY Peripheral Index Number"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_INDEX
+    ---endhelp---
+
+config DRV_ETHPHY_PERIPHERAL_ID
+    int "PHY Peripheral ID"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_PERIPHERAL_ID
+    ---endhelp---
+
+config DRV_ETHPHY_NEG_INIT_TMO
+    int "PHY Negotiation Time-out - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 1
+    ---help---
+    IDH_HTML_DRV_ETHPHY_NEG_INIT_TMO
+    ---endhelp---
+
+config DRV_ETHPHY_NEG_DONE_TMO
+    int "PHY Negotiation Done Time-out - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 2000
+    ---help---
+    IDH_HTML_DRV_ETHPHY_NEG_DONE_TMO
+    ---endhelp---
+
+config DRV_ETHPHY_RESET_CLR_TMO
+    int "PHY Reset Clear Time-out - ms"
+    depends on TCPIP_USE_ETH_MAC
+    default 500
+    ---help---
+    IDH_HTML_DRV_ETHPHY_RESET_CLR_TMO
+    ---endhelp---
+    
+config DRV_ETHPHY_USE_RESET_CALLBACK
+    bool "Use a Function to be called at PHY Reset"
+    depends on TCPIP_USE_ETH_MAC
+    default n
+    ---help---
+    ---endhelp---
+
+config DRV_ETHPHY_RESET_CALLBACK
+    string "App Function"
+    depends on DRV_ETHPHY_USE_RESET_CALLBACK
+    default "AppPhyResetFunction"
+    ---help---
+    ---endhelp---
+    
+
+endmenu
+endmenu
+    
+ifblock TCPIP_USE_ETH_MAC
+file TCPIP_MAC_DRV_H "$HARMONY_VERSION_PATH/framework/driver/ethmac/drv_ethmac.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethmac/drv_ethmac.h"
+file TCPIP_MAC_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/drv_ethmac_local.h" to           "$PROJECT_HEADER_FILES/framework/driver/ethmac/src/drv_ethmac_local.h"
+file TCPIP_MAC_DESC_H "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/dynamic/_eth_dcpt_lists.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethmac/src/dynamic/_eth_dcpt_lists.h"
+file TCPIP_MAC_LIB_H "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/dynamic/drv_ethmac_lib.h" to     "$PROJECT_HEADER_FILES/framework/driver/ethmac/src/dynamic/drv_ethmac_lib.h"
+file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
+file TCPIP_ETH_PHY_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/drv_ethphy_local.h" to           "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/drv_ethphy_local.h"
+file TCPIP_ETH_EXT_PHY_REGS_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h" to    "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_regs.h"
+    
+file TCPIP_MAC_PHY_DP83640_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83640.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_dp83640.h"
+file TCPIP_MAC_PHY_DP83848_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83848.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_dp83848.h"
+file TCPIP_MAC_PHY_IP101GR_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ip101gr.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ip101gr.h"
+file TCPIP_MAC_PHY_LAN8700_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8700.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8700.h"
+file TCPIP_MAC_PHY_LAN8720_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8720.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8720.h"
+file TCPIP_MAC_PHY_LAN8740_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h"
+file TCPIP_MAC_PHY_LAN9303_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc9303.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_smsc9303.h"
+file TCPIP_MAC_PHY_KSZ8061_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8061.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8061.h"
+file TCPIP_MAC_PHY_KSZ8041_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.h"
+file TCPIP_MAC_PHY_KSZ8863_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8863.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8863.h"
+endif
+
+ifblock TCPIP_USE_ETH_MAC
+
+file TCPIP_MAC_DRV_C "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/dynamic/drv_ethmac.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethmac/drv_ethmac.c"
+file TCPIP_MAC_LIB_C "$HARMONY_VERSION_PATH/framework/driver/ethmac/src/dynamic/drv_ethmac_lib.c" to     "$PROJECT_SOURCE_FILES/framework/driver/ethmac/drv_ethmac_lib.c"
+
+file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
+
+ifblock TCPIP_EMAC_PHY_TYPE = "National_DP83640"
+file TCPIP_MAC_PHY_DP83640_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83640.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_dp83640.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "National_DP83848"
+file TCPIP_MAC_PHY_DP83848_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_dp83848.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_dp83848.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "IP_IP101GR"
+file TCPIP_MAC_PHY_IP101GR_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ip101gr.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ip101gr.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8700"
+file TCPIP_MAC_PHY_LAN8700_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8700.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8700.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8720"
+file TCPIP_MAC_PHY_LAN8720_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8720.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8720.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN8740"
+file TCPIP_MAC_PHY_LAN8740_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc8740.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "KSZ8061"
+file TCPIP_MAC_PHY_KSZ8061_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8061.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ksz8061.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "KSZ8041"
+file TCPIP_MAC_PHY_KSZ8041_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ksz8041.c"
+endif
+
+ifblock TCPIP_EMAC_PHY_TYPE = "KSZ8863"
+file TCPIP_MAC_PHY_KSZ8863_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8863.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ksz8863.c"
+endif
+
+
+ifblock TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+file TCPIP_MAC_PHY_LAN9303_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_smsc9303.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_smsc9303.c"
+endif
+
+endif
+    
+

@@ -1,0 +1,143 @@
+config TCPIP_USE_SNTP_CLIENT_NEEDED
+    bool
+    default n
+
+config TCPIP_USE_SNTP_CLIENT
+    bool "Use SNTP Client"
+    depends on USE_TCPIP_STACK && TCPIP_USE_UDP
+    default n if !TCPIP_USE_SNTP_CLIENT_NEEDED
+    default y if TCPIP_USE_SNTP_CLIENT_NEEDED
+    ---help---
+    IDH_HTML_TCPIP_SNTP_Introduction
+    ---endhelp---
+ifblock !PIC32WK    
+config TCPIP_NTP_DEFAULT_IF
+    string "Default Interface"
+    range TCPIP_STACK_IF_NAME
+    depends on TCPIP_USE_SNTP_CLIENT
+    default "PIC32CINT" if USE_PIC32CINT_ETH_MAC_NEEDED
+	#default "PIC32INT" if USE_PIC32INT_ETH_MAC_NEEDED
+    default "MRF24WN" if HAVE_WIFI
+    ---help---
+    IDH_HTML_TCPIP_SNTP_Introduction
+    ---endhelp---
+endif
+ifblock PIC32WK 
+config TCPIP_NTP_DEFAULT_IF_WK
+    string "Default Interface"
+	depends on TCPIP_USE_SNTP_CLIENT
+    default "PIC32WK" 
+    ---help---
+    IDH_HTML_TCPIP_SNTP_Introduction
+    ---endhelp---
+endif    
+enum TCPIP_SNTP_PROTOCOL_TYPE
+    "SNTP_VERSION_3" ||"SNTP_VERSION_4"
+    
+config TCPIP_NTP_STRING_VERSION
+    string "SNTP Version"
+    range TCPIP_SNTP_PROTOCOL_TYPE
+    depends on TCPIP_USE_SNTP_CLIENT
+    default "SNTP_VERSION_4"
+    ---help---
+    IDH_HTML_TCPIP_NTP_VERSION
+    ---endhelp---
+    
+config TCPIP_NTP_DEFAULT_CONNECTION_TYPE
+    string "Default Connection Type"
+    range TCPIP_ADDRESS_TYPE_STRICT
+    depends on TCPIP_USE_SNTP_CLIENT
+    default "IP_ADDRESS_TYPE_IPV4" if TCPIP_STACK_USE_IPV4
+    default "IP_ADDRESS_TYPE_IPV6" if TCPIP_STACK_USE_IPV6
+
+    ---help---
+    IDH_HTML_TCPIP_NTP_DEFAULT_CONNECTION_TYPE
+    ---endhelp---
+
+config TCPIP_NTP_EPOCH
+    int "Epoch"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 2208988800
+    ---help---
+    IDH_HTML_TCPIP_NTP_EPOCH
+    ---endhelp---
+    
+config TCPIP_NTP_REPLY_TIMEOUT
+    int "NTP Reply Time-out in Seconds"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 6
+    ---help---
+    IDH_HTML_TCPIP_NTP_REPLY_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_NTP_MAX_STRATUM
+    int "Max Stratum"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 15
+    ---help---
+    IDH_HTML_TCPIP_NTP_MAX_STRATUM
+    ---endhelp---
+    
+config TCPIP_NTP_TIME_STAMP_TMO
+    int "Time Stamp Time-Out"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 660
+    ---help---
+    IDH_HTML_TCPIP_NTP_TIME_STAMP_TMO
+    ---endhelp---
+    
+config TCPIP_NTP_SERVER
+    string "NTP Server Name"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default "pool.ntp.org"
+    ---help---
+    IDH_HTML_TCPIP_NTP_SERVER
+    ---endhelp---
+    
+config TCPIP_NTP_SERVER_MAX_LENGTH
+    string "Server Address Max Length"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 30
+    ---help---
+    IDH_HTML_TCPIP_NTP_SERVER_MAX_LENGTH
+    ---endhelp---
+    
+config TCPIP_NTP_QUERY_INTERVAL
+    string "Query Interval - Seconds"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 600
+    ---help---
+    IDH_HTML_TCPIP_NTP_QUERY_INTERVAL
+    ---endhelp---
+    
+config TCPIP_NTP_FAST_QUERY_INTERVAL
+    string "Fast Query Interval"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 14
+    ---help---
+    IDH_HTML_TCPIP_NTP_FAST_QUERY_INTERVAL
+    ---endhelp---
+    
+config TCPIP_NTP_TASK_TICK_RATE
+    string "Task Tick Rate - ms"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 1100
+    ---help---
+    IDH_HTML_TCPIP_NTP_TASK_TICK_RATE
+    ---endhelp---
+    
+config TCPIP_NTP_RX_QUEUE_LIMIT
+    string "RX Queue Limit"
+    depends on TCPIP_USE_SNTP_CLIENT
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_NTP_RX_QUEUE_LIMIT
+    ---endhelp---
+ifblock USE_TCPIP_STACK    
+file TCPIP_SNTP_H "$HARMONY_VERSION_PATH/framework/tcpip/sntp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/sntp.h"
+file TCPIP_SNTP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/sntp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/sntp_manager.h"
+endif
+    
+ifblock TCPIP_USE_SNTP_CLIENT
+file TCPIP_SNTP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/sntp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/sntp.c"
+endif

@@ -1,0 +1,78 @@
+menu "TCPIP File System Wrapper"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_USE_UDP
+
+enum FS_DRIVE
+    "FLASH"
+    || "SDCARD"
+    || "FLASH & SDCARD"
+    
+config TCPIP_STACK_USE_FS_WRAPPER
+    bool    
+    default y
+    ---help---
+    These options configure the File System Wrapper used by HTTP/FTP/SNMP Services
+    ---endhelp---
+    
+config TCPIP_SYS_FS_MAX_PATH
+    int "Max Length of Full Web Path"
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    default 80
+    ---help---
+    Used to define maximum length of full web path
+    ---endhelp---
+    
+config TCPIP_LOCAL_WEBSITE_PATH
+    string "Web Server Mount Path"
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    default "/mnt/mchpSite1"
+    ---help---
+    Used to define the web server mount path
+    ---endhelp---
+    
+config TCPIP_SYS_FS_DRIVE
+    string "Memory Drive"
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    range FS_DRIVE
+    default "FLASH" if SYS_FS_MPFS = y
+    default "SDCARD" if SYS_FS_FAT = y
+	default "FLASH"
+    ---help---
+    Used to define the memory drive type
+    ---endhelp---
+    
+config TCPIP_SYS_FS_NVM_VOL
+    string "NVM Disk Path"
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    default "/dev/nvma1"
+    ---help---
+    Used to define the disk path
+    ---endhelp---
+    
+config TCPIP_SYS_FS_SD_VOL
+    string "SDCARD Disk Path"
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    default "/dev/mmcblka1"
+    ---help---
+    Used to define the disk path
+    ---endhelp---
+	
+config TCPIP_SYS_FS_MPFS_STRING
+    string
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    default "MPFS2"
+    
+config TCPIP_SYS_FS_FATFS_STRING
+    string
+    depends on TCPIP_STACK_USE_FS_WRAPPER
+    default "FATFS"
+
+endmenu
+
+ifblock USE_TCPIP_STACK
+file TCPIP_SYS_FS_WRAPPER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/common/sys_fs_wrapper.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/common/sys_fs_wrapper.h"
+endif
+
+ifblock TCPIP_STACK_USE_FS_WRAPPER
+file TCPIP_SYS_FS_WRAPPER_C "$HARMONY_VERSION_PATH/framework/tcpip/src/common/sys_fs_wrapper.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/common/sys_fs_wrapper.c"
+endif
+

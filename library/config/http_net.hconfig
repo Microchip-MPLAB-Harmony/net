@@ -1,0 +1,451 @@
+config TCPIP_STACK_USE_HTTP_NET_SERVER
+    bool "HTTP NET Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && !TCPIP_STACK_USE_HTTP_SERVER
+    select USE_SYS_FS_NEEDED
+    select NET_PRES_NEEDED
+    select USE_CRYPTO_LIB_NEEDED
+    select USE_CRYPTO_MD5_NEEDED
+    select USE_CRYPTO_RANDOM_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_Introduction
+    ---endhelp---
+
+config TCPIP_HTTP_NET_MAX_HEADER_LEN
+    int "Max Header Length"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 15
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MAX_HEADER_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CACHE_LEN
+    string "Max Lifetime of Static Responses in Seconds"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default "600"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_CACHE_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_NET_TIMEOUT
+    int "Socket Disconnect Time-out"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 45
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_TIMEOUT
+    ---endhelp---
+
+config TCPIP_HTTP_NET_MAX_CONNECTIONS
+    int "Max Number of Simultaneous Connections"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MAX_CONNECTIONS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_DEFAULT_FILE
+    string "Default HTTP NET File"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default "index.htm"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DEFAULT_FILE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FILENAME_MAX_LEN
+    int "Maximum Size of a HTTP File Name"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 25
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DYNVAR_FILENAME_MAX_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE
+    bool "Enable Update via HTTP NET"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FILE_UPLOAD_NAME
+    depends on TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE && TCPIP_STACK_USE_HTTP_NET_SERVER
+    string "MPFS Upload Page Name"
+    default "mpfsupload"
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_FILE_UPLOAD_NAME
+    ---endhelp---
+
+config TCPIP_HTTP_NET_USE_POST
+    bool "Enable POST Support"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_USE_POST
+    ---endhelp---
+
+config TCPIP_HTTP_NET_USE_COOKIES
+    bool "Enable Cookie Support"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_USE_COOKIES
+    ---endhelp---
+
+config TCPIP_HTTP_NET_USE_BASE64_DECODE
+    bool "Use Base 64 Decode"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_USE_BASE64_DECODE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_USE_AUTHENTICATION
+    bool "Enable Basic Authenication Support"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    select TCPIP_HTTP_NET_USE_BASE64_DECODE
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_USE_AUTHENTICATION
+    ---endhelp---
+
+config TCPIP_HTTP_NET_MAX_DATA_LEN
+    int "Max Data Length (bytes) for Reading Cookie and GET/POST Arguments"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MAX_DATA_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE
+    int "HTTP NET Socket TX Buffer Size"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 1024
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE
+    int "HTTP NET Socket RX Buffer Size"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 1024
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_LISTEN_PORT
+    int "HTTP NET Listening Port"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 80
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_LISTEN_PORT
+    ---endhelp---
+
+menu "HTTP NET Configuration Flags"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+
+config TCPIP_HTTP_NET_CONFIG_FLAG_NON_PERSISTENT
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    bool "Use non-persistent connections"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MODULE_FLAGS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CONFIG_FLAG_NO_DELAY
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    bool " HTTP sockets created with NO-DELAY option"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MODULE_FLAGS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && !TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF && !TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT
+    bool "All HTTP connections have to be secure"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MODULE_FLAGS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && !TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON && !TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT
+    bool "All HTTP connections have to be non-secure"
+    default n
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MODULE_FLAGS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && !TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF && !TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON
+    bool "HTTP security is based on the port numbers"
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MODULE_FLAGS
+    ---endhelp---
+
+endmenu
+
+config TCPIP_HTTP_NET_TASK_RATE
+    int "HTTP NET Task Rate - ms"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 33
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_TASK_RATE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE
+    int "Size of the Buffer Used for Sending Response Messages to the Client"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 300
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE
+    int "Size of the Buffer Used for Sending Cookies to the Client"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 200
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE
+    int "Size of the Peek Buffer for Performing Searches"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE
+    int "Size of the Buffer for Processing HTML, Dynamic Variable and Binary Files"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER
+    int "Number of File Buffers to be Created"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES
+    int "Retry Limit for Allocating a File Buffer from the Pool"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CHUNKS_NUMBER
+    int "Number of Chunks to be Created"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_CHUNKS_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CHUNK_RETRIES
+    int "Retry Limit for Allocating a Chunk from the Pool"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_CHUNK_RETRIES
+    ---endhelp---
+
+config TCPIP_HTTP_NET_MAX_RECURSE_LEVEL
+    int "The Maximum Depth of Recursive Calls for Serving a Web Page"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_MAX_RECURSE_LEVEL
+    ---endhelp---
+
+
+config TCPIP_HTTP_NET_DYNVAR_PROCESS
+    bool "Enable the Processing of Dynamic Variables"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DYNVAR_PROCESS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER
+    int "Number of the Descriptors for Dynamic Variables Processing"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_DYNVAR_PROCESS
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_DYNVAR_MAX_LEN
+    int "Maximum Size for a Complete Dynamic Variable: Name + Args"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_DYNVAR_PROCESS
+    default 50
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DYNVAR_MAX_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_NET_DYNVAR_ARG_MAX_NUMBER
+    int "Maximum Number of Arguments for a Dynamic Variable"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_DYNVAR_PROCESS
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DYNVAR_ARG_MAX_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES
+    int "Retry Limit for a Dynamic Variable Processing"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_DYNVAR_PROCESS
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_PROCESS
+    bool "Enable the Processing of SSI Commands"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default y
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_PROCESS
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_ATTRIBUTES_MAX_NUMBER
+    int "Maximum Number of Attributes for a SSI Command"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_ATTRIBUTES_MAX_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_STATIC_ATTTRIB_NUMBER
+    int "Number of Static Attributes Associated to a SSI Command"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_STATIC_ATTTRIB_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_CMD_MAX_LEN
+    int "Maximum Size for a SSI Command Line: Command + Attribute/Value Pairs"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_CMD_MAX_LEN
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER
+    int "Maximum Number of SSI Variables that Can Be Created at Run Time"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default 13
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH
+    int "Maximum Length of a SSI Variable Name"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH
+    int "Maximum Size of a SSI String Variable Value"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH
+    ---endhelp---
+
+config TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE
+    string "Message to Echo when Echoing a Not Found Variable"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER && TCPIP_HTTP_NET_SSI_PROCESS
+    default "SSI Echo - Not Found: "
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CUSTOM_TEMPLATE
+    bool "Include HTTP NET Custom Template"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default y
+    ---help---
+    Includes http_net_print.c, custom_http_net_app.c and mpfs_img2.c in project
+    ---endhelp---
+
+config TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    bool
+    default y if (USE_SYS_FS = y) && (SYS_FS_MPFS = y)
+    default n
+
+config TCPIP_HTTP_NET_CONNECTION_TIMEOUT
+    int "Persistent Connection Idle Time-out"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_HTTP_NET_CONNECTION_TIMEOUT
+    ---endhelp---
+
+config TCPIP_HTTP_NET_MALLOC_FUNC
+    string " HTTP NET allocation function, malloc style"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    ---help---
+    This is the function HTTP_NET will call to allocate memory
+    Use standard C library 'malloc' as a default
+    ---endhelp---
+
+config TCPIP_HTTP_NET_FREE_FUNC
+    string " HTTP NET deallocation function, free style"
+    depends on TCPIP_STACK_USE_HTTP_NET_SERVER
+    ---help---
+    This is the function HTTP_NET will call to deallocate memory
+    Use standard C library 'free' as a default
+    ---endhelp---
+
+config TCPIP_STACK_USE_HTTP_NET_SERVER_DUMMY
+    bool "HTTP NET Server"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_STACK_USE_HTTP_SERVER
+    default n
+    persistent
+    ---help---
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/tcpip/http_net.h"  to "$PROJECT_HEADER_FILES/framework/tcpip/http_net.h"
+file TCPIP_HTTP_NET_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/http_net_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/http_net_manager.h"
+file TCPIP_HTTP_NET_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/http_net_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/http_net_private.h"
+
+file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
+endif
+
+ifblock TCPIP_STACK_USE_HTTP_NET_SERVER
+
+file TCPIP_HTTP_NET_C "$HARMONY_VERSION_PATH/framework/tcpip/src/http_net.c"  to "$PROJECT_SOURCE_FILES/framework/tcpip/src/http_net.c"
+
+file DRV_NVM_STATIC_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
+file DRV_NVM_STATIC_LOCAL_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
+file DRV_NVM_STATIC_VAR_MAP_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
+
+file DRV_NVM_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
+file DRV_NVM_LOCAL_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
+file DRV_NVM_VAR_MAP_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
+
+
+ifblock TCPIP_HTTP_NET_CUSTOM_TEMPLATE
+
+template HTTP_NET_PRINT_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/http_net_print.c.ftl" to "$PROJECT_SOURCE_FILES/app/http_net_print.c"
+template HTTP_NET_CUSTOM_APP_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/custom_http_net_app.c.ftl" to "$PROJECT_SOURCE_FILES/app/custom_http_net_app.c"
+
+ifblock TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL
+template HTTP_NET_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2.c"
+endif
+
+endif
+
+endif

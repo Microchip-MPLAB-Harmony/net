@@ -1,0 +1,97 @@
+config TCPIP_USE_FTP_MODULE
+    bool "Use FTP Module"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_STACK_USE_IPV4  
+	select USE_SYS_FS_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_FTP_Introduction
+    ---endhelp---
+
+config TCPIP_FTP_USER_NAME_LEN
+    int "Maximum Length for User Name"
+    depends on TCPIP_USE_FTP_MODULE
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_FTP_USER_NAME_LEN
+    ---endhelp---
+
+config TCPIP_FTP_PASSWD_LEN
+    int "Maximum Length of FTP Login Password"
+    depends on TCPIP_USE_FTP_MODULE
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_FTP_PASSWD_LEN
+    ---endhelp---
+
+config TCPIP_FTP_MAX_CONNECTIONS
+    int "Maximum Number of FTP Connections Allowed per Interface"
+    depends on TCPIP_USE_FTP_MODULE
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_FTP_MAX_CONNECTIONS
+    ---endhelp---
+
+config TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE
+    int "TX Buffer for the FTP Data Socket"
+    depends on TCPIP_USE_FTP_MODULE
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE
+    int "RX Buffer for the FTP Data Socket"
+    depends on TCPIP_USE_FTP_MODULE
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE
+    ---endhelp---
+	
+config TCPIP_FTPS_TASK_TICK_RATE
+    int "FTP Server Task Rate in msec"
+    depends on TCPIP_USE_FTP_MODULE
+    default 33
+    ---help---
+    IDH_HTML_TCPIP_FTPS_TASK_TICK_RATE
+    ---endhelp---
+	
+config TCPIP_FTP_TIMEOUT
+    int "FTP Server timeout in sec"
+    depends on TCPIP_USE_FTP_MODULE
+    default 180
+    ---help---
+    
+    ---endhelp---
+	
+config TCPIP_FTP_USER_NAME
+    string "FTP Login User Name"
+    depends on TCPIP_USE_FTP_MODULE
+    default "Microchip"
+    ---help---
+    IDH_HTML_TCPIP_FTP_MODULE_CONFIG
+    ---endhelp---
+
+config TCPIP_FTP_PASSWORD
+    string "FTP Login Password"
+    depends on TCPIP_USE_FTP_MODULE
+    default "Harmony"
+    ---help---
+    IDH_HTML_TCPIP_FTP_MODULE_CONFIG
+    ---endhelp---
+
+config TCPIP_FTP_PUT_ENABLED
+	bool "FTP File PUT Command"
+	depends on TCPIP_USE_FTP_MODULE
+	default y
+    ---help---
+    IDH_HTML_TCPIP_FTP_PUT_ENABLED
+    ---endhelp---
+ifblock USE_TCPIP_STACK
+file TCPIP_FTP_H "$HARMONY_VERSION_PATH/framework/tcpip/ftp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/ftp.h"
+file TCPIP_FTP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ftp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ftp_manager.h"
+file TCPIP_FTP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ftp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ftp_private.h"
+endif
+
+ifblock TCPIP_USE_FTP_MODULE
+file TCPIP_FTP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/ftp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/ftp.c"
+endif

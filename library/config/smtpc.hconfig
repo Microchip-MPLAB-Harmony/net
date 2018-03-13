@@ -1,0 +1,153 @@
+config TCPIP_USE_SMTPC_CLIENT
+    bool "Use SMTPC"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP
+    select NET_PRES_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_Introduction
+    ---endhelp---
+    
+config TCPIP_SMTPC_MAIL_CONNECTIONS
+    int "Number of Mail Connections to be Created"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 2
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_MAIL_CONNECTIONS
+    ---endhelp---
+   
+
+config TCPIP_SMTPC_CLIENT_MESSAGE_DATE
+    string "String that Identifies the SMTPC Client Mail Date"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default "Wed, 20 July 2016 14:55:06 -0600"
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_CLIENT_MESSAGE_DATE
+    ---endhelp---
+   
+
+config TCPIP_SMTPC_SERVER_REPLY_TIMEOUT
+    int "General Server Response Timeout, Seconds"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 60
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_SERVER_REPLY_TIMEOUT
+    ---endhelp---
+
+
+config TCPIP_SMTPC_SERVER_DATA_TIMEOUT
+    int "Server Acknowledgment of the Mail Data: Body, Attachments etc. Seconds"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 60
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_SERVER_DATA_TIMEOUT
+    ---endhelp---
+
+config TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT
+    int "Timeout for the TLS Handshake to Complete, Seconds"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT
+    ---endhelp---
+
+config TCPIP_SMTPC_MAIL_RETRIES
+    int "Number of Retries for Sending a Mail Message"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_MAIL_RETRIES
+    ---endhelp---
+
+
+config TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT
+    int "The Retry Interval Because of a Server Transient Error, Seconds"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 600
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT
+    ---endhelp---
+
+config TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT
+    int "The Retry Interval Because of a SMTPC Temporary Error, Seconds"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 10
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT
+    ---endhelp---
+
+
+config TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE
+    int "Size of the RX Buffer for Processing the Server Replies"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE
+    int "Size of a Buffer that Can Hold the 2 x Username and Password"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 100
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE
+    int "Size of a Buffer that Can Hold an Email Address: user@domain.smth"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 80
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE
+    ---endhelp---
+
+config TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE
+    int "Size of an Email Line when Sending the Email Body as Plain Text"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 256
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_SMTPC_SKT_TX_BUFF_SIZE
+    int "Size of the TX Buffer for the SMTPC Socket"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_SKT_TX_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_SMTPC_SKT_RX_BUFF_SIZE
+    int "Size of the RX Buffer for the SMTPC Socket"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 0
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_SKT_RX_BUFF_SIZE
+    ---endhelp---
+
+config TCPIP_SMTPC_TASK_TICK_RATE
+    int "SMTPC Task Tick Rate in ms"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default 55
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_TASK_TICK_RATE
+    ---endhelp---
+
+config TCPIP_SMTPC_USE_MAIL_COMMAND
+    bool "Use the Sample TCP/IP Console mail Command"
+    depends on TCPIP_USE_SMTPC_CLIENT
+    default n
+    ---help---
+    IDH_HTML_TCPIP_SMTPC_USE_MAIL_COMMAND
+    ---endhelp---
+
+
+ifblock USE_TCPIP_STACK
+file TCPIP_SMTPC_H "$HARMONY_VERSION_PATH/framework/tcpip/smtpc.h" to "$PROJECT_HEADER_FILES/framework/tcpip/smtpc.h"
+file TCPIP_SMTPC_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/smtpc_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/smtpc_manager.h"
+file TCPIP_SMTPC_PRIV_H "$HARMONY_VERSION_PATH/framework/tcpip/src/smtpc_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/smtpc_private.h"
+endif
+    
+ifblock TCPIP_USE_SMTPC_CLIENT
+file TCPIP_SMTPC_C "$HARMONY_VERSION_PATH/framework/tcpip/src/smtpc.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/smtpc.c"
+endif
+

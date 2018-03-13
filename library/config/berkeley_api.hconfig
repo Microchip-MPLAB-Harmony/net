@@ -1,0 +1,25 @@
+config TCPIP_STACK_USE_BERKELEY_API
+    bool "Berkeley API"
+    depends on USE_TCPIP_STACK
+    select NET_PRES_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_BERKELEY_Introduction
+    ---endhelp---
+    
+config TCPIP_BSD_MAX_BSD_SOCKETS
+    int "Max Number of Simultaneous Sockets Supported"
+    depends on TCPIP_STACK_USE_BERKELEY_API
+    default 4
+    ---help---
+    IDH_HTML_MAX_BSD_SOCKETS
+    ---endhelp---
+    
+ifblock USE_TCPIP_STACK
+file TCPIP_BERKELEY_H "$HARMONY_VERSION_PATH/framework/tcpip/berkeley_api.h"  to "$PROJECT_HEADER_FILES/framework/tcpip/berkeley_api.h"
+endif
+    
+ifblock TCPIP_STACK_USE_BERKELEY_API
+file TCPIP_BERKELEY_C "$HARMONY_VERSION_PATH/framework/tcpip/src/berkeley_api.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/berkeley_api.c"
+endif
+    

@@ -1,0 +1,110 @@
+menu "Neighbor Discovery Protocol"
+    depends on TCPIP_STACK_USE_IPV6
+    
+config TCPIP_MAX_RTR_SOLICITATION_DELAY
+    int "RTR Solicitation Delay - Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY
+    ---endhelp---
+
+config TCPIP_RTR_SOLICITATION_INTERVAL
+    int "RTR Soliciation Interval - Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 4
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_RTR_SOLICITATION_INTERVAL
+    ---endhelp---
+    
+config TCPIP_MAX_RTR_SOLICITATIONS
+    int "Max RTR Solicitations"
+    depends on TCPIP_STACK_USE_IPV6
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_MAX_RTR_SOLICITATIONS
+    ---endhelp---
+    
+config TCPIP_MAX_MULTICAST_SOLICIT
+    int "Max Multicast Solicitations"
+    depends on TCPIP_STACK_USE_IPV6
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_MAX_MULTICAST_SOLICIT
+    ---endhelp---
+
+config TCPIP_MAX_UNICAST_SOLICIT
+    int "Max Unicast Solicitations"
+    depends on TCPIP_STACK_USE_IPV6
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_MAX_UNICAST_SOLICIT
+    ---endhelp---
+
+config TCPIP_MAX_ANYCAST_DELAY_TIME
+    int "Max Anycast Delay Time in Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_MAX_ANYCAST_DELAY_TIME
+    ---endhelp---
+
+config TCPIP_MAX_NEIGHBOR_ADVERTISEMENT
+    int "Max Neighbor Advertisement Transmissions"
+    depends on TCPIP_STACK_USE_IPV6
+    default 3
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_MAX_ANYCAST_DELAY_TIME
+    ---endhelp---
+    
+config TCPIP_REACHABLE_TIME
+    int "Reachable Time in Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 30
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_REACHABLE_TIME
+    ---endhelp---
+
+config TCPIP_RETRANS_TIMER
+    int "Re-transmission Timer - Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 1
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_RETRANS_TIMER
+    ---endhelp---
+
+config TCPIP_DELAY_FIRST_PROBE_TIME
+    int "Delay First Probe Time in Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 5
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_DELAY_FIRST_PROBE_TIME
+    ---endhelp---
+
+config TCPIP_IPV6_MTU_INCREASE_TIMEOUT
+    int "IPv6 Maximum Transmission Unit Increase Time-out in Seconds"
+    depends on TCPIP_STACK_USE_IPV6
+    default 600
+    ---help---
+    IDH_HTML_TCPIP_IPV6_MTU_INCREASE_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_NDP_TASK_TIMER_RATE
+    int "NDP Task Timer in msec"
+    depends on TCPIP_STACK_USE_IPV6
+    default 32
+    ---help---
+    IDH_HTML_TCPIP_IPV6_NDP_TASK_TIMER_RATE
+    ---endhelp---
+
+endmenu
+
+ifblock USE_TCPIP_STACK
+file TCPIP_NDP_H "$HARMONY_VERSION_PATH/framework/tcpip/ndp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/ndp.h"
+file TCPIP_NDP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ndp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ndp_manager.h"
+file TCPIP_NDP_private_H "$HARMONY_VERSION_PATH/framework/tcpip/src/ndp_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/ndp_private.h"
+endif 
+
+ifblock TCPIP_STACK_USE_IPV6
+file TCPIP_NDP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/ndp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/ndp.c"
+endif 

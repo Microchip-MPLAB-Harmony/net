@@ -1,0 +1,49 @@
+config TCPIP_USE_SMTP_CLIENT
+    bool "Use SMTP"
+    depends on USE_TCPIP_STACK && TCPIP_USE_TCP
+    select NET_PRES_NEEDED
+    default n
+    ---help---
+    IDH_HTML_TCPIP_SMTP_Introduction
+    ---endhelp---
+    
+config TCPIP_SMTP_SERVER_REPLY_TIMEOUT
+    int "Server Reply Time-out"
+    depends on TCPIP_USE_SMTP_CLIENT
+    default 8
+    ---help---
+    IDH_HTML_TCPIP_SMTP_SERVER_REPLY_TIMEOUT
+    ---endhelp---
+    
+config TCPIP_SMTP_WRITE_READY_SPACE
+    int "Minimum Amount of Data to Ask from the Transport/Encryption Layer"
+    depends on TCPIP_USE_SMTP_CLIENT
+    default 150
+    ---help---
+    IDH_HTML_TCPIP_SMTP_WRITE_READY_SPACE
+    ---endhelp---
+
+config TCPIP_SMTP_MAX_WRITE_SIZE
+    int "Maximum size of data to be written in a discrete string/array email write"
+    depends on TCPIP_USE_SMTP_CLIENT
+    default 512
+    ---help---
+    IDH_HTML_TCPIP_SMTP_MAX_WRITE_SIZE
+    ---endhelp---
+    
+config TCPIP_SMTP_TASK_TICK_RATE
+    int "SMTP Task Tick Rate in ms"
+    depends on TCPIP_USE_SMTP_CLIENT
+    default 55
+    ---help---
+    IDH_HTML_TCPIP_SMTP_TASK_TICK_RATE
+    ---endhelp---
+
+ifblock USE_TCPIP_STACK
+file TCPIP_SMTP_H "$HARMONY_VERSION_PATH/framework/tcpip/smtp.h" to "$PROJECT_HEADER_FILES/framework/tcpip/smtp.h"
+file TCPIP_SMTP_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/smtp_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/smtp_manager.h"
+endif
+    
+ifblock TCPIP_USE_SMTP_CLIENT
+file TCPIP_SMTP_C "$HARMONY_VERSION_PATH/framework/tcpip/src/smtp.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/smtp.c"
+endif
