@@ -60,7 +60,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackIfChange.setVisible(True)
 	tcpipStackIfChange.setDescription("Enable Interface Address Change Signaling")
 	tcpipStackIfChange.setDefaultValue(False)
-	tcpipStackIfChange.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_USE_IPV4"])
+	tcpipStackIfChange.setDependencies(tcpipStackMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
 
 	# Enable Configuration Save/Restore Functionality
 	tcpipStackConfigSaveRestore= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_CONFIGURATION_SAVE_RESTORE", None)
@@ -103,11 +103,11 @@ def instantiateComponent(tcpipStackComponent):
 	
 	#niyas  ifblock USE_TCPIP_STACK
 	# add "<#include \"/framework/tcpip/config/tcpip_stack.h.ftl\">"  to list SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION 	
-    # tcpipStackHeaderFtl = tcpipStackComponent.createFileSymbol(None, None)
-    # tcpipStackHeaderFtl.setSourcePath("library/config/tcpip_stack.h.ftl")
-    # tcpipStackHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
-    # tcpipStackHeaderFtl.setMarkup(True)
-    # tcpipStackHeaderFtl.setType("STRING")
+	tcpipStackHeaderFtl = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackHeaderFtl.setSourcePath("library/config/tcpip_stack.h.ftl")
+	tcpipStackHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipStackHeaderFtl.setMarkup(True)
+	tcpipStackHeaderFtl.setType("STRING")
 	
 	# file TCPIP_COMMON_HELPERS_H "$HARMONY_VERSION_PATH/framework/tcpip/src/common/helpers.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/common/helpers.h"
 	tcpipStackHelpersHeaderFile = tcpipStackComponent.createFileSymbol(None, None)

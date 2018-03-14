@@ -40,7 +40,7 @@
 
 #include "tcpip/tcpip.h"
 
-<#if CONFIG_USE_DRV_WIFI_WK!false == true && CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true && CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE == true>
+<#if CONFIG_USE_DRV_WIFI_WK!false == true && TCPIP_STACK_USE_HTTP_SERVER == true && TCPIP_HTTP_CUSTOM_TEMPLATE == true>
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
 void TCPIP_HTTP_Print_version(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle);
@@ -161,6 +161,8 @@ TCP_SOCKET sktHTTP;
 <#else><#-- CONFIG_USE_DRV_WIFI_WK -->
 <#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" != "Easy Configuration Demo">
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
+testcode = ${TCPIP_STACK_USE_HTTP_SERVER?c}
+
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
 void TCPIP_HTTP_Print_hellomsg(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_cookiename(HTTP_CONN_HANDLE connHandle);
