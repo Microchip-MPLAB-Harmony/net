@@ -17,11 +17,13 @@ def loadModule():
 	tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/Libraries/TCPIP/", "library/config/tcpip_ipv4.py")
 	tcpipIPv4Component.addCapability("libTcpipIPv4","IPv4")
 	tcpipIPv4Component.addCapability("libTcpipIPv4IP","IP")
+	tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_STACK")	
 	
 	tcpipIPv6Component = Module.CreateSharedComponent("tcpipIPv6", "IPv6", "/Libraries/TCPIP/", "library/config/tcpip_ipv6.py")
 	tcpipIPv6Component.addCapability("libTcpipIPv6","IPv6")
 	tcpipIPv6Component.addCapability("libTcpipIPv6IP","IP")
-			
+	tcpipIPv6Component.addDependency("Ipv6_Stack_Dependency", "TCPIP_STACK")
+	
 	tcpipNdpComponent = Module.CreateComponent("tcpipNdp", "NDP", "/Libraries/TCPIP/", "library/config/tcpip_ndp.py")
 	tcpipNdpComponent.addCapability("libtcpipNdp","NDP")
 	tcpipNdpComponent.addDependency("Ndp_IPv6_Dependency", "IPv6")
@@ -43,6 +45,8 @@ def loadModule():
 	
 	tcpipBerkeleyApiComponent = Module.CreateComponent("tcpipBerkeleyApi", "BSD", "/Libraries/TCPIP/", "library/config/tcpip_berkeley_api.py")
 	tcpipBerkeleyApiComponent.addCapability("libtcpipBerkeleyApi","BSD")	
+	tcpipBerkeleyApiComponent.addDependency("BSD_TCP_Dependency", "TCP")
+	tcpipBerkeleyApiComponent.addDependency("BSD_UDP_Dependency", "UDP")
 	
 	tcpipDhcpComponent = Module.CreateComponent("tcpipDhcp", "DHCPC", "/Libraries/TCPIP/", "library/config/tcpip_dhcp.py")
 	tcpipDhcpComponent.addCapability("libtcpipDhcp","DHCPC")
@@ -52,8 +56,7 @@ def loadModule():
 	tcpipDhcpsComponent = Module.CreateComponent("tcpipDhcps", "DHCPS", "/Libraries/TCPIP/", "library/config/tcpip_dhcps.py")
 	tcpipDhcpsComponent.addCapability("libtcpipDhcps","DHCPS")
 	tcpipDhcpsComponent.addDependency("Dhcps_IPv4_Dependency", "IPv4")
-	tcpipDhcpsComponent.addDependency("Dhcps_UDP_Dependency", "UDP")
-	tcpipDhcpsComponent.addDependency("Dhcps_Stack_Dependency", "TCPIP_STACK")	
+	tcpipDhcpsComponent.addDependency("Dhcps_UDP_Dependency", "UDP")	
 	
 	tcpipDnsComponent = Module.CreateComponent("tcpipDns", "DNS", "/Libraries/TCPIP/", "library/config/tcpip_dns.py")
 	tcpipDnsComponent.addCapability("libtcpipDns","DNS")	
@@ -83,6 +86,8 @@ def loadModule():
 	
 	tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/Libraries/TCPIP/", "library/config/tcpip_iperf.py")
 	tcpipIperfComponent.addCapability("libtcpipIperf","IPERF")
+	tcpipIperfComponent.addDependency("Iperf_TCP_Dependency", "TCP")
+	tcpipIperfComponent.addDependency("Iperf_UDP_Dependency", "UDP")
 	
 	tcpipRebootComponent = Module.CreateComponent("tcpipReboot", "REBOOT", "/Libraries/TCPIP/", "library/config/tcpip_reboot.py")
 	tcpipRebootComponent.addCapability("libtcpipReboot","REBOOT")
@@ -102,8 +107,8 @@ def loadModule():
 	tcpipSntpComponent.addDependency("Sntp_UDP_Dependency", "UDP")
 
 	tcpipIgmpComponent = Module.CreateComponent("tcpipIgmp", "IGMP", "/Libraries/TCPIP/", "library/config/tcpip_igmp.py")
-	tcpipRebootComponent.addCapability("libtcpipIgmp","IGMP")
-	tcpipRebootComponent.addDependency("Igmp_IPv4_Dependency", "IPv4")
+	tcpipIgmpComponent.addCapability("libtcpipIgmp","IGMP")
+	tcpipIgmpComponent.addDependency("Igmp_IPv4_Dependency", "IPv4")
 	
 	tcpipTftpcComponent = Module.CreateComponent("tcpipTftpc", "TFTPC", "/Libraries/TCPIP/", "library/config/tcpip_tftpc.py")
 	tcpipTftpcComponent.addCapability("libtcpipTftpc","TFTPC")
@@ -116,7 +121,6 @@ def loadModule():
 		
 	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "CMD", "/Libraries/TCPIP/", "library/config/tcpip_cmd.py")
 	tcpipCmdComponent.addCapability("libtcpipCmd","CMD")	
-	tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_STACK")
 	tcpipCmdComponent.addDependency("Cmd_TCP_Dependency", "TCP")	
 	
 	tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/", "library/config/tcpip_announce.py")

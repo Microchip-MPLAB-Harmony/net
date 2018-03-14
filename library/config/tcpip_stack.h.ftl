@@ -44,75 +44,78 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: TCPIP Stack Configuration
 // *****************************************************************************
 // *****************************************************************************
-<#if CONFIG_USE_TCPIP_STACK == true>
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+use_tcpipIPv4 = ${tcpipIPv4.TCPIP_STACK_USE_IPV4?c}
+
+<#if USE_TCPIP_STACK == true>
+<#if use_tcpipIPv4 == true>
 #define TCPIP_STACK_USE_IPV4
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_IPV6 == true>
+<#if tcpipIPv6.TCPIP_STACK_USE_IPV6?c == true>
 #define TCPIP_STACK_USE_IPV6
 </#if>
-<#if CONFIG_TCPIP_USE_TCP == true>
+<#if tcpipTcp.CONFIG_TCPIP_USE_TCP?c == true>
 #define TCPIP_STACK_USE_TCP
 </#if>
-<#if CONFIG_TCPIP_USE_UDP == true>
+<#if tcpipUdp.CONFIG_TCPIP_USE_UDP?c == true>
 #define TCPIP_STACK_USE_UDP
 </#if>
 
-#define TCPIP_STACK_TICK_RATE		        		${CONFIG_TCPIP_STACK_TICK_RATE}
-#define TCPIP_STACK_SECURE_PORT_ENTRIES             ${CONFIG_TCPIP_STACK_SECURE_PORT_ENTRIES}
+#define TCPIP_STACK_TICK_RATE		        		${TCPIP_STACK_TICK_RATE?c}
+#define TCPIP_STACK_SECURE_PORT_ENTRIES             ${TCPIP_STACK_SECURE_PORT_ENTRIES?c}
 
-<#if CONFIG_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT == true>
+<#if TCPIP_STACK_ALIAS_INTERFACE_SUPPORT?c == true>
 #define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT   true
 <#else>
 #define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT   false
 </#if>
 
-<#if CONFIG_TCPIP_PACKET_LOG_ENABLE == true>
+<#if TCPIP_PACKET_LOG_ENABLE?c == true>
 #define TCPIP_PACKET_LOG_ENABLE                     1
-#define TCPIP_PKT_LOG_SIZE                          ${CONFIG_TCPIP_PKT_LOG_SIZE}
+#define TCPIP_PKT_LOG_SIZE                          ${TCPIP_PKT_LOG_SIZE?c}
 <#else>
 #define TCPIP_PACKET_LOG_ENABLE     0
 </#if>
 
 /* TCP/IP stack event notification */
-<#if CONFIG_TCPIP_STACK_EVENT_NOTIFICATION == true>
+<#if TCPIP_STACK_EVENT_NOTIFICATION?c == true>
 #define TCPIP_STACK_USE_EVENT_NOTIFICATION
 </#if>
-<#if CONFIG_TCPIP_STACK_USER_NOTIFICATION == true>
+<#if TCPIP_STACK_USER_NOTIFICATION?c == true>
 #define TCPIP_STACK_USER_NOTIFICATION   true
 <#else>
 #define TCPIP_STACK_USER_NOTIFICATION   false
 </#if>
-<#if CONFIG_TCPIP_STACK_DOWN_OPERATION == false>
+<#if TCPIP_STACK_DOWN_OPERATION?c == false>
 #define TCPIP_STACK_DOWN_OPERATION   false
 #define TCPIP_STACK_IF_UP_DOWN_OPERATION   false
 <#else>
 #define TCPIP_STACK_DOWN_OPERATION   true
-<#if CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION == true>
+<#if TCPIP_STACK_IF_UP_DOWN_OPERATION?c == true>
 #define TCPIP_STACK_IF_UP_DOWN_OPERATION   true
 <#else>
 #define TCPIP_STACK_IF_UP_DOWN_OPERATION   false
 </#if>
 </#if>
-<#if CONFIG_TCPIP_STACK_DOWN_OPERATION == true>
+<#if TCPIP_STACK_DOWN_OPERATION == true>
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 <#else>
-<#if CONFIG_TCPIP_STACK_MAC_DOWN_OPERATION == true>
+<#if TCPIP_STACK_MAC_DOWN_OPERATION?c == true>
 #define TCPIP_STACK_MAC_DOWN_OPERATION   true
 <#else>
 #define TCPIP_STACK_MAC_DOWN_OPERATION   false
 </#if>
 </#if>
-<#if CONFIG_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING == true>
+<#if TCPIP_STACK_INTERFACE_CHANGE_SIGNALING?c == true>
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   true
 <#else>
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 </#if>
-<#if CONFIG_TCPIP_STACK_CONFIGURATION_SAVE_RESTORE == true>
+<#if TCPIP_STACK_CONFIGURATION_SAVE_RESTORE?c == true>
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
 <#else>
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   false
 </#if>
+<#-- niyas
 <#include "/framework/tcpip/config/tcpip_heap.h.ftl">
 <#include "/framework/tcpip/config/arp.h.ftl">
 <#include "/framework/tcpip/config/berkeley_api.h.ftl">
@@ -151,4 +154,5 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true || CONFIG_TCPIP_STACK_USE_HTTP_NET_SERVER == true || CONFIG_TCPIP_USE_SNMP == true || CONFIG_TCPIP_USE_FTP_MODULE == true || CONFIG_TCPIP_USE_TFTPC_MODULE>
 <#include "/framework/tcpip/config/sys_fs_wrapper.h.ftl">
 </#if>
+-->
 </#if>
