@@ -34,6 +34,13 @@ def instantiateComponent(tcpipAnnounceComponent):
 	tcpipAnnounceTskRate.setDefaultValue(333)
 	tcpipAnnounceTskRate.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
 
+	#Add to system_config.h
+	tcpipAnnounceHeaderFtl = tcpipAnnounceComponent.createFileSymbol(None, None)
+	tcpipAnnounceHeaderFtl.setSourcePath("library/config/tcpip_announce.h.ftl")
+	tcpipAnnounceHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipAnnounceHeaderFtl.setMarkup(True)
+	tcpipAnnounceHeaderFtl.setType("STRING")
+	
 	# Add tcpip_announce_manager.h file to project
 	tcpipAnnounceManagerHeaderFile = tcpipAnnounceComponent.createFileSymbol(None, None)
 	tcpipAnnounceManagerHeaderFile.setSourcePath("library/src/tcpip_announce_manager.h")

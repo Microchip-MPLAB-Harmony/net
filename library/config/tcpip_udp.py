@@ -101,6 +101,13 @@ def instantiateComponent(tcpipUdpComponent):
 	tcpipUdpHeaderFile.setType("HEADER")
 	tcpipUdpHeaderFile.setOverwrite(True)
 
+	#Add to system_config.h
+	tcpipUdpHeaderFtl = tcpipUdpComponent.createFileSymbol(None, None)
+	tcpipUdpHeaderFtl.setSourcePath("library/config/udp.h.ftl")
+	tcpipUdpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipUdpHeaderFtl.setMarkup(True)
+	tcpipUdpHeaderFtl.setType("STRING")
+	
 	# Add udp_manager.h file to project
 	tcpipUdpManagerHeaderFile = tcpipUdpComponent.createFileSymbol(None, None)
 	tcpipUdpManagerHeaderFile.setSourcePath("library/src/udp_manager.h")

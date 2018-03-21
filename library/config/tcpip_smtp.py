@@ -44,6 +44,13 @@ def instantiateComponent(tcpipSmtpComponent):
 	tcpipSmtpTskTickRate.setDefaultValue(55)
 	tcpipSmtpTskTickRate.setDependencies(tcpipSmtpMenuVisibleSingle, ["TCPIP_USE_SMTP_CLIENT"])
 
+	#Add to system_config.h
+	tcpipSmtpHeaderFtl = tcpipSmtpComponent.createFileSymbol(None, None)
+	tcpipSmtpHeaderFtl.setSourcePath("library/config/smtp.h.ftl")
+	tcpipSmtpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipSmtpHeaderFtl.setMarkup(True)
+	tcpipSmtpHeaderFtl.setType("STRING")
+	
 	# Add smtp.h file to project
 	tcpipSmtpHeaderFile = tcpipSmtpComponent.createFileSymbol(None, None)
 	tcpipSmtpHeaderFile.setSourcePath("library/smtp.h")

@@ -69,6 +69,13 @@ def instantiateComponent(tcpipCmdComponent):
 	tcpipCmdIcmpEchoReqDataSize.setDefaultValue(100)
 	tcpipCmdIcmpEchoReqDataSize.setDependencies(tcpipCmdMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
 
+	#Add to system_config.h
+	tcpipCmdHeaderFtl = tcpipCmdComponent.createFileSymbol(None, None)
+	tcpipCmdHeaderFtl.setSourcePath("library/config/tcpip_cmd.h.ftl")
+	tcpipCmdHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipCmdHeaderFtl.setMarkup(True)
+	tcpipCmdHeaderFtl.setType("STRING")
+	
 	# Add tcpip_commands.h file to project
 	tcpipCmdHeaderFile = tcpipCmdComponent.createFileSymbol(None, None)
 	tcpipCmdHeaderFile.setSourcePath("library/tcpip_commands.h")

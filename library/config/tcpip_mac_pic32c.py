@@ -832,6 +832,13 @@ drvEthPhyResetCallback.setDescription("App Function")
 drvEthPhyResetCallback.setDefaultValue("AppPhyResetFunction")
 drvEthPhyResetCallback.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
 
+#Add to system_config.h
+tcpipGmacHeaderFtl = tcpipEthMacComponent.createFileSymbol(None, None)
+tcpipGmacHeaderFtl.setSourcePath("library/config/tcpip_mac_pic32c.h.ftl")
+tcpipGmacHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+tcpipGmacHeaderFtl.setMarkup(True)
+tcpipGmacHeaderFtl.setType("STRING")
+	
 # file TCPIP_MAC_DRV_H "$HARMONY_VERSION_PATH/framework/driver/gmac/drv_gmac.h" to                     "$PROJECT_HEADER_FILES/framework/driver/gmac/drv_gmac.h"
 # Add drv_gmac.h file to project
 drvGmacHeaderFile = tcpipEthMacComponent.createFileSymbol(None, None)

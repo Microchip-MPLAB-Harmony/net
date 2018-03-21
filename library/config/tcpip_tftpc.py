@@ -87,6 +87,13 @@ def instantiateComponent(tcpipTftpcComponent):
 	tcpipTftpcRetryMax.setDefaultValue(3)
 	tcpipTftpcRetryMax.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
 
+	#Add to system_config.h
+	tcpipTftpcHeaderFtl = tcpipTftpcComponent.createFileSymbol(None, None)
+	tcpipTftpcHeaderFtl.setSourcePath("library/config/tftpc.h.ftl")
+	tcpipTftpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipTftpcHeaderFtl.setMarkup(True)
+	tcpipTftpcHeaderFtl.setType("STRING")
+	
 	# Add tftpc.h file to project
 	tcpipTftpcHeaderFile = tcpipTftpcComponent.createFileSymbol(None, None)
 	tcpipTftpcHeaderFile.setSourcePath("library/tftpc.h")

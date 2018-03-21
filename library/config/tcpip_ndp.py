@@ -107,7 +107,12 @@ def instantiateComponent(tcpipNdpComponent):
 	tcpipNdpTaskTimer.setDefaultValue(32)
 	tcpipNdpTaskTimer.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
-	#niyas Complete this file
+	#Add to system_config.h
+	tcpipNdpHeaderFtl = tcpipNdpComponent.createFileSymbol(None, None)
+	tcpipNdpHeaderFtl.setSourcePath("library/config/ndp.h.ftl")
+	tcpipNdpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipNdpHeaderFtl.setMarkup(True)
+	tcpipNdpHeaderFtl.setType("STRING")
 
 	# Add ndp.h file to project
 	tcpipNdpHeaderFile = tcpipNdpComponent.createFileSymbol(None, None)

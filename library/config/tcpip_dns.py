@@ -125,6 +125,13 @@ def instantiateComponent(tcpipDnsComponent):
 	tcpipDnscUsrNotification.setDefaultValue(False)
 	tcpipDnscUsrNotification.setDependencies(tcpipDnsMenuVisible, ["TCPIP_USE_DNS_CLIENT"])
 
+	#Add to system_config.h
+	tcpipDnscHeaderFtl = tcpipDnsComponent.createFileSymbol(None, None)
+	tcpipDnscHeaderFtl.setSourcePath("library/config/dns.h.ftl")
+	tcpipDnscHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipDnscHeaderFtl.setMarkup(True)
+	tcpipDnscHeaderFtl.setType("STRING")
+	
 	# Add dns.h file to project
 	tcpipDnscHeaderFile = tcpipDnsComponent.createFileSymbol(None, None)
 	tcpipDnscHeaderFile.setSourcePath("library/dns.h")

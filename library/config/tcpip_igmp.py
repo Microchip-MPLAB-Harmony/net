@@ -83,7 +83,13 @@ def instantiateComponent(tcpipIgmpComponent):
 	tcpipIgmpTskTickRate.setDefaultValue(33)
 	tcpipIgmpTskTickRate.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
-
+	#Add to system_config.h
+	tcpipIgmpHeaderFtl = tcpipIgmpComponent.createFileSymbol(None, None)
+	tcpipIgmpHeaderFtl.setSourcePath("library/config/igmp.h.ftl")
+	tcpipIgmpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipIgmpHeaderFtl.setMarkup(True)
+	tcpipIgmpHeaderFtl.setType("STRING")
+	
 	# Add igmp.h file to project
 	tcpipIgmpHeaderFile = tcpipIgmpComponent.createFileSymbol(None, None)
 	tcpipIgmpHeaderFile.setSourcePath("library/igmp.h")

@@ -156,6 +156,13 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpRxQueueLimit.setDefaultValue("2")
 	tcpipSntpRxQueueLimit.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
+	#Add to system_config.h
+	tcpipSntpHeaderFtl = tcpipSntpComponent.createFileSymbol(None, None)
+	tcpipSntpHeaderFtl.setSourcePath("library/config/sntp.h.ftl")
+	tcpipSntpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipSntpHeaderFtl.setMarkup(True)
+	tcpipSntpHeaderFtl.setType("STRING")
+	
 	# Add sntp.h file to project
 	tcpipUdpHeaderFile = tcpipSntpComponent.createFileSymbol(None, None)
 	tcpipUdpHeaderFile.setSourcePath("library/sntp.h")

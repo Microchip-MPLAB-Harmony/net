@@ -38,7 +38,12 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 	tcpipBerkeleyApiSourceFile.setType("SOURCE")
 	tcpipBerkeleyApiSourceFile.setEnabled(True)
 	tcpipBerkeleyApiSourceFile.setDependencies(tcpipBerkeleyApiGenSourceFile, ["TCPIP_STACK_USE_BERKELEY_API"])
-	
+
+	tcpipBerkeleyApiHeaderFtl = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
+	tcpipBerkeleyApiHeaderFtl.setSourcePath("library/config/berkeley_api.h.ftl")
+	tcpipBerkeleyApiHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipBerkeleyApiHeaderFtl.setMarkup(True)
+	tcpipBerkeleyApiHeaderFtl.setType("STRING")	
 	
 def tcpipBerkeleyApiMenuVisible(symbol, event):
 	if (event["value"] == True):

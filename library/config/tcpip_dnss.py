@@ -68,6 +68,13 @@ def instantiateComponent(tcpipDnssComponent):
 	tcpipDnssDeleteOldLease.setDefaultValue(True)
 	tcpipDnssDeleteOldLease.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
+	#Add to system_config.h
+	tcpipDnssHeaderFtl = tcpipDnssComponent.createFileSymbol(None, None)
+	tcpipDnssHeaderFtl.setSourcePath("library/config/dnss.h.ftl")
+	tcpipDnssHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipDnssHeaderFtl.setMarkup(True)
+	tcpipDnssHeaderFtl.setType("STRING")
+	
 	# Add dnss.h file to project
 	tcpipDnssHeaderFile = tcpipDnssComponent.createFileSymbol(None, None)
 	tcpipDnssHeaderFile.setSourcePath("library/dnss.h")

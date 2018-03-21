@@ -163,6 +163,13 @@ def instantiateComponent(tcpipTcpComponent):
 	tcpipTcpCommands.setDefaultValue(False)
 	tcpipTcpCommands.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
+	#Add to system_config.h
+	tcpipTcpHeaderFtl = tcpipTcpComponent.createFileSymbol(None, None)
+	tcpipTcpHeaderFtl.setSourcePath("library/config/tcp.h.ftl")
+	tcpipTcpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipTcpHeaderFtl.setMarkup(True)
+	tcpipTcpHeaderFtl.setType("STRING")
+	
 	# Add tcp.h file to project
 	tcpipTcpHeaderFile = tcpipTcpComponent.createFileSymbol(None, None)
 	tcpipTcpHeaderFile.setSourcePath("library/tcp.h")

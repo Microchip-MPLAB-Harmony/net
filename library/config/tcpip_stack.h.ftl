@@ -44,32 +44,31 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // Section: TCPIP Stack Configuration
 // *****************************************************************************
 // *****************************************************************************
-use_tcpipIPv4 = ${tcpipIPv4.TCPIP_STACK_USE_IPV4?c}
 
 <#if USE_TCPIP_STACK == true>
-<#if use_tcpipIPv4 == true>
+<#if tcpipIPv4.TCPIP_STACK_USE_IPV4 == true>
 #define TCPIP_STACK_USE_IPV4
 </#if>
-<#if tcpipIPv6.TCPIP_STACK_USE_IPV6?c == true>
+<#if tcpipIPv6.TCPIP_STACK_USE_IPV6 == true>
 #define TCPIP_STACK_USE_IPV6
 </#if>
-<#if tcpipTcp.CONFIG_TCPIP_USE_TCP?c == true>
+<#if tcpipTcp.TCPIP_USE_TCP == true>
 #define TCPIP_STACK_USE_TCP
 </#if>
-<#if tcpipUdp.CONFIG_TCPIP_USE_UDP?c == true>
+<#if tcpipUdp.TCPIP_USE_UDP == true>
 #define TCPIP_STACK_USE_UDP
 </#if>
 
 #define TCPIP_STACK_TICK_RATE		        		${TCPIP_STACK_TICK_RATE?c}
 #define TCPIP_STACK_SECURE_PORT_ENTRIES             ${TCPIP_STACK_SECURE_PORT_ENTRIES?c}
 
-<#if TCPIP_STACK_ALIAS_INTERFACE_SUPPORT?c == true>
+<#if TCPIP_STACK_ALIAS_INTERFACE_SUPPORT == true>
 #define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT   true
 <#else>
 #define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT   false
 </#if>
 
-<#if TCPIP_PACKET_LOG_ENABLE?c == true>
+<#if TCPIP_PACKET_LOG_ENABLE == true>
 #define TCPIP_PACKET_LOG_ENABLE                     1
 #define TCPIP_PKT_LOG_SIZE                          ${TCPIP_PKT_LOG_SIZE?c}
 <#else>
@@ -77,20 +76,20 @@ use_tcpipIPv4 = ${tcpipIPv4.TCPIP_STACK_USE_IPV4?c}
 </#if>
 
 /* TCP/IP stack event notification */
-<#if TCPIP_STACK_EVENT_NOTIFICATION?c == true>
+<#if TCPIP_STACK_EVENT_NOTIFICATION == true>
 #define TCPIP_STACK_USE_EVENT_NOTIFICATION
 </#if>
-<#if TCPIP_STACK_USER_NOTIFICATION?c == true>
+<#if TCPIP_STACK_USER_NOTIFICATION == true>
 #define TCPIP_STACK_USER_NOTIFICATION   true
 <#else>
 #define TCPIP_STACK_USER_NOTIFICATION   false
 </#if>
-<#if TCPIP_STACK_DOWN_OPERATION?c == false>
+<#if TCPIP_STACK_DOWN_OPERATION == false>
 #define TCPIP_STACK_DOWN_OPERATION   false
 #define TCPIP_STACK_IF_UP_DOWN_OPERATION   false
 <#else>
 #define TCPIP_STACK_DOWN_OPERATION   true
-<#if TCPIP_STACK_IF_UP_DOWN_OPERATION?c == true>
+<#if TCPIP_STACK_IF_UP_DOWN_OPERATION == true>
 #define TCPIP_STACK_IF_UP_DOWN_OPERATION   true
 <#else>
 #define TCPIP_STACK_IF_UP_DOWN_OPERATION   false
@@ -99,22 +98,23 @@ use_tcpipIPv4 = ${tcpipIPv4.TCPIP_STACK_USE_IPV4?c}
 <#if TCPIP_STACK_DOWN_OPERATION == true>
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 <#else>
-<#if TCPIP_STACK_MAC_DOWN_OPERATION?c == true>
+<#if TCPIP_STACK_MAC_DOWN_OPERATION == true>
 #define TCPIP_STACK_MAC_DOWN_OPERATION   true
 <#else>
 #define TCPIP_STACK_MAC_DOWN_OPERATION   false
 </#if>
 </#if>
-<#if TCPIP_STACK_INTERFACE_CHANGE_SIGNALING?c == true>
+<#if TCPIP_STACK_INTERFACE_CHANGE_SIGNALING == true>
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   true
 <#else>
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 </#if>
-<#if TCPIP_STACK_CONFIGURATION_SAVE_RESTORE?c == true>
+<#if TCPIP_STACK_CONFIGURATION_SAVE_RESTORE == true>
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
 <#else>
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   false
 </#if>
+
 <#-- niyas
 <#include "/framework/tcpip/config/tcpip_heap.h.ftl">
 <#include "/framework/tcpip/config/arp.h.ftl">

@@ -150,6 +150,13 @@ def instantiateComponent(tcpipDhcpsComponent):
 		tcpipDhcpsPoolEn[index].setDependencies(tcpipDhcpsInstnPoolEnMenu, [tcpipDhcpsInstance[index].getID(),"TCPIP_STACK_USE_DHCP_SERVER"])	
 	
 	######################################################################################################################################
+	#Add to system_config.h
+	tcpipDhcpsHeaderFtl = tcpipDhcpsComponent.createFileSymbol(None, None)
+	tcpipDhcpsHeaderFtl.setSourcePath("library/config/dhcps.h.ftl")
+	tcpipDhcpsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipDhcpsHeaderFtl.setMarkup(True)
+	tcpipDhcpsHeaderFtl.setType("STRING")
+	
 	# Add dhcps.h file to project
 	tcpipDhcpsHeaderFile = tcpipDhcpsComponent.createFileSymbol(None, None)
 	tcpipDhcpsHeaderFile.setSourcePath("library/dhcps.h")

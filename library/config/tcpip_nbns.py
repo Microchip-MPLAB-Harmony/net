@@ -18,6 +18,13 @@ def instantiateComponent(tcpipNbnsComponent):
 	tcpipNbnsTskTickRate.setDefaultValue(110)
 	tcpipNbnsTskTickRate.setDependencies(tcpipNbnsMenuVisibleSingle, ["TCPIP_USE_NBNS"])
 
+	#Add to system_config.h
+	tcpipNbnsHeaderFtl = tcpipNbnsComponent.createFileSymbol(None, None)
+	tcpipNbnsHeaderFtl.setSourcePath("library/config/nbns.h.ftl")
+	tcpipNbnsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipNbnsHeaderFtl.setMarkup(True)
+	tcpipNbnsHeaderFtl.setType("STRING")
+	
 	# Add nbns.h file to project
 	tcpipUdpHeaderFile = tcpipNbnsComponent.createFileSymbol(None, None)
 	tcpipUdpHeaderFile.setSourcePath("library/nbns.h")
