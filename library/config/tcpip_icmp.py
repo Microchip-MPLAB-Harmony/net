@@ -50,6 +50,13 @@ def instantiateComponent(tcpipIcmpComponent):
 	tcpipIcmpTskTickRate.setDefaultValue(33)
 	tcpipIcmpTskTickRate.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMP_CLIENT"])
 
+	#Add to system_config.h
+	tcpipIcmpHeaderFtl = tcpipIcmpComponent.createFileSymbol(None, None)
+	tcpipIcmpHeaderFtl.setSourcePath("library/config/icmp.h.ftl")
+	tcpipIcmpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipIcmpHeaderFtl.setMarkup(True)
+	tcpipIcmpHeaderFtl.setType("STRING")
+	
 	# Add icmp.h file to project
 	tcpipIcmpHeaderFile = tcpipIcmpComponent.createFileSymbol(None, None)
 	tcpipIcmpHeaderFile.setSourcePath("library/icmp.h")

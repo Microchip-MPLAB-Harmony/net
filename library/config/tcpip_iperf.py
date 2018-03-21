@@ -64,6 +64,13 @@ def instantiateComponent(tcpipIperfComponent):
 	tcpipIperfTxBwLimit.setDefaultValue(1)
 	tcpipIperfTxBwLimit.setDependencies(tcpipIperfMenuVisible, ["TCPIP_USE_IPERF"])
 
+	#Add to system_config.h
+	tcpipIperfHeaderFtl = tcpipIperfComponent.createFileSymbol(None, None)
+	tcpipIperfHeaderFtl.setSourcePath("library/config/iperf.h.ftl")
+	tcpipIperfHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipIperfHeaderFtl.setMarkup(True)
+	tcpipIperfHeaderFtl.setType("STRING")
+	
 	# Add iperf.h file to project
 	tcpipIperfHeaderFile = tcpipIperfComponent.createFileSymbol(None, None)
 	tcpipIperfHeaderFile.setSourcePath("library/iperf.h")

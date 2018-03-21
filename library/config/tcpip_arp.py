@@ -1,14 +1,37 @@
 def instantiateComponent(tcpipArpComponent):
-	print("TCPIP TCP Component")
+	print("TCPIP ARP Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
 	
-	# Settings for Address Resolution Protocol
-	tcpipArp = tcpipArpComponent.createMenuSymbol("TCPIP_USE_ARP", None)
-	tcpipArp.setLabel("ARP")
+	# # Settings for Address Resolution Protocol
+	# tcpipArp = tcpipArpComponent.createMenuSymbol("TCPIP_ARP", None)
+	# tcpipArp.setLabel("ARP")
+	# tcpipArp.setVisible(True)
+	# tcpipArp.setDescription("Address Resolution Protocol Settings")
+	# tcpipArp.setDependencies(tcpipArpMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	
+	# # ARP Enable 
+	# tcpipArpEnable = tcpipArpComponent.createBooleanSymbol("TCPIP_USE_ARP", None)
+	# tcpipArpEnable.setLabel("Use ARP?")
+	# tcpipArpEnable.setDescription("Enables ARP")
+	# tcpipArpEnable.setDefaultValue(True)
+	# tcpipArpEnable.setVisible(True)
+	# tcpipArpEnable.setDependencies(tcpipArpEnable, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	
+		# Settings for Address Resolution Protocol
+	# tcpipArp = tcpipArpComponent.createMenuSymbol("TCPIP_ARP", None)
+	# tcpipArp.setLabel("ARP")
+	# tcpipArp.setVisible(True)
+	# tcpipArp.setDescription("Address Resolution Protocol Settings")
+	# tcpipArp.setDependencies(tcpipArpMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	
+	# ARP Enable 
+	tcpipArp = tcpipArpComponent.createBooleanSymbol("TCPIP_USE_ARP", None)
+	tcpipArp.setLabel("Use ARP?")
+	tcpipArp.setDescription("Enables ARP")
+	tcpipArp.setDefaultValue(True)
 	tcpipArp.setVisible(True)
-	tcpipArp.setDescription("Address Resolution Protocol Settings")
-	tcpipArp.setDependencies(tcpipArpMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
-
+	tcpipArp.setDependencies(tcpipArpEnable, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	
 	# Cache Entries for this Interface
 	tcpipArpCacheEntries = tcpipArpComponent.createIntegerSymbol("TCPIP_ARP_CACHE_ENTRIES", tcpipArp)
 	tcpipArpCacheEntries.setLabel("Cache Entries for This Interface")
@@ -105,7 +128,14 @@ def instantiateComponent(tcpipArpComponent):
 	tcpipArpPrimaryCacheOnly.setDescription("Alias Interfaces Share One Cache")
 	tcpipArpPrimaryCacheOnly.setDefaultValue(True)
 	tcpipArpPrimaryCacheOnly.setDependencies(tcpipArpMenuVisibleSingle, ["TCPIP_USE_ARP"])
-
+	
+	#Add to system_config.h
+	tcpipArpHeaderFtl = tcpipArpComponent.createFileSymbol(None, None)
+	tcpipArpHeaderFtl.setSourcePath("library/config/arp.h.ftl")
+	tcpipArpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipArpHeaderFtl.setMarkup(True)
+	tcpipArpHeaderFtl.setType("STRING")
+	
 	# Add arp.h file to project
 	tcpipArpHeaderFile = tcpipArpComponent.createFileSymbol(None, None)
 	tcpipArpHeaderFile.setSourcePath("library/arp.h")
@@ -152,6 +182,15 @@ def tcpipArpMenuVisibleSingle(symbol, event):
 	else:
 		print("ARP Menu Invisible.")
 		symbol.setVisible(False)
+
+
+def tcpipArpEnable(symbol, event):
+	if (event["value"] == True):
+		print("ARP Enable")		
+		symbol.setValue(True, 1)
+	else:
+		print("ARP Disable.")
+		symbol.setValue(False, 1)		
 		
 def tcpipArpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])

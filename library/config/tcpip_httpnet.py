@@ -430,6 +430,13 @@ def instantiateComponent(tcpipHttpNetComponent):
 	# default n
 	# persistent
 
+	#Add to system_config.h
+	tcpipHttpNetHeaderFtl = tcpipHttpNetComponent.createFileSymbol(None, None)
+	tcpipHttpNetHeaderFtl.setSourcePath("library/config/http_net.h.ftl")
+	tcpipHttpNetHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipHttpNetHeaderFtl.setMarkup(True)
+	tcpipHttpNetHeaderFtl.setType("STRING")
+	
 	# Add http_net.h file to project
 	tcpipHttpNetHeaderFile = tcpipHttpNetComponent.createFileSymbol(None, None)
 	tcpipHttpNetHeaderFile.setSourcePath("library/http_net.h")

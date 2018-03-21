@@ -26,7 +26,14 @@ def instantiateComponent(tcpipDdnsComponent):
 	tcpipDdnsTskRate.setDescription("Dynamic DNS Task Rate in msec")
 	tcpipDdnsTskRate.setDefaultValue(777)
 	tcpipDdnsTskRate.setDependencies(tcpipDdnsMenuVisible, ["TCPIP_USE_DDNS"])
-
+	
+	# Add to system_config.h
+	tcpipDdnsHeaderFtl = tcpipDdnsComponent.createFileSymbol(None, None)
+	tcpipDdnsHeaderFtl.setSourcePath("library/config/ddns.h.ftl")
+	tcpipDdnsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipDdnsHeaderFtl.setMarkup(True)
+	tcpipDdnsHeaderFtl.setType("STRING")
+	
 	# Add ddns.h file to project
 	tcpipUdpHeaderFile = tcpipDdnsComponent.createFileSymbol(None, None)
 	tcpipUdpHeaderFile.setSourcePath("library/ddns.h")

@@ -53,6 +53,13 @@ def instantiateComponent(tcpipIPv4Component):
 	tcpipIPv4TaskTickRate.setDescription("IPv4 task rate in ms")
 	tcpipIPv4TaskTickRate.setDefaultValue(37)
 
+	#Add to system_config.h
+	tcpipIPv4HeaderFtl = tcpipIPv4Component.createFileSymbol(None, None)
+	tcpipIPv4HeaderFtl.setSourcePath("library/config/ip.h.ftl")
+	tcpipIPv4HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipIPv4HeaderFtl.setMarkup(True)
+	tcpipIPv4HeaderFtl.setType("STRING")
+	
 	# Add ipv4.h file to project
 	tcpipIPv4HeaderFile = tcpipIPv4Component.createFileSymbol(None, None)
 	tcpipIPv4HeaderFile.setSourcePath("library/ipv4.h")

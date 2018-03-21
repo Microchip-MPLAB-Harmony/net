@@ -223,6 +223,13 @@ def instantiateComponent(tcpipHttpComponent):
 	#    default n
 	#   persistent
 
+	#Add to system_config.h
+	tcpipHttpHeaderFtl = tcpipHttpComponent.createFileSymbol(None, None)
+	tcpipHttpHeaderFtl.setSourcePath("library/config/http.h.ftl")
+	tcpipHttpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipHttpHeaderFtl.setMarkup(True)
+	tcpipHttpHeaderFtl.setType("STRING")
+	
 	# Add http.h file to project
 	tcpipHttpHeaderFile = tcpipHttpComponent.createFileSymbol(None, None)
 	tcpipHttpHeaderFile.setSourcePath("library/http.h")

@@ -59,7 +59,14 @@ def instantiateComponent(tcpipDhcpComponent):
 	tcpipDhcpcServerListenPort.setDescription("Remote Server Port for DHCP Server Messages")
 	tcpipDhcpcServerListenPort.setDefaultValue(67)
 	tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
-
+	
+	#Add to system_config.h
+	tcpipDhcpcHeaderFtl = tcpipDhcpComponent.createFileSymbol(None, None)
+	tcpipDhcpcHeaderFtl.setSourcePath("library/config/dhcp.h.ftl")
+	tcpipDhcpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipDhcpcHeaderFtl.setMarkup(True)
+	tcpipDhcpcHeaderFtl.setType("STRING")
+	
 	# Add dhcp.h file to project
 	tcpipDhcpcHeaderFile = tcpipDhcpComponent.createFileSymbol(None, None)
 	tcpipDhcpcHeaderFile.setSourcePath("library/dhcp.h")

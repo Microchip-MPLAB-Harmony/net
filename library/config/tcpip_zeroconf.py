@@ -308,6 +308,13 @@ def instantiateComponent(tcpipZeroConfComponent):
 
 	# Niyas to verify all the below header files
 
+	#Add to system_config.h
+	tcpipZcHeaderFtl = tcpipZeroConfComponent.createFileSymbol(None, None)
+	tcpipZcHeaderFtl.setSourcePath("library/config/zeroconf.h.ftl")
+	tcpipZcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipZcHeaderFtl.setMarkup(True)
+	tcpipZcHeaderFtl.setType("STRING")
+	
 	# Add zero_conf_helper.h file to project
 	tcpipZcHelperHeaderFile = tcpipZeroConfComponent.createFileSymbol(None, None)
 	tcpipZcHelperHeaderFile.setSourcePath("library/src/zero_conf_helper.h")

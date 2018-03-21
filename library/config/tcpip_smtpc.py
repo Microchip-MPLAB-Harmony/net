@@ -140,6 +140,13 @@ def instantiateComponent(tcpipSmtpcComponent):
 	tcpipSmtpcMailCommand.setDefaultValue(False)
 	tcpipSmtpcMailCommand.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
 
+	#Add to system_config.h
+	tcpipSmtpcHeaderFtl = tcpipSmtpcComponent.createFileSymbol(None, None)
+	tcpipSmtpcHeaderFtl.setSourcePath("library/config/smtpc.h.ftl")
+	tcpipSmtpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipSmtpcHeaderFtl.setMarkup(True)
+	tcpipSmtpcHeaderFtl.setType("STRING")
+	
 	# Add smtpc.h file to project
 	tcpipSmtpcHeaderFile = tcpipSmtpcComponent.createFileSymbol(None, None)
 	tcpipSmtpcHeaderFile.setSourcePath("library/smtpc.h")

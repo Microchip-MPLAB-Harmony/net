@@ -38,9 +38,9 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 -->
-<#if CONFIG_TCPIP_STACK_USE_BERKELEY_API == true>
+<#if TCPIP_STACK_USE_BERKELEY_API == true>
 /*** Berkeley API Configuration ***/
 #define TCPIP_STACK_USE_BERKELEY_API
-#define MAX_BSD_SOCKETS 					${CONFIG_TCPIP_BSD_MAX_BSD_SOCKETS}
+#define MAX_BSD_SOCKETS 					${TCPIP_BSD_MAX_BSD_SOCKETS}
 #define TCPIP_STACK_USE_BERKELEY_API
 </#if>

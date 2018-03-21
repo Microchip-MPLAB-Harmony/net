@@ -35,6 +35,13 @@ def instantiateComponent(tcpipRebootComponent):
 	tcpipRebootTskTickRate.setDefaultValue(1130)
 	tcpipRebootTskTickRate.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
 
+	#Add to system_config.h
+	tcpipRebootHeaderFtl = tcpipRebootComponent.createFileSymbol(None, None)
+	tcpipRebootHeaderFtl.setSourcePath("library/config/tcpip_reboot.h.ftl")
+	tcpipRebootHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipRebootHeaderFtl.setMarkup(True)
+	tcpipRebootHeaderFtl.setType("STRING")
+	
 	# Add tcpip_reboot_manager.h file to project
 	tcpipRebootManagerHeaderFile = tcpipRebootComponent.createFileSymbol(None, None)
 	tcpipRebootManagerHeaderFile.setSourcePath("library/src/tcpip_reboot_manager.h")

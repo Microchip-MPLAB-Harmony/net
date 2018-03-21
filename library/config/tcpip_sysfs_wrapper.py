@@ -75,7 +75,13 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsFatfsStr.setDefaultValue("FATFS")
 	tcpipSysFsFatfsStr.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
-
+	#Add to system_config.h
+	tcpipSysFsHeaderFtl = tcpipSysFsWrapperComponent.createFileSymbol(None, None)
+	tcpipSysFsHeaderFtl.setSourcePath("library/config/sys_fs_wrapper.h.ftl")
+	tcpipSysFsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipSysFsHeaderFtl.setMarkup(True)
+	tcpipSysFsHeaderFtl.setType("STRING")
+	
 	# Add sys_fs_wrapper.h file to project
 	tcpipSysFsWrapperHeaderFile = tcpipSysFsWrapperComponent.createFileSymbol(None, None)
 	tcpipSysFsWrapperHeaderFile.setSourcePath("library/sys_fs_wrapper.h")

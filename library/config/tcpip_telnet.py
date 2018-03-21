@@ -53,6 +53,13 @@ def instantiateComponent(tcpipTelnetComponent):
 	tcpipTelnetRejectUnsecure.setDefaultValue(False)
 	tcpipTelnetRejectUnsecure.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
+	#Add to system_config.h
+	tcpipTelnetHeaderFtl = tcpipTelnetComponent.createFileSymbol(None, None)
+	tcpipTelnetHeaderFtl.setSourcePath("library/config/arp.h.ftl")
+	tcpipTelnetHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipTelnetHeaderFtl.setMarkup(True)
+	tcpipTelnetHeaderFtl.setType("STRING")
+	
 	# Add telnet.h file to project
 	tcpipTelnetHeaderFile = tcpipTelnetComponent.createFileSymbol(None, None)
 	tcpipTelnetHeaderFile.setSourcePath("library/telnet.h")

@@ -93,6 +93,13 @@ def instantiateComponent(tcpipFtpsComponent):
 	tcpipFtpsFilePut.setDefaultValue(True)
 	tcpipFtpsFilePut.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
 
+	#Add to system_config.h
+	tcpipFtpsHeaderFtl = tcpipFtpsComponent.createFileSymbol(None, None)
+	tcpipFtpsHeaderFtl.setSourcePath("library/config/ftp.h.ftl")
+	tcpipFtpsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipFtpsHeaderFtl.setMarkup(True)
+	tcpipFtpsHeaderFtl.setType("STRING")	
+	
 	# Add ftp.h file to project
 	tcpipFtpsHeaderFile = tcpipFtpsComponent.createFileSymbol(None, None)
 	tcpipFtpsHeaderFile.setSourcePath("library/ftp.h")

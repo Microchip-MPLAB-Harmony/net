@@ -165,6 +165,13 @@ def instantiateComponent(tcpipIPv6Component):
 	# niyas use Variables.get("__TCPIP_DIR") 
 	#execfile(__TCPIP_DIR + "/library/config/ndp.py")
 
+	#Add to system_config.h
+	tcpipIPv6HeaderFtl = tcpipIPv6Component.createFileSymbol(None, None)
+	tcpipIPv6HeaderFtl.setSourcePath("library/config/ipv6.h.ftl")
+	tcpipIPv6HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipIPv6HeaderFtl.setMarkup(True)
+	tcpipIPv6HeaderFtl.setType("STRING")
+	
 	# Add ipv6.h file to project
 	tcpipIPv6HeaderFile = tcpipIPv6Component.createFileSymbol(None, None)
 	tcpipIPv6HeaderFile.setSourcePath("library/ipv6.h")
