@@ -39,7 +39,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
  -->
 
-<#if CONFIG_DRV_MIIM_USE_DRIVER>
+<#if DRV_MIIM_USE_DRIVER>
 /* MIIM Driver Configuration */
 static const DRV_MIIM_INIT drvMiimInitData =
 {

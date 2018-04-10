@@ -23,30 +23,32 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
  -->
 <#--
-// tcpip_stack.c.ftl: TCP/IP module Initialization Calls
+// tcpip_stack_init.c.ftl: TCP/IP module Initialization Calls
 -->
 
-<#if CONFIG_USE_TCPIP_STACK == true>
-<#if CONFIG_DSTBDPIC32CZ == true>	
-<#if CONFIG_TCPIP_GMAC_INTERRUPT_MODE == true>
+<#if USE_TCPIP_STACK == true>
+<#if (TCPIP_DEVICE_FAMILY) == "PIC32C">
+<#if (tcpipEthMac.TCPIP_GMAC_INTERRUPT_MODE)?has_content && (tcpipEthMac.TCPIP_GMAC_INTERRUPT_MODE) == true>
     /* set priority for ETHERNET interrupt source */
-    SYS_INT_VectorPrioritySet(${CONFIG_DRV_GMAC_INTERRUPT_VECTOR}, ${CONFIG_TCPIP_GMAC_INTERRUPT_PRIORITY});
+    SYS_INT_VectorPrioritySet(${tcpipEthMac.DRV_GMAC_INTERRUPT_VECTOR}, ${tcpipEthMac.TCPIP_GMAC_INTERRUPT_PRIORITY});
 </#if>  	
 <#else>
-<#if CONFIG_TCPIP_EMAC_INTERRUPT_MODE == true>
+<#if (tcpipEthMac.TCPIP_EMAC_INTERRUPT_MODE)?has_content && (tcpipEthMac.TCPIP_EMAC_INTERRUPT_MODE) == true>
     /* set priority for ETHERNET interrupt source */
-    SYS_INT_VectorPrioritySet(INT_VECTOR_ETH, ${CONFIG_TCPIP_EMAC_INTERRUPT_PRIORITY});
+    SYS_INT_VectorPrioritySet(INT_VECTOR_ETH, ${TCPIP_EMAC_INTERRUPT_PRIORITY});
 
     /* set sub-priority for ETHERNET interrupt source */
-    SYS_INT_VectorSubprioritySet(INT_VECTOR_ETH, ${CONFIG_TCPIP_EMAC_INTERRUPT_SUB_PRIORITY});
+    SYS_INT_VectorSubprioritySet(INT_VECTOR_ETH, ${TCPIP_EMAC_INTERRUPT_SUB_PRIORITY});
 </#if>    
-</#if>      
-<#if CONFIG_TCPIP_STACK_USE_COMMANDS == true && CONFIG_USE_SYS_COMMAND == false>
+</#if>     
+<#-- niyas to do 
+<#if TCPIP_STACK_USE_COMMANDS == true && CONFIG_USE_SYS_COMMAND == false>
     if (!SYS_CMD_Initialize())
     {
         return;
     }
 </#if>
+-->
     /* TCPIP Stack Initialization */
     sysObj.tcpip = TCPIP_STACK_Init();
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );

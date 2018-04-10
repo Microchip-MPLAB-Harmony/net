@@ -177,6 +177,11 @@ def instantiateComponent(tcpipHttpComponent):
 	#   default 1 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS"
 	#    default 2 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_NO_DELAY"
 
+	# HTTP Config Flag - Niyasto complete
+	tcpipHttpConfigFlag = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_CONFIG_FLAGS", tcpipHttp)
+	tcpipHttpConfigFlag.setVisible(False)	
+	tcpipHttpConfigFlag.setDefaultValue(1)
+		
 	# HTTP Task Rate in ms
 	tcpipHttpTskRate= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_TASK_RATE", tcpipHttp)
 	tcpipHttpTskRate.setLabel("HTTP Task Rate - ms")

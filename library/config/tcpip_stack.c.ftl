@@ -31,8 +31,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#--
 // tcpip_stack_init.c.ftl: TCP/IP modules initialization data
 -->
-
-<#if CONFIG_TCPIP_USE_ARP == true>
+<#if (tcpipArp.TCPIP_USE_ARP)?has_content && (tcpipArp.TCPIP_USE_ARP) == true>
 /*** ARP Service Initialization Data ***/
 const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
 { 
@@ -48,35 +47,34 @@ const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
     .gratProbeCount     = TCPIP_ARP_GRATUITOUS_PROBE_COUNT,
 };
 </#if>
-
-<#if CONFIG_TCPIP_USE_TELNET == true>
+<#if (tcpipTelnet.TCPIP_USE_TELNET)?has_content && (tcpipTelnet.TCPIP_USE_TELNET) == true>
 /*** telnet Server Initialization Data ***/
 const TCPIP_TELNET_MODULE_CONFIG tcpipTelnetInitData =
 { 
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_ANNOUNCE == true>
+<#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content && (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>
 /*** Announce Discovery Initialization Data ***/
 const TCPIP_ANNOUNCE_MODULE_CONFIG tcpipAnnounceInitData =
 { 
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_UDP == true>
+<#if (tcpipUdp.TCPIP_USE_UDP)?has_content && (tcpipUdp.TCPIP_USE_UDP) == true>
 /*** UDP Sockets Initialization Data ***/
 const TCPIP_UDP_MODULE_CONFIG tcpipUDPInitData =
 {
     .nSockets       = TCPIP_UDP_MAX_SOCKETS,
     .sktTxBuffSize  = TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE, 
-<#if CONFIG_TCPIP_UDP_USE_POOL_BUFFERS == true>
+<#if (tcpipUdp.TCPIP_UDP_USE_POOL_BUFFERS)?has_content && (tcpipUdp.TCPIP_UDP_USE_POOL_BUFFERS) == true>
     .poolBuffers    = TCPIP_UDP_SOCKET_POOL_BUFFERS,
     .poolBufferSize = TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE,
 </#if>
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_TCP == true>
+<#if (tcpipTcp.TCPIP_USE_TCP)?has_content && (tcpipTcp.TCPIP_USE_TCP) == true>
 /*** TCP Sockets Initialization Data ***/
 const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
 {
@@ -86,7 +84,7 @@ const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true>
+<#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
 /*** HTTP Server Initialization Data ***/
 const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
 {
@@ -100,7 +98,7 @@ const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_HTTP_NET_SERVER == true>
+<#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content && (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 /*** HTTP_NET Server Initialization Data ***/
 const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
 {
@@ -109,7 +107,7 @@ const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
     .sktTxBuffSize	= TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE,
     .sktRxBuffSize	= TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE,
     .listenPort	    = TCPIP_HTTP_NET_LISTEN_PORT,
-<#if CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
+<#if (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS)?has_content && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS) == true>
     .nDescriptors   = TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER,
 <#else>
     .nDescriptors   = 0,
@@ -121,7 +119,7 @@ const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
     .fileBufferSize = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE,
     .chunkPoolRetries = TCPIP_HTTP_NET_CHUNK_RETRIES,
     .fileBufferRetries = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES,
-<#if CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
+<#if (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS)?has_content && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS) == true>
     .dynVarRetries  = TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES,
 <#else>
     .dynVarRetries      = 0,
@@ -132,7 +130,7 @@ const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_SNTP_CLIENT == true>
+<#if (tcpipSntp.TCPIP_USE_SNTP_CLIENT)?has_content && (tcpipSntp.TCPIP_USE_SNTP_CLIENT) == true>
 /*** SNTP Client Initialization Data ***/
 const TCPIP_SNTP_MODULE_CONFIG tcpipSNTPInitData =
 {
@@ -146,14 +144,14 @@ const TCPIP_SNTP_MODULE_CONFIG tcpipSNTPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_SMTP_CLIENT == true>
+<#if (tcpipSmtp.TCPIP_USE_SMTP_CLIENT)?has_content && (tcpipSmtp.TCPIP_USE_SMTP_CLIENT) == true>
 /*** SMTP client Initialization Data ***/
 const TCPIP_SMTP_CLIENT_MODULE_CONFIG tcpipSMTPInitData =
 { 
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_SMTPC_CLIENT == true>
+<#if (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT)?has_content && (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT) == true>
 /*** SMTPC client Initialization Data ***/
 const TCPIP_SMTPC_MODULE_CONFIG tcpipSMTPCInitData =
 {
@@ -169,7 +167,7 @@ const TCPIP_SMTPC_MODULE_CONFIG tcpipSMTPCInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_DHCP_CLIENT == true>
+<#if (tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT)?has_content && (tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT) == true>
 /*** DHCP client Initialization Data ***/
 const TCPIP_DHCP_MODULE_CONFIG tcpipDHCPInitData =
 {     
@@ -181,7 +179,7 @@ const TCPIP_DHCP_MODULE_CONFIG tcpipDHCPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_BERKELEY_API == true>
+<#if (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API)?has_content && (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API) == true>
 /*** Berkeley API Initialization Data ***/
 const BERKELEY_MODULE_CONFIG tcpipBerkeleyInitData = 
 {
@@ -189,21 +187,21 @@ const BERKELEY_MODULE_CONFIG tcpipBerkeleyInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_ICMP_SERVER == true>
+<#if (tcpipIcmp.TCPIP_STACK_USE_ICMP_SERVER)?has_content && (tcpipIcmp.TCPIP_STACK_USE_ICMP_SERVER) == true>
 /*** ICMP Server Initialization Data ***/
 const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData = 
 {
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_NBNS == true>
+<#if (tcpipNbns.TCPIP_USE_NBNS)?has_content && (tcpipNbns.TCPIP_USE_NBNS) == true>
 /*** NBNS Server Initialization Data ***/
 const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
 { 
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_IGMP == true>
+<#if (tcpipIgmp.TCPIP_USE_IGMP)?has_content && (tcpipIgmp.TCPIP_USE_IGMP) == true>
 /*** IGMP module Initialization Data ***/
 const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 {     
@@ -214,12 +212,12 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_ETH_MAC == true>
+<#if (tcpipEthMac.TCPIP_USE_ETH_MAC)?has_content && (tcpipEthMac.TCPIP_USE_ETH_MAC) == true>
 /*** ETH PHY Initialization Data ***/
 
-<#if CONFIG_DRV_ETHPHY_USE_RESET_CALLBACK == true>
-<#if CONFIG_DRV_ETHPHY_RESET_CALLBACK?has_content>
-extern void ${CONFIG_DRV_ETHPHY_RESET_CALLBACK}( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
+<#if (tcpipEthMac.DRV_ETHPHY_USE_RESET_CALLBACK) == true>
+<#if (tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)?has_content>
+extern void ${(tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)}( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
 </#if>
 </#if>
 
@@ -228,21 +226,21 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 {
     .moduleInit             = {SYS_MODULE_POWER_RUN_FULL},
     .ethphyId               = TCPIP_EMAC_MODULE_ID,
-<#if (CONFIG_DSTBDPIC32CZ == true)>
+<#if (TCPIP_DEVICE_FAMILY == "PIC32C")>
     .phyAddress             = TCPIP_GMAC_PHY_ADDRESS,
     .phyFlags               = TCPIP_GMAC_PHY_CONFIG_FLAGS,
 <#else>
     .phyAddress             = TCPIP_EMAC_PHY_ADDRESS,
     .phyFlags               = TCPIP_EMAC_PHY_CONFIG_FLAGS,
 </#if>
-    .pPhyObject             = &DRV_ETHPHY_OBJECT_${CONFIG_TCPIP_EMAC_PHY_TYPE},
-<#if CONFIG_DRV_ETHPHY_USE_RESET_CALLBACK == true && CONFIG_DRV_ETHPHY_RESET_CALLBACK?has_content>
-    .resetFunction          = ${CONFIG_DRV_ETHPHY_RESET_CALLBACK},
+    .pPhyObject             = &DRV_ETHPHY_OBJECT_${tcpipEthMac.TCPIP_EMAC_PHY_TYPE},
+<#if (tcpipEthMac.DRV_ETHPHY_USE_RESET_CALLBACK) == true && (tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)?has_content>
+    .resetFunction          = ${(tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)},
 <#else>
     .resetFunction          = 0,
 </#if>
-<#if CONFIG_DRV_MIIM_USE_DRIVER == true>
-    .pMiimObject            = &${CONFIG_DRV_MIIM_DRIVER_OBJECT},
+<#if DRV_MIIM_USE_DRIVER?has_content && DRV_MIIM_USE_DRIVER == true >
+    .pMiimObject            = &${DRV_MIIM_DRIVER_OBJECT},
     .pMiimInit              = &drvMiimInitData,
     .miimIndex              = DRV_MIIM_DRIVER_INDEX,
 <#else>
@@ -250,14 +248,16 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
     .pMiimInit              = 0,
     .miimIndex              = 0,
 </#if>
+
 };
 
 /*** ETH MAC Initialization Data ***/
-<#if (CONFIG_DSTBDPIC32CZ == true)>
+
+<#if (TCPIP_DEVICE_FAMILY == "PIC32C")>
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-<#if CONFIG_TCPIP_GMAC_QUEUE_0 == true>
+<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_0) == true>
 	.gmac_queue_config[0].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[0].queueEnable	= false,	
@@ -268,7 +268,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
 	
 	/** QUEUE 1 Intialization**/
-<#if CONFIG_TCPIP_GMAC_QUEUE_1 == true>
+<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_1) == true>
 	.gmac_queue_config[1].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[1].queueEnable	= false,	
@@ -279,7 +279,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[1].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
 
 	/** QUEUE 2 Intialization**/
-<#if CONFIG_TCPIP_GMAC_QUEUE_2 == true>
+<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_2) == true>
 	.gmac_queue_config[2].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[2].queueEnable	= false,	
@@ -290,7 +290,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[2].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
 
 	/** QUEUE 3 Intialization**/
-<#if CONFIG_TCPIP_GMAC_QUEUE_3 == true>
+<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_3) == true>
 	.gmac_queue_config[3].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[3].queueEnable	= false,	
@@ -301,7 +301,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[3].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
 
 	/** QUEUE 4 Intialization**/
-<#if CONFIG_TCPIP_GMAC_QUEUE_4 == true>
+<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_4) == true>
 	.gmac_queue_config[4].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[4].queueEnable	= false,	
@@ -312,7 +312,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[4].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE4,
 
 	/** QUEUE 5 Intialization**/
-<#if CONFIG_TCPIP_GMAC_QUEUE_5 == true>
+<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_5) == true>
 	.gmac_queue_config[5].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[5].queueEnable	= false,	
@@ -325,9 +325,9 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.ethFlags               = TCPIP_GMAC_ETH_OPEN_FLAGS,	
 	.linkInitDelay          = TCPIP_GMAC_PHY_LINK_INIT_DELAY,
     .ethModuleId            = TCPIP_EMAC_MODULE_ID,
-<#if CONFIG_TCPIP_EMAC_PHY_TYPE == "SMSC_LAN9303">
+<#if (tcpipEthMac.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
-<#elseif CONFIG_TCPIP_EMAC_PHY_TYPE == "KSZ8863">
+<#elseif (tcpipEthMac.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
 <#else>
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
@@ -347,9 +347,9 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .linkInitDelay          = TCPIP_EMAC_PHY_LINK_INIT_DELAY,
     .ethFlags               = TCPIP_EMAC_ETH_OPEN_FLAGS,
     .ethModuleId            = TCPIP_EMAC_MODULE_ID,
-<#if CONFIG_TCPIP_EMAC_PHY_TYPE == "SMSC_LAN9303">
+<#if TCPIP_EMAC_PHY_TYPE == "SMSC_LAN9303">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
-<#elseif CONFIG_TCPIP_EMAC_PHY_TYPE == "KSZ8863">
+<#elseif TCPIP_EMAC_PHY_TYPE == "KSZ8863">
     .pPhyBase		    = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
 <#else>
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
@@ -360,37 +360,41 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 </#if>
 
 
-<#if CONFIG_USE_DRV_WIFI == true>
- <#if CONFIG_DRV_WIFI_DEVICE == "MRF24WN">
+<#if CONFIG_USE_DRV_WIFI?has_content && CONFIG_USE_DRV_WIFI == true >
+<#if DRV_WIFI_DEVICE?has_content >
+<#if DRV_WIFI_DEVICE == "MRF24WN" >
 /*** Wi-Fi Interface MRF24WN Initialization Data ***/
 const TCPIP_MODULE_MAC_MRF24WN_CONFIG macMRF24WNConfigData = {
 };
- <#elseif CONFIG_DRV_WIFI_DEVICE == "WINC1500">
+<#elseif DRV_WIFI_DEVICE == "WINC1500">
 /*** Wi-Fi Interface WINC1500 Initialization Data ***/
 const TCPIP_MODULE_MAC_WINC1500_CONFIG macWINC1500ConfigData = {
 };
- <#elseif CONFIG_DRV_WIFI_DEVICE == "WILC1000">
+<#elseif DRV_WIFI_DEVICE == "WILC1000">
 /*** Wi-Fi Interface WILC1000 Initialization Data ***/
 const TCPIP_MODULE_MAC_WILC1000_CONFIG macWILC1000ConfigData = {
 };
- </#if>
+</#if>
+</#if>
 </#if>
 
-<#if CONFIG_TCPIP_USE_DDNS == true>
+
+<#if (tcpipDdns.TCPIP_USE_DDNS)?has_content && (tcpipDdns.TCPIP_USE_DDNS) == true>
 /*** DDNS Initialization Data ***/
 const DDNS_MODULE_CONFIG tcpipDDNSInitData =
 {
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_LINK_ZERO_CONFIG == true>
+<#if (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG)?has_content && (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG) == true>
 /*** Zeroconfig initialization data ***/
 const ZCLL_MODULE_CONFIG tcpipZCLLInitData =
 {
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_TFTPC_MODULE == true>
+
+<#if (tcpipTftpc.TCPIP_USE_TFTPC_MODULE)?has_content && (tcpipTftpc.TCPIP_USE_TFTPC_MODULE) == true>
 /*** TFTP Client Initialization Data ***/
 const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 {
@@ -399,11 +403,11 @@ const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_DHCP_SERVER == true>
+<#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content && (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
 /*** DHCP server initialization data ***/
 TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
 {
-<#if CONFIG_TCPIP_DHCP_SERVER_IDX0 == true>
+<#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX0) == true>
     {
         .interfaceIndex     = TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX0,
         .serverIPAddress    = TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX0,
@@ -414,7 +418,7 @@ TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
         .poolEnabled        = TCPIP_DHCP_SERVER_POOL_ENABLED_IDX0,
     },
 </#if>
-<#if CONFIG_TCPIP_DHCP_SERVER_IDX1 == true>
+<#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX1) == true>
     {
         .interfaceIndex     = TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX1,
         .serverIPAddress    = TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX1,
@@ -436,7 +440,7 @@ const TCPIP_DHCPS_MODULE_CONFIG tcpipDHCPSInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_FTP_MODULE == true>
+<#if (tcpipFtps.TCPIP_USE_FTP_MODULE)?has_content && (tcpipFtps.TCPIP_USE_FTP_MODULE) == true>
 /*** FTP Server Initialization Data ***/
 const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
 { 
@@ -448,7 +452,7 @@ const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_DNS_CLIENT == true>
+<#if (tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content && (tcpipDns.TCPIP_USE_DNS_CLIENT) == true>
 /*** DNS Client Initialization Data ***/
 const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 {
@@ -461,14 +465,14 @@ const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_DNSS == true>
+<#if (tcpipDnss.TCPIP_USE_DNSS)?has_content && (tcpipDnss.TCPIP_USE_DNSS) == true>
 /*** DNS Server Initialization Data ***/
 const TCPIP_DNSS_MODULE_CONFIG tcpipDNSServerInitData =
 { 
     .deleteOldLease			= TCPIP_DNSS_DELETE_OLD_LEASE,
     .replyBoardAddr			= TCPIP_DNSS_REPLY_BOARD_ADDR,
     .IPv4EntriesPerDNSName 	= TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS,
-<#if CONFIG_TCPIP_STACK_USE_IPV6 == true >
+<#if (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true >
 	.IPv6EntriesPerDNSName 	= TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS,
 <#else>
 	.IPv6EntriesPerDNSName 	= 0,
@@ -476,7 +480,7 @@ const TCPIP_DNSS_MODULE_CONFIG tcpipDNSServerInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_IPV6 == true>
+<#if (tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true>
 /*** IPv6 Initialization Data ***/
 const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData = 
 {
@@ -485,22 +489,22 @@ const TCPIP_IPV6_MODULE_CONFIG  tcpipIPv6InitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_SNMP == true>
+<#if (tcpipSnmp.TCPIP_USE_SNMP)?has_content && (tcpipSnmp.TCPIP_USE_SNMP) == true>
 TCPIP_SNMP_COMMUNITY_CONFIG tcpipSNMPInitReadcommunity[] =
 {
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX0>
+<#if (tcpipSnmp.TCPIP_SNMP_STACK_CONFIG_IDX0)>
 /*** SNMP Configuration Index 0 ***/
     {
         TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX0,
     },
 </#if>
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX1>
+<#if (tcpipSnmp.TCPIP_SNMP_STACK_CONFIG_IDX1)>
 /*** SNMP Configuration Index 1 ***/
     {
         TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX1,
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX2>
+<#if (tcpipSnmp.TCPIP_SNMP_STACK_CONFIG_IDX2)>
 /*** SNMP Configuration Index 2 ***/	
     {
         TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX2,
@@ -510,19 +514,19 @@ TCPIP_SNMP_COMMUNITY_CONFIG tcpipSNMPInitReadcommunity[] =
 
 TCPIP_SNMP_COMMUNITY_CONFIG tcpipSNMPInitWritecommunity[] =
 {
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX0>
+<#if (tcpipSnmp.TCPIP_SNMP_STACK_CONFIG_IDX0)>
 /*** SNMP Configuration Index 0 ***/
     {
         TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX0,
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX1>
+<#if (tcpipSnmp.TCPIP_SNMP_STACK_CONFIG_IDX1)>
 /*** SNMP Configuration Index 1 ***/
     {
         TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX1,
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX2>
+<#if (tcpipSnmp.TCPIP_SNMP_STACK_CONFIG_IDX2)>
 /*** SNMP Configuration Index 2 ***/
     {
         TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX2,
@@ -530,11 +534,11 @@ TCPIP_SNMP_COMMUNITY_CONFIG tcpipSNMPInitWritecommunity[] =
 </#if>	
 };
 
-<#if CONFIG_TCPIP_USE_SNMPv3 == true>
+<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content && (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
 // SNMPv3 USM configuration
 TCPIP_SNMPV3_USM_USER_CONFIG tcpipSNMPv3InitUSM[] =
 {
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX0>
+<#if (tcpipSnmpv3.TCPIP_SNMPV3_STACK_CONFIG_IDX0)>
 /*** SNMPV3 Configuration Index 0 ***/
     {
         TCPIP_SNMPV3_STACK_USM_NAME_IDX0,            			/*** securityName ***/
@@ -547,7 +551,7 @@ TCPIP_SNMPV3_USM_USER_CONFIG tcpipSNMPv3InitUSM[] =
         TCPIP_SNMPV3_STACK_PRIV_PASSWORD_IDX0,            		/*** priv passphrase ***/
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX1>
+<#if (tcpipSnmpv3.TCPIP_SNMPV3_STACK_CONFIG_IDX1)>
 /*** SNMPV3 Configuration Index 1 ***/	
     {
         TCPIP_SNMPV3_STACK_USM_NAME_IDX1,            			/*** securityName ***/
@@ -560,7 +564,7 @@ TCPIP_SNMPV3_USM_USER_CONFIG tcpipSNMPv3InitUSM[] =
         TCPIP_SNMPV3_STACK_PRIV_PASSWORD_IDX1,            		/*** priv passphrase ***/
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX2>
+<#if (tcpipSnmpv3.TCPIP_SNMPV3_STACK_CONFIG_IDX2)>
 /*** SNMPV3 Configuration Index 2 ***/	
     {
         TCPIP_SNMPV3_STACK_USM_NAME_IDX2,            			/*** securityName ***/
@@ -579,7 +583,7 @@ TCPIP_SNMPV3_USM_USER_CONFIG tcpipSNMPv3InitUSM[] =
 // User name should be exacly same to the above USM table.
 TCPIP_SNMPV3_TARGET_ENTRY_CONFIG tcpipSNMPv3InitTargetTrap[]=
 {
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX0>
+<#if (tcpipSnmpv3.TCPIP_SNMPV3_STACK_CONFIG_IDX0)>
 /*** SNMPV3 Configuration Index 0 ***/
     {
         TCPIP_SNMPV3_TARGET_ENTRY_SEC_NAME_IDX0,                    /*** securityName ***/
@@ -588,7 +592,7 @@ TCPIP_SNMPV3_TARGET_ENTRY_CONFIG tcpipSNMPv3InitTargetTrap[]=
         TCPIP_SNMPV3_TARGET_ENTRY_SEC_LEVEL_IDX0,             		/*** Security-level ***/
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX1>
+<#if (tcpipSnmpv3.TCPIP_SNMPV3_STACK_CONFIG_IDX1)>
 /*** SNMPV3 Configuration Index 1 ***/	
      {
         TCPIP_SNMPV3_TARGET_ENTRY_SEC_NAME_IDX1,                    /*** securityName ***/
@@ -597,7 +601,7 @@ TCPIP_SNMPV3_TARGET_ENTRY_CONFIG tcpipSNMPv3InitTargetTrap[]=
         TCPIP_SNMPV3_TARGET_ENTRY_SEC_LEVEL_IDX1,             		/*** Security-level ***/
     },
 </#if>	
-<#if CONFIG_TCPIP_SNMP_STACK_CONFIG_IDX2>
+<#if (tcpipSnmpv3.TCPIP_SNMPV3_STACK_CONFIG_IDX2)>
 /*** SNMPV3 Configuration Index 2 ***/	
 	{
         TCPIP_SNMPV3_TARGET_ENTRY_SEC_NAME_IDX2,                    /*** securityName ***/
@@ -613,7 +617,7 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 {
 	.trapEnable             = TCPIP_SNMP_USE_TRAP_SUPPORT,
 	.snmp_trapv2_use        = TCPIP_SNMP_STACK_USE_V2_TRAP,
-<#if CONFIG_TCPIP_USE_SNMPv3 == true>
+<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
 	.snmpv3_trapv1v2_use    = TCPIP_SNMPV3_STACK_USE_V1_V2_TRAP,
 <#else>
 	.snmpv3_trapv1v2_use    = false,
@@ -621,7 +625,7 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 	.snmp_bib_file          = TCPIP_SNMP_BIB_FILE_NAME,
 	.read_community_config  = (TCPIP_SNMP_COMMUNITY_CONFIG*)tcpipSNMPInitReadcommunity,
 	.write_community_config = (TCPIP_SNMP_COMMUNITY_CONFIG*)tcpipSNMPInitWritecommunity,
-<#if CONFIG_TCPIP_USE_SNMPv3 == true>
+<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
 	.usm_config             = (TCPIP_SNMPV3_USM_USER_CONFIG*)tcpipSNMPv3InitUSM,
 	.trap_target_config     = (TCPIP_SNMPV3_TARGET_ENTRY_CONFIG*)tcpipSNMPv3InitTargetTrap,
 <#else>
@@ -631,8 +635,8 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 };
 </#if>
 
-<#if CONFIG_TCPIP_USE_HEAP == true>
-<#if CONFIG_TCPIP_STACK_USE_HEAP_CONFIG == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP">
+<#if (tcpipHeap.TCPIP_USE_HEAP)?has_content && (tcpipHeap.TCPIP_USE_HEAP) == true>
+<#if (tcpipHeap.TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP">
 TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
 {
     .heapType = TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP,
@@ -643,7 +647,7 @@ TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
     .free_fnc = TCPIP_STACK_FREE_FUNC,
     .heapSize = TCPIP_STACK_DRAM_SIZE,
 };
-<#elseif CONFIG_TCPIP_STACK_USE_HEAP_CONFIG == "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP">
+<#elseif (tcpipHeap.TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP">
 TCPIP_STACK_HEAP_EXTERNAL_CONFIG tcpipHeapConfig =
 {
     .heapType = TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP,
@@ -653,69 +657,69 @@ TCPIP_STACK_HEAP_EXTERNAL_CONFIG tcpipHeapConfig =
     .calloc_fnc = TCPIP_STACK_CALLOC_FUNC,
     .free_fnc = TCPIP_STACK_FREE_FUNC,
 };
-<#elseif CONFIG_TCPIP_STACK_USE_HEAP_CONFIG == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL">
+<#elseif (tcpipHeap.TCPIP_STACK_USE_HEAP_CONFIG) == "TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL">
 TCPIP_STACK_HEAP_POOL_ENTRY tcpipHeapPoolEntryTbl[TCPIP_HEAP_POOL_ENTRIES_NUMBER] =
 {
     // entrySize     nBlocks            // expansion Blocks
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX0?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX0},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX0},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX0} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX0)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX0)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX0)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX0)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX1?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX1},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX1},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX1} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX1)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX1)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX1)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX1)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX2?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX2},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX2},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX2} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX2)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX2)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX2)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX2)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX3?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX3},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX3},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX3} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX3)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX3)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX3)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX3)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX4?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX4},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX4},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX4} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX4)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX4)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX4)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX4)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX5?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX5},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX5},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX5} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX5)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX5)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX5)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX5)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX6?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX6},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX6},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX6} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX6)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX6)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX6)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX6)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX7?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX7},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX7},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX7} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX7)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX7)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX7)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX7)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX8?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX8},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX8},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX8} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX8)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX8)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX8)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX8)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX9?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX9},       ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX9},    ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX9} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX9)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX9)},       ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX9)},    ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX9)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX10?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX10},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX10},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX10} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX10)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX10)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX10)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX10)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX11?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX11},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX11},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX11} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX11)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX11)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX11)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX11)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX12?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX12},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX12},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX12} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX12)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX12)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX12)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX12)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX13?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX13},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX13},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX13} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX13)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX13)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX13)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX13)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX14?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX14},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX14},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX14} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX14)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX14)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX14)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX14)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX15?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX15},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX15},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX15} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX15)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX15)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX15)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX15)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX16?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX16},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX16},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX16} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX16)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX16)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX16)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX16)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX17?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX17},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX17},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX17} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX17)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX17)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX17)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX17)} },
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX18?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX18},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX18},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX18}},
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX18)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX18)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX18)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX18)}},
 </#if>
-<#if CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX19?has_content>
-    {  ${CONFIG_TCPIP_HEAP_POOL_ENTRY_SIZE_IDX19},      ${CONFIG_TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX19},   ${CONFIG_TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX19} },
+<#if (tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX19)?has_content>
+    {  ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_SIZE_IDX19)},      ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_BLOCKS_IDX19)},   ${(tcpipHeap.TCPIP_HEAP_POOL_ENTRY_EXP_BLOCKS_IDX19)} },
 </#if>
 };
 
@@ -733,130 +737,115 @@ TCPIP_STACK_HEAP_POOL_CONFIG tcpipHeapConfig =
 };
 </#if>
 </#if>
- 
-const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] =
-{
-<#macro genhostConfigs idx>
-<#if .vars["CONFIG_TCPIP_STACK_NETWORK_CONFIG_IDX${idx}"]>
-/*** Network Configuration Index 0 ***/
-    {
-        TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${idx},       // interface
-        TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${idx},            // hostName
-        TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX${idx},             // macAddr
-        TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX${idx},           // ipAddr
-        TCPIP_NETWORK_DEFAULT_IP_MASK_IDX${idx},              // ipMask
-        TCPIP_NETWORK_DEFAULT_GATEWAY_IDX${idx},              // gateway
-        TCPIP_NETWORK_DEFAULT_DNS_IDX${idx},                  // priDNS
-        TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX${idx},           // secondDNS
-        TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX${idx},           // powerMode
-        TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX${idx},      // startFlags
-       &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${idx},           // pMacObject
-<#if .vars["CONFIG_TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${idx}"]>
-        TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX${idx},         // ipv6Addr
-        TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX${idx},   // ipv6PrefixLen
-        TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${idx},         // ipv6Gateway 
-</#if>
-    },
-</#if>
-</#macro>
-<#list 0..(CONFIG_TCPIP_STACK_NETWORK_CONFIG_NUMBER?number-1) as idx>
-	<@genhostConfigs idx/>
-</#list>
-};
+
+
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+<#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content &&(tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
     {TCPIP_MODULE_IPV4,             0},
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_ICMP_CLIENT == true || CONFIG_TCPIP_STACK_USE_ICMP_SERVER == true>
+
+<#if (tcpipIcmp.TCPIP_STACK_USE_ICMP_CLIENT)?has_content >
+<#if (tcpipIcmp.TCPIP_STACK_USE_ICMP_CLIENT) == true || (tcpipIcmp.TCPIP_STACK_USE_ICMP_SERVER) == true>
     {TCPIP_MODULE_ICMP,             0},                             // TCPIP_MODULE_ICMP
 </#if>
-<#if CONFIG_TCPIP_USE_ARP == true>
+</#if>
+
+<#if (tcpipArp.TCPIP_USE_ARP)?has_content && (tcpipArp.TCPIP_USE_ARP) == true>
     {TCPIP_MODULE_ARP,              &tcpipARPInitData},             // TCPIP_MODULE_ARP
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_IPV6 == true>
+<#if (tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true>
     {TCPIP_MODULE_IPV6,             &tcpipIPv6InitData},            // TCPIP_MODULE_IPV6
     {TCPIP_MODULE_ICMPV6,           0},                             // TCPIP_MODULE_ICMPV6
     {TCPIP_MODULE_NDP,              0},                             // TCPIP_MODULE_NDP
 </#if>
-<#if CONFIG_TCPIP_USE_UDP == true>
+<#if (tcpipUdp.TCPIP_USE_UDP)?has_content && (tcpipUdp.TCPIP_USE_UDP) == true>
     {TCPIP_MODULE_UDP,              &tcpipUDPInitData},             // TCPIP_MODULE_UDP
 </#if>
-<#if CONFIG_TCPIP_USE_TCP == true>
+<#if (tcpipTcp.TCPIP_USE_TCP)?has_content && (tcpipTcp.TCPIP_USE_TCP) == true>
     {TCPIP_MODULE_TCP,              &tcpipTCPInitData},             // TCPIP_MODULE_TCP
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_DHCP_CLIENT == true>
+<#if (tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT)?has_content && (tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT) == true>
     {TCPIP_MODULE_DHCP_CLIENT,      &tcpipDHCPInitData},            // TCPIP_MODULE_DHCP_CLIENT
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_DHCP_SERVER == true>
+<#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content && (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
     {TCPIP_MODULE_DHCP_SERVER,      &tcpipDHCPSInitData},           // TCPIP_MODULE_DHCP_SERVER
 </#if>
-<#if CONFIG_TCPIP_USE_ANNOUNCE == true>
+<#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content && (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>
     {TCPIP_MODULE_ANNOUNCE,         &tcpipAnnounceInitData},        // TCPIP_MODULE_ANNOUNCE
 </#if>
-<#if CONFIG_TCPIP_USE_DNS_CLIENT == true>
+<#if (tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content && (tcpipDns.TCPIP_USE_DNS_CLIENT) == true>
     {TCPIP_MODULE_DNS_CLIENT,       &tcpipDNSClientInitData},       // TCPIP_MODULE_DNS_CLIENT
 </#if>
-<#if CONFIG_TCPIP_USE_DNSS == true>
+<#if (tcpipDnss.TCPIP_USE_DNSS)?has_content && (tcpipDnss.TCPIP_USE_DNSS) == true>
     {TCPIP_MODULE_DNS_SERVER,       &tcpipDNSServerInitData},       // TCPIP_MODULE_DNS_SERVER
 </#if>
-<#if CONFIG_TCPIP_USE_NBNS == true>
+<#if (tcpipNbns.TCPIP_USE_NBNS)?has_content && (tcpipNbns.TCPIP_USE_NBNS) == true>
     {TCPIP_MODULE_NBNS,             &tcpipNBNSInitData},            // TCPIP_MODULE_NBNS
 </#if>
-<#if CONFIG_TCPIP_USE_SNTP_CLIENT == true>
+<#if (tcpipSntp.TCPIP_USE_SNTP_CLIENT)?has_content && (tcpipSntp.TCPIP_USE_SNTP_CLIENT) == true>
     {TCPIP_MODULE_SNTP,             &tcpipSNTPInitData},            // TCPIP_MODULE_SNTP
 </#if>
 
-<#if CONFIG_TCPIP_STACK_USE_BERKELEY_API == true>
+<#if (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API)?has_content && (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API) == true>
     {TCPIP_MODULE_BERKELEY,         &tcpipBerkeleyInitData},        // TCPIP_MODULE_BERKELEY
 </#if>
-<#if CONFIG_TCPIP_USE_FTP_MODULE == true>
+<#if (tcpipFtps.TCPIP_USE_FTP_MODULE)?has_content && (tcpipFtps.TCPIP_USE_FTP_MODULE) == true>
     {TCPIP_MODULE_FTP_SERVER,       &tcpipFTPInitData},             // TCPIP_MODULE_FTP
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true>
+<#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
     {TCPIP_MODULE_HTTP_SERVER,      &tcpipHTTPInitData},            // TCPIP_MODULE_HTTP_SERVER
 </#if>
-<#if CONFIG_TCPIP_STACK_USE_HTTP_NET_SERVER == true>
+<#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content && (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
     {TCPIP_MODULE_HTTP_NET_SERVER,  &tcpipHTTPNetInitData},         // TCPIP_MODULE_HTTP_NET_SERVER
 </#if>
-<#if CONFIG_TCPIP_USE_TELNET == true>
+<#if (tcpipTelnet.TCPIP_USE_TELNET)?has_content &&  (tcpipTelnet.TCPIP_USE_TELNET) == true>
     {TCPIP_MODULE_TELNET_SERVER,    &tcpipTelnetInitData},          // TCPIP_MODULE_TELNET_SERVER
 </#if>
-<#if CONFIG_TCPIP_USE_SNMP == true>
+<#if (tcpipSnmp.TCPIP_USE_SNMP)?has_content && (tcpipSnmp.TCPIP_USE_SNMP) == true>
     {TCPIP_MODULE_SNMP_SERVER,      &tcpipSNMPInitData},            // TCPIP_MODULE_SNMP_SERVER
 </#if>
-<#if CONFIG_TCPIP_USE_SMTPC_CLIENT == true>
+<#if (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT)?has_content && (tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT) == true>
     {TCPIP_MODULE_SMTPC, &tcpipSMTPCInitData},                                  // TCPIP_MODULE_SMTPC,
 </#if>
-<#if CONFIG_TCPIP_USE_DDNS == true>
+<#if (tcpipDdns.TCPIP_USE_DDNS)?has_content && (tcpipDdns.TCPIP_USE_DDNS) == true>
     {TCPIP_MODULE_DYNDNS_CLIENT,    &tcpipDDNSInitData},            // TCPIP_MODULE_DYNDNS_CLIENT,
 </#if>
-<#if CONFIG_TCPIP_USE_REBOOT_SERVER == true>
+<#if (tcpipReboot.TCPIP_USE_REBOOT_SERVER)?has_content && (tcpipReboot.TCPIP_USE_REBOOT_SERVER) == true>
     {TCPIP_MODULE_REBOOT_SERVER,    0},                             // TCPIP_MODULE_REBOOT_SERVER,
 </#if>
-<#if CONFIG_TCPIP_USE_LINK_ZERO_CONFIG == true>
+<#if (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG)?has_content && (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG) == true>
     {TCPIP_MODULE_ZCLL,             0},                             // TCPIP_MODULE_ZCLL,
 </#if>
-<#if CONFIG_TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG == true>
+<#if (tcpipZeroConf.TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG)?has_content && (tcpipZeroConf.TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG) == true>
     {TCPIP_MODULE_MDNS,             0},                             // TCPIP_MODULE_MDNS,
 </#if>
-<#if CONFIG_TCPIP_USE_TFTPC_MODULE == true>
+<#if (tcpipTftpc.TCPIP_USE_TFTPC_MODULE)?has_content && (tcpipTftpc.TCPIP_USE_TFTPC_MODULE) == true>
     {TCPIP_MODULE_TFTP_CLIENT,      &tcpipTFTPCInitData},           // TCPIP_MODULE_TFTP_CLIENT
 </#if>
-<#if CONFIG_TCPIP_USE_IGMP == true>
+<#if (tcpipIgmp.TCPIP_USE_IGMP)?has_content && (tcpipIgmp.TCPIP_USE_IGMP) == true>
     {TCPIP_MODULE_IGMP, &tcpipIGMPInitData},            // TCPIP_MODULE_IGMP
 </#if>
-<#if CONFIG_TCPIP_USE_HEAP == true>
+<#if (tcpipHeap.TCPIP_USE_HEAP)?has_content && (tcpipHeap.TCPIP_USE_HEAP) == true>
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 </#if>
+
     // MAC modules
+<#-- niyas todo :  mac for network interface
+-->
 <#function checkInterface interface>
-	<#list 0..(CONFIG_TCPIP_STACK_NETWORK_CONFIG_NUMBER?number-1) as idx>
-		<#if .vars["CONFIG_TCPIP_STACK_NETWORK_CONFIG_IDX${idx}"] && (.vars["CONFIG_TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${idx}"] == interface)>
-			<#return true>
+<#if (tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER)?has_content >
+	<#list 0..((tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER)?number-1) as idx>
+		<#assign TCPIP_STACK_NETWORK_CONFIG = "tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_IDX" + idx>
+		<#assign TCPIP_NETWORK_DEFAULT_INTERFACE_NAME = "tcpipNetConfig.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX" + idx>
+		<#if .vars[TCPIP_STACK_NETWORK_CONFIG]?has_content && (.vars[TCPIP_STACK_NETWORK_CONFIG] != false)>		
+			<#if  (.vars[TCPIP_NETWORK_DEFAULT_INTERFACE_NAME] == interface)>
+				<#return true>
+			</#if>
 		</#if>
 	</#list>
+</#if>
 	<#return false>
 </#function>
 <#if checkInterface("PIC32INT")>
@@ -865,20 +854,23 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 <#if checkInterface("PIC32CINT")>
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
 </#if>
-<#if CONFIG_USE_DRV_WIFI == true>
- <#if CONFIG_DRV_WIFI_DEVICE == "MRF24WN">
-    <#if checkInterface("MRF24WN")>
+
+<#if CONFIG_USE_DRV_WIFI?has_content && CONFIG_USE_DRV_WIFI == true >
+<#if DRV_WIFI_DEVICE?has_content >
+ <#if DRV_WIFI_DEVICE == "MRF24WN" >
+	<#if checkInterface("MRF24WN")>
     {TCPIP_MODULE_MAC_MRF24WN,      &macMRF24WNConfigData},         // TCPIP_MODULE_MAC_MRF24WN
-  </#if>
- <#elseif CONFIG_DRV_WIFI_DEVICE == "WINC1500">
+	</#if>
+ <#elseif DRV_WIFI_DEVICE == "WINC1500">
     <#if checkInterface("WINC1500")>
     {TCPIP_MODULE_MAC_WINC1500,     &macWINC1500ConfigData},        // TCPIP_MODULE_MAC_WINC1500
-  </#if>
- <#elseif CONFIG_DRV_WIFI_DEVICE == "WILC1000">
+	</#if>
+ <#elseif DRV_WIFI_DEVICE == "WILC1000">
     <#if checkInterface("WILC1000")>
     {TCPIP_MODULE_MAC_WILC1000,     &macWILC1000ConfigData},        // TCPIP_MODULE_MAC_WILC1000
-  </#if>
+	</#if>
  </#if>
+</#if>
 </#if>
 <#if checkInterface("ENCX24J600")>
     {TCPIP_MODULE_MAC_ENCJ600,      &drvEncX24j600InitDataIdx0},    // TCPIP_MODULE_MAC_ENCJ600

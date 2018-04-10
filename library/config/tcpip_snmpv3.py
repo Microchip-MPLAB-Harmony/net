@@ -50,6 +50,10 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3PrivacyPswdKeyLen.setDescription("Privacy Password Key Length")
 	tcpipSnmpV3PrivacyPswdKeyLen.setDefaultValue(20)
 	tcpipSnmpV3PrivacyPswdKeyLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
+		
+	tcpipSnmpV3CommMaxNum= tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USE_MAX_NUM", tcpipSnmpV3)
+	tcpipSnmpV3CommMaxNum.setDefaultValue(tcpipSnmpV3MaxUsrNum)
+	tcpipSnmpV3CommMaxNum.setVisible(False)
 
 	# Maximum Users
 	tcpipSnmpV3UsmUsrMax = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USM_MAX_USER", tcpipSnmpV3)

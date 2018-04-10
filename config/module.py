@@ -161,6 +161,9 @@ def loadModule():
 	tcpipEthMacComponent = Module.CreateComponent("tcpipEthMac", "Internal Ethernet MAC", "/Drivers/", "library/config/tcpip_mac.py")
 	tcpipEthMacComponent.addCapability("libtcpipEthMac","Ethernet MAC")
 	
+	## niyas : decide on moving driver to core repo
+	drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Drivers/", "driver/miim/config/drv_miim.py")
+	drvMiimComponent.addCapability("libdrvMiim","MIIM DRV")	
 	
 	
 	

@@ -46,16 +46,16 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 // *****************************************************************************
 
 <#if USE_TCPIP_STACK == true>
-<#if tcpipIPv4.TCPIP_STACK_USE_IPV4 == true>
+<#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>
 #define TCPIP_STACK_USE_IPV4
 </#if>
-<#if tcpipIPv6.TCPIP_STACK_USE_IPV6 == true>
+<#if (tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true>
 #define TCPIP_STACK_USE_IPV6
 </#if>
-<#if tcpipTcp.TCPIP_USE_TCP == true>
+<#if (tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true>
 #define TCPIP_STACK_USE_TCP
 </#if>
-<#if tcpipUdp.TCPIP_USE_UDP == true>
+<#if (tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true>
 #define TCPIP_STACK_USE_UDP
 </#if>
 

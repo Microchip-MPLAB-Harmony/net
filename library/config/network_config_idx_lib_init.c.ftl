@@ -1,22 +1,22 @@
 <#--
 /*******************************************************************************
-  MIIM Driver Freemarker Template File
+  network_config_idx0 Freemarker Template File
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    drv_miim.h.ftl
+    network_config_idx_lib_init.c.ftl
 
   Summary:
-    MIIM Driver Freemarker Template File
+    network_config_idx0 Freemarker Template File
 
   Description:
 
 *******************************************************************************/
 
 /*******************************************************************************
-Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2014 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -38,23 +38,32 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE  THEREOF),  OR  OTHER  SIMILAR  COSTS.
 *******************************************************************************/
 -->
-
-<#if DRV_MIIM_USE_DRIVER>
-/*** MIIM Driver Configuration ***/
-#define DRV_MIIM_ETH_MODULE_ID              ${DRV_MIIM_ETH_MODULE_ID}
-#define DRV_MIIM_INSTANCES_NUMBER           ${DRV_MIIM_INSTANCES_NUMBER}
-#define DRV_MIIM_INSTANCE_OPERATIONS        ${DRV_MIIM_INSTANCE_OPERATIONS}
-#define DRV_MIIM_INSTANCE_CLIENTS           ${DRV_MIIM_INSTANCE_CLIENTS}
-<#if DRV_MIIM_CLIENT_OP_PROTECTION == true>
-#define DRV_MIIM_CLIENT_OP_PROTECTION   true
-<#else>
-#define DRV_MIIM_CLIENT_OP_PROTECTION   false
+const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] =
+{
+<#macro genhostConfigs idx>
+<#if .vars["TCPIP_STACK_NETWORK_CONFIG_IDX${idx}"]>
+/*** Network Configuration Index 0 ***/
+    {
+        TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${idx},       // interface
+        TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${idx},            // hostName
+        TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX${idx},             // macAddr
+        TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX${idx},           // ipAddr
+        TCPIP_NETWORK_DEFAULT_IP_MASK_IDX${idx},              // ipMask
+        TCPIP_NETWORK_DEFAULT_GATEWAY_IDX${idx},              // gateway
+        TCPIP_NETWORK_DEFAULT_DNS_IDX${idx},                  // priDNS
+        TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX${idx},           // secondDNS
+        TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX${idx},           // powerMode
+        TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX${idx},      // startFlags
+       &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${idx},           // pMacObject
+<#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${idx}"]>
+        TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX${idx},         // ipv6Addr
+        TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX${idx},   // ipv6PrefixLen
+        TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${idx},         // ipv6Gateway 
 </#if>
-<#if DRV_MIIM_COMMANDS == true>
-#define DRV_MIIM_COMMANDS   true
-<#else>
-#define DRV_MIIM_COMMANDS   false
+    },
 </#if>
-#define DRV_MIIM_DRIVER_OBJECT              ${DRV_MIIM_DRIVER_OBJECT}
-#define DRV_MIIM_DRIVER_INDEX               DRV_MIIM_INDEX_${DRV_MIIM_DRIVER_INDEX}              
-</#if>
+</#macro>
+<#list 0..(TCPIP_STACK_NETWORK_CONFIG_NUMBER?number-1) as idx>
+	<@genhostConfigs idx/>
+</#list>
+};

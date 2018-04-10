@@ -22,42 +22,43 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
  -->
-<#if CONFIG_DRV_MIIM_USE_DRIVER == true>
-<#if CONFIG_USE_3RDPARTY_RTOS == true>
-<#if (DRV_MIIM_TASKS == "PROTO") && (CONFIG_DRV_MIIM_RTOS == "Standalone")>
-<#if CONFIG_3RDPARTY_RTOS_USED == "ThreadX">
+<#if DRV_MIIM_USE_DRIVER == true>
+<#-- niyas todo 
+<#if USE_3RDPARTY_RTOS == true>
+<#if (DRV_MIIM_TASKS == "PROTO") && (DRV_MIIM_RTOS == "Standalone")>
+<#if THIRDPARTY_RTOS_USED == "ThreadX">
 void _DRV_MIIM_Tasks(ULONG thread_input);
 <#else>
 void _DRV_MIIM_Tasks(void);
 </#if>
 </#if>
 <#if DRV_MIIM_TASKS == "CREATE_TASK">
- <#if CONFIG_DRV_MIIM_RTOS == "Standalone">
+ <#if DRV_MIIM_RTOS == "Standalone">
     /* Create task for MIIM state machine*/
-<@RTOS_TASK_CREATE RTOS_NAME=CONFIG_3RDPARTY_RTOS_USED TASK_FUNC_NAME="_DRV_MIIM_Tasks"
-TASK_NAME="DRV_MIIM Tasks" TASK_PRI=CONFIG_DRV_MIIM_RTOS_TASK_PRIORITY
-TASK_STK_SZ=CONFIG_DRV_MIIM_RTOS_TASK_SIZE/>
+<@RTOS_TASK_CREATE RTOS_NAME=THIRDPARTY_RTOS_USED TASK_FUNC_NAME="_DRV_MIIM_Tasks"
+TASK_NAME="DRV_MIIM Tasks" TASK_PRI=DRV_MIIM_RTOS_TASK_PRIORITY
+TASK_STK_SZ=DRV_MIIM_RTOS_TASK_SIZE/>
   </#if>
 </#if>
-<#if (DRV_MIIM_TASKS == "TASK_CALL_NO_RTOS") || (DRV_MIIM_TASKS == "TASK_CALL" && CONFIG_DRV_MIIM_RTOS != "Standalone")>
+<#if (DRV_MIIM_TASKS == "TASK_CALL_NO_RTOS") || (DRV_MIIM_TASKS == "TASK_CALL" && DRV_MIIM_RTOS != "Standalone")>
     DRV_MIIM_Tasks (sysObj.drvMiim);
 </#if>
 <#if DRV_MIIM_TASKS == "LOCAL_FUNCTION">
-<#if CONFIG_DRV_MIIM_RTOS == "Standalone">
-<#if CONFIG_3RDPARTY_RTOS_USED == "ThreadX">
+<#if DRV_MIIM_RTOS == "Standalone">
+<#if THIRDPARTY_RTOS_USED == "ThreadX">
 void _DRV_MIIM_Tasks(ULONG thread_input)
 <#else>
 void _DRV_MIIM_Tasks(void)
 </#if>
  {
-<#if CONFIG_3RDPARTY_RTOS_USED == "uC/OS-III">
+<#if THIRDPARTY_RTOS_USED == "uC/OS-III">
     OS_ERR os_err;
 	
 </#if> 
     while(1)
     {
         DRV_MIIM_Tasks (sysObj.drvMiim);
-        <@RTOS_TASK_DELAY RTOS_NAME=CONFIG_3RDPARTY_RTOS_USED TASK_DELAY=CONFIG_DRV_MIIM_RTOS_DELAY/>		
+        <@RTOS_TASK_DELAY RTOS_NAME=THIRDPARTY_RTOS_USED TASK_DELAY=DRV_MIIM_RTOS_DELAY/>		
     }
  }
 </#if>
@@ -65,6 +66,7 @@ void _DRV_MIIM_Tasks(void)
 <#else>
     DRV_MIIM_Tasks (sysObj.drvMiim);
 </#if>
+niyas -->
 </#if>
 <#--
 /*******************************************************************************
