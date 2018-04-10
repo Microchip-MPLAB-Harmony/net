@@ -55,7 +55,7 @@ def instantiateComponent(tcpipTelnetComponent):
 
 	#Add to system_config.h
 	tcpipTelnetHeaderFtl = tcpipTelnetComponent.createFileSymbol(None, None)
-	tcpipTelnetHeaderFtl.setSourcePath("library/config/arp.h.ftl")
+	tcpipTelnetHeaderFtl.setSourcePath("library/config/telnet.h.ftl")
 	tcpipTelnetHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipTelnetHeaderFtl.setMarkup(True)
 	tcpipTelnetHeaderFtl.setType("STRING")

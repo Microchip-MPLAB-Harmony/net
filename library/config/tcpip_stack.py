@@ -100,6 +100,13 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
 	tcpipStackPktLogSize.setDefaultValue(40)
 	tcpipStackPktLogSize.setDependencies(tcpipStackMenuVisible, ["TCPIP_PACKET_LOG_ENABLE"])	
+
+	tcpipStackDeviceFamily = tcpipStackComponent.createStringSymbol("TCPIP_DEVICE_FAMILY", None)
+	tcpipStackDeviceFamily.setVisible(False)
+	if "PIC32C" in Variables.get("__PROCESSOR"):
+		tcpipStackDeviceFamily.setDefaultValue("PIC32C")
+	else:
+		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
 	
 	#niyas  ifblock USE_TCPIP_STACK
 	# add "<#include \"/framework/tcpip/config/tcpip_stack.h.ftl\">"  to list SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION 	
@@ -360,28 +367,35 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipEthernetHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
 	tcpipStackTcpipEthernetHeaderFile.setType("HEADER")
 	tcpipStackTcpipEthernetHeaderFile.setOverwrite(True)
-		
+	
+	# #Add to system_config.h
+	# tcpipTcpHeaderFtl = tcpipTcpComponent.createFileSymbol(None, None)
+	# tcpipTcpHeaderFtl.setSourcePath("library/config/tcp.h.ftl")
+	# tcpipTcpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	# tcpipTcpHeaderFtl.setMarkup(True)
+	# tcpipTcpHeaderFtl.setType("STRING")
+	
 	#niyas to do
 	# add "<#include \"/framework/tcpip/config/tcpip_stack.c.ftl\">"  to list SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA
-	# tcpipStackSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
-	# tcpipStackSourceFtl.setType("STRING")
-	# tcpipStackSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
-	# tcpipStackSourceFtl.setSourcePath("library/config/tcpip_stack.c.ftl")
-	# tcpipStackSourceFtl.setMarkup(True)
+	tcpipStackSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSourceFtl.setType("STRING")
+	tcpipStackSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+	tcpipStackSourceFtl.setSourcePath("library/config/tcpip_stack.c.ftl")
+	tcpipStackSourceFtl.setMarkup(True)
 	
 	# add "<#include \"/framework/tcpip/config/tcpip_stack_init.c.ftl\">"  to list SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE
-	# tcpipStackInitSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
-	# tcpipStackInitSourceFtl.setType("STRING")
-	# tcpipStackInitSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE")
-	# tcpipStackInitSourceFtl.setSourcePath("library/config/tcpip_stack_init.c.ftl")
-	# tcpipStackInitSourceFtl.setMarkup(True)
+	tcpipStackInitSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackInitSourceFtl.setType("STRING")
+	tcpipStackInitSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE")
+	tcpipStackInitSourceFtl.setSourcePath("library/config/tcpip_stack_init.c.ftl")
+	tcpipStackInitSourceFtl.setMarkup(True)
 		
 	# add "<#include \"/framework/tcpip/config/tcpip_stack_tasks.c.ftl\">"  to list SYSTEM_TASKS_C_CALL_LIB_TASKS
-	# tcpipStackTaskSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
-	# tcpipStackTaskSourceFtl.setType("STRING")
-	# tcpipStackTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
-	# tcpipStackTaskSourceFtl.setSourcePath("library/config/tcpip_stack_tasks.c.ftl")
-	# tcpipStackTaskSourceFtl.setMarkup(True)
+	tcpipStackTaskSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackTaskSourceFtl.setType("STRING")
+	tcpipStackTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
+	tcpipStackTaskSourceFtl.setSourcePath("library/config/tcpip_stack_tasks.c.ftl")
+	tcpipStackTaskSourceFtl.setMarkup(True)
 		
 	# file TCPIP_COMMON_HELPERS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/common/helpers.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/common/helpers.c"
 	tcpipStackHelpersSourceFile = tcpipStackComponent.createFileSymbol(None, None)

@@ -354,37 +354,37 @@ tcpipGmacTxBuffSizeQue5.setDescription("Size Of TX Buffer for Queue5. Should Be 
 tcpipGmacTxBuffSizeQue5.setDefaultValue(64)
 tcpipGmacTxBuffSizeQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"])
 
-# # GMAC TX descriptors Dummy Count
-# tcpipGmacTxDescCountDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY", tcpipEthMac)
-# tcpipGmacTxDescCountDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
-# tcpipGmacTxDescCountDummmy.setVisible(False)
-# tcpipGmacTxDescCountDummmy.setDescription("GMAC TX descriptors Dummy Count")
-# tcpipGmacTxDescCountDummmy.setDefaultValue(1)
-# tcpipGmacTxDescCountDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
+# GMAC TX descriptors Dummy Count
+tcpipGmacTxDescCountDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY", tcpipEthMac)
+tcpipGmacTxDescCountDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
+tcpipGmacTxDescCountDummmy.setVisible(False)
+tcpipGmacTxDescCountDummmy.setDescription("GMAC TX descriptors Dummy Count")
+tcpipGmacTxDescCountDummmy.setDefaultValue(1)
+tcpipGmacTxDescCountDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
-# # GMAC RX descriptors Dummy Count
-# tcpipGmacRxDescCountDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY", tcpipEthMac)
-# tcpipGmacRxDescCountDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
-# tcpipGmacRxDescCountDummmy.setVisible(False)
-# tcpipGmacRxDescCountDummmy.setDescription("GMAC RX descriptors Dummy Count")
-# tcpipGmacRxDescCountDummmy.setDefaultValue(1)
-# tcpipGmacRxDescCountDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
+# GMAC RX descriptors Dummy Count
+tcpipGmacRxDescCountDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY", tcpipEthMac)
+tcpipGmacRxDescCountDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
+tcpipGmacRxDescCountDummmy.setVisible(False)
+tcpipGmacRxDescCountDummmy.setDescription("GMAC RX descriptors Dummy Count")
+tcpipGmacRxDescCountDummmy.setDefaultValue(1)
+tcpipGmacRxDescCountDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
-# # GMAC Rx buffer size dummy
-# tcpipGmacRxBuffSizeDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_DUMMY", tcpipEthMac)
-# tcpipGmacRxBuffSizeDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
-# tcpipGmacRxBuffSizeDummmy.setVisible(False)
-# tcpipGmacRxBuffSizeDummmy.setDescription("GMAC Rx buffer size dummy")
-# tcpipGmacRxBuffSizeDummmy.setDefaultValue(64)
-# tcpipGmacRxBuffSizeDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
+# GMAC Rx buffer size dummy
+tcpipGmacRxBuffSizeDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_SIZE_DUMMY", tcpipEthMac)
+tcpipGmacRxBuffSizeDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
+tcpipGmacRxBuffSizeDummmy.setVisible(False)
+tcpipGmacRxBuffSizeDummmy.setDescription("GMAC Rx buffer size dummy")
+tcpipGmacRxBuffSizeDummmy.setDefaultValue(64)
+tcpipGmacRxBuffSizeDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
-# # GMAC Tx buffer size dummy
-# tcpipGmacTxBuffSizeDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_DUMMY", tcpipEthMac)
-# tcpipGmacTxBuffSizeDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
-# tcpipGmacTxBuffSizeDummmy.setVisible(False)
-# tcpipGmacTxBuffSizeDummmy.setDescription("GMAC Tx buffer size dummy")
-# tcpipGmacTxBuffSizeDummmy.setDefaultValue(64)
-# tcpipGmacTxBuffSizeDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
+# GMAC Tx buffer size dummy
+tcpipGmacTxBuffSizeDummmy = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_TX_BUFF_SIZE_DUMMY", tcpipEthMac)
+tcpipGmacTxBuffSizeDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
+tcpipGmacTxBuffSizeDummmy.setVisible(False)
+tcpipGmacTxBuffSizeDummmy.setDescription("GMAC Tx buffer size dummy")
+tcpipGmacTxBuffSizeDummmy.setDefaultValue(64)
+tcpipGmacTxBuffSizeDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
 # Maximum MAC Supported RX Frame Size
 tcpipGmacRxFrameMax = tcpipEthMacComponent.createIntegerSymbol("TCPIP_GMAC_RX_MAX_FRAME", tcpipEthMac)

@@ -68,6 +68,11 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpCommunityLenMax.setDefaultValue(8)
 	tcpipSnmpCommunityLenMax.setDependencies(tcpipSnmpMenuVisibleSingle, ["TCPIP_USE_SNMP"])
 
+	
+	tcpipSnmpCommMaxNum= tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_COMMUNITY_MAX_NUM", tcpipSnmp)
+	tcpipSnmpCommMaxNum.setDefaultValue(tcpipSnmpMaxCommNum)
+	tcpipSnmpCommMaxNum.setVisible(False)
+	
 	# Maximum Community Support
 	tcpipSnmpCommunitySuppMax = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_MAX_COMMUNITY_SUPPORT", tcpipSnmp)
 	tcpipSnmpCommunitySuppMax.setLabel("Max Community Support")

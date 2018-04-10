@@ -224,6 +224,12 @@ def instantiateComponent(tcpipNetConfigComponent):
 		tcpipNetMacDrvObj[index].setDependencies(tcpipNetMACDrvObjUpdate, [tcpipNetIfName[index].getID(), tcpipNetConfig[index].getID()])	
 
 
+		#Add to system_init.c
+		tcpipNetConfigSrcFtl = tcpipNetConfigComponent.createFileSymbol(None, None)
+		tcpipNetConfigSrcFtl.setSourcePath("library/config/network_config_idx_lib_init.c.ftl")
+		tcpipNetConfigSrcFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+		tcpipNetConfigSrcFtl.setMarkup(True)
+		tcpipNetConfigSrcFtl.setType("STRING")
 ###############################################################################################################			
 def tcpipNetConfigMenuVisible(symbol, event):
 	if (event["value"] == True):
