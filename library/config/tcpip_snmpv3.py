@@ -196,24 +196,6 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3StackV1V2Trap.setDefaultValue(True) 
 	tcpipSnmpV3StackV1V2Trap.setDependencies(tcpipSnmpV3StackConfigV1V2TrapVisible, ["TCPIP_USE_SNMPv3" , "tcpipSnmp.TCPIP_SNMP_USE_TRAP_SUPPORT", "tcpipSnmp.TCPIP_SNMP_STACK_USE_V2_TRAP"])
 
-	# Add snmpv3.h file to project
-	tcpipSnmpV3HeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
-	tcpipSnmpV3HeaderFile.setSourcePath("library/snmpv3.h")
-	tcpipSnmpV3HeaderFile.setOutputName("snmpv3.h")
-	tcpipSnmpV3HeaderFile.setDestPath("library/tcpip/")
-	tcpipSnmpV3HeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipSnmpV3HeaderFile.setType("HEADER")
-	tcpipSnmpV3HeaderFile.setOverwrite(True)
-
-	# Add snmpv3_private.h file to project
-	tcpipSnmpV3PrivateHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
-	tcpipSnmpV3PrivateHeaderFile.setSourcePath("library/src/snmpv3_private.h")
-	tcpipSnmpV3PrivateHeaderFile.setOutputName("snmpv3_private.h")
-	tcpipSnmpV3PrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipSnmpV3PrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipSnmpV3PrivateHeaderFile.setType("HEADER")
-	tcpipSnmpV3PrivateHeaderFile.setOverwrite(True)
-
 	# Niyas to add
 	# file SNMPV3_AES_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes.h"
 	# file SNMPV3_AES_CBC_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cbc.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cbc.h"
@@ -230,7 +212,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3SourceFile.setOutputName("snmpv3.c")
 	tcpipSnmpV3SourceFile.setOverwrite(True)
 	tcpipSnmpV3SourceFile.setDestPath("library/tcpip/src/")
-	tcpipSnmpV3SourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipSnmpV3SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipSnmpV3SourceFile.setType("SOURCE")
 	tcpipSnmpV3SourceFile.setEnabled(True)
 	tcpipSnmpV3SourceFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMP"])

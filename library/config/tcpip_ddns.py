@@ -33,35 +33,17 @@ def instantiateComponent(tcpipDdnsComponent):
 	tcpipDdnsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipDdnsHeaderFtl.setMarkup(True)
 	tcpipDdnsHeaderFtl.setType("STRING")
-	
-	# Add ddns.h file to project
-	tcpipUdpHeaderFile = tcpipDdnsComponent.createFileSymbol(None, None)
-	tcpipUdpHeaderFile.setSourcePath("library/ddns.h")
-	tcpipUdpHeaderFile.setOutputName("ddns.h")
-	tcpipUdpHeaderFile.setDestPath("library/tcpip/")
-	tcpipUdpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipUdpHeaderFile.setType("HEADER")
-	tcpipUdpHeaderFile.setOverwrite(True)
-
-	# Add ddns_manager.h file to project
-	tcpipUdpManagerHeaderFile = tcpipDdnsComponent.createFileSymbol(None, None)
-	tcpipUdpManagerHeaderFile.setSourcePath("library/src/ddns_manager.h")
-	tcpipUdpManagerHeaderFile.setOutputName("ddns_manager.h")
-	tcpipUdpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setType("HEADER")
-	tcpipUdpManagerHeaderFile.setOverwrite(True)
 
 	# Add ddns.c file
-	tcpipUdpSourceFile = tcpipDdnsComponent.createFileSymbol(None, None)
-	tcpipUdpSourceFile.setSourcePath("library/src/ddns.c")
-	tcpipUdpSourceFile.setOutputName("ddns.c")
-	tcpipUdpSourceFile.setOverwrite(True)
-	tcpipUdpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipUdpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpSourceFile.setType("SOURCE")
-	tcpipUdpSourceFile.setEnabled(True)
-	tcpipUdpSourceFile.setDependencies(tcpipDdnsGenSourceFile, ["TCPIP_USE_DDNS"])
+	tcpipDdnsSourceFile = tcpipDdnsComponent.createFileSymbol(None, None)
+	tcpipDdnsSourceFile.setSourcePath("library/src/ddns.c")
+	tcpipDdnsSourceFile.setOutputName("ddns.c")
+	tcpipDdnsSourceFile.setOverwrite(True)
+	tcpipDdnsSourceFile.setDestPath("library/tcpip/src/")
+	tcpipDdnsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipDdnsSourceFile.setType("SOURCE")
+	tcpipDdnsSourceFile.setEnabled(True)
+	tcpipDdnsSourceFile.setDependencies(tcpipDdnsGenSourceFile, ["TCPIP_USE_DDNS"])
 
 # make Dynamic DNS module option visible
 def tcpipDdnsMenuVisible(symbol, event):

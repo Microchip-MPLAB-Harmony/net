@@ -115,44 +115,4 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   false
 </#if>
 
-<#-- niyas
-<#include "/framework/tcpip/config/tcpip_heap.h.ftl">
-<#include "/framework/tcpip/config/arp.h.ftl">
-<#include "/framework/tcpip/config/berkeley_api.h.ftl">
-<#include "/framework/tcpip/config/ddns.h.ftl">
-<#include "/framework/tcpip/config/dhcp.h.ftl">
-<#include "/framework/tcpip/config/dhcps.h.ftl">
-<#include "/framework/tcpip/config/dns.h.ftl">
-<#include "/framework/tcpip/config/dnss.h.ftl">
-<#include "/framework/tcpip/config/ftp.h.ftl">
-<#include "/framework/tcpip/config/http.h.ftl">
-<#include "/framework/tcpip/config/http_net.h.ftl">
-<#include "/framework/tcpip/config/icmp.h.ftl">
-<#include "/framework/tcpip/config/iperf.h.ftl">
-<#include "/framework/tcpip/config/ipv6.h.ftl">
-<#include "/framework/tcpip/config/nbns.h.ftl">
-<#include "/framework/tcpip/config/smtp.h.ftl">
-<#include "/framework/tcpip/config/smtpc.h.ftl">
-<#include "/framework/tcpip/config/sntp.h.ftl">
-<#include "/framework/tcpip/config/snmp.h.ftl">
-<#include "/framework/tcpip/config/tcp.h.ftl">
-<#include "/framework/tcpip/config/tcpip_announce.h.ftl">
-<#if (CONFIG_DSTBDPIC32CZ == true)>
-<#include "/framework/tcpip/config/tcpip_mac_pic32c.h.ftl">
-<#else>
-<#include "/framework/tcpip/config/tcpip_mac_pic32m.h.ftl">
-</#if>
-<#include "/framework/tcpip/config/tcpip_reboot.h.ftl">
-<#include "/framework/tcpip/config/telnet.h.ftl">
-<#include "/framework/tcpip/config/udp.h.ftl">
-<#include "/framework/tcpip/config/zeroconf.h.ftl">
-<#include "/framework/tcpip/config/tcpip_cmd.h.ftl">
-<#include "/framework/tcpip/config/tftpc.h.ftl">
-<#include "/framework/tcpip/config/ip.h.ftl">
-<#include "/framework/tcpip/config/igmp.h.ftl">
-<#include "/framework/tcpip/config/network_config_idx.h.ftl">
-<#if CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true || CONFIG_TCPIP_STACK_USE_HTTP_NET_SERVER == true || CONFIG_TCPIP_USE_SNMP == true || CONFIG_TCPIP_USE_FTP_MODULE == true || CONFIG_TCPIP_USE_TFTPC_MODULE>
-<#include "/framework/tcpip/config/sys_fs_wrapper.h.ftl">
-</#if>
--->
 </#if>

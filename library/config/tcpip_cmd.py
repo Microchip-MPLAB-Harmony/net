@@ -75,24 +75,6 @@ def instantiateComponent(tcpipCmdComponent):
 	tcpipCmdHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipCmdHeaderFtl.setMarkup(True)
 	tcpipCmdHeaderFtl.setType("STRING")
-	
-	# Add tcpip_commands.h file to project
-	tcpipCmdHeaderFile = tcpipCmdComponent.createFileSymbol(None, None)
-	tcpipCmdHeaderFile.setSourcePath("library/tcpip_commands.h")
-	tcpipCmdHeaderFile.setOutputName("tcpip_commands.h")
-	tcpipCmdHeaderFile.setDestPath("library/tcpip/")
-	tcpipCmdHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipCmdHeaderFile.setType("HEADER")
-	tcpipCmdHeaderFile.setOverwrite(True)
-
-	# Add tcpip_commands_manager.h file to project
-	tcpipCmdManagerHeaderFile = tcpipCmdComponent.createFileSymbol(None, None)
-	tcpipCmdManagerHeaderFile.setSourcePath("library/src/tcpip_commands_manager.h")
-	tcpipCmdManagerHeaderFile.setOutputName("tcpip_commands_manager.h")
-	tcpipCmdManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipCmdManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipCmdManagerHeaderFile.setType("HEADER")
-	tcpipCmdManagerHeaderFile.setOverwrite(True)
 
 	# Add tcpip_commands.c file
 	tcpipCmdSourceFile = tcpipCmdComponent.createFileSymbol(None, None)
@@ -100,7 +82,7 @@ def instantiateComponent(tcpipCmdComponent):
 	tcpipCmdSourceFile.setOutputName("tcpip_commands.c")
 	tcpipCmdSourceFile.setOverwrite(True)
 	tcpipCmdSourceFile.setDestPath("library/tcpip/src/")
-	tcpipCmdSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipCmdSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipCmdSourceFile.setType("SOURCE")
 	tcpipCmdSourceFile.setEnabled(True)
 	tcpipCmdSourceFile.setDependencies(tcpipCmdGenSourceFile, ["TCPIP_STACK_USE_COMMANDS"])

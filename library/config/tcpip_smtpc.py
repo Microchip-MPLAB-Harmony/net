@@ -146,33 +146,6 @@ def instantiateComponent(tcpipSmtpcComponent):
 	tcpipSmtpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipSmtpcHeaderFtl.setMarkup(True)
 	tcpipSmtpcHeaderFtl.setType("STRING")
-	
-	# Add smtpc.h file to project
-	tcpipSmtpcHeaderFile = tcpipSmtpcComponent.createFileSymbol(None, None)
-	tcpipSmtpcHeaderFile.setSourcePath("library/smtpc.h")
-	tcpipSmtpcHeaderFile.setOutputName("smtpc.h")
-	tcpipSmtpcHeaderFile.setDestPath("library/tcpip/")
-	tcpipSmtpcHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipSmtpcHeaderFile.setType("HEADER")
-	tcpipSmtpcHeaderFile.setOverwrite(True)
-
-	# Add smtpc_manager.h file to project
-	tcpipSmtpcManagerHeaderFile = tcpipSmtpcComponent.createFileSymbol(None, None)
-	tcpipSmtpcManagerHeaderFile.setSourcePath("library/src/smtpc_manager.h")
-	tcpipSmtpcManagerHeaderFile.setOutputName("smtpc_manager.h")
-	tcpipSmtpcManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipSmtpcManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipSmtpcManagerHeaderFile.setType("HEADER")
-	tcpipSmtpcManagerHeaderFile.setOverwrite(True)
-
-	# Add smtpc_private.h file to project
-	tcpipSmtpcPrivateHeaderFile = tcpipSmtpcComponent.createFileSymbol(None, None)
-	tcpipSmtpcPrivateHeaderFile.setSourcePath("library/src/smtpc_private.h")
-	tcpipSmtpcPrivateHeaderFile.setOutputName("smtpc_private.h")
-	tcpipSmtpcPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipSmtpcPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipSmtpcPrivateHeaderFile.setType("HEADER")
-	tcpipSmtpcPrivateHeaderFile.setOverwrite(True)
 
 	# Add smtpc.c file
 	tcpipSmtpcSourceFile = tcpipSmtpcComponent.createFileSymbol(None, None)
@@ -180,7 +153,7 @@ def instantiateComponent(tcpipSmtpcComponent):
 	tcpipSmtpcSourceFile.setOutputName("smtpc.c")
 	tcpipSmtpcSourceFile.setOverwrite(True)
 	tcpipSmtpcSourceFile.setDestPath("library/tcpip/src/")
-	tcpipSmtpcSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipSmtpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipSmtpcSourceFile.setType("SOURCE")
 	tcpipSmtpcSourceFile.setEnabled(True)
 	tcpipSmtpcSourceFile.setDependencies(tcpipSmtpcGenSourceFile, ["TCPIP_USE_SMTPC_CLIENT"])

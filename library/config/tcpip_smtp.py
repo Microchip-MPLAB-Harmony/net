@@ -50,24 +50,6 @@ def instantiateComponent(tcpipSmtpComponent):
 	tcpipSmtpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipSmtpHeaderFtl.setMarkup(True)
 	tcpipSmtpHeaderFtl.setType("STRING")
-	
-	# Add smtp.h file to project
-	tcpipSmtpHeaderFile = tcpipSmtpComponent.createFileSymbol(None, None)
-	tcpipSmtpHeaderFile.setSourcePath("library/smtp.h")
-	tcpipSmtpHeaderFile.setOutputName("smtp.h")
-	tcpipSmtpHeaderFile.setDestPath("library/tcpip/")
-	tcpipSmtpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipSmtpHeaderFile.setType("HEADER")
-	tcpipSmtpHeaderFile.setOverwrite(True)
-
-	# Add smtp_manager.h file to project
-	tcpipSmtpManagerHeaderFile = tcpipSmtpComponent.createFileSymbol(None, None)
-	tcpipSmtpManagerHeaderFile.setSourcePath("library/src/smtp_manager.h")
-	tcpipSmtpManagerHeaderFile.setOutputName("smtp_manager.h")
-	tcpipSmtpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipSmtpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipSmtpManagerHeaderFile.setType("HEADER")
-	tcpipSmtpManagerHeaderFile.setOverwrite(True)
 
 	# Add smtp.c file
 	tcpipSmtpSourceFile = tcpipSmtpComponent.createFileSymbol(None, None)
@@ -75,7 +57,7 @@ def instantiateComponent(tcpipSmtpComponent):
 	tcpipSmtpSourceFile.setOutputName("smtp.c")
 	tcpipSmtpSourceFile.setOverwrite(True)
 	tcpipSmtpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipSmtpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipSmtpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipSmtpSourceFile.setType("SOURCE")
 	tcpipSmtpSourceFile.setEnabled(True)
 	tcpipSmtpSourceFile.setDependencies(tcpipSmtpGenSourceFile, ["TCPIP_USE_SMTP_CLIENT"])

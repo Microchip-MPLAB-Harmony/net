@@ -13,8 +13,8 @@ config DRV_MIIM_USE_DRIVER
 config DRV_MIIM_ETH_MODULE_ID
     string "ETH Module ID"
     depends on DRV_MIIM_USE_DRIVER
-    default "ETH_ID_0" if TCPIP_EMAC_MODULE_ID = "ETH_ID_0"
-    default "GMAC_ID_0" if TCPIP_EMAC_MODULE_ID = "GMAC_ID_0"
+    default "ETH_ID_0" if TCPIP_INTMAC_MODULE_ID = "ETH_ID_0"
+    default "GMAC_ID_0" if TCPIP_INTMAC_MODULE_ID = "GMAC_ID_0"
     ---help---
     ---endhelp---
     

@@ -201,7 +201,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 </#if>
                                                     0
 
-#define TCPIP_EMAC_MODULE_ID		    			${TCPIP_EMAC_MODULE_ID}
+#define TCPIP_INTMAC_MODULE_ID		    			${TCPIP_INTMAC_MODULE_ID}
 <#if TCPIP_GMAC_INTERRUPT_MODE == true>
 #define TCPIP_GMAC_INTERRUPT_MODE        			true
 <#else>
@@ -221,33 +221,6 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #define DRV_GMAC_INTERRUPT_MODE        			true
 </#if>
 
-
-#define TCPIP_GMAC_PHY_CONFIG_FLAGS     			\
-<#if TCPIP_GMAC_PHY_CONFIG_RMII>
-                                                    DRV_ETHPHY_CFG_RMII | \
-</#if>
-<#if TCPIP_GMAC_PHY_CONFIG_ALTERNATE>
-                                                    DRV_ETHPHY_CFG_ALTERNATE | \
-</#if>
-<#if TCPIP_GMAC_PHY_CONFIG_AUTO>
-                                                    DRV_ETHPHY_CFG_AUTO | \
-</#if>
-                                                    0                                                    
-
-#define TCPIP_GMAC_PHY_LINK_INIT_DELAY  			${TCPIP_GMAC_PHY_LINK_INIT_DELAY}
-#define TCPIP_GMAC_PHY_ADDRESS		    			${TCPIP_GMAC_PHY_ADDRESS}
-#define DRV_ETHPHY_INSTANCES_NUMBER					${DRV_ETHPHY_INSTANCES_NUMBER}
-#define DRV_ETHPHY_CLIENTS_NUMBER					${DRV_ETHPHY_CLIENTS_NUMBER}
-#define DRV_ETHPHY_INDEX		        			${DRV_ETHPHY_INDEX}
-#define DRV_ETHPHY_PERIPHERAL_ID					${DRV_ETHPHY_PERIPHERAL_ID}
-#define DRV_ETHPHY_NEG_INIT_TMO		    			${DRV_ETHPHY_NEG_INIT_TMO}
-#define DRV_ETHPHY_NEG_DONE_TMO		    			${DRV_ETHPHY_NEG_DONE_TMO}
-#define DRV_ETHPHY_RESET_CLR_TMO					${DRV_ETHPHY_RESET_CLR_TMO}
-<#if DRV_MIIM_USE_DRIVER?has_content && DRV_MIIM_USE_DRIVER == true >
-#define DRV_ETHPHY_USE_DRV_MIIM                     true
-<#else>
-#define DRV_ETHPHY_USE_DRV_MIIM                     false
-</#if>
 </#if>
 
 <#--

@@ -70,24 +70,6 @@ def instantiateComponent(tcpipIperfComponent):
 	tcpipIperfHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipIperfHeaderFtl.setMarkup(True)
 	tcpipIperfHeaderFtl.setType("STRING")
-	
-	# Add iperf.h file to project
-	tcpipIperfHeaderFile = tcpipIperfComponent.createFileSymbol(None, None)
-	tcpipIperfHeaderFile.setSourcePath("library/iperf.h")
-	tcpipIperfHeaderFile.setOutputName("iperf.h")
-	tcpipIperfHeaderFile.setDestPath("library/tcpip/")
-	tcpipIperfHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipIperfHeaderFile.setType("HEADER")
-	tcpipIperfHeaderFile.setOverwrite(True)
-
-	# Add iperf_manager.h file to project
-	tcpipIperfManagerHeaderFile = tcpipIperfComponent.createFileSymbol(None, None)
-	tcpipIperfManagerHeaderFile.setSourcePath("library/src/iperf_manager.h")
-	tcpipIperfManagerHeaderFile.setOutputName("iperf_manager.h")
-	tcpipIperfManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIperfManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIperfManagerHeaderFile.setType("HEADER")
-	tcpipIperfManagerHeaderFile.setOverwrite(True)
 
 	# Add iperf.c file
 	tcpipIperfSourceFile = tcpipIperfComponent.createFileSymbol(None, None)
@@ -95,7 +77,7 @@ def instantiateComponent(tcpipIperfComponent):
 	tcpipIperfSourceFile.setOutputName("iperf.c")
 	tcpipIperfSourceFile.setOverwrite(True)
 	tcpipIperfSourceFile.setDestPath("library/tcpip/src/")
-	tcpipIperfSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipIperfSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIperfSourceFile.setType("SOURCE")
 	tcpipIperfSourceFile.setEnabled(True)
 	tcpipIperfSourceFile.setDependencies(tcpipIperfGenSourceFile, ["TCPIP_USE_IPERF"])

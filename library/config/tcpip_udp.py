@@ -92,39 +92,12 @@ def instantiateComponent(tcpipUdpComponent):
 	tcpipUdpCommands.setDefaultValue(False)
 	tcpipUdpCommands.setDependencies(tcpipUdpMenuVisibleSingle, ["TCPIP_USE_UDP"])
 
-	# Add udp.h file to project
-	tcpipUdpHeaderFile = tcpipUdpComponent.createFileSymbol(None, None)
-	tcpipUdpHeaderFile.setSourcePath("library/udp.h")
-	tcpipUdpHeaderFile.setOutputName("udp.h")
-	tcpipUdpHeaderFile.setDestPath("library/tcpip/")
-	tcpipUdpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipUdpHeaderFile.setType("HEADER")
-	tcpipUdpHeaderFile.setOverwrite(True)
-
 	#Add to system_config.h
 	tcpipUdpHeaderFtl = tcpipUdpComponent.createFileSymbol(None, None)
 	tcpipUdpHeaderFtl.setSourcePath("library/config/udp.h.ftl")
 	tcpipUdpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipUdpHeaderFtl.setMarkup(True)
 	tcpipUdpHeaderFtl.setType("STRING")
-	
-	# Add udp_manager.h file to project
-	tcpipUdpManagerHeaderFile = tcpipUdpComponent.createFileSymbol(None, None)
-	tcpipUdpManagerHeaderFile.setSourcePath("library/src/udp_manager.h")
-	tcpipUdpManagerHeaderFile.setOutputName("udp_manager.h")
-	tcpipUdpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setType("HEADER")
-	tcpipUdpManagerHeaderFile.setOverwrite(True)
-
-	# Add udp_private.h file to project
-	tcpipUdpPrivateHeaderFile = tcpipUdpComponent.createFileSymbol(None, None)
-	tcpipUdpPrivateHeaderFile.setSourcePath("library/src/udp_private.h")
-	tcpipUdpPrivateHeaderFile.setOutputName("udp_private.h")
-	tcpipUdpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipUdpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpPrivateHeaderFile.setType("HEADER")
-	tcpipUdpPrivateHeaderFile.setOverwrite(True)
 
 	# Add udp.c file
 	tcpipUdpSourceFile = tcpipUdpComponent.createFileSymbol(None, None)
@@ -132,7 +105,7 @@ def instantiateComponent(tcpipUdpComponent):
 	tcpipUdpSourceFile.setOutputName("udp.c")
 	tcpipUdpSourceFile.setOverwrite(True)
 	tcpipUdpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipUdpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipUdpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipUdpSourceFile.setType("SOURCE")
 	tcpipUdpSourceFile.setEnabled(True)
 	tcpipUdpSourceFile.setDependencies(tcpipUdpGenSourceFile, ["TCPIP_USE_UDP"])

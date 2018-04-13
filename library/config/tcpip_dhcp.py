@@ -66,33 +66,6 @@ def instantiateComponent(tcpipDhcpComponent):
 	tcpipDhcpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipDhcpcHeaderFtl.setMarkup(True)
 	tcpipDhcpcHeaderFtl.setType("STRING")
-	
-	# Add dhcp.h file to project
-	tcpipDhcpcHeaderFile = tcpipDhcpComponent.createFileSymbol(None, None)
-	tcpipDhcpcHeaderFile.setSourcePath("library/dhcp.h")
-	tcpipDhcpcHeaderFile.setOutputName("dhcp.h")
-	tcpipDhcpcHeaderFile.setDestPath("library/tcpip/")
-	tcpipDhcpcHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipDhcpcHeaderFile.setType("HEADER")
-	tcpipDhcpcHeaderFile.setOverwrite(True)
-
-	# Add dhcp_manager.h file to project
-	tcpipDhcpcManagerHeaderFile = tcpipDhcpComponent.createFileSymbol(None, None)
-	tcpipDhcpcManagerHeaderFile.setSourcePath("library/src/dhcp_manager.h")
-	tcpipDhcpcManagerHeaderFile.setOutputName("dhcp_manager.h")
-	tcpipDhcpcManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipDhcpcManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipDhcpcManagerHeaderFile.setType("HEADER")
-	tcpipDhcpcManagerHeaderFile.setOverwrite(True)
-
-	# Add dhcp_private.h file to project
-	tcpipDhcpcPrivateHeaderFile = tcpipDhcpComponent.createFileSymbol(None, None)
-	tcpipDhcpcPrivateHeaderFile.setSourcePath("library/src/dhcp_private.h")
-	tcpipDhcpcPrivateHeaderFile.setOutputName("dhcp_private.h")
-	tcpipDhcpcPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipDhcpcPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipDhcpcPrivateHeaderFile.setType("HEADER")
-	tcpipDhcpcPrivateHeaderFile.setOverwrite(True)
 
 	# Add dhcp.c file
 	tcpipDhcpcSourceFile = tcpipDhcpComponent.createFileSymbol(None, None)
@@ -100,7 +73,7 @@ def instantiateComponent(tcpipDhcpComponent):
 	tcpipDhcpcSourceFile.setOutputName("dhcp.c")
 	tcpipDhcpcSourceFile.setOverwrite(True)
 	tcpipDhcpcSourceFile.setDestPath("library/tcpip/src/")
-	tcpipDhcpcSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipDhcpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipDhcpcSourceFile.setType("SOURCE")
 	tcpipDhcpcSourceFile.setEnabled(True)
 	

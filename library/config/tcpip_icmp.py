@@ -56,24 +56,6 @@ def instantiateComponent(tcpipIcmpComponent):
 	tcpipIcmpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipIcmpHeaderFtl.setMarkup(True)
 	tcpipIcmpHeaderFtl.setType("STRING")
-	
-	# Add icmp.h file to project
-	tcpipIcmpHeaderFile = tcpipIcmpComponent.createFileSymbol(None, None)
-	tcpipIcmpHeaderFile.setSourcePath("library/icmp.h")
-	tcpipIcmpHeaderFile.setOutputName("icmp.h")
-	tcpipIcmpHeaderFile.setDestPath("library/tcpip/")
-	tcpipIcmpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipIcmpHeaderFile.setType("HEADER")
-	tcpipIcmpHeaderFile.setOverwrite(True)
-
-	# Add icmp_manager.h file to project
-	tcpipIcmpManagerHeaderFile = tcpipIcmpComponent.createFileSymbol(None, None)
-	tcpipIcmpManagerHeaderFile.setSourcePath("library/src/icmp_manager.h")
-	tcpipIcmpManagerHeaderFile.setOutputName("icmp_manager.h")
-	tcpipIcmpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIcmpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIcmpManagerHeaderFile.setType("HEADER")
-	tcpipIcmpManagerHeaderFile.setOverwrite(True)
 
 	# Add icmp.c file
 	tcpipIcmpSourceFile = tcpipIcmpComponent.createFileSymbol(None, None)
@@ -81,7 +63,7 @@ def instantiateComponent(tcpipIcmpComponent):
 	tcpipIcmpSourceFile.setOutputName("icmp.c")
 	tcpipIcmpSourceFile.setOverwrite(True)
 	tcpipIcmpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipIcmpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipIcmpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIcmpSourceFile.setType("SOURCE")
 	tcpipIcmpSourceFile.setEnabled(True)
 	tcpipIcmpSourceFile.setDependencies(tcpipIcmpGenSourceFile, ["TCPIP_STACK_USE_ICMP_SERVER","TCPIP_STACK_USE_ICMP_CLIENT"])

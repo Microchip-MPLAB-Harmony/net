@@ -27,13 +27,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 -->
 
 <#if USE_TCPIP_STACK == true>
-<#if (TCPIP_DEVICE_FAMILY) == "PIC32C">
-<#if (tcpipEthMac.TCPIP_GMAC_INTERRUPT_MODE)?has_content && (tcpipEthMac.TCPIP_GMAC_INTERRUPT_MODE) == true>
+<#if (TCPIP_DEVICE_FAMILY) == "SAME70">
+<#if (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE)?has_content && (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE) == true>
     /* set priority for ETHERNET interrupt source */
-    SYS_INT_VectorPrioritySet(${tcpipEthMac.DRV_GMAC_INTERRUPT_VECTOR}, ${tcpipEthMac.TCPIP_GMAC_INTERRUPT_PRIORITY});
+    SYS_INT_VectorPrioritySet(${drvSamv71Gmac.DRV_GMAC_INTERRUPT_VECTOR}, ${drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_PRIORITY});
 </#if>  	
 <#else>
-<#if (tcpipEthMac.TCPIP_EMAC_INTERRUPT_MODE)?has_content && (tcpipEthMac.TCPIP_EMAC_INTERRUPT_MODE) == true>
+<#if (drvSamv71Gmac.TCPIP_EMAC_INTERRUPT_MODE)?has_content && (drvSamv71Gmac.TCPIP_EMAC_INTERRUPT_MODE) == true>
     /* set priority for ETHERNET interrupt source */
     SYS_INT_VectorPrioritySet(INT_VECTOR_ETH, ${TCPIP_EMAC_INTERRUPT_PRIORITY});
 

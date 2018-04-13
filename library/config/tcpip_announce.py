@@ -40,16 +40,6 @@ def instantiateComponent(tcpipAnnounceComponent):
 	tcpipAnnounceHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipAnnounceHeaderFtl.setMarkup(True)
 	tcpipAnnounceHeaderFtl.setType("STRING")
-	
-	# Add tcpip_announce_manager.h file to project
-	tcpipAnnounceManagerHeaderFile = tcpipAnnounceComponent.createFileSymbol(None, None)
-	tcpipAnnounceManagerHeaderFile.setSourcePath("library/src/tcpip_announce_manager.h")
-	tcpipAnnounceManagerHeaderFile.setOutputName("tcpip_announce_manager.h")
-	tcpipAnnounceManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipAnnounceManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipAnnounceManagerHeaderFile.setType("HEADER")
-	tcpipAnnounceManagerHeaderFile.setOverwrite(True)
-
 
 	# Add tcpip_announce.c file
 	tcpipAnnounceSourceFile = tcpipAnnounceComponent.createFileSymbol(None, None)
@@ -57,7 +47,7 @@ def instantiateComponent(tcpipAnnounceComponent):
 	tcpipAnnounceSourceFile.setOutputName("tcpip_announce.c")
 	tcpipAnnounceSourceFile.setOverwrite(True)
 	tcpipAnnounceSourceFile.setDestPath("library/tcpip/src/")
-	tcpipAnnounceSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipAnnounceSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipAnnounceSourceFile.setType("SOURCE")
 	tcpipAnnounceSourceFile.setEnabled(True)
 	tcpipAnnounceSourceFile.setDependencies(tcpipAnnounceGenSourceFile, ["TCPIP_USE_ANNOUNCE"])

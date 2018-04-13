@@ -234,33 +234,6 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipHttpHeaderFtl.setMarkup(True)
 	tcpipHttpHeaderFtl.setType("STRING")
-	
-	# Add http.h file to project
-	tcpipHttpHeaderFile = tcpipHttpComponent.createFileSymbol(None, None)
-	tcpipHttpHeaderFile.setSourcePath("library/http.h")
-	tcpipHttpHeaderFile.setOutputName("udp.h")
-	tcpipHttpHeaderFile.setDestPath("library/tcpip/")
-	tcpipHttpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipHttpHeaderFile.setType("HEADER")
-	tcpipHttpHeaderFile.setOverwrite(True)
-
-	# Add http_manager.h file to project
-	tcpipHttpManagerHeaderFile = tcpipHttpComponent.createFileSymbol(None, None)
-	tcpipHttpManagerHeaderFile.setSourcePath("library/src/http_manager.h")
-	tcpipHttpManagerHeaderFile.setOutputName("http_manager.h")
-	tcpipHttpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipHttpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipHttpManagerHeaderFile.setType("HEADER")
-	tcpipHttpManagerHeaderFile.setOverwrite(True)
-
-	# Add http_private.h file to project
-	tcpipHttpPrivateHeaderFile = tcpipHttpComponent.createFileSymbol(None, None)
-	tcpipHttpPrivateHeaderFile.setSourcePath("library/src/http_private.h")
-	tcpipHttpPrivateHeaderFile.setOutputName("http_private.h")
-	tcpipHttpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipHttpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipHttpPrivateHeaderFile.setType("HEADER")
-	tcpipHttpPrivateHeaderFile.setOverwrite(True)
 
 	# Niyas to do
 	# file SYS_FS_HTTP_H "$HARMONY_VERSION_PATH/framework/system/fs/sys_fs.h" to "$PROJECT_HEADER_FILES/framework/system/fs/sys_fs.h"
@@ -271,7 +244,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpSourceFile.setOutputName("http.c")
 	tcpipHttpSourceFile.setOverwrite(True)
 	tcpipHttpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipHttpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipHttpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipHttpSourceFile.setType("SOURCE")
 	tcpipHttpSourceFile.setEnabled(True)
 	tcpipHttpSourceFile.setDependencies(tcpipHttpGenSourceFile, ["TCPIP_STACK_USE_HTTP_SERVER"])

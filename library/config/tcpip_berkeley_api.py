@@ -19,22 +19,13 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 	tcpipBerkeleyBsdSktsMaxNum.setDefaultValue(4)
 	tcpipBerkeleyBsdSktsMaxNum.setDependencies(tcpipBerkeleyApiMenuVisible, ["TCPIP_STACK_USE_BERKELEY_API"])
 
-	# Add berkeley_api.h file to project
-	tcpipBerkeleyApiHeaderFile = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
-	tcpipBerkeleyApiHeaderFile.setSourcePath("library/berkeley_api.h")
-	tcpipBerkeleyApiHeaderFile.setOutputName("berkeley_api.h")
-	tcpipBerkeleyApiHeaderFile.setDestPath("library/tcpip/")
-	tcpipBerkeleyApiHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipBerkeleyApiHeaderFile.setType("HEADER")
-	tcpipBerkeleyApiHeaderFile.setOverwrite(True)
-
 	# Add berkeley_api.c file
 	tcpipBerkeleyApiSourceFile = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
 	tcpipBerkeleyApiSourceFile.setSourcePath("library/src/berkeley_api.c")
 	tcpipBerkeleyApiSourceFile.setOutputName("berkeley_api.c")
 	tcpipBerkeleyApiSourceFile.setOverwrite(True)
 	tcpipBerkeleyApiSourceFile.setDestPath("library/tcpip/src/")
-	tcpipBerkeleyApiSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipBerkeleyApiSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipBerkeleyApiSourceFile.setType("SOURCE")
 	tcpipBerkeleyApiSourceFile.setEnabled(True)
 	tcpipBerkeleyApiSourceFile.setDependencies(tcpipBerkeleyApiGenSourceFile, ["TCPIP_STACK_USE_BERKELEY_API"])

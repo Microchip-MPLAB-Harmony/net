@@ -1,12 +1,13 @@
 #niyas multiple definition for following; find a method
 TCPIP_STACK_IF_NAME = []
+#niyas modify the interface name
 TCPIP_STACK_PIC32C_IF_NAME =	["PIC32CINT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 TCPIP_STACK_PIC32M_IF_NAME =	["PIC32INT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]    
 def instantiateComponent(tcpipTftpcComponent):
 	print("TCPIP TFTPC Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
 	
-	if "PIC32C" in Variables.get("__PROCESSOR"):
+	if "SAME70" in Variables.get("__PROCESSOR"):
 		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32C_IF_NAME
 	else:
 		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32M_IF_NAME
@@ -93,33 +94,6 @@ def instantiateComponent(tcpipTftpcComponent):
 	tcpipTftpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipTftpcHeaderFtl.setMarkup(True)
 	tcpipTftpcHeaderFtl.setType("STRING")
-	
-	# Add tftpc.h file to project
-	tcpipTftpcHeaderFile = tcpipTftpcComponent.createFileSymbol(None, None)
-	tcpipTftpcHeaderFile.setSourcePath("library/tftpc.h")
-	tcpipTftpcHeaderFile.setOutputName("tftpc.h")
-	tcpipTftpcHeaderFile.setDestPath("library/tcpip/")
-	tcpipTftpcHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipTftpcHeaderFile.setType("HEADER")
-	tcpipTftpcHeaderFile.setOverwrite(True)
-
-	# Add tftpc_manager.h file to project
-	tcpipTftpcManagerHeaderFile = tcpipTftpcComponent.createFileSymbol(None, None)
-	tcpipTftpcManagerHeaderFile.setSourcePath("library/src/tftpc_manager.h")
-	tcpipTftpcManagerHeaderFile.setOutputName("tftpc_manager.h")
-	tcpipTftpcManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipTftpcManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipTftpcManagerHeaderFile.setType("HEADER")
-	tcpipTftpcManagerHeaderFile.setOverwrite(True)
-
-	# Add tftpc_private.h file to project
-	tcpipTftpcPrivateHeaderFile = tcpipTftpcComponent.createFileSymbol(None, None)
-	tcpipTftpcPrivateHeaderFile.setSourcePath("library/src/tftpc_private.h")
-	tcpipTftpcPrivateHeaderFile.setOutputName("tftpc_private.h")
-	tcpipTftpcPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipTftpcPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipTftpcPrivateHeaderFile.setType("HEADER")
-	tcpipTftpcPrivateHeaderFile.setOverwrite(True)
 
 	# Add tftpc.c file
 	tcpipTftpcSourceFile = tcpipTftpcComponent.createFileSymbol(None, None)
@@ -127,7 +101,7 @@ def instantiateComponent(tcpipTftpcComponent):
 	tcpipTftpcSourceFile.setOutputName("tftpc.c")
 	tcpipTftpcSourceFile.setOverwrite(True)
 	tcpipTftpcSourceFile.setDestPath("library/tcpip/src/")
-	tcpipTftpcSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipTftpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipTftpcSourceFile.setType("SOURCE")
 	tcpipTftpcSourceFile.setEnabled(True)
 	tcpipTftpcSourceFile.setDependencies(tcpipTftpcGenSourceFile, ["TCPIP_USE_TFTPC_MODULE"])

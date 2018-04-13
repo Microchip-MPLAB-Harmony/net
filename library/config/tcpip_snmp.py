@@ -174,40 +174,13 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpCustTemplate.setDefaultValue(True) 
 	tcpipSnmpCustTemplate.setDependencies(tcpipSnmpMenuVisibleSingle, ["TCPIP_USE_SNMP"])
 
-	# Add snmp.h file to project
-	tcpipSnmpHeaderFile = tcpipSnmpComponent.createFileSymbol(None, None)
-	tcpipSnmpHeaderFile.setSourcePath("library/snmp.h")
-	tcpipSnmpHeaderFile.setOutputName("snmp.h")
-	tcpipSnmpHeaderFile.setDestPath("library/tcpip/")
-	tcpipSnmpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipSnmpHeaderFile.setType("HEADER")
-	tcpipSnmpHeaderFile.setOverwrite(True)
-
-	# Add snmp_manager.h file to project
-	tcpipSnmptManagerHeaderFile = tcpipSnmpComponent.createFileSymbol(None, None)
-	tcpipSnmptManagerHeaderFile.setSourcePath("library/src/snmp_manager.h")
-	tcpipSnmptManagerHeaderFile.setOutputName("snmp_manager.h")
-	tcpipSnmptManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipSnmptManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipSnmptManagerHeaderFile.setType("HEADER")
-	tcpipSnmptManagerHeaderFile.setOverwrite(True)
-
-	# Add snmp_private.h file to project
-	tcpipSnmpPrivateHeaderFile = tcpipSnmpComponent.createFileSymbol(None, None)
-	tcpipSnmpPrivateHeaderFile.setSourcePath("library/src/snmp_private.h")
-	tcpipSnmpPrivateHeaderFile.setOutputName("snmp_private.h")
-	tcpipSnmpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipSnmpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipSnmpPrivateHeaderFile.setType("HEADER")
-	tcpipSnmpPrivateHeaderFile.setOverwrite(True)
-
 	# Add snmp.c file
 	tcpipSnmpSourceFile = tcpipSnmpComponent.createFileSymbol(None, None)
 	tcpipSnmpSourceFile.setSourcePath("library/src/snmp.c")
 	tcpipSnmpSourceFile.setOutputName("snmp.c")
 	tcpipSnmpSourceFile.setOverwrite(True)
 	tcpipSnmpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipSnmpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipSnmpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipSnmpSourceFile.setType("SOURCE")
 	tcpipSnmpSourceFile.setEnabled(True)
 	tcpipSnmpSourceFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_USE_SNMP"])

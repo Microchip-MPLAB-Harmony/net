@@ -81,15 +81,6 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipSysFsHeaderFtl.setMarkup(True)
 	tcpipSysFsHeaderFtl.setType("STRING")
-	
-	# Add sys_fs_wrapper.h file to project
-	tcpipSysFsWrapperHeaderFile = tcpipSysFsWrapperComponent.createFileSymbol(None, None)
-	tcpipSysFsWrapperHeaderFile.setSourcePath("library/src/common/sys_fs_wrapper.h")
-	tcpipSysFsWrapperHeaderFile.setOutputName("sys_fs_wrapper.h")
-	tcpipSysFsWrapperHeaderFile.setDestPath("library/tcpip/src/common/")
-	tcpipSysFsWrapperHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/common/")
-	tcpipSysFsWrapperHeaderFile.setType("HEADER")
-	tcpipSysFsWrapperHeaderFile.setOverwrite(True)
 
 	# Add sys_fs_wrapper.c file
 	tcpipSysFsWrapperSourceFile = tcpipSysFsWrapperComponent.createFileSymbol(None, None)
@@ -97,7 +88,7 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsWrapperSourceFile.setOutputName("sys_fs_wrapper.c")
 	tcpipSysFsWrapperSourceFile.setOverwrite(True)
 	tcpipSysFsWrapperSourceFile.setDestPath("library/tcpip/src/common/")
-	tcpipSysFsWrapperSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/common/")
+	tcpipSysFsWrapperSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
 	tcpipSysFsWrapperSourceFile.setType("SOURCE")
 	tcpipSysFsWrapperSourceFile.setEnabled(False)
 	tcpipSysFsWrapperSourceFile.setDependencies(tcpipSysFsWrapperGenSourceFile, ["TCPIP_STACK_USE_FS_WRAPPER"])

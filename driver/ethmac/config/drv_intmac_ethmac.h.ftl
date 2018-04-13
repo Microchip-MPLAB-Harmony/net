@@ -113,7 +113,7 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 </#if>
                                                     0
 
-#define TCPIP_EMAC_MODULE_ID		    			${CONFIG_TCPIP_EMAC_MODULE_ID}
+#define TCPIP_INTMAC_MODULE_ID		    			${CONFIG_TCPIP_EMAC_MODULE_ID}
 <#if CONFIG_TCPIP_EMAC_INTERRUPT_MODE == true>
 #define TCPIP_EMAC_INTERRUPT_MODE        			true
 <#else>

@@ -99,33 +99,6 @@ def instantiateComponent(tcpipFtpsComponent):
 	tcpipFtpsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipFtpsHeaderFtl.setMarkup(True)
 	tcpipFtpsHeaderFtl.setType("STRING")	
-	
-	# Add ftp.h file to project
-	tcpipFtpsHeaderFile = tcpipFtpsComponent.createFileSymbol(None, None)
-	tcpipFtpsHeaderFile.setSourcePath("library/ftp.h")
-	tcpipFtpsHeaderFile.setOutputName("ftp.h")
-	tcpipFtpsHeaderFile.setDestPath("library/tcpip/")
-	tcpipFtpsHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipFtpsHeaderFile.setType("HEADER")
-	tcpipFtpsHeaderFile.setOverwrite(True)
-
-	# Add ftp_manager.h file to project
-	tcpipFtpsManagerHeaderFile = tcpipFtpsComponent.createFileSymbol(None, None)
-	tcpipFtpsManagerHeaderFile.setSourcePath("library/src/ftp_manager.h")
-	tcpipFtpsManagerHeaderFile.setOutputName("ftp_manager.h")
-	tcpipFtpsManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipFtpsManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipFtpsManagerHeaderFile.setType("HEADER")
-	tcpipFtpsManagerHeaderFile.setOverwrite(True)
-
-	# Add ftp_private.h file to project
-	tcpipFtpsPrivateHeaderFile = tcpipFtpsComponent.createFileSymbol(None, None)
-	tcpipFtpsPrivateHeaderFile.setSourcePath("library/src/ftp_private.h")
-	tcpipFtpsPrivateHeaderFile.setOutputName("ftp_private.h")
-	tcpipFtpsPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipFtpsPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipFtpsPrivateHeaderFile.setType("HEADER")
-	tcpipFtpsPrivateHeaderFile.setOverwrite(True)
 
 	# Add ftp.c file
 	tcpipFtpsSourceFile = tcpipFtpsComponent.createFileSymbol(None, None)
@@ -133,7 +106,7 @@ def instantiateComponent(tcpipFtpsComponent):
 	tcpipFtpsSourceFile.setOutputName("ftp.c")
 	tcpipFtpsSourceFile.setOverwrite(True)
 	tcpipFtpsSourceFile.setDestPath("library/tcpip/src/")
-	tcpipFtpsSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipFtpsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipFtpsSourceFile.setType("SOURCE")
 	tcpipFtpsSourceFile.setEnabled(True)
 	tcpipFtpsSourceFile.setDependencies(tcpipFtpsGenSourceFile, ["TCPIP_USE_FTP_MODULE"])

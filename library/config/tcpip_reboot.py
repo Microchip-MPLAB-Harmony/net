@@ -41,15 +41,6 @@ def instantiateComponent(tcpipRebootComponent):
 	tcpipRebootHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipRebootHeaderFtl.setMarkup(True)
 	tcpipRebootHeaderFtl.setType("STRING")
-	
-	# Add tcpip_reboot_manager.h file to project
-	tcpipRebootManagerHeaderFile = tcpipRebootComponent.createFileSymbol(None, None)
-	tcpipRebootManagerHeaderFile.setSourcePath("library/src/tcpip_reboot_manager.h")
-	tcpipRebootManagerHeaderFile.setOutputName("tcpip_reboot_manager.h")
-	tcpipRebootManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipRebootManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipRebootManagerHeaderFile.setType("HEADER")
-	tcpipRebootManagerHeaderFile.setOverwrite(True)
 
 	# Add tcpip_reboot.c file
 	tcpipRebootSourceFile = tcpipRebootComponent.createFileSymbol(None, None)
@@ -57,7 +48,7 @@ def instantiateComponent(tcpipRebootComponent):
 	tcpipRebootSourceFile.setOutputName("tcpip_reboot.c")
 	tcpipRebootSourceFile.setOverwrite(True)
 	tcpipRebootSourceFile.setDestPath("library/tcpip/src/")
-	tcpipRebootSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipRebootSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipRebootSourceFile.setType("SOURCE")
 	tcpipRebootSourceFile.setEnabled(True)
 	tcpipRebootSourceFile.setDependencies(tcpipRebootGenSourceFile, ["TCPIP_USE_REBOOT_SERVER"])

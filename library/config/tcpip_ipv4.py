@@ -59,33 +59,6 @@ def instantiateComponent(tcpipIPv4Component):
 	tcpipIPv4HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipIPv4HeaderFtl.setMarkup(True)
 	tcpipIPv4HeaderFtl.setType("STRING")
-	
-	# Add ipv4.h file to project
-	tcpipIPv4HeaderFile = tcpipIPv4Component.createFileSymbol(None, None)
-	tcpipIPv4HeaderFile.setSourcePath("library/ipv4.h")
-	tcpipIPv4HeaderFile.setOutputName("ipv4.h")
-	tcpipIPv4HeaderFile.setDestPath("library/tcpip/")
-	tcpipIPv4HeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipIPv4HeaderFile.setType("HEADER")
-	tcpipIPv4HeaderFile.setOverwrite(True)
-
-	# Add ipv4_manager.h file to project
-	tcpipIPv4ManagerHeaderFile = tcpipIPv4Component.createFileSymbol(None, None)
-	tcpipIPv4ManagerHeaderFile.setSourcePath("library/src/ipv4_manager.h")
-	tcpipIPv4ManagerHeaderFile.setOutputName("ipv4_manager.h")
-	tcpipIPv4ManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIPv4ManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIPv4ManagerHeaderFile.setType("HEADER")
-	tcpipIPv4ManagerHeaderFile.setOverwrite(True)
-
-	# Add ipv4_private.h file to project
-	tcpipIPv4PrivateHeaderFile = tcpipIPv4Component.createFileSymbol(None, None)
-	tcpipIPv4PrivateHeaderFile.setSourcePath("library/src/ipv4_private.h")
-	tcpipIPv4PrivateHeaderFile.setOutputName("ipv4_private.h")
-	tcpipIPv4PrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIPv4PrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIPv4PrivateHeaderFile.setType("HEADER")
-	tcpipIPv4PrivateHeaderFile.setOverwrite(True)
 
 	# Add ipv4.c file
 	tcpipIPv4SourceFile = tcpipIPv4Component.createFileSymbol(None, None)
@@ -93,7 +66,7 @@ def instantiateComponent(tcpipIPv4Component):
 	tcpipIPv4SourceFile.setOutputName("ipv4.c")
 	tcpipIPv4SourceFile.setOverwrite(True)
 	tcpipIPv4SourceFile.setDestPath("library/tcpip/src/")
-	tcpipIPv4SourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipIPv4SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIPv4SourceFile.setType("SOURCE")
 	tcpipIPv4SourceFile.setEnabled(True)
 	tcpipIPv4SourceFile.setDependencies(tcpipIpv4GenSourceFile, ["TCPIP_STACK_USE_IPV4"])
