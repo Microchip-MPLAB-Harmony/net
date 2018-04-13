@@ -74,33 +74,6 @@ def instantiateComponent(tcpipDnssComponent):
 	tcpipDnssHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipDnssHeaderFtl.setMarkup(True)
 	tcpipDnssHeaderFtl.setType("STRING")
-	
-	# Add dnss.h file to project
-	tcpipDnssHeaderFile = tcpipDnssComponent.createFileSymbol(None, None)
-	tcpipDnssHeaderFile.setSourcePath("library/dnss.h")
-	tcpipDnssHeaderFile.setOutputName("dnss.h")
-	tcpipDnssHeaderFile.setDestPath("library/tcpip/")
-	tcpipDnssHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipDnssHeaderFile.setType("HEADER")
-	tcpipDnssHeaderFile.setOverwrite(True)
-
-	# Add dnss_manager.h file to project
-	tcpipDnssManagerHeaderFile = tcpipDnssComponent.createFileSymbol(None, None)
-	tcpipDnssManagerHeaderFile.setSourcePath("library/src/dnss_manager.h")
-	tcpipDnssManagerHeaderFile.setOutputName("dnss_manager.h")
-	tcpipDnssManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipDnssManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipDnssManagerHeaderFile.setType("HEADER")
-	tcpipDnssManagerHeaderFile.setOverwrite(True)
-
-	# Add dnss_private.h file to project
-	tcpipDnssPrivateHeaderFile = tcpipDnssComponent.createFileSymbol(None, None)
-	tcpipDnssPrivateHeaderFile.setSourcePath("library/src/dnss_private.h")
-	tcpipDnssPrivateHeaderFile.setOutputName("dnss_private.h")
-	tcpipDnssPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipDnssPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipDnssPrivateHeaderFile.setType("HEADER")
-	tcpipDnssPrivateHeaderFile.setOverwrite(True)
 
 	# Add dnss.c file
 	tcpipDnssSourceFile = tcpipDnssComponent.createFileSymbol(None, None)
@@ -108,7 +81,7 @@ def instantiateComponent(tcpipDnssComponent):
 	tcpipDnssSourceFile.setOutputName("dnss.c")
 	tcpipDnssSourceFile.setOverwrite(True)
 	tcpipDnssSourceFile.setDestPath("library/tcpip/src/")
-	tcpipDnssSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipDnssSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipDnssSourceFile.setType("SOURCE")
 	tcpipDnssSourceFile.setEnabled(True)
 	tcpipDnssSourceFile.setDependencies(tcpipDnssGenSourceFile, ["TCPIP_USE_DNSS"])

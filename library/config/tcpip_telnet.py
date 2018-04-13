@@ -59,24 +59,6 @@ def instantiateComponent(tcpipTelnetComponent):
 	tcpipTelnetHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipTelnetHeaderFtl.setMarkup(True)
 	tcpipTelnetHeaderFtl.setType("STRING")
-	
-	# Add telnet.h file to project
-	tcpipTelnetHeaderFile = tcpipTelnetComponent.createFileSymbol(None, None)
-	tcpipTelnetHeaderFile.setSourcePath("library/telnet.h")
-	tcpipTelnetHeaderFile.setOutputName("telnet.h")
-	tcpipTelnetHeaderFile.setDestPath("library/tcpip/")
-	tcpipTelnetHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipTelnetHeaderFile.setType("HEADER")
-	tcpipTelnetHeaderFile.setOverwrite(True)
-
-	# Add telnet_manager.h file to project
-	tcpipTelnetManagerHeaderFile = tcpipTelnetComponent.createFileSymbol(None, None)
-	tcpipTelnetManagerHeaderFile.setSourcePath("library/src/telnet_manager.h")
-	tcpipTelnetManagerHeaderFile.setOutputName("telnet_manager.h")
-	tcpipTelnetManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipTelnetManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipTelnetManagerHeaderFile.setType("HEADER")
-	tcpipTelnetManagerHeaderFile.setOverwrite(True)
 
 	# Add telnet.c file
 	tcpipTelnetSourceFile = tcpipTelnetComponent.createFileSymbol(None, None)
@@ -84,7 +66,7 @@ def instantiateComponent(tcpipTelnetComponent):
 	tcpipTelnetSourceFile.setOutputName("telnet.c")
 	tcpipTelnetSourceFile.setOverwrite(True)
 	tcpipTelnetSourceFile.setDestPath("library/tcpip/src/")
-	tcpipTelnetSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipTelnetSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipTelnetSourceFile.setType("SOURCE")
 	tcpipTelnetSourceFile.setEnabled(True)
 	tcpipTelnetSourceFile.setDependencies(tcpipTelnetGenSourceFile, ["TCPIP_USE_TELNET"])

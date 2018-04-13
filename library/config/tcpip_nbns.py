@@ -24,35 +24,17 @@ def instantiateComponent(tcpipNbnsComponent):
 	tcpipNbnsHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipNbnsHeaderFtl.setMarkup(True)
 	tcpipNbnsHeaderFtl.setType("STRING")
-	
-	# Add nbns.h file to project
-	tcpipUdpHeaderFile = tcpipNbnsComponent.createFileSymbol(None, None)
-	tcpipUdpHeaderFile.setSourcePath("library/nbns.h")
-	tcpipUdpHeaderFile.setOutputName("nbns.h")
-	tcpipUdpHeaderFile.setDestPath("library/tcpip/")
-	tcpipUdpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipUdpHeaderFile.setType("HEADER")
-	tcpipUdpHeaderFile.setOverwrite(True)
-
-	# Add nbns_manager.h file to project
-	tcpipUdpManagerHeaderFile = tcpipNbnsComponent.createFileSymbol(None, None)
-	tcpipUdpManagerHeaderFile.setSourcePath("library/src/nbns_manager.h")
-	tcpipUdpManagerHeaderFile.setOutputName("nbns_manager.h")
-	tcpipUdpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setType("HEADER")
-	tcpipUdpManagerHeaderFile.setOverwrite(True)
 
 	# Add nbns.c file
-	tcpipUdpSourceFile = tcpipNbnsComponent.createFileSymbol(None, None)
-	tcpipUdpSourceFile.setSourcePath("library/src/nbns.c")
-	tcpipUdpSourceFile.setOutputName("nbns.c")
-	tcpipUdpSourceFile.setOverwrite(True)
-	tcpipUdpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipUdpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpSourceFile.setType("SOURCE")
-	tcpipUdpSourceFile.setEnabled(True)
-	tcpipUdpSourceFile.setDependencies(tcpipNbnsGenSourceFile, ["TCPIP_USE_NBNS"])
+	tcpipNbnsSourceFile = tcpipNbnsComponent.createFileSymbol(None, None)
+	tcpipNbnsSourceFile.setSourcePath("library/src/nbns.c")
+	tcpipNbnsSourceFile.setOutputName("nbns.c")
+	tcpipNbnsSourceFile.setOverwrite(True)
+	tcpipNbnsSourceFile.setDestPath("library/tcpip/src/")
+	tcpipNbnsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipNbnsSourceFile.setType("SOURCE")
+	tcpipNbnsSourceFile.setEnabled(True)
+	tcpipNbnsSourceFile.setDependencies(tcpipNbnsGenSourceFile, ["TCPIP_USE_NBNS"])
 
 # make Nbns Server option visible
 def tcpipNbnsMenuVisible(symbol, event):

@@ -171,51 +171,6 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipIPv6HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipIPv6HeaderFtl.setMarkup(True)
 	tcpipIPv6HeaderFtl.setType("STRING")
-	
-	# Add ipv6.h file to project
-	tcpipIPv6HeaderFile = tcpipIPv6Component.createFileSymbol(None, None)
-	tcpipIPv6HeaderFile.setSourcePath("library/ipv6.h")
-	tcpipIPv6HeaderFile.setOutputName("ipv6.h")
-	tcpipIPv6HeaderFile.setDestPath("library/tcpip/")
-	tcpipIPv6HeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipIPv6HeaderFile.setType("HEADER")
-	tcpipIPv6HeaderFile.setOverwrite(True)
-
-	# Add ipv6_manager.h file to project
-	tcpipIPv6ManagerHeaderFile = tcpipIPv6Component.createFileSymbol(None, None)
-	tcpipIPv6ManagerHeaderFile.setSourcePath("library/src/ipv6_manager.h")
-	tcpipIPv6ManagerHeaderFile.setOutputName("ipv6_manager.h")
-	tcpipIPv6ManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIPv6ManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIPv6ManagerHeaderFile.setType("HEADER")
-	tcpipIPv6ManagerHeaderFile.setOverwrite(True)
-
-	# Add ipv6_private.h file to project
-	tcpipIPv6PrivateHeaderFile = tcpipIPv6Component.createFileSymbol(None, None)
-	tcpipIPv6PrivateHeaderFile.setSourcePath("library/src/ipv6_private.h")
-	tcpipIPv6PrivateHeaderFile.setOutputName("ipv6_private.h")
-	tcpipIPv6PrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIPv6PrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIPv6PrivateHeaderFile.setType("HEADER")
-	tcpipIPv6PrivateHeaderFile.setOverwrite(True)
-
-	# Add icmpv6.h file to project
-	tcpipICMPv6HeaderFile = tcpipIPv6Component.createFileSymbol(None, None)
-	tcpipICMPv6HeaderFile.setSourcePath("library/icmpv6.h")
-	tcpipICMPv6HeaderFile.setOutputName("icmpv6.h")
-	tcpipICMPv6HeaderFile.setDestPath("library/tcpip/")
-	tcpipICMPv6HeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipICMPv6HeaderFile.setType("HEADER")
-	tcpipICMPv6HeaderFile.setOverwrite(True)
-
-	# Add icmpv6_manager.h file to project
-	tcpipICMPv6ManagerHeaderFile = tcpipIPv6Component.createFileSymbol(None, None)
-	tcpipICMPv6ManagerHeaderFile.setSourcePath("library/src/icmpv6_manager.h")
-	tcpipICMPv6ManagerHeaderFile.setOutputName("icmpv6_manager.h")
-	tcpipICMPv6ManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipICMPv6ManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipICMPv6ManagerHeaderFile.setType("HEADER")
-	tcpipICMPv6ManagerHeaderFile.setOverwrite(True)
 
 	# Add ipv6.c file
 	tcpipIPv6SourceFile = tcpipIPv6Component.createFileSymbol(None, None)
@@ -223,7 +178,7 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipIPv6SourceFile.setOutputName("ipv6.c")
 	tcpipIPv6SourceFile.setOverwrite(True)
 	tcpipIPv6SourceFile.setDestPath("library/tcpip/src/")
-	tcpipIPv6SourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipIPv6SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIPv6SourceFile.setType("SOURCE")
 	tcpipIPv6SourceFile.setEnabled(False)
 	tcpipIPv6SourceFile.setDependencies(tcpipIpv6GenSourceFile, ["TCPIP_STACK_USE_IPV6"])
@@ -234,7 +189,7 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipICMPv6SourceFile.setOutputName("icmpv6.c")
 	tcpipICMPv6SourceFile.setOverwrite(True)
 	tcpipICMPv6SourceFile.setDestPath("library/tcpip/src/")
-	tcpipICMPv6SourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipICMPv6SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipICMPv6SourceFile.setType("SOURCE")
 	tcpipICMPv6SourceFile.setEnabled(False)
 	tcpipICMPv6SourceFile.setDependencies(tcpipIpv6GenSourceFile, ["TCPIP_STACK_USE_IPV6"])

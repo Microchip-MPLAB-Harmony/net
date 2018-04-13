@@ -9,80 +9,86 @@ def instantiateComponent(drvMiimComponent):
 	# Use Internal Ethernet MAC Driver?	
 	drvUseMiim = drvMiimComponent.createBooleanSymbol("DRV_MIIM_USE_DRIVER", None) # Niyas to check the component name and dependency
 	drvUseMiim.setLabel("Use MIIM Driver?")
-	drvUseMiim.setVisible(True)
+	drvUseMiim.setVisible(False)
 	drvUseMiim.setDescription("Use MIIM Driver?")
 	drvUseMiim.setDefaultValue(True)
-	drvUseMiim.setDependencies(drvMiimMenuVisibleSingle, ["tcpipEthMac.TCPIP_USE_ETH_MAC"])
+	#drvUseMiim.setDependencies(drvMiimMenuVisibleSingle, ["drvSamv71Gmac.TCPIP_USE_ETH_MAC"])
 	
+	# niyas : see whether this parameter is needed
 	# Ethernet MAC Module ID
-	drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", drvUseMiim) 
+	drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", None) 
 	drvMiimModuleId.setLabel("ETH Module ID")
 	drvMiimModuleId.setVisible(True)
+	#drvMiimModuleId.setVisible(False)
 	drvMiimModuleId.setDescription("Ethernet MAC Module ID")
-	drvMiimModuleId.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
+	if "SAME70" in Variables.get("__PROCESSOR"):
+		drvMiimModuleId.setDefaultValue("GMAC_ID_0")
+	else:
+		drvMiimModuleId.setDefaultValue("ETH_ID_0")
+	#drvMiimModuleId.setDependencies(drvMiimMenuVisibleSingle, ["TCPIP_INTMAC_MODULE_ID"])	
 
 	# Number of Driver Instances
-	drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", drvUseMiim)
+	drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", None)
 	drvMiimInstnNum.setLabel("Number of Driver Instances")
 	drvMiimInstnNum.setVisible(True)
 	drvMiimInstnNum.setDescription("Number of Driver Instances")
 	drvMiimInstnNum.setDefaultValue(1)
-	drvMiimInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
 	# Number of Instance Operations
-	drvMiimOpsInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_OPERATIONS", drvUseMiim)
+	drvMiimOpsInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_OPERATIONS", None)
 	drvMiimOpsInstnNum.setLabel("Number of Instance Operations")
 	drvMiimOpsInstnNum.setVisible(True)
 	drvMiimOpsInstnNum.setDescription("Number of Instance Operations")
 	# niyas todo default 8 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
 	drvMiimOpsInstnNum.setDefaultValue(4)
-	drvMiimOpsInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimOpsInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
 	# Maximum Number of Clients per Instance
-	drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", drvUseMiim)
+	drvMiimMaxNumClientsInstn = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCE_CLIENTS", None)
 	drvMiimMaxNumClientsInstn.setLabel("Maximum Number of Clients per Instance")
 	drvMiimMaxNumClientsInstn.setVisible(True)
 	drvMiimMaxNumClientsInstn.setDescription("Maximum Number of Clients per Instance")
 	drvMiimMaxNumClientsInstn.setDefaultValue(2)
-	drvMiimMaxNumClientsInstn.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimMaxNumClientsInstn.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	
 	# Enable Client Operation Protection Feature
-	drvMiimOpsProtectEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_CLIENT_OP_PROTECTION", drvUseMiim) 
+	drvMiimOpsProtectEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_CLIENT_OP_PROTECTION", None) 
 	drvMiimOpsProtectEnable.setLabel("Enable Client Operation Protection Feature")
 	drvMiimOpsProtectEnable.setVisible(True)
 	drvMiimOpsProtectEnable.setDescription("Enable Client Operation Protection Feature")
 	drvMiimOpsProtectEnable.setDefaultValue(False)
-	drvMiimOpsProtectEnable.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimOpsProtectEnable.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	
 	# Enable MIIM Commands
-	drvMiimCmdEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_COMMANDS", drvUseMiim) 
+	drvMiimCmdEnable = drvMiimComponent.createBooleanSymbol("DRV_MIIM_COMMANDS", None) 
 	drvMiimCmdEnable.setLabel("Enable MIIM Commands")
 	drvMiimCmdEnable.setVisible(True)
 	drvMiimCmdEnable.setDescription("Enable MIIM Commands")
 	drvMiimCmdEnable.setDefaultValue(False)
-	drvMiimCmdEnable.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimCmdEnable.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	
 	# MIIM Driver Object
-	drvMiimDrvObj = drvMiimComponent.createStringSymbol("DRV_MIIM_DRIVER_OBJECT", drvUseMiim) 
+	drvMiimDrvObj = drvMiimComponent.createStringSymbol("DRV_MIIM_DRIVER_OBJECT", None) 
 	drvMiimDrvObj.setLabel("MIIM Driver Object")
 	drvMiimDrvObj.setVisible(True)
 	drvMiimDrvObj.setDescription("MIIM Driver Object")
 	drvMiimDrvObj.setDefaultValue("DRV_MIIM_OBJECT_BASE_Default")
-	drvMiimDrvObj.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
+	#drvMiimDrvObj.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
 
 	# MIIM Driver Object Index
-	drvMiimDrvIndex = drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX", drvUseMiim)
+	drvMiimDrvIndex = drvMiimComponent.createIntegerSymbol("DRV_MIIM_DRIVER_INDEX", None)
 	drvMiimDrvIndex.setLabel("MIIM Driver Object Index")
 	drvMiimDrvIndex.setVisible(True)
 	drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
 	drvMiimDrvIndex.setDefaultValue(0)
-	drvMiimDrvIndex.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimDrvIndex.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
 	# RTOS Configuration
-	drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", drvUseMiim)
+	drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
 	drvMiimRtosMenu.setLabel("RTOS Configuration")
 	drvMiimRtosMenu.setVisible(True)
-	drvMiimRtosMenu.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
+	#drvMiimRtosMenu.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
 	#menu "RTOS Configuration"
     #depends on DRV_MIIM_USE_DRIVER
     #niyas todo depends on USE_3RDPARTY_RTOS	
@@ -93,7 +99,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimInstnExecMode.setVisible(True)
 	drvMiimInstnExecMode.setDescription("MIIM Driver Execution mode")
 	drvMiimInstnExecMode.setDefaultValue("Combined with System Tasks")
-	drvMiimInstnExecMode.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimInstnExecMode.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
 	# MIIM Driver Task Size
 	drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_SIZE", drvMiimRtosMenu)
@@ -101,7 +107,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskSize.setVisible(False)
 	drvMiimDrvTaskSize.setDescription("MIIM Driver Task Size")
 	drvMiimDrvTaskSize.setDefaultValue(1024)
-	drvMiimDrvTaskSize.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimDrvTaskSize.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"
 
 	# MIIM Driver Task Priority
@@ -110,7 +116,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskPriority.setVisible(False)
 	drvMiimDrvTaskPriority.setDescription("MIIM Driver Task Priority")
 	drvMiimDrvTaskPriority.setDefaultValue(1)
-	drvMiimDrvTaskPriority.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimDrvTaskPriority.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"	
 
 	# MIIM Use Task Delay?
@@ -119,7 +125,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimUseTaskDelay.setVisible(False)
 	drvMiimUseTaskDelay.setDescription("MIIM Use Task Delay?")
 	drvMiimUseTaskDelay.setDefaultValue(True)
-	drvMiimUseTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimUseTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"	
 
 	# MIIM Driver Task Delay
@@ -128,7 +134,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskDelay.setVisible(False)
 	drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
 	drvMiimDrvTaskDelay.setDefaultValue(100)
-	drvMiimDrvTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
+	#drvMiimDrvTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	#niyas todo     depends on DRV_MIIM_RTOS = "Standalone"
     #depends on DRV_MIIM_RTOS_USE_DELAY
 	
@@ -138,7 +144,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimHeaderFile.setSourcePath("driver/miim/drv_miim.h")
 	drvMiimHeaderFile.setOutputName("drv_miim.h")
 	drvMiimHeaderFile.setDestPath("driver/miim/")
-	drvMiimHeaderFile.setProjectPath("config/" + configName + "driver/miim/")
+	drvMiimHeaderFile.setProjectPath("config/" + configName + "/driver/miim/")
 	drvMiimHeaderFile.setType("HEADER")
 	drvMiimHeaderFile.setOverwrite(True)
 	
@@ -147,7 +153,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimConfigHeaderFile.setSourcePath("driver/miim/config/drv_miim_config.h")
 	drvMiimConfigHeaderFile.setOutputName("drv_miim_config.h")
 	drvMiimConfigHeaderFile.setDestPath("driver/miim/")
-	drvMiimConfigHeaderFile.setProjectPath("config/" + configName + "driver/miim/config/")
+	drvMiimConfigHeaderFile.setProjectPath("config/" + configName + "/driver/miim/config/")
 	drvMiimConfigHeaderFile.setType("HEADER")
 	drvMiimConfigHeaderFile.setOverwrite(True)
 	
@@ -156,7 +162,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimLocalHeaderFile.setSourcePath("driver/miim/src/drv_miim_local.h")
 	drvMiimLocalHeaderFile.setOutputName("drv_miim_local.h")
 	drvMiimLocalHeaderFile.setDestPath("driver/miim/")
-	drvMiimLocalHeaderFile.setProjectPath("config/" + configName + "driver/miim/src/")
+	drvMiimLocalHeaderFile.setProjectPath("config/" + configName + "/driver/miim/src/")
 	drvMiimLocalHeaderFile.setType("HEADER")
 	drvMiimLocalHeaderFile.setOverwrite(True)
 	
@@ -165,7 +171,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimMappingHeaderFile.setSourcePath("driver/miim/src/dynamic/drv_miim_mapping.h")
 	drvMiimMappingHeaderFile.setOutputName("drv_miim_mapping.h")
 	drvMiimMappingHeaderFile.setDestPath("driver/miim/")
-	drvMiimMappingHeaderFile.setProjectPath("config/" + configName + "driver/miim/src/dynamic/")
+	drvMiimMappingHeaderFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
 	drvMiimMappingHeaderFile.setType("HEADER")
 	drvMiimMappingHeaderFile.setOverwrite(True)
 	
@@ -175,10 +181,10 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimSourceFile.setOutputName("drv_miim.c")
 	drvMiimSourceFile.setOverwrite(True)
 	drvMiimSourceFile.setDestPath("library/tcpip/src/")
-	drvMiimSourceFile.setProjectPath("config/" + configName + "driver/miim/src/dynamic/")
+	drvMiimSourceFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
 	drvMiimSourceFile.setType("SOURCE")
-	drvMiimSourceFile.setEnabled(False)
-	drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])		
+	drvMiimSourceFile.setEnabled(True)
+	#drvMiimSourceFile.setDependencies(drvMiimGenSourceFile, ["DRV_MIIM_USE_DRIVER"])		
 
 	#add "<#include \"/framework/driver/miim/config/drv_miim.c.ftl\">"  to list SYSTEM_INIT_C_DRIVER_INITIALIZATION_DATA
 	drvMiimInitDataSourceFtl = drvMiimComponent.createFileSymbol(None, None)

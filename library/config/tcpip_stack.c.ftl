@@ -212,52 +212,16 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 };
 </#if>
 
-<#if (tcpipEthMac.TCPIP_USE_ETH_MAC)?has_content && (tcpipEthMac.TCPIP_USE_ETH_MAC) == true>
-/*** ETH PHY Initialization Data ***/
-
-<#if (tcpipEthMac.DRV_ETHPHY_USE_RESET_CALLBACK) == true>
-<#if (tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)?has_content>
-extern void ${(tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)}( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
-</#if>
-</#if>
 
 
-const DRV_ETHPHY_INIT tcpipPhyInitData =
-{
-    .moduleInit             = {SYS_MODULE_POWER_RUN_FULL},
-    .ethphyId               = TCPIP_EMAC_MODULE_ID,
-<#if (TCPIP_DEVICE_FAMILY == "PIC32C")>
-    .phyAddress             = TCPIP_GMAC_PHY_ADDRESS,
-    .phyFlags               = TCPIP_GMAC_PHY_CONFIG_FLAGS,
-<#else>
-    .phyAddress             = TCPIP_EMAC_PHY_ADDRESS,
-    .phyFlags               = TCPIP_EMAC_PHY_CONFIG_FLAGS,
-</#if>
-    .pPhyObject             = &DRV_ETHPHY_OBJECT_${tcpipEthMac.TCPIP_EMAC_PHY_TYPE},
-<#if (tcpipEthMac.DRV_ETHPHY_USE_RESET_CALLBACK) == true && (tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)?has_content>
-    .resetFunction          = ${(tcpipEthMac.DRV_ETHPHY_RESET_CALLBACK)},
-<#else>
-    .resetFunction          = 0,
-</#if>
-<#if DRV_MIIM_USE_DRIVER?has_content && DRV_MIIM_USE_DRIVER == true >
-    .pMiimObject            = &${DRV_MIIM_DRIVER_OBJECT},
-    .pMiimInit              = &drvMiimInitData,
-    .miimIndex              = DRV_MIIM_DRIVER_INDEX,
-<#else>
-    .pMiimObject            = 0,
-    .pMiimInit              = 0,
-    .miimIndex              = 0,
-</#if>
 
-};
 
-/*** ETH MAC Initialization Data ***/
-
-<#if (TCPIP_DEVICE_FAMILY == "PIC32C")>
+<#if (TCPIP_DEVICE_FAMILY == "SAME70")&&(drvSamv71Gmac.TCPIP_USE_ETH_MAC)?has_content && (drvSamv71Gmac.TCPIP_USE_ETH_MAC)  == true>
+/*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_0) == true>
+<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_0)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_0)  == true>
 	.gmac_queue_config[0].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[0].queueEnable	= false,	
@@ -268,7 +232,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
 	
 	/** QUEUE 1 Intialization**/
-<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_1) == true>
+<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_1)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_1)  == true>
 	.gmac_queue_config[1].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[1].queueEnable	= false,	
@@ -279,7 +243,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[1].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
 
 	/** QUEUE 2 Intialization**/
-<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_2) == true>
+<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_2)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_2)  == true>
 	.gmac_queue_config[2].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[2].queueEnable	= false,	
@@ -290,7 +254,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[2].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
 
 	/** QUEUE 3 Intialization**/
-<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_3) == true>
+<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_3)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_3)  == true>
 	.gmac_queue_config[3].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[3].queueEnable	= false,	
@@ -301,7 +265,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[3].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
 
 	/** QUEUE 4 Intialization**/
-<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_4) == true>
+<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_4)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_4)  == true>
 	.gmac_queue_config[4].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[4].queueEnable	= false,	
@@ -312,7 +276,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[4].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE4,
 
 	/** QUEUE 5 Intialization**/
-<#if (tcpipEthMac.TCPIP_GMAC_QUEUE_5) == true>
+<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_5)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_5)  == true>
 	.gmac_queue_config[5].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[5].queueEnable	= false,	
@@ -323,18 +287,19 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[5].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE5,
 	
 	.ethFlags               = TCPIP_GMAC_ETH_OPEN_FLAGS,	
-	.linkInitDelay          = TCPIP_GMAC_PHY_LINK_INIT_DELAY,
-    .ethModuleId            = TCPIP_EMAC_MODULE_ID,
-<#if (tcpipEthMac.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
-    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
-<#elseif (tcpipEthMac.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
+	.linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+    .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
+<#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,	
+<#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
 <#else>
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
 </#if>
     .pPhyInit               = &tcpipPhyInitData,
 };
-<#else>
+<#elseif (drvPic32mEthmacComponent.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmacComponent.TCPIP_USE_ETH_MAC)  == true>
+/*** ETH MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 { 
     .nTxDescriptors         = TCPIP_EMAC_TX_DESCRIPTORS,
@@ -346,7 +311,7 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .rxLowFill              = TCPIP_EMAC_RX_LOW_FILL,
     .linkInitDelay          = TCPIP_EMAC_PHY_LINK_INIT_DELAY,
     .ethFlags               = TCPIP_EMAC_ETH_OPEN_FLAGS,
-    .ethModuleId            = TCPIP_EMAC_MODULE_ID,
+    .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
 <#if TCPIP_EMAC_PHY_TYPE == "SMSC_LAN9303">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
 <#elseif TCPIP_EMAC_PHY_TYPE == "KSZ8863">
@@ -357,7 +322,7 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .pPhyInit               = &tcpipPhyInitData,
 };
 </#if>
-</#if>
+
 
 
 <#if CONFIG_USE_DRV_WIFI?has_content && CONFIG_USE_DRV_WIFI == true >
@@ -739,6 +704,45 @@ TCPIP_STACK_HEAP_POOL_CONFIG tcpipHeapConfig =
 </#if>
 
 
+const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] =
+{
+<#if (tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX)?has_content>
+<#list 0..(tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX - 1) as i>
+<#assign netConfigEnabled = "tcpipNetConfig_${i}">
+<#if .vars[netConfigEnabled]?has_content>
+<#assign network_config_idx = "tcpipNetConfig_${i}.TCPIP_STACK_NETWORK_CONFIG_IDX${i}"?eval>
+<#assign network_ipv6_idx = "tcpipNetConfig_${i}.TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${i}"?eval>
+<#if network_config_idx??>
+<#if network_config_idx == true>
+	/*** Network Configuration Index ${i} ***/
+    {
+        TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${i},       // interface
+        TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX${i},            // hostName
+        TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX${i},             // macAddr
+        TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX${i},           // ipAddr
+        TCPIP_NETWORK_DEFAULT_IP_MASK_IDX${i},              // ipMask
+        TCPIP_NETWORK_DEFAULT_GATEWAY_IDX${i},              // gateway
+        TCPIP_NETWORK_DEFAULT_DNS_IDX${i},                  // priDNS
+        TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX${i},           // secondDNS
+        TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX${i},           // powerMode
+        TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX${i},      // startFlags
+       &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX${i},           // pMacObject
+<#if network_ipv6_idx??>
+<#if network_ipv6_idx == true>
+        TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX${i},         // ipv6Addr
+        TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX${i},   // ipv6PrefixLen
+        TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX${i},         // ipv6Gateway 
+</#if>
+</#if>
+    },
+</#if>
+</#if>
+</#if>
+</#list>
+</#if>
+};
+
+
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
@@ -831,27 +835,26 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 </#if>
 
-    // MAC modules
-<#-- niyas todo :  mac for network interface
--->
-<#function checkInterface interface>
-<#if (tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER)?has_content >
-	<#list 0..((tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER)?number-1) as idx>
-		<#assign TCPIP_STACK_NETWORK_CONFIG = "tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_IDX" + idx>
-		<#assign TCPIP_NETWORK_DEFAULT_INTERFACE_NAME = "tcpipNetConfig.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX" + idx>
-		<#if .vars[TCPIP_STACK_NETWORK_CONFIG]?has_content && (.vars[TCPIP_STACK_NETWORK_CONFIG] != false)>		
-			<#if  (.vars[TCPIP_NETWORK_DEFAULT_INTERFACE_NAME] == interface)>
-				<#return true>
-			</#if>
-		</#if>
+// MAC modules
+<#if (tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX)?has_content>
+	<#function checkInterface interface>
+	<#list 0..(tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX - 1) as i>
+		<#assign netConfigEnabled = "tcpipNetConfig_${i}">
+		<#if .vars[netConfigEnabled]?has_content>
+			<#assign network_interface_name_idx = "tcpipNetConfig_${i}.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${i}"?eval>
+			<#if network_interface_name_idx??>
+				<#if network_interface_name_idx == interface>
+					<#return true>
+				</#if>
+			</#if>		
+		</#if>	
 	</#list>
-</#if>
 	<#return false>
-</#function>
-<#if checkInterface("PIC32INT")>
+	</#function>
+<#if checkInterface("ETHMAC")>
     {TCPIP_MODULE_MAC_PIC32INT,     &tcpipMACPIC32INTInitData},     // TCPIP_MODULE_MAC_PIC32INT
 </#if>
-<#if checkInterface("PIC32CINT")>
+<#if checkInterface("GMAC")>
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
 </#if>
 
@@ -878,6 +881,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
 <#if checkInterface("ENC28J60")>
     {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitDataIdx0},      // TCPIP_MODULE_MAC_ENCJ60
+</#if>
 </#if>
 };
 

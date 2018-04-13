@@ -135,34 +135,6 @@ def instantiateComponent(tcpipArpComponent):
 	tcpipArpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipArpHeaderFtl.setMarkup(True)
 	tcpipArpHeaderFtl.setType("STRING")
-	
-	# Add arp.h file to project
-	tcpipArpHeaderFile = tcpipArpComponent.createFileSymbol(None, None)
-	tcpipArpHeaderFile.setSourcePath("library/arp.h")
-	tcpipArpHeaderFile.setOutputName("arp.h")
-	tcpipArpHeaderFile.setDestPath("library/tcpip/")
-	tcpipArpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipArpHeaderFile.setType("HEADER")
-	tcpipArpHeaderFile.setOverwrite(True)
-
-	# Add arp_manager.h file to project
-	tcpipArpManagerHeaderFile = tcpipArpComponent.createFileSymbol(None, None)
-	tcpipArpManagerHeaderFile.setSourcePath("library/src/arp_manager.h")
-	tcpipArpManagerHeaderFile.setOutputName("arp_manager.h")
-	tcpipArpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipArpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipArpManagerHeaderFile.setType("HEADER")
-	tcpipArpManagerHeaderFile.setOverwrite(True)
-
-	# Add arp_private.h file to project
-	tcpipArpPrivateHeaderFile = tcpipArpComponent.createFileSymbol(None, None)
-	tcpipArpPrivateHeaderFile.setSourcePath("library/src/arp_private.h")
-	tcpipArpPrivateHeaderFile.setOutputName("arp_private.h")
-	tcpipArpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipArpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipArpPrivateHeaderFile.setType("HEADER")
-	tcpipArpPrivateHeaderFile.setOverwrite(True)
-
 
 	# Add arp.c file
 	tcpipArpSourceFile = tcpipArpComponent.createFileSymbol(None, None)
@@ -170,7 +142,7 @@ def instantiateComponent(tcpipArpComponent):
 	tcpipArpSourceFile.setOutputName("arp.c")
 	tcpipArpSourceFile.setOverwrite(True)
 	tcpipArpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipArpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipArpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipArpSourceFile.setType("SOURCE")
 	tcpipArpSourceFile.setEnabled(False)
 	tcpipArpSourceFile.setDependencies(tcpipArpGenSourceFile, ["TCPIP_USE_ARP"])

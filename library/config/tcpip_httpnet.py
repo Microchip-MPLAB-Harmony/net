@@ -436,33 +436,6 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipHttpNetHeaderFtl.setMarkup(True)
 	tcpipHttpNetHeaderFtl.setType("STRING")
-	
-	# Add http_net.h file to project
-	tcpipHttpNetHeaderFile = tcpipHttpNetComponent.createFileSymbol(None, None)
-	tcpipHttpNetHeaderFile.setSourcePath("library/http_net.h")
-	tcpipHttpNetHeaderFile.setOutputName("http_net.h")
-	tcpipHttpNetHeaderFile.setDestPath("library/tcpip/")
-	tcpipHttpNetHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipHttpNetHeaderFile.setType("HEADER")
-	tcpipHttpNetHeaderFile.setOverwrite(True)
-
-	# Add http_net_manager.h file to project
-	tcpipHttpNetManagerHeaderFile = tcpipHttpNetComponent.createFileSymbol(None, None)
-	tcpipHttpNetManagerHeaderFile.setSourcePath("library/src/http_net_manager.h")
-	tcpipHttpNetManagerHeaderFile.setOutputName("http_net_manager.h")
-	tcpipHttpNetManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipHttpNetManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipHttpNetManagerHeaderFile.setType("HEADER")
-	tcpipHttpNetManagerHeaderFile.setOverwrite(True)
-
-	# Add http_net_private.h file to project
-	tcpipHttpNetPrivateHeaderFile = tcpipHttpNetComponent.createFileSymbol(None, None)
-	tcpipHttpNetPrivateHeaderFile.setSourcePath("library/src/http_net_private.h")
-	tcpipHttpNetPrivateHeaderFile.setOutputName("http_net_private.h")
-	tcpipHttpNetPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipHttpNetPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipHttpNetPrivateHeaderFile.setType("HEADER")
-	tcpipHttpNetPrivateHeaderFile.setOverwrite(True)
 
 	# Niyas to add
 	# file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
@@ -473,7 +446,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetSourceFile.setOutputName("http_net.c")
 	tcpipHttpNetSourceFile.setOverwrite(True)
 	tcpipHttpNetSourceFile.setDestPath("library/tcpip/src/")
-	tcpipHttpNetSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipHttpNetSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipHttpNetSourceFile.setType("SOURCE")
 	tcpipHttpNetSourceFile.setEnabled(True)
 	tcpipHttpNetSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])

@@ -3,6 +3,7 @@ TCPIP_SNTP_PROTOCOL_TYPE = ["SNTP_VERSION_3", "SNTP_VERSION_4"]
 #niyas multiple definition for following; find a method
 TCPIP_ADDRESS_TYPE_STRICT = ["IP_ADDRESS_TYPE_IPV4", "IP_ADDRESS_TYPE_IPV6"]
 TCPIP_STACK_IF_NAME = []
+#niyas modify the interface name
 TCPIP_STACK_PIC32C_IF_NAME =	["PIC32CINT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 TCPIP_STACK_PIC32M_IF_NAME =	["PIC32INT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 
@@ -11,7 +12,7 @@ def instantiateComponent(tcpipSntpComponent):
 	#global TCPIP_ADDRESS_TYPE_STRICT
 	print("TCPIP SNTP Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
-	if "PIC32C" in Variables.get("__PROCESSOR"):
+	if "SAME70" in Variables.get("__PROCESSOR"):
 		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32C_IF_NAME
 	else:
 		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32M_IF_NAME
@@ -162,35 +163,17 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipSntpHeaderFtl.setMarkup(True)
 	tcpipSntpHeaderFtl.setType("STRING")
-	
-	# Add sntp.h file to project
-	tcpipUdpHeaderFile = tcpipSntpComponent.createFileSymbol(None, None)
-	tcpipUdpHeaderFile.setSourcePath("library/sntp.h")
-	tcpipUdpHeaderFile.setOutputName("sntp.h")
-	tcpipUdpHeaderFile.setDestPath("library/tcpip/")
-	tcpipUdpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipUdpHeaderFile.setType("HEADER")
-	tcpipUdpHeaderFile.setOverwrite(True)
-
-	# Add sntp_manager.h file to project
-	tcpipUdpManagerHeaderFile = tcpipSntpComponent.createFileSymbol(None, None)
-	tcpipUdpManagerHeaderFile.setSourcePath("library/src/sntp_manager.h")
-	tcpipUdpManagerHeaderFile.setOutputName("sntp_manager.h")
-	tcpipUdpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpManagerHeaderFile.setType("HEADER")
-	tcpipUdpManagerHeaderFile.setOverwrite(True)
 
 	# Add sntp.c file
-	tcpipUdpSourceFile = tcpipSntpComponent.createFileSymbol(None, None)
-	tcpipUdpSourceFile.setSourcePath("library/src/sntp.c")
-	tcpipUdpSourceFile.setOutputName("sntp.c")
-	tcpipUdpSourceFile.setOverwrite(True)
-	tcpipUdpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipUdpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipUdpSourceFile.setType("SOURCE")
-	tcpipUdpSourceFile.setEnabled(True)
-	tcpipUdpSourceFile.setDependencies(tcpipSntpGenSourceFile, ["TCPIP_USE_SNTP_CLIENT"])
+	tcpipSntpSourceFile = tcpipSntpComponent.createFileSymbol(None, None)
+	tcpipSntpSourceFile.setSourcePath("library/src/sntp.c")
+	tcpipSntpSourceFile.setOutputName("sntp.c")
+	tcpipSntpSourceFile.setOverwrite(True)
+	tcpipSntpSourceFile.setDestPath("library/tcpip/src/")
+	tcpipSntpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipSntpSourceFile.setType("SOURCE")
+	tcpipSntpSourceFile.setEnabled(True)
+	tcpipSntpSourceFile.setDependencies(tcpipSntpGenSourceFile, ["TCPIP_USE_SNTP_CLIENT"])
 
 
 def tcpipSntpMenuVisibleSingle(symbol, event):

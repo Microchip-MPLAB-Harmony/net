@@ -89,33 +89,6 @@ def instantiateComponent(tcpipIgmpComponent):
 	tcpipIgmpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipIgmpHeaderFtl.setMarkup(True)
 	tcpipIgmpHeaderFtl.setType("STRING")
-	
-	# Add igmp.h file to project
-	tcpipIgmpHeaderFile = tcpipIgmpComponent.createFileSymbol(None, None)
-	tcpipIgmpHeaderFile.setSourcePath("library/igmp.h")
-	tcpipIgmpHeaderFile.setOutputName("igmp.h")
-	tcpipIgmpHeaderFile.setDestPath("library/tcpip/")
-	tcpipIgmpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipIgmpHeaderFile.setType("HEADER")
-	tcpipIgmpHeaderFile.setOverwrite(True)
-
-	# Add igmp_manager.h file to project
-	tcpipIgmpManagerHeaderFile = tcpipIgmpComponent.createFileSymbol(None, None)
-	tcpipIgmpManagerHeaderFile.setSourcePath("library/src/igmp_manager.h")
-	tcpipIgmpManagerHeaderFile.setOutputName("igmp_manager.h")
-	tcpipIgmpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIgmpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIgmpManagerHeaderFile.setType("HEADER")
-	tcpipIgmpManagerHeaderFile.setOverwrite(True)
-
-	# Add igmp_private.h file to project
-	tcpipIgmpPrivateHeaderFile = tcpipIgmpComponent.createFileSymbol(None, None)
-	tcpipIgmpPrivateHeaderFile.setSourcePath("library/src/igmp_private.h")
-	tcpipIgmpPrivateHeaderFile.setOutputName("igmp_private.h")
-	tcpipIgmpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipIgmpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipIgmpPrivateHeaderFile.setType("HEADER")
-	tcpipIgmpPrivateHeaderFile.setOverwrite(True)
 
 	# Add igmp.c file
 	tcpipIgmpSourceFile = tcpipIgmpComponent.createFileSymbol(None, None)
@@ -123,7 +96,7 @@ def instantiateComponent(tcpipIgmpComponent):
 	tcpipIgmpSourceFile.setOutputName("igmp.c")
 	tcpipIgmpSourceFile.setOverwrite(True)
 	tcpipIgmpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipIgmpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipIgmpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIgmpSourceFile.setType("SOURCE")
 	tcpipIgmpSourceFile.setEnabled(True)
 	tcpipIgmpSourceFile.setDependencies(tcpipIgmpGenSourceFile, ["TCPIP_USE_IGMP"])

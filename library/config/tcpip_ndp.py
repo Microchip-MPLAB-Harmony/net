@@ -114,40 +114,13 @@ def instantiateComponent(tcpipNdpComponent):
 	tcpipNdpHeaderFtl.setMarkup(True)
 	tcpipNdpHeaderFtl.setType("STRING")
 
-	# Add ndp.h file to project
-	tcpipNdpHeaderFile = tcpipNdpComponent.createFileSymbol(None, None)
-	tcpipNdpHeaderFile.setSourcePath("library/ndp.h")
-	tcpipNdpHeaderFile.setOutputName("ndp.h")
-	tcpipNdpHeaderFile.setDestPath("library/tcpip/")
-	tcpipNdpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipNdpHeaderFile.setType("HEADER")
-	tcpipNdpHeaderFile.setOverwrite(True)
-
-	# Add ndp_manager.h file to project
-	tcpipNdpManagerHeaderFile = tcpipNdpComponent.createFileSymbol(None, None)
-	tcpipNdpManagerHeaderFile.setSourcePath("library/src/ndp_manager.h")
-	tcpipNdpManagerHeaderFile.setOutputName("ndp_manager.h")
-	tcpipNdpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipNdpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipNdpManagerHeaderFile.setType("HEADER")
-	tcpipNdpManagerHeaderFile.setOverwrite(True)
-
-	# Add ndp_private.h file to project
-	tcpipNdpPrivateHeaderFile = tcpipNdpComponent.createFileSymbol(None, None)
-	tcpipNdpPrivateHeaderFile.setSourcePath("library/src/ndp_private.h")
-	tcpipNdpPrivateHeaderFile.setOutputName("ndp_private.h")
-	tcpipNdpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipNdpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipNdpPrivateHeaderFile.setType("HEADER")
-	tcpipNdpPrivateHeaderFile.setOverwrite(True)
-
 	# Add ndp.c file
 	tcpipNdpSourceFile = tcpipNdpComponent.createFileSymbol(None, None)
 	tcpipNdpSourceFile.setSourcePath("library/src/ndp.c")
 	tcpipNdpSourceFile.setOutputName("ndp.c")
 	tcpipNdpSourceFile.setOverwrite(True)
 	tcpipNdpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipNdpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipNdpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipNdpSourceFile.setType("SOURCE")
 	tcpipNdpSourceFile.setEnabled(False)
 	tcpipNdpSourceFile.setDependencies(tcpipNdpGenSourceFile, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])

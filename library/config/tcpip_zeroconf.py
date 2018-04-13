@@ -306,8 +306,6 @@ def instantiateComponent(tcpipZeroConfComponent):
 	tcpipZcMdnsAnnounceWait.setDefaultValue(250)
 	tcpipZcMdnsAnnounceWait.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])
 
-	# Niyas to verify all the below header files
-
 	#Add to system_config.h
 	tcpipZcHeaderFtl = tcpipZeroConfComponent.createFileSymbol(None, None)
 	tcpipZcHeaderFtl.setSourcePath("library/config/zeroconf.h.ftl")
@@ -315,58 +313,13 @@ def instantiateComponent(tcpipZeroConfComponent):
 	tcpipZcHeaderFtl.setMarkup(True)
 	tcpipZcHeaderFtl.setType("STRING")
 	
-	# Add zero_conf_helper.h file to project
-	tcpipZcHelperHeaderFile = tcpipZeroConfComponent.createFileSymbol(None, None)
-	tcpipZcHelperHeaderFile.setSourcePath("library/src/zero_conf_helper.h")
-	tcpipZcHelperHeaderFile.setOutputName("zero_conf_helper.h")
-	tcpipZcHelperHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipZcHelperHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipZcHelperHeaderFile.setType("HEADER")
-	tcpipZcHelperHeaderFile.setOverwrite(True)
-
-	# Add zero_conf_link_local.h file to project
-	tcpipZcLlHeaderFile = tcpipZeroConfComponent.createFileSymbol(None, None)
-	tcpipZcLlHeaderFile.setSourcePath("library/zero_conf_link_local.h")
-	tcpipZcLlHeaderFile.setOutputName("zero_conf_link_local.h")
-	tcpipZcLlHeaderFile.setDestPath("library/tcpip/")
-	tcpipZcLlHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipZcLlHeaderFile.setType("HEADER")
-	tcpipZcLlHeaderFile.setOverwrite(True)
-
-	# Add zero_conf_link_local_private.h file to project
-	tcpipZcLlPrivateHeaderFile = tcpipZeroConfComponent.createFileSymbol(None, None)
-	tcpipZcLlPrivateHeaderFile.setSourcePath("library/src/zero_conf_link_local_private.h")
-	tcpipZcLlPrivateHeaderFile.setOutputName("zero_conf_link_local_private.h")
-	tcpipZcLlPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipZcLlPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipZcLlPrivateHeaderFile.setType("HEADER")
-	tcpipZcLlPrivateHeaderFile.setOverwrite(True)
-
-	# Add zero_conf_multicast_dns.h file to project
-	tcpipZcMdnsHeaderFile = tcpipZeroConfComponent.createFileSymbol(None, None)
-	tcpipZcMdnsHeaderFile.setSourcePath("library/zero_conf_multicast_dns.h")
-	tcpipZcMdnsHeaderFile.setOutputName("zero_conf_multicast_dns.h")
-	tcpipZcMdnsHeaderFile.setDestPath("library/tcpip/")
-	tcpipZcMdnsHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipZcMdnsHeaderFile.setType("HEADER")
-	tcpipZcMdnsHeaderFile.setOverwrite(True)
-
-	# Add zero_conf_manager.h file to project
-	tcpipZcManagerHeaderFile = tcpipZeroConfComponent.createFileSymbol(None, None)
-	tcpipZcManagerHeaderFile.setSourcePath("library/src/zero_conf_manager.h")
-	tcpipZcManagerHeaderFile.setOutputName("zero_conf_manager.h")
-	tcpipZcManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipZcManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipZcManagerHeaderFile.setType("HEADER")
-	tcpipZcManagerHeaderFile.setOverwrite(True)
-
 	# Add zero_conf_helper.c file
 	tcpipZcHelperSourceFile = tcpipZeroConfComponent.createFileSymbol(None, None)
 	tcpipZcHelperSourceFile.setSourcePath("library/src/zero_conf_helper.c")
 	tcpipZcHelperSourceFile.setOutputName("zero_conf_helper.c")
 	tcpipZcHelperSourceFile.setOverwrite(True)
 	tcpipZcHelperSourceFile.setDestPath("library/tcpip/src/")
-	tcpipZcHelperSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipZcHelperSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipZcHelperSourceFile.setType("SOURCE")
 	tcpipZcHelperSourceFile.setEnabled(True)
 	tcpipZcHelperSourceFile.setDependencies(tcpipZeroConfGenSourceFile, ["TCPIP_USE_LINK_ZERO_CONFIG"])
@@ -377,7 +330,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 	tcpipZcLlSourceFile.setOutputName("zero_conf_link_local.c")
 	tcpipZcLlSourceFile.setOverwrite(True)
 	tcpipZcLlSourceFile.setDestPath("library/tcpip/src/")
-	tcpipZcLlSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipZcLlSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipZcLlSourceFile.setType("SOURCE")
 	tcpipZcLlSourceFile.setEnabled(True)
 	tcpipZcLlSourceFile.setDependencies(tcpipZeroConfGenSourceFile, ["TCPIP_USE_LINK_ZERO_CONFIG"])
@@ -388,7 +341,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 	tcpipZcMdnsSourceFile.setOutputName("zero_conf_multicast_dns.c")
 	tcpipZcMdnsSourceFile.setOverwrite(True)
 	tcpipZcMdnsSourceFile.setDestPath("library/tcpip/src/")
-	tcpipZcMdnsSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipZcMdnsSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipZcMdnsSourceFile.setType("SOURCE")
 	tcpipZcMdnsSourceFile.setEnabled(True)
 	tcpipZcMdnsSourceFile.setDependencies(tcpipZeroConfGenSourceFile, ["TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG"])

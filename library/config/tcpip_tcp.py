@@ -169,33 +169,6 @@ def instantiateComponent(tcpipTcpComponent):
 	tcpipTcpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipTcpHeaderFtl.setMarkup(True)
 	tcpipTcpHeaderFtl.setType("STRING")
-	
-	# Add tcp.h file to project
-	tcpipTcpHeaderFile = tcpipTcpComponent.createFileSymbol(None, None)
-	tcpipTcpHeaderFile.setSourcePath("library/tcp.h")
-	tcpipTcpHeaderFile.setOutputName("tcp.h")
-	tcpipTcpHeaderFile.setDestPath("library/tcpip/")
-	tcpipTcpHeaderFile.setProjectPath("config/" + configName + "library/tcpip/")
-	tcpipTcpHeaderFile.setType("HEADER")
-	tcpipTcpHeaderFile.setOverwrite(True)
-
-	# Add tcp_manager.h file to project
-	tcpipTcpManagerHeaderFile = tcpipTcpComponent.createFileSymbol(None, None)
-	tcpipTcpManagerHeaderFile.setSourcePath("library/src/tcp_manager.h")
-	tcpipTcpManagerHeaderFile.setOutputName("tcp_manager.h")
-	tcpipTcpManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipTcpManagerHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipTcpManagerHeaderFile.setType("HEADER")
-	tcpipTcpManagerHeaderFile.setOverwrite(True)
-
-	# Add tcp_private.h file to project
-	tcpipTcpPrivateHeaderFile = tcpipTcpComponent.createFileSymbol(None, None)
-	tcpipTcpPrivateHeaderFile.setSourcePath("library/src/tcp_private.h")
-	tcpipTcpPrivateHeaderFile.setOutputName("tcp_private.h")
-	tcpipTcpPrivateHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipTcpPrivateHeaderFile.setProjectPath("config/" + configName + "library/tcpip/src/")
-	tcpipTcpPrivateHeaderFile.setType("HEADER")
-	tcpipTcpPrivateHeaderFile.setOverwrite(True)
 
 	# Add tcp.c file
 	tcpipTcpSourceFile = tcpipTcpComponent.createFileSymbol(None, None)
@@ -203,7 +176,7 @@ def instantiateComponent(tcpipTcpComponent):
 	tcpipTcpSourceFile.setOutputName("tcp.c")
 	tcpipTcpSourceFile.setOverwrite(True)
 	tcpipTcpSourceFile.setDestPath("library/tcpip/src/")
-	tcpipTcpSourceFile.setProjectPath("config/" + configName + "library/tcpip/src/")
+	tcpipTcpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipTcpSourceFile.setType("SOURCE")
 	tcpipTcpSourceFile.setEnabled(True)
 	tcpipTcpSourceFile.setDependencies(tcpipTcpGenSourceFile, ["TCPIP_USE_TCP"])
