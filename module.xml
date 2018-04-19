@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Module name="net" id="4A504564-9EC9-4E81-B198-A18B57A6AC4A" version="1.0.0">
+<!--
     <ConfigRoot path="config/module.py"/>
+-->
 </Module>
