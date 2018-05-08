@@ -53,11 +53,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "system_config.h"
+#include "configuration.h"
+#include "definitions.h"//niyas
+#include "driver/miim/drv_miim.h"
 
 #include "osal/osal.h"
-
-#include "../drv_miim.h"
 
 // *****************************************************************************
 // *****************************************************************************

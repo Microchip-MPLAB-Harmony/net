@@ -51,9 +51,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stdbool.h>
         
-#include "system_config.h"
-#include "system/common/sys_common.h"
-#include "system/common/sys_module.h"
+#include "configuration.h"
+#include "system/system_common.h"
+#include "system/system_module.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

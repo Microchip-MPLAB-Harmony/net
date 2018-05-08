@@ -5,53 +5,53 @@ def instantiateComponent(tcpipTelnetComponent):
 	# Use Telnet Server
 	tcpipTelnet = tcpipTelnetComponent.createBooleanSymbol("TCPIP_USE_TELNET", None)
 	tcpipTelnet.setLabel("Use Telnet Server")
-	tcpipTelnet.setVisible(True)
+	tcpipTelnet.setVisible(False)
 	tcpipTelnet.setDescription("Use Telnet Server")
-	tcpipTelnet.setDefaultValue(False) 
+	tcpipTelnet.setDefaultValue(True) 
 	 # niyas to do   
 	 # select NET_PRES_NEEDED
 	 # select USE_SYS_COMMAND_NEEDED
-	tcpipTelnet.setDependencies(tcpipTelnetMenuVisible, ["tcpipTcp.TCPIP_USE_TCP"])
+	#tcpipTelnet.setDependencies(tcpipTelnetMenuVisible, ["tcpipTcp.TCPIP_USE_TCP"])
 
 	# Max Connections
 	tcpipTelnetConnMax = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_MAX_CONNECTIONS", tcpipTelnet)
 	tcpipTelnetConnMax.setLabel("Maximum Connections")
-	tcpipTelnetConnMax.setVisible(False)
+	tcpipTelnetConnMax.setVisible(True)
 	tcpipTelnetConnMax.setDescription("Maximum Connections")
 	tcpipTelnetConnMax.setDefaultValue(2)
-	tcpipTelnetConnMax.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+	#tcpipTelnetConnMax.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
 	# Telnet User Name
 	tcpipTelnetUsrName = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_USERNAME", tcpipTelnet)
 	tcpipTelnetUsrName.setLabel("User Name")
-	tcpipTelnetUsrName.setVisible(False)
+	tcpipTelnetUsrName.setVisible(True)
 	tcpipTelnetUsrName.setDescription("Telnet User Name")
 	tcpipTelnetUsrName.setDefaultValue("admin")
-	tcpipTelnetUsrName.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+	#tcpipTelnetUsrName.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
 	# Telnet Password
 	tcpipTelnetPswd = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_PASSWORD", tcpipTelnet)
 	tcpipTelnetPswd.setLabel("Password")
-	tcpipTelnetPswd.setVisible(False)
+	tcpipTelnetPswd.setVisible(True)
 	tcpipTelnetPswd.setDescription("Telnet Password")
 	tcpipTelnetPswd.setDefaultValue("microchip")
-	tcpipTelnetPswd.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+	#tcpipTelnetPswd.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
 	# Task Rate in ms
 	tcpipTelnetTskTickRate = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_TASK_TICK_RATE", tcpipTelnet)
 	tcpipTelnetTskTickRate.setLabel("Task Rate - ms")
-	tcpipTelnetTskTickRate.setVisible(False)
+	tcpipTelnetTskTickRate.setVisible(True)
 	tcpipTelnetTskTickRate.setDescription("Task Rate in ms")
 	tcpipTelnetTskTickRate.setDefaultValue(100)
-	tcpipTelnetTskTickRate.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+	#tcpipTelnetTskTickRate.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
 	# Reject Unsecure Connections
 	tcpipTelnetRejectUnsecure = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_REJECT_UNSECURED", tcpipTelnet)
 	tcpipTelnetRejectUnsecure.setLabel("Reject Unsecure Connections")
-	tcpipTelnetRejectUnsecure.setVisible(False)
+	tcpipTelnetRejectUnsecure.setVisible(True)
 	tcpipTelnetRejectUnsecure.setDescription("Reject Unsecure Connections")
 	tcpipTelnetRejectUnsecure.setDefaultValue(False)
-	tcpipTelnetRejectUnsecure.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+	#tcpipTelnetRejectUnsecure.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
 	#Add to system_config.h
 	tcpipTelnetHeaderFtl = tcpipTelnetComponent.createFileSymbol(None, None)
@@ -69,7 +69,7 @@ def instantiateComponent(tcpipTelnetComponent):
 	tcpipTelnetSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipTelnetSourceFile.setType("SOURCE")
 	tcpipTelnetSourceFile.setEnabled(True)
-	tcpipTelnetSourceFile.setDependencies(tcpipTelnetGenSourceFile, ["TCPIP_USE_TELNET"])
+	#tcpipTelnetSourceFile.setDependencies(tcpipTelnetGenSourceFile, ["TCPIP_USE_TELNET"])
 	
 def tcpipTelnetMenuVisible(symbol, event):
 	if (event["value"] == True):

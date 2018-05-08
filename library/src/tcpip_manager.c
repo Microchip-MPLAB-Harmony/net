@@ -1328,7 +1328,9 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
 static bool _TCPIPStackCreateTimer(void)
 {
 
-    tcpip_stack_tickH = SYS_TMR_CallbackPeriodic(TCPIP_STACK_TICK_RATE, 0, _TCPIP_STACK_TickHandler);
+    tcpip_stack_tickH = SYS_TMR_CallbackPeriodic(TCPIP_STACK_TICK_RATE, 0, _TCPIP_STACK_TickHandler);//niyas
+    _TCPIP_STACK_TickHandler(0,TCPIP_STACK_TICK_RATE);//niyas
+	
     if(tcpip_stack_tickH != SYS_TMR_HANDLE_INVALID)
     {
         uint32_t sysRes = SYS_TMR_TickCounterFrequencyGet();

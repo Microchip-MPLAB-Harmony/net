@@ -53,12 +53,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
 #include <stddef.h>
 
-#include "system/common/sys_common.h"
-#include "system/common/sys_module.h"
+#include "system/system_common.h"
+#include "system/system_module.h"
 
 #include "driver/driver_common.h"
 #if defined (__PIC32C__) 
-#include "arch/arm/devices_pic32c.h" /* PIC32C system header. */
+#include "device.h" //niyas
+//#include "arch/arm/devices_pic32c.h" /* PIC32C system header. */
 #else
 #include "peripheral/eth/plib_eth.h"
 #endif

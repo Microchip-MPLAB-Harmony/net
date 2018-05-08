@@ -6,82 +6,82 @@ def instantiateComponent(tcpipIgmpComponent):
 	# Use IGMPv3 Module
 	tcpipIgmp = tcpipIgmpComponent.createBooleanSymbol("TCPIP_USE_IGMP", None)
 	tcpipIgmp.setLabel("Use IGMPv3 Module")
-	tcpipIgmp.setVisible(True)
+	tcpipIgmp.setVisible(False)
 	tcpipIgmp.setDescription("Use IGMPv3 Module")
-	tcpipIgmp.setDefaultValue(False)   
-	tcpipIgmp.setDependencies(tcpipIgmpMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	tcpipIgmp.setDefaultValue(True)   
+	#tcpipIgmp.setDependencies(tcpipIgmpMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
 
 	# Number of IGMP Interfaces
-	tcpipIgmpInterfaceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_INTERFACES", tcpipIgmp)
+	tcpipIgmpInterfaceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_INTERFACES", None)
 	tcpipIgmpInterfaceNum.setLabel("Number of IGMP Interfaces")
-	tcpipIgmpInterfaceNum.setVisible(False)
+	tcpipIgmpInterfaceNum.setVisible(True)
 	tcpipIgmpInterfaceNum.setDescription("Number of IGMP Interfaces")
 	tcpipIgmpInterfaceNum.setDefaultValue(1)
-	tcpipIgmpInterfaceNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpInterfaceNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# Number of Multicast Groups
-	tcpipIgmpMcastGrpNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_MCAST_GROUPS", tcpipIgmp)
+	tcpipIgmpMcastGrpNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_MCAST_GROUPS", None)
 	tcpipIgmpMcastGrpNum.setLabel("Number of Multicast Groups")
-	tcpipIgmpMcastGrpNum.setVisible(False)
+	tcpipIgmpMcastGrpNum.setVisible(True)
 	tcpipIgmpMcastGrpNum.setDescription("Number of Multicast Groups")
 	tcpipIgmpMcastGrpNum.setDefaultValue(7)
-	tcpipIgmpMcastGrpNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpMcastGrpNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# IGMPv2 Support Only
-	tcpipIgmpv2Support = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMPV2_SUPPORT_ONLY", tcpipIgmp)
+	tcpipIgmpv2Support = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMPV2_SUPPORT_ONLY", None)
 	tcpipIgmpv2Support.setLabel("IGMPv2 Support Only")
-	tcpipIgmpv2Support.setVisible(False)
+	tcpipIgmpv2Support.setVisible(True)
 	tcpipIgmpv2Support.setDescription("IGMPv2 Support Only")
 	tcpipIgmpv2Support.setDefaultValue(False)   
-	tcpipIgmpv2Support.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpv2Support.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# Number of Sources in Each Group
-	tcpipIgmpSourceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOURCES_PER_GROUP", tcpipIgmp)
+	tcpipIgmpSourceNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOURCES_PER_GROUP", None)
 	tcpipIgmpSourceNum.setLabel("Number of Sources in Each Group")
-	tcpipIgmpSourceNum.setVisible(False)
+	tcpipIgmpSourceNum.setVisible(True)
 	tcpipIgmpSourceNum.setDescription("Number of Sources in Each Group")
 	tcpipIgmpSourceNum.setDefaultValue(11)
-	tcpipIgmpSourceNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpSourceNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# Number of Sockets per Source
-	tcpipIgmpSktNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE", tcpipIgmp)
+	tcpipIgmpSktNum = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_SOCKET_RECORDS_PER_SOURCE", None)
 	tcpipIgmpSktNum.setLabel("Number of Sockets per Source")
-	tcpipIgmpSktNum.setVisible(False)
+	tcpipIgmpSktNum.setVisible(True)
 	tcpipIgmpSktNum.setDescription("Number of Sockets per Source")
 	tcpipIgmpSktNum.setDefaultValue(4)
-	tcpipIgmpSktNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpSktNum.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# Default Robustness Variable Value
-	tcpipIgmpRobustVarValue = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_ROBUSTNESS_VARIABLE", tcpipIgmp)
+	tcpipIgmpRobustVarValue = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_ROBUSTNESS_VARIABLE", None)
 	tcpipIgmpRobustVarValue.setLabel("Default Robustness Variable Value")
-	tcpipIgmpRobustVarValue.setVisible(False)
+	tcpipIgmpRobustVarValue.setVisible(True)
 	tcpipIgmpRobustVarValue.setDescription("Default Robustness Variable Value")
 	tcpipIgmpRobustVarValue.setDefaultValue(2)
-	tcpipIgmpRobustVarValue.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpRobustVarValue.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# Default Unsolicited Report Interval in ms
-	tcpipIgmpUnsoilicitReportInterval = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL", tcpipIgmp)
+	tcpipIgmpUnsoilicitReportInterval = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_UNSOLICITED_REPORT_INTERVAL", None)
 	tcpipIgmpUnsoilicitReportInterval.setLabel("Default Unsolicited Report Interval - ms")
-	tcpipIgmpUnsoilicitReportInterval.setVisible(False)
+	tcpipIgmpUnsoilicitReportInterval.setVisible(True)
 	tcpipIgmpUnsoilicitReportInterval.setDescription("Default Unsolicited Report Interval in ms")
 	tcpipIgmpUnsoilicitReportInterval.setDefaultValue(1000)
-	tcpipIgmpUnsoilicitReportInterval.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpUnsoilicitReportInterval.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# Enable User Notification Functions"
-	tcpipIgmpUsrNotify = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMP_USER_NOTIFICATION", tcpipIgmp)
+	tcpipIgmpUsrNotify = tcpipIgmpComponent.createBooleanSymbol("TCPIP_IGMP_USER_NOTIFICATION", None)
 	tcpipIgmpUsrNotify.setLabel("Enable User Notification Functions")
-	tcpipIgmpUsrNotify.setVisible(False)
+	tcpipIgmpUsrNotify.setVisible(True)
 	tcpipIgmpUsrNotify.setDescription("Enable User Notification Functions")
 	tcpipIgmpUsrNotify.setDefaultValue(False)   
-	tcpipIgmpUsrNotify.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpUsrNotify.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	# IGMP Task Rate
-	tcpipIgmpTskTickRate = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_TASK_TICK_RATE", tcpipIgmp)
+	tcpipIgmpTskTickRate = tcpipIgmpComponent.createIntegerSymbol("TCPIP_IGMP_TASK_TICK_RATE", None)
 	tcpipIgmpTskTickRate.setLabel("IGMP Task Rate")
-	tcpipIgmpTskTickRate.setVisible(False)
+	tcpipIgmpTskTickRate.setVisible(True)
 	tcpipIgmpTskTickRate.setDescription("IGMP Task Rate")
 	tcpipIgmpTskTickRate.setDefaultValue(33)
-	tcpipIgmpTskTickRate.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpTskTickRate.setDependencies(tcpipIgmpMenuVisibleSingle, ["TCPIP_USE_IGMP"])
 
 	#Add to system_config.h
 	tcpipIgmpHeaderFtl = tcpipIgmpComponent.createFileSymbol(None, None)
@@ -99,7 +99,7 @@ def instantiateComponent(tcpipIgmpComponent):
 	tcpipIgmpSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIgmpSourceFile.setType("SOURCE")
 	tcpipIgmpSourceFile.setEnabled(True)
-	tcpipIgmpSourceFile.setDependencies(tcpipIgmpGenSourceFile, ["TCPIP_USE_IGMP"])
+	#tcpipIgmpSourceFile.setDependencies(tcpipIgmpGenSourceFile, ["TCPIP_USE_IGMP"])
 
 def tcpipIgmpMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):

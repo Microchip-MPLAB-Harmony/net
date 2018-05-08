@@ -1,0 +1,165 @@
+menu "Presentation Layer"
+
+#source "$HARMONY_VERSION_PATH/framework/net/pres/tls/config/net_tls.hconfig"
+
+config NET_PRES_NEEDED
+    bool
+    default n
+
+config NET_PRES_USE
+    bool "Use MPLAB Harmony Networking Presentation Layer?"
+    default n if !NET_PRES_NEEDED
+    default y if NET_PRES_NEEDED
+
+menu "RTOS Configuration"
+    depends on NET_PRES_USE
+    depends on USE_3RDPARTY_RTOS
+
+config NET_PRES_RTOS
+    string "Run Library Tasks As"
+    range 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
+    default "Standalone"
+
+config NET_PRES_RTOS_TASK_SIZE
+    int "Task Size"
+    depends on NET_PRES_RTOS = "Standalone"
+    default 1024
+
+config NET_PRES_RTOS_TASK_PRIORITY
+    int "Task Priority"
+    depends on NET_PRES_RTOS = "Standalone"
+    default 1
+
+config NET_PRES_RTOS_USE_DELAY
+    bool "Use Task Delay?"
+    depends on NET_PRES_RTOS = "Standalone"
+    default y
+
+config NET_PRES_RTOS_DELAY
+    int "Task Delay"
+    depends on NET_PRES_RTOS = "Standalone"
+    depends on NET_PRES_RTOS_USE_DELAY
+    default 1000
+endmenu
+    
+config NET_PRES_SOCKETS
+    int "Number of Presentation Sockets?"
+    depends on NET_PRES_USE
+    default 10
+
+config NET_PRES_INSTANCES
+    int "Number of Presentation Instances?"
+    depends on NET_PRES_USE
+    default 1
+    range 1 10
+    
+source "$HARMONY_VERSION_PATH/framework/net/pres/config/net_pres_idx.ftl" 10 instances
+
+config NET_PRES_BLOB_CERT_REPO
+    bool "Use Fixed Flash Based Certificate Repository for Encryption?"
+    depends on NET_PRES_USE
+    depends on !NET_PRES_CERT_STORE_STUBS
+    default n
+
+
+ifblock NET_PRES_BLOB_CERT_REPO
+
+config NET_PRES_BLOB_CLIENT_SUPPORT
+    bool "Support Client Certificates?"
+    depends on NET_PRES_BLOB_CERT_REPO
+    default y
+    
+config NET_PRES_BLOB_CLIENT_CERT_FILENAME
+    string "File name containing definitions for Client Certificates?"
+    depends on NET_PRES_BLOB_CLIENT_SUPPORT
+    default "ca-certs.h"
+    
+config NET_PRES_BLOB_CLIENT_CERT_VARIABLE
+    string "Variable Name Containing Data for Client Certificates?"
+    depends on NET_PRES_BLOB_CLIENT_SUPPORT
+    default "caCert"
+    
+config NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE
+    string "Variable Name Containing Size of Client Certificates?"
+    depends on NET_PRES_BLOB_CLIENT_SUPPORT
+    default "caCert_len"
+
+config NET_PRES_BLOB_SERVER_SUPPORT
+    bool "Support Server Certificate?"
+    depends on NET_PRES_BLOB_CERT_REPO
+    default y
+    
+config NET_PRES_BLOB_SERVER_CERT_FILENAME
+    string "File name containing definitions for Server Certificate?"
+    depends on NET_PRES_BLOB_SERVER_SUPPORT
+    default "ca-certs.h"
+    
+config NET_PRES_BLOB_SERVER_CERT_VARIABLE
+    string "Variable Name Containing Data for Server Certificate?"
+    depends on NET_PRES_BLOB_SERVER_SUPPORT
+    default "serverCert"
+    
+config NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE
+    string "Variable Name Containing Size of Server Certificate?"
+    depends on NET_PRES_BLOB_SERVER_SUPPORT
+    default "serverCert_len"
+    
+config NET_PRES_BLOB_SERVER_KEY_FILENAME
+    string "File name containing definitions for Server Private Key?"
+    depends on NET_PRES_BLOB_SERVER_SUPPORT
+    default "ca-certs.h"
+    
+config NET_PRES_BLOB_SERVER_KEY_VARIABLE
+    string "Variable Name Containing Data for Server Private Key?"
+    depends on NET_PRES_BLOB_SERVER_SUPPORT
+    default "serverKey"
+    
+config NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE
+    string "Variable Name Containing Size of Server Private Key?"
+    depends on NET_PRES_BLOB_SERVER_SUPPORT
+    default "serverKey_len"
+    
+endif
+config NET_PRES_CERT_STORE_STUBS
+    bool "Generate Certificate Store Stubs?"
+    depends on NET_PRES_USE
+    depends on !NET_PRES_BLOB_CERT_REPO
+    
+ifblock NET_PRES_CERT_STORE_STUBS
+
+config NET_PRES_CERT_STORE_STUBS_CLIENT
+    bool "Generate Client Certificate Stubs?"
+    default y
+    
+config NET_PRES_CERT_STORE_STUBS_SERVER
+    bool "Generate Server Certificate Stubs?"
+    default y
+endif
+
+endmenu
+
+ifblock NET_PRES_USE
+
+file NET_PRES1_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
+file NET_PRES2_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_certstore.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_certstore.h"
+file NET_PRES3_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_encryptionproviderapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_encryptionproviderapi.h"
+file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapi.h"
+file NET_PRES5_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_transportapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_transportapi.h"
+file NET_PRES_LOCAL_H "$HARMONY_VERSION_PATH/framework/net/pres/src/net_pres_local.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/src/net_pres_local.h"
+file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapiconversion.h"
+
+
+add "<#include \"/framework/net/templates/system_init.c.data.ftl\">"  to list SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA
+add "<#include \"/framework/net/templates/system_init.c.call.ftl\">"  to list SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE
+add "<#include \"/framework/net/templates/system_tasks.c.ftl\">"  to list SYSTEM_TASKS_C_CALL_LIB_TASKS
+
+file NET_PRES_C "$HARMONY_VERSION_PATH/framework/net/pres/src/net_pres.c" to "$PROJECT_SOURCE_FILES/framework/net/pres/src/net_pres.c"
+
+template NET_PRES_ENC_GLUE_H_TEMPLATE "$HARMONY_VERSION_PATH/framework/net/pres/templates/net_pres_enc_glue.h.ftl" to "$PROJECT_HEADER_FILES/app/system_config/$CONFIGURATION/framework/net/pres/net_pres_enc_glue.h"
+template NET_PRES_ENC_GLUE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net/pres/templates/net_pres_enc_glue.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net/pres/net_pres_enc_glue.c"
+endif
+
+ifblock NET_PRES_BLOB_CERT_REPO || NET_PRES_CERT_STORE_STUBS
+template NET_PRES_ENC_CERT_STORE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net/pres/templates/net_pres_cert_store.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net/pres/net_pres_cert_store.c"
+endif 
+    

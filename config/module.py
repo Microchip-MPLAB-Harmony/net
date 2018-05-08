@@ -3,39 +3,41 @@ def loadModule():
 
 	tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "library/config/tcpip_stack.py")
 	tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE")
-	tcpipStackComponent.addDependency("Core_Rtos_Dependency", "RTOS")
+	tcpipStackComponent.addDependency("Core_TcpipRtos_Dependency", "TCPIP_RTOS")
 	#tcpipStackComponent.addDependency("Tcpip_NetConfig_Dependency", "NET_CONFIG")
-	tcpipStackComponent.addDependency("Core_Heap_Dependency", "HEAP")
-	tcpipStackComponent.addDependency("Core_SysFs_Dependency", "SYSFSWRAPPER")
+	tcpipStackComponent.addDependency("Core_Heap_Dependency", "TCPIP_HEAP")
+	tcpipStackComponent.addDependency("Core_TcpipFs_Dependency", "TCPIP FS WRAPPER")
 	tcpipStackComponent.addDependency("Core_NetConfig_Dependency", "NETCONFIG")
+	tcpipStackComponent.addDependency("Core_SysTime_Dependency", "sys_time")
 	
 	
-	tcpipHeapComponent = Module.CreateComponent("tcpipHeap", "HEAP", "/Libraries/TCPIP/CORE/", "library/config/tcpip_heap.py")
-	tcpipHeapComponent.addCapability("libtcpipRtos","HEAP")	
+	tcpipHeapComponent = Module.CreateComponent("tcpipHeap", "TCPIP HEAP", "/Libraries/TCPIP/CORE/", "library/config/tcpip_heap.py")
+	tcpipHeapComponent.addCapability("libtcpipHeap","TCPIP_HEAP")	
 	
-	tcpipRtosComponent = Module.CreateComponent("tcpipRtos", "RTOS", "/Libraries/TCPIP/CORE/", "library/config/tcpip_rtos.py")
-	tcpipRtosComponent.addCapability("libtcpipRtos","RTOS")	
-	tcpipRtosComponent.addDependency("Rtos_Osal_Dependency", "OSAL")
+	tcpipRtosComponent = Module.CreateComponent("tcpipRtos", "TCPIP RTOS", "/Libraries/TCPIP/CORE/", "library/config/tcpip_rtos.py")
+	tcpipRtosComponent.addCapability("libtcpipRtos","TCPIP_RTOS")	
+	#tcpipRtosComponent.addDependency("Rtos_Osal_Dependency", "OSAL")
 	
 	tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/Libraries/TCPIP/Layer3-NETWORK/", "library/config/tcpip_ipv4.py")
 	tcpipIPv4Component.addCapability("libTcpipIPv4","IPv4")
 	tcpipIPv4Component.addCapability("libTcpipIPv4IP","IP")
 	tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_CORE")	
+	tcpipIPv4Component.addDependency("Ipv4_Arp_Dependency", "ARP")	
 	
 	tcpipIPv6Component = Module.CreateSharedComponent("tcpipIPv6", "IPv6", "/Libraries/TCPIP/Layer3-NETWORK/", "library/config/tcpip_ipv6.py")
 	tcpipIPv6Component.addCapability("libTcpipIPv6","IPv6")
 	tcpipIPv6Component.addCapability("libTcpipIPv6IP","IP")
 	tcpipIPv6Component.addDependency("Ipv6_Stack_Dependency", "TCPIP_CORE")
+	tcpipIPv6Component.addDependency("Ipv6_Ndp_Dependency", "NDP")
 	
 	tcpipNdpComponent = Module.CreateComponent("tcpipNdp", "NDP", "/Libraries/TCPIP/Layer3-NETWORK/", "library/config/tcpip_ndp.py")
 	tcpipNdpComponent.addCapability("libtcpipNdp","NDP")
-	tcpipNdpComponent.addDependency("Ndp_IPv6_Dependency", "IPv6")
-	
-	tcpipTcpComponent = Module.CreateComponent("tcpipTcp", "TCP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "library/config/tcpip_tcp.py")
+		
+	tcpipTcpComponent = Module.CreateSharedComponent("tcpipTcp", "TCP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "library/config/tcpip_tcp.py")
 	tcpipTcpComponent.addCapability("libtcpipTcp","TCP")
 	tcpipTcpComponent.addDependency("Tcp_IP_Dependency", "IP")
 		
-	tcpipUdpComponent = Module.CreateComponent("tcpipUdp", "UDP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "library/config/tcpip_udp.py")
+	tcpipUdpComponent = Module.CreateSharedComponent("tcpipUdp", "UDP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "library/config/tcpip_udp.py")
 	tcpipUdpComponent.addCapability("libtcpipUdp","UDP")
 	tcpipUdpComponent.addDependency("Udp_IP_Dependency", "IP")
 
@@ -45,9 +47,8 @@ def loadModule():
 	
 	tcpipArpComponent = Module.CreateComponent("tcpipArp", "ARP", "/Libraries/TCPIP/Layer3-NETWORK/", "library/config/tcpip_arp.py")
 	tcpipArpComponent.addCapability("libtcpipArp","ARP")
-	tcpipArpComponent.addDependency("Arp_IPv4_Dependency", "IPv4")
-	
-	tcpipBerkeleyApiComponent = Module.CreateComponent("tcpipBerkeleyApi", "BSD", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_berkeley_api.py")
+		
+	tcpipBerkeleyApiComponent = Module.CreateComponent("tcpipBerkeleyApi", "Berkeley API", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_berkeley_api.py")
 	tcpipBerkeleyApiComponent.addCapability("libtcpipBerkeleyApi","BSD")	
 	tcpipBerkeleyApiComponent.addDependency("BSD_TCP_Dependency", "TCP")
 	tcpipBerkeleyApiComponent.addDependency("BSD_UDP_Dependency", "UDP")
@@ -80,13 +81,15 @@ def loadModule():
 	tcpipFtpsComponent.addDependency("Ftps_TCP_Dependency", "TCP")	
 	tcpipFtpsComponent.addDependency("Ftps_IPv4_Dependency", "IPv4")	
 	
-	tcpipIcmpComponent = Module.CreateComponent("tcpipIcmp", "ICMP", "/Libraries/TCPIP/Layer3-NETWORK/", "library/config/tcpip_icmp.py")
-	tcpipIcmpComponent.addCapability("libtcpipIcmp","ICMP")	
+	tcpipIcmpComponent = Module.CreateComponent("tcpipIcmp", "ICMPv4", "/Libraries/TCPIP/Layer3-NETWORK/", "library/config/tcpip_icmp.py")
+	tcpipIcmpComponent.addCapability("libtcpipIcmp","ICMPv4")	
 	tcpipIcmpComponent.addDependency("Icmp_IPv4_Dependency", "IPv4")
 	
 	tcpipTelnetComponent = Module.CreateComponent("tcpipTelnet", "TELNET", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_telnet.py")
 	tcpipTelnetComponent.addCapability("libtcpipTelnet","TELNET")	
 	tcpipTelnetComponent.addDependency("Telnet_TCP_Dependency", "TCP")
+	tcpipTelnetComponent.addDependency("Telnet_SysCmd_Dependency", "sys_cmd")
+	tcpipTelnetComponent.addDependency("Telnet_NetPres_Dependency", "net_pres")
 	
 	tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_iperf.py")
 	tcpipIperfComponent.addCapability("libtcpipIperf","IPERF")
@@ -124,9 +127,11 @@ def loadModule():
 	tcpipZeroConfComponent.addCapability("libtcpipZeroConf","ZEROCONF")
 	tcpipZeroConfComponent.addDependency("ZeroConf_IPv4_Dependency", "IPv4")
 		
-	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "CMD", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_cmd.py")
-	tcpipCmdComponent.addCapability("libtcpipCmd","CMD")	
-	tcpipCmdComponent.addDependency("Cmd_TCP_Dependency", "TCP")	
+	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_cmd.py")
+	tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD")	
+	tcpipCmdComponent.addDependency("Cmd_TCP_Dependency", "TCP")
+	tcpipCmdComponent.addDependency("Cmd_SysCmd_Dependency", "sys_cmd")
+	tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "sys_console")
 	
 	tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_announce.py")
 	tcpipAnnounceComponent.addCapability("libtcpipAnnounce","ANNOUNCE")
@@ -154,11 +159,10 @@ def loadModule():
 	tcpipSnmpv3Component.addCapability("libtcpipSnmpv3","SNMPV3")	
 	tcpipSnmpv3Component.addDependency("Snmpv3_SNMP_Dependency", "SNMP")
 	
-	tcpipSysFsWrapperComponent = Module.CreateComponent("tcpipSysFsWrapper", "SYSFSWRAPPER", "/Libraries/TCPIP/CORE/", "library/config/tcpip_sysfs_wrapper.py")
-	tcpipSysFsWrapperComponent.addCapability("libtcpipSysFsWrapper","SYSFSWRAPPER")	
-	tcpipSysFsWrapperComponent.addDependency("SysFsWarapper_TCP_Dependency", "TCP")	
-	tcpipSysFsWrapperComponent.addDependency("SysFsWarapper_UDP_Dependency", "UDP")	
-	
+	tcpipSysFsWrapperComponent = Module.CreateComponent("tcpipSysFsWrapper", "TCPIP FS WRAPPER", "/Libraries/TCPIP/CORE/", "library/config/tcpip_sysfs_wrapper.py")
+	tcpipSysFsWrapperComponent.addCapability("libtcpipSysFsWrapper","TCPIP FS WRAPPER")	
+	tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "sys_fs")	
+		
 	########################## Driver Modules ####################################################
 	## niyas : decide on moving driver to core repo
 	if "SAME70" in Variables.get("__PROCESSOR"):

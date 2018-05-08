@@ -52,10 +52,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
-#include "system/clk/sys_clk.h"
-#include "system/tmr/sys_tmr.h"
-#include "system/debug/sys_debug.h"
-#include "system/console/sys_console.h"
+//#include "system/clk/sys_clk.h"
+//#include "system/tmr/sys_tmr.h"
+//#include "system/debug/sys_debug.h"
+//#include "system/console/sys_console.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -1901,7 +1901,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
     hwFlags |= (DEVCFG3bits.FETHIO != 0) ? DRV_ETHPHY_CFG_DEFAULT : DRV_ETHPHY_CFG_ALTERNATE;
     ethRes = DRV_ETHPHY_RES_OK;
 #elif defined (__PIC32C__)
-    hwFlags = ((_GMAC_REGS->GMAC_UR.w & GMAC_UR_Msk)!= 0) ?  DRV_ETHPHY_CFG_MII : DRV_ETHPHY_CFG_RMII;
+    hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)!= 0) ?  DRV_ETHPHY_CFG_MII : DRV_ETHPHY_CFG_RMII;
     ethRes = DRV_ETHPHY_RES_OK;
 #else
     hwFlags = 0;

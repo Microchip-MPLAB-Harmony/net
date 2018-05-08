@@ -5,26 +5,26 @@ def instantiateComponent(tcpipIcmpComponent):
 	# ICMPv4 Client and Server
 	tcpipIcmp = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMPV4", None)
 	tcpipIcmp.setLabel("ICMPv4 Client and Server")
-	tcpipIcmp.setVisible(True)
+	tcpipIcmp.setVisible(False)
 	tcpipIcmp.setDescription("ICMPv4 Client and Server")
-	tcpipIcmp.setDefaultValue(True)  # Niyas to check the default value with .hconfig file
-	tcpipIcmp.setDependencies(tcpipIcmpMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	tcpipIcmp.setDefaultValue(True)
+	#tcpipIcmp.setDependencies(tcpipIcmpMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
 
 	# Use ICMPv4 Server
-	tcpipIcmpv4Server = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_SERVER", tcpipIcmp)
+	tcpipIcmpv4Server = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_SERVER", None)
 	tcpipIcmpv4Server.setLabel("Use ICMPv4 Server")
 	tcpipIcmpv4Server.setVisible(True)
 	tcpipIcmpv4Server.setDescription("Use ICMPv4 Server")
 	tcpipIcmpv4Server.setDefaultValue(True)  # Niyas to check the default value with .hconfig file
-	tcpipIcmpv4Server.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMPV4"])
+	#tcpipIcmpv4Server.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMPV4"])
 
 	# Use ICMPv4 Client
-	tcpipIcmpv4Client = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_CLIENT", tcpipIcmp)
+	tcpipIcmpv4Client = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_CLIENT", None)
 	tcpipIcmpv4Client.setLabel("Use ICMPv4 Client")
 	tcpipIcmpv4Client.setVisible(True)
 	tcpipIcmpv4Client.setDescription("Use ICMPv4 Client")
 	tcpipIcmpv4Client.setDefaultValue(False)
-	tcpipIcmpv4Client.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMPV4"])
+	#tcpipIcmpv4Client.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMPV4"])
 
 	# Enable User Notification
 	tcpipIcmpClientUsrNotify = tcpipIcmpComponent.createBooleanSymbol("TCPIP_ICMP_CLIENT_USER_NOTIFICATION", tcpipIcmpv4Client)

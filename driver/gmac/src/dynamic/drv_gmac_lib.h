@@ -48,9 +48,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define _DRV_PIC32CGMAC_LIB_H_
 
 #include <stdlib.h>
-#include "system_config.h"
-#include "system_definitions.h"
-#include "system/debug/sys_debug.h"
+#include "configuration.h"
+#include "definitions.h"
+//#include "system/debug/sys_debug.h"
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
 #include "driver/gmac/src/drv_gmac_local.h"
@@ -1018,8 +1018,8 @@ static __inline__ void __attribute__((always_inline)) _DRV_GMAC_TxUnlock(DRV_GMA
  *****************************************************************************/
 static __inline__ void __attribute__((always_inline)) _DRV_GMAC_HashValueSet(uint64_t hash_value)
 {
-    _GMAC_REGS->GMAC_HRB.w = hash_value & 0xffffffff;
-    _GMAC_REGS->GMAC_HRT.w = (hash_value >> 32) & 0xffffffff;    
+    GMAC_REGS->GMAC_HRB = hash_value & 0xffffffff;
+    GMAC_REGS->GMAC_HRT = (hash_value >> 32) & 0xffffffff;    
 }
 
 /****************************************************************************
@@ -1029,8 +1029,8 @@ static __inline__ void __attribute__((always_inline)) _DRV_GMAC_HashValueSet(uin
 static __inline__ uint64_t __attribute__((always_inline)) _DRV_GMAC_HashValueGet(void)
 {
     uint64_t hash_value = 0;    
-    hash_value = _GMAC_REGS->GMAC_HRT.w;
-    hash_value = (hash_value << 32) | _GMAC_REGS->GMAC_HRB.w;
+    hash_value = GMAC_REGS->GMAC_HRT;
+    hash_value = (hash_value << 32) | GMAC_REGS->GMAC_HRB;
     return hash_value;
 }
 // *****************************************************************************

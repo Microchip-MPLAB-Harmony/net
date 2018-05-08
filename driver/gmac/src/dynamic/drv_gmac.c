@@ -430,8 +430,8 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
         }
         // Set Rx Filters 
         gmacRxFilt = _DRV_GMAC_MacToEthFilter(TCPIP_GMAC_RX_FILTERS);
-		rxfilter = (uint32_t)(_GMAC_REGS->GMAC_NCFGR.w) & (~GMAC_FILT_ALL_FILTERS); 
-		_GMAC_REGS->GMAC_NCFGR.w  = (rxfilter|gmacRxFilt) ;
+		rxfilter = (uint32_t)(GMAC_REGS->GMAC_NCFGR) & (~GMAC_FILT_ALL_FILTERS); 
+		GMAC_REGS->GMAC_NCFGR  = (rxfilter|gmacRxFilt) ;
 
 		if(DRV_PIC32CGMAC_LibRxInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
 		{			
@@ -1141,12 +1141,12 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 	{
 		if(pMacParams)
 		{			
-			pMacParams->ifPhyAddress.v[0] = (_GMAC_REGS->GMAC_SA[0].GMAC_SAB.w)& 0xFF;
-			pMacParams->ifPhyAddress.v[1] = ((_GMAC_REGS->GMAC_SA[0].GMAC_SAB.w)>>8)& 0xFF;
-			pMacParams->ifPhyAddress.v[2] = ((_GMAC_REGS->GMAC_SA[0].GMAC_SAB.w)>>16)& 0xFF;
-			pMacParams->ifPhyAddress.v[3] = ((_GMAC_REGS->GMAC_SA[0].GMAC_SAB.w)>>24)& 0xFF;
-			pMacParams->ifPhyAddress.v[4] = (_GMAC_REGS->GMAC_SA[0].GMAC_SAT.w)& 0xFF;
-			pMacParams->ifPhyAddress.v[5] = ((_GMAC_REGS->GMAC_SA[0].GMAC_SAT.w)>>8)& 0xFF;
+			pMacParams->ifPhyAddress.v[0] = (GMAC_REGS->GMAC_SA[0].GMAC_SAB)& 0xFF;
+			pMacParams->ifPhyAddress.v[1] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>8)& 0xFF;
+			pMacParams->ifPhyAddress.v[2] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>16)& 0xFF;
+			pMacParams->ifPhyAddress.v[3] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>24)& 0xFF;
+			pMacParams->ifPhyAddress.v[4] = (GMAC_REGS->GMAC_SA[0].GMAC_SAT)& 0xFF;
+			pMacParams->ifPhyAddress.v[5] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAT)>>8)& 0xFF;
 			
 			pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
 			pMacParams->macType = TCPIP_MAC_TYPE_ETH;
@@ -1170,9 +1170,9 @@ static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueI
 	
 #if !defined(PIC32C_GMAC_ISR_TX)	
 	//polling TXCOMP in STATUS register	
-	if((_GMAC_REGS->GMAC_TSR.w) & GMAC_TSR_TXCOMP_Msk )
+	if((GMAC_REGS->GMAC_TSR) & GMAC_TSR_TXCOMP_Msk )
 	{		
-		_GMAC_REGS->GMAC_TSR.w = GMAC_TSR_TXCOMP_Msk;
+		GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
 		DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
 	}
 #else
@@ -1612,8 +1612,8 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{
 			ethSetEvents &= ~pDcpt->_EthPendingEvents;		// keep just the new un-ack events			
-			_GMAC_REGS->GMAC_ISR.w;		//Read ISR register to clear the interrupt status			
-			_GMAC_REGS->GMAC_IER.w = ethSetEvents;
+			GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status			
+			GMAC_REGS->GMAC_IER = ethSetEvents;
 			SYS_INT_SourceEnable(pMACDrv->sGmacData._macIntSrc);       // enable
 		}
 	}
@@ -1636,12 +1636,13 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 		pDcpt->_TcpPendingEvents &= ~macEvMask;     // remove them from un-ack list
 		pDcpt->_EthPendingEvents &= ~ethClrEvents;
 		
-		_GMAC_REGS->GMAC_IDR.w = ethClrEvents;		
-		_GMAC_REGS->GMAC_ISR.w;		//Read ISR register to clear the interrupt status
+		GMAC_REGS->GMAC_IDR = ethClrEvents;		
+		GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{
-			SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable
+			//niyas SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable
+            SYS_INT_Restore(ethILev);//niyas
 		}
 	}
 
@@ -1715,10 +1716,11 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 
 		pDcpt->_EthPendingEvents &= ~ethAckEv;         // no longer pending
 		
-		_GMAC_REGS->GMAC_ISR.w;		//Read ISR register to clear the interrupt status		
-		_GMAC_REGS->GMAC_IER.w = ethAckEv;
+		GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status		
+		GMAC_REGS->GMAC_IER = ethAckEv;
 
-		SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable
+		//niyas SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable
+        SYS_INT_Restore(ethILev);//niyas 
 		return true;
 	}
 
@@ -1830,7 +1832,7 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 	DRV_GMAC_EVENT_DCPT* pDcpt;	
 	DRV_GMAC_DRIVER * pMACDrv = &_pic32c_emb_mac_dcpt[macIndex];		
 	
-	currEthEvents = (GMAC_EVENTS)_GMAC_REGS->GMAC_ISR.w;
+	currEthEvents = (GMAC_EVENTS)GMAC_REGS->GMAC_ISR;
     __DMB();
 	// process interrupts
 	pDcpt = &pMACDrv->sGmacData._pic32c_ev_group_dcpt;
@@ -1847,7 +1849,7 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 
 
 		{			
-			_GMAC_REGS->GMAC_IDR.w = currGroupEvents;					
+			GMAC_REGS->GMAC_IDR = currGroupEvents;					
 		}
 
 
@@ -1866,271 +1868,271 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 static uint32_t _DRV_GMAC_GetTxOctetLow(void)
 {
 		
-	return _GMAC_REGS->GMAC_OTLO.w;	
+	return GMAC_REGS->GMAC_OTLO;	
 }
 
 static uint32_t _DRV_GMAC_GetTxOctetHigh(void)
 {
 	
-	return _GMAC_REGS->GMAC_OTHI.w;
+	return GMAC_REGS->GMAC_OTHI;
 }
 
 static uint32_t _DRV_GMAC_GetTxFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_FT.w;
+	return GMAC_REGS->GMAC_FT;
 }
 
 static uint32_t _DRV_GMAC_GetTxBCastFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_BCFT.w;
+	return GMAC_REGS->GMAC_BCFT;
 }
 
 static uint32_t _DRV_GMAC_GetTxMCastFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_MFT.w;
+	return GMAC_REGS->GMAC_MFT;
 }
 
 static uint32_t _DRV_GMAC_GetTxPauseFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_PFT.w;
+	return GMAC_REGS->GMAC_PFT;
 }
 
 static uint32_t _DRV_GMAC_GetTx64ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_BFT64.w;
+	return GMAC_REGS->GMAC_BFT64;
 }
 
 static uint32_t _DRV_GMAC_GetTx127ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFT127.w;
+	return GMAC_REGS->GMAC_TBFT127;
 }
 
 static uint32_t _DRV_GMAC_GetTx255ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFT255.w;
+	return GMAC_REGS->GMAC_TBFT255;
 }
 
 static uint32_t _DRV_GMAC_GetTx511ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFT511.w;
+	return GMAC_REGS->GMAC_TBFT511;
 }
 
 static uint32_t _DRV_GMAC_GetTx1023ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFT1023.w;
+	return GMAC_REGS->GMAC_TBFT1023;
 }
 
 static uint32_t _DRV_GMAC_GetTx1518ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFT1518.w;
+	return GMAC_REGS->GMAC_TBFT1518;
 }
 
 static uint32_t _DRV_GMAC_GetTxGT1518ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_GTBFT1518.w;
+	return GMAC_REGS->GMAC_GTBFT1518;
 }
 
 static uint32_t _DRV_GMAC_GetTxUnderRunFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TUR.w;
+	return GMAC_REGS->GMAC_TUR;
 }
 
 static uint32_t _DRV_GMAC_GetTxSingleCollFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_SCF.w;
+	return GMAC_REGS->GMAC_SCF;
 }
 
 static uint32_t _DRV_GMAC_GetTxMultiCollFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_MCF.w;
+	return GMAC_REGS->GMAC_MCF;
 }
 
 static uint32_t _DRV_GMAC_GetTxExcessCollFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_EC.w;
+	return GMAC_REGS->GMAC_EC;
 }
 
 static uint32_t _DRV_GMAC_GetTxLateCollFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_LC.w;
+	return GMAC_REGS->GMAC_LC;
 }
 
 static uint32_t _DRV_GMAC_GetTxDeferFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_DTF.w;
+	return GMAC_REGS->GMAC_DTF;
 }
 
 static uint32_t _DRV_GMAC_GetTxCSErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_CSE.w;
+	return GMAC_REGS->GMAC_CSE;
 }
 
 static uint32_t _DRV_GMAC_GetRxOctetLow(void)
 {
 	
-	return _GMAC_REGS->GMAC_ORLO.w;
+	return GMAC_REGS->GMAC_ORLO;
 }
 
 static uint32_t _DRV_GMAC_GetRxOctetHigh(void)
 {
 	
-	return _GMAC_REGS->GMAC_ORHI.w;
+	return GMAC_REGS->GMAC_ORHI;
 }
 
 static uint32_t _DRV_GMAC_GetRxFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_FR.w;
+	return GMAC_REGS->GMAC_FR;
 }
 
 static uint32_t _DRV_GMAC_GetRxBCastFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_BCFR.w;
+	return GMAC_REGS->GMAC_BCFR;
 }
 
 static uint32_t _DRV_GMAC_GetRxMCastFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_MFR.w;
+	return GMAC_REGS->GMAC_MFR;
 }
 
 static uint32_t _DRV_GMAC_GetRxPauseFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_PFR.w;
+	return GMAC_REGS->GMAC_PFR;
 }
 
 static uint32_t _DRV_GMAC_GetRx64ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_BFR64.w;
+	return GMAC_REGS->GMAC_BFR64;
 }
 
 static uint32_t _DRV_GMAC_GetRx127ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFR127.w;
+	return GMAC_REGS->GMAC_TBFR127;
 }
 
 static uint32_t _DRV_GMAC_GetRx255ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFR255.w;
+	return GMAC_REGS->GMAC_TBFR255;
 }
 
 static uint32_t _DRV_GMAC_GetRx511ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFR511.w;
+	return GMAC_REGS->GMAC_TBFR511;
 }
 
 static uint32_t _DRV_GMAC_GetRx1023ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFR1023.w;
+	return GMAC_REGS->GMAC_TBFR1023;
 }
 
 static uint32_t _DRV_GMAC_GetRx1518ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TBFR1518.w;
+	return GMAC_REGS->GMAC_TBFR1518;
 }
 
 static uint32_t _DRV_GMAC_GetRxGT1518ByteFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TMXBFR.w;
+	return GMAC_REGS->GMAC_TMXBFR;
 }
 
 static uint32_t _DRV_GMAC_GetRxUnderSizeFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_UFR.w;
+	return GMAC_REGS->GMAC_UFR;
 }
 
 static uint32_t _DRV_GMAC_GetRxOverSizeFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_OFR.w;
+	return GMAC_REGS->GMAC_OFR;
 }
 
 static uint32_t _DRV_GMAC_GetRxJabberFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_JR.w;
+	return GMAC_REGS->GMAC_JR;
 }
 
 static uint32_t _DRV_GMAC_GetRxFCSErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_FCSE.w;
+	return GMAC_REGS->GMAC_FCSE;
 }
 
 static uint32_t _DRV_GMAC_GetRxLFErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_LFFE.w;
+	return GMAC_REGS->GMAC_LFFE;
 }
 
 static uint32_t _DRV_GMAC_GetRxSymErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_RSE.w;
+	return GMAC_REGS->GMAC_RSE;
 }
 
 static uint32_t _DRV_GMAC_GetRxAlignErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_AE.w;
+	return GMAC_REGS->GMAC_AE;
 }
 
 static uint32_t _DRV_GMAC_GetRxResErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_RRE.w;
+	return GMAC_REGS->GMAC_RRE;
 }
 
 static uint32_t _DRV_GMAC_GetRxOverRunFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_ROE.w;
+	return GMAC_REGS->GMAC_ROE;
 }
 
 static uint32_t _DRV_GMAC_GetRxIPHdrCSErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_IHCE.w;
+	return GMAC_REGS->GMAC_IHCE;
 }
 
 static uint32_t _DRV_GMAC_GetRxTCPCSErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_TCE.w;
+	return GMAC_REGS->GMAC_TCE;
 }
 
 static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void)
 {
 	
-	return _GMAC_REGS->GMAC_UCE.w;
+	return GMAC_REGS->GMAC_UCE;
 }
 
 /****************************************************************************

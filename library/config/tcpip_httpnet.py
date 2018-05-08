@@ -437,8 +437,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetHeaderFtl.setMarkup(True)
 	tcpipHttpNetHeaderFtl.setType("STRING")
 
-	# Niyas to add
-	# file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
+	
 
 	# Add http_net.c file
 	tcpipHttpNetSourceFile = tcpipHttpNetComponent.createFileSymbol(None, None)

@@ -108,17 +108,17 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_MNGMNT_PORT_ENABLE(uintptr_t ethphyId)
     {
-        _GMAC_REGS->GMAC_NCR.w |=	GMAC_NCR_MPE_Msk;
+        GMAC_REGS->GMAC_NCR |=	GMAC_NCR_MPE_Msk;
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_MNGMNT_PORT_DISABLE(uintptr_t ethphyId)
     {
-       _GMAC_REGS->GMAC_NCR.w &= ~GMAC_NCR_MPE_Msk;
+       GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_MPE_Msk;
     }
     
     static  __inline__ bool __attribute__((always_inline))_DRV_MIIM_IS_BUSY(uintptr_t ethphyId)
     {
-       if ((_GMAC_REGS->GMAC_NSR.w & GMAC_NSR_IDLE_Msk) != GMAC_NSR_IDLE_Msk)
+       if ((GMAC_REGS->GMAC_NSR & GMAC_NSR_IDLE_Msk) != GMAC_NSR_IDLE_Msk)
            return true;
        else
            return false;          
@@ -137,7 +137,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_OP_WRITE_DATA(uintptr_t ethphyId,DRV_MIIM_OP_DCPT* pOpDcpt)
     {
-        _GMAC_REGS->GMAC_MAN.w = 
+        GMAC_REGS->GMAC_MAN = 
                                 (~GMAC_MAN_WZO_Msk & GMAC_MAN_CLTTO_Msk)
                                  | (GMAC_MAN_OP(0x1)) 
                                  | GMAC_MAN_WTN(0x02) 
@@ -153,7 +153,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
    
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_OP_READ_START(uintptr_t ethphyId, DRV_MIIM_OP_DCPT* pOpDcpt)
     {
-        _GMAC_REGS->GMAC_MAN.w =    (~GMAC_MAN_WZO_Msk & GMAC_MAN_CLTTO_Msk) 
+        GMAC_REGS->GMAC_MAN =    (~GMAC_MAN_WZO_Msk & GMAC_MAN_CLTTO_Msk) 
                                     | (GMAC_MAN_OP(0x2)) 
                                     | GMAC_MAN_WTN(0x02) 
                                     | GMAC_MAN_PHYA(pOpDcpt->phyAdd) 
@@ -164,7 +164,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
                                  
     static  __inline__ uint16_t __attribute__((always_inline))_DRV_MIIM_OP_READ_DATA_GET(uintptr_t ethphyId)
     {
-       return (uint16_t)(_GMAC_REGS->GMAC_MAN.w & GMAC_MAN_DATA_Msk) ;
+       return (uint16_t)(GMAC_REGS->GMAC_MAN & GMAC_MAN_DATA_Msk) ;
     }
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_CLEAR_DATA_VALID(uintptr_t ethphyId)
@@ -214,13 +214,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         { 
             clock_dividor = 0; 
         } 
-        _GMAC_REGS->GMAC_NCR.w &= ~GMAC_NCR_TXEN_Msk; 
-        _GMAC_REGS->GMAC_NCR.w &= ~GMAC_NCR_RXEN_Msk;	
-        _GMAC_REGS->GMAC_NCFGR.w = 
-                   (_GMAC_REGS->GMAC_NCFGR.w & 
+        GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk; 
+        GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;	
+        GMAC_REGS->GMAC_NCFGR = 
+                   (GMAC_REGS->GMAC_NCFGR & 
                         (~GMAC_NCFGR_CLK_Msk)) | (clock_dividor << GMAC_NCFGR_CLK_Pos); 
-        _GMAC_REGS->GMAC_NCR.w |= GMAC_NCR_TXEN_Msk; 
-        _GMAC_REGS->GMAC_NCR.w |= GMAC_NCR_RXEN_Msk;	
+        GMAC_REGS->GMAC_NCR |= GMAC_NCR_TXEN_Msk; 
+        GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;	
     } 
     
 #else    

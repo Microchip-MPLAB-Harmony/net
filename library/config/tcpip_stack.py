@@ -670,7 +670,7 @@ def instantiateComponent(tcpipStackComponent):
 	# Add http.h file to project
 	tcpipStackHttpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackHttpHeaderFile.setSourcePath("library/http.h")
-	tcpipStackHttpHeaderFile.setOutputName("udp.h")
+	tcpipStackHttpHeaderFile.setOutputName("http.h")
 	tcpipStackHttpHeaderFile.setDestPath("library/tcpip/")
 	tcpipStackHttpHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
 	tcpipStackHttpHeaderFile.setType("HEADER")
@@ -1108,6 +1108,33 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackSysFsWrapperHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
 	tcpipStackSysFsWrapperHeaderFile.setType("HEADER")
 	tcpipStackSysFsWrapperHeaderFile.setOverwrite(True)
+
+	# file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
+	tcpipStackNetPresHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackNetPresHeaderFile.setSourcePath("net/pres/net_pres.h")
+	tcpipStackNetPresHeaderFile.setOutputName("net_pres.h")
+	tcpipStackNetPresHeaderFile.setDestPath("/net/pres/")
+	tcpipStackNetPresHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	tcpipStackNetPresHeaderFile.setType("HEADER")
+	tcpipStackNetPresHeaderFile.setOverwrite(True)
+
+	#file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapi.h"
+	tcpipStackNetPresSktApiHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackNetPresSktApiHeaderFile.setSourcePath("net/pres/net_pres_socketapi.h")
+	tcpipStackNetPresSktApiHeaderFile.setOutputName("net_pres_socketapi.h")
+	tcpipStackNetPresSktApiHeaderFile.setDestPath("/net/pres/")
+	tcpipStackNetPresSktApiHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	tcpipStackNetPresSktApiHeaderFile.setType("HEADER")
+	tcpipStackNetPresSktApiHeaderFile.setOverwrite(True)
+	
+	#file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapiconversion.h"	
+	tcpipStackNetPresSktApiConvHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackNetPresSktApiConvHeaderFile.setSourcePath("net/pres/net_pres_socketapiconversion.h")
+	tcpipStackNetPresSktApiConvHeaderFile.setOutputName("net_pres_socketapiconversion.h")
+	tcpipStackNetPresSktApiConvHeaderFile.setDestPath("/net/pres/")
+	tcpipStackNetPresSktApiConvHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	tcpipStackNetPresSktApiConvHeaderFile.setType("HEADER")
+	tcpipStackNetPresSktApiConvHeaderFile.setOverwrite(True)	
 	
 	# #Add to system_config.h
 	# tcpipTcpHeaderFtl = tcpipTcpComponent.createFileSymbol(None, None)
@@ -1144,7 +1171,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackHelpersSourceFile.setOutputName("helpers.c")
 	tcpipStackHelpersSourceFile.setOverwrite(True)
 	tcpipStackHelpersSourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackHelpersSourceFile.setProjectPath("config/" + configName + "/library/src/common/")
+	tcpipStackHelpersSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
 	tcpipStackHelpersSourceFile.setType("SOURCE")
 	tcpipStackHelpersSourceFile.setEnabled(True)	
 	
@@ -1154,7 +1181,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackHashFnvSourceFile.setOutputName("hash_fnv.c")
 	tcpipStackHashFnvSourceFile.setOverwrite(True)
 	tcpipStackHashFnvSourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackHashFnvSourceFile.setProjectPath("config/" + configName + "/library/src/")
+	tcpipStackHashFnvSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackHashFnvSourceFile.setType("SOURCE")
 	tcpipStackHashFnvSourceFile.setEnabled(True)	
 		
@@ -1164,7 +1191,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackOaHashSourceFile.setOutputName("oahash.c")
 	tcpipStackOaHashSourceFile.setOverwrite(True)
 	tcpipStackOaHashSourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackOaHashSourceFile.setProjectPath("config/" + configName + "/library/src/")
+	tcpipStackOaHashSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackOaHashSourceFile.setType("SOURCE")
 	tcpipStackOaHashSourceFile.setEnabled(True)	
 			
@@ -1174,10 +1201,22 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipHelpersSourceFile.setOutputName("tcpip_helpers.c")
 	tcpipStackTcpipHelpersSourceFile.setOverwrite(True)
 	tcpipStackTcpipHelpersSourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackTcpipHelpersSourceFile.setProjectPath("config/" + configName + "/library/src/")
+	tcpipStackTcpipHelpersSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipHelpersSourceFile.setType("SOURCE")
 	tcpipStackTcpipHelpersSourceFile.setEnabled(True)	
-		
+
+	tcpipStackSystemDefFile = tcpipStackComponent.createFileSymbol("TCPIP_H_FILE", None)
+	tcpipStackSystemDefFile.setType("STRING")
+	tcpipStackSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	tcpipStackSystemDefFile.setSourcePath("library/templates/system/system_definitions.h.ftl")
+	tcpipStackSystemDefFile.setMarkup(True)
+
+	tcpipStackSystemDefObjFile = tcpipStackComponent.createFileSymbol("TCPIP_DEF_OBJ", None)
+	tcpipStackSystemDefObjFile.setType("STRING")
+	tcpipStackSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
+	tcpipStackSystemDefObjFile.setSourcePath("library/templates/system/system_definitions_objects.h.ftl")
+	tcpipStackSystemDefObjFile.setMarkup(True)
+	
 	# ifblock !DSTBDPIC32CZ
 	# file TCPIP_HELPERS_C_32 "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_helper_c32.S" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_helper_c32.S"
 	# endif
@@ -1187,7 +1226,7 @@ def instantiateComponent(tcpipStackComponent):
 		tcpipStackTcpipHelpersC32SourceFile.setOutputName("tcpip_helper_c32.S")
 		tcpipStackTcpipHelpersC32SourceFile.setOverwrite(True)
 		tcpipStackTcpipHelpersC32SourceFile.setDestPath("library/tcpip/src/")
-		tcpipStackTcpipHelpersC32SourceFile.setProjectPath("config/" + configName + "/library/src/")
+		tcpipStackTcpipHelpersC32SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 		tcpipStackTcpipHelpersC32SourceFile.setType("SOURCE")
 		tcpipStackTcpipHelpersC32SourceFile.setEnabled(True)	
 			
@@ -1197,7 +1236,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipMngrSourceFile.setOutputName("tcpip_manager.c")
 	tcpipStackTcpipMngrSourceFile.setOverwrite(True)
 	tcpipStackTcpipMngrSourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackTcpipMngrSourceFile.setProjectPath("config/" + configName + "/library/src/")
+	tcpipStackTcpipMngrSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipMngrSourceFile.setType("SOURCE")
 	tcpipStackTcpipMngrSourceFile.setEnabled(True)	
 			
@@ -1207,7 +1246,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipNotifySourceFile.setOutputName("tcpip_notify.c")
 	tcpipStackTcpipNotifySourceFile.setOverwrite(True)
 	tcpipStackTcpipNotifySourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackTcpipNotifySourceFile.setProjectPath("config/" + configName + "/library/src/")
+	tcpipStackTcpipNotifySourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipNotifySourceFile.setType("SOURCE")
 	tcpipStackTcpipNotifySourceFile.setEnabled(True)	
 		
@@ -1217,7 +1256,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipPacketSourceFile.setOutputName("tcpip_packet.c")
 	tcpipStackTcpipPacketSourceFile.setOverwrite(True)
 	tcpipStackTcpipPacketSourceFile.setDestPath("library/tcpip/src/")
-	tcpipStackTcpipPacketSourceFile.setProjectPath("config/" + configName + "/library/src/")
+	tcpipStackTcpipPacketSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipPacketSourceFile.setType("SOURCE")
 	tcpipStackTcpipPacketSourceFile.setEnabled(True)	
 		

@@ -1,0 +1,7 @@
+menu "MPLAB Harmony Networking"
+
+source "$HARMONY_VERSION_PATH/framework/net/pres/config/net_pres.hconfig"
+
+add "<#include \"/framework/net/templates/system_config.h.ftl\">"  to list SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION 
+
+endmenu

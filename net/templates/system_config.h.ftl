@@ -1,0 +1,1 @@
+<#include "/framework/net/pres/templates/system_config.h.ftl">

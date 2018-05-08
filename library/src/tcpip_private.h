@@ -47,17 +47,20 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stdbool.h>
         
-#include "system_config.h"
-#include "system/debug/sys_debug.h"
-#include "system/console/sys_console.h"
-#include "system/command/sys_command.h"
-
-#include "system/random/sys_random.h"
-#include "system/tmr/sys_tmr.h"
-
+#include "configuration.h"
+#include "definitions.h" //niyas
+//#include "system/debug/sys_debug.h"
+//#include "system/console/sys_console.h"
+//#include "system/command/sys_command.h"
+//
+//#include "system/random/sys_random.h"
+#include "system/time/sys_time.h"
+//
 #include "osal/osal.h"
 
 #include "tcpip/src/common/helpers.h"
+
+
 
 // Internal adjustments - dependencies
 // change signaling depends on the IPv4

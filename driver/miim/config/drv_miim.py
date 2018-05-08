@@ -152,7 +152,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimConfigHeaderFile = drvMiimComponent.createFileSymbol(None, None)
 	drvMiimConfigHeaderFile.setSourcePath("driver/miim/config/drv_miim_config.h")
 	drvMiimConfigHeaderFile.setOutputName("drv_miim_config.h")
-	drvMiimConfigHeaderFile.setDestPath("driver/miim/")
+	drvMiimConfigHeaderFile.setDestPath("driver/miim/config/")
 	drvMiimConfigHeaderFile.setProjectPath("config/" + configName + "/driver/miim/config/")
 	drvMiimConfigHeaderFile.setType("HEADER")
 	drvMiimConfigHeaderFile.setOverwrite(True)
@@ -161,7 +161,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimLocalHeaderFile = drvMiimComponent.createFileSymbol(None, None)
 	drvMiimLocalHeaderFile.setSourcePath("driver/miim/src/drv_miim_local.h")
 	drvMiimLocalHeaderFile.setOutputName("drv_miim_local.h")
-	drvMiimLocalHeaderFile.setDestPath("driver/miim/")
+	drvMiimLocalHeaderFile.setDestPath("driver/miim/src/")
 	drvMiimLocalHeaderFile.setProjectPath("config/" + configName + "/driver/miim/src/")
 	drvMiimLocalHeaderFile.setType("HEADER")
 	drvMiimLocalHeaderFile.setOverwrite(True)
@@ -170,7 +170,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimMappingHeaderFile = drvMiimComponent.createFileSymbol(None, None)
 	drvMiimMappingHeaderFile.setSourcePath("driver/miim/src/dynamic/drv_miim_mapping.h")
 	drvMiimMappingHeaderFile.setOutputName("drv_miim_mapping.h")
-	drvMiimMappingHeaderFile.setDestPath("driver/miim/")
+	drvMiimMappingHeaderFile.setDestPath("driver/miim/src/dynamic/")
 	drvMiimMappingHeaderFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
 	drvMiimMappingHeaderFile.setType("HEADER")
 	drvMiimMappingHeaderFile.setOverwrite(True)
@@ -180,7 +180,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimSourceFile.setSourcePath("driver/miim/src/dynamic/drv_miim.c")
 	drvMiimSourceFile.setOutputName("drv_miim.c")
 	drvMiimSourceFile.setOverwrite(True)
-	drvMiimSourceFile.setDestPath("library/tcpip/src/")
+	drvMiimSourceFile.setDestPath("driver/miim/src/dynamic/")
 	drvMiimSourceFile.setProjectPath("config/" + configName + "/driver/miim/src/dynamic/")
 	drvMiimSourceFile.setType("SOURCE")
 	drvMiimSourceFile.setEnabled(True)
@@ -213,8 +213,19 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimSysConfigSourceFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_DRIVER_CONFIGURATION")
 	drvMiimSysConfigSourceFtl.setSourcePath("driver/miim/config/drv_miim.h.ftl")
 	drvMiimSysConfigSourceFtl.setMarkup(True)
-	
 
+	drvMiimSystemDefFile = drvMiimComponent.createFileSymbol("MIIM_H_FILE", None)
+	drvMiimSystemDefFile.setType("STRING")
+	drvMiimSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	drvMiimSystemDefFile.setSourcePath("driver/miim/templates/system/system_definitions.h.ftl")
+	drvMiimSystemDefFile.setMarkup(True)	
+
+	drvMiimSystemDefObjFile = drvMiimComponent.createFileSymbol("TCPIP_DEF_OBJ", None)
+	drvMiimSystemDefObjFile.setType("STRING")
+	drvMiimSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
+	drvMiimSystemDefObjFile.setSourcePath("driver/miim/templates/system/system_definitions_objects.h.ftl")
+	drvMiimSystemDefObjFile.setMarkup(True)
+	
 def drvMiimMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
 		print("MIIM Menu Visible.")		

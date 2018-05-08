@@ -37,7 +37,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 
 // Delimiter to locate IP address from CheckIP server
-static const uint8_t _checkIpSrvrResponse[] = "Address:";
+//niyas static const uint8_t _checkIpSrvrResponse[] = "Address:";
 
 // Response codes from DynDNS Update Server
 static const char* _updateIpSrvrResponse[] =

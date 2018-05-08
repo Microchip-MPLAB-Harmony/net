@@ -6,59 +6,59 @@ def instantiateComponent(tcpipDhcpComponent):
 	# Enable DHCP Client
 	tcpipDhcpc = tcpipDhcpComponent.createBooleanSymbol("TCPIP_STACK_USE_DHCP_CLIENT", None)
 	tcpipDhcpc.setLabel("DHCP Client")
-	tcpipDhcpc.setVisible(True)
+	tcpipDhcpc.setVisible(False)
 	tcpipDhcpc.setDescription("Enable DHCP Client")
 	tcpipDhcpc.setDefaultValue(True)
-	tcpipDhcpc.setDependencies(tcpipDhcpcMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
+	#tcpipDhcpc.setDependencies(tcpipDhcpcMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
 	# DHCP Client Request Time-out in seconds
-	tcpipDhcpcReqTimeout = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TIMEOUT", tcpipDhcpc)
+	tcpipDhcpcReqTimeout = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TIMEOUT", None)
 	tcpipDhcpcReqTimeout.setLabel("DHCP Request Time-out (seconds)")
 	tcpipDhcpcReqTimeout.setVisible(True)
 	tcpipDhcpcReqTimeout.setDescription("DHCP Request Time-out in seconds")
 	tcpipDhcpcReqTimeout.setDefaultValue(10)
-	tcpipDhcpcReqTimeout.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
+	#tcpipDhcpcReqTimeout.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
 	# DHCP Client Tick Rate in msec
-	tcpipDhcpcTickRate = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TASK_TICK_RATE", tcpipDhcpc)
+	tcpipDhcpcTickRate = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_TASK_TICK_RATE", None)
 	tcpipDhcpcTickRate.setLabel("DHCP Tick Rate (msec)")
 	tcpipDhcpcTickRate.setVisible(True)
 	tcpipDhcpcTickRate.setDescription("DHCP Tick Rate in msec")
 	tcpipDhcpcTickRate.setDefaultValue(5)
-	tcpipDhcpcTickRate.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
+	#tcpipDhcpcTickRate.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
 
 	# Enable DHCP Client by default at Stack Start-up
-	tcpipDhcpcEnable = tcpipDhcpComponent.createBooleanSymbol("TCPIP_DHCP_CLIENT_ENABLED", tcpipDhcpc)
+	tcpipDhcpcEnable = tcpipDhcpComponent.createBooleanSymbol("TCPIP_DHCP_CLIENT_ENABLED", None)
 	tcpipDhcpcEnable.setLabel("DHCP Client enabled by default at Stack Start-up")
 	tcpipDhcpcEnable.setVisible(True)
 	tcpipDhcpcEnable.setDescription("Enable DHCP Client by default at Stack Start-up")
 	tcpipDhcpcEnable.setDefaultValue(True)
-	tcpipDhcpcEnable.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
+	#tcpipDhcpcEnable.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
 	# DHCP Client Host name maximum size
-	tcpipDhcpcHostNameSize = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_HOST_NAME_SIZE", tcpipDhcpc)
+	tcpipDhcpcHostNameSize = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_HOST_NAME_SIZE", None)
 	tcpipDhcpcHostNameSize.setLabel("DHCP Host name maximum size")
 	tcpipDhcpcHostNameSize.setVisible(True)
 	tcpipDhcpcHostNameSize.setDescription("DHCP Client Host name maximum size")
 	tcpipDhcpcHostNameSize.setDefaultValue(20)
-	tcpipDhcpcHostNameSize.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
+	#tcpipDhcpcHostNameSize.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
 	# DHCP Client Host name maximum size
-	tcpipDhcpcConnectPort = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_CLIENT_CONNECT_PORT", tcpipDhcpc)
+	tcpipDhcpcConnectPort = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_CLIENT_CONNECT_PORT", None)
 	tcpipDhcpcConnectPort.setLabel("Client Port for DHCP Client Transactions")
 	tcpipDhcpcConnectPort.setVisible(True)
 	tcpipDhcpcConnectPort.setDescription("Client Port for DHCP Client Transactions")
 	tcpipDhcpcConnectPort.setDefaultValue(68)
-	tcpipDhcpcConnectPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
+	#tcpipDhcpcConnectPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
 	# Remote Server Port for DHCP Server Messages
-	tcpipDhcpcServerListenPort= tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_LISTEN_PORT", tcpipDhcpc)
+	tcpipDhcpcServerListenPort= tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_LISTEN_PORT", None)
 	tcpipDhcpcServerListenPort.setLabel("Remote Server Port for DHCP Server Messages")
 	tcpipDhcpcServerListenPort.setVisible(True)
 	tcpipDhcpcServerListenPort.setDescription("Remote Server Port for DHCP Server Messages")
 	tcpipDhcpcServerListenPort.setDefaultValue(67)
-	tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
+	#tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 	
 	#Add to system_config.h
 	tcpipDhcpcHeaderFtl = tcpipDhcpComponent.createFileSymbol(None, None)
