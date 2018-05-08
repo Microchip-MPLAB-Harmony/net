@@ -53,11 +53,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stddef.h>
 #include <string.h>
 
-#include "system_config.h"
-#include "system_definitions.h"
+#include "configuration.h"
+#include "definitions.h"
 #include "system/system.h"
 #include "system/int/sys_int.h"
-#include "system/tmr/sys_tmr.h"
+#include "system/time/sys_time.h"
 #include "tcpip/tcpip_mac_object.h"
 
 // *****************************************************************************

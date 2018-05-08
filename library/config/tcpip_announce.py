@@ -5,34 +5,34 @@ def instantiateComponent(tcpipAnnounceComponent):
 	# Use Announce Discovery Tool
 	tcpipAnnounce = tcpipAnnounceComponent.createBooleanSymbol("TCPIP_USE_ANNOUNCE", None)
 	tcpipAnnounce.setLabel("Use Announce Discovery Tool")
-	tcpipAnnounce.setVisible(True)
+	tcpipAnnounce.setVisible(False)
 	tcpipAnnounce.setDescription("Use Announce Discovery Tool")
 	tcpipAnnounce.setDefaultValue(True)
-	tcpipAnnounce.setDependencies(tcpipAnnounceMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
+	#tcpipAnnounce.setDependencies(tcpipAnnounceMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
 	# Maximum Payload Size
-	tcpipAnnouncePayloadMax= tcpipAnnounceComponent.createIntegerSymbol("TCPIP_ANNOUNCE_MAX_PAYLOAD", tcpipAnnounce)
+	tcpipAnnouncePayloadMax= tcpipAnnounceComponent.createIntegerSymbol("TCPIP_ANNOUNCE_MAX_PAYLOAD", None)
 	tcpipAnnouncePayloadMax.setLabel("Maximum Payload Size")
 	tcpipAnnouncePayloadMax.setVisible(True)
 	tcpipAnnouncePayloadMax.setDescription("Maximum Payload Size")
 	tcpipAnnouncePayloadMax.setDefaultValue(512)
-	tcpipAnnouncePayloadMax.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
+	#tcpipAnnouncePayloadMax.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
 
 	# Use Announce Network Directed Broadcast
-	tcpipAnnounceNetBroadcast = tcpipAnnounceComponent.createBooleanSymbol("TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST", tcpipAnnounce)
+	tcpipAnnounceNetBroadcast = tcpipAnnounceComponent.createBooleanSymbol("TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST", None)
 	tcpipAnnounceNetBroadcast.setLabel("Use Announce Network Directed Broadcast")
 	tcpipAnnounceNetBroadcast.setVisible(True)
 	tcpipAnnounceNetBroadcast.setDescription("Use Announce Network Directed Broadcast")
 	tcpipAnnounceNetBroadcast.setDefaultValue(False) 
-	tcpipAnnounceNetBroadcast.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
+	#tcpipAnnounceNetBroadcast.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
 
 	# Announce Task Rate in ms
-	tcpipAnnounceTskRate= tcpipAnnounceComponent.createIntegerSymbol("TCPIP_ANNOUNCE_TASK_RATE", tcpipAnnounce)
+	tcpipAnnounceTskRate= tcpipAnnounceComponent.createIntegerSymbol("TCPIP_ANNOUNCE_TASK_RATE", None)
 	tcpipAnnounceTskRate.setLabel("Announce Task Rate - ms")
 	tcpipAnnounceTskRate.setVisible(True)
 	tcpipAnnounceTskRate.setDescription("Announce Task Rate in ms")
 	tcpipAnnounceTskRate.setDefaultValue(333)
-	tcpipAnnounceTskRate.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
+	#tcpipAnnounceTskRate.setDependencies(tcpipAnnounceMenuVisibleSingle, ["TCPIP_USE_ANNOUNCE"])
 
 	#Add to system_config.h
 	tcpipAnnounceHeaderFtl = tcpipAnnounceComponent.createFileSymbol(None, None)
@@ -50,7 +50,7 @@ def instantiateComponent(tcpipAnnounceComponent):
 	tcpipAnnounceSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipAnnounceSourceFile.setType("SOURCE")
 	tcpipAnnounceSourceFile.setEnabled(True)
-	tcpipAnnounceSourceFile.setDependencies(tcpipAnnounceGenSourceFile, ["TCPIP_USE_ANNOUNCE"])
+	#tcpipAnnounceSourceFile.setDependencies(tcpipAnnounceGenSourceFile, ["TCPIP_USE_ANNOUNCE"])
 
 # make TCPIP Announce discovery option visible
 def tcpipAnnounceMenuVisible(symbol, event):

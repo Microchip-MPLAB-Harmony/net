@@ -27,6 +27,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 -->
 
 <#if USE_TCPIP_STACK == true>
+<#-- niyas
 <#if (TCPIP_DEVICE_FAMILY) == "SAME70">
 <#if (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE)?has_content && (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE) == true>
     /* set priority for ETHERNET interrupt source */
@@ -40,7 +41,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     /* set sub-priority for ETHERNET interrupt source */
     SYS_INT_VectorSubprioritySet(INT_VECTOR_ETH, ${TCPIP_EMAC_INTERRUPT_SUB_PRIORITY});
 </#if>    
-</#if>     
+</#if>    
+--> 
 <#-- niyas to do 
 <#if TCPIP_STACK_USE_COMMANDS == true && CONFIG_USE_SYS_COMMAND == false>
     if (!SYS_CMD_Initialize())

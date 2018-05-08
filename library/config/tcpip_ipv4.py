@@ -6,17 +6,17 @@ def instantiateComponent(tcpipIPv4Component):
 	# Enable IPv4 	
 	tcpipIPv4 = tcpipIPv4Component.createBooleanSymbol("TCPIP_STACK_USE_IPV4", None)
 	tcpipIPv4.setLabel("IPv4")
-	tcpipIPv4.setVisible(True)
+	tcpipIPv4.setVisible(False)
 	tcpipIPv4.setDescription("Enable IPv4")
 	tcpipIPv4.setDefaultValue(True)
 
 	# Load IPv4 Configurations
-	tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", tcpipIPv4)
+	tcpipIPv4Frag = tcpipIPv4Component.createBooleanSymbol("TCPIP_IPV4_FRAGMENTATION", None)
 	tcpipIPv4Frag.setLabel("Enable IPv4 Fragmentation Support")
 	tcpipIPv4Frag.setVisible(True)
-	tcpipIPv4Frag.setDescription("Enable IPv5")
+	tcpipIPv4Frag.setDescription("Enable IPv4 fragmentation support")
 	tcpipIPv4Frag.setDefaultValue(False)
-	tcpipIPv4Frag.setDependencies(tcpipIPv4MenuVisible, ["TCPIP_STACK_USE_IPV4"])
+	#tcpipIPv4Frag.setDependencies(tcpipIPv4MenuVisible, ["TCPIP_STACK_USE_IPV4"])
 
 	# Settings for IPv4 Fragmentation
 	tcpipIPv4FragSetting = tcpipIPv4Component.createMenuSymbol("TCPIP_IPV4_FRAGMENT_SETTING", tcpipIPv4Frag)
@@ -69,7 +69,7 @@ def instantiateComponent(tcpipIPv4Component):
 	tcpipIPv4SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipIPv4SourceFile.setType("SOURCE")
 	tcpipIPv4SourceFile.setEnabled(True)
-	tcpipIPv4SourceFile.setDependencies(tcpipIpv4GenSourceFile, ["TCPIP_STACK_USE_IPV4"])
+	#tcpipIPv4SourceFile.setDependencies(tcpipIpv4GenSourceFile, ["TCPIP_STACK_USE_IPV4"])
 	
 
 def tcpipIPv4MenuVisible(symbol, event):
