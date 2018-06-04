@@ -8,77 +8,77 @@ def instantiateComponent(tcpipHttpComponent):
 	# Enable HTTP Server
 	tcpipHttp = tcpipHttpComponent.createBooleanSymbol("TCPIP_STACK_USE_HTTP_SERVER", None)
 	tcpipHttp.setLabel("HTTP Server")
-	tcpipHttp.setVisible(True)
+	tcpipHttp.setVisible(False)
 	tcpipHttp.setDescription("Enable HTTP Server")
-	tcpipHttp.setDefaultValue(False)
+	tcpipHttp.setDefaultValue(True)
 	# Niyas to do  
 	# select USE_SYS_FS_NEEDED
 	# select USE_CRYPTO_LIB_NEEDED
-	tcpipHttp.setDependencies(tcpipHttpSrvVisible, ["tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER" , "tcpipTcp.TCPIP_USE_TCP"]) # Niyas to check the dependency function
+	#tcpipHttp.setDependencies(tcpipHttpSrvVisible, ["tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER" , "tcpipTcp.TCPIP_USE_TCP"]) # Niyas to check the dependency function
 
 	# Maximum Header Length
-	tcpipHttpHeaderLenMax = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_HEADER_LEN", tcpipHttp)
+	tcpipHttpHeaderLenMax = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_HEADER_LEN", None)
 	tcpipHttpHeaderLenMax.setLabel("Max Header Length")
-	tcpipHttpHeaderLenMax.setVisible(False)
+	tcpipHttpHeaderLenMax.setVisible(True)
 	tcpipHttpHeaderLenMax.setDescription("Maximum Header Length")
 	tcpipHttpHeaderLenMax.setDefaultValue(15)
-	tcpipHttpHeaderLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpHeaderLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Maximum Lifetime of Static Responses in Seconds
-	tcpipHttpCacheLen = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_CACHE_LEN", tcpipHttp)
+	tcpipHttpCacheLen = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_CACHE_LEN", None)
 	tcpipHttpCacheLen.setLabel("Max Lifetime of Static Responses in Seconds")
-	tcpipHttpCacheLen.setVisible(False)
+	tcpipHttpCacheLen.setVisible(True)
 	tcpipHttpCacheLen.setDescription("Maximum Lifetime of Static Responses in Seconds")
 	tcpipHttpCacheLen.setDefaultValue("600")
-	tcpipHttpCacheLen.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpCacheLen.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Socket Disconnect Time-out
-	tcpipHttpSktDisconnectTimeout= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_TIMEOUT", tcpipHttp)
+	tcpipHttpSktDisconnectTimeout= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_TIMEOUT", None)
 	tcpipHttpSktDisconnectTimeout.setLabel("Socket Disconnect Time-out")
-	tcpipHttpSktDisconnectTimeout.setVisible(False)
+	tcpipHttpSktDisconnectTimeout.setVisible(True)
 	tcpipHttpSktDisconnectTimeout.setDescription("Socket Disconnect Time-out")
 	tcpipHttpSktDisconnectTimeout.setDefaultValue(45)
-	tcpipHttpSktDisconnectTimeout.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpSktDisconnectTimeout.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Maximum Number of Simultaneous Connections
-	tcpipHttpConnMaxNum= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_CONNECTIONS", tcpipHttp)
+	tcpipHttpConnMaxNum= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_CONNECTIONS", None)
 	tcpipHttpConnMaxNum.setLabel("Max Number of Simultaneous Connections")
-	tcpipHttpConnMaxNum.setVisible(False)
+	tcpipHttpConnMaxNum.setVisible(True)
 	tcpipHttpConnMaxNum.setDescription("Maximum Number of Simultaneous Connections")
 	tcpipHttpConnMaxNum.setDefaultValue(4)
-	tcpipHttpConnMaxNum.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpConnMaxNum.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Default HTTP File
-	tcpipHttpDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_DEFAULT_FILE", tcpipHttp)
+	tcpipHttpDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_DEFAULT_FILE", None)
 	tcpipHttpDefaultFile.setLabel("Default HTTP File")
-	tcpipHttpDefaultFile.setVisible(False)
+	tcpipHttpDefaultFile.setVisible(True)
 	tcpipHttpDefaultFile.setDescription("Default HTTP File")
 	tcpipHttpDefaultFile.setDefaultValue("index.htm")
-	tcpipHttpDefaultFile.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpDefaultFile.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Default HTTPS File
-	tcpipHttpsDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTPS_DEFAULT_FILE", tcpipHttp)
+	tcpipHttpsDefaultFile = tcpipHttpComponent.createStringSymbol("TCPIP_HTTPS_DEFAULT_FILE", None)
 	tcpipHttpsDefaultFile.setLabel("Default HTTPS File")
-	tcpipHttpsDefaultFile.setVisible(False)
+	tcpipHttpsDefaultFile.setVisible(True)
 	tcpipHttpsDefaultFile.setDescription("Default HTTPS File")
 	tcpipHttpsDefaultFile.setDefaultValue("index.htm")
-	tcpipHttpsDefaultFile.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpsDefaultFile.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Maximum Default File String Length
-	tcpipHttpDefaultLenMax= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_DEFAULT_LEN", tcpipHttp)
+	tcpipHttpDefaultLenMax= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_DEFAULT_LEN", None)
 	tcpipHttpDefaultLenMax.setLabel("Max Default File String Length")
-	tcpipHttpDefaultLenMax.setVisible(False)
+	tcpipHttpDefaultLenMax.setVisible(True)
 	tcpipHttpDefaultLenMax.setDescription("Maximum Default File String Length")
 	tcpipHttpDefaultLenMax.setDefaultValue(10)
-	tcpipHttpDefaultLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpDefaultLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Enable Update via HTTP
-	tcpipHttpFileUpload = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_FILE_UPLOAD_ENABLE", tcpipHttp)
+	tcpipHttpFileUpload = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_FILE_UPLOAD_ENABLE", None)
 	tcpipHttpFileUpload.setLabel("Enable Update via HTTP")
-	tcpipHttpFileUpload.setVisible(False)
+	tcpipHttpFileUpload.setVisible(True)
 	tcpipHttpFileUpload.setDescription("Enable Update via HTTP")
 	tcpipHttpFileUpload.setDefaultValue(False)
-	tcpipHttpFileUpload.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpFileUpload.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# MPFS Upload Page Name
 	tcpipHttpFileUploadName = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_FILE_UPLOAD_NAME", tcpipHttpFileUpload)
@@ -86,88 +86,89 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpFileUploadName.setVisible(False)
 	tcpipHttpFileUploadName.setDescription("MPFS Upload Page Name")
 	tcpipHttpFileUploadName.setDefaultValue("mpfsupload")
-	tcpipHttpFileUploadName.setDependencies(tcpipHttpFileUploadVisible, ["TCPIP_STACK_USE_HTTP_SERVER" , "TCPIP_HTTP_FILE_UPLOAD_ENABLE"])
+	tcpipHttpFileUploadName.setDependencies(tcpipHttpFileUploadVisible, ["TCPIP_HTTP_FILE_UPLOAD_ENABLE"])
+	# tcpipHttpFileUploadName.setDependencies(tcpipHttpFileUploadVisible, ["TCPIP_STACK_USE_HTTP_SERVER" , "TCPIP_HTTP_FILE_UPLOAD_ENABLE"])
 
 	# Enable POST Support
-	tcpipHttpPostSupport = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_POST", tcpipHttp)
+	tcpipHttpPostSupport = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_POST", None)
 	tcpipHttpPostSupport.setLabel("Enable POST Support")
-	tcpipHttpPostSupport.setVisible(False)
+	tcpipHttpPostSupport.setVisible(True)
 	tcpipHttpPostSupport.setDescription("Enable POST Support")
 	tcpipHttpPostSupport.setDefaultValue(True)
-	tcpipHttpPostSupport.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpPostSupport.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Enable Cookie Support
-	tcpipHttpCookieSupport = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_COOKIES", tcpipHttp)
+	tcpipHttpCookieSupport = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_COOKIES", None)
 	tcpipHttpCookieSupport.setLabel("Enable Cookie Support")
-	tcpipHttpCookieSupport.setVisible(False)
+	tcpipHttpCookieSupport.setVisible(True)
 	tcpipHttpCookieSupport.setDescription("Enable Cookie Support")
 	tcpipHttpCookieSupport.setDefaultValue(True)
-	tcpipHttpCookieSupport.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpCookieSupport.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Use Base 64 Decode
-	tcpipHttpBase64Decode = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_BASE64_DECODE", tcpipHttp)
+	tcpipHttpBase64Decode = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_BASE64_DECODE", None)
 	tcpipHttpBase64Decode.setLabel("Use Base 64 Decode")
-	tcpipHttpBase64Decode.setVisible(False)
+	tcpipHttpBase64Decode.setVisible(True)
 	tcpipHttpBase64Decode.setDescription("Use Base 64 Decode")
 	tcpipHttpBase64Decode.setDefaultValue(False)
-	tcpipHttpBase64Decode.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpBase64Decode.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Enable Basic Authenication Support
-	tcpipHttpAuth = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_AUTHENTICATION", tcpipHttp)
+	tcpipHttpAuth = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_AUTHENTICATION", None)
 	tcpipHttpAuth.setLabel("Enable Basic Authenication Support")
-	tcpipHttpAuth.setVisible(False)
+	tcpipHttpAuth.setVisible(True)
 	tcpipHttpAuth.setDescription("Enable Basic Authenication Support")
 	tcpipHttpAuth.setDefaultValue(True)
 	# select TCPIP_HTTP_USE_BASE64_DECODE    Niyas to do
-	tcpipHttpAuth.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpAuth.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Require Secure Connection Before Requesting a Password
-	tcpipHttpNoAuthWithoutSsl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_NO_AUTH_WITHOUT_SSL", tcpipHttp)
+	tcpipHttpNoAuthWithoutSsl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_NO_AUTH_WITHOUT_SSL", None)
 	tcpipHttpNoAuthWithoutSsl.setLabel("Require Secure Connection Before Requesting a Password")
-	tcpipHttpNoAuthWithoutSsl.setVisible(False)
+	tcpipHttpNoAuthWithoutSsl.setVisible(True)
 	tcpipHttpNoAuthWithoutSsl.setDescription("Require Secure Connection Before Requesting a Password")
 	tcpipHttpNoAuthWithoutSsl.setDefaultValue(False)
-	tcpipHttpNoAuthWithoutSsl.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpNoAuthWithoutSsl.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Maximum Data Length in bytes for Reading Cookie and GET/POST Arguments
-	tcpipHttpDataLenMax= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_DATA_LEN", tcpipHttp)
+	tcpipHttpDataLenMax= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_DATA_LEN", None)
 	tcpipHttpDataLenMax.setLabel("Max Data Length (bytes) for Reading Cookie and GET/POST Arguments")
-	tcpipHttpDataLenMax.setVisible(False)
+	tcpipHttpDataLenMax.setVisible(True)
 	tcpipHttpDataLenMax.setDescription("Maximum Data Length in bytes for Reading Cookie and GET/POST Arguments")
 	tcpipHttpDataLenMax.setDefaultValue(100)
-	tcpipHttpDataLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpDataLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Minimum Number of Bytes Free in TX FIFO Before Executing Callbacks
-	tcpipHttpCallbackFreeMin= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MIN_CALLBACK_FREE", tcpipHttp)
+	tcpipHttpCallbackFreeMin= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MIN_CALLBACK_FREE", None)
 	tcpipHttpCallbackFreeMin.setLabel("Min Number of Bytes Free in TX FIFO Before Executing Callbacks")
-	tcpipHttpCallbackFreeMin.setVisible(False)
+	tcpipHttpCallbackFreeMin.setVisible(True)
 	tcpipHttpCallbackFreeMin.setDescription("Minimum Number of Bytes Free in TX FIFO Before Executing Callbacks")
 	tcpipHttpCallbackFreeMin.setDefaultValue(16)
-	tcpipHttpCallbackFreeMin.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpCallbackFreeMin.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# HTTP Socket Transmit Buffer Size
-	tcpipHttpSktTxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_TX_BUFF_SIZE", tcpipHttp)
+	tcpipHttpSktTxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_TX_BUFF_SIZE", None)
 	tcpipHttpSktTxBuffSize.setLabel("HTTP Socket TX Buffer Size")
-	tcpipHttpSktTxBuffSize.setVisible(False)
+	tcpipHttpSktTxBuffSize.setVisible(True)
 	tcpipHttpSktTxBuffSize.setDescription("HTTP Socket Transmit Buffer Size")
 	tcpipHttpSktTxBuffSize.setDefaultValue(0)
-	tcpipHttpSktTxBuffSize.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpSktTxBuffSize.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# HTTP Socket Receive Buffer Size
-	tcpipHttpSktRxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_RX_BUFF_SIZE", tcpipHttp)
+	tcpipHttpSktRxBuffSize= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_SKT_RX_BUFF_SIZE", None)
 	tcpipHttpSktRxBuffSize.setLabel("HTTP Socket RX Buffer Size")
-	tcpipHttpSktRxBuffSize.setVisible(False)
+	tcpipHttpSktRxBuffSize.setVisible(True)
 	tcpipHttpSktRxBuffSize.setDescription("HTTP Socket Receive Buffer Size")
 	tcpipHttpSktRxBuffSize.setDefaultValue(0)
-	tcpipHttpSktRxBuffSize.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpSktRxBuffSize.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# HTTP Module Configuration Flags
-	tcpipHttpConfigFlags = tcpipHttpComponent.createComboSymbol("TCPIP_HTTP_CFG_FLAGS", tcpipHttp, TCPIP_HTTP_MODULE_FLAGS)
+	tcpipHttpConfigFlags = tcpipHttpComponent.createComboSymbol("TCPIP_HTTP_CFG_FLAGS", None, TCPIP_HTTP_MODULE_FLAGS)
 	tcpipHttpConfigFlags.setLabel("HTTP Module Configuration Flags")
-	tcpipHttpConfigFlags.setVisible(False)
+	tcpipHttpConfigFlags.setVisible(True)
 	tcpipHttpConfigFlags.setDescription("HTTP Module Configuration Flags")
 	tcpipHttpConfigFlags.setDefaultValue("TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS")
-	tcpipHttpConfigFlags.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpConfigFlags.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Niyas to do
 	#   config TCPIP_HTTP_CONFIG_FLAGS
@@ -178,39 +179,39 @@ def instantiateComponent(tcpipHttpComponent):
 	#    default 2 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_NO_DELAY"
 
 	# HTTP Config Flag - Niyasto complete
-	tcpipHttpConfigFlag = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_CONFIG_FLAGS", tcpipHttp)
+	tcpipHttpConfigFlag = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_CONFIG_FLAGS", None)
 	tcpipHttpConfigFlag.setVisible(False)	
 	tcpipHttpConfigFlag.setDefaultValue(1)
 		
 	# HTTP Task Rate in ms
-	tcpipHttpTskRate= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_TASK_RATE", tcpipHttp)
+	tcpipHttpTskRate= tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_TASK_RATE", None)
 	tcpipHttpTskRate.setLabel("HTTP Task Rate - ms")
-	tcpipHttpTskRate.setVisible(False)
+	tcpipHttpTskRate.setVisible(True)
 	tcpipHttpTskRate.setDescription("HTTP Task Rate in ms")
 	tcpipHttpTskRate.setDefaultValue(33)
-	tcpipHttpTskRate.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpTskRate.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# HTTP allocation function, malloc style
-	tcpipHttpMallocFunction = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_MALLOC_FUNC", tcpipHttp)
+	tcpipHttpMallocFunction = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_MALLOC_FUNC", None)
 	tcpipHttpMallocFunction.setLabel("HTTP allocation function, malloc style")
-	tcpipHttpMallocFunction.setVisible(False)
+	tcpipHttpMallocFunction.setVisible(True)
 	tcpipHttpMallocFunction.setDescription("HTTP allocation function, malloc style")
-	tcpipHttpMallocFunction.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpMallocFunction.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# HTTP deallocation function, free style
-	tcpipHttpFreeFunction = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_FREE_FUNC", tcpipHttp)
+	tcpipHttpFreeFunction = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_FREE_FUNC", None)
 	tcpipHttpFreeFunction.setLabel("HTTP deallocation function, free style")
-	tcpipHttpFreeFunction.setVisible(False)
+	tcpipHttpFreeFunction.setVisible(True)
 	tcpipHttpFreeFunction.setDescription("HTTP deallocation function, free style")
-	tcpipHttpFreeFunction.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpFreeFunction.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Include HTTP Custom Template
-	tcpipHttpCustomTemplate = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE", tcpipHttp)
+	tcpipHttpCustomTemplate = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE", None)
 	tcpipHttpCustomTemplate.setLabel("Include HTTP Custom Template")
-	tcpipHttpCustomTemplate.setVisible(False)
+	tcpipHttpCustomTemplate.setVisible(True)
 	tcpipHttpCustomTemplate.setDescription("Include HTTP Custom Template")
 	tcpipHttpCustomTemplate.setDefaultValue(True)
-	tcpipHttpCustomTemplate.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	#tcpipHttpCustomTemplate.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Niyas to do
 	# config TCPIP_HTTP_CUSTOM_TEMPLATE_SL
@@ -218,7 +219,7 @@ def instantiateComponent(tcpipHttpComponent):
 	#    bool
 	#    default y if (USE_SYS_FS = y) && (SYS_FS_MPFS = y)
 	#   default n
-	tcpipHttpCustomTemplateSl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE_SL", tcpipHttp)
+	tcpipHttpCustomTemplateSl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE_SL", None)
 	tcpipHttpCustomTemplateSl.setVisible(False)	
 	tcpipHttpCustomTemplateSl.setDefaultValue(True)
 	
@@ -308,14 +309,20 @@ def tcpipHttpSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):
 		tcpipDependentSymbol.setVisible(False)	
 
 # make Http Module file upload name option visible
-def tcpipHttpFileUploadVisible(tcpipDependentSymbol, tcpipIPSymbol):	
-	tcpipHttp = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
-	tcpipHttpFileUpload = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_FILE_UPLOAD_ENABLE")
+# def tcpipHttpFileUploadVisible(tcpipDependentSymbol, tcpipIPSymbol):	
+	# tcpipHttp = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
+	# tcpipHttpFileUpload = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_FILE_UPLOAD_ENABLE")
 
-	if(tcpipHttp and tcpipHttpFileUpload):
-		tcpipDependentSymbol.setVisible(True)
-	else:
-		tcpipDependentSymbol.setVisible(False)
+	# if(tcpipHttp and tcpipHttpFileUpload):
+		# tcpipDependentSymbol.setVisible(True)
+	# else:
+		# tcpipDependentSymbol.setVisible(False)
+		
+def tcpipHttpFileUploadVisible(symbol, event):	
+	if (event["value"] == True):				
+		symbol.setVisible(True)
+	else:		
+		symbol.setVisible(False)
 		
 		
 def tcpipHttpMenuVisibleSingle(symbol, event):

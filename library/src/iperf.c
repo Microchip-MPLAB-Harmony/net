@@ -42,7 +42,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_IPERF)
 
-#include "system/command/sys_command.h"
+//#include "system/command/sys_command.h"
+#include "sys_command.h" //niyas dummy header
 
 //****************************************************************************
 // CONSTANTS (Defines and enums)

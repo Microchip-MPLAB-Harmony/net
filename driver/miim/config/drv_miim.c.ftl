@@ -43,7 +43,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* MIIM Driver Configuration */
 static const DRV_MIIM_INIT drvMiimInitData =
 {
-    .moduleInit = {SYS_MODULE_POWER_RUN_FULL},
+    //niyas .moduleInit = {SYS_MODULE_POWER_RUN_FULL},
     .ethphyId = DRV_MIIM_ETH_MODULE_ID,
 };
 </#if>

@@ -47,7 +47,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "system_config.h"
+#include "configuration.h"
 
 #include "net_pres.h"
 #ifndef _NET_PRES_CERTSTORE_H_

@@ -38,7 +38,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
 
-#include "system/command/sys_command.h"
+//#include "system/command/sys_command.h"
+#include "sys_command.h" //niyas dummy header
 #include "driver/miim/drv_miim.h"
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)

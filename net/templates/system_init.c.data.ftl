@@ -1,1 +1,1 @@
-<#include "/framework/net/pres/templates/system_init.c.data.ftl">
+<#include "/net/pres/templates/system_init.c.data.ftl">

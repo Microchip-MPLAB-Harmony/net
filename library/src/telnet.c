@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
 #include "net/pres/net_pres_socketapi.h"
-#include "system/command/sys_command.h"
-
+//#include "system/command/sys_command.h"
+#include "sys_command.h" //niyas dummy header
 
 #if !defined(TCPIP_TELNET_MAX_CONNECTIONS)
     // Maximum number of Telnet connections
@@ -215,10 +215,9 @@ bool TCPIP_TELNET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
         pDcpt = telnetDcpt;
         for(tIx = 0; tIx < sizeof(telnetDcpt)/sizeof(*telnetDcpt); tIx++, pDcpt++)
         {
-           //niyas pDcpt->telnetSkt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_ANY, TCPIP_TELNET_SERVER_PORT, 0, 0);
-            //niyas sigHandle = NET_PRES_SocketSignalHandlerRegister(pDcpt->telnetSkt, TCPIP_TCP_SIGNAL_RX_DATA, _TelnetSocketRxSignalHandler, 0);
-            sigHandle = 0;//niyas
-            _TelnetSocketRxSignalHandler(pDcpt->telnetSkt, 0,TCPIP_TCP_SIGNAL_RX_DATA,0 );//niyas
+            pDcpt->telnetSkt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_ANY, TCPIP_TELNET_SERVER_PORT, 0, 0);
+            sigHandle = NET_PRES_SocketSignalHandlerRegister(pDcpt->telnetSkt, TCPIP_TCP_SIGNAL_RX_DATA, _TelnetSocketRxSignalHandler, 0);
+            
             if(pDcpt->telnetSkt == INVALID_SOCKET || sigHandle == 0)
             {
                 initFail = true;
@@ -282,7 +281,7 @@ static void _Telnet_Cleanup(void)
 
         if( pDcpt->telnetSkt != INVALID_SOCKET)
         {
-//niyas            NET_PRES_SocketClose(pDcpt->telnetSkt);
+            NET_PRES_SocketClose(pDcpt->telnetSkt);
             pDcpt->telnetSkt = NET_PRES_INVALID_SOCKET;
         }
 
@@ -522,7 +521,7 @@ static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE t
         userFound = false;
     }
 
-//niyas    NET_PRES_SocketRead(tSkt, 0, avlblBytes);
+    NET_PRES_SocketRead(tSkt, 0, avlblBytes);
     // Print the password prompt
     NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_ASK_PASSWORD_MSG, strlen(TELNET_ASK_PASSWORD_MSG));
     return userFound?SM_GET_PASSWORD:SM_GET_PASSWORD_BAD_LOGIN;
@@ -583,7 +582,7 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
     }
 
     // success
-//niyas    NET_PRES_SocketRead(tSkt, 0, avlblBytes);  //  throw this line of data away
+    NET_PRES_SocketRead(tSkt, 0, avlblBytes);  //  throw this line of data away
     // Print the authenticated prompt
     NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_LOGON_OK, strlen(TELNET_LOGON_OK));
     return SM_AUTHENTICATED;

@@ -1,5 +1,5 @@
 <#--include "/framework/net/pres/tls/templates/system_init.c.data.ftl"-->
-<#if CONFIG_NET_PRES_USE>
+<#if NET_PRES_USE>
     <#macro NET_PRES_HRM_TRANS_DATA
         CONN
         PEER>
@@ -51,11 +51,11 @@
         INST_NUMBER>
 /* Net Presentation Layer Data Definitions */
 #include "framework/net/pres/net_pres_enc_glue.h"
-        <#assign useStream=.vars["CONFIG_NET_PRES_SUPPORT_STREAM_IDX${INST_NUMBER}"]>
-        <#assign useDataGram=.vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_IDX${INST_NUMBER}"]>
-        <#assign useServer=.vars["CONFIG_NET_PRES_SUPPORT_SERVER_IDX${INST_NUMBER}"]>
-        <#assign useClient=.vars["CONFIG_NET_PRES_SUPPORT_CLIENT_IDX${INST_NUMBER}"]>
-        <#assign useHarmonyTcp=.vars["CONFIG_NET_PRES_TRANSPORT_AS_TCPIP_IDX${INST_NUMBER}"]>
+        <#assign useStream=.vars["NET_PRES_SUPPORT_STREAM_IDX${INST_NUMBER}"]>
+        <#assign useDataGram=.vars["NET_PRES_SUPPORT_DATAGRAM_IDX${INST_NUMBER}"]>
+        <#assign useServer=.vars["NET_PRES_SUPPORT_SERVER_IDX${INST_NUMBER}"]>
+        <#assign useClient=.vars["NET_PRES_SUPPORT_CLIENT_IDX${INST_NUMBER}"]>
+        <#assign useHarmonyTcp=.vars["NET_PRES_TRANSPORT_AS_TCPIP_IDX${INST_NUMBER}"]>
 
         <#if useHarmonyTcp && useStream && useServer && CONFIG_TCPIP_USE_TCP>        
 static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}SS = {
@@ -78,28 +78,30 @@ static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}DC = {
 };
         </#if>
     </#macro>
-    <#assign numInstance=CONFIG_NET_PRES_INSTANCES?number>
+    <#assign numInstance=NET_PRES_INSTANCES?number>
     <#list 0..(numInstance-1) as idx>
-        <#if .vars["CONFIG_NET_PRES_IDX${idx}"]>
+	<#assign netPresIdx = "NET_PRES_IDX${idx}">
+        <#if .vars[netPresIdx]?has_content>
             <@NET_PRES_TRANS_DATA 
                 INST_NUMBER=idx
             />
-            <#assign supportStream=.vars["CONFIG_NET_PRES_SUPPORT_STREAM_ENC_IDX${idx}"]>
-            <#assign supportDataGram=.vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${idx}"]>
-            <#assign supportServer=.vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${idx}"]>
-            <#assign supportClient=.vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${idx}"]>
+            <#assign supportStream=.vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${idx}"]>
+            <#assign supportDataGram=.vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${idx}"]>
+            <#assign supportServer=.vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${idx}"]>
+            <#assign supportClient=.vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${idx}"]>
         </#if>
     </#list>
 static const NET_PRES_INST_DATA netPresCfgs[] = 
 {
     <#list 0..(numInstance-1) as idx>
-        <#if .vars["CONFIG_NET_PRES_IDX${idx}"]>
+        <#assign netPresIdx = "NET_PRES_IDX${idx}">
+        <#if .vars[netPresIdx]?has_content>
     {
-            <#assign useStream=.vars["CONFIG_NET_PRES_SUPPORT_STREAM_IDX${idx}"]>
-            <#assign useDataGram=.vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_IDX${idx}"]>
-            <#assign useServer=.vars["CONFIG_NET_PRES_SUPPORT_SERVER_IDX${idx}"]>
-            <#assign useClient=.vars["CONFIG_NET_PRES_SUPPORT_CLIENT_IDX${idx}"]>
-            <#assign useHarmonyTcp=.vars["CONFIG_NET_PRES_TRANSPORT_AS_TCPIP_IDX${idx}"]>
+            <#assign useStream=.vars["NET_PRES_SUPPORT_STREAM_IDX${idx}"]>
+            <#assign useDataGram=.vars["NET_PRES_SUPPORT_DATAGRAM_IDX${idx}"]>
+            <#assign useServer=.vars["NET_PRES_SUPPORT_SERVER_IDX${idx}"]>
+            <#assign useClient=.vars["NET_PRES_SUPPORT_CLIENT_IDX${idx}"]>
+            <#assign useHarmonyTcp=.vars["NET_PRES_TRANSPORT_AS_TCPIP_IDX${idx}"]>
             <#if useHarmonyTcp && useStream && useServer && CONFIG_TCPIP_USE_TCP>        
         .pTransObject_ss = &netPresTransObject${idx}SS,
             </#if>

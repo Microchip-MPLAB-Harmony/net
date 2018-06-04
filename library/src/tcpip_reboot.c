@@ -39,7 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_REBOOT_SERVER)
 
-#include "system/reset/sys_reset.h"
+//niyas #include "system/reset/sys_reset.h"
+#define SYS_RESET_SoftwareReset()//niyas
 
 
 

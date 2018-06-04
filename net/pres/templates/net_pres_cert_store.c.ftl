@@ -34,48 +34,48 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
 #include "net/pres/net_pres_certstore.h"
-<#if CONFIG_NET_PRES_BLOB_CERT_REPO>
-    <#if CONFIG_NET_PRES_BLOB_CLIENT_SUPPORT>
+<#if NET_PRES_BLOB_CERT_REPO>
+    <#if NET_PRES_BLOB_CLIENT_SUPPORT>
 #define USE_CERT_BUFFERS_2048
-#include "${CONFIG_NET_PRES_BLOB_CLIENT_CERT_FILENAME}"
+#include "${NET_PRES_BLOB_CLIENT_CERT_FILENAME}"
     </#if>
-    <#if CONFIG_NET_PRES_BLOB_SERVER_SUPPORT>
+    <#if NET_PRES_BLOB_SERVER_SUPPORT>
 #define USE_CERT_BUFFERS_2048
-#include "${CONFIG_NET_PRES_BLOB_SERVER_CERT_FILENAME}"
-#include "${CONFIG_NET_PRES_BLOB_SERVER_KEY_FILENAME}"
+#include "${NET_PRES_BLOB_SERVER_CERT_FILENAME}"
+#include "${NET_PRES_BLOB_SERVER_KEY_FILENAME}"
     </#if>
 </#if>
 
-<#if CONFIG_NET_PRES_CERT_STORE_STUBS>
-    <#if CONFIG_NET_PRES_CERT_STORE_STUBS_CLIENT>
+<#if NET_PRES_CERT_STORE_STUBS>
+    <#if NET_PRES_CERT_STORE_STUBS_CLIENT>
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
 {
     return false;
 }
     </#if>
-    <#if CONFIG_NET_PRES_CERT_STORE_STUBS_SERVER>
+    <#if NET_PRES_CERT_STORE_STUBS_SERVER>
 bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
 {
     return false;
 }
     </#if>
 </#if>
-<#if CONFIG_NET_PRES_BLOB_CERT_REPO>
-    <#if CONFIG_NET_PRES_BLOB_CLIENT_SUPPORT>
+<#if NET_PRES_BLOB_CERT_REPO>
+    <#if NET_PRES_BLOB_CLIENT_SUPPORT>
 bool NET_PRES_CertStoreGetCACerts(const uint8_t ** certPtr, int32_t * certSize, uint8_t certIndex)
 {
-    *certPtr = ${CONFIG_NET_PRES_BLOB_CLIENT_CERT_VARIABLE};
-    *certSize = ${CONFIG_NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE};
+    *certPtr = ${NET_PRES_BLOB_CLIENT_CERT_VARIABLE};
+    *certSize = ${NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE};
     return true;
 }
     </#if>
-    <#if CONFIG_NET_PRES_BLOB_SERVER_SUPPORT>
+    <#if NET_PRES_BLOB_SERVER_SUPPORT>
 bool NET_PRES_CertStoreGetServerCert(const uint8_t ** serverCertPtr, int32_t * serverCertSize, const uint8_t ** serverKeyPtr, int32_t * serverKeySize, uint8_t certIndex)
 {
-    *serverCertPtr = ${CONFIG_NET_PRES_BLOB_SERVER_CERT_VARIABLE};
-    *serverCertSize = ${CONFIG_NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE};
-    *serverKeyPtr = ${CONFIG_NET_PRES_BLOB_SERVER_KEY_VARIABLE};
-    *serverKeySize = ${CONFIG_NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE};
+    *serverCertPtr = ${NET_PRES_BLOB_SERVER_CERT_VARIABLE};
+    *serverCertSize = ${NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE};
+    *serverKeyPtr = ${NET_PRES_BLOB_SERVER_KEY_VARIABLE};
+    *serverKeySize = ${NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE};
     return true;
 }
     </#if>
