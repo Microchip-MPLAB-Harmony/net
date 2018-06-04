@@ -37,7 +37,7 @@
  *
  ***************************************************************/
 #include <stdint.h>
-#include "system_config.h"
+#include "configuration.h"
 
 /**************************************
  * MPFS2 Image Data

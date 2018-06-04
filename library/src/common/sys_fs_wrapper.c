@@ -51,7 +51,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 
 #include "tcpip/src/common/sys_fs_wrapper.h"
-#include "system_config.h"
+#include "configuration.h"
 
 // the file name will be formatted in nameBuffer and the path will be added, if needed
 // buffSize is the buffer size, including the terminating \0.

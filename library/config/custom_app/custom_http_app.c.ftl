@@ -35,7 +35,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
 <#if CONFIG_USE_DRV_WIFI_WK!false == true && CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true && CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE == true >
 
-#include "system_config.h"
+#include "configuration.h"
 
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 #include<ctype.h>
@@ -3063,8 +3063,8 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 <#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
 #include <ctype.h>
 </#if>
-#include "system_config.h"
-#include "system_definitions.h"
+#include "configuration.h"
+#include "definitions.h"
 
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 

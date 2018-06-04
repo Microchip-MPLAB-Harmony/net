@@ -52,6 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 //#include "system/debug/sys_debug.h"
 //#include "system/console/sys_console.h"
 //#include "system/command/sys_command.h"
+#include "sys_command.h" //niyas dummy header
 //
 //#include "system/random/sys_random.h"
 #include "system/time/sys_time.h"

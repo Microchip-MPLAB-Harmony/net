@@ -6,34 +6,34 @@ def instantiateComponent(tcpipRebootComponent):
 	# Use Reboot Server
 	tcpipReboot = tcpipRebootComponent.createBooleanSymbol("TCPIP_USE_REBOOT_SERVER", None)
 	tcpipReboot.setLabel("Use Reboot Server")
-	tcpipReboot.setVisible(True)
+	tcpipReboot.setVisible(False)
 	tcpipReboot.setDescription("Use Reboot Server")
-	tcpipReboot.setDefaultValue(False)
+	tcpipReboot.setDefaultValue(True)
 	tcpipReboot.setDependencies(tcpipRebootServerMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
 	# Allow Only Same Subnet
-	tcpipRebootAllowSameSubnet = tcpipRebootComponent.createBooleanSymbol("TCPIP_REBOOT_SAME_SUBNET_ONLY", tcpipReboot)
+	tcpipRebootAllowSameSubnet = tcpipRebootComponent.createBooleanSymbol("TCPIP_REBOOT_SAME_SUBNET_ONLY", None)
 	tcpipRebootAllowSameSubnet.setLabel("Allow Only Same Subnet")
-	tcpipRebootAllowSameSubnet.setVisible(False)
+	tcpipRebootAllowSameSubnet.setVisible(True)
 	tcpipRebootAllowSameSubnet.setDescription("Allow Only Same Subnet")
 	tcpipRebootAllowSameSubnet.setDefaultValue(True)
-	tcpipRebootAllowSameSubnet.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
+	#tcpipRebootAllowSameSubnet.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
 
 	# Reboot Message
-	tcpipRebootMessage = tcpipRebootComponent.createStringSymbol("TCPIP_REBOOT_MESSAGE", tcpipReboot)
+	tcpipRebootMessage = tcpipRebootComponent.createStringSymbol("TCPIP_REBOOT_MESSAGE", None)
 	tcpipRebootMessage.setLabel("Reboot Message")
-	tcpipRebootMessage.setVisible(False)
+	tcpipRebootMessage.setVisible(True)
 	tcpipRebootMessage.setDescription("Reboot Message")
 	tcpipRebootMessage.setDefaultValue("MCHP Reboot")
-	tcpipRebootMessage.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
+	#tcpipRebootMessage.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
 
 	# Reboot Server Tick Rate in ms
-	tcpipRebootTskTickRate = tcpipRebootComponent.createIntegerSymbol("TCPIP_REBOOT_TASK_TICK_RATE", tcpipReboot)
+	tcpipRebootTskTickRate = tcpipRebootComponent.createIntegerSymbol("TCPIP_REBOOT_TASK_TICK_RATE", None)
 	tcpipRebootTskTickRate.setLabel("Reboot Server Tick Rate - ms")
-	tcpipRebootTskTickRate.setVisible(False)
+	tcpipRebootTskTickRate.setVisible(True)
 	tcpipRebootTskTickRate.setDescription("Reboot Server Tick Rate in ms")
 	tcpipRebootTskTickRate.setDefaultValue(1130)
-	tcpipRebootTskTickRate.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
+	#tcpipRebootTskTickRate.setDependencies(tcpipRebootMenuSingle, ["TCPIP_USE_REBOOT_SERVER"])
 
 	#Add to system_config.h
 	tcpipRebootHeaderFtl = tcpipRebootComponent.createFileSymbol(None, None)
@@ -51,7 +51,7 @@ def instantiateComponent(tcpipRebootComponent):
 	tcpipRebootSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipRebootSourceFile.setType("SOURCE")
 	tcpipRebootSourceFile.setEnabled(True)
-	tcpipRebootSourceFile.setDependencies(tcpipRebootGenSourceFile, ["TCPIP_USE_REBOOT_SERVER"])
+	#tcpipRebootSourceFile.setDependencies(tcpipRebootGenSourceFile, ["TCPIP_USE_REBOOT_SERVER"])
 
 # make Reboot Server option visible
 def tcpipRebootServerMenuVisible(symbol, event):

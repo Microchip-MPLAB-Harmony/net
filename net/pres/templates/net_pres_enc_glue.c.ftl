@@ -38,15 +38,15 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "net/pres/net_pres_transportapi.h"
 #include "net/pres/net_pres_certstore.h"
 
-<#if CONFIG_USE_3RDPARTY_WOLFSSL>
+<#if USE_3RDPARTY_WOLFSSL?has_content>
 #include "config.h"
 #include "wolfssl/ssl.h"
 #include "wolfssl/wolfcrypt/logging.h"
 #include "wolfssl/wolfcrypt/random.h"
 
 <#assign needSysConsole=false/>
-<#list 0..(CONFIG_NET_PRES_INSTANCES?number-1) as idx>
-	<#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${idx}"]>
+<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+	<#if .vars["NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${idx}"]>
 		<#assign needSysConsole=true/>
     </#if>
 </#list>
@@ -59,10 +59,10 @@ static uint8_t _net_pres_wolfsslUsers = 0;
 </#if>
 <#macro NET_PRES_ENC_PROV_INFOS
     INST_NUMBER>
-
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_ENCRYPTION${INST_NUMBER}"]>
-        <#if .vars["CONFIG_NET_PRES_SUPPORT_STREAM_ENC_IDX${INST_NUMBER}"]>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"]>            
+	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION${INST_NUMBER}">
+    <#if .vars[netPresSuppEnc]?has_content>
+        <#if .vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${INST_NUMBER}"]>
+            <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"]>            
 NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER} =
 {
     .fpInit =    NET_PRES_EncProviderStreamServerInit${INST_NUMBER},
@@ -78,7 +78,7 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER} =
     .fpIsInited = NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER},
 };
             </#if>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"]>            
+            <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"]>            
 NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} = 
 {
     .fpInit =    NET_PRES_EncProviderStreamClientInit${INST_NUMBER},
@@ -95,8 +95,8 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} =
 };
             </#if>
         </#if>
-        <#if .vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST_NUMBER}"]>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"]>            
+        <#if .vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST_NUMBER}"]>
+            <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST_NUMBER}"]>            
 NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER} =
 {
     .fpInit =    NET_PRES_EncProviderDataGramServerInit${INST_NUMBER},
@@ -112,7 +112,7 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER} =
     .fpIsInited = NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER},
 };
             </#if>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"]>            
+            <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"]>            
 NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
 {
     .fpInit =    NET_PRES_EncProviderDataGramClientInit${INST_NUMBER},
@@ -136,10 +136,10 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
         CONNECTION
         TYPE>
 		
-<#if  .vars["CONFIG_NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INST}"]>
+<#if  .vars["NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INST}"]>
 void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * message)
 {
-	<#assign num = .vars["CONFIG_NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS_IDX${INST}"]/>
+	<#assign num = .vars["NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS_IDX${INST}"]/>
 	static char buffer[${num}][120];
 	static int bufNum = 0;
 	if (level > 2)
@@ -158,7 +158,7 @@ void NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST}(int level, const char * 
 		
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObject * transObject)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
         <#if CONNECTION="Client">
     const uint8_t * caCertsPtr;
     int32_t caCertsLen;
@@ -177,7 +177,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     if (_net_pres_wolfsslUsers == 0)
     {
         wolfSSL_Init();
-		<#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INST}"]>
+		<#if .vars["NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INST}"]>
 		wolfSSL_SetLoggingCb(NET_PRES_EncProvider${TYPE}${CONNECTION}Log${INST});
 		wolfSSL_Debugging_ON();
 		</#if>
@@ -239,7 +239,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}()
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     wolfSSL_CTX_free(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited = false;
     _net_pres_wolfsslUsers--;
@@ -260,7 +260,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Deinit${INST}()
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(uintptr_t transHandle, void * providerData)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
         WOLFSSL* ssl = wolfSSL_new(net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context);
         if (ssl == NULL)
         {
@@ -289,7 +289,7 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Open${INST}(uintptr_t transHandle, 
     </#if>
 NET_PRES_EncSessionStatus NET_PRES_EncProvider${CONNECTION}${ACCEPT}${INST}(void * providerData)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
         <#if CONNECTION=="Server">
@@ -328,7 +328,7 @@ NET_PRES_EncSessionStatus NET_PRES_EncProvider${CONNECTION}${ACCEPT}${INST}(void
         INST>
 NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST}(void * providerData)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
     wolfSSL_free(ssl);
@@ -343,7 +343,7 @@ NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose${INST}(void * prov
         INST>
 int32_t NET_PRES_EncProviderWrite${INST}(void * providerData, const uint8_t * buffer, uint16_t size)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
     int ret = wolfSSL_write(ssl, buffer, size);
@@ -363,7 +363,7 @@ int32_t NET_PRES_EncProviderWrite${INST}(void * providerData, const uint8_t * bu
         INST>
 uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t reqSize, uint16_t minSize)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     extern  int CheckAvailableSize(WOLFSSL *ssl, int size);
     char buffer;
     WOLFSSL* ssl;
@@ -401,7 +401,7 @@ uint16_t NET_PRES_EncProviderWriteReady${INST}(void * providerData, uint16_t req
         INST>
 int32_t NET_PRES_EncProviderRead${INST}(void * providerData, uint8_t * buffer, uint16_t size)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
     int ret = wolfSSL_read(ssl, buffer, size);
@@ -422,7 +422,7 @@ int32_t NET_PRES_EncProviderRead${INST}(void * providerData, uint8_t * buffer, u
 
 int32_t NET_PRES_EncProviderReadReady${INST}(void * providerData)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
     int32_t ret = wolfSSL_pending(ssl);
@@ -448,7 +448,7 @@ int32_t NET_PRES_EncProviderReadReady${INST}(void * providerData)
         INST>
 int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, uint16_t size)
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     WOLFSSL* ssl;
     memcpy(&ssl, providerData, sizeof(WOLFSSL*));
     int ret = wolfSSL_peek(ssl, buffer, size);
@@ -469,7 +469,7 @@ int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, u
         TYPE>
 bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}()
 {
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
     return net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.isInited;
     <#else>
     //TODO: Enter in code to open a connection with the provider
@@ -479,21 +479,21 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}IsInited${INST}()
 </#macro> 
 <#macro NET_PRES_ENC_GLUE_WOLF_INFO
     INST>
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_ENCRYPTION${INST}"]>
-        <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
-                <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>            
+    <#if .vars["NET_PRES_SUPPORT_ENCRYPTION${INST}"]>
+        <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+            <#if .vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
+                <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>            
 net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamServer${INST};
                 </#if>
-                <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
+                <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
 net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamClient${INST};
                 </#if>
             </#if>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
-                <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>            
+            <#if .vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
+                <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>            
 net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramServer${INST};
                 </#if>
-                <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
+                <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
 net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
                 </#if>
             </#if>
@@ -502,39 +502,39 @@ net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
 </#macro>
 <#macro NET_PRES_ENC_GLUE_FUNCTIONS
     INST>
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_ENCRYPTION${INST}"]>
-        <#if .vars["CONFIG_NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>
+    <#if .vars["NET_PRES_SUPPORT_ENCRYPTION${INST}"]>
+        <#if .vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
+            <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>
                 <@NET_PRES_ENC_GLUE_INIT INST "Server" "Stream"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Server" "Stream"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Server" "Stream"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Server" "Stream"/>                
             </#if>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
+            <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
                 <@NET_PRES_ENC_GLUE_INIT INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Client" "Stream"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Client" "Stream"/>                
             </#if>
         </#if>
-        <#if .vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>            
+        <#if .vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
+            <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]>            
                 <@NET_PRES_ENC_GLUE_INIT INST "Server" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Server" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Server" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Server" "DataGram"/>                
             </#if>
-            <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
+            <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
                 <@NET_PRES_ENC_GLUE_INIT INST "Client" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_DEINIT INST "Client" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_OPEN INST "Client" "DataGram"/>
                 <@NET_PRES_ENC_GLUE_IS_INIT INST "Client" "DataGram"/>                
             </#if>
         </#if>
-        <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]> 
+        <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"]> 
             <@NET_PRES_ENC_GLUE_CONNECT INST "Server"/>
         </#if>
-        <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
+        <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"]>            
             <@NET_PRES_ENC_GLUE_CONNECT INST "Client"/>
         </#if>
         <@NET_PRES_ENC_GLUE_CLOSE INST/>
@@ -549,7 +549,7 @@ net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
     INST
     CONNECTION
     TYPE>
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
 int NET_PRES_EncGlue_${TYPE}${CONNECTION}ReceiveCb${INST}(void *sslin, char *buf, int sz, void *ctx)
 {
     int fd = *(int *)ctx;
@@ -579,20 +579,20 @@ int NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, i
 </#macro>
 <#macro NET_PRES_WOLF_CBS
     INST>
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"] && .vars["CONFIG_NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
+    <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"] && .vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
         <@NET_PRES_WOLF_CB INST "Server" "Stream"/>
     </#if>
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"] && .vars["CONFIG_NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
+    <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"] && .vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"]>
         <@NET_PRES_WOLF_CB INST "Client" "Stream"/>
     </#if>
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"] && .vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
+    <#if .vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"] && .vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
         <@NET_PRES_WOLF_CB INST "Server" "DataGram"/>
     </#if>
-    <#if .vars["CONFIG_NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"] && .vars["CONFIG_NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
+    <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"] && .vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"]>
         <@NET_PRES_WOLF_CB INST "Client" "DataGram"/>
     </#if>
 </#macro>
-<#if CONFIG_USE_3RDPARTY_WOLFSSL>
+<#if USE_3RDPARTY_WOLFSSL?has_content>
 typedef struct 
 {
     WOLFSSL_CTX* context;
@@ -607,21 +607,27 @@ int  InitRng(RNG* rng)
 }
 
 </#if>
-<#list 0..(CONFIG_NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
     <@NET_PRES_ENC_PROV_INFOS idx/>
 </#list>
-<#list 0..(CONFIG_NET_PRES_INSTANCES?number-1) as idx>
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${idx}"] || .vars["CONFIG_NET_PRES_GENERATE_ENC_STUBS_IDX${idx}"]>
+<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+	<#assign netPresUseWolfSSL = "NET_PRES_USE_WOLF_SSL_IDX${idx}">
+	<#assign netPresGenEncStub = "NET_PRES_GENERATE_ENC_STUBS_IDX${idx}">
+    <#if .vars[netPresUseWolfSSL]?has_content || .vars[netPresGenEncStub]?has_content>
         <@NET_PRES_ENC_GLUE_WOLF_INFO idx/>
     </#if>
 </#list>
-<#list 0..(CONFIG_NET_PRES_INSTANCES?number-1) as idx>
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${idx}"] || .vars["CONFIG_NET_PRES_GENERATE_ENC_STUBS_IDX${idx}"]>
+<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+    <#assign netPresUseWolfSSL = "NET_PRES_USE_WOLF_SSL_IDX${idx}">
+	<#assign netPresGenEncStub = "NET_PRES_GENERATE_ENC_STUBS_IDX${idx}">
+    <#if .vars[netPresUseWolfSSL]?has_content || .vars[netPresGenEncStub]?has_content>
         <@NET_PRES_WOLF_CBS idx/>
     </#if>
 </#list>
-<#list 0..(CONFIG_NET_PRES_INSTANCES?number-1) as idx>
-    <#if .vars["CONFIG_NET_PRES_USE_WOLF_SSL_IDX${idx}"] || .vars["CONFIG_NET_PRES_GENERATE_ENC_STUBS_IDX${idx}"]>
+<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+	<#assign netPresUseWolfSSL = "NET_PRES_USE_WOLF_SSL_IDX${idx}">
+	<#assign netPresGenEncStub = "NET_PRES_GENERATE_ENC_STUBS_IDX${idx}">
+    <#if .vars[netPresUseWolfSSL]?has_content || .vars[netPresGenEncStub]?has_content>
         <@NET_PRES_ENC_GLUE_FUNCTIONS idx/>
     </#if>
 </#list>

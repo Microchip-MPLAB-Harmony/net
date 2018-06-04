@@ -90,7 +90,7 @@ def instantiateComponent(tcpipDnsComponent):
 	tcpipDnscLookupRetryTimeout.setLabel("Retry Lookup Host name after Time-out")
 	tcpipDnscLookupRetryTimeout.setVisible(True)
 	tcpipDnscLookupRetryTimeout.setDescription("Retry Lookup Host name after Time-out")
-	tcpipDnscLookupRetryTimeout.setDefaultValue(3)
+	tcpipDnscLookupRetryTimeout.setDefaultValue(5)
 	#tcpipDnscLookupRetryTimeout.setDependencies(tcpipDnsMenuVisible, ["TCPIP_USE_DNS_CLIENT"])
 
 	# DNS Client Host Name Length

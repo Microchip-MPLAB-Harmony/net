@@ -38,7 +38,7 @@
  *
  *********************************************************************/
 
-#include "system_config.h"
+#include "configuration.h"
 #include "tcpip/tcpip.h"
 <#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>

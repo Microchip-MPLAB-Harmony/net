@@ -159,8 +159,8 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 #define mMIN(a, b)	((a<b)?a:b)
 
 
-static const char TCPIP_FTP_USER_NAME_DEFAULT[]    = TCPIP_FTP_USER_NAME;
-static const char TCPIP_FTP_USER_PASS_DEFAULT[]    = TCPIP_FTP_PASSWORD;
+//niyas static const char TCPIP_FTP_USER_NAME_DEFAULT[]    = TCPIP_FTP_USER_NAME;
+//niyas static const char TCPIP_FTP_USER_PASS_DEFAULT[]    = TCPIP_FTP_PASSWORD;
 static const char TCPIP_FTP_ANNONYMOUS_USER_NAME[]    = "anonymous";
 
 static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE;

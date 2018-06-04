@@ -7,73 +7,73 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	# Enable TCPIP File System Wrapper Menu
 	tcpipFileSysWrapper= tcpipSysFsWrapperComponent.createMenuSymbol(None, None)
 	tcpipFileSysWrapper.setLabel("TCPIP File System Wrapper")
-	tcpipFileSysWrapper.setVisible(True) # niyas to change the visibility to false
+	tcpipFileSysWrapper.setVisible(False) # niyas to change the visibility to false
 	tcpipFileSysWrapper.setDescription("TCPIP File System Wrapper Menu")
-	tcpipFileSysWrapper.setDependencies(tcpipSysFsWrapperVisible, ["tcpipTcp.TCPIP_USE_TCP" , "tcpipUdp.TCPIP_USE_UDP"])
+	#tcpipFileSysWrapper.setDependencies(tcpipSysFsWrapperVisible, ["tcpipTcp.TCPIP_USE_TCP" , "tcpipUdp.TCPIP_USE_UDP"])
 
 	# Use TCPIP File System Wrapper
-	tcpipSysFsWrapper = tcpipSysFsWrapperComponent.createBooleanSymbol("TCPIP_STACK_USE_FS_WRAPPER", tcpipFileSysWrapper)
+	tcpipSysFsWrapper = tcpipSysFsWrapperComponent.createBooleanSymbol("TCPIP_STACK_USE_FS_WRAPPER", None)
 	tcpipSysFsWrapper.setVisible(False)
 	tcpipSysFsWrapper.setDescription("Use TCPIP File System Wrapper")
-	tcpipSysFsWrapper.setDefaultValue(False) 
-	tcpipSysFsWrapper.setDependencies(tcpipSysFsWrapperNeeded, ["tcpipSnmp.TCPIP_USE_SNMP","tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER","tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipFtps.TCPIP_USE_FTP_MODULE","tcpipTftpc.TCPIP_USE_TFTPC_MODULE"])
+	tcpipSysFsWrapper.setDefaultValue(True) 
+	#tcpipSysFsWrapper.setDependencies(tcpipSysFsWrapperNeeded, ["tcpipSnmp.TCPIP_USE_SNMP","tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER","tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipFtps.TCPIP_USE_FTP_MODULE","tcpipTftpc.TCPIP_USE_TFTPC_MODULE"])
 	
 	# Maximum Length of Full Web Path
-	tcpipSysFsPathLenMax = tcpipSysFsWrapperComponent.createIntegerSymbol("TCPIP_SYS_FS_MAX_PATH", tcpipFileSysWrapper)
+	tcpipSysFsPathLenMax = tcpipSysFsWrapperComponent.createIntegerSymbol("TCPIP_SYS_FS_MAX_PATH", None)
 	tcpipSysFsPathLenMax.setLabel("Max Length of Full Web Path")
-	tcpipSysFsPathLenMax.setVisible(False)
+	tcpipSysFsPathLenMax.setVisible(True)
 	tcpipSysFsPathLenMax.setDescription("Maximum Length of Full Web Path")
 	tcpipSysFsPathLenMax.setDefaultValue(80)
-	tcpipSysFsPathLenMax.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsPathLenMax.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	# Web Server Mount Path
-	tcpipSysFsLocalWebsitePath = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_LOCAL_WEBSITE_PATH", tcpipFileSysWrapper)
+	tcpipSysFsLocalWebsitePath = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_LOCAL_WEBSITE_PATH", None)
 	tcpipSysFsLocalWebsitePath.setLabel("Web Server Mount Path")
-	tcpipSysFsLocalWebsitePath.setVisible(False)
+	tcpipSysFsLocalWebsitePath.setVisible(True)
 	tcpipSysFsLocalWebsitePath.setDescription("Web Server Mount Path")
 	tcpipSysFsLocalWebsitePath.setDefaultValue("/mnt/mchpSite1")
-	tcpipSysFsLocalWebsitePath.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsLocalWebsitePath.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	# Memory Drive 
-	tcpipSysFsDrive = tcpipSysFsWrapperComponent.createComboSymbol("TCPIP_SYS_FS_DRIVE", tcpipFileSysWrapper, FS_DRIVE)
+	tcpipSysFsDrive = tcpipSysFsWrapperComponent.createComboSymbol("TCPIP_SYS_FS_DRIVE", None, FS_DRIVE)
 	tcpipSysFsDrive.setLabel("Memory Drive")
-	tcpipSysFsDrive.setVisible(False)
+	tcpipSysFsDrive.setVisible(True)
 	tcpipSysFsDrive.setDescription("Memory Drive")
 	tcpipSysFsDrive.setDefaultValue("FLASH")
 	# Niyas to do
 	  # default "FLASH" if SYS_FS_MPFS = y
 	  # default "SDCARD" if SYS_FS_FAT = y
-	tcpipSysFsDrive.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsDrive.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	# NVM Disk Path
-	tcpipSysFsNvmVol = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_NVM_VOL", tcpipFileSysWrapper)
+	tcpipSysFsNvmVol = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_NVM_VOL", None)
 	tcpipSysFsNvmVol.setLabel("NVM Disk Path")
-	tcpipSysFsNvmVol.setVisible(False)
+	tcpipSysFsNvmVol.setVisible(True)
 	tcpipSysFsNvmVol.setDescription("NVM Disk Path")
 	tcpipSysFsNvmVol.setDefaultValue("/dev/nvma1")
-	tcpipSysFsNvmVol.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsNvmVol.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	# SDCARD Disk Path
-	tcpipSysFsSdVol = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_SD_VOL", tcpipFileSysWrapper)
+	tcpipSysFsSdVol = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_SD_VOL", None)
 	tcpipSysFsSdVol.setLabel("SDCARD Disk Path")
-	tcpipSysFsSdVol.setVisible(False)
+	tcpipSysFsSdVol.setVisible(True)
 	tcpipSysFsSdVol.setDescription("SDCARD Disk Path")
 	tcpipSysFsSdVol.setDefaultValue("/dev/mmcblka1")
-	tcpipSysFsSdVol.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsSdVol.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	# File system MPFS String
-	tcpipSysFsMpfsStr = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_MPFS_STRING", tcpipFileSysWrapper)
-	tcpipSysFsMpfsStr.setVisible(False)
+	tcpipSysFsMpfsStr = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_MPFS_STRING", None)
+	tcpipSysFsMpfsStr.setVisible(True)
 	tcpipSysFsMpfsStr.setDescription("File system MPFS String")
 	tcpipSysFsMpfsStr.setDefaultValue("MPFS2")
-	tcpipSysFsMpfsStr.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsMpfsStr.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	# File system FATFS String
-	tcpipSysFsFatfsStr = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_FATFS_STRING", tcpipFileSysWrapper)
-	tcpipSysFsFatfsStr.setVisible(False)
+	tcpipSysFsFatfsStr = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_FATFS_STRING", None)
+	tcpipSysFsFatfsStr.setVisible(True)
 	tcpipSysFsFatfsStr.setDescription("File system FATFS String")
 	tcpipSysFsFatfsStr.setDefaultValue("FATFS")
-	tcpipSysFsFatfsStr.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	#tcpipSysFsFatfsStr.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 	#Add to system_config.h
 	tcpipSysFsHeaderFtl = tcpipSysFsWrapperComponent.createFileSymbol(None, None)
@@ -90,8 +90,8 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsWrapperSourceFile.setDestPath("library/tcpip/src/common/")
 	tcpipSysFsWrapperSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
 	tcpipSysFsWrapperSourceFile.setType("SOURCE")
-	tcpipSysFsWrapperSourceFile.setEnabled(False)
-	tcpipSysFsWrapperSourceFile.setDependencies(tcpipSysFsWrapperGenSourceFile, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	tcpipSysFsWrapperSourceFile.setEnabled(True)
+	#tcpipSysFsWrapperSourceFile.setDependencies(tcpipSysFsWrapperGenSourceFile, ["TCPIP_STACK_USE_FS_WRAPPER"])
 
 def tcpipSysFsWrapperNeeded(symbol, event):	
 	tcpipSnmp = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
