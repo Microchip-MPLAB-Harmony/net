@@ -214,11 +214,11 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimSysConfigSourceFtl.setSourcePath("driver/miim/config/drv_miim.h.ftl")
 	drvMiimSysConfigSourceFtl.setMarkup(True)
 
-	drvMiimSystemDefFile = drvMiimComponent.createFileSymbol("MIIM_H_FILE", None)
-	drvMiimSystemDefFile.setType("STRING")
-	drvMiimSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	drvMiimSystemDefFile.setSourcePath("driver/miim/templates/system/system_definitions.h.ftl")
-	drvMiimSystemDefFile.setMarkup(True)	
+	# drvMiimSystemDefFile = drvMiimComponent.createFileSymbol("MIIM_H_FILE", None)
+	# drvMiimSystemDefFile.setType("STRING")
+	# drvMiimSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	# drvMiimSystemDefFile.setSourcePath("driver/miim/templates/system/system_definitions.h.ftl")
+	# drvMiimSystemDefFile.setMarkup(True)	
 
 	drvMiimSystemDefObjFile = drvMiimComponent.createFileSymbol("TCPIP_DEF_OBJ", None)
 	drvMiimSystemDefObjFile.setType("STRING")

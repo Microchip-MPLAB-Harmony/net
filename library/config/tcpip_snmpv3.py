@@ -24,52 +24,52 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3.setLabel("Use SNMP Version 3")
 	tcpipSnmpV3.setVisible(False)
 	tcpipSnmpV3.setDescription("Use SNMP Version 3")
-	tcpipSnmpV3.setDefaultValue(False) 
-	tcpipSnmpV3.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["tcpipSnmp.TCPIP_USE_SNMP"])
+	tcpipSnmpV3.setDefaultValue(True) 
+	#tcpipSnmpV3.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["tcpipSnmp.TCPIP_USE_SNMP"])
 
 	# Security User Name Length
-	tcpipSnmpV3UsrSecureNameLen = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USER_SECURITY_NAME_LEN", tcpipSnmpV3)
+	tcpipSnmpV3UsrSecureNameLen = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USER_SECURITY_NAME_LEN", None)
 	tcpipSnmpV3UsrSecureNameLen.setLabel("Security User Name Length")
-	tcpipSnmpV3UsrSecureNameLen.setVisible(False)
+	tcpipSnmpV3UsrSecureNameLen.setVisible(True)
 	tcpipSnmpV3UsrSecureNameLen.setDescription("Security User Name Length")
 	tcpipSnmpV3UsrSecureNameLen.setDefaultValue(16)
-	tcpipSnmpV3UsrSecureNameLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
+	#tcpipSnmpV3UsrSecureNameLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
 
 	# Localized Password Key Length
-	tcpipSnmpV3LocalPswdKeyLen = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN", tcpipSnmpV3)
+	tcpipSnmpV3LocalPswdKeyLen = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_AUTH_LOCALIZED_PASSWORD_KEY_LEN", None)
 	tcpipSnmpV3LocalPswdKeyLen.setLabel("Localized Password Key Length")
-	tcpipSnmpV3LocalPswdKeyLen.setVisible(False)
+	tcpipSnmpV3LocalPswdKeyLen.setVisible(True)
 	tcpipSnmpV3LocalPswdKeyLen.setDescription("Localized Password Key Length")
 	tcpipSnmpV3LocalPswdKeyLen.setDefaultValue(20)
-	tcpipSnmpV3LocalPswdKeyLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
+	#tcpipSnmpV3LocalPswdKeyLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
 
 	# Privacy Password Key Length
-	tcpipSnmpV3PrivacyPswdKeyLen = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN", tcpipSnmpV3)
+	tcpipSnmpV3PrivacyPswdKeyLen = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN", None)
 	tcpipSnmpV3PrivacyPswdKeyLen.setLabel("Privacy Password Key Length")
-	tcpipSnmpV3PrivacyPswdKeyLen.setVisible(False)
+	tcpipSnmpV3PrivacyPswdKeyLen.setVisible(True)
 	tcpipSnmpV3PrivacyPswdKeyLen.setDescription("Privacy Password Key Length")
 	tcpipSnmpV3PrivacyPswdKeyLen.setDefaultValue(20)
-	tcpipSnmpV3PrivacyPswdKeyLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
+	#tcpipSnmpV3PrivacyPswdKeyLen.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
 		
-	tcpipSnmpV3CommMaxNum= tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USE_MAX_NUM", tcpipSnmpV3)
+	tcpipSnmpV3CommMaxNum= tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USE_MAX_NUM", None)
 	tcpipSnmpV3CommMaxNum.setDefaultValue(tcpipSnmpV3MaxUsrNum)
 	tcpipSnmpV3CommMaxNum.setVisible(False)
 
 	# Maximum Users
-	tcpipSnmpV3UsmUsrMax = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USM_MAX_USER", tcpipSnmpV3)
+	tcpipSnmpV3UsmUsrMax = tcpipSnmpv3Component.createIntegerSymbol("TCPIP_SNMPV3_USM_MAX_USER", None)
 	tcpipSnmpV3UsmUsrMax.setLabel("Max Users")
-	tcpipSnmpV3UsmUsrMax.setVisible(False)
+	tcpipSnmpV3UsmUsrMax.setVisible(True)
 	tcpipSnmpV3UsmUsrMax.setDescription("Maximum Users")
 	tcpipSnmpV3UsmUsrMax.setMax(tcpipSnmpV3MaxUsrNum)
 	tcpipSnmpV3UsmUsrMax.setMin(0)
 	tcpipSnmpV3UsmUsrMax.setDefaultValue(3)
-	tcpipSnmpV3UsmUsrMax.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
+	#tcpipSnmpV3UsmUsrMax.setDependencies(tcpipSnmpv3MenuVisibleSingle, ["TCPIP_USE_SNMPv3"])
 
 	####-----------------------------------------------------------------------------------------##########
 	for index in range(0,tcpipSnmpV3MaxUsrNum):	
-		tcpipSnmpV3StackConfigIdx.append(tcpipSnmpv3Component.createBooleanSymbol("TCPIP_SNMPV3_STACK_CONFIG_IDX"+str(index),tcpipSnmpV3))
+		tcpipSnmpV3StackConfigIdx.append(tcpipSnmpv3Component.createBooleanSymbol("TCPIP_SNMPV3_STACK_CONFIG_IDX"+str(index),None))
 		tcpipSnmpV3StackConfigIdx[index].setLabel("SNMPV3 Stack Config Number "+ str(index))
-		tcpipSnmpV3StackConfigIdx[index].setVisible(False)
+		tcpipSnmpV3StackConfigIdx[index].setVisible(True)
 		if (index < tcpipSnmpV3UsmUsrMax.getValue()):				
 			tcpipSnmpV3StackConfigIdx[index].setDefaultValue(True)
 		else:			
@@ -189,9 +189,9 @@ def instantiateComponent(tcpipSnmpv3Component):
 	####-----------------------------------------------------------------------------------------##########
 	
 	# V1 and V2 Trap Support
-	tcpipSnmpV3StackV1V2Trap = tcpipSnmpv3Component.createBooleanSymbol("TCPIP_SNMPV3_STACK_USE_V1_V2_TRAP", tcpipSnmpV3)
+	tcpipSnmpV3StackV1V2Trap = tcpipSnmpv3Component.createBooleanSymbol("TCPIP_SNMPV3_STACK_USE_V1_V2_TRAP", None)
 	tcpipSnmpV3StackV1V2Trap.setLabel("V1 and V2 Trap Support")
-	tcpipSnmpV3StackV1V2Trap.setVisible(False)
+	tcpipSnmpV3StackV1V2Trap.setVisible(True)
 	tcpipSnmpV3StackV1V2Trap.setDescription("V1 and V2 Trap Support")
 	tcpipSnmpV3StackV1V2Trap.setDefaultValue(True) 
 	tcpipSnmpV3StackV1V2Trap.setDependencies(tcpipSnmpV3StackConfigV1V2TrapVisible, ["TCPIP_USE_SNMPv3" , "tcpipSnmp.TCPIP_SNMP_USE_TRAP_SUPPORT", "tcpipSnmp.TCPIP_SNMP_STACK_USE_V2_TRAP"])
@@ -232,11 +232,12 @@ def instantiateComponent(tcpipSnmpv3Component):
 		
 # make SnmpV3 Module Stack Config V1-V2 Trap visible
 def tcpipSnmpV3StackConfigV1V2TrapVisible(tcpipDependentSymbol, tcpipIPSymbol):	
-	tcpipSnmpV3 = Database.getSymbolValue("tcpipSnmpv3","TCPIP_USE_SNMPv3")
+	#tcpipSnmpV3 = Database.getSymbolValue("tcpipSnmpv3","TCPIP_USE_SNMPv3")
 	tcpipSnmpTrapSupport = Database.getSymbolValue("tcpipSnmp","TCPIP_SNMP_USE_TRAP_SUPPORT")
 	tcpipSnmpV2TrapSupport = Database.getSymbolValue("tcpipSnmp","TCPIP_SNMP_STACK_USE_V2_TRAP")
 
-	if(tcpipSnmpV3 and tcpipSnmpTrapSupport and tcpipSnmpV2TrapSupport ):
+	# if(tcpipSnmpV3 and tcpipSnmpTrapSupport and tcpipSnmpV2TrapSupport ):
+	if(tcpipSnmpTrapSupport and tcpipSnmpV2TrapSupport ):
 		tcpipDependentSymbol.setVisible(True)
 	else:
 		tcpipDependentSymbol.setVisible(False)

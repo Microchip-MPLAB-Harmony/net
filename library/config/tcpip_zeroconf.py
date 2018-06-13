@@ -7,7 +7,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 	tcpipZc.setLabel("Use Link Local Zero Config")
 	tcpipZc.setVisible(False)
 	tcpipZc.setDescription("Use Link Local Zero Config")
-	tcpipZc.setDefaultValue(False)   # Niyas to check the default value
+	tcpipZc.setDefaultValue(True)   # Niyas to check the default value
 	#tcpipZc.setDependencies(tcpipZeroConfMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
 
 	# Enable Link Local Warning Messages

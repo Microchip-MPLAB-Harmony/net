@@ -52,9 +52,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <string.h>
 
-#include "configuration.h"
-#include "definitions.h" //niyas
+#include "system_config.h"
 #include "driver/miim/drv_miim.h"
 #include "driver/ethphy/drv_ethphy.h"
 #include "driver/ethphy/src/dynamic/drv_extphy_regs.h"

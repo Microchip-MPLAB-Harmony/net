@@ -48,8 +48,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define _DRV_PIC32CGMAC_LIB_H_
 
 #include <stdlib.h>
-#include "configuration.h"
-#include "definitions.h"
+#include "system_config.h"
+#include "system_definitions.h"
 //#include "system/debug/sys_debug.h"
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/gmac/src/dynamic/_gmac_dcpt_lists.h"

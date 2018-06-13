@@ -4,8 +4,8 @@ TCPIP_SNTP_PROTOCOL_TYPE = ["SNTP_VERSION_3", "SNTP_VERSION_4"]
 TCPIP_ADDRESS_TYPE_STRICT = ["IP_ADDRESS_TYPE_IPV4", "IP_ADDRESS_TYPE_IPV6"]
 TCPIP_STACK_IF_NAME = []
 #niyas modify the interface name
-TCPIP_STACK_PIC32C_IF_NAME =	["GMAC", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
-TCPIP_STACK_PIC32M_IF_NAME =	["ETHMAC", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
+TCPIP_STACK_PIC32C_IF_NAME =	["PIC32CINT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
+TCPIP_STACK_PIC32M_IF_NAME =	["PIC32INT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 
 def instantiateComponent(tcpipSntpComponent):
 	#global TCPIP_STACK_IF_NAME
@@ -25,26 +25,26 @@ def instantiateComponent(tcpipSntpComponent):
 	# Use SNTP Client
 	tcpipSntpClient = tcpipSntpComponent.createBooleanSymbol("TCPIP_USE_SNTP_CLIENT", None)
 	tcpipSntpClient.setLabel("Use SNTP Client")
-	tcpipSntpClient.setVisible(True)
+	tcpipSntpClient.setVisible(False)
 	tcpipSntpClient.setDescription("Use SNTP Client")
-	tcpipSntpClient.setDefaultValue(False) 
+	tcpipSntpClient.setDefaultValue(True) 
 	# Niyas to do  
 	# default n if !TCPIP_USE_SNTP_CLIENT_NEEDED
 	# default y if TCPIP_USE_SNTP_CLIENT_NEEDED
-	tcpipSntpClient.setDependencies(tcpipSntpMenuVisibleSingle, ["tcpipUdp.TCPIP_USE_UDP"])
+	#tcpipSntpClient.setDependencies(tcpipSntpMenuVisibleSingle, ["tcpipUdp.TCPIP_USE_UDP"])
 
 	# ifblock !PIC32WK    Niyas to do
 	# Default Interface
-	tcpipSntpDefault = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_IF", tcpipSntpClient, TCPIP_STACK_IF_NAME)
+	tcpipSntpDefault = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_IF", None, TCPIP_STACK_IF_NAME)
 	tcpipSntpDefault.setLabel("Default Interface")
-	tcpipSntpDefault.setVisible(False)
+	tcpipSntpDefault.setVisible(True)
 	tcpipSntpDefault.setDescription("Default Interface")
 	tcpipSntpDefault.setDefaultValue("PIC32CINT")
 	# Niyas to do
 	# default "PIC32CINT" if USE_PIC32CINT_ETH_MAC_NEEDED
 	# default "PIC32INT" if USE_PIC32INT_ETH_MAC_NEEDED
 	# default "MRF24WN" if HAVE_WIFI
-	tcpipSntpDefault.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpDefault.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Niyas to do
 	# ifblock PIC32WK 
@@ -58,104 +58,104 @@ def instantiateComponent(tcpipSntpComponent):
 	# endif 
 
 	# SNTP Version
-	tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", tcpipSntpClient, TCPIP_SNTP_PROTOCOL_TYPE)
+	tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", None, TCPIP_SNTP_PROTOCOL_TYPE)
 	tcpipSntpVersion.setLabel("SNTP Version")
-	tcpipSntpVersion.setVisible(False)
+	tcpipSntpVersion.setVisible(True)
 	tcpipSntpVersion.setDescription("SNTP Version")
 	tcpipSntpVersion.setDefaultValue("SNTP_VERSION_4")
-	tcpipSntpVersion.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpVersion.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Default Connection Type
-	tcpipSntpConnType = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_CONNECTION_TYPE", tcpipSntpClient, TCPIP_ADDRESS_TYPE_STRICT)
+	tcpipSntpConnType = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_CONNECTION_TYPE", None, TCPIP_ADDRESS_TYPE_STRICT)
 	tcpipSntpConnType.setLabel("Default Connection Type")
-	tcpipSntpConnType.setVisible(False)
+	tcpipSntpConnType.setVisible(True)
 	tcpipSntpConnType.setDescription("Default Connection Type")
 	tcpipSntpConnType.setDefaultValue("TCPIP_STACK_USE_IPV4")
 	# Niyas to do 
 	# default "IP_ADDRESS_TYPE_IPV4" if TCPIP_STACK_USE_IPV4
 	# default "IP_ADDRESS_TYPE_IPV6" if TCPIP_STACK_USE_IPV6
-	tcpipSntpConnType.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpConnType.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Sntp Epoch
-	tcpipSntpEpoch = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_EPOCH", tcpipSntpClient)
+	tcpipSntpEpoch = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_EPOCH", None)
 	tcpipSntpEpoch.setLabel("Epoch")
-	tcpipSntpEpoch.setVisible(False)
+	tcpipSntpEpoch.setVisible(True)
 	tcpipSntpEpoch.setDescription("Sntp Epoch")
 	tcpipSntpEpoch.setDefaultValue(2147483216)   # niyas to set the correct value 2208988800
-	tcpipSntpEpoch.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpEpoch.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# SNTP Reply Time-out in Seconds
-	tcpipSntpReplyTimeout = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_REPLY_TIMEOUT", tcpipSntpClient)
+	tcpipSntpReplyTimeout = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_REPLY_TIMEOUT", None)
 	tcpipSntpReplyTimeout.setLabel("NTP Reply Time-out in Seconds")
-	tcpipSntpReplyTimeout.setVisible(False)
+	tcpipSntpReplyTimeout.setVisible(True)
 	tcpipSntpReplyTimeout.setDescription("SNTP Reply Time-out in Seconds")
 	tcpipSntpReplyTimeout.setDefaultValue(6)
-	tcpipSntpReplyTimeout.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpReplyTimeout.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Maximum Stratum
-	tcpipSntpStratumMax = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_MAX_STRATUM", tcpipSntpClient)
+	tcpipSntpStratumMax = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_MAX_STRATUM", None)
 	tcpipSntpStratumMax.setLabel("Max Stratum")
-	tcpipSntpStratumMax.setVisible(False)
+	tcpipSntpStratumMax.setVisible(True)
 	tcpipSntpStratumMax.setDescription("Maximum Stratum")
 	tcpipSntpStratumMax.setDefaultValue(15)
-	tcpipSntpStratumMax.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpStratumMax.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Time Stamp Time-Out
-	tcpipSntpTimestampTimeout = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_TIME_STAMP_TMO", tcpipSntpClient)
+	tcpipSntpTimestampTimeout = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_TIME_STAMP_TMO", None)
 	tcpipSntpTimestampTimeout.setLabel("Time Stamp Time-Out")
-	tcpipSntpTimestampTimeout.setVisible(False)
+	tcpipSntpTimestampTimeout.setVisible(True)
 	tcpipSntpTimestampTimeout.setDescription("Time Stamp Time-Out")
 	tcpipSntpTimestampTimeout.setDefaultValue(660)
-	tcpipSntpTimestampTimeout.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpTimestampTimeout.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# SNTP Server Name
-	tcpipSntpSrvrName = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_SERVER", tcpipSntpClient)
+	tcpipSntpSrvrName = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_SERVER", None)
 	tcpipSntpSrvrName.setLabel("NTP Server Name")
-	tcpipSntpSrvrName.setVisible(False)
+	tcpipSntpSrvrName.setVisible(True)
 	tcpipSntpSrvrName.setDescription("SNTP Server Name")
 	tcpipSntpSrvrName.setDefaultValue("pool.ntp.org")
-	tcpipSntpSrvrName.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpSrvrName.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Server Address Max Length
-	tcpipSntpSrvrMaxLength = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_SERVER_MAX_LENGTH", tcpipSntpClient)
+	tcpipSntpSrvrMaxLength = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_SERVER_MAX_LENGTH", None)
 	tcpipSntpSrvrMaxLength.setLabel("Server Address Max Length")
-	tcpipSntpSrvrMaxLength.setVisible(False)
+	tcpipSntpSrvrMaxLength.setVisible(True)
 	tcpipSntpSrvrMaxLength.setDescription("Server Address Max Length")
 	tcpipSntpSrvrMaxLength.setDefaultValue("30")
-	tcpipSntpSrvrMaxLength.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpSrvrMaxLength.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Query Interval in seconds
-	tcpipSntpQueryInterval = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_QUERY_INTERVAL", tcpipSntpClient)
+	tcpipSntpQueryInterval = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_QUERY_INTERVAL", None)
 	tcpipSntpQueryInterval.setLabel("Query Interval - Seconds")
-	tcpipSntpQueryInterval.setVisible(False)
+	tcpipSntpQueryInterval.setVisible(True)
 	tcpipSntpQueryInterval.setDescription("Query Interval in seconds")
 	tcpipSntpQueryInterval.setDefaultValue("600")
-	tcpipSntpQueryInterval.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpQueryInterval.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Fast Query Interval
-	tcpipSntpFastQueryInterval = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_FAST_QUERY_INTERVAL", tcpipSntpClient)
+	tcpipSntpFastQueryInterval = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_FAST_QUERY_INTERVAL", None)
 	tcpipSntpFastQueryInterval.setLabel("Fast Query Interval")
-	tcpipSntpFastQueryInterval.setVisible(False)
+	tcpipSntpFastQueryInterval.setVisible(True)
 	tcpipSntpFastQueryInterval.setDescription("Fast Query Interval")
 	tcpipSntpFastQueryInterval.setDefaultValue("14")
-	tcpipSntpFastQueryInterval.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpFastQueryInterval.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Task Tick Rate in ms
-	tcpipSntpTskTickRate = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_TASK_TICK_RATE", tcpipSntpClient)
+	tcpipSntpTskTickRate = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_TASK_TICK_RATE", None)
 	tcpipSntpTskTickRate.setLabel("Task Tick Rate - ms")
-	tcpipSntpTskTickRate.setVisible(False)
+	tcpipSntpTskTickRate.setVisible(True)
 	tcpipSntpTskTickRate.setDescription("Task Tick Rate in ms")
 	tcpipSntpTskTickRate.setDefaultValue("1100")
-	tcpipSntpTskTickRate.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpTskTickRate.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 
 	# RX Queue Limit
-	tcpipSntpRxQueueLimit = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_RX_QUEUE_LIMIT", tcpipSntpClient)
+	tcpipSntpRxQueueLimit = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_RX_QUEUE_LIMIT", None)
 	tcpipSntpRxQueueLimit.setLabel("RX Queue Limit")
-	tcpipSntpRxQueueLimit.setVisible(False)
+	tcpipSntpRxQueueLimit.setVisible(True)
 	tcpipSntpRxQueueLimit.setDescription("RX Queue Limit")
 	tcpipSntpRxQueueLimit.setDefaultValue("2")
-	tcpipSntpRxQueueLimit.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
+	#tcpipSntpRxQueueLimit.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	#Add to system_config.h
 	tcpipSntpHeaderFtl = tcpipSntpComponent.createFileSymbol(None, None)

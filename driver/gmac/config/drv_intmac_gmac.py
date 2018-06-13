@@ -640,11 +640,12 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacLibSourceFile.setEnabled(True)
 	#drvGmacLibSourceFile.setDependencies(tcpipGmacGenSourceFile, ["TCPIP_USE_ETH_MAC"])
 
-	drvGmacSystemDefFile = drvSamv71GmacComponent.createFileSymbol("GMAC_H_FILE", None)
-	drvGmacSystemDefFile.setType("STRING")
-	drvGmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	drvGmacSystemDefFile.setSourcePath("driver/gmac/templates/system/system_definitions.h.ftl")
-	drvGmacSystemDefFile.setMarkup(True)
+	# drvGmacSystemDefFile = drvSamv71GmacComponent.createFileSymbol("GMAC_H_FILE", None)
+	# drvGmacSystemDefFile.setType("STRING")
+	# drvGmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	# drvGmacSystemDefFile.setSourcePath("driver/gmac/templates/system/system_definitions.h.ftl")
+	# drvGmacSystemDefFile.setMarkup(True)
+	
 	# ifblock TCPIP_GMAC_INTERRUPT_MODE = y
 	# add "pfnGMAC_Handler GMAC_Handler"  to list SYSTEM_STARTUP_PIC32C_INTERRUPT_HANDLERS
 	# endif

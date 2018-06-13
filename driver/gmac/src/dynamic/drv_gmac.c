@@ -1641,8 +1641,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{
-			//niyas SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable
-            SYS_INT_Restore(ethILev);//niyas
+			SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable  
 		}
 	}
 
@@ -1719,8 +1718,7 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 		GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status		
 		GMAC_REGS->GMAC_IER = ethAckEv;
 
-		//niyas SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable
-        SYS_INT_Restore(ethILev);//niyas 
+		SYS_INT_SourceRestore(pMACDrv->sGmacData._macIntSrc, ethILev);   // re-enable 
 		return true;
 	}
 
@@ -1807,7 +1805,10 @@ static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilt
 
 }
 
-
+void GMAC_InterruptHandler(void)
+{
+	DRV_GMAC_Tasks_ISR((SYS_MODULE_OBJ)0);
+}
 
 /****************************************************************************
  * Function:        DRV_GMAC_Tasks_ISR

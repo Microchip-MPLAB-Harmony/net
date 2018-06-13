@@ -46,12 +46,11 @@ def instantiateComponent(drvExtPhyLan8740Component):
 	drvExtPhyLan8740ConfigAuto.setDefaultValue(False)
 	
 	# External PHY Type
-	#tcpipEmacPhyType = drvExtPhyLan8740Component.createComboSymbol("TCPIP_EMAC_PHY_TYPE", None, TCPIP_STACK_PHY_TYPE) # Niyas to check the range values
-	#tcpipEmacPhyType.setLabel("External PHY Type")
-	#tcpipEmacPhyType.setVisible(True)# Niyas to check the visibility 
-	#tcpipEmacPhyType.setDescription("External PHY Type")
-	#tcpipEmacPhyType.setDefaultValue("KSZ8061")
-	#tcpipEmacPhyType.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
+	drvExtPhyLan8740PhyType = drvExtPhyLan8740Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
+	#drvExtPhyLan8740PhyType.setLabel("External PHY Type")
+	drvExtPhyLan8740PhyType.setVisible(False)# Niyas to check the visibility 
+	#drvExtPhyLan8740PhyType.setDescription("External PHY Type")
+	drvExtPhyLan8740PhyType.setDefaultValue("SMSC_LAN8740")
 
 	# Driver PHY Instances Number
 	drvExtPhyLan8740InstanceNum= drvExtPhyLan8740Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
@@ -116,13 +115,21 @@ def instantiateComponent(drvExtPhyLan8740Component):
 	drvExtPhyLan8740ResetCallback.setDescription("App Function")
 	drvExtPhyLan8740ResetCallback.setDefaultValue("AppPhyResetFunction")
 	drvExtPhyLan8740ResetCallback.setDependencies(drvExtPhyLan8740MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
-
+	
 	#Add to system_config.h
 	drvExtPhyLan8740HeaderFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
 	drvExtPhyLan8740HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_lan8740.h.ftl")
 	drvExtPhyLan8740HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	drvExtPhyLan8740HeaderFtl.setMarkup(True)
 	drvExtPhyLan8740HeaderFtl.setType("STRING")
+	
+	#niyas to do
+	# add "<#include \"/framework/tcpip/config/tcpip_stack.c.ftl\">"  to list SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA
+	drvExtPhyLan8740SourceFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
+	drvExtPhyLan8740SourceFtl.setType("STRING")
+	drvExtPhyLan8740SourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
+	drvExtPhyLan8740SourceFtl.setSourcePath("driver/ethphy/config/drv_extphy_lan8740.c.ftl")
+	drvExtPhyLan8740SourceFtl.setMarkup(True)
 	
 	# file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
 	# Add drv_ethphy.h file to project

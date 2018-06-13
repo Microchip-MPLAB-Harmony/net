@@ -1324,7 +1324,6 @@ static bool _TCPIPStackCreateTimer(void)
 {
 
     tcpip_stack_tickH = SYS_TMR_CallbackPeriodic(TCPIP_STACK_TICK_RATE, 0, _TCPIP_STACK_TickHandler);
-	_TCPIP_STACK_TickHandler(0,TCPIP_STACK_TICK_RATE);//niyas
     if(tcpip_stack_tickH != SYS_TMR_HANDLE_INVALID)
     {
         uint32_t sysRes = SYS_TMR_TickCounterFrequencyGet();
@@ -1422,7 +1421,7 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
             if((activeEvents & (TCPIP_STACK_MAC_ACTIVE_RX_EVENTS)) != 0)
             {
-                _TCPIPExtractMacRxPackets(pNetIf);
+               _TCPIPExtractMacRxPackets(pNetIf);
                 newTcpipStackEventCnt++;
             }
 
