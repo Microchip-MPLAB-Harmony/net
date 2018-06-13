@@ -651,10 +651,9 @@ typedef struct
 <#if (tcpipArp.TCPIP_USE_ARP)?has_content && (tcpipArp.TCPIP_USE_ARP) == true>
 #include "tcpip/arp.h"
 </#if>
-<#if (tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true>
+<#if ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true) ||
+((tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true)>
 #include "tcpip/tcp.h"
-</#if>
-<#if (tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true>
 #include "tcpip/udp.h"
 </#if>
 <#if (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API)?has_content &&  (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API) == true>
