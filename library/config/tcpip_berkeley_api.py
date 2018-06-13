@@ -8,7 +8,7 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 	tcpipBerkeleyApi.setLabel("Berkeley API")
 	tcpipBerkeleyApi.setVisible(False)
 	tcpipBerkeleyApi.setDescription("Enable Berkeley API")
-	tcpipBerkeleyApi.setDefaultValue(False)
+	tcpipBerkeleyApi.setDefaultValue(True)
 	#Niyas, select NET_PRES_NEEDED
 
 	# Maximum Number of Simultaneous Sockets Supported

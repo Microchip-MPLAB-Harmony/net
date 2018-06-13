@@ -53,9 +53,12 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "driver/ethphy/src/drv_ethphy_local.h"
 
 //#include "system/clk/sys_clk.h"
+#include "system/sys_clk_h2_adapter.h"
 //#include "system/tmr/sys_tmr.h"
+#include "system/sys_time_h2_adapter.h"
 //#include "system/debug/sys_debug.h"
 //#include "system/console/sys_console.h"
+#include "system/sys_console_h2_adapter.h"
 
 // *****************************************************************************
 // *****************************************************************************

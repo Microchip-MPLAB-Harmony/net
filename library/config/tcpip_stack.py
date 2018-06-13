@@ -2,6 +2,22 @@
 def instantiateComponent(tcpipStackComponent):
 	print("TCPIP main Stack Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
+
+	# Enable dependent Harmony core components
+	Database.clearSymbolValue("Harmony", "ENABLE_SYS_COMMON")
+	Database.setSymbolValue("Harmony", "ENABLE_SYS_COMMON", True, 2)
+	
+	Database.clearSymbolValue("Harmony", "ENABLE_DRV_COMMON")
+	Database.setSymbolValue("Harmony", "ENABLE_DRV_COMMON", True, 2)
+	
+	Database.clearSymbolValue("Harmony", "ENABLE_SYS_INT")
+	Database.setSymbolValue("Harmony", "ENABLE_SYS_INT", True, 2)
+
+	Database.clearSymbolValue("Harmony", "ENABLE_OSAL")
+	Database.setSymbolValue("Harmony", "ENABLE_OSAL", True, 2)
+
+	Database.clearSymbolValue("Harmony", "ENABLE_APP_FILE")
+	Database.setSymbolValue("Harmony", "ENABLE_APP_FILE", True, 2)
 	
 	# TCP/IP Stack Enable 
 	tcpipStackEnable = tcpipStackComponent.createBooleanSymbol("USE_TCPIP_STACK", None)
@@ -1012,8 +1028,9 @@ def instantiateComponent(tcpipStackComponent):
 		
 	# file TCPIP_PRIVATE_H "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_private.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/tcpip_private.h"
 	tcpipStackTcpipPrivHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackTcpipPrivHeaderFile.setSourcePath("library/src/tcpip_private.h")
+	tcpipStackTcpipPrivHeaderFile.setSourcePath("library/config/tcpip_private.h.ftl")
 	tcpipStackTcpipPrivHeaderFile.setOutputName("tcpip_private.h")
+	tcpipStackTcpipPrivHeaderFile.setMarkup(True)
 	tcpipStackTcpipPrivHeaderFile.setDestPath("library/tcpip/src/")
 	tcpipStackTcpipPrivHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipPrivHeaderFile.setType("HEADER")
@@ -1027,15 +1044,16 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipTypeHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipTypeHeaderFile.setType("HEADER")
 	tcpipStackTcpipTypeHeaderFile.setOverwrite(True)
-		
-	# file TCPIP_H "$HARMONY_VERSION_PATH/framework/tcpip/tcpip.h" to "$PROJECT_HEADER_FILES/framework/tcpip/tcpip.h"
+
+	
 	tcpipStackTcpipHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackTcpipHeaderFile.setSourcePath("library/tcpip.h")
+	tcpipStackTcpipHeaderFile.setSourcePath("library/config/tcpip.h.ftl")
 	tcpipStackTcpipHeaderFile.setOutputName("tcpip.h")
+	tcpipStackTcpipHeaderFile.setMarkup(True)
 	tcpipStackTcpipHeaderFile.setDestPath("library/tcpip/")
 	tcpipStackTcpipHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
 	tcpipStackTcpipHeaderFile.setType("HEADER")
-	tcpipStackTcpipHeaderFile.setOverwrite(True)
+	tcpipStackTcpipHeaderFile.setOverwrite(True)	
 
 	# file BERKELEY_MANAGER_H "$HARMONY_VERSION_PATH/framework/tcpip/src/berkeley_manager.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/berkeley_manager.h"
 	tcpipStackBrklyMngrHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -1258,7 +1276,89 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipPacketSourceFile.setDestPath("library/tcpip/src/")
 	tcpipStackTcpipPacketSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipPacketSourceFile.setType("SOURCE")
-	tcpipStackTcpipPacketSourceFile.setEnabled(True)	
+	tcpipStackTcpipPacketSourceFile.setEnabled(True)
+
+#########################################################################################
+#### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
+	tcpipStackSysTimeAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysTimeAdapterHeaderFile.setSourcePath("sys_adapter/sys_time_h2_adapter.h")
+	tcpipStackSysTimeAdapterHeaderFile.setOutputName("sys_time_h2_adapter.h")
+	tcpipStackSysTimeAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysTimeAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysTimeAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysTimeAdapterHeaderFile.setOverwrite(True)
+	
+	tcpipStackSysTimeAdapterSourceFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysTimeAdapterSourceFile.setSourcePath("sys_adapter/sys_time_h2_adapter.c")
+	tcpipStackSysTimeAdapterSourceFile.setOutputName("sys_time_h2_adapter.c")
+	tcpipStackSysTimeAdapterSourceFile.setOverwrite(True)
+	tcpipStackSysTimeAdapterSourceFile.setDestPath("system/")
+	tcpipStackSysTimeAdapterSourceFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysTimeAdapterSourceFile.setType("SOURCE")
+	tcpipStackSysTimeAdapterSourceFile.setEnabled(True)
+	
+	tcpipStackSysIntAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysIntAdapterHeaderFile.setSourcePath("sys_adapter/sys_int_h2_adapter.h")
+	tcpipStackSysIntAdapterHeaderFile.setOutputName("sys_int_h2_adapter.h")
+	tcpipStackSysIntAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysIntAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysIntAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysIntAdapterHeaderFile.setOverwrite(True)	
+	
+	tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysClkAdapterHeaderFile.setSourcePath("sys_adapter/sys_clk_h2_adapter.h")
+	tcpipStackSysClkAdapterHeaderFile.setOutputName("sys_clk_h2_adapter.h")
+	tcpipStackSysClkAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysClkAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysClkAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysClkAdapterHeaderFile.setOverwrite(True)	
+	
+	tcpipStackSysCmdAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysCmdAdapterHeaderFile.setSourcePath("sys_adapter/sys_cmd_h2_adapter.h")
+	tcpipStackSysCmdAdapterHeaderFile.setOutputName("sys_cmd_h2_adapter.h")
+	tcpipStackSysCmdAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysCmdAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysCmdAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysCmdAdapterHeaderFile.setOverwrite(True)	
+	
+	tcpipStackSysConsoleAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysConsoleAdapterHeaderFile.setSourcePath("sys_adapter/sys_console_h2_adapter.h")
+	tcpipStackSysConsoleAdapterHeaderFile.setOutputName("sys_console_h2_adapter.h")
+	tcpipStackSysConsoleAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysConsoleAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysConsoleAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysConsoleAdapterHeaderFile.setOverwrite(True)
+	
+	tcpipStackSysRandomAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysRandomAdapterHeaderFile.setSourcePath("sys_adapter/sys_random_h2_adapter.h")
+	tcpipStackSysRandomAdapterHeaderFile.setOutputName("sys_random_h2_adapter.h")
+	tcpipStackSysRandomAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysRandomAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysRandomAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysRandomAdapterHeaderFile.setOverwrite(True)		
+	
+	tcpipStackSysConfigHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysConfigHeaderFile.setSourcePath("sys_adapter/system_config.h")
+	tcpipStackSysConfigHeaderFile.setOutputName("system_config.h")
+	tcpipStackSysConfigHeaderFile.setDestPath("")
+	tcpipStackSysConfigHeaderFile.setProjectPath("config/" + configName + "/")
+	tcpipStackSysConfigHeaderFile.setType("HEADER")
+	tcpipStackSysConfigHeaderFile.setOverwrite(True)	
+	
+	tcpipStackSysDefHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysDefHeaderFile.setSourcePath("sys_adapter/system_definitions.h")
+	tcpipStackSysDefHeaderFile.setOutputName("system_definitions.h")
+	tcpipStackSysDefHeaderFile.setDestPath("")
+	tcpipStackSysDefHeaderFile.setProjectPath("config/" + configName + "/")
+	tcpipStackSysDefHeaderFile.setType("HEADER")
+	tcpipStackSysDefHeaderFile.setOverwrite(True)
+	
+	tcpipStackSysAdapterSystemDefFile = tcpipStackComponent.createFileSymbol("ADAPTER_H_FILE", None)
+	tcpipStackSysAdapterSystemDefFile.setType("STRING")
+	tcpipStackSysAdapterSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	tcpipStackSysAdapterSystemDefFile.setSourcePath("sys_adapter/templates/system/system_definitions.h.ftl")
+	tcpipStackSysAdapterSystemDefFile.setMarkup(True)
+#########################################################################################	
 		
 def tcpipStackMenuVisible(symbol, event):
 	if (event["value"] == True):

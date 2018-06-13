@@ -23,8 +23,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  *******************************************************************************/
  -->
 <#if DRV_MIIM_USE_DRIVER == true>
-<#-- niyas todo 
-<#if USE_3RDPARTY_RTOS == true>
+<#if (USE_3RDPARTY_RTOS)?has_content && USE_3RDPARTY_RTOS == true>
 <#if (DRV_MIIM_TASKS == "PROTO") && (DRV_MIIM_RTOS == "Standalone")>
 <#if THIRDPARTY_RTOS_USED == "ThreadX">
 void _DRV_MIIM_Tasks(ULONG thread_input);
@@ -66,8 +65,8 @@ void _DRV_MIIM_Tasks(void)
 <#else>
     DRV_MIIM_Tasks (sysObj.drvMiim);
 </#if>
-niyas -->
 </#if>
+
 <#--
 /*******************************************************************************
  End of File
