@@ -282,6 +282,12 @@ def instantiateComponent(netPresCommonComponent):
 	netPresSysInitCallSourceFtl.setSourcePath("net/pres/templates/system_init.c.call.ftl")
 	netPresSysInitCallSourceFtl.setMarkup(True)
 
+	netPresSystemDefFile = netPresCommonComponent.createFileSymbol(None, None)
+	netPresSystemDefFile.setType("STRING")
+	netPresSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
+	netPresSystemDefFile.setSourcePath("net/pres/templates/system_definitions.h.include.ftl")
+	netPresSystemDefFile.setMarkup(True)
+	
 	netPresSystemDefObjFile = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSystemDefObjFile.setType("STRING")
 	netPresSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
