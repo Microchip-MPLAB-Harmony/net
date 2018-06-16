@@ -1,4 +1,4 @@
-<#--include "/framework/net/pres/tls/templates/system_init.c.data.ftl"-->
+<#--include "/net/pres/tls/templates/system_init.c.data.ftl"-->
 <#if NET_PRES_USE>
     <#macro NET_PRES_HRM_TRANS_DATA
         CONN
@@ -7,7 +7,7 @@
     .fpLocalBind         = (NET_PRES_TransBind)TCPIP_${CONN}_Bind,
     .fpRemoteBind        = (NET_PRES_TransBind)TCPIP_${CONN}_RemoteBind,
     <#if CONN == "TCP">
-    <#if CONFIG_TCPIP_TCP_DYNAMIC_OPTIONS == true>
+    <#if ((tcpipTcp.TCPIP_TCP_DYNAMIC_OPTIONS)?has_content &&  (tcpipTcp.TCPIP_TCP_DYNAMIC_OPTIONS) == true)>
     .fpOptionGet         = (NET_PRES_TransOption)TCPIP_${CONN}_OptionsGet,
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_${CONN}_OptionsSet,
     <#else>
@@ -50,92 +50,98 @@
     <#macro NET_PRES_TRANS_DATA
         INST_NUMBER>
 /* Net Presentation Layer Data Definitions */
-#include "framework/net/pres/net_pres_enc_glue.h"
-        <#assign useStream=.vars["NET_PRES_SUPPORT_STREAM_IDX${INST_NUMBER}"]>
-        <#assign useDataGram=.vars["NET_PRES_SUPPORT_DATAGRAM_IDX${INST_NUMBER}"]>
-        <#assign useServer=.vars["NET_PRES_SUPPORT_SERVER_IDX${INST_NUMBER}"]>
-        <#assign useClient=.vars["NET_PRES_SUPPORT_CLIENT_IDX${INST_NUMBER}"]>
-        <#assign useHarmonyTcp=.vars["NET_PRES_TRANSPORT_AS_TCPIP_IDX${INST_NUMBER}"]>
+#include "net/pres/net_pres_enc_glue.h"
+        <#assign useStream= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_STREAM_IDX${INST_NUMBER}"?eval>
+        <#assign useDataGram= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_DATAGRAM_IDX${INST_NUMBER}"?eval> 
+        <#assign useServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_IDX${INST_NUMBER}"?eval> 
+        <#assign useClient= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_CLIENT_IDX${INST_NUMBER}"?eval> 
+        <#assign useHarmonyTcp= "netPres_${INST_NUMBER}.NET_PRES_TRANSPORT_AS_TCPIP_IDX${INST_NUMBER}"?eval> 
 
-        <#if useHarmonyTcp && useStream && useServer && CONFIG_TCPIP_USE_TCP>        
+        <#if useHarmonyTcp && useStream && useServer && ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true)>        
 static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}SS = {
             <@NET_PRES_HRM_TRANS_DATA "TCP" "Server"/>
 };
         </#if>
-        <#if useHarmonyTcp && useStream && useClient && CONFIG_TCPIP_USE_TCP>        
+        <#if useHarmonyTcp && useStream && useClient && ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true)>        
 static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}SC = {
             <@NET_PRES_HRM_TRANS_DATA "TCP" "Client"/>
 };
         </#if>
-        <#if useHarmonyTcp && useDataGram && useServer && CONFIG_TCPIP_USE_UDP>        
+        <#if useHarmonyTcp && useDataGram && useServer && ((tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true)>        
 static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}DS = {
             <@NET_PRES_HRM_TRANS_DATA "UDP" "Server"/>
 };
         </#if>
-        <#if useHarmonyTcp && useDataGram && useClient && CONFIG_TCPIP_USE_UDP>        
+        <#if useHarmonyTcp && useDataGram && useClient && ((tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true)>        
 static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}DC = {
             <@NET_PRES_HRM_TRANS_DATA "UDP" "Client"/>
 };
         </#if>
     </#macro>
-    <#assign numInstance=NET_PRES_INSTANCES?number>
+    <#assign numInstance= NET_PRES_INSTANCES?number>
     <#list 0..(numInstance-1) as idx>
-	<#assign netPresIdx = "NET_PRES_IDX${idx}">
-        <#if .vars[netPresIdx]?has_content>
+	<#assign netPresIdx = "netPres_${idx}.NET_PRES_IDX${idx}"?eval>
+		<#if netPresIdx??>
+		<#if netPresIdx == true>
             <@NET_PRES_TRANS_DATA 
                 INST_NUMBER=idx
             />
-            <#assign supportStream=.vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${idx}"]>
-            <#assign supportDataGram=.vars["NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${idx}"]>
-            <#assign supportServer=.vars["NET_PRES_SUPPORT_SERVER_ENC_IDX${idx}"]>
-            <#assign supportClient=.vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${idx}"]>
+			<#assign supportEncryption= "netPres_${idx}.NET_PRES_SUPPORT_ENCRYPTION${idx}"?eval> 
+            <#assign supportStream= "netPres_${idx}.NET_PRES_SUPPORT_STREAM_ENC_IDX${idx}"?eval> 
+            <#assign supportDataGram= "netPres_${idx}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${idx}"?eval>
+            <#assign supportServer=  "netPres_${idx}.NET_PRES_SUPPORT_SERVER_ENC_IDX${idx}"?eval>
+            <#assign supportClient=  "netPres_${idx}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${idx}"?eval>
         </#if>
+		</#if>
     </#list>
+
 static const NET_PRES_INST_DATA netPresCfgs[] = 
-{
+{  
     <#list 0..(numInstance-1) as idx>
-        <#assign netPresIdx = "NET_PRES_IDX${idx}">
-        <#if .vars[netPresIdx]?has_content>
+        <#assign netPresIdx = "netPres_${idx}.NET_PRES_IDX${idx}"?eval>
+		<#if netPresIdx??>
+		<#if netPresIdx == true>
     {
-            <#assign useStream=.vars["NET_PRES_SUPPORT_STREAM_IDX${idx}"]>
-            <#assign useDataGram=.vars["NET_PRES_SUPPORT_DATAGRAM_IDX${idx}"]>
-            <#assign useServer=.vars["NET_PRES_SUPPORT_SERVER_IDX${idx}"]>
-            <#assign useClient=.vars["NET_PRES_SUPPORT_CLIENT_IDX${idx}"]>
-            <#assign useHarmonyTcp=.vars["NET_PRES_TRANSPORT_AS_TCPIP_IDX${idx}"]>
-            <#if useHarmonyTcp && useStream && useServer && CONFIG_TCPIP_USE_TCP>        
+            <#assign useStream=  "netPres_${idx}.NET_PRES_SUPPORT_STREAM_IDX${idx}"?eval> 
+            <#assign useDataGram= "netPres_${idx}.NET_PRES_SUPPORT_DATAGRAM_IDX${idx}"?eval>
+            <#assign useServer= "netPres_${idx}.NET_PRES_SUPPORT_SERVER_IDX${idx}"?eval>
+            <#assign useClient=  "netPres_${idx}.NET_PRES_SUPPORT_CLIENT_IDX${idx}"?eval>
+            <#assign useHarmonyTcp= "netPres_${idx}.NET_PRES_TRANSPORT_AS_TCPIP_IDX${idx}"?eval>
+            <#if useHarmonyTcp && useStream && useServer && ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true)>        
         .pTransObject_ss = &netPresTransObject${idx}SS,
             </#if>
-            <#if useHarmonyTcp && useStream && useClient && CONFIG_TCPIP_USE_TCP>        
+            <#if useHarmonyTcp && useStream && useClient && ((tcpipTcp.TCPIP_USE_TCP)?has_content &&  (tcpipTcp.TCPIP_USE_TCP) == true)>        
         .pTransObject_sc = &netPresTransObject${idx}SC,
             </#if>
-            <#if useHarmonyTcp && useDataGram && useServer && CONFIG_TCPIP_USE_UDP>        
+            <#if useHarmonyTcp && useDataGram && useServer && ((tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true)>        
         .pTransObject_ds = &netPresTransObject${idx}DS,
             </#if>
-            <#if useHarmonyTcp && useDataGram && useClient && CONFIG_TCPIP_USE_UDP>        
+            <#if useHarmonyTcp && useDataGram && useClient && ((tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true)>        
         .pTransObject_dc = &netPresTransObject${idx}DC,
             </#if>
-            <#if supportStream && supportServer>
+            <#if supportEncryption && supportStream && supportServer >
         .pProvObject_ss = &net_pres_EncProviderStreamServer${idx},
             <#else>
         .pProvObject_ss = NULL,
             </#if>
-            <#if supportStream && supportClient>
+            <#if supportEncryption && supportStream && supportClient>
         .pProvObject_sc = &net_pres_EncProviderStreamClient${idx},
             <#else>
         .pProvObject_sc = NULL,
             </#if>
-            <#if supportDataGram && supportServer>
+            <#if supportEncryption && supportDataGram && supportServer>
         .pProvObject_ds = &net_pres_EncProviderDataGramServer${idx},
             <#else>
         .pProvObject_ds = NULL,
             </#if>
-            <#if supportDataGram && supportClient>
+            <#if supportEncryption && supportDataGram && supportClient>
         .pProvObject_dc = &net_pres_EncProviderDataGramClient${idx},
             <#else>
         .pProvObject_dc = NULL,
             </#if>
     },
         </#if>     
+		</#if>
      </#list>
 };
 
