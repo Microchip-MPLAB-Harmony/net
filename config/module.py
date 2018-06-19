@@ -52,6 +52,7 @@ def loadModule():
 	tcpipBerkeleyApiComponent.addCapability("libtcpipBerkeleyApi","BSD")	
 	tcpipBerkeleyApiComponent.addDependency("BSD_TCP_Dependency", "TCP")
 	tcpipBerkeleyApiComponent.addDependency("BSD_UDP_Dependency", "UDP")
+	tcpipBerkeleyApiComponent.addDependency("BSD_NETPRES_Dependency", "net_pres")
 	
 	tcpipDhcpComponent = Module.CreateComponent("tcpipDhcp", "DHCP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "library/config/tcpip_dhcp.py")
 	tcpipDhcpComponent.addCapability("libtcpipDhcp","DHCPC")
