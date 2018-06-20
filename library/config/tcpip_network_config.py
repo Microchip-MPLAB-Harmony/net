@@ -38,7 +38,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 	tcpipNetIfName.setReadOnly(True)
 
 
-	#niyas to do : check the need of this
+	#H3_ToDo : check the need of this
 	# Ethernet MAC needed
 	tcpipNetEthMacNeeded = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_DEFAULT_INTERFACE_ETH_MAC_NEEDED_IDX"+str(index),None)
 	tcpipNetEthMacNeeded.setVisible(False)
@@ -235,7 +235,7 @@ def tcpipNetHostNameUpdate(symbol, event):
 	
 	print("END tcpipNetHostNameUpdate")
 
-# niyas todo : check the need of this func
+# H3_ToDo : check the need of this func
 def tcpipNetEthMacNeedUpdate(symbol, event):
 	symbol.clearValue()
 	if ((event["value"] == "PIC32CINT") or (event["value"] == "PIC32INT")):
@@ -281,7 +281,7 @@ def tcpipNetIpAddrUpdate(symbol, event):
 				if(tcpipInterfaceName == "ENC28J60"):
 					symbol.setValue("192.168.100.13",1)
 				else:
-					# niyas implment dhcp server client dependency
+					# H3_ToDo implment dhcp server client dependency
 					if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
 						symbol.setValue("192.168.1.2",1)
 					else:
@@ -307,7 +307,7 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
 			if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
 				symbol.setValue("192.168.1.1",1)
 			else:					
-				# niyas Implement PIC32WK dependency
+				# H3_ToDo Implement PIC32WK dependency
 				symbol.setValue("0.0.0.0",1)
 	
 	print("END tcpipNetGatewayIpAddrUpdate")		
@@ -330,7 +330,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
 			if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
 				symbol.setValue("192.168.1.1",1)
 			else:					
-				#niyas Implement PIC32WK dependency
+				#H3_ToDo Implement PIC32WK dependency
 				symbol.setValue("0.0.0.0",1)
 		
 	print("END tcpipNetPrimDnsIpAddrUpdate")
@@ -356,7 +356,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
 				if(tcpipInterfaceName == "ENC28J60"):
 					symbol.setValue("DRV_ENC28J60_MACObject",1)
 				else:
-					# niyas implment dhcp server client dependency
+					# H3_ToDo implment dhcp server client dependency
 					if(tcpipInterfaceName == "MRF24WN"):
 						symbol.setValue("WDRV_MRF24WN_MACObject",1)
 					else:
@@ -366,38 +366,12 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
 							if(tcpipInterfaceName == "WILC1000"):
 								symbol.setValue("WDRV_WILC1000_MACObject",1)
 							else:	
-								# niyas implment PIC32WK dependency
+								# H3_ToDo implment PIC32WK dependency
 								symbol.setValue("",1)
 
 	print("END tcpipNetMACDrvObjUpdate")	
 	
-#niyas revisit this implementataion
-# def tcpipNetEnableConfig(symbol, event):
-	# global tcpipNetConfigNumPrev
-	# print("Start tcpipNetEnableConfig")
-	# print(symbol.getID())
-	# print(event["id"])
-	# tcpipNetConfigNumberValue = event["value"]
-	# print(tcpipNetConfigNumberValue)
-	# print(tcpipNetConfigNumPrev)
-	# if(tcpipNetConfigNumberValue > tcpipNetConfigNumPrev ):
-		# tcpipNetConfig[tcpipNetConfigNumPrev].setVisible(True)
-		# tcpipNetConfig[tcpipNetConfigNumPrev].setValue(True, 1)
-		# print("Set TRUE"+ str(tcpipNetConfigNumPrev))
-		# tcpipNetConfigNumPrev = tcpipNetConfigNumPrev + 1
-		# #Add more network configurations
-	# else:
-		# if(tcpipNetConfigNumberValue < tcpipNetConfigNumPrev ):
-			# #Reduce network configurations
-			# tcpipNetConfigNumPrev = tcpipNetConfigNumPrev - 1
-			# tcpipNetConfig[tcpipNetConfigNumPrev].setVisible(False)
-			# tcpipNetConfig[tcpipNetConfigNumPrev].setValue(False, 1)
-			# print("Set FALSE"+ str(tcpipNetConfigNumPrev))
-			
-		# #else:
-			# #Do Nothing
-			
-	# print("END tcpipNetEnableConfig")
+
 
 def tcpipNetStartupFlagZConf(symbol, event):	
 	print("Start tcpipNetStartupFlagZConf")

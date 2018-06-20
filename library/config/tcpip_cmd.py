@@ -7,8 +7,8 @@ def instantiateComponent(tcpipCmdComponent):
 	tcpipCmd.setLabel("Use TCP/IP Commands")
 	tcpipCmd.setVisible(False)
 	tcpipCmd.setDescription("Use TCP/IP Commands")
-	tcpipCmd.setDefaultValue(True)   # Niyas to check the default value
-	# Niyas to do 
+	tcpipCmd.setDefaultValue(True)
+	# H3_ToDo  
 	# select USE_SYS_RESET_NEEDED
 	# select USE_SYS_CONSOLE_NEEDED
 	# select USE_SYS_COMMAND_NEEDED 

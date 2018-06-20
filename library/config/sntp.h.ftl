@@ -41,14 +41,14 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 <#if TCPIP_USE_SNTP_CLIENT == true>
 /*** SNTP Configuration ***/
 #define TCPIP_STACK_USE_SNTP_CLIENT
-<#-- niyas 
+<#-- H3_ToDo 
 <#if CONFIG_PIC32WK == true>
 #define TCPIP_NTP_DEFAULT_IF		        		"${TCPIP_NTP_DEFAULT_IF_WK}"
 <#else>
 #define TCPIP_NTP_DEFAULT_IF		        		"${TCPIP_NTP_DEFAULT_IF}"
 </#if>
 -->
-/** niyas */
+/** H3_ToDo */
 #define TCPIP_NTP_DEFAULT_IF		        		"${TCPIP_NTP_DEFAULT_IF}"
 <#if TCPIP_NTP_STRING_VERSION == "SNTP_VERSION_3">
 #define TCPIP_NTP_VERSION                           		3

@@ -10,7 +10,7 @@ def instantiateComponent(tcpipFtpsComponent):
 	tcpipFtpsModule.setDescription("Use FTP Module")
 	tcpipFtpsModule.setDefaultValue(True)
 	#tcpipFtpsModule.setDependencies(tcpipFtpsModuleMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipTcp.TCPIP_USE_TCP"])
-	# niyas to do  select USE_SYS_FS_NEEDED
+	# H3_ToDo  select USE_SYS_FS_NEEDED
 
 	# Maximum Length for User Name
 	tcpipFtpsUsrNameMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_USER_NAME_LEN", None)

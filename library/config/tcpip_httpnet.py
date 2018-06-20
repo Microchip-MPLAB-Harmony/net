@@ -9,13 +9,13 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetSrv.setVisible(False)
 	tcpipHttpNetSrv.setDescription("Enable HTTP NET Server")
 	tcpipHttpNetSrv.setDefaultValue(True)
-	# Niyas to do  
+	# H3_ToDo  
 		# select USE_SYS_FS_NEEDED
 		# select NET_PRES_NEEDED
 		# select USE_CRYPTO_LIB_NEEDED
 		# select USE_CRYPTO_MD5_NEEDED
 		# select USE_CRYPTO_RANDOM_NEEDED
-	#tcpipHttpNetSrv.setDependencies(tcpipHttpNetSrvVisible, ["tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER" , "tcpipTcp.TCPIP_USE_TCP"]) # Niyas to verify the dependency function
+	#tcpipHttpNetSrv.setDependencies(tcpipHttpNetSrvVisible, ["tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER" , "tcpipTcp.TCPIP_USE_TCP"]) # H3_ToDo to verify the dependency function
 
 	# Maximum Header Length
 	tcpipHttpNetHdrLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_HEADER_LEN", None)
@@ -102,7 +102,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetBase64Decode.setLabel("Use Base 64 Decode")
 	tcpipHttpNetBase64Decode.setVisible(True)
 	tcpipHttpNetBase64Decode.setDescription("Use Base 64 Decode")
-	tcpipHttpNetBase64Decode.setDefaultValue(False) # Niyas to check the default value
+	tcpipHttpNetBase64Decode.setDefaultValue(False) # H3_ToDo to check the default value
 	#tcpipHttpNetBase64Decode.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
 	# Enable Basic Authenication Support
@@ -111,7 +111,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetAuth.setVisible(True)
 	tcpipHttpNetAuth.setDescription("Enable Basic Authenication Support")
 	tcpipHttpNetAuth.setDefaultValue(True)
-	# Niyas to do
+	# H3_ToDo
 	# select TCPIP_HTTP_NET_USE_BASE64_DECODE
 	#tcpipHttpNetAuth.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
@@ -191,12 +191,12 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetConfigFlagSecureDefault.setDescription("HTTP security is based on the port numbers")
 	tcpipHttpNetConfigFlagSecureDefault.setDefaultValue(True)
 	
-		# Niyas to verify this dependency
+		# H3_ToDo to verify this dependency
 	tcpipHttpNetConfigFlagSecureDefault.setDependencies(tcpipHttpNetSrvConfigFlagSecureDefaultEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON"])
 	tcpipHttpNetConfigFlagSecureOn.setDependencies(tcpipHttpNetSrvConfigFlagSecureOnEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
 	tcpipHttpNetConfigFlagSecureOff.setDependencies(tcpipHttpNetSrvConfigFlagSecureOffEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
 
-	# # Niyas to verify this dependency
+	# # H3_ToDo to verify this dependency
 	# tcpipHttpNetConfigFlagSecureDefault.setDependencies(tcpipHttpNetSrvConfigFlagSecureDefaultEnable, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON"])
 	# tcpipHttpNetConfigFlagSecureOn.setDependencies(tcpipHttpNetSrvConfigFlagSecureOnEnable, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
 	# tcpipHttpNetConfigFlagSecureOff.setDependencies(tcpipHttpNetSrvConfigFlagSecureOffEnable, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
@@ -394,13 +394,13 @@ def instantiateComponent(tcpipHttpNetComponent):
 	#tcpipHttpNetCustTemplate.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
 
-	# Niyas to check below component
+	# H3_ToDo to check below component
 	# Include HTTP NET Custom Template SL
 	tcpipHttpNetCustTemplateSl = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL", None)
 	tcpipHttpNetCustTemplateSl.setVisible(False)
 	tcpipHttpNetCustTemplateSl.setDescription("Include HTTP NET Custom Template SL")
 	tcpipHttpNetCustTemplateSl.setDefaultValue(False)
-	# # Niyas to check below
+	# # H3_ToDo check below
 	# # default y if (USE_SYS_FS = y) && (SYS_FS_MPFS = y)
 	#tcpipHttpNetCustTemplateSl.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
@@ -428,7 +428,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	#tcpipHttpNetFreeFunct.setDefaultValue("")
 	#tcpipHttpNetFreeFunct.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
-	# Niyas to check the dummy 
+	# H3_ToDo to check the dummy 
 	# config TCPIP_STACK_USE_HTTP_NET_SERVER_DUMMY
 	# bool "HTTP NET Server"
 	# depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_STACK_USE_HTTP_SERVER
@@ -455,7 +455,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetSourceFile.setEnabled(True)
 	tcpipHttpNetSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
-	# Niyas to add
+	# H3_ToDo
 	# file DRV_NVM_STATIC_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
 	# file DRV_NVM_STATIC_LOCAL_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
 	# file DRV_NVM_STATIC_VAR_MAP_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"

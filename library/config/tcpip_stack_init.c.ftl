@@ -27,7 +27,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 -->
 
 <#if USE_TCPIP_STACK == true>
-<#-- niyas
+<#-- H3_ToDo
 <#if (TCPIP_DEVICE_FAMILY) == "SAME70">
 <#if (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE)?has_content && (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE) == true>
     /* set priority for ETHERNET interrupt source */
@@ -43,7 +43,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 </#if>    
 </#if>    
 --> 
-<#-- niyas to do 
+<#-- H3_ToDo to do 
 <#if TCPIP_STACK_USE_COMMANDS == true && CONFIG_USE_SYS_COMMAND == false>
     if (!SYS_CMD_Initialize())
     {

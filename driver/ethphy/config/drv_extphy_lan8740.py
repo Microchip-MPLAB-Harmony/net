@@ -48,7 +48,7 @@ def instantiateComponent(drvExtPhyLan8740Component):
 	# External PHY Type
 	drvExtPhyLan8740PhyType = drvExtPhyLan8740Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
 	#drvExtPhyLan8740PhyType.setLabel("External PHY Type")
-	drvExtPhyLan8740PhyType.setVisible(False)# Niyas to check the visibility 
+	drvExtPhyLan8740PhyType.setVisible(False)
 	#drvExtPhyLan8740PhyType.setDescription("External PHY Type")
 	drvExtPhyLan8740PhyType.setDefaultValue("SMSC_LAN8740")
 
@@ -111,7 +111,7 @@ def instantiateComponent(drvExtPhyLan8740Component):
 	# App Function
 	drvExtPhyLan8740ResetCallback = drvExtPhyLan8740Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyLan8740ResetCallbackEnable)
 	drvExtPhyLan8740ResetCallback.setLabel("App Function")
-	drvExtPhyLan8740ResetCallback.setVisible(False)# Niyas to check the visibility 
+	drvExtPhyLan8740ResetCallback.setVisible(False)
 	drvExtPhyLan8740ResetCallback.setDescription("App Function")
 	drvExtPhyLan8740ResetCallback.setDefaultValue("AppPhyResetFunction")
 	drvExtPhyLan8740ResetCallback.setDependencies(drvExtPhyLan8740MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
@@ -123,7 +123,7 @@ def instantiateComponent(drvExtPhyLan8740Component):
 	drvExtPhyLan8740HeaderFtl.setMarkup(True)
 	drvExtPhyLan8740HeaderFtl.setType("STRING")
 	
-	#niyas to do
+	
 	# add "<#include \"/framework/tcpip/config/tcpip_stack.c.ftl\">"  to list SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA
 	drvExtPhyLan8740SourceFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
 	drvExtPhyLan8740SourceFtl.setType("STRING")

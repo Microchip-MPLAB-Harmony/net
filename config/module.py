@@ -172,7 +172,7 @@ def loadModule():
 	tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "SYS_FS")	
 		
 	########################## Driver Modules ####################################################
-	## niyas : decide on moving driver to core repo
+	## H3_ToDo : decide on moving driver to core repo
 	if "SAME70" in Variables.get("__PROCESSOR"):
 		drvSamv71GmacComponent = Module.CreateComponent("drvSamv71Gmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
 		drvSamv71GmacComponent.addCapability("libdrvSamv71Gmac","MAC")
@@ -191,11 +191,11 @@ def loadModule():
 	drvWifiWinc1500Component = Module.CreateComponent("drvWifiWinc1500", "WINC1500", "/Harmony/Drivers/MAC Driver/WiFi/", "driver/winc1500/config/drv_wifi_winc1500.py")
 	drvWifiWinc1500Component.addCapability("libdrvExtMacEnc28j","MAC")	
 	
-	## niyas : decide on moving driver to core repo
+	## H3_ToDo : decide on moving driver to core repo
 	drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Harmony/Drivers/", "driver/miim/config/drv_miim.py")
 	drvMiimComponent.addCapability("libdrvMiim","MIIM")	
 	
-	## niyas : decide on moving driver to core repo
+	## H3_ToDo : decide on moving driver to core repo
 	drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
 	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY")	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM")	

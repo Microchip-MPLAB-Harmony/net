@@ -1,5 +1,5 @@
 TCPIP_STACK_PHY_TYPE =	["National_DP83640", "National_DP83848", "SMSC_LAN8700", "SMSC_LAN8720", "SMSC_LAN8740", "SMSC_LAN9303", "KSZ8061", "KSZ8041", "KSZ8863", "IP_IP101GR" ]
-#niyas global enum from SYS module
+#H3_ToDo :  global enum from SYS module
 SYS_MODULE_POWER_STATE =	["SYS_MODULE_POWER_OFF","SYS_MODULE_POWER_SLEEP","SYS_MODULE_POWER_IDLE_STOP","SYS_MODULE_POWER_IDLE_RUN","SYS_MODULE_POWER_RUN_FULL"]
 
 __TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
@@ -257,11 +257,10 @@ def instantiateComponent(drvSamv71GmacComponent):
 
 	# GMAC TX descriptors Dummy Count
 	tcpipGmacTxDescCountDummmy = drvSamv71GmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY", None)
-	tcpipGmacTxDescCountDummmy.setLabel("")  # Niyas to check this label value and other settings for this dummy variables
+	tcpipGmacTxDescCountDummmy.setLabel("") 
 	tcpipGmacTxDescCountDummmy.setVisible(False)
 	tcpipGmacTxDescCountDummmy.setDescription("GMAC TX descriptors Dummy Count")
 	tcpipGmacTxDescCountDummmy.setDefaultValue(1)
-	#tcpipGmacTxDescCountDummmy.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
 	# GMAC RX descriptors Dummy Count
 	tcpipGmacRxDescCountDummmy = drvSamv71GmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY", None)
@@ -294,7 +293,7 @@ def instantiateComponent(drvSamv71GmacComponent):
 	# MAC Maximum Number of Supported Fragments
 	tcpipEmacRxFragNumMax = drvSamv71GmacComponent.createIntegerSymbol("TCPIP_EMAC_RX_FRAGMENTS", None)
 	tcpipEmacRxFragNumMax.setLabel("MAC Maximum Number of Supported Fragments")
-	tcpipEmacRxFragNumMax.setMax(6) # Niyas to do review
+	tcpipEmacRxFragNumMax.setMax(6)
 	tcpipEmacRxFragNumMax.setVisible(True)
 	tcpipEmacRxFragNumMax.setDescription("MAC Maximum Number of Supported Fragments")
 	tcpipEmacRxFragNumMax.setDefaultValue(1)
@@ -315,14 +314,14 @@ def instantiateComponent(drvSamv71GmacComponent):
 	# Accept Multicast Packets
 	tcpipGmacEthFilterMcastAccept = drvSamv71GmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_FILTER_MCAST_ACCEPT", tcpipEthRxFilter)
 	tcpipGmacEthFilterMcastAccept.setLabel("Accept Multicast Packets")
-	tcpipGmacEthFilterMcastAccept.setVisible(True) # Niyas to check the visibility 
+	tcpipGmacEthFilterMcastAccept.setVisible(True)
 	tcpipGmacEthFilterMcastAccept.setDescription("Accept Multicast Packets")
 	tcpipGmacEthFilterMcastAccept.setDefaultValue(True)
 	
 	# Accept Unicast Packets
 	tcpipGmacEthFilterUcastAccept = drvSamv71GmacComponent.createBooleanSymbol("TCPIP_GMAC_ETH_FILTER_UCAST_ACCEPT", tcpipEthRxFilter)
 	tcpipGmacEthFilterUcastAccept.setLabel("Accept Unicast Packets")
-	tcpipGmacEthFilterUcastAccept.setVisible(True) # Niyas to check the visibility 
+	tcpipGmacEthFilterUcastAccept.setVisible(True)
 	tcpipGmacEthFilterUcastAccept.setDescription("Accept Unicast Packets")
 	tcpipGmacEthFilterUcastAccept.setDefaultValue(True)
 	
@@ -476,10 +475,10 @@ def instantiateComponent(drvSamv71GmacComponent):
 	tcpipEmacModuleId.setDefaultValue("GMAC_ID_0")
 	
 	# GMAC Interrupt mode 
-	#niyas : this sysmbol need more review
+	#H3_ToDo : this sysmbol need more review
 	tcpipGmacIntrMode = drvSamv71GmacComponent.createBooleanSymbol("TCPIP_GMAC_INTERRUPT_MODE", None)
 	tcpipGmacIntrMode.setLabel("")
-	tcpipGmacIntrMode.setVisible(False) # Niyas to check the visibility and label
+	tcpipGmacIntrMode.setVisible(False)
 	tcpipGmacIntrMode.setDescription("GMAC Interrupt mode")
 	tcpipGmacIntrMode.setDefaultValue(True)
 	#tcpipGmacIntrMode.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
@@ -500,7 +499,7 @@ def instantiateComponent(drvSamv71GmacComponent):
 	
 	# Driver GMAC Clients Number
 	drvGmacIndex = drvSamv71GmacComponent.createIntegerSymbol("DRV_GMAC_INDEX", None)
-	drvGmacIndex.setLabel("GMAC Index Number") # Niyas to check the label name repetation with the above one
+	drvGmacIndex.setLabel("GMAC Index Number") 
 	drvGmacIndex.setVisible(True)
 	drvGmacIndex.setDescription("Driver GMAC Clients Number")
 	drvGmacIndex.setDefaultValue(1)
@@ -536,7 +535,7 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacIntrVector.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_GMAC_INTERRUPT_MODE"])
 
 	# Interrupt Priority
-	tcpipGmacIntrPriority = drvSamv71GmacComponent.createStringSymbol("TCPIP_GMAC_INTERRUPT_PRIORITY", tcpipGmacIntrMode)  # Niyas to use the below combo symbol instead of string
+	tcpipGmacIntrPriority = drvSamv71GmacComponent.createStringSymbol("TCPIP_GMAC_INTERRUPT_PRIORITY", tcpipGmacIntrMode)  # H3_ToDo: use the below combo symbol instead of string
 	#tcpipGmacIntrPriority = drvSamv71GmacComponent.createComboSymbol("TCPIP_GMAC_INTERRUPT_PRIORITY", tcpipGmacIntrMode, INT_PRIORITY_LEVEL)
 	tcpipGmacIntrPriority.setLabel("Interrupt Priority")
 	tcpipGmacIntrPriority.setVisible(False)
@@ -545,10 +544,9 @@ def instantiateComponent(drvSamv71GmacComponent):
 	tcpipGmacIntrPriority.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_INTERRUPT_MODE"])
 
 	# Power State
-	#drvGmacPowerState = drvSamv71GmacComponent.createStringSymbol("DRV_GMAC_POWER_STATE", None)# Niyas to use the below combo symbol instead of string
 	drvGmacPowerState = drvSamv71GmacComponent.createComboSymbol("DRV_GMAC_POWER_STATE", None, SYS_MODULE_POWER_STATE)
 	drvGmacPowerState.setLabel("Power State")
-	drvGmacPowerState.setVisible(True) # Niyas to check the visibility 
+	drvGmacPowerState.setVisible(True)
 	drvGmacPowerState.setDescription("Power State")
 	drvGmacPowerState.setDefaultValue("SYS_MODULE_POWER_RUN_FULL")
 	#drvGmacPowerState.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
@@ -640,6 +638,7 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacLibSourceFile.setEnabled(True)
 	#drvGmacLibSourceFile.setDependencies(tcpipGmacGenSourceFile, ["TCPIP_USE_ETH_MAC"])
 
+	# H3_ToDo :moved this system def to tcpip module as there is dependency for th eorder of inclusion
 	# drvGmacSystemDefFile = drvSamv71GmacComponent.createFileSymbol("GMAC_H_FILE", None)
 	# drvGmacSystemDefFile.setType("STRING")
 	# drvGmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
@@ -649,7 +648,7 @@ def instantiateComponent(drvSamv71GmacComponent):
 	# ifblock TCPIP_GMAC_INTERRUPT_MODE = y
 	# add "pfnGMAC_Handler GMAC_Handler"  to list SYSTEM_STARTUP_PIC32C_INTERRUPT_HANDLERS
 	# endif
-	# niyas GMAC interrupt Handler 
+	# H3_ToDo GMAC interrupt Handler 
 	global peripId
 	global NVICVector
 	global NVICHandler
@@ -683,8 +682,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 			
 	# NVIC Dynamic settings
 	drvGmacNVICControl = drvSamv71GmacComponent.createBooleanSymbol("NVIC_GMAC_ENABLE", None)
-	#niyas check dependency value
-	#drvGmacNVICControl.setDependencies(NVICControl, ["TCPIP_GMAC_INTERRUPT_MODE"])
 	drvGmacNVICControl.setDependencies(NVICControl, ["DRV_GMAC_INTERRUPT_MODE"])
 	drvGmacNVICControl.setVisible(False)
 
@@ -699,12 +696,7 @@ def tcpipEthMacMenuVisibleSingle(symbol, event):
 		
 def tcpipEthMacMdixSwapVisible(symbol, event):
 	tcpipEthMacAutoMdix = Database.getSymbolValue("drvSamv71Gmac","TCPIP_GMAC_ETH_OF_MDIX_AUTO")
-	#drvSamv71Gmac = Database.getSymbolValue("drvSamv71Gmac","TCPIP_USE_ETH_MAC")
-	
-	#gmac = ATDF.getNode("/avr-tools-device-file/modules/module@[name=\"GMAC\"]")
-	#gmacID = gmac.getAttribute("id")
-	#print("niyas test" + str(gmacID))
-	#if(tcpipEthMacAutoMdix):
+
 	if (event["value"] == True):
 		symbol.setVisible(False)
 	else:

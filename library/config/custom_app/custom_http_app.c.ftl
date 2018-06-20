@@ -3060,7 +3060,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 
 <#else><#-- if CONFIG_USE_DRV_WIFI_WK!false == false -->
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #include <ctype.h>
 </#if>
 #include "configuration.h"
@@ -3072,7 +3072,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 #include "system/random/sys_random.h"
 #include "system/tmr/sys_tmr.h"
 #include "tcpip/tcpip.h"
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #include "tcpip/src/tcpip_types.h"
 </#if>
 #include "tcpip/src/common/helpers.h"
@@ -3094,7 +3094,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 #define HTTP_APP_USE_EMAIL
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #if defined(TCPIP_IF_MRF24WN) || defined(TCPIP_IF_WINC1500) || defined(TCPIP_IF_WILC1000)
 #define HTTP_APP_USE_WIFI
 #endif
@@ -3126,7 +3126,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
         static HTTP_IO_RESULT HTTPPostDDNSConfig(HTTP_CONN_HANDLE connHandle);
     #endif
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
     #if defined(HTTP_APP_USE_WIFI)
         static HTTP_IO_RESULT HTTPPostWIFIConfig(HTTP_CONN_HANDLE connHandle);
     #endif
@@ -3137,7 +3137,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
   Section:
     Variables
  ****************************************************************************/
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 extern bool g_wifi_redirection_signal;
 extern WF_CONFIG g_wifi_cfg;
 extern WF_DEVICE_INFO g_wifi_deviceInfo;
@@ -3167,7 +3167,7 @@ static bool lastSuccess = false;
 // Stick status message variable.  See lastSuccess for details.
 static bool lastFailure = false;
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 /****************************************************************************
   Section:
     Helper Functions
@@ -3453,7 +3453,7 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         }
     }
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
     else if(!memcmp(filename, "scan.cgi", 8))
     {
         uint8_t bssIdx;
@@ -3559,7 +3559,7 @@ HTTP_IO_RESULT TCPIP_HTTP_PostExecute(HTTP_CONN_HANDLE connHandle)
         return HTTPPostDDNSConfig(connHandle);
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #if defined(HTTP_APP_USE_WIFI)
     if(!memcmp(filename, "configure.htm", 13))
         return HTTPPostWIFIConfig(connHandle);
@@ -4604,7 +4604,7 @@ static HTTP_IO_RESULT HTTPPostDDNSConfig(HTTP_CONN_HANDLE connHandle)
 }
 #endif // #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 /*******************************************************************************
   Function:
     static HTTP_IO_RESULT HTTPPostWIFIConfig(HTTP_CONN_HANDLE connHandle)
@@ -4940,7 +4940,7 @@ void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle)
 
 void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle)
 {
-<#-- niyas CONFIG_TCPIP_STACK_USE_FS_WRAPPER -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_FS_WRAPPER -->
 <#if CONFIG_TCPIP_STACK_USE_FS_WRAPPER!false == true> 
 <#if CONFIG_TCPIP_SYS_FS_DRIVE?has_content >
 <#if CONFIG_TCPIP_SYS_FS_DRIVE == "FLASH">
@@ -5355,7 +5355,7 @@ void TCPIP_HTTP_Print_ddns_status_msg(HTTP_CONN_HANDLE connHandle)
 }
 
 void TCPIP_HTTP_Print_reboot(HTTP_CONN_HANDLE connHandle)
-{ <#-- niyas CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION -->
+{ <#-- H3_ToDo CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION -->
 <#if TCPIP_STACK_IF_UP_DOWN_OPERATION!false == true>
     // This is not so much a print function, but causes the interface to restart
     // when the configuration is changed.  If called via an AJAX call, this
@@ -5444,7 +5444,7 @@ void TCPIP_HTTP_Print_write_comm(HTTP_CONN_HANDLE connHandle, uint16_t num)
 #endif
 }
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 void TCPIP_HTTP_Print_fwver(HTTP_CONN_HANDLE connHandle)
 {
     static bool firstTime = true;

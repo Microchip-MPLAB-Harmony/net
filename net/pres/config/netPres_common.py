@@ -1,4 +1,4 @@
-# niyas ;  redefine 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
+# H3_ToDo  redefine 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
 THIRDPARTY_RTOS_SYS_TASKS_OPTIONS = ["Standalone", "Combined with System Tasks"]
 
 def instantiateComponent(netPresCommonComponent):
@@ -22,7 +22,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresRtosMenu = netPresCommonComponent.createMenuSymbol("NET_PRES_RTOS_MENU", None)
 	netPresRtosMenu.setLabel("RTOS Configuration")
 	netPresRtosMenu.setVisible(True)
-	#Niyas todo
+	#H3_ToDo
 	#depends on USE_3RDPARTY_RTOS
 	
 	# Net Pres Execution mode
@@ -39,7 +39,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresTaskSize.setDescription("Net Pres Task Size")
 	netPresTaskSize.setDefaultValue(1024)
 	netPresTaskSize.setDependencies(netPresRtosVisible, ["NET_PRES_RTOS"])
-	#niyas todo depends on NET_PRES_RTOS = "Standalone"	
+	#H3_ToDo depends on NET_PRES_RTOS = "Standalone"	
 
 
 	# Net Pres Task Priority
@@ -49,7 +49,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresTaskPriority.setDescription("Net Pres Task Priority")
 	netPresTaskPriority.setDefaultValue(1)
 	netPresTaskPriority.setDependencies(netPresRtosVisible, ["NET_PRES_RTOS"])
-	#niyas todo depends on NET_PRES_RTOS = "Standalone"	
+	#H3_ToDo depends on NET_PRES_RTOS = "Standalone"	
 
 	# Net Pres Task Delay?
 	netPresUseTaskDelay = netPresCommonComponent.createBooleanSymbol("NET_PRES_RTOS_USE_DELAY", netPresRtosMenu)
@@ -58,7 +58,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresUseTaskDelay.setDescription("Net Pres Use Task Delay?")
 	netPresUseTaskDelay.setDefaultValue(True)
 	netPresUseTaskDelay.setDependencies(netPresRtosVisible, ["NET_PRES_RTOS"])
-	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"	
+	#H3_ToDo depends on DRV_MIIM_RTOS = "Standalone"	
 
 	# Net Pres Task Delay
 	netPresTaskDelay = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_DELAY", netPresRtosMenu)
@@ -67,7 +67,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresTaskDelay.setDescription("Net Pres Task Delay")
 	netPresTaskDelay.setDefaultValue(1000)
 	netPresTaskDelay.setDependencies(netPresRtosDelayVisible, ["NET_PRES_RTOS","NET_PRES_RTOS_USE_DELAY"])
-	#niyas todo         depends on NET_PRES_RTOS = "Standalone"
+	#H3_ToDo         depends on NET_PRES_RTOS = "Standalone"
     #depends on NET_PRES_RTOS_USE_DELAY
 	
 	# Number of Presentation Sockets

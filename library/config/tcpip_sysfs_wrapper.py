@@ -7,7 +7,7 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	# Enable TCPIP File System Wrapper Menu
 	tcpipFileSysWrapper= tcpipSysFsWrapperComponent.createMenuSymbol(None, None)
 	tcpipFileSysWrapper.setLabel("TCPIP File System Wrapper")
-	tcpipFileSysWrapper.setVisible(False) # niyas to change the visibility to false
+	tcpipFileSysWrapper.setVisible(False)
 	tcpipFileSysWrapper.setDescription("TCPIP File System Wrapper Menu")
 	#tcpipFileSysWrapper.setDependencies(tcpipSysFsWrapperVisible, ["tcpipTcp.TCPIP_USE_TCP" , "tcpipUdp.TCPIP_USE_UDP"])
 
@@ -40,7 +40,7 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsDrive.setVisible(True)
 	tcpipSysFsDrive.setDescription("Memory Drive")
 	tcpipSysFsDrive.setDefaultValue("FLASH")
-	# Niyas to do
+	# H3_ToDo
 	  # default "FLASH" if SYS_FS_MPFS = y
 	  # default "SDCARD" if SYS_FS_FAT = y
 	#tcpipSysFsDrive.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])

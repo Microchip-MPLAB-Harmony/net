@@ -7,8 +7,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 	tcpipZc.setLabel("Use Link Local Zero Config")
 	tcpipZc.setVisible(False)
 	tcpipZc.setDescription("Use Link Local Zero Config")
-	tcpipZc.setDefaultValue(True)   # Niyas to check the default value
-	#tcpipZc.setDependencies(tcpipZeroConfMenuVisibleSingle, ["tcpipIPv4.TCPIP_STACK_USE_IPV4"])
+	tcpipZc.setDefaultValue(True)
 
 	# Enable Link Local Warning Messages
 	tcpipZcWarnZcll = tcpipZeroConfComponent.createBooleanSymbol("TCPIP_ZC_WARN_ZCLL", None)
@@ -115,7 +114,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 	#tcpipZcDefendInterval.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
 	# Base IP
-	tcpipZcBaseIp = tcpipZeroConfComponent.createStringSymbol("TCPIP_ZC_LL_IPV4_LLBASE", None) # Niyas to change datatype to hex
+	tcpipZcBaseIp = tcpipZeroConfComponent.createStringSymbol("TCPIP_ZC_LL_IPV4_LLBASE", None) # H3_ToDo change datatype to hex
 	tcpipZcBaseIp.setLabel("Base IP")
 	tcpipZcBaseIp.setVisible(True)
 	tcpipZcBaseIp.setDescription("Base IP")
@@ -123,7 +122,7 @@ def instantiateComponent(tcpipZeroConfComponent):
 	#tcpipZcBaseIp.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
 	# Base Netmask
-	tcpipZcBaseNetmask = tcpipZeroConfComponent.createStringSymbol("TCPIP_ZC_LL_IPV4_LLBASE_MASK", None) # Niyas to change datatype to hex
+	tcpipZcBaseNetmask = tcpipZeroConfComponent.createStringSymbol("TCPIP_ZC_LL_IPV4_LLBASE_MASK", None) # H3_ToDo change datatype to hex
 	tcpipZcBaseNetmask.setLabel("Base Netmask")
 	tcpipZcBaseNetmask.setVisible(True)
 	tcpipZcBaseNetmask.setDescription("Base Netmask")

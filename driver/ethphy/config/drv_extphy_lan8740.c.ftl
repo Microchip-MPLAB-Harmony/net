@@ -51,7 +51,6 @@ extern void ${(DRV_ETHPHY_RESET_CALLBACK)}( const struct DRV_ETHPHY_OBJECT_BASE_
 
 const DRV_ETHPHY_INIT tcpipPhyInitData =
 {
-    //niyas .moduleInit             = {SYS_MODULE_POWER_RUN_FULL},
     .ethphyId               = TCPIP_INTMAC_MODULE_ID,
     .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
     .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,

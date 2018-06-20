@@ -15,8 +15,7 @@ def instantiateComponent(tcpipIcmpComponent):
 	tcpipIcmpv4Server.setLabel("Use ICMPv4 Server")
 	tcpipIcmpv4Server.setVisible(True)
 	tcpipIcmpv4Server.setDescription("Use ICMPv4 Server")
-	tcpipIcmpv4Server.setDefaultValue(True)  # Niyas to check the default value with .hconfig file
-	#tcpipIcmpv4Server.setDependencies(tcpipIcmpMenuVisible, ["TCPIP_STACK_USE_ICMPV4"])
+	tcpipIcmpv4Server.setDefaultValue(True) 
 
 	# Use ICMPv4 Client
 	tcpipIcmpv4Client = tcpipIcmpComponent.createBooleanSymbol("TCPIP_STACK_USE_ICMP_CLIENT", None)

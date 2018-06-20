@@ -910,7 +910,6 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 {
     TCPIP_STACK_INIT    tcpipInit;
 
-   //niyas  tcpipInit.moduleInit.sys.powerState = SYS_MODULE_POWER_RUN_FULL;
     tcpipInit.pNetConf = TCPIP_HOSTS_CONFIGURATION;
     tcpipInit.nNets = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
     tcpipInit.pModConfig = TCPIP_STACK_MODULE_CONFIG_TBL;
