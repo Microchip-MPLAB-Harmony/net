@@ -45,13 +45,6 @@ def instantiateComponent(drvExtPhyLan8700Component):
 	drvExtPhyLan8700ConfigAuto.setDescription("Use The Fuses Configuration")
 	drvExtPhyLan8700ConfigAuto.setDefaultValue(False)
 	
-	# External PHY Type
-	#tcpipEmacPhyType = drvExtPhyLan8700Component.createComboSymbol("TCPIP_EMAC_PHY_TYPE", None, TCPIP_STACK_PHY_TYPE) # Niyas to check the range values
-	#tcpipEmacPhyType.setLabel("External PHY Type")
-	#tcpipEmacPhyType.setVisible(True)# Niyas to check the visibility 
-	#tcpipEmacPhyType.setDescription("External PHY Type")
-	#tcpipEmacPhyType.setDefaultValue("KSZ8061")
-	#tcpipEmacPhyType.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
 	# Driver PHY Instances Number
 	drvExtPhyLan8700InstanceNum= drvExtPhyLan8700Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
@@ -112,7 +105,7 @@ def instantiateComponent(drvExtPhyLan8700Component):
 	# App Function
 	drvExtPhyLan8700ResetCallback = drvExtPhyLan8700Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyLan8700ResetCallbackEnable)
 	drvExtPhyLan8700ResetCallback.setLabel("App Function")
-	drvExtPhyLan8700ResetCallback.setVisible(False)# Niyas to check the visibility 
+	drvExtPhyLan8700ResetCallback.setVisible(False)
 	drvExtPhyLan8700ResetCallback.setDescription("App Function")
 	drvExtPhyLan8700ResetCallback.setDefaultValue("AppPhyResetFunction")
 	drvExtPhyLan8700ResetCallback.setDependencies(drvExtPhyLan8700MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])

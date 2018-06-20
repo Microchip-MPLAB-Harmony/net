@@ -161,7 +161,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 					tcpipSnmpv3PrivProtocolPswd[index].setDefaultValue("")					
 		tcpipSnmpv3PrivProtocolPswd[index].setDependencies(tcpipSnmpv3MenuVisibleSingle, [tcpipSnmpV3StackConfigIdx[index].getID()])
 		
-		# niyas; review this with Snmp owner
+		# H3_ToDo; review this with Snmp owner
 		# config TCPIP_SNMPV3_TARGET_ENTRY_SEC_NAME_IDX0
 		# string "Target Entry Security Name"
 		# depends on TCPIP_SNMPV3_STACK_CONFIG_IDX0
@@ -181,7 +181,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 		tcpipSnmpv3TrgtEntrySecModelType[index].setDefaultValue("SNMPV3_USM_SECURITY_MODEL")
 		tcpipSnmpv3TrgtEntrySecModelType[index].setDependencies(tcpipSnmpv3MenuVisibleSingle, [tcpipSnmpV3StackConfigIdx[index].getID()])
 
-		# niyas; review this with Snmp owner
+		# H3_ToDo; review this with Snmp owner
 		# config TCPIP_SNMPV3_TARGET_ENTRY_SEC_LEVEL_IDX0
 		# string "Target Entry Security Level"
 		# depends on TCPIP_SNMPV3_STACK_CONFIG_IDX0
@@ -196,7 +196,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3StackV1V2Trap.setDefaultValue(True) 
 	tcpipSnmpV3StackV1V2Trap.setDependencies(tcpipSnmpV3StackConfigV1V2TrapVisible, ["TCPIP_USE_SNMPv3" , "tcpipSnmp.TCPIP_SNMP_USE_TRAP_SUPPORT", "tcpipSnmp.TCPIP_SNMP_STACK_USE_V2_TRAP"])
 
-	# Niyas to add
+	# H3_ToDo
 	# file SNMPV3_AES_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes.h"
 	# file SNMPV3_AES_CBC_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cbc.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cbc.h"
 	# file SNMPV3_AES_CFB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cfb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cfb.h"
@@ -217,7 +217,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3SourceFile.setEnabled(True)
 	tcpipSnmpV3SourceFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMP"])
 
-	# Niyas to add
+	# H3_ToDo
 	# file TCPIP_SNMPV3_USM_C "$HARMONY_VERSION_PATH/framework/tcpip/src/snmpv3_usm.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/snmpv3_usm.c"
 	# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_AES_PRIV") 
 	# library TCPIP_SNMPV3_A "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_pic32mx.a"
@@ -254,7 +254,7 @@ def tcpipSnmpv3MenuVisibleSingle(symbol, event):
 def tcpipSnmpv3GenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 	
-#niyas revisit this implementataion
+#H3_ToDo revisit this implementataion
 def tcpipSnmpv3EnableConfig(symbol, event):
 	global tcpipSnmpV3ConfigNumPrev
 	print("Start tcpipSnmpv3EnableConfig")

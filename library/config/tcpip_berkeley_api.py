@@ -9,7 +9,6 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 	tcpipBerkeleyApi.setVisible(False)
 	tcpipBerkeleyApi.setDescription("Enable Berkeley API")
 	tcpipBerkeleyApi.setDefaultValue(True)
-	#Niyas, select NET_PRES_NEEDED
 
 	# Maximum Number of Simultaneous Sockets Supported
 	tcpipBerkeleyBsdSktsMaxNum = tcpipBerkeleyApiComponent.createIntegerSymbol("TCPIP_BSD_MAX_BSD_SOCKETS", None)
@@ -17,7 +16,7 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 	tcpipBerkeleyBsdSktsMaxNum.setVisible(True)
 	tcpipBerkeleyBsdSktsMaxNum.setDescription("Maximum Number of Simultaneous Sockets Supported")
 	tcpipBerkeleyBsdSktsMaxNum.setDefaultValue(4)
-	#tcpipBerkeleyBsdSktsMaxNum.setDependencies(tcpipBerkeleyApiMenuVisible, ["TCPIP_STACK_USE_BERKELEY_API"])
+
 
 	# Add berkeley_api.c file
 	tcpipBerkeleyApiSourceFile = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
@@ -28,7 +27,6 @@ def instantiateComponent(tcpipBerkeleyApiComponent):
 	tcpipBerkeleyApiSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipBerkeleyApiSourceFile.setType("SOURCE")
 	tcpipBerkeleyApiSourceFile.setEnabled(True)
-	#tcpipBerkeleyApiSourceFile.setDependencies(tcpipBerkeleyApiGenSourceFile, ["TCPIP_STACK_USE_BERKELEY_API"])
 
 	tcpipBerkeleyApiHeaderFtl = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
 	tcpipBerkeleyApiHeaderFtl.setSourcePath("library/config/berkeley_api.h.ftl")

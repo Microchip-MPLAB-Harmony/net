@@ -69,7 +69,4 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 #define TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION   false
 </#if>
 </#if>
-<#-- niyas to do
-<#include "/framework/tcpip/config/ndp.h.ftl">
--->
 </#if>

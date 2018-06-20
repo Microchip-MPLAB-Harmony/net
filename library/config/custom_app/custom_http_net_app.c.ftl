@@ -33,7 +33,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #include <ctype.h>
 </#if>
 #include "system_config.h"
@@ -46,7 +46,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/random/sys_random.h"
 #include "system/tmr/sys_tmr.h"
 #include "tcpip/tcpip.h"
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #include "tcpip/src/tcpip_types.h"
 </#if>
 #include "tcpip/src/common/helpers.h"
@@ -66,7 +66,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define HTTP_APP_USE_EMAIL
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #if defined(TCPIP_IF_MRF24WN) || defined(TCPIP_IF_WINC1500) || defined(TCPIP_IF_WILC1000)
 #define HTTP_APP_USE_WIFI
 #endif
@@ -97,14 +97,14 @@ Function Prototypes and Memory Globalizers
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
         static TCPIP_HTTP_NET_IO_RESULT HTTPPostDDNSConfig(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
     #endif
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
     #if defined(HTTP_APP_USE_WIFI)
         static TCPIP_HTTP_NET_IO_RESULT HTTPPostWIFIConfig(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
     #endif
 </#if>
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 extern bool g_wifi_redirection_signal;
 extern WF_CONFIG g_wifi_cfg;
 extern WF_DEVICE_INFO g_wifi_deviceInfo;
@@ -132,7 +132,7 @@ static bool lastSuccess = false;
 
 // Stick status message variable.  See lastSuccess for details.
 static bool lastFailure = false;
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
 // Number of buffers to be used by the app for dynamic variable callbacks
 #define HTTP_APP_DYNVAR_BUFFERS_NO      4
@@ -150,7 +150,7 @@ typedef struct
 static HTTP_APP_DYNVAR_BUFFER httpDynVarBuffers[HTTP_APP_DYNVAR_BUFFERS_NO];
 
 </#if>
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 /****************************************************************************
   Section:
     Helper Functions
@@ -364,7 +364,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTP_APP_ConfigFailure(TCPIP_HTTP_NET_CONN_HANDL
 }
 
 </#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
 // helper to get one of the application's dynamic buffer that are used in the
 // dynamic variables processing
@@ -398,7 +398,7 @@ static HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
  ****************************************************************************/
 void HTTP_APP_Initialize(void)
 {
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
     int ix;
 
@@ -413,7 +413,7 @@ void HTTP_APP_Initialize(void)
     {
         .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
         .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
-<#-- niyas CONFIG_TCPIP_HTTP_NET_USE_AUTHENTICATION -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_USE_AUTHENTICATION -->
 <#if TCPIP_HTTP_NET_USE_AUTHENTICATION == true>
         .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
         .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
@@ -421,7 +421,7 @@ void HTTP_APP_Initialize(void)
         .fileAuthenticate = 0,
         .userAuthenticate = 0,
 </#if>
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
         .dynamicPrint = TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
         .dynamicAck = TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
@@ -430,7 +430,7 @@ void HTTP_APP_Initialize(void)
         .dynamicAck = 0,
 </#if>
         .eventReport = TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
-<#-- niyas CONFIG_TCPIP_HTTP_NET_SSI_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_SSI_PROCESS -->
 <#if TCPIP_HTTP_NET_SSI_PROCESS == true>
         .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
 <#else>
@@ -447,7 +447,7 @@ void HTTP_APP_Initialize(void)
   Section:
     Customized HTTP NET Functions
  ****************************************************************************/
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
 // processing the HTTP buffer acknowledgment
 void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void *buffer, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack)
@@ -469,7 +469,7 @@ void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTT
     }
     SYS_CONSOLE_PRINT("HTTP event: %d, info: %s\r\n", evType, evMsg);
 }
-<#-- niyas CONFIG_TCPIP_HTTP_NET_SSI_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_SSI_PROCESS -->
 <#if TCPIP_HTTP_NET_SSI_PROCESS == true>
 // example of processing an SSI notification
 // return false for standard processing of this SSI command by the HTTP module
@@ -587,7 +587,7 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute(TCPIP_HTTP_NET_CONN
         }
     }
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
     else if(!memcmp(filename, "scan.cgi", 8))
     {
         uint8_t bssIdx;
@@ -693,7 +693,7 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute(TCPIP_HTTP_NET_CON
         return HTTPPostDDNSConfig(connHandle);
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 #if defined(HTTP_APP_USE_WIFI)
     if(!memcmp(filename, "configure.htm", 13))
         return HTTPPostWIFIConfig(connHandle);
@@ -1743,7 +1743,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostDDNSConfig(TCPIP_HTTP_NET_CONN_HANDLE co
 }
 #endif // #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 /*******************************************************************************
   Function:
     static TCPIP_HTTP_NET_IO_RESULT HTTPPostWIFIConfig(TCPIP_HTTP_NET_CONN_HANDLE connHandle)
@@ -2026,7 +2026,7 @@ uint8_t TCPIP_HTTP_NET_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
     return 0x00;            // Provided user/pass is invalid
 }
 #endif
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
 /****************************************************************************
   Section:
@@ -2320,7 +2320,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_hostname(TCPIP_HTTP_NET_CONN_HA
 
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_dhcpchecked(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
-<#-- niyas CONFIG_TCPIP_STACK_USE_IPV4 -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_IPV4 -->
 <#if CONFIG_TCPIP_STACK_USE_IPV4!true == true>
     TCPIP_NET_HANDLE hNet;
 
@@ -2345,7 +2345,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_ip(TCPIP_HTTP_NET_CONN_HANDLE c
     }
 
     ipAddStr = pDynBuffer->data;
-<#-- niyas CONFIG_TCPIP_STACK_USE_IPV4 -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_IPV4 -->
 <#if CONFIG_TCPIP_STACK_USE_IPV4!true == true>
     TCPIP_NET_HANDLE hNet = TCPIP_HTTP_NET_ConnectionNetHandle(connHandle);
     ipAddress.Val = TCPIP_STACK_NetAddress(hNet);
@@ -2369,7 +2369,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_gw(TCPIP_HTTP_NET_CONN_HANDLE c
     }
 
     ipAddStr = pDynBuffer->data;
-<#-- niyas CONFIG_TCPIP_STACK_USE_IPV4 -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_IPV4 -->
 <#if CONFIG_TCPIP_STACK_USE_IPV4!true == true>
     TCPIP_NET_HANDLE hNet = TCPIP_HTTP_NET_ConnectionNetHandle(connHandle);
     gwAddress.Val = TCPIP_STACK_NetAddressGateway(hNet);
@@ -2392,7 +2392,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_subnet(TCPIP_HTTP_NET_CONN_HAND
     }
 
     ipAddStr = pDynBuffer->data;
-<#-- niyas CONFIG_TCPIP_STACK_USE_IPV4 -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_IPV4 -->
 <#if CONFIG_TCPIP_STACK_USE_IPV4!true == true>
     TCPIP_NET_HANDLE hNet = TCPIP_HTTP_NET_ConnectionNetHandle(connHandle);
     ipMask.Val = TCPIP_STACK_NetMask(hNet);
@@ -2415,7 +2415,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_dns1(TCPIP_HTTP_NET_CONN_HANDLE
     }
 
     ipAddStr = pDynBuffer->data;
-<#-- niyas CONFIG_TCPIP_STACK_USE_IPV4 -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_IPV4 -->
 <#if CONFIG_TCPIP_STACK_USE_IPV4!true == true>
     TCPIP_NET_HANDLE hNet = TCPIP_HTTP_NET_ConnectionNetHandle(connHandle);
     priDnsAddr.Val = TCPIP_STACK_NetAddressDnsPrimary(hNet);
@@ -2438,7 +2438,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_dns2(TCPIP_HTTP_NET_CONN_HANDLE
     }
 
     ipAddStr = pDynBuffer->data;
-<#-- niyas CONFIG_TCPIP_STACK_USE_IPV4 -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_IPV4 -->
 <#if CONFIG_TCPIP_STACK_USE_IPV4!true == true>
     TCPIP_NET_HANDLE hNet = TCPIP_HTTP_NET_ConnectionNetHandle(connHandle);
     secondDnsAddr.Val = TCPIP_STACK_NetAddressDnsSecond(hNet);
@@ -2625,7 +2625,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_status_msg(TCPIP_HTTP_NET_CONN_HA
 
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_reboot(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
-<#-- niyas CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION -->
+<#-- H3_ToDo CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION -->
 <#if CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION!false == true>
     // This is not so much a print function, but causes the interface to restart
     // when the configuration is changed.  If called via an AJAX call, this
@@ -2777,7 +2777,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE 
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fwver(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     static bool firstTime = true;

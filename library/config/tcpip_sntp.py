@@ -1,9 +1,9 @@
 # Global definitions  
 TCPIP_SNTP_PROTOCOL_TYPE = ["SNTP_VERSION_3", "SNTP_VERSION_4"]
-#niyas multiple definition for following; find a method
+#H3_ToDo multiple definition for following; find a method
 TCPIP_ADDRESS_TYPE_STRICT = ["IP_ADDRESS_TYPE_IPV4", "IP_ADDRESS_TYPE_IPV6"]
 TCPIP_STACK_IF_NAME = []
-#niyas modify the interface name
+#H3_ToDo modify the interface name
 TCPIP_STACK_PIC32C_IF_NAME =	["PIC32CINT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 TCPIP_STACK_PIC32M_IF_NAME =	["PIC32INT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 
@@ -28,25 +28,25 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpClient.setVisible(False)
 	tcpipSntpClient.setDescription("Use SNTP Client")
 	tcpipSntpClient.setDefaultValue(True) 
-	# Niyas to do  
+	# H3_ToDo  
 	# default n if !TCPIP_USE_SNTP_CLIENT_NEEDED
 	# default y if TCPIP_USE_SNTP_CLIENT_NEEDED
 	#tcpipSntpClient.setDependencies(tcpipSntpMenuVisibleSingle, ["tcpipUdp.TCPIP_USE_UDP"])
 
-	# ifblock !PIC32WK    Niyas to do
+	# ifblock !PIC32WK    H3_ToDo
 	# Default Interface
 	tcpipSntpDefault = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_IF", None, TCPIP_STACK_IF_NAME)
 	tcpipSntpDefault.setLabel("Default Interface")
 	tcpipSntpDefault.setVisible(True)
 	tcpipSntpDefault.setDescription("Default Interface")
 	tcpipSntpDefault.setDefaultValue("PIC32CINT")
-	# Niyas to do
+	# H3_ToDo
 	# default "PIC32CINT" if USE_PIC32CINT_ETH_MAC_NEEDED
 	# default "PIC32INT" if USE_PIC32INT_ETH_MAC_NEEDED
 	# default "MRF24WN" if HAVE_WIFI
 	#tcpipSntpDefault.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
-	# Niyas to do
+	# H3_ToDo
 	# ifblock PIC32WK 
 	# config TCPIP_NTP_DEFAULT_IF_WK
 		# string "Default Interface"
@@ -71,7 +71,7 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpConnType.setVisible(True)
 	tcpipSntpConnType.setDescription("Default Connection Type")
 	tcpipSntpConnType.setDefaultValue("TCPIP_STACK_USE_IPV4")
-	# Niyas to do 
+	# H3_ToDo
 	# default "IP_ADDRESS_TYPE_IPV4" if TCPIP_STACK_USE_IPV4
 	# default "IP_ADDRESS_TYPE_IPV6" if TCPIP_STACK_USE_IPV6
 	#tcpipSntpConnType.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
@@ -81,7 +81,7 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpEpoch.setLabel("Epoch")
 	tcpipSntpEpoch.setVisible(True)
 	tcpipSntpEpoch.setDescription("Sntp Epoch")
-	tcpipSntpEpoch.setDefaultValue(2147483216)   # niyas to set the correct value 2208988800
+	tcpipSntpEpoch.setDefaultValue(2147483216)   # H3_ToDo to set the correct value 2208988800
 	#tcpipSntpEpoch.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# SNTP Reply Time-out in Seconds

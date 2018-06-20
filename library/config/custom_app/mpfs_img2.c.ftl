@@ -1445,8 +1445,8 @@ struct MEDIA_STORAGE_PARTITION_INFO
 	sizeof(SRAM_MEDIA_0_DATA),
 };
 <#else><#-- CONFIG_USE_DRV_WIFI_WK -->
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" != "Easy Configuration Demo">
-<#-- niyas CONFIG_TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL -->
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" != "Easy Configuration Demo">
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL -->
   <#if CONFIG_TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL!false == true>
     <#-- Following NVM_MEDIA_DATA[] is for web_net_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
 	const uint8_t __attribute__((space(prog),address(DRV_NVM_MEDIA_START_ADDRESS))) __attribute__((keep))
@@ -3490,7 +3490,7 @@ struct MEDIA_STORAGE_PARTITION_INFO
 
 
 };
-	<#-- niyas CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE_SL -->
+	<#-- H3_ToDo CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE_SL -->
   <#elseif CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE_SL!true == true>
     <#-- Following NVM_MEDIA_DATA[] is for web_server_nvm_mpfs demo -->
 	const uint8_t __attribute__((space(prog),address(DRV_NVM_MEDIA_START_ADDRESS))) __attribute__((keep))

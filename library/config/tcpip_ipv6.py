@@ -162,9 +162,6 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipIPv6UseIcmpv6Client.setDefaultValue(True)
 	tcpipIPv6UseIcmpv6Client.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_ICMPV6_CLIENT"])
 
-	# niyas use Variables.get("__TCPIP_DIR") 
-	#execfile(__TCPIP_DIR + "/library/config/ndp.py")
-
 	#Add to system_config.h
 	tcpipIPv6HeaderFtl = tcpipIPv6Component.createFileSymbol(None, None)
 	tcpipIPv6HeaderFtl.setSourcePath("library/config/ipv6.h.ftl")

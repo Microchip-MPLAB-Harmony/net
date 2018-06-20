@@ -9,7 +9,7 @@ def instantiateComponent(tcpipRtosComponent):
 	tcpipRtosMenu.setLabel("RTOS Configuration")
 	tcpipRtosMenu.setVisible(True)
 	tcpipRtosMenu.setDescription("Enable IPv4")
-	# niyas set dependencies to 3rd party RTOS also
+	# H3_ToDo set dependencies to 3rd party RTOS also
 	#tcpipRtosMenu.setDependencies(tcpipMenuVisibleSingleTrigger, ["USE_3RDPARTY_RTOS"])
 
 	# Menu for RTOS options
@@ -18,7 +18,7 @@ def instantiateComponent(tcpipRtosComponent):
 	tcpipRtosOptions.setVisible(True)
 	tcpipRtosOptions.setDescription("Rtos Options")
 	tcpipRtosOptions.setDefaultValue("Standalone")
-	# niyas set dependencies to 3rd party RTOS also
+	# H3_ToDo set dependencies to 3rd party RTOS also
 	#tcpipRtosOptions.setDependencies(tcpipMenuVisibleSingleTrigger, ["USE_3RDPARTY_RTOS"])
 
 			
@@ -28,7 +28,7 @@ def instantiateComponent(tcpipRtosComponent):
 	tcpipRtosTaskSize.setVisible(True)
 	tcpipRtosTaskSize.setDescription("Rtos Task Size")
 	tcpipRtosTaskSize.setDefaultValue(1024)
-	# niyas set dependencies to 3rd party RTOS also
+	# H3_ToDo set dependencies to 3rd party RTOS also
 	tcpipRtosTaskSize.setDependencies(tcpipRtosMenuStandalone, ["TCPIP_RTOS"])
 
 	# Menu for RTOS Task Priority
@@ -37,7 +37,7 @@ def instantiateComponent(tcpipRtosComponent):
 	tcpipRtosTaskPriority.setVisible(True)
 	tcpipRtosTaskPriority.setDescription("Rtos Task Priority")
 	tcpipRtosTaskPriority.setDefaultValue(1)
-	# niyas set dependencies to 3rd party RTOS also
+	# H3_ToDo set dependencies to 3rd party RTOS also
 	tcpipRtosTaskPriority.setDependencies(tcpipRtosMenuStandalone, ["TCPIP_RTOS"])
 
 	# Use RTOS Task Delay 
@@ -54,7 +54,7 @@ def instantiateComponent(tcpipRtosComponent):
 	tcpipRtosDelay.setVisible(True)
 	tcpipRtosDelay.setDescription("Rtos Task Delay")
 	tcpipRtosDelay.setDefaultValue(1000)
-	# niyas set dependencies to 3rd party RTOS also
+	# H3_ToDo set dependencies to 3rd party RTOS also
 	tcpipRtosDelay.setDependencies(tcpipRtosMenuVisibleSingle, ["TCPIP_RTOS_USE_DELAY"])
 
 

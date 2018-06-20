@@ -123,8 +123,7 @@ def instantiateComponent(tcpipStackComponent):
 		tcpipStackDeviceFamily.setDefaultValue("SAME70")
 	else:
 		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
-	
-	#niyas  ifblock USE_TCPIP_STACK
+
 	# add "<#include \"/framework/tcpip/config/tcpip_stack.h.ftl\">"  to list SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION 	
 	tcpipStackHeaderFtl = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackHeaderFtl.setSourcePath("library/config/tcpip_stack.h.ftl")
@@ -1154,14 +1153,6 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackNetPresSktApiConvHeaderFile.setType("HEADER")
 	tcpipStackNetPresSktApiConvHeaderFile.setOverwrite(True)	
 	
-	# #Add to system_config.h
-	# tcpipTcpHeaderFtl = tcpipTcpComponent.createFileSymbol(None, None)
-	# tcpipTcpHeaderFtl.setSourcePath("library/config/tcp.h.ftl")
-	# tcpipTcpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
-	# tcpipTcpHeaderFtl.setMarkup(True)
-	# tcpipTcpHeaderFtl.setType("STRING")
-	
-	#niyas to do
 	# add "<#include \"/framework/tcpip/config/tcpip_stack.c.ftl\">"  to list SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA
 	tcpipStackSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackSourceFtl.setType("STRING")

@@ -9,7 +9,7 @@ def instantiateComponent(tcpipSmtpComponent):
 	tcpipSmtpClient.setVisible(True)
 	tcpipSmtpClient.setDescription("Use SMTP Client")
 	tcpipSmtpClient.setDefaultValue(False) 
-	# Niyas to do   select NET_PRES_NEEDED
+	# H3_ToDo   select NET_PRES_NEEDED
 	tcpipSmtpClient.setDependencies(tcpipSmtpMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
 
 	# Server Reply Time-out

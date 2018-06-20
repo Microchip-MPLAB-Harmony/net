@@ -9,10 +9,10 @@ tcpipDhcpsPrimDnsAddr = []
 tcpipDhcpsSecDnsAddr = []
 tcpipDhcpsIfIdx = []
 tcpipDhcpsPoolEn = []
-tcpipNetConfigNumMax = 10  # niyas o check this hard coded value
+tcpipNetConfigNumMax = 10  # H3_ToDo check this hard coded value
 ############################################################################
 def instantiateComponent(tcpipDhcpsComponent):
-	#tcpipNetConfigNumMax = Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX") # niyas to check this 
+
 	print(tcpipNetConfigNumMax)
 	print("TCPIP DHCP Server Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
@@ -170,7 +170,7 @@ def instantiateComponent(tcpipDhcpsComponent):
 	tcpipDhcpSourceFile.setDependencies(tcpipDhcpsGenSourceFile, ["TCPIP_STACK_USE_DHCP_SERVER"])
 	
 #############################################################################################################
-#niyas revisit this implementataion
+#H3_ToDo revisit this implementataion
 #global tcpipNetConfigNum
 def tcpipDhcpsEnableInstance(tcpipNetDependentSymbol, event):
 	global tcpipDhcpsInstancesNumPrev

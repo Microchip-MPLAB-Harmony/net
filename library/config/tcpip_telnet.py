@@ -8,7 +8,7 @@ def instantiateComponent(tcpipTelnetComponent):
 	tcpipTelnet.setVisible(False)
 	tcpipTelnet.setDescription("Use Telnet Server")
 	tcpipTelnet.setDefaultValue(True) 
-	 # niyas to do   
+	 # H3_ToDo  
 	 # select NET_PRES_NEEDED
 	 # select USE_SYS_COMMAND_NEEDED
 	#tcpipTelnet.setDependencies(tcpipTelnetMenuVisible, ["tcpipTcp.TCPIP_USE_TCP"])

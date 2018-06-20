@@ -11,10 +11,10 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttp.setVisible(False)
 	tcpipHttp.setDescription("Enable HTTP Server")
 	tcpipHttp.setDefaultValue(True)
-	# Niyas to do  
+	# H3_ToDo 
 	# select USE_SYS_FS_NEEDED
 	# select USE_CRYPTO_LIB_NEEDED
-	#tcpipHttp.setDependencies(tcpipHttpSrvVisible, ["tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER" , "tcpipTcp.TCPIP_USE_TCP"]) # Niyas to check the dependency function
+
 
 	# Maximum Header Length
 	tcpipHttpHeaderLenMax = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_HEADER_LEN", None)
@@ -119,7 +119,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpAuth.setVisible(True)
 	tcpipHttpAuth.setDescription("Enable Basic Authenication Support")
 	tcpipHttpAuth.setDefaultValue(True)
-	# select TCPIP_HTTP_USE_BASE64_DECODE    Niyas to do
+	# select TCPIP_HTTP_USE_BASE64_DECODE    H3_ToDo
 	#tcpipHttpAuth.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
 	# Require Secure Connection Before Requesting a Password
@@ -170,7 +170,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpConfigFlags.setDefaultValue("TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS")
 	#tcpipHttpConfigFlags.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
-	# Niyas to do
+	# H3_ToDo
 	#   config TCPIP_HTTP_CONFIG_FLAGS
 	#   int
 	#    depends on TCPIP_STACK_USE_HTTP_SERVER
@@ -178,7 +178,7 @@ def instantiateComponent(tcpipHttpComponent):
 	#   default 1 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS"
 	#    default 2 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_NO_DELAY"
 
-	# HTTP Config Flag - Niyasto complete
+	# HTTP Config Flag - H3_ToDo
 	tcpipHttpConfigFlag = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_CONFIG_FLAGS", None)
 	tcpipHttpConfigFlag.setVisible(False)	
 	tcpipHttpConfigFlag.setDefaultValue(1)
@@ -213,7 +213,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpCustomTemplate.setDefaultValue(True)
 	#tcpipHttpCustomTemplate.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
-	# Niyas to do
+	# H3_ToDo
 	# config TCPIP_HTTP_CUSTOM_TEMPLATE_SL
 	#   depends on TCPIP_STACK_USE_HTTP_SERVER
 	#    bool
@@ -236,7 +236,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpHeaderFtl.setMarkup(True)
 	tcpipHttpHeaderFtl.setType("STRING")
 
-	# Niyas to do
+	# H3_ToDo
 	# file SYS_FS_HTTP_H "$HARMONY_VERSION_PATH/framework/system/fs/sys_fs.h" to "$PROJECT_HEADER_FILES/framework/system/fs/sys_fs.h"
 
 	# Add http.c file
@@ -250,7 +250,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpSourceFile.setEnabled(True)
 	tcpipHttpSourceFile.setDependencies(tcpipHttpGenSourceFile, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
-	# Niyas to do
+	# H3_ToDo to do
 	# file DRV_NVM_STATIC_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
 	# file DRV_NVM_STATIC_LOCAL_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
 	# file DRV_NVM_STATIC_VAR_MAP_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"

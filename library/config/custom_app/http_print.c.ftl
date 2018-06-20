@@ -159,7 +159,7 @@ TCP_SOCKET sktHTTP;
 	return;
 }
 <#else><#-- CONFIG_USE_DRV_WIFI_WK -->
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" != "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" != "Easy Configuration Demo">
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
 
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
@@ -229,7 +229,7 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
     TCP_SOCKET sktHTTP; 
     switch(callbackID)
     {
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" != "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" != "Easy Configuration Demo">
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
         case 0x00000000:
 			TCPIP_HTTP_FileInclude(connHandle,(const uint8_t *)"header.inc");

@@ -2079,13 +2079,13 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
 {
    uint8_t myRef;
    static uint8_t AN0String[8];
-   //niyas the device name __PIC32C__
+   //H3_ToDo the device name __PIC32C__
 #if defined(__PIC32MZ__) || defined(__PIC32C__)
    uint16_t     randPotVal=0;
 #endif
 
     // Convert potentiometer result into ASCII string
-	//niyas the device name __PIC32C__
+	//H3_ToDo the device name __PIC32C__
 #if defined(__PIC32MZ__) || defined(__PIC32C__)
     randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
     uitoa(randPotVal,AN0String);

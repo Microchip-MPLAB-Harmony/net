@@ -1,6 +1,6 @@
-#niyas multiple definition for following; find a method
+#H3_ToDo multiple definition for following; find a method
 TCPIP_STACK_IF_NAME = []
-#niyas modify the interface name
+#H3_ToDo modify the interface name
 TCPIP_STACK_PIC32C_IF_NAME =	["GMAC", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
 TCPIP_STACK_PIC32M_IF_NAME =	["ETHMAC", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]    
 def instantiateComponent(tcpipTftpcComponent):

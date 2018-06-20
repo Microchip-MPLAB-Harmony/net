@@ -15,7 +15,7 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmp.setVisible(False)
 	tcpipSnmp.setDescription("Use SNMP")
 	tcpipSnmp.setDefaultValue(True) 
-	# Niyas to do   
+	# H3_ToDo   
 	# select USE_SYS_FS_NEEDED
 	# select USE_CRYPTO_LIB_NEEDED
 	#tcpipSnmp.setDependencies(tcpipSnmpMenuVisibleSingle, ["tcpipUdp.TCPIP_USE_UDP"])
@@ -185,7 +185,6 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpSourceFile.setEnabled(True)
 	#tcpipSnmpSourceFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_USE_SNMP"])
 
-# Niyas to add 
 
 # ifblock TCPIP_SNMP_CUSTOM_TEMPLATE
 # template SNMP_CUSTOM_APP_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/custom_snmp_app.c.ftl" to "$PROJECT_SOURCE_FILES/app/custom_snmp_app.c"
@@ -232,7 +231,7 @@ def tcpipSnmpMenuVisibleSingle(symbol, event):
 def tcpipSnmpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 
-#niyas revisit this implementataion
+#H3_ToDo revisit this implementataion
 def tcpipSnmpEnableConfig(symbol, event):
 	global tcpipSnmpConfigNumPrev
 	print("Start tcpipSnmpEnableConfig")

@@ -1,4 +1,4 @@
-# niyas ;  redefine 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
+# H3_ToDo :  redefine 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
 THIRDPARTY_RTOS_SYS_TASKS_OPTIONS = ["Standalone", "Combined with System Tasks"]
 
 def instantiateComponent(drvMiimComponent):
@@ -7,14 +7,14 @@ def instantiateComponent(drvMiimComponent):
 	
 	
 	# Use Internal Ethernet MAC Driver?	
-	drvUseMiim = drvMiimComponent.createBooleanSymbol("DRV_MIIM_USE_DRIVER", None) # Niyas to check the component name and dependency
+	drvUseMiim = drvMiimComponent.createBooleanSymbol("DRV_MIIM_USE_DRIVER", None) 
 	drvUseMiim.setLabel("Use MIIM Driver?")
 	drvUseMiim.setVisible(False)
 	drvUseMiim.setDescription("Use MIIM Driver?")
 	drvUseMiim.setDefaultValue(True)
 	#drvUseMiim.setDependencies(drvMiimMenuVisibleSingle, ["drvSamv71Gmac.TCPIP_USE_ETH_MAC"])
 	
-	# niyas : see whether this parameter is needed
+	# H3_ToDo : see whether this parameter is needed
 	# Ethernet MAC Module ID
 	drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", None) 
 	drvMiimModuleId.setLabel("ETH Module ID")
@@ -40,7 +40,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimOpsInstnNum.setLabel("Number of Instance Operations")
 	drvMiimOpsInstnNum.setVisible(True)
 	drvMiimOpsInstnNum.setDescription("Number of Instance Operations")
-	# niyas todo default 8 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
+	# H3_ToDo default 8 if TCPIP_EMAC_PHY_TYPE = "SMSC_LAN9303"
 	drvMiimOpsInstnNum.setDefaultValue(4)
 	#drvMiimOpsInstnNum.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
@@ -91,7 +91,7 @@ def instantiateComponent(drvMiimComponent):
 	#drvMiimRtosMenu.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
 	#menu "RTOS Configuration"
     #depends on DRV_MIIM_USE_DRIVER
-    #niyas todo depends on USE_3RDPARTY_RTOS	
+    #H3_ToDo depends on USE_3RDPARTY_RTOS	
 	
 	# MIIM Driver Execution mode
 	drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, THIRDPARTY_RTOS_SYS_TASKS_OPTIONS) 
@@ -108,7 +108,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskSize.setDescription("MIIM Driver Task Size")
 	drvMiimDrvTaskSize.setDefaultValue(1024)
 	#drvMiimDrvTaskSize.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"
+	#H3_ToDo depends on DRV_MIIM_RTOS = "Standalone"
 
 	# MIIM Driver Task Priority
 	drvMiimDrvTaskPriority = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_PRIORITY", drvMiimRtosMenu)
@@ -117,7 +117,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskPriority.setDescription("MIIM Driver Task Priority")
 	drvMiimDrvTaskPriority.setDefaultValue(1)
 	#drvMiimDrvTaskPriority.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"	
+	#H3_ToDo depends on DRV_MIIM_RTOS = "Standalone"	
 
 	# MIIM Use Task Delay?
 	drvMiimUseTaskDelay = drvMiimComponent.createBooleanSymbol("DRV_MIIM_RTOS_USE_DELAY", drvMiimRtosMenu)
@@ -126,7 +126,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimUseTaskDelay.setDescription("MIIM Use Task Delay?")
 	drvMiimUseTaskDelay.setDefaultValue(True)
 	#drvMiimUseTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#niyas todo depends on DRV_MIIM_RTOS = "Standalone"	
+	#H3_ToDo todo depends on DRV_MIIM_RTOS = "Standalone"	
 
 	# MIIM Driver Task Delay
 	drvMiimDrvTaskDelay = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_DELAY", drvMiimRtosMenu)
@@ -135,7 +135,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
 	drvMiimDrvTaskDelay.setDefaultValue(100)
 	#drvMiimDrvTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#niyas todo     depends on DRV_MIIM_RTOS = "Standalone"
+	#H3_ToDo     depends on DRV_MIIM_RTOS = "Standalone"
     #depends on DRV_MIIM_RTOS_USE_DELAY
 	
 	# Add drv_miim.h file to project

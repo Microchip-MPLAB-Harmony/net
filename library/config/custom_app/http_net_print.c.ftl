@@ -40,7 +40,7 @@
 
 #include "configuration.h"
 #include "tcpip/tcpip.h"
-<#-- niyas CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
+<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
 <#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
 /****************************************************************************
 Section:
@@ -99,7 +99,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_smtps_en(TCPIP_HTTP_NET_CONN_HANDLE co
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_snmp_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_read_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fwver(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ssid(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_scan(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
@@ -179,7 +179,7 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
     {"snmp_en",                     TCPIP_HTTP_Print_snmp_en},
     {"read_comm",                   TCPIP_HTTP_Print_read_comm},
     {"write_comm",                  TCPIP_HTTP_Print_write_comm},
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"niyas" == "Easy Configuration Demo">
+<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
     {"fwver",                       TCPIP_HTTP_Print_fwver},
     {"ssid",                        TCPIP_HTTP_Print_ssid},
     {"scan",                        TCPIP_HTTP_Print_scan},

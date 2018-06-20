@@ -8,26 +8,6 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnIndex.setVisible(False)
 	netPresInstnIndex.setDefaultValue(index)
 	
-	#netPresInstnNum = Database.getSymbolValue("netPres","NET_PRES_INSTANCES")
-	#netPresInstnNum = netPresComponent.getSymbolValue("NET_PRES_INSTANCES")
-	#print(netPresInstnNum)
-	#Database.clearSymbolValue("netPres","NET_PRES_INSTANCES")
-	#res = netPresComponent.clearSymbolValue("NET_PRES_INSTANCES")
-	#Database.setSymbolValue("netPres","NET_PRES_INSTANCES",(netPresInstnNum + 1),2)
-	#netPresInstnNum1 = netPresComponent.getSymbolValue("NET_PRES_INSTANCES")
-	#print("niyas net pres instn num : ")
-	#print(netPresInstnNum1)
-	
-	# numInstances = Database.getSymbolValue("netPres", "NET_PRES_INSTANCES")
-	# print(numInstances)
-	# if numInstances is None:
-		# numInstances = 1
-	# else:
-		# numInstances = numInstances + 1
-		
-	# Database.setSymbolValue("netPres", "NET_PRES_INSTANCES", numInstances, 1)
-	
-	print("niyas Net pres")
 	numInstances  = Database.getSymbolValue("netPres", "NET_PRES_INSTANCES")
 	numInstances = numInstances + 1
 	Database.setSymbolValue("netPres", "NET_PRES_INSTANCES", numInstances, 1)
@@ -57,7 +37,7 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnStreamConn.setLabel("Support Stream Connections?")
 	netPresInstnStreamConn.setVisible(True)
 	netPresInstnStreamConn.setDefaultValue(True)
-	# niyas todo
+	# H3_ToDo
 	#default y if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && TCPIP_USE_TCP
     #default n if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && !TCPIP_USE_TCP
 
@@ -66,7 +46,7 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnDatagramConn.setLabel("Support Data-gram Connections?")
 	netPresInstnDatagramConn.setVisible(True)
 	netPresInstnDatagramConn.setDefaultValue(True)
-	# niyas todo
+	# H3_ToDo
 	# default y if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && TCPIP_USE_UDP
     # default n if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && !TCPIP_USE_UDP
 
@@ -88,7 +68,7 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnEncryptEnable.setVisible(True)
 	netPresInstnEncryptEnable.setDefaultValue(False)
 
-# niyas todo	
+# H3_ToDo	
 # config NET_PRES_USE_WOLF_SSL_IDX${INSTANCE}
     # bool "Use wolfSSL as Encryption Provider?"
     # depends on USE_3RDPARTY_WOLFSSL
@@ -120,7 +100,6 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnStreamEncrypt.setVisible(False)
 	netPresInstnStreamEncrypt.setDefaultValue(True)
 	netPresInstnStreamEncrypt.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
-    #niyas todo depends on NET_PRES_SUPPORT_STREAM_IDX${INSTANCE}
 	
 	# Support Data-gram Encryption?
 	netPresInstnDataGramEncrypt = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_DATAGRAM_ENC_IDX" + str(index),netPresInstnEncryptEnable)
@@ -128,7 +107,6 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnDataGramEncrypt.setVisible(False)
 	netPresInstnDataGramEncrypt.setDefaultValue(False)
 	netPresInstnDataGramEncrypt.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
-    #niyas todo depends on NET_PRES_SUPPORT_DATAGRAM_IDX${INSTANCE}
 		
 	# Support Server Encryption?
 	netPresInstnServerEncrypt = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_SERVER_ENC_IDX" + str(index),netPresInstnEncryptEnable)
@@ -136,7 +114,6 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnServerEncrypt.setVisible(False)
 	netPresInstnServerEncrypt.setDefaultValue(False)
 	netPresInstnServerEncrypt.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
-    #niyas todo depends on NET_PRES_SUPPORT_SERVER_IDX${INSTANCE}
 			
 	# Support Client Encryption?
 	netPresInstnClientEncrypt = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_CLIENT_ENC_IDX" + str(index),netPresInstnEncryptEnable)
@@ -144,7 +121,7 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnClientEncrypt.setVisible(False)
 	netPresInstnClientEncrypt.setDefaultValue(True)
 	netPresInstnClientEncrypt.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
-    #niyas todo depends on NET_PRES_SUPPORT_CLIENT_IDX${INSTANCE}
+    
 	
 					
 	

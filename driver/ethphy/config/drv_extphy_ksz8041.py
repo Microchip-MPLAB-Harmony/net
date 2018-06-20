@@ -46,13 +46,6 @@ def instantiateComponent(drvExtPhyKsz8041Component):
 	drvExtPhyKsz8041ConfigAuto.setDescription("Use The Fuses Configuration")
 	drvExtPhyKsz8041ConfigAuto.setDefaultValue(False)
 	
-	# External PHY Type
-	#tcpipEmacPhyType = drvExtPhyKsz8041Component.createComboSymbol("TCPIP_EMAC_PHY_TYPE", None, TCPIP_STACK_PHY_TYPE) # Niyas to check the range values
-	#tcpipEmacPhyType.setLabel("External PHY Type")
-	#tcpipEmacPhyType.setVisible(True)# Niyas to check the visibility 
-	#tcpipEmacPhyType.setDescription("External PHY Type")
-	#tcpipEmacPhyType.setDefaultValue("KSZ8041")
-	#tcpipEmacPhyType.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
 	# Driver PHY Instances Number
 	drvExtPhyKsz8041InstanceNum= drvExtPhyKsz8041Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
@@ -113,7 +106,7 @@ def instantiateComponent(drvExtPhyKsz8041Component):
 	# App Function
 	drvExtPhyKsz8041ResetCallback = drvExtPhyKsz8041Component.createStringSymbol("DRV_ETHPHY_RESET_CALLBACK", drvExtPhyKsz8041ResetCallbackEnable)
 	drvExtPhyKsz8041ResetCallback.setLabel("App Function")
-	drvExtPhyKsz8041ResetCallback.setVisible(False)# Niyas to check the visibility 
+	drvExtPhyKsz8041ResetCallback.setVisible(False)
 	drvExtPhyKsz8041ResetCallback.setDescription("App Function")
 	drvExtPhyKsz8041ResetCallback.setDefaultValue("AppPhyResetFunction")
 	drvExtPhyKsz8041ResetCallback.setDependencies(drvExtPhyKsz8041MenuVisibleSingle, ["DRV_ETHPHY_USE_RESET_CALLBACK"])
