@@ -103,6 +103,8 @@ uint16_t  NET_PRES_EncProviderWriteReady${INST_NUMBER}(void * providerData, uint
 int32_t NET_PRES_EncProviderRead${INST_NUMBER}(void * providerData, uint8_t * buffer, uint16_t size);
 int32_t NET_PRES_EncProviderReadReady${INST_NUMBER}(void * providerData);
 int32_t NET_PRES_EncProviderPeek${INST_NUMBER}(void * providerData, uint8_t * buffer, uint16_t size);
+int32_t NET_PRES_EncProviderOutputSize${INST_NUMBER}(void * providerData, int32_t inSize);
+int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
     </#if>
 </#macro>
 <#list 0..(NET_PRES_INSTANCES?number-1) as idx>
