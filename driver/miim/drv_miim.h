@@ -58,7 +58,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "driver/driver_common.h"
 #if defined (__PIC32C__) 
-#include "device.h" //niyas
+#include "device.h" //H3_ToDo decide on common strategy for H3 & H2
 //#include "arch/arm/devices_pic32c.h" /* PIC32C system header. */
 #else
 #include "peripheral/eth/plib_eth.h"

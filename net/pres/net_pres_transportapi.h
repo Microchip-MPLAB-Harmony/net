@@ -45,7 +45,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "configuration.h"
+#include "system_config.h"
 
 #include "net_pres.h"
 #include "net_pres_socketapi.h"

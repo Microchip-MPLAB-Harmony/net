@@ -46,7 +46,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "configuration.h"
+#include "system_config.h"
 
 #include "net_pres.h"
 
@@ -370,6 +370,69 @@ typedef int32_t (*NET_PRES_EncProviderReadReady)(void * providerData);
 typedef bool (*NET_PRES_EncProviderIsInitialized)();
 
 // *****************************************************************************
+/* Presentation Encryption Provider Output Size Function Pointer Prototype
+
+  Summary:
+    Defines the output size function to the provider.
+	<p><b>Implementation:</b> Dynamic</p>
+
+  Description:
+    This function pointer defines the output size function. It is called by the 
+	presentation layer when the application wants to check how many bytes will
+    be sent across the Transport layer, given a specified plaintext input size. 
+    
+
+  Preconditions:
+    A connection must have already been created, and be in the open state.
+    This function must be called after the SSL/TLS handshake has been completed. 
+
+  Parameters:
+    providerData - A pointer to the buffer for the provider to keep connection
+                   specific data.
+    inSize       - The requested plain text size to check for.
+
+
+  Returns:
+    Upon success, the requested size will be returned. 
+    Upon error, 0 is returned:
+            - if the input size is greater than the maximum TLS fragment size 
+            - invalid function argument
+            - if the SSL/TLS handshake has not been completed yet 
+ */
+typedef int32_t (*NET_PRES_EncProviderOutputSize)(void * providerData, int32_t inSize);
+
+// *****************************************************************************
+/* Presentation Encryption Provider Maximum Output Size Function Pointer Prototype
+
+  Summary:
+    Defines the maximum output size function to the provider.
+	<p><b>Implementation:</b> Dynamic</p>
+
+  Description:
+    This function pointer defines the maximum output size function.
+    Returns the maximum record layer size for plaintext data.
+    This will correspond to either the maximum SSL/TLS record size as specified by the protocol standard,
+    the maximum TLS fragment size as set by the TLS Max Fragment Length extension.
+      
+    
+
+  Preconditions:
+    A connection must have already been created, and be in the open state.
+    This function must be called after the SSL/TLS handshake has been completed. 
+
+  Parameters:
+    providerData - A pointer to the buffer for the provider to keep connection
+                   specific data.
+
+  Returns:
+    Upon success, the maximum output size will be returned.
+    Upon error, 0 is returned:
+            - invalid function argument
+            - if the SSL/TLS handshake has not been completed yet 
+ */
+typedef int32_t (*NET_PRES_EncProviderMaxOutputSize)(void * providerData);
+
+// *****************************************************************************
 /* Presentation Encryption Provider Information Structure
 
   Summary:
@@ -402,6 +465,8 @@ typedef struct _NET_PRES_EncProviderObject
     NET_PRES_EncProviderRead fpPeek;               // Function pointer to peek at data from a connection
     NET_PRES_EncProviderIsInitialized fpIsInited;  // Function pointer to check to determine if
 	                                               // the provider has been initialized
+    NET_PRES_EncProviderOutputSize fpOutputSize;   // Function pointer to get the output size
+    NET_PRES_EncProviderMaxOutputSize fpMaxOutputSize; // Function pointer to get the maximum output size
 }NET_PRES_EncProviderObject;
 
 #ifdef __cplusplus

@@ -76,6 +76,9 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamServer${INST_NUMBER} =
     .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
     .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
     .fpIsInited = NET_PRES_EncProviderStreamServerIsInited${INST_NUMBER},
+    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
+
 };
             </#if>
             <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"]>            
@@ -92,6 +95,8 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamClient${INST_NUMBER} =
     .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
     .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
     .fpIsInited = NET_PRES_EncProviderStreamClientIsInited${INST_NUMBER},
+    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
 };
             </#if>
         </#if>
@@ -110,6 +115,8 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramServer${INST_NUMBER} =
     .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
     .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
     .fpIsInited = NET_PRES_EncProviderDataGramServerIsInited${INST_NUMBER},
+    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
 };
             </#if>
             <#if .vars["NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST_NUMBER}"]>            
@@ -126,6 +133,8 @@ NET_PRES_EncProviderObject net_pres_EncProviderDataGramClient${INST_NUMBER} =
     .fpReadReady = NET_PRES_EncProviderReadReady${INST_NUMBER},
     .fpPeek =    NET_PRES_EncProviderPeek${INST_NUMBER},
     .fpIsInited = NET_PRES_EncProviderDataGramClientIsInited${INST_NUMBER},
+    .fpOutputSize = NET_PRES_EncProviderOutputSize${INST_NUMBER},
+    .fpMaxOutputSize = NET_PRES_EncProviderMaxOutputSize${INST_NUMBER},
 };
             </#if>
         </#if>

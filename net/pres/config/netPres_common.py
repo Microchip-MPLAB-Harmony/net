@@ -271,7 +271,7 @@ def instantiateComponent(netPresCommonComponent):
 	# add "<#include \"/framework/net/templates/system_init.c.data.ftl\">"  to list SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA
 	netPresSysInitDataSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysInitDataSourceFtl.setType("STRING")
-	netPresSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_MODULE_INITIALIZATION_DATA")
+	netPresSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
 	netPresSysInitDataSourceFtl.setSourcePath("net/pres/templates/system_init.c.data.ftl")
 	netPresSysInitDataSourceFtl.setMarkup(True)
 	
