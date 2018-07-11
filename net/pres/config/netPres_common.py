@@ -1,6 +1,3 @@
-# H3_ToDo  redefine 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
-THIRDPARTY_RTOS_SYS_TASKS_OPTIONS = ["Standalone", "Combined with System Tasks"]
-
 def instantiateComponent(netPresCommonComponent):
 
 	print("Network Presentation Component")
@@ -21,14 +18,15 @@ def instantiateComponent(netPresCommonComponent):
 	# RTOS Configuration
 	netPresRtosMenu = netPresCommonComponent.createMenuSymbol("NET_PRES_RTOS_MENU", None)
 	netPresRtosMenu.setLabel("RTOS Configuration")
-	netPresRtosMenu.setVisible(True)
-	#H3_ToDo
-	#depends on USE_3RDPARTY_RTOS
+	netPresRtosMenu.setDescription("RTOS Configuration")
+	netPresRtosMenu.setVisible(False)
+	netPresRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS_1") != 'BareMetal'))
+	netPresRtosMenu.setDependencies(netPresshowRTOSMenu, ["Harmony.ENABLE_OSAL","Harmony.SELECT_RTOS_1"])
 	
 	# Net Pres Execution mode
-	netPresExecMode = netPresCommonComponent.createComboSymbol("NET_PRES_RTOS", netPresRtosMenu, THIRDPARTY_RTOS_SYS_TASKS_OPTIONS) 
+	netPresExecMode = netPresCommonComponent.createComboSymbol("NET_PRES_RTOS", netPresRtosMenu, ["Standalone"]) 
 	netPresExecMode.setLabel("Run this driver instance as")
-	netPresExecMode.setVisible(True)
+	netPresExecMode.setVisible(False)
 	netPresExecMode.setDescription("Net Pres Execution mode")
 	netPresExecMode.setDefaultValue("Standalone")
 	
@@ -38,38 +36,32 @@ def instantiateComponent(netPresCommonComponent):
 	netPresTaskSize.setVisible(True)
 	netPresTaskSize.setDescription("Net Pres Task Size")
 	netPresTaskSize.setDefaultValue(1024)
-	netPresTaskSize.setDependencies(netPresRtosVisible, ["NET_PRES_RTOS"])
-	#H3_ToDo depends on NET_PRES_RTOS = "Standalone"	
-
-
+	netPresTaskSize.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
+	
 	# Net Pres Task Priority
 	netPresTaskPriority = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_TASK_PRIORITY", netPresRtosMenu)
 	netPresTaskPriority.setLabel("Task Priority")
 	netPresTaskPriority.setVisible(True)
 	netPresTaskPriority.setDescription("Net Pres Task Priority")
 	netPresTaskPriority.setDefaultValue(1)
-	netPresTaskPriority.setDependencies(netPresRtosVisible, ["NET_PRES_RTOS"])
-	#H3_ToDo depends on NET_PRES_RTOS = "Standalone"	
-
+	netPresTaskPriority.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
+	
 	# Net Pres Task Delay?
 	netPresUseTaskDelay = netPresCommonComponent.createBooleanSymbol("NET_PRES_RTOS_USE_DELAY", netPresRtosMenu)
 	netPresUseTaskDelay.setLabel("Use Task Delay?")
 	netPresUseTaskDelay.setVisible(True)
 	netPresUseTaskDelay.setDescription("Net Pres Use Task Delay?")
 	netPresUseTaskDelay.setDefaultValue(True)
-	netPresUseTaskDelay.setDependencies(netPresRtosVisible, ["NET_PRES_RTOS"])
-	#H3_ToDo depends on DRV_MIIM_RTOS = "Standalone"	
-
+	netPresUseTaskDelay.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
+	
 	# Net Pres Task Delay
 	netPresTaskDelay = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_DELAY", netPresRtosMenu)
 	netPresTaskDelay.setLabel("Task Delay")
 	netPresTaskDelay.setVisible(True)
 	netPresTaskDelay.setDescription("Net Pres Task Delay")
 	netPresTaskDelay.setDefaultValue(1000)
-	netPresTaskDelay.setDependencies(netPresRtosDelayVisible, ["NET_PRES_RTOS","NET_PRES_RTOS_USE_DELAY"])
-	#H3_ToDo         depends on NET_PRES_RTOS = "Standalone"
-    #depends on NET_PRES_RTOS_USE_DELAY
-	
+	netPresTaskDelay.setDependencies(netPresRTOSTaskDelayMenu, ["NET_PRES_RTOS","NET_PRES_RTOS_USE_DELAY"])
+		
 	# Number of Presentation Sockets
 	netPresSocketCnt = netPresCommonComponent.createIntegerSymbol("NET_PRES_SOCKETS", None)
 	netPresSocketCnt.setLabel("Number of Presentation Sockets")
@@ -354,8 +346,10 @@ def netPresRtosVisible(symbol, event):
 	else:
 		symbol.setVisible(False)
 
-def netPresRtosDelayVisible(symbol, event):
-	if (event["value"] == "Standalone"):	
+def netPresRTOSTaskDelayMenu(symbol, event):
+	netPresRtos = Database.getSymbolValue("netPres","NET_PRES_RTOS")
+	netPresRtosUseDelay = Database.getSymbolValue("netPres","NET_PRES_RTOS_USE_DELAY")
+	if((netPresRtos == 'Standalone') and netPresRtosUseDelay):		
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
@@ -372,6 +366,28 @@ def netPresCertRepo(symbol, event):
 		symbol.setVisible(True)			
 	else:
 		symbol.setVisible(False)
+		
+def netPresshowRTOSMenu(symbol, event):
+
+	netPresEnableOsal = Database.getSymbolValue("Harmony","ENABLE_OSAL")
+	netPresSelectRtos = Database.getSymbolValue("Harmony","SELECT_RTOS_1")
+	if(netPresEnableOsal and (netPresSelectRtos != 'BareMetal')):
+	#if (event["value"] != 'BareMetal'):
+	#if (event["value"] != 0):
+		# If not Bare Metal
+		symbol.setVisible(True)
+		print("NetPres rtos")
+	else:
+		symbol.setVisible(False)
+		print("NetPres Bare Metal")		
+		
+def netPresRTOSStandaloneMenu(symbol, event):
+	if (event["value"] == 'Standalone'):		
+		symbol.setVisible(True)
+		print("netPres Standalone")
+	else:
+		symbol.setVisible(False)
+		print("netPres Combined")		
 		
 def netPresGenSourceFile(sourceFile, event):
 	netPresBlob = Database.getSymbolValue("netPres","NET_PRES_BLOB_CERT_REPO")

@@ -1,6 +1,3 @@
-# H3_ToDo :  redefine 3RDPARTY_RTOS_SYS_TASKS_OPTIONS
-THIRDPARTY_RTOS_SYS_TASKS_OPTIONS = ["Standalone", "Combined with System Tasks"]
-
 def instantiateComponent(drvMiimComponent):
 	print("MIIM Driver Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
@@ -83,61 +80,73 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvIndex.setDescription("MIIM Driver Object Index")
 	drvMiimDrvIndex.setDefaultValue(0)
 	#drvMiimDrvIndex.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-
+	
 	# RTOS Configuration
-	drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
-	drvMiimRtosMenu.setLabel("RTOS Configuration")
-	drvMiimRtosMenu.setVisible(True)
+	#drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
+	#drvMiimRtosMenu.setLabel("RTOS Configuration")
+	#drvMiimRtosMenu.setVisible(True)
 	#drvMiimRtosMenu.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
 	#menu "RTOS Configuration"
     #depends on DRV_MIIM_USE_DRIVER
-    #H3_ToDo depends on USE_3RDPARTY_RTOS	
+    #depends on USE_3RDPARTY_RTOS	
+	
+	drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
+	drvMiimRtosMenu.setLabel("RTOS Configuration")
+	drvMiimRtosMenu.setDescription("RTOS Configuration")
+	drvMiimRtosMenu.setVisible(False)
+	drvMiimRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS_1") != 'BareMetal'))
+	drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["Harmony.ENABLE_OSAL","Harmony.SELECT_RTOS_1"])
+	
+	# drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
+	# drvMiimRtosMenu.setLabel("RTOS Configuration")
+	# drvMiimRtosMenu.setDescription("RTOS Configuration_11")
+	# drvMiimRtosMenu.setVisible(False)
+	# drvMiimRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
+	# drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["Harmony.SELECT_RTOS"])
 	
 	# MIIM Driver Execution mode
-	drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, THIRDPARTY_RTOS_SYS_TASKS_OPTIONS) 
+	drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, ["Standalone"]) 
 	drvMiimInstnExecMode.setLabel("Run this driver instance as")
-	drvMiimInstnExecMode.setVisible(True)
+	drvMiimInstnExecMode.setVisible(False)
 	drvMiimInstnExecMode.setDescription("MIIM Driver Execution mode")
-	drvMiimInstnExecMode.setDefaultValue("Combined with System Tasks")
+	drvMiimInstnExecMode.setDefaultValue("Standalone")
 	#drvMiimInstnExecMode.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
 	# MIIM Driver Task Size
 	drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_SIZE", drvMiimRtosMenu)
 	drvMiimDrvTaskSize.setLabel("Task Size")
-	drvMiimDrvTaskSize.setVisible(False)
+	drvMiimDrvTaskSize.setVisible(True)
 	drvMiimDrvTaskSize.setDescription("MIIM Driver Task Size")
 	drvMiimDrvTaskSize.setDefaultValue(1024)
-	#drvMiimDrvTaskSize.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#H3_ToDo depends on DRV_MIIM_RTOS = "Standalone"
+	drvMiimDrvTaskSize.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
+	
 
 	# MIIM Driver Task Priority
 	drvMiimDrvTaskPriority = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_PRIORITY", drvMiimRtosMenu)
 	drvMiimDrvTaskPriority.setLabel("Task Priority")
-	drvMiimDrvTaskPriority.setVisible(False)
+	drvMiimDrvTaskPriority.setVisible(True)
 	drvMiimDrvTaskPriority.setDescription("MIIM Driver Task Priority")
 	drvMiimDrvTaskPriority.setDefaultValue(1)
-	#drvMiimDrvTaskPriority.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#H3_ToDo depends on DRV_MIIM_RTOS = "Standalone"	
+	drvMiimDrvTaskPriority.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
+	
 
 	# MIIM Use Task Delay?
 	drvMiimUseTaskDelay = drvMiimComponent.createBooleanSymbol("DRV_MIIM_RTOS_USE_DELAY", drvMiimRtosMenu)
 	drvMiimUseTaskDelay.setLabel("Use Task Delay?")
-	drvMiimUseTaskDelay.setVisible(False)
+	drvMiimUseTaskDelay.setVisible(True)
 	drvMiimUseTaskDelay.setDescription("MIIM Use Task Delay?")
 	drvMiimUseTaskDelay.setDefaultValue(True)
-	#drvMiimUseTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#H3_ToDo todo depends on DRV_MIIM_RTOS = "Standalone"	
+	drvMiimUseTaskDelay.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
+	
 
 	# MIIM Driver Task Delay
 	drvMiimDrvTaskDelay = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_DELAY", drvMiimRtosMenu)
 	drvMiimDrvTaskDelay.setLabel("Task Delay")
-	drvMiimDrvTaskDelay.setVisible(False)
+	drvMiimDrvTaskDelay.setVisible(True)
 	drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
 	drvMiimDrvTaskDelay.setDefaultValue(100)
-	#drvMiimDrvTaskDelay.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
-	#H3_ToDo     depends on DRV_MIIM_RTOS = "Standalone"
-    #depends on DRV_MIIM_RTOS_USE_DELAY
-	
+	drvMiimDrvTaskDelay.setDependencies(drvMiimRTOSTaskDelayMenu, ["DRV_MIIM_RTOS", "DRV_MIIM_RTOS_USE_DELAY"])
+		
 	# Add drv_miim.h file to project
 	#file DRV_MIIM_H "$HARMONY_VERSION_PATH/framework/driver/miim/drv_miim.h" to "$PROJECT_HEADER_FILES/framework/driver/miim/drv_miim.h"
 	drvMiimHeaderFile = drvMiimComponent.createFileSymbol(None, None)
@@ -232,6 +241,36 @@ def drvMiimMenuVisibleSingle(symbol, event):
 		symbol.setVisible(True)
 	else:
 		print("MIIM Menu Invisible.")
+		symbol.setVisible(False)
+		
+def drvMiimshowRTOSMenu(symbol, event):
+
+	drvMiimEnableOsal = Database.getSymbolValue("Harmony","ENABLE_OSAL")
+	drvMiimSelectRtos = Database.getSymbolValue("Harmony","SELECT_RTOS_1")
+	if(drvMiimEnableOsal and (drvMiimSelectRtos != 'BareMetal')):	
+	#if (event["value"] != 'BareMetal'):
+	#if (event["value"] != 0):
+		# If not Bare Metal
+		symbol.setVisible(True)
+		print("MIIM rtos")
+	else:
+		symbol.setVisible(False)
+		print("MIIM Bare Metal")
+
+def drvMiimRTOSStandaloneMenu(symbol, event):
+	if (event["value"] == 'Standalone'):		
+		symbol.setVisible(True)
+		print("MIIM Standalone")
+	else:
+		symbol.setVisible(False)
+		print("MIIM Combined")
+		
+def drvMiimRTOSTaskDelayMenu(symbol, event):
+	drvMiimRtos = Database.getSymbolValue("drvMiim","DRV_MIIM_RTOS")
+	drvMiimRtosUseDelay = Database.getSymbolValue("drvMiim","DRV_MIIM_RTOS_USE_DELAY")
+	if((drvMiimRtos == 'Standalone') and drvMiimRtosUseDelay):		
+		symbol.setVisible(True)
+	else:
 		symbol.setVisible(False)
 		
 def drvMiimGenSourceFile(sourceFile, event):

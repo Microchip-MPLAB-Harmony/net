@@ -28,7 +28,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if !(TCPIP_TASKS?has_content)>
 <#assign TCPIP_TASKS = "TASK_CALL_NO_RTOS">
 </#if>
-<#if (TCPIP_TASKS == "PROTO") && (tcpipRtos.TCPIP_RTOS) == "Standalone">
+<#if (TCPIP_TASKS == "PROTO") && (TCPIP_RTOS) == "Standalone">
 <#if (CONFIG_3RDPARTY_RTOS_USED)?has_content && (CONFIG_3RDPARTY_RTOS_USED) == "ThreadX">
 void _TCPIP_Tasks(ULONG thread_input);
 <#else>
@@ -42,7 +42,7 @@ void _TCPIP_Tasks(void);
 <@RTOS_TASK_CREATE RTOS_NAME=CONFIG_3RDPARTY_RTOS_USED TASK_FUNC_NAME="_TCPIP_Tasks" TASK_NAME="TCPIP Tasks" TASK_PRI=TCPIP_RTOS_TASK_PRIORITY TASK_STK_SZ=TCPIP_RTOS_TASK_SIZE/>
  </#if>
 </#if>
-<#if (TCPIP_TASKS == "TASK_CALL_NO_RTOS") || (TCPIP_TASKS == "TASK_CALL" && (tcpipRtos.TCPIP_RTOS) != "Standalone")>
+<#if (TCPIP_TASKS == "TASK_CALL_NO_RTOS") || (TCPIP_TASKS == "TASK_CALL" && (TCPIP_RTOS) != "Standalone")>
  <#if USE_TCPIP_STACK == true>
   <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content && (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true && (USE_SYS_COMMAND)?has_content && (USE_SYS_COMMAND == false)>
     /* Maintain the TCPIP Native Command Stack */
@@ -53,7 +53,7 @@ void _TCPIP_Tasks(void);
  </#if>
 </#if>
 <#if TCPIP_TASKS == "LOCAL_FUNCTION">
- <#if (tcpipRtos.TCPIP_RTOS) == "Standalone">
+ <#if (TCPIP_RTOS) == "Standalone">
 <#if CONFIG_3RDPARTY_RTOS_USED == "ThreadX">
 void _TCPIP_Tasks(ULONG thread_input)
 <#else>

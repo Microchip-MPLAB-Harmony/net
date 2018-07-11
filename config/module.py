@@ -3,19 +3,19 @@ def loadModule():
 
 	tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_stack.py")
 	tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE")
-	tcpipStackComponent.addDependency("Core_TcpipRtos_Dependency", "TCPIP_RTOS")
+	#tcpipStackComponent.addDependency("Core_TcpipRtos_Dependency", "TCPIP_RTOS")
 	#tcpipStackComponent.addDependency("Tcpip_NetConfig_Dependency", "NET_CONFIG")
-	tcpipStackComponent.addDependency("Core_Heap_Dependency", "TCPIP_HEAP")
+	#tcpipStackComponent.addDependency("Core_Heap_Dependency", "TCPIP_HEAP")
 	#tcpipStackComponent.addDependency("Core_TcpipFs_Dependency", "TCPIP FS WRAPPER")
 	tcpipStackComponent.addDependency("Core_NetConfig_Dependency", "NETCONFIG")
 	tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME")
 	
 	
-	tcpipHeapComponent = Module.CreateComponent("tcpipHeap", "TCPIP HEAP", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_heap.py")
-	tcpipHeapComponent.addCapability("libtcpipHeap","TCPIP_HEAP")	
+	#tcpipHeapComponent = Module.CreateComponent("tcpipHeap", "TCPIP HEAP", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_heap.py")
+	#tcpipHeapComponent.addCapability("libtcpipHeap","TCPIP_HEAP")	
 	
-	tcpipRtosComponent = Module.CreateComponent("tcpipRtos", "TCPIP RTOS", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_rtos.py")
-	tcpipRtosComponent.addCapability("libtcpipRtos","TCPIP_RTOS")	
+	#tcpipRtosComponent = Module.CreateComponent("tcpipRtos", "TCPIP RTOS", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_rtos.py")
+	#tcpipRtosComponent.addCapability("libtcpipRtos","TCPIP_RTOS")	
 	#tcpipRtosComponent.addDependency("Rtos_Osal_Dependency", "OSAL")
 	
 	tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv4.py")
