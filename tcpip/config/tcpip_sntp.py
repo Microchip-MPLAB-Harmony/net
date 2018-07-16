@@ -70,7 +70,7 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpConnType.setLabel("Default Connection Type")
 	tcpipSntpConnType.setVisible(True)
 	tcpipSntpConnType.setDescription("Default Connection Type")
-	tcpipSntpConnType.setDefaultValue("TCPIP_STACK_USE_IPV4")
+	tcpipSntpConnType.setDefaultValue("IP_ADDRESS_TYPE_IPV4")
 	# H3_ToDo
 	# default "IP_ADDRESS_TYPE_IPV4" if TCPIP_STACK_USE_IPV4
 	# default "IP_ADDRESS_TYPE_IPV6" if TCPIP_STACK_USE_IPV6
