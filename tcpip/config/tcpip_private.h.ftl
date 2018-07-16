@@ -94,7 +94,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 <#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content &&  (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>
 #include "tcpip/src/tcpip_announce_manager.h"
 </#if>
-<#if (tcpipNdp.TCPIP_IPV6_NDP)?has_content>
+<#if (tcpipNdp.TCPIP_USE_NDP)?has_content && (tcpipNdp.TCPIP_USE_NDP) == true>
 #include "tcpip/src/ndp_manager.h"
 </#if>
 <#if (tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true>

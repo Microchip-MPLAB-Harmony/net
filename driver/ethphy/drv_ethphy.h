@@ -62,6 +62,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #if !defined (__PIC32C__) 
 #include "peripheral/eth/plib_eth.h"
 #else
+#include "device.h" //H3_ToDo decide on common strategy for H3 & H2
 typedef enum
 {
   GMAC_ID_0 = ((uint32_t)GMAC_BASE_ADDRESS),

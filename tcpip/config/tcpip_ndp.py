@@ -1,18 +1,17 @@
     
 def instantiateComponent(tcpipNdpComponent):
 	print("TCPIP NDP Component")
-	configName = Variables.get("__CONFIGURATION_NAME")
+	configName = Variables.get("__CONFIGURATION_NAME")	
 	
-	# Settings for Neighbor Discovery Protocol
-	#tcpipNdp = tcpipNdpComponent.createMenuSymbol("TCPIP_IPV6_NDP", tcpipIPv6)
-	tcpipNdp = tcpipNdpComponent.createMenuSymbol("TCPIP_IPV6_NDP", None)
-	tcpipNdp.setLabel("Neighbor Discovery Protocol")
-	tcpipNdp.setVisible(True)
-	tcpipNdp.setDescription("Neighbor Discovery ProtocolSettings")
-	#tcpipNdp.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
-
+	# Enable Neighbor Discovery Protocol Settings 	
+	tcpipNdp = tcpipNdpComponent.createBooleanSymbol("TCPIP_USE_NDP", None)
+	tcpipNdp.setLabel("NDP")
+	tcpipNdp.setVisible(False)
+	tcpipNdp.setDescription("Enable Neighbor Discovery Protocol Settings")
+	tcpipNdp.setDefaultValue(True)
+	
 	# RTR Solicitation Delay in seconds
-	tcpipNdpRtrDelay = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_RTR_SOLICITATION_DELAY", tcpipNdp)
+	tcpipNdpRtrDelay = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_RTR_SOLICITATION_DELAY", None)
 	tcpipNdpRtrDelay.setLabel("RTR Solicitation Delay - Seconds")
 	tcpipNdpRtrDelay.setVisible(True)
 	tcpipNdpRtrDelay.setDescription("RTR Solicitation Delay in seconds")
@@ -20,7 +19,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpRtrDelay.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# RTR Solicitation Interval in seconds
-	tcpipNdpRtrSolicitInterval = tcpipNdpComponent.createIntegerSymbol("TCPIP_RTR_SOLICITATION_INTERVAL", tcpipNdp)
+	tcpipNdpRtrSolicitInterval = tcpipNdpComponent.createIntegerSymbol("TCPIP_RTR_SOLICITATION_INTERVAL", None)
 	tcpipNdpRtrSolicitInterval.setLabel("RTR Solicitation Interval - Seconds")
 	tcpipNdpRtrSolicitInterval.setVisible(True)
 	tcpipNdpRtrSolicitInterval.setDescription("RTR Solicitation Interval in seconds")
@@ -28,7 +27,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpRtrSolicitInterval.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Maximum RTR Solicitations
-	tcpipNdpRtrSolicitMax = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_RTR_SOLICITATIONS", tcpipNdp)
+	tcpipNdpRtrSolicitMax = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_RTR_SOLICITATIONS", None)
 	tcpipNdpRtrSolicitMax.setLabel("Max RTR Solicitations")
 	tcpipNdpRtrSolicitMax.setVisible(True)
 	tcpipNdpRtrSolicitMax.setDescription("Maximum RTR Solicitations")
@@ -36,7 +35,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpRtrSolicitMax.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Maximum Multicast Solicitations
-	tcpipNdpMcastSolicitMax = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_MULTICAST_SOLICIT", tcpipNdp)
+	tcpipNdpMcastSolicitMax = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_MULTICAST_SOLICIT", None)
 	tcpipNdpMcastSolicitMax.setLabel("Max Multicast Solicitations")
 	tcpipNdpMcastSolicitMax.setVisible(True)
 	tcpipNdpMcastSolicitMax.setDescription("Maximum Multicast Solicitations")
@@ -44,7 +43,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpMcastSolicitMax.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Maximum Unicast Solicitations
-	tcpipNdpUcastSolicitMax = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_UNICAST_SOLICIT", tcpipNdp)
+	tcpipNdpUcastSolicitMax = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_UNICAST_SOLICIT", None)
 	tcpipNdpUcastSolicitMax.setLabel("Max Unicast Solicitations")
 	tcpipNdpUcastSolicitMax.setVisible(True)
 	tcpipNdpUcastSolicitMax.setDescription("Maximum Unicast Solicitations")
@@ -52,7 +51,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpUcastSolicitMax.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Maximum Anycast Delay Time in Seconds
-	tcpipNdpMaxAnycastDelayTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_ANYCAST_DELAY_TIME", tcpipNdp)
+	tcpipNdpMaxAnycastDelayTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_ANYCAST_DELAY_TIME", None)
 	tcpipNdpMaxAnycastDelayTime.setLabel("Max Anycast Delay Time in Seconds")
 	tcpipNdpMaxAnycastDelayTime.setVisible(True)
 	tcpipNdpMaxAnycastDelayTime.setDescription("Maximum Anycast Delay Time in Seconds")
@@ -60,7 +59,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpMaxAnycastDelayTime.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Maximum Neighbor Advertisement Transmissions
-	tcpipNdpMaxNeighbAdvTxn = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_NEIGHBOR_ADVERTISEMENT", tcpipNdp)
+	tcpipNdpMaxNeighbAdvTxn = tcpipNdpComponent.createIntegerSymbol("TCPIP_MAX_NEIGHBOR_ADVERTISEMENT", None)
 	tcpipNdpMaxNeighbAdvTxn.setLabel("Max Neighbor Advertisement Transmissions")
 	tcpipNdpMaxNeighbAdvTxn.setVisible(True)
 	tcpipNdpMaxNeighbAdvTxn.setDescription("Maximum Neighbor Advertisement Transmissions")
@@ -68,7 +67,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpMaxNeighbAdvTxn.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Reachable Time in Seconds
-	tcpipNdpReachTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_REACHABLE_TIME", tcpipNdp)
+	tcpipNdpReachTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_REACHABLE_TIME", None)
 	tcpipNdpReachTime.setLabel("Reachable Time in Seconds")
 	tcpipNdpReachTime.setVisible(True)
 	tcpipNdpReachTime.setDescription("Reachable Time in Seconds")
@@ -76,7 +75,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpReachTime.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Re-transmission Timer in Seconds
-	tcpipNdpRetxnTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_RETRANS_TIMER", tcpipNdp)
+	tcpipNdpRetxnTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_RETRANS_TIMER", None)
 	tcpipNdpRetxnTime.setLabel("Re-transmission Timer - Seconds")
 	tcpipNdpRetxnTime.setVisible(True)
 	tcpipNdpRetxnTime.setDescription("Re-transmission Timer in Seconds")
@@ -84,7 +83,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpRetxnTime.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# Delay First Probe Time in Seconds
-	tcpipNdpDlyFirstProbeTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_DELAY_FIRST_PROBE_TIME", tcpipNdp)
+	tcpipNdpDlyFirstProbeTime = tcpipNdpComponent.createIntegerSymbol("TCPIP_DELAY_FIRST_PROBE_TIME", None)
 	tcpipNdpDlyFirstProbeTime.setLabel("Delay First Probe Time in Seconds")
 	tcpipNdpDlyFirstProbeTime.setVisible(True)
 	tcpipNdpDlyFirstProbeTime.setDescription("Delay First Probe Time in Seconds")
@@ -92,7 +91,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpDlyFirstProbeTime.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# IPv6 Maximum Transmission Unit Increase Time-out in Seconds
-	tcpipNdpMtuIncreaseTimeout = tcpipNdpComponent.createIntegerSymbol("TCPIP_IPV6_MTU_INCREASE_TIMEOUT", tcpipNdp)
+	tcpipNdpMtuIncreaseTimeout = tcpipNdpComponent.createIntegerSymbol("TCPIP_IPV6_MTU_INCREASE_TIMEOUT", None)
 	tcpipNdpMtuIncreaseTimeout.setLabel("IPv6 Maximum Transmission Unit Increase Time-out in Seconds")
 	tcpipNdpMtuIncreaseTimeout.setVisible(True)
 	tcpipNdpMtuIncreaseTimeout.setDescription("IPv6 Maximum Transmission Unit Increase Time-out in Seconds")
@@ -100,7 +99,7 @@ def instantiateComponent(tcpipNdpComponent):
 	#tcpipNdpMtuIncreaseTimeout.setDependencies(tcpipNdpMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
 
 	# NDP Task Timer in msec
-	tcpipNdpTaskTimer = tcpipNdpComponent.createIntegerSymbol("TCPIP_NDP_TASK_TIMER_RATE", tcpipNdp)
+	tcpipNdpTaskTimer = tcpipNdpComponent.createIntegerSymbol("TCPIP_NDP_TASK_TIMER_RATE", None)
 	tcpipNdpTaskTimer.setLabel("NDP Task Timer in msec")
 	tcpipNdpTaskTimer.setVisible(True)
 	tcpipNdpTaskTimer.setDescription("NDP Task Timer in msec")

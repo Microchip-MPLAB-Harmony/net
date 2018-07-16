@@ -643,7 +643,7 @@ typedef struct
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
 
-<#if (tcpipNdp.TCPIP_IPV6_NDP)?has_content>
+<#if (tcpipNdp.TCPIP_USE_NDP)?has_content && (tcpipNdp.TCPIP_USE_NDP) == true>
 #include "tcpip/ndp.h"
 </#if>
 <#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true) || ((tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true) >
