@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/default/production/tcpip_udp_server.X.production.elf">
+    <memory name="program">
+      <units>bytes</units>
+      <length>2097152</length>
+      <used>62106</used>
+      <free>2035046</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>393216</length>
+      <used>5439</used>
+      <free>387777</free>
+    </memory>
+  </executable>
+</project>
