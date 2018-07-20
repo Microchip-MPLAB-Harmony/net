@@ -3,20 +3,9 @@ def loadModule():
 
 	tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_stack.py")
 	tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE")
-	#tcpipStackComponent.addDependency("Core_TcpipRtos_Dependency", "TCPIP_RTOS")
-	#tcpipStackComponent.addDependency("Tcpip_NetConfig_Dependency", "NET_CONFIG")
-	#tcpipStackComponent.addDependency("Core_Heap_Dependency", "TCPIP_HEAP")
 	#tcpipStackComponent.addDependency("Core_TcpipFs_Dependency", "TCPIP FS WRAPPER")
 	tcpipStackComponent.addDependency("Core_NetConfig_Dependency", "NETCONFIG")
 	tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME")
-	
-	
-	#tcpipHeapComponent = Module.CreateComponent("tcpipHeap", "TCPIP HEAP", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_heap.py")
-	#tcpipHeapComponent.addCapability("libtcpipHeap","TCPIP_HEAP")	
-	
-	#tcpipRtosComponent = Module.CreateComponent("tcpipRtos", "TCPIP RTOS", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_rtos.py")
-	#tcpipRtosComponent.addCapability("libtcpipRtos","TCPIP_RTOS")	
-	#tcpipRtosComponent.addDependency("Rtos_Osal_Dependency", "OSAL")
 	
 	tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv4.py")
 	tcpipIPv4Component.addCapability("libTcpipIPv4","IPv4")
@@ -103,7 +92,7 @@ def loadModule():
 	tcpipRebootComponent.addDependency("Reboot_IPv4_Dependency", "IPv4")
 	tcpipRebootComponent.addDependency("Reboot_UDP_Dependency", "UDP")
 	
-	#Commented as per Adrian's review comment
+	# Removed SMTP as per review comment
 	# tcpipSmtpComponent = Module.CreateComponent("tcpipSmtp", "SMTP", "/Libraries/TCPIP/", "tcpip/config/tcpip_smtp.py")
 	# tcpipSmtpComponent.addCapability("libtcpipSmtp","SMTP")	
 	# tcpipSmtpComponent.addDependency("Smtp_TCP_Dependency", "TCP")
@@ -116,6 +105,7 @@ def loadModule():
 	tcpipSntpComponent = Module.CreateComponent("tcpipSntp", "SNTP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_sntp.py")
 	tcpipSntpComponent.addCapability("libtcpipSntp","SNTP")	
 	tcpipSntpComponent.addDependency("Sntp_UDP_Dependency", "UDP")
+	tcpipSntpComponent.addDependency("Sntp_MAC_Dependency", "MAC")
 
 	tcpipIgmpComponent = Module.CreateComponent("tcpipIgmp", "IGMP", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_igmp.py")
 	tcpipIgmpComponent.addCapability("libtcpipIgmp","IGMP")

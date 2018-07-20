@@ -2,6 +2,7 @@
 TCPIP_SNTP_PROTOCOL_TYPE = ["SNTP_VERSION_3", "SNTP_VERSION_4"]
 #H3_ToDo multiple definition for following; find a method
 TCPIP_ADDRESS_TYPE_STRICT = ["IP_ADDRESS_TYPE_IPV4", "IP_ADDRESS_TYPE_IPV6"]
+
 TCPIP_STACK_IF_NAME = []
 #H3_ToDo modify the interface name
 TCPIP_STACK_PIC32C_IF_NAME =	["PIC32CINT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
@@ -10,6 +11,7 @@ TCPIP_STACK_PIC32M_IF_NAME =	["PIC32INT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN"
 def instantiateComponent(tcpipSntpComponent):
 	#global TCPIP_STACK_IF_NAME
 	#global TCPIP_ADDRESS_TYPE_STRICT
+
 	print("TCPIP SNTP Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
 	if "SAME70" in Variables.get("__PROCESSOR"):
@@ -35,11 +37,12 @@ def instantiateComponent(tcpipSntpComponent):
 
 	# ifblock !PIC32WK    H3_ToDo
 	# Default Interface
-	tcpipSntpDefault = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_IF", None, TCPIP_STACK_IF_NAME)
+	#tcpipSntpDefault = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_IF", None, TCPIP_STACK_IF_NAME)
+	tcpipSntpDefault = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_DEFAULT_IF", None)	
 	tcpipSntpDefault.setLabel("Default Interface")
 	tcpipSntpDefault.setVisible(True)
 	tcpipSntpDefault.setDescription("Default Interface")
-	tcpipSntpDefault.setDefaultValue("PIC32CINT")
+	tcpipSntpDefault.setDefaultValue("")
 	# H3_ToDo
 	# default "PIC32CINT" if USE_PIC32CINT_ETH_MAC_NEEDED
 	# default "PIC32INT" if USE_PIC32INT_ETH_MAC_NEEDED
@@ -186,3 +189,14 @@ def tcpipSntpMenuVisibleSingle(symbol, event):
 
 def tcpipSntpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+def onDependentComponentAdded(tcpipSntpComponent, id, macComponent):
+    if id == "Sntp_MAC_Dependency" :
+        tcpipSntpIf = tcpipSntpComponent.getSymbolByID("TCPIP_NTP_DEFAULT_IF")
+        tcpipSntpIf.clearValue()
+        tcpipSntpIf.setValue(macComponent.getDisplayName(), 2)
+        
+def onDependentComponentRemoved(tcpipSntpComponent, id, macComponent):
+    if id == "Sntp_MAC_Dependency" :
+        tcpipSntpComponent.clearSymbolValue("TCPIP_NTP_DEFAULT_IF")	
+		

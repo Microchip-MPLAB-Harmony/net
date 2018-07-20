@@ -472,7 +472,7 @@ def instantiateComponent(drvSamv71GmacComponent):
 	tcpipEmacModuleId.setLabel("GMAC Module ID")
 	tcpipEmacModuleId.setVisible(True)
 	tcpipEmacModuleId.setDescription("GMAC Module ID")
-	tcpipEmacModuleId.setDefaultValue("GMAC_ID_0")
+	tcpipEmacModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
 	
 	# GMAC Interrupt mode 
 	#H3_ToDo : this sysmbol need more review

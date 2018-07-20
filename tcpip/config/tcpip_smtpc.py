@@ -9,7 +9,6 @@ def instantiateComponent(tcpipSmtpcComponent):
 	tcpipSmtpcClient.setVisible(False)
 	tcpipSmtpcClient.setDescription("Use SMTPC Client")
 	tcpipSmtpcClient.setDefaultValue(True) 
-	# H3_ToDo   select NET_PRES_NEEDED
 	#tcpipSmtpcClient.setDependencies(tcpipSmtpcMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
 
 	# Number of Mail Connections to be Created

@@ -37,14 +37,6 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 	tcpipNetIfName.setDefaultValue("")
 	tcpipNetIfName.setReadOnly(True)
 
-
-	#H3_ToDo : check the need of this
-	# Ethernet MAC needed
-	tcpipNetEthMacNeeded = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_DEFAULT_INTERFACE_ETH_MAC_NEEDED_IDX"+str(index),None)
-	tcpipNetEthMacNeeded.setVisible(False)
-	tcpipNetEthMacNeeded.setDefaultValue(True)
-	#tcpipNetEthMacNeeded.setDependencies(tcpipNetEthMacNeedUpdate, tcpipNetIfName)
-
 	# Network Host name
 	tcpipNetHostName = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX" + str(index), None)
 	tcpipNetHostName.setLabel("Host Name")
@@ -235,13 +227,6 @@ def tcpipNetHostNameUpdate(symbol, event):
 	
 	print("END tcpipNetHostNameUpdate")
 
-# H3_ToDo : check the need of this func
-def tcpipNetEthMacNeedUpdate(symbol, event):
-	symbol.clearValue()
-	if ((event["value"] == "PIC32CINT") or (event["value"] == "PIC32INT")):
-		symbol.setValue(True,1)
-	else:
-		symbol.setValue(False,1)
 	
 def tcpipNetMacAddrUpdate(symbol, event):	
 	print("Start tcpipNetMacAddrUpdate")
@@ -261,11 +246,10 @@ def tcpipNetMacAddrUpdate(symbol, event):
 
 def tcpipNetIpAddrUpdate(symbol, event):	
 	print("Start tcpipNetIpAddrUpdate")
-	#print(symbol.getID())
-	#print(event["id"])
-	#tcpipIpAddrIndex = int(symbol.getID().strip("TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX"))
-		
-	#print(tcpipIpAddrIndex)
+
+	tcpipDhcpc = Database.getSymbolValue("tcpipDhcp","TCPIP_STACK_USE_DHCP_CLIENT")
+	tcpipDhcps = Database.getSymbolValue("tcpipDhcps","TCPIP_STACK_USE_DHCP_SERVER")
+	
 	tcpipInterfaceName = event["value"]
 	
 	symbol.clearValue()
@@ -281,11 +265,11 @@ def tcpipNetIpAddrUpdate(symbol, event):
 				if(tcpipInterfaceName == "ENC28J60"):
 					symbol.setValue("192.168.100.13",1)
 				else:
-					# H3_ToDo implment dhcp server client dependency
-					if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
+					if ((tcpipDhcpc == False) and (tcpipDhcps== False) and ((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000"))):
 						symbol.setValue("192.168.1.2",1)
 					else:
 						symbol.setValue("0.0.0.0",1)
+						
 	
 	print("END tcpipNetIpAddrUpdate")	
 
@@ -307,7 +291,7 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
 			if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
 				symbol.setValue("192.168.1.1",1)
 			else:					
-				# H3_ToDo Implement PIC32WK dependency
+				# ToDo Implement PIC32WK dependency
 				symbol.setValue("0.0.0.0",1)
 	
 	print("END tcpipNetGatewayIpAddrUpdate")		
@@ -330,7 +314,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
 			if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
 				symbol.setValue("192.168.1.1",1)
 			else:					
-				#H3_ToDo Implement PIC32WK dependency
+				# ToDo Implement PIC32WK dependency
 				symbol.setValue("0.0.0.0",1)
 		
 	print("END tcpipNetPrimDnsIpAddrUpdate")
@@ -356,7 +340,6 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
 				if(tcpipInterfaceName == "ENC28J60"):
 					symbol.setValue("DRV_ENC28J60_MACObject",1)
 				else:
-					# H3_ToDo implment dhcp server client dependency
 					if(tcpipInterfaceName == "MRF24WN"):
 						symbol.setValue("WDRV_MRF24WN_MACObject",1)
 					else:
@@ -366,7 +349,7 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
 							if(tcpipInterfaceName == "WILC1000"):
 								symbol.setValue("WDRV_WILC1000_MACObject",1)
 							else:	
-								# H3_ToDo implment PIC32WK dependency
+								# ToDo implment PIC32WK dependency
 								symbol.setValue("",1)
 
 	print("END tcpipNetMACDrvObjUpdate")	
