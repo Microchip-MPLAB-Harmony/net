@@ -20,8 +20,8 @@ def instantiateComponent(netPresCommonComponent):
 	netPresRtosMenu.setLabel("RTOS Configuration")
 	netPresRtosMenu.setDescription("RTOS Configuration")
 	netPresRtosMenu.setVisible(False)
-	netPresRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS_1") != 'BareMetal'))
-	netPresRtosMenu.setDependencies(netPresshowRTOSMenu, ["Harmony.ENABLE_OSAL","Harmony.SELECT_RTOS_1"])
+	netPresRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
+	netPresRtosMenu.setDependencies(netPresshowRTOSMenu, ["Harmony.SELECT_RTOS"])
 	
 	# Net Pres Execution mode
 	netPresExecMode = netPresCommonComponent.createComboSymbol("NET_PRES_RTOS", netPresRtosMenu, ["Standalone"]) 
@@ -369,17 +369,13 @@ def netPresCertRepo(symbol, event):
 		
 def netPresshowRTOSMenu(symbol, event):
 
-	netPresEnableOsal = Database.getSymbolValue("Harmony","ENABLE_OSAL")
-	netPresSelectRtos = Database.getSymbolValue("Harmony","SELECT_RTOS_1")
-	if(netPresEnableOsal and (netPresSelectRtos != 'BareMetal')):
-	#if (event["value"] != 'BareMetal'):
-	#if (event["value"] != 0):
+	if (event["value"] != 0):
 		# If not Bare Metal
 		symbol.setVisible(True)
 		print("NetPres rtos")
 	else:
 		symbol.setVisible(False)
-		print("NetPres Bare Metal")		
+		print("NetPres Bare Metal")	
 		
 def netPresRTOSStandaloneMenu(symbol, event):
 	if (event["value"] == 'Standalone'):		

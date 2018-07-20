@@ -130,14 +130,15 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
 	tcpipStackPktLogSize.setDefaultValue(40)
 	tcpipStackPktLogSize.setDependencies(tcpipStackMenuVisible, ["TCPIP_PACKET_LOG_ENABLE"])	
-
+	
+	# RTOS Configuration
 	tcpipStackRtosMenu = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_RTOS_MENU", None)
 	tcpipStackRtosMenu.setLabel("RTOS Configuration")
 	tcpipStackRtosMenu.setDescription("RTOS Configuration")
 	tcpipStackRtosMenu.setVisible(False)
-	tcpipStackRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS_1") != 'BareMetal'))
-	tcpipStackRtosMenu.setDependencies(tcpipStackshowRTOSMenu, ["Harmony.ENABLE_OSAL","Harmony.SELECT_RTOS_1"])	
-	
+	tcpipStackRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
+	tcpipStackRtosMenu.setDependencies(tcpipStackshowRTOSMenu, ["Harmony.SELECT_RTOS"])
+
 	# Menu for RTOS options
 	tcpipStackInstnExecMode = tcpipStackComponent.createComboSymbol("TCPIP_STACK_RTOS", tcpipStackRtosMenu, ["Standalone"]) 
 	tcpipStackInstnExecMode.setLabel("Run Library Tasks as")
@@ -1774,11 +1775,7 @@ def tcpipStackHeapPoolExpBlkMenu(symbol, event):
 		symbol.setVisible(False)		
 
 def tcpipStackshowRTOSMenu(symbol, event):
-	tcpipStackEnableOsal = Database.getSymbolValue("Harmony","ENABLE_OSAL")
-	tcpipStackSelectRtos = Database.getSymbolValue("Harmony","SELECT_RTOS_1")
-	if(tcpipStackEnableOsal and (tcpipStackSelectRtos != 'BareMetal')):	
-	#if (event["value"] != 'BareMetal'):
-	#if (event["value"] != 0):
+	if (event["value"] != 0):
 		# If not Bare Metal
 		symbol.setVisible(True)
 		print("tcpip stack rtos")

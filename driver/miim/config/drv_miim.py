@@ -19,7 +19,7 @@ def instantiateComponent(drvMiimComponent):
 	#drvMiimModuleId.setVisible(False)
 	drvMiimModuleId.setDescription("Ethernet MAC Module ID")
 	if "SAME70" in Variables.get("__PROCESSOR"):
-		drvMiimModuleId.setDefaultValue("GMAC_ID_0")
+		drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
 	else:
 		drvMiimModuleId.setDefaultValue("ETH_ID_0")
 	#drvMiimModuleId.setDependencies(drvMiimMenuVisibleSingle, ["TCPIP_INTMAC_MODULE_ID"])	
@@ -82,27 +82,12 @@ def instantiateComponent(drvMiimComponent):
 	#drvMiimDrvIndex.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 	
 	# RTOS Configuration
-	#drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
-	#drvMiimRtosMenu.setLabel("RTOS Configuration")
-	#drvMiimRtosMenu.setVisible(True)
-	#drvMiimRtosMenu.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])	
-	#menu "RTOS Configuration"
-    #depends on DRV_MIIM_USE_DRIVER
-    #depends on USE_3RDPARTY_RTOS	
-	
 	drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
 	drvMiimRtosMenu.setLabel("RTOS Configuration")
 	drvMiimRtosMenu.setDescription("RTOS Configuration")
 	drvMiimRtosMenu.setVisible(False)
-	drvMiimRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS_1") != 'BareMetal'))
-	drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["Harmony.ENABLE_OSAL","Harmony.SELECT_RTOS_1"])
-	
-	# drvMiimRtosMenu = drvMiimComponent.createMenuSymbol("DRV_MIIM_RTOS_MENU", None)
-	# drvMiimRtosMenu.setLabel("RTOS Configuration")
-	# drvMiimRtosMenu.setDescription("RTOS Configuration_11")
-	# drvMiimRtosMenu.setVisible(False)
-	# drvMiimRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
-	# drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["Harmony.SELECT_RTOS"])
+	drvMiimRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
+	drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["Harmony.SELECT_RTOS"])
 	
 	# MIIM Driver Execution mode
 	drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, ["Standalone"]) 
@@ -243,20 +228,17 @@ def drvMiimMenuVisibleSingle(symbol, event):
 		print("MIIM Menu Invisible.")
 		symbol.setVisible(False)
 		
+
 def drvMiimshowRTOSMenu(symbol, event):
 
-	drvMiimEnableOsal = Database.getSymbolValue("Harmony","ENABLE_OSAL")
-	drvMiimSelectRtos = Database.getSymbolValue("Harmony","SELECT_RTOS_1")
-	if(drvMiimEnableOsal and (drvMiimSelectRtos != 'BareMetal')):	
-	#if (event["value"] != 'BareMetal'):
-	#if (event["value"] != 0):
+	if (event["value"] != 0):
 		# If not Bare Metal
 		symbol.setVisible(True)
 		print("MIIM rtos")
 	else:
 		symbol.setVisible(False)
 		print("MIIM Bare Metal")
-
+		
 def drvMiimRTOSStandaloneMenu(symbol, event):
 	if (event["value"] == 'Standalone'):		
 		symbol.setVisible(True)
