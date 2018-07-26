@@ -59,6 +59,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "net/pres/net_pres_encryptionproviderapi.h"
 #include "net/pres/net_pres_transportapi.h"
 #include "net/pres/net_pres_socketapi.h"
+#include "system/console/sys_console.h"
+#include "system/console/sys_debug.h"
+#include "system/console/sys_command.h"
 #include "system/time/sys_time.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "library/tcpip/tcpip.h"
@@ -67,9 +70,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/sys_time_h2_adapter.h"
 #include "system/sys_int_h2_adapter.h"
 #include "system/sys_clk_h2_adapter.h"
-#include "system/sys_cmd_h2_adapter.h"
-#include "system/sys_console_h2_adapter.h"
 #include "system/sys_random_h2_adapter.h"
+#include "peripheral/usart/plib_usart1.h"
 #include "app.h"
 
 
@@ -195,6 +197,9 @@ typedef struct
 {
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  netPres;
+
+    SYS_MODULE_OBJ  sysConsole0;
+    SYS_MODULE_OBJ  sysDebug;
 
     SYS_MODULE_OBJ  sysTime;
     SYS_MODULE_OBJ  tcpip;

@@ -1,5 +1,5 @@
 def instantiateComponent(tcpipCmdComponent):
-	print("TCPIP ZEROCONF Component")
+	print("TCPIP CMD Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
 		
 	# Use TCP/IP Commands
@@ -8,15 +8,11 @@ def instantiateComponent(tcpipCmdComponent):
 	tcpipCmd.setVisible(False)
 	tcpipCmd.setDescription("Use TCP/IP Commands")
 	tcpipCmd.setDefaultValue(True)
-	# H3_ToDo  
-	# select USE_SYS_RESET_NEEDED
-	# select USE_SYS_CONSOLE_NEEDED
-	# select USE_SYS_COMMAND_NEEDED 
 
 	# Enable Storage for Stack Commands
 	tcpipCmdStorage = tcpipCmdComponent.createBooleanSymbol("TCPIP_STACK_COMMANDS_STORAGE_ENABLE", None)
 	tcpipCmdStorage.setLabel("Enable Storage for Stack Commands")
-	tcpipCmdStorage.setVisible(True)
+	tcpipCmdStorage.setVisible((Database.getSymbolValue("tcpipStack", "TCPIP_STACK_CONFIGURATION_SAVE_RESTORE") != False))
 	tcpipCmdStorage.setDescription("Enable Storage for Stack Commands")
 	tcpipCmdStorage.setDefaultValue(False)  
 	tcpipCmdStorage.setDependencies(tcpipCmdStorageMenuVisible, ["tcpipStack.TCPIP_STACK_CONFIGURATION_SAVE_RESTORE"]) 
@@ -56,15 +52,15 @@ def instantiateComponent(tcpipCmdComponent):
 	# Echo Request Data Buffer size - bytes
 	tcpipCmdIcmpEchoReqBuffSize= tcpipCmdComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE", None)
 	tcpipCmdIcmpEchoReqBuffSize.setLabel("Echo Request Data Buffer size - bytes")
-	tcpipCmdIcmpEchoReqBuffSize.setVisible(True)
+	tcpipCmdIcmpEchoReqBuffSize.setVisible((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") != False))
 	tcpipCmdIcmpEchoReqBuffSize.setDescription("Echo Request Data Buffer size - bytes")
 	tcpipCmdIcmpEchoReqBuffSize.setDefaultValue(2000)
-	#tcpipCmdIcmpEchoReqBuffSize.setDependencies(tcpipCmdMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
+	tcpipCmdIcmpEchoReqBuffSize.setDependencies(tcpipCmdMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
 
 	# Echo request Default Data Size - bytes
 	tcpipCmdIcmpEchoReqDataSize= tcpipCmdComponent.createIntegerSymbol("TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE", None)
 	tcpipCmdIcmpEchoReqDataSize.setLabel("Echo request Default Data Size - bytes")
-	tcpipCmdIcmpEchoReqDataSize.setVisible(True)
+	tcpipCmdIcmpEchoReqDataSize.setVisible((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") != False))
 	tcpipCmdIcmpEchoReqDataSize.setDescription("Echo request Default Data Size - bytes")
 	tcpipCmdIcmpEchoReqDataSize.setDefaultValue(100)
 	tcpipCmdIcmpEchoReqDataSize.setDependencies(tcpipCmdMenuVisibleSingle, ["tcpipTcp.TCPIP_USE_TCP"])
@@ -88,12 +84,12 @@ def instantiateComponent(tcpipCmdComponent):
 	#tcpipCmdSourceFile.setDependencies(tcpipCmdGenSourceFile, ["TCPIP_STACK_USE_COMMANDS"])
 
 # Enable Storage for Stack Commands option visible
-def tcpipCmdStorageMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):	
+def tcpipCmdStorageMenuVisible(symbol, event):	
 
 	if (event["value"] == True):
-		tcpipDependentSymbol.setVisible(True)
+		symbol.setVisible(True)
 	else:
-		tcpipDependentSymbol.setVisible(False)
+		symbol.setVisible(False)
 		
 def tcpipCmdMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):

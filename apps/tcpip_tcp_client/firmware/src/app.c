@@ -94,7 +94,7 @@ void APP_Initialize ( void )
     /* Place the App state machine in its initial state. */
     appData.state = APP_STATE_INIT;
     
-   //H3_ToDo APP_Commands_Init();
+    APP_Commands_Init();//H3_ToDo
 }
 
 
@@ -184,7 +184,7 @@ void APP_Tasks ( void )
         case APP_TCPIP_WAITING_FOR_COMMAND:
         {
             SYS_CMD_READY_TO_READ();
-#if 0 //H3_ToDo SYS Command dependency
+#if 1 //H3_ToDo SYS Command dependency
             if (APP_URL_Buffer[0] != '\0')
             {
                 TCPIP_DNS_RESULT result;

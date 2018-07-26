@@ -70,6 +70,25 @@ extern "C" {
 // Section: System Service Configuration
 // *****************************************************************************
 // *****************************************************************************
+/* Console System Service Configuration Options */
+#define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
+#define SYS_CONSOLE_INSTANCES_NUMBER       1
+#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH    10
+#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH    64
+#define SYS_CONSOLE_BUFFER_DMA_READY
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+
+#define SYS_CMD_ENABLE
+#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
+#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_BUFFER_DMA_READY
+#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+#define SYS_CMD_REMAP_SYS_DEBUG_MESSAGE
+
 /* TIME System Service Configuration Options */
 #define SYS_TIME_MAX_TIMERS                  10
 
@@ -82,7 +101,7 @@ extern "C" {
 // *****************************************************************************
 
 /*** MIIM Driver Configuration ***/
-#define DRV_MIIM_ETH_MODULE_ID              GMAC_ID_0
+#define DRV_MIIM_ETH_MODULE_ID              GMAC_BASE_ADDRESS
 #define DRV_MIIM_INSTANCES_NUMBER           1
 #define DRV_MIIM_INSTANCE_OPERATIONS        4
 #define DRV_MIIM_INSTANCE_CLIENTS           2
@@ -175,7 +194,7 @@ extern "C" {
                                                     TCPIP_ETH_OPEN_RMII |\
                                                     0
 
-#define TCPIP_INTMAC_MODULE_ID		    			GMAC_ID_0
+#define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
 #define TCPIP_GMAC_INTERRUPT_MODE        			true
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_CLIENTS_NUMBER					1
@@ -214,6 +233,16 @@ extern "C" {
 #define MAX_BSD_SOCKETS 					4
 #define TCPIP_STACK_USE_BERKELEY_API
 
+/*** tcpip_cmd Configuration ***/
+#define TCPIP_STACK_COMMAND_ENABLE
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS         4
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY    1000
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT          5000
+#define TCPIP_STACK_COMMANDS_WIFI_ENABLE             	false
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE    2000
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE    100
+
+
 /*** DHCP Configuration ***/
 #define TCPIP_STACK_USE_DHCP_CLIENT
 #define TCPIP_DHCP_TIMEOUT                          2
@@ -244,6 +273,11 @@ extern "C" {
 
 
 /*** IPv4 Configuration ***/
+
+
+/*** ICMPv4 Server Configuration ***/
+#define TCPIP_STACK_USE_ICMP_SERVER
+#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
 /* Network Configuration Index 0 */

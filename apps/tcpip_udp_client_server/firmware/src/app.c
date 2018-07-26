@@ -106,7 +106,7 @@ void APP_Initialize ( void )
 
 void _APP_ClientTasks()
 {
-#if defined(TCPIP_STACK_COMMAND_ENABLE) //H3_ToDo  
+#if defined(TCPIP_STACK_COMMAND_ENABLE) 
     switch(appData.clientState)
     {
         case APP_TCPIP_WAITING_FOR_COMMAND:

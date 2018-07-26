@@ -207,7 +207,7 @@ void APP_Tasks(void) {
 
         case APP_BSD_BIND:
         {
-#if defined(TCPIP_STACK_COMMAND_ENABLE) //H3_ToDo
+#if defined(TCPIP_STACK_COMMAND_ENABLE)
             struct sockaddr_in6 addr;
             SOCKADDR_IN *ptr = (SOCKADDR_IN*) (&addr);
             int addrlen = sizeof (struct sockaddr_in6);
@@ -240,7 +240,7 @@ void APP_Tasks(void) {
 
         case APP_TCPIP_SEND:
         {
-#if defined(TCPIP_STACK_COMMAND_ENABLE) //H3_ToDo
+#if defined(TCPIP_STACK_COMMAND_ENABLE)
             if (appData.addressInfo->ai_family == AF_INET6) {
                 ((struct sockaddr_in6*) ((appData.addressInfo->ai_addr)))->sin6_port = atoi(APP_Port_Buffer);
             } else {

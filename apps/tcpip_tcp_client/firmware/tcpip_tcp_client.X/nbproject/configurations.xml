@@ -189,13 +189,22 @@
               <itemPath>../src/config/default/peripheral/tc/plib_tc0.h</itemPath>
               <itemPath>../src/config/default/peripheral/tc/plib_tc.h</itemPath>
             </logicalFolder>
+            <logicalFolder name="f6" displayName="usart" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/usart/plib_usart.h</itemPath>
+              <itemPath>../src/config/default/peripheral/usart/plib_usart1.h</itemPath>
+            </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
+              <itemPath>../src/config/default/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/default/system/console/sys_debug.h</itemPath>
+              <itemPath>../src/config/default/system/console/sys_command.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="f1" displayName="int" projectFiles="true">
               <itemPath>../src/config/default/system/int/sys_int.h</itemPath>
               <itemPath>../src/config/default/system/int/sys_int_mapping.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="time" projectFiles="true">
+            <logicalFolder name="f3" displayName="time" projectFiles="true">
               <itemPath>../src/config/default/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/default/system/time/sys_time_definitions.h</itemPath>
             </logicalFolder>
@@ -205,8 +214,6 @@
             <itemPath>../src/config/default/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/default/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/default/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_cmd_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_console_h2_adapter.h</itemPath>
             <itemPath>../src/config/default/system/sys_random_h2_adapter.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/default/user.h</itemPath>
@@ -335,6 +342,7 @@
                   <itemPath>../src/config/default/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/default/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/default/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/ipv4.c</itemPath>
@@ -368,12 +376,24 @@
             <logicalFolder name="f5" displayName="tc" projectFiles="true">
               <itemPath>../src/config/default/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="f6" displayName="usart" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/usart/plib_usart1.c</itemPath>
+            </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
+              <itemPath>../src/config/default/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_debug.c</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_command.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="f1" displayName="int" projectFiles="true">
               <itemPath>../src/config/default/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="time" projectFiles="true">
+            <logicalFolder name="f3" displayName="time" projectFiles="true">
               <itemPath>../src/config/default/system/time/src/sys_time.c</itemPath>
               <itemPath>../src/config/default/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
@@ -507,7 +527,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="44960"/>
+        <property key="heap-size" value="44600"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
