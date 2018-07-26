@@ -98,7 +98,7 @@ void APP_Initialize ( void )
     
     /* TODO: Initialize your application's state machine and other
      */
-    //H3_ToDo APP_Commands_Init();
+    APP_Commands_Init();
 }
 
 
@@ -183,7 +183,7 @@ void APP_Tasks ( void )
             
 			break;
         case APP_TCPIP_WAITING_FOR_COMMAND:
-#if 0 //H3_ToDo
+
         {
             SYS_CMD_READY_TO_READ();
             if (APP_Send_Packet)
@@ -297,7 +297,7 @@ void APP_Tasks ( void )
 
             }
         }
-#endif
+
         break;
         default:
             break;

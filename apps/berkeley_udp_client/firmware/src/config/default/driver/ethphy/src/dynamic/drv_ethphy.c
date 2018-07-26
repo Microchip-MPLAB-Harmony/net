@@ -56,9 +56,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/sys_clk_h2_adapter.h"
 //#include "system/tmr/sys_tmr.h"
 #include "system/sys_time_h2_adapter.h"
-//#include "system/debug/sys_debug.h"
-//#include "system/console/sys_console.h"
-#include "system/sys_console_h2_adapter.h"
+#include "system/console/sys_debug.h"
+#include "system/console/sys_console.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -352,7 +352,7 @@ static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_O
 #else
 static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    ETH_MODULE_ID ethphyId = hClientObj->ethphyId;
+    uintptr_t ethphyId = hClientObj->ethphyId;
 
     switch(hClientObj->smiTxferStatus)
     {
@@ -1759,7 +1759,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_SMIClockSet( DRV_HANDLE handle,
 #else
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
     int  ix;
-    ETH_MODULE_ID    ethphyId; 
+    uintptr_t    ethphyId; 
 
     if( hClientObj == 0)
     {

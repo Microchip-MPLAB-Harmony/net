@@ -59,15 +59,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "driver/driver_common.h"
 
-#if !defined (__PIC32C__) 
-#include "peripheral/eth/plib_eth.h"
-#else
-typedef enum
-{
-  GMAC_ID_0 = ((uint32_t)GMAC_BASE_ADDRESS),
-  GMAC_NUMBER_OF_MODULES = 1
-} GMAC_MODULE_ID;
-#endif
 
 #include "tcpip/tcpip_ethernet.h"
 

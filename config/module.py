@@ -124,9 +124,8 @@ def loadModule():
 		
 	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_cmd.py")
 	tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD")	
-	tcpipCmdComponent.addDependency("Cmd_TCP_Dependency", "TCP")
-	tcpipCmdComponent.addDependency("Cmd_SysCmd_Dependency", "sys_cmd")
-	tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "sys_console")
+	tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_CORE")
+	tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "SYS_CONSOLE")
 	
 	tcpipAnnounceComponent = Module.CreateComponent("tcpipAnnounce", "ANNOUNCE", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_announce.py")
 	tcpipAnnounceComponent.addCapability("libtcpipAnnounce","ANNOUNCE")

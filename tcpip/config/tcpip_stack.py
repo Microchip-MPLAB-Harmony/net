@@ -1578,23 +1578,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackSysClkAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
 	tcpipStackSysClkAdapterHeaderFile.setType("HEADER")
 	tcpipStackSysClkAdapterHeaderFile.setOverwrite(True)	
-	
-	tcpipStackSysCmdAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackSysCmdAdapterHeaderFile.setSourcePath("sys_adapter/sys_cmd_h2_adapter.h")
-	tcpipStackSysCmdAdapterHeaderFile.setOutputName("sys_cmd_h2_adapter.h")
-	tcpipStackSysCmdAdapterHeaderFile.setDestPath("system/")
-	tcpipStackSysCmdAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
-	tcpipStackSysCmdAdapterHeaderFile.setType("HEADER")
-	tcpipStackSysCmdAdapterHeaderFile.setOverwrite(True)	
-	
-	tcpipStackSysConsoleAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackSysConsoleAdapterHeaderFile.setSourcePath("sys_adapter/sys_console_h2_adapter.h")
-	tcpipStackSysConsoleAdapterHeaderFile.setOutputName("sys_console_h2_adapter.h")
-	tcpipStackSysConsoleAdapterHeaderFile.setDestPath("system/")
-	tcpipStackSysConsoleAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
-	tcpipStackSysConsoleAdapterHeaderFile.setType("HEADER")
-	tcpipStackSysConsoleAdapterHeaderFile.setOverwrite(True)
-	
+
 	tcpipStackSysRandomAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackSysRandomAdapterHeaderFile.setSourcePath("sys_adapter/sys_random_h2_adapter.h")
 	tcpipStackSysRandomAdapterHeaderFile.setOutputName("sys_random_h2_adapter.h")

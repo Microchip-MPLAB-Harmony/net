@@ -7,6 +7,8 @@
             <file>file:/D:/06_Repo/05_H3/h3/net/apps/berkeley_tcp_client/firmware/src/config/default/library/tcpip/tcpip.h</file>
             <file>file:/D:/06_Repo/05_H3/h3/net/apps/berkeley_tcp_client/firmware/src/config/default/system/sys_time_h2_adapter.c</file>
             <file>file:/D:/06_Repo/05_H3/h3/net/apps/berkeley_tcp_client/firmware/src/config/default/system_config.h</file>
+            <file>file:/D:/06_Repo/05_H3/h3/net/apps/berkeley_tcp_client/firmware/src/app.c</file>
+            <file>file:/D:/06_Repo/05_H3/h3/net/apps/berkeley_tcp_client/firmware/src/app_commands.c</file>
         </group>
     </open-files>
 </project-private>
