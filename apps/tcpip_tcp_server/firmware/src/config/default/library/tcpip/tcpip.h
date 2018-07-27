@@ -653,6 +653,7 @@ typedef struct
 #include "tcpip/dhcp.h"
 #include "tcpip/icmp.h"
 #include "tcpip/lldp.h"
+#include "tcpip/tcpip_commands.h"
 
 #endif  // __TCPIP_H__
 

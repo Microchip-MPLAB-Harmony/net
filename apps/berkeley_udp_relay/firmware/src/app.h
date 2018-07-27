@@ -17,7 +17,6 @@
     internally by the application (such as the "APP_STATES" definition).  Both
     are defined here for convenience.
 *******************************************************************************/
-
 #ifndef _APP_H
 #define _APP_H
 
@@ -31,16 +30,8 @@
 #include <stdbool.h>
 #include <stddef.h>
 #include <stdlib.h>
-#include "configuration.h"
-
-//H3_ToDo add udp relay app.h after integrating sys command
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-extern "C" {
-
-#endif
-// DOM-IGNORE-END
+#include "system_config.h"
+#include "system_definitions.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -49,7 +40,7 @@ extern "C" {
 // *****************************************************************************
 
 // *****************************************************************************
-/* Application states
+/* Application States
 
   Summary:
     Application states enumeration
@@ -61,13 +52,50 @@ extern "C" {
 
 typedef enum
 {
-    /* Application's state machine's initial state. */
-    APP_STATE_INIT=0,
-    APP_STATE_SERVICE_TASKS,
-    /* TODO: Define states used by the application state machine. */
+	/* Application's state machine's initial state. */
+	APP_STATE_INIT=0,
+
+	/* TODO: Define states used by the application state machine. */
+        APP_STATE_WAIT_FOR_IP,
+        APP_STATE_READY_TO_START,
+        APP_STATE_STARTED,
+        APP_STATE_ERROR,
 
 } APP_STATES;
 
+typedef enum
+{
+    APP_STATE_SERVER_CLOSED,
+    APP_STATE_SERVER_CREATE_SOCKET,
+    APP_STATE_SERVER_BIND,
+    APP_STATE_WAITING_FOR_CONNECTIONS,
+} APP_SERVER_STATES;
+
+typedef enum
+{
+    APP_STATE_CLIENT_CLOSED,
+    APP_STATE_DNS_LOOKUP,
+    APP_STATE_WAIT_FOR_DNS,
+    APP_STATE_CREATE_SOCKET,
+    APP_STATE_READY
+} APP_CLIENT_STATES;
+
+typedef enum
+{
+    APP_STATE_RELAY_CLIENT_CLOSED,
+    APP_STATE_RELAY_CLIENT_DNS_LOOKUP,
+    APP_STATE_RELAY_CLIENT_CREATE_SOCKET,
+    APP_STATE_RELAY_CLIENT_RUNNING,
+}APP_RELAY_CLIENT_STATES;
+
+
+typedef enum
+{
+    APP_STATE_RELAY_SERVER_CLOSED,
+    APP_STATE_RELAY_SERVER_CREATE_SOCKET,
+    APP_STATE_RELAY_SERVER_BIND,
+    APP_STATE_RELAY_SERVER_SERVING
+}APP_RELAY_SERVER_STATES;
 
 // *****************************************************************************
 /* Application Data
@@ -86,8 +114,66 @@ typedef struct
 {
     /* The application's current state */
     APP_STATES state;
+    APP_SERVER_STATES serverState;
+    APP_CLIENT_STATES clientState;
+    APP_RELAY_CLIENT_STATES relayClientState;
+    APP_RELAY_SERVER_STATES relayServerState;
 
     /* TODO: Define any additional data used by the application. */
+
+    bool serviceStarted;
+    SOCKET serverSocket4;
+    SOCKET serverSocket6;
+    SOCKET clientSocket;
+    SOCKET relayClientSocket;
+    SOCKET relayServerSocket4;
+    SOCKET relayServerSocket6;
+
+    char relayHost[256];
+    uint16_t relayPort;
+    uint16_t ipv4ServerPort;
+    uint16_t ipv6ServerPort;
+    struct sockaddr_in6 clientAddr;
+    struct addrinfo hints;
+    struct addrinfo *addinfo;
+
+    char relayClientHost[256];
+    uint16_t relayClientPort;
+    struct sockaddr_in6 relayClientAddr;
+    struct addrinfo *relayaddinfo;
+
+    uint64_t serverLastReport;
+    uint64_t clientLastReport;
+    uint64_t relayServerLastReport;
+    uint64_t relayClientLastReport;
+    uint64_t reportInterval;
+
+    uint32_t serverTotalPackets;
+    uint32_t serverPacketsSinceLastReport;
+    uint32_t serverTotalSize;
+    uint32_t serverSizeSinceLastReport;
+
+    uint32_t clientTotalPackets;
+    uint32_t clientPacketsSinceLastReport;
+    uint32_t clientTotalSize;
+    uint32_t clientSizeSinceLastReport;
+
+    uint32_t relayServerTotalPackets;
+    uint32_t relayServerPacketsSinceLastReport;
+    uint32_t relayServerTotalSize;
+    uint32_t relayServerSizeSinceLastReport;
+
+    uint32_t relayClientTotalPackets;
+    uint32_t relayClientPacketsSinceLastReport;
+    uint32_t relayClientTotalSize;
+    uint32_t relayClientSizeSinceLastReport;
+
+    uint32_t relayClientCounter;
+    uint32_t relayClientNumberOfPackets;
+
+    uint32_t relayServerPacketsDropped;
+    uint32_t relayServerPacketsDroppedSinceLastReport;
+    uint32_t relayServerPacketCount;
 
 } APP_DATA;
 
@@ -100,6 +186,7 @@ typedef struct
 /* These routines are called by drivers when certain events occur.
 */
 
+	
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions
@@ -114,8 +201,8 @@ typedef struct
      MPLAB Harmony application initialization routine.
 
   Description:
-    This function initializes the Harmony application.  It places the
-    application in its initial state and prepares it to run so that its
+    This function initializes the Harmony application.  It places the 
+    application in its initial state and prepares it to run so that its 
     APP_Tasks function can be called.
 
   Precondition:
@@ -173,15 +260,7 @@ void APP_Initialize ( void );
 void APP_Tasks( void );
 
 
-
 #endif /* _APP_H */
-
-//DOM-IGNORE-BEGIN
-#ifdef __cplusplus
-}
-#endif
-//DOM-IGNORE-END
-
 /*******************************************************************************
  End of File
  */
