@@ -48,11 +48,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdbool.h>
         
 #include "system_config.h"
-//#include "system/debug/sys_debug.h"
-//#include "system/console/sys_console.h"
-#include "system/sys_console_h2_adapter.h"
-//#include "system/command/sys_command.h"
-#include "system/sys_cmd_h2_adapter.h"
+#include "system/console/sys_debug.h"
+#include "system/console/sys_console.h"
+#include "system/console/sys_command.h"
 //#include "system/random/sys_random.h"
 #include "system/sys_random_h2_adapter.h"
 //#include "system/tmr/sys_tmr.h"
@@ -96,6 +94,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/src/arp_manager.h"
 #include "tcpip/src/dns_manager.h"
 #include "tcpip/src/tcp_manager.h"
+#include "tcpip/src/tcpip_commands_manager.h"
 #include "tcpip/src/udp_manager.h"
 #include "tcpip/src/berkeley_manager.h"
 #include "tcpip/src/lldp_manager.h"

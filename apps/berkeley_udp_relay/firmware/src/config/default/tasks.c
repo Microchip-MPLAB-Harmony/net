@@ -71,7 +71,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-    
+    SYS_CONSOLE_Tasks(sysObj.sysConsole0);
+    SYS_CMD_Tasks();
+
+
 
     /* Maintain Device Drivers */
         DRV_MIIM_Tasks (sysObj.drvMiim);
