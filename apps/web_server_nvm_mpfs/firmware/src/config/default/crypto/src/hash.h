@@ -45,7 +45,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define WOLF_CRYPT_HASH_H
 
 #include "crypto/src/types.h"
-#include "configuration.h"
+#include "system_config.h"
 
 #ifndef NO_MD5
     #include "crypto/src/md5.h"

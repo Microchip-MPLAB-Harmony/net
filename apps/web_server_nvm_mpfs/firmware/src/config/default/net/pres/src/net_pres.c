@@ -556,16 +556,10 @@ bool NET_PRES_SocketInfoGet(NET_PRES_SKT_HANDLE_T handle, void * info)
    
 }
 
-// TODO aa: these empyrical constants are based on values detected during testing
-// The proper wolfSSL function should be devised/used!
-static uint32_t    transpMulFact = 18;          // transport provider multiplication factor
-static uint32_t    transpDivFact = 10;          // transport provider divider factor
-static uint16_t    writeReqSizeThres = 100;     // lower threshold for a required size
-static uint16_t    writeMinReqSizeThres = 50;   // lower threshold for a minimum requested size
-
 uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqSize, uint16_t minSize)
 {
-    uint16_t transpSize;
+    uint16_t transpSpace;
+    uint16_t encAvlblSize, encOutSize; 
     NET_PRES_SocketData * pSkt;
 
     if ((pSkt = _NET_PRES_SocketValidate(handle)) == NULL)
@@ -582,44 +576,50 @@ uint16_t NET_PRES_SocketWriteIsReady(NET_PRES_SKT_HANDLE_T handle, uint16_t reqS
 
     if ((pSkt->socketType & NET_PRES_SKT_ENCRYPTED) == NET_PRES_SKT_ENCRYPTED)
     {   // encrypted socket
-        NET_PRES_EncProviderWriteReady fpEnc =  0;
 
-        if(pSkt->status == NET_PRES_ENC_SS_OPEN)
-        {   // IsSecure!
-            fpEnc = pSkt->provObject->fpWriteReady;
-            if (fpEnc == NULL)
-            {
-                pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
-                return 0;
-            }
+        NET_PRES_EncProviderWriteReady fpWriteReady = pSkt->provObject->fpWriteReady;
+        NET_PRES_EncProviderOutputSize fpOutputSize = pSkt->provObject->fpOutputSize;
 
-        }
-        if(reqSize < writeReqSizeThres)
-        {
-            reqSize = writeReqSizeThres;
-        }
-        if(minSize != 0 && minSize < writeMinReqSizeThres)
-        {
-            minSize = writeMinReqSizeThres;
+        if(pSkt->status != NET_PRES_ENC_SS_OPEN || fpWriteReady == NULL || fpOutputSize == NULL)
+        {   // data cannot be sent/received
+            pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
+            return 0;
         }
 
-        uint16_t encSize = fpEnc ? (*fpEnc)(pSkt->providerData, reqSize, minSize) : 0;
-        if(encSize != 0)
+        transpSpace = (*fpTrans)(pSkt->transHandle);
+        encAvlblSize = (*fpWriteReady)(pSkt->providerData, reqSize, 0);
+        if(encAvlblSize != 0)
         {   // check that transport also available
-            transpSize = (*fpTrans)(pSkt->transHandle);
-            if(transpSize >= (encSize * transpMulFact) / transpDivFact)
+            encOutSize = (*fpOutputSize)(pSkt->providerData, reqSize); 
+            if(transpSpace >= encOutSize)
             {
-                return encSize;
+                return reqSize;
             }
         }
+        // failed; check for min space
+        if(minSize != 0)
+        {
+            encAvlblSize = (*fpWriteReady)(pSkt->providerData, minSize, 0);
+            if(encAvlblSize != 0)
+            {   // check that transport also available
+                encOutSize = (*fpOutputSize)(pSkt->providerData, minSize); 
+                if(transpSpace >= encOutSize)
+                {
+                    return minSize;
+                }
+            }
+        }
+
+        // failed
         return 0;
     }
 
 
-    transpSize = (*fpTrans)(pSkt->transHandle);
-    if(transpSize >= reqSize || (minSize != 0 && transpSize >= minSize))
+    // non secured socket
+    transpSpace = (*fpTrans)(pSkt->transHandle);
+    if(transpSpace >= reqSize || (minSize != 0 && transpSpace >= minSize))
     {
-        return transpSize;
+        return transpSpace;
     }
 
     return 0;

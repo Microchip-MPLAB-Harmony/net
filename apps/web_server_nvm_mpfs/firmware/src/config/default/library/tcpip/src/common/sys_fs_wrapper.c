@@ -51,7 +51,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdlib.h>
 
 #include "tcpip/src/common/sys_fs_wrapper.h"
-#include "configuration.h"
+#include "system_config.h"
 
 // the file name will be formatted in nameBuffer and the path will be added, if needed
 // buffSize is the buffer size, including the terminating \0.
@@ -135,6 +135,20 @@ SYS_FS_HANDLE SYS_FS_DirOpen_Wrapper(const char *fname)
     const char *fnameBuf = SYS_FS_FileNameFormat(fname, localSitePath, sizeof(localSitePath));
 
     return (fnameBuf == 0) ? SYS_FS_HANDLE_INVALID : SYS_FS_DirOpen(fnameBuf);
+}
+
+//******************************************************************************
+/*Function:
+  SYS_FS_HANDLE SYS_FS_FileDelete_Wrapper(const char *fname);
+
+***************************************************************************/
+SYS_FS_RESULT SYS_FS_FileDelete_Wrapper(const char *fname)
+{
+    char localSitePath[SYS_FS_MAX_PATH + 1];
+
+    const char *fnameBuf = SYS_FS_FileNameFormat(fname, localSitePath, sizeof(localSitePath));
+
+    return (fnameBuf == 0) ? SYS_FS_HANDLE_INVALID : SYS_FS_FileDirectoryRemove(fnameBuf);
 }
 /*******************************************************************************
  End of File

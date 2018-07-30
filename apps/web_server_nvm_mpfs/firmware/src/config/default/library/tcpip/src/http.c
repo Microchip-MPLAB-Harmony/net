@@ -54,6 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
+// TODO aa: should be a HTTP parameter!
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE   (4 * 1024)
 
 #include "tcpip/src/common/sys_fs_wrapper.h"
@@ -1452,7 +1453,7 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
                 pHttpCon->TxFile.dynVarCntr-=1;
                 pHttpCon->file_sm=SM_GET_DYN_VAR_FILE_RCRD;
                 if(pHttpCon->TxFile.dynVarCntr == 0)
-                {       
+                {       // TODO: may need add SYS_FS_feof() for additional check
                     if (pHttpCon->TxFile.numBytes != 0)
                     {
                         pHttpCon->file_sm =SM_SERVE_TEXT_DATA;
@@ -2110,9 +2111,14 @@ static HTTP_READ_STATUS _HTTP_ReadTo(HTTP_CONN* pHttpCon, uint8_t cDelim, uint8_
     This function is only available when MPFS uploads are enabled and
     the MPFS image is stored in EEPROM.
 
+  TODO Internal:
+    After the headers, the first line from the form will be the MIME
+    separator.  Following that is more headers about the file, which
+    are discarded.  After another CRLFCRLF pair the file data begins,
+    which is read 16 bytes at a time and written to external memory.
   ***************************************************************************/
 #if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND) && !defined(DRV_WIFI_OTA_ENABLE)
-#define     SYS_FS_MEDIA_SECTOR_SIZE        512     
+#define     SYS_FS_MEDIA_SECTOR_SIZE        512     // TODO aa: use a SYS_FS symbol here!
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE       (4 * 1024)
 static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
 {

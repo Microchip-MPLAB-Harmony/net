@@ -41,7 +41,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #ifndef __BERKELEY_MANAGER_H_
 #define __BERKELEY_MANAGER_H_
-
+#include "net/pres/net_pres.h"
 
 typedef enum
 {

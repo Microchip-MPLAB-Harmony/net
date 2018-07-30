@@ -1058,7 +1058,7 @@ static void TCPIP_ARP_Process(void)
     OA_HASH_ENTRY   *hE;
     ARP_CACHE_DCPT  *pArpDcpt;
     TCPIP_MAC_PKT_ACK_RES ackRes;
-    TCPIP_ARP_RESULT arpReqRes;   
+    TCPIP_ARP_RESULT arpReqRes;    // TODO aa: could  be used for ARP statistics counters
     IPV4_ADDR targetAdd;
 
 
@@ -1137,6 +1137,7 @@ static void TCPIP_ARP_Process(void)
 
         if(arpReqRes != ARP_RES_OK)
         {
+            // TODO aa: update ARP statistics counters
         }
 
         TCPIP_PKT_PacketAcknowledge(pPkt, ackRes); 

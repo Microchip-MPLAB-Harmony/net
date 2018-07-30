@@ -1324,7 +1324,6 @@ static bool _TCPIPStackCreateTimer(void)
 {
 
     tcpip_stack_tickH = SYS_TMR_CallbackPeriodic(TCPIP_STACK_TICK_RATE, 0, _TCPIP_STACK_TickHandler);
-
     if(tcpip_stack_tickH != SYS_TMR_HANDLE_INVALID)
     {
         uint32_t sysRes = SYS_TMR_TickCounterFrequencyGet();
@@ -4201,10 +4200,10 @@ size_t TCPIP_STACK_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH)
     return heapH ? TCPIP_HEAP_FreeSize(heapH) : 0;
 }
 
-//niyas size_t TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH)
-// {
-    // return heapH ? TCPIP_HEAP_HighWatermark(heapH) : 0;
-// }
+size_t TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH)
+{
+    return heapH ? TCPIP_HEAP_HighWatermark(heapH) : 0;
+}
 
 
 TCPIP_STACK_HEAP_RES TCPIP_STACK_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)

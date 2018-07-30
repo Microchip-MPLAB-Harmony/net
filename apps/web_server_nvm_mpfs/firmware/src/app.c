@@ -26,6 +26,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+
 #include "app.h"
 
 // *****************************************************************************
@@ -33,9 +34,7 @@
 // Section: Global Data Definitions
 // *****************************************************************************
 // *****************************************************************************
-// Buffers for USART2
-#define UART_BUFFER_SIZE  200
-char uartBuf [UART_BUFFER_SIZE + 1]; // UART buffer
+
 // *****************************************************************************
 /* Application Data
 
@@ -127,8 +126,8 @@ void APP_Tasks ( void )
     const char          *netName, *netBiosName;
     static uint32_t     startTick = 0;
 
-
-    switch(appData.state)
+    /* Check the application's current state. */
+    switch ( appData.state )
     {
         case APP_MOUNT_DISK:
             if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL) == 0)
@@ -202,6 +201,10 @@ void APP_Tasks ( void )
             for(i = 0; i < nNets; i++)
             {
                 netH = TCPIP_STACK_IndexToNet(i);
+                if(!TCPIP_STACK_NetIsReady(netH))
+                {
+                    return;    // interface not ready yet!
+                }
                 ipAddr.Val = TCPIP_STACK_NetAddress(netH);
                 if(dwLastIP[i].Val != ipAddr.Val)
                 {
@@ -212,7 +215,7 @@ void APP_Tasks ( void )
                 }
             }
 
-            //SYS_CMD_READY_TO_READ();
+            SYS_CMD_READY_TO_READ();
 
             break;
 
@@ -221,121 +224,7 @@ void APP_Tasks ( void )
     }
 }
 
-//void APP_Command_Task()
-//{
-//    switch(appData.appCmdState)
-//    {
-//        case APP_TCPIP_WAIT_FOR_COMMAND:                                     //2
-//            if ( bPromptForNextCommand )
-//            {
-//                SYS_CONSOLE_MESSAGE("Enter ^C to enter command mode...\r\n");
-//                bPromptForNextCommand = false;
-//            }
-//            if ( U2STAbits.URXDA == 1 ) // Input found
-//            {
-//                c = U2RXREG;
-//                if ( c == '\x3')
-//                { // If found a ^C
-//                    SYS_CONSOLE_MESSAGE("\r\nCommand:");
-//                    appData.adcState =  APP_ADC_STATE_IDLE;  // Turn off ADC captures
-//                    pNextChar = command;
-//                    appData.state = APP_TCPIP_GET_COMMAND;
-//                }
-//            }
-//            break;
-//
-//        case APP_TCPIP_GET_COMMAND:                                          //3
-//            while ( U2STAbits.URXDA == 1 )
-//            {
-//                c = U2RXREG;
-//                if ( c == '\x3' )
-//                { // Extra ^C
-//                    // Do nothing
-//                }
-//                else if ( c == '\r' )
-//                { // End of the command
-//                    *pNextChar = '\0';
-//                  //SYS_CONSOLE_MESSAGE("\r\nEnd Command: ");
-//                  //SYS_CONSOLE_MESSAGE(command);
-//                    SYS_CONSOLE_MESSAGE("\r\n");
-//                    appData.state = APP_TCPIP_PROCESS_COMMAND;
-//                }
-//                else
-//                {
-//                    while(U2STAbits.UTXBF == 1)
-//                    {
-//                        // Wait for transmit buffer to open up
-//                    }
-//                    if ( c == '\b' || c == '\x7f')
-//                    { //backspace or delete
-//                        pNextChar--;
-//                        U2TXREG = '\b'; // backspace
-//                    }
-//                    else
-//                    {
-//                        *pNextChar++ = c;
-//                        U2TXREG = c; // Repeat character just typed
-//                    }
-//                }
-//            }
-//            bPromptForNextCommand = true;
-//            break;
-//
-//        case APP_TCPIP_PROCESS_COMMAND:                                      //4
-//            pCommand = strtok(command,tokenWhiteSpace);
-//            if ( pCommand != NULL )
-//            {
-//                
-//            }
-//        default:
-//            break;
-//    }
-//}
-/* Call Tree:
- * Everywhere -> SYS_CONSOLE_PRINT (= USART2_MSG)
- */
-void USART_MSG(const char* str)
-{
-    uint32_t len = 0;
-    unsigned char ch;
-    char* lStr = (char*)str;
-    ch = *str;
-    while((ch != '\0'))
-    {
-        len++;
-        ch = *str++;
-    }
-    //USART1_Write("\r\n",2);
-    USART1_Write((void*)lStr,len);
-    //USART1_Write("\r\n",2);
-}
 
-/* Call Tree:
- * Everywhere -> SYS_CONSOLE_PRINT (= USART2_PRINT)
- */
-int USART_PRINT(const char* format, ...)
-{
-    size_t len;
-    va_list args;
-    va_start( args, format );
-
-    len = vsnprintf(uartBuf, UART_BUFFER_SIZE + 1, format, args);
-
-    va_end( args );
-
-    if (len >= UART_BUFFER_SIZE + 1 )
-    {// Output truncated because it's too long.
-        len = UART_BUFFER_SIZE;
-        uartBuf[len] = '\0';  // Add NULL
-    }
-
-    if (len > 0)
-    {
-        USART_MSG(uartBuf);
-    }
-
-    return len;
-}
 /*******************************************************************************
  End of File
  */

@@ -55,7 +55,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 
 // enable SMTPC debugging levels
-#define TCPIP_SMTPC_DEBUG_LEVEL  (TCPIP_SMTPC_DEBUG_MASK_BASIC | TCPIP_SMTPC_DEBUG_MASK_ERROR_STATE)
+#define TCPIP_SMTPC_DEBUG_LEVEL  (TCPIP_SMTPC_DEBUG_MASK_BASIC)
 
 // extra guard space needed for the plain line buffer size
 // extra 4 bytes are needed: . at beg, crLF + 0 at end
@@ -218,6 +218,7 @@ typedef enum
     TCPIP_SMTPC_SERVER_FLAG_AUTH_MD5    = 0x4000,       // CRAM-MD5 authentication
 
     // supported authentications mask
+    // TODO aa: CRAM-MD5 is not supported yet!
     TCPIP_SMTPC_SERVER_FLAG_AUTH_SUPPORTED_MASK = ( TCPIP_SMTPC_SERVER_FLAG_AUTH_LOGIN | TCPIP_SMTPC_SERVER_FLAG_AUTH_PLAIN),
     // authentication fields mask
     TCPIP_SMTPC_SERVER_FLAG_AUTH_MASK = ( TCPIP_SMTPC_SERVER_FLAG_AUTH | TCPIP_SMTPC_SERVER_FLAG_AUTH_LOGIN | TCPIP_SMTPC_SERVER_FLAG_AUTH_PLAIN | TCPIP_SMTPC_SERVER_FLAG_AUTH_MD5),

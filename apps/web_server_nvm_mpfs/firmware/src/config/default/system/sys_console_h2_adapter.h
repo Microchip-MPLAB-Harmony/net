@@ -70,23 +70,23 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // DOM-IGNORE-END
 
 
-//#ifndef SYS_CONSOLE_MESSAGE
-//    #define SYS_CONSOLE_MESSAGE(message)
-//#endif
-//
-//#ifndef SYS_CONSOLE_PRINT
-//    #define SYS_CONSOLE_PRINT(fmt, ...)
-//#endif
-//
-//#ifndef SYS_DEBUG
-//    #define SYS_DEBUG(level,message)    
-//#endif
-//
-//#ifndef SYS_ERROR
-//    #define SYS_ERROR(level,fmt, ...)   
-//#endif
-//
-//#ifndef SYS_ERROR_PRINT
-//    #define SYS_ERROR_PRINT(level,fmt, ...)   
-//#endif
+#ifndef SYS_CONSOLE_MESSAGE
+    #define SYS_CONSOLE_MESSAGE(message)
+#endif
+
+#ifndef SYS_CONSOLE_PRINT
+    #define SYS_CONSOLE_PRINT(fmt, ...)
+#endif
+
+#ifndef SYS_DEBUG
+    #define SYS_DEBUG(level,message)    
+#endif
+
+#ifndef SYS_ERROR
+    #define SYS_ERROR(level,fmt, ...)   
+#endif
+
+#ifndef SYS_ERROR_PRINT
+    #define SYS_ERROR_PRINT(level,fmt, ...)   
+#endif
 #endif //SYS_CONSOLE_ADPATER_H

@@ -359,12 +359,14 @@ typedef struct
     
     UDP_PORT localPort				-	UDP port on which to listen for connections
     
-    IP_MULTI_ADDRESS* localAddress	-	Local address to use.
-                                        Can be NULL if any incoming interface will do.
+    IP_MULTI_ADDRESS* localAddress	-	Pointer to a local IP address to use.
+                                        This needs to be the valid IP address of a local interface
+                                        the server is to listen on
+                                        or NULL if any incoming interface will do.
 	
   Returns:
  	- INVALID_SOCKET -  No sockets of the specified type were available to be
-                      opened.
+                      opened or parameter error.
 
     - A UDP_SOCKET handle - Save this handle and use it when calling all other UDP APIs. 
  */

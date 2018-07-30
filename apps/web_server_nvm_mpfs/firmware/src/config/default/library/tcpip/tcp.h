@@ -337,6 +337,8 @@ typedef enum
                                                 // This event signals that the remote party has acknowledged 
 												// some data and, as a result, TX buffer space is available.
 
+    TCPIP_TCP_SIGNAL_TX_RST          = 0x0008,  // Reset sent to the remote host and connection is reset
+
     // RX related signals
     TCPIP_TCP_SIGNAL_ESTABLISHED     = 0x0100,  // Socket established a connection (client or server socket)
 

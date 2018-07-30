@@ -44,7 +44,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef WOLF_CRYPT_SHA_H
 #define WOLF_CRYPT_SHA_H
 
-#include "configuration.h"
+#include "system_config.h"
 #include "crypto/src/types.h"
 
 #ifndef NO_SHA

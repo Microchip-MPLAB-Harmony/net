@@ -45,9 +45,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // min heap alignment
 // always power of 2
-#if defined(__PIC32MX__)
-typedef uint32_t _heap_Align;
-#elif defined(__PIC32MZ__) || defined(__PIC32WK__)
+#if defined(__PIC32MZ__) || defined(__PIC32WK__)
 typedef struct __attribute__((aligned(16)))
 {
     uint64_t     pad[2];
@@ -57,7 +55,9 @@ typedef struct __attribute__((aligned(32)))
 {
     uint32_t     pad[8];
 }_heap_Align;
-#endif  // defined(__PIC32MX__) || defined(__PIC32MZ__)
+#else   // PIC32MX, PIC32MK
+typedef uint32_t _heap_Align;
+#endif  // defined(__PIC32MZ__) || defined(__PIC32WK__)
 
 
 typedef union __attribute__((aligned(16))) _tag_headNode
@@ -83,6 +83,7 @@ typedef struct
     _headNode*      _heapTail;                  // head and tail pointers
     size_t          _heapUnits;                 // size of the heap, units
     size_t          _heapAllocatedUnits;        // how many units allocated out there
+    size_t          _heapWatermark;             // max allocated units
     TCPIP_STACK_HEAP_RES  _lastHeapErr;         // last error encountered
     TCPIP_STACK_HEAP_FLAGS _heapFlags;          // heap flags
     void*           allocatedBuffer;            // buffer initially allocated for this heap
@@ -112,6 +113,7 @@ static size_t           _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const vo
 static size_t           _TCPIP_HEAP_Size(TCPIP_STACK_HEAP_HANDLE heapH);
 static size_t           _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
 static size_t           _TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
+static size_t           _TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
 static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH);
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 static size_t           _TCPIP_HEAP_AllocSize(TCPIP_STACK_HEAP_HANDLE heapH, const void* ptr);
@@ -126,16 +128,17 @@ const void* _TCPIP_HEAP_BufferMapNonCached(const void* buffer, size_t buffSize);
 // the heap object
 static const TCPIP_HEAP_OBJECT      _tcpip_heap_object = 
 {
-    _TCPIP_HEAP_Delete,
-    _TCPIP_HEAP_Malloc,
-    _TCPIP_HEAP_Calloc,
-    _TCPIP_HEAP_Free,
-    _TCPIP_HEAP_Size,
-    _TCPIP_HEAP_MaxSize,
-    _TCPIP_HEAP_FreeSize,
-    _TCPIP_HEAP_LastError,
+    .TCPIP_HEAP_Delete = _TCPIP_HEAP_Delete,
+    .TCPIP_HEAP_Malloc = _TCPIP_HEAP_Malloc,
+    .TCPIP_HEAP_Calloc = _TCPIP_HEAP_Calloc,
+    .TCPIP_HEAP_Free = _TCPIP_HEAP_Free,
+    .TCPIP_HEAP_Size = _TCPIP_HEAP_Size,
+    .TCPIP_HEAP_MaxSize = _TCPIP_HEAP_MaxSize,
+    .TCPIP_HEAP_FreeSize = _TCPIP_HEAP_FreeSize,
+    .TCPIP_HEAP_HighWatermark = _TCPIP_HEAP_HighWatermark,
+    .TCPIP_HEAP_LastError = _TCPIP_HEAP_LastError,
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    _TCPIP_HEAP_AllocSize,
+    .TCPIP_HEAP_AllocSize = _TCPIP_HEAP_AllocSize,
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 };
 
@@ -238,6 +241,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternal(const TCPIP_STACK_HEAP_INTERNA
 
 
         // check if mapping needed; always alloc uncached!
+        // TODO aa: this should be done only for packet heap!
         // if((pHeapConfig->heapFlags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0) 
         {
             alignHeapBuffer = (uint8_t*)_TCPIP_HEAP_BufferMapNonCached(alignHeapBuffer, heapBufferSize);
@@ -252,6 +256,7 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternal(const TCPIP_STACK_HEAP_INTERNA
         hDcpt->_heapTail = hDcpt->_heapHead;
         hDcpt->_heapUnits = heapUnits;
         hDcpt->_heapAllocatedUnits = 0;
+        hDcpt->_heapWatermark = 0;
         hDcpt->_lastHeapErr = TCPIP_STACK_HEAP_RES_OK;
         hDcpt->_heapFlags = pHeapConfig->heapFlags;
         hDcpt->allocatedBuffer = allocatedHeapBuffer;
@@ -374,9 +379,12 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 				ptr->units = nunits;
 			}
 
-            hDcpt->_heapAllocatedUnits += nunits;
+            if((hDcpt->_heapAllocatedUnits += nunits) > hDcpt->_heapWatermark)
+            {
+                hDcpt->_heapWatermark = hDcpt->_heapAllocatedUnits;
+            }
             OSAL_SEM_Post(&hDcpt->_heapSemaphore);
-            return ptr+1;
+            return ptr + 1;
 		}
 	}
 
@@ -559,6 +567,18 @@ static size_t _TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH)
     return 0;
 }
 
+static size_t _TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH)
+{
+    TCPIP_HEAP_DCPT*      hDcpt;
+
+    hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
+
+    if(hDcpt)
+    {
+        return hDcpt->_heapWatermark * sizeof(_headNode);
+    }
+    return 0;
+}
 
 static size_t _TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH)
 {

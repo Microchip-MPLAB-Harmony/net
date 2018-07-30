@@ -276,6 +276,7 @@ static void _UDPsetPacketInfo(UDP_SOCKET_DCPT* pSkt, TCPIP_MAC_PACKET* pRxPkt)
 #if defined (TCPIP_STACK_USE_IPV6)
     if(pRxPkt != 0 && pSkt->addType == IP_ADDRESS_TYPE_IPV6)
     {
+        // TODO aa: for IPv6 the packet source and destination are not saved for now!
         if(pSkt->flags.destSet == 0)
         {
             TCPIP_IPV6_DestAddressSet(pSkt->pV6Pkt, TCPIP_IPV6_PacketGetSourceAddress(pRxPkt));
@@ -3386,6 +3387,8 @@ bool TCPIP_UDP_SetSplitPayload(UDP_SOCKET s, void* pLoad, uint16_t loadSize)
         void* pPkt = _TxSktGetLockedV4Pkt(pSkt, true);
         if(pPkt == 0)
         {   // no packet or queued
+            // TODO aa: for efficiency the packet could be left in place and
+            // updated (locked) only after allocation succeeds, or discarded
             _UDPv4AllocateSktTxBuffer(pSkt, pSkt->addType, true);
         }
 
@@ -3496,6 +3499,8 @@ int TCPIP_UDP_SocketsNumberGet(void)
 
 // fragmentation support
 #if (TCPIP_IPV4_FRAGMENTATION != 0)
+// TODO aa: this function is identical in ICMP
+// Maybe IPv4 can offer this service!
 static void _UDP_RxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
 {
     TCPIP_MAC_PACKET *pFragPkt, *pFragNext;

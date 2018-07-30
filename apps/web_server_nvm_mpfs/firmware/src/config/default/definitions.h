@@ -48,34 +48,39 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "crypto/crypto.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
 #include "bsp/bsp.h"
 #include "system/int/sys_int.h"
-#include "system/ports/sys_ports.h"
 #include "osal/osal.h"
 #include "driver/memory/drv_memory.h"
 #include "driver/memory/drv_memory_efc0.h"
 #include "driver/usart/drv_usart_definitions.h"
 #include "driver/usart/drv_usart.h"
 #include "peripheral/efc/plib_efc0.h"
+#include "net/pres/net_pres.h"
+#include "net/pres/net_pres_encryptionproviderapi.h"
+#include "net/pres/net_pres_transportapi.h"
+#include "net/pres/net_pres_socketapi.h"
+#include "system/console/sys_console.h"
+#include "system/console/sys_debug.h"
+#include "system/console/sys_command.h"
 #include "system/fs/sys_fs.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "system/fs/mpfs/mpfs.h"
 #include "system/time/sys_time.h"
 #include "peripheral/tc/plib_tc0.h"
-#include "net/pres/net_pres.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
 #include "driver/miim/drv_miim.h"
 #include "system/sys_time_h2_adapter.h"
 #include "system/sys_int_h2_adapter.h"
 #include "system/sys_clk_h2_adapter.h"
-#include "system/sys_cmd_h2_adapter.h"
-#include "system/sys_console_h2_adapter.h"
 #include "system/sys_random_h2_adapter.h"
+#include "peripheral/trng/plib_trng0.h"
 #include "peripheral/usart/plib_usart1.h"
 #include "app.h"
 
@@ -204,6 +209,9 @@ typedef struct
     SYS_MODULE_OBJ  drvMemory0;
     SYS_MODULE_OBJ  drvUsart0;
     SYS_MODULE_OBJ  netPres;
+
+    SYS_MODULE_OBJ  sysConsole0;
+    SYS_MODULE_OBJ  sysDebug;
 
     SYS_MODULE_OBJ  sysTime;
     SYS_MODULE_OBJ  tcpip;

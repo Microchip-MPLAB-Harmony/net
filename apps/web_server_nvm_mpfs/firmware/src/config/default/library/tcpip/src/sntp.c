@@ -370,8 +370,8 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
-        if(stackCtrl->pNetIf == pSntpIf)
-        {   // this interface is going away/re-initialized, etc
+        if(pSntpIf == 0 || pSntpIf == stackCtrl->pNetIf)
+        {   // this interface is going up/re-initialized, etc
             TCPIP_SNTP_SetIdleState(SM_HOME);
         }
         return true;

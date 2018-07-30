@@ -59,10 +59,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "driver/ethphy/drv_ethphy.h"
 #include "driver/ethphy/src/dynamic/drv_extphy_regs.h"
 
-#if defined (__PIC32C__) 
-#define ETH_MODULE_ID GMAC_MODULE_ID
-#endif  // defined (__PIC32C__) 
-
 // debugging
 #define DRV_PHY_DEBUG_MASK_BASIC        (0x0001)
 
@@ -309,7 +305,7 @@ typedef struct _DRV_ETHPHY_CLIENT_OBJ_STRUCT
 {
     uint16_t                    clientInUse;// True if in use
     uint16_t                    clientIx;   // client number
-    ETH_MODULE_ID               ethphyId;   // The peripheral Id associated with the object
+    uintptr_t               ethphyId;   // The peripheral Id associated with the object
     DRV_ETHPHY_CLIENT_STATUS    status;     // Client Status
     struct _DRV_ETHPHY_OBJ_STRUCT* hDriver; // Handle of driver that owns the client
 #if (DRV_ETHPHY_USE_DRV_MIIM)
@@ -362,7 +358,7 @@ typedef struct _DRV_ETHPHY_OBJ_STRUCT
     uint16_t            numClients;     // Number of active clients
     SYS_STATUS          status;         // Status of module
     SYS_MODULE_INDEX    iModule;        // Module instance number
-    ETH_MODULE_ID       ethphyId;       // The peripheral Id associated with the object
+    uintptr_t       ethphyId;       // The peripheral Id associated with the object
     TCPIP_ETH_OPEN_FLAGS      openFlags;      // flags required at open time
     DRV_ETHPHY_CONFIG_FLAGS configFlags;    // ETHPHY MII/RMII configuration flags
     TCPIP_ETH_PAUSE_TYPE      macPauseType;   // MAC supported pause type

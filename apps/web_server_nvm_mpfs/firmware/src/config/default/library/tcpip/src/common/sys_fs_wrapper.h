@@ -57,7 +57,7 @@ typedef enum
 
 //******************************************************************************
 /*Function:
-  uint32_t SYS_FS_FileOpen_Wrapper(const char *fname,
+  SYS_FS_HANDLE SYS_FS_FileOpen_Wrapper(const char *fname,
                                  SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
 
 ***************************************************************************/
@@ -66,8 +66,8 @@ SYS_FS_HANDLE SYS_FS_FileOpen_Wrapper(const char *fname,
 
 //******************************************************************************
 /*Function:
-  SYS_FS_RESULT SYS_FS_FileOpen_Wrapper(const char *fname,
-                                 SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
+  SYS_FS_RESULT SYS_FS_FileStat_Wrapper(const char *fname,
+                                      SYS_FS_FSTAT *buf);
 
 ***************************************************************************/
 SYS_FS_RESULT SYS_FS_FileStat_Wrapper(const char *fname,
@@ -75,26 +75,31 @@ SYS_FS_RESULT SYS_FS_FileStat_Wrapper(const char *fname,
 
 //******************************************************************************
 /*Function:
-  uint32_t SYS_FS_FileOpen_Wrapper(const char *fname,
-                                 SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
+  SYS_FS_RESULT SYS_FS_Unmount_Wrapper(const char *mountName);
 
 ***************************************************************************/
 SYS_FS_RESULT SYS_FS_Unmount_Wrapper(const char *mountName);
 
 //******************************************************************************
 /*Function:
-  SYS_FS_HANDLE SYS_FS_FileOpen_Wrapper(const char *fname,
-                                 SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
+  SYS_FS_HANDLE SYS_FS_FileNameGet_Wrapper(SYS_FS_HANDLE handle, 
+ *                                              uint8_t* cName, uint16_t wLen);
 
 ***************************************************************************/
 SYS_FS_HANDLE SYS_FS_FileNameGet_Wrapper(SYS_FS_HANDLE handle, uint8_t* cName, uint16_t wLen);
 
 //******************************************************************************
 /*Function:
-  uint32_t SYS_FS_DirOpen_Wrapper(const char *fname,
-                                 SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
+  SYS_FS_HANDLE SYS_FS_DirOpen_Wrapper(const char *fname);
 
 ***************************************************************************/
 SYS_FS_HANDLE SYS_FS_DirOpen_Wrapper(const char *fname);
+
+//******************************************************************************
+/*Function:
+  SYS_FS_RESULT SYS_FS_FileDelete_Wrapper(const char *fname);
+
+***************************************************************************/
+SYS_FS_RESULT SYS_FS_FileDelete_Wrapper(const char *fname);
 
 #endif	/* SYS_FS_WRAPPER_H */

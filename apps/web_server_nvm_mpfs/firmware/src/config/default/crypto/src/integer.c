@@ -53,7 +53,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
-#include "configuration.h"
+#include "system_config.h"
 
 /* in case user set USE_FAST_MATH there */
 #include "crypto/src/settings.h"

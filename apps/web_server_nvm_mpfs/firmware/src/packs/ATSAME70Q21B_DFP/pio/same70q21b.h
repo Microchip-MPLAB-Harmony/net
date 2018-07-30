@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-05-02T16:40:23Z */
+/* file generated from device description version 2018-06-05T16:39:35Z */
 #ifndef SAME70Q21B_GPIO_H
 #define SAME70Q21B_GPIO_H
 

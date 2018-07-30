@@ -53,6 +53,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #endif
 // DOM-IGNORE-END  
 
+// NOTE: The SMTP module is deprecated and should not be used for new projects. The new SMTPC module should be used.
+//
+// #warning "The SMTP module is obsolete. The new SMTPC module should be used!"
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Type Definitions

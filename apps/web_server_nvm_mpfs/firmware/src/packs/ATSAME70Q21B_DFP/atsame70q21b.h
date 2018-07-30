@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-05-02T16:40:23Z */
+/* file generated from device description version 2018-06-04T16:37:13Z */
 #ifndef SAME70Q21B_H
 #define SAME70Q21B_H
 
@@ -122,14 +122,14 @@ typedef enum IRQn
   XDMAC_IRQn                =  58, /**< 58  Extensible DMA Controller (XDMAC)   */
   ISI_IRQn                  =  59, /**< 59  Image Sensor Interface (ISI)        */
   PWM1_IRQn                 =  60, /**< 60  Pulse Width Modulation Controller (PWM1) */
-  FPU_IRQn                  =  61, /**< 61  Floating Point Unit Registers (FPU) */
+  FPU_IRQn                  =  61, /**< 61  Floating Point Unit (FPU)           */
   SDRAMC_IRQn               =  62, /**< 62  SDRAM Controller (SDRAMC)           */
   RSWDT_IRQn                =  63, /**< 63  Reinforced Safety Watchdog Timer (RSWDT) */
-  CCW_IRQn                  =  64, /**< 64  System Control Registers (SystemControl) */
-  CCF_IRQn                  =  65, /**< 65  System Control Registers (SystemControl) */
+  CCW_IRQn                  =  64, /**< 64  System Control Block (SCB)          */
+  CCF_IRQn                  =  65, /**< 65  System Control Block (SCB)          */
   GMAC_Q1_IRQn              =  66, /**< 66  Gigabit Ethernet MAC (GMAC)         */
   GMAC_Q2_IRQn              =  67, /**< 67  Gigabit Ethernet MAC (GMAC)         */
-  IXC_IRQn                  =  68, /**< 68  Floating Point Unit Registers (FPU) */
+  IXC_IRQn                  =  68, /**< 68  Floating Point Unit (FPU)           */
   I2SC0_IRQn                =  69, /**< 69  Inter-IC Sound Controller (I2SC0)   */
   I2SC1_IRQn                =  70, /**< 70  Inter-IC Sound Controller (I2SC1)   */
   GMAC_Q3_IRQn              =  71, /**< 71  Gigabit Ethernet MAC (GMAC)         */
@@ -222,14 +222,14 @@ typedef struct _DeviceVectors
   void* pfnXDMAC_Handler;                        /*  58 Extensible DMA Controller (XDMAC) */
   void* pfnISI_Handler;                          /*  59 Image Sensor Interface (ISI) */
   void* pfnPWM1_Handler;                         /*  60 Pulse Width Modulation Controller (PWM1) */
-  void* pfnFPU_Handler;                          /*  61 Floating Point Unit Registers (FPU) */
+  void* pfnFPU_Handler;                          /*  61 Floating Point Unit (FPU) */
   void* pfnSDRAMC_Handler;                       /*  62 SDRAM Controller (SDRAMC) */
   void* pfnRSWDT_Handler;                        /*  63 Reinforced Safety Watchdog Timer (RSWDT) */
-  void* pfnCCW_Handler;                          /*  64 System Control Registers (SystemControl) */
-  void* pfnCCF_Handler;                          /*  65 System Control Registers (SystemControl) */
+  void* pfnCCW_Handler;                          /*  64 System Control Block (SCB) */
+  void* pfnCCF_Handler;                          /*  65 System Control Block (SCB) */
   void* pfnGMAC_Q1_Handler;                      /*  66 Gigabit Ethernet MAC (GMAC) */
   void* pfnGMAC_Q2_Handler;                      /*  67 Gigabit Ethernet MAC (GMAC) */
-  void* pfnIXC_Handler;                          /*  68 Floating Point Unit Registers (FPU) */
+  void* pfnIXC_Handler;                          /*  68 Floating Point Unit (FPU) */
   void* pfnI2SC0_Handler;                        /*  69 Inter-IC Sound Controller (I2SC0) */
   void* pfnI2SC1_Handler;                        /*  70 Inter-IC Sound Controller (I2SC1) */
   void* pfnGMAC_Q3_Handler;                      /*  71 Gigabit Ethernet MAC (GMAC) */

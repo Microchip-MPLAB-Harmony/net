@@ -194,7 +194,7 @@ static void TCPIP_IPV4_CheckRxPkt(TCPIP_MAC_PACKET* pRxPkt)
         }
     }
     else if(pHeader->Protocol == IP_PROT_TCP)
-    {   
+    {   // TODO aa: add minimal debug for TCP packets
     }
 
 }
@@ -581,6 +581,7 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
         }
 #else
         // MAC transmit will fail anyway
+        // TODO aa: the MAC max frame has to be taken into consideration too!
         return false;
 #endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
 
@@ -700,7 +701,6 @@ void TCPIP_IPV4_PacketFormatTx(IPV4_PACKET* pPkt, uint8_t protocol, uint16_t ipL
     pPkt->macPkt.pktIf = pPkt->netIfH;
 }
 	
-
 // ARP resolution done
 static void TCPIP_IPV4_ArpHandler(TCPIP_NET_HANDLE hNet, const IPV4_ADDR* ipAdd, const TCPIP_MAC_ADDR* MACAddr, TCPIP_ARP_EVENT_TYPE evType, const void* param)
 {
@@ -1131,23 +1131,25 @@ TCPIP_IPV4_FILTER_TYPE TCPIP_IPV4_PacketFilterClear(TCPIP_IPV4_FILTER_TYPE filtT
 
 // helper to transform a RX packet to a TX packet
 // IPv4 header:
-//          - source and destination addresses are switched
+//          - the destination addresses is set as the packet source address
+//          - the source address is the IP address of the coresponding packet interface (which should be set!) 
 //          - total length and fragment info are converted to network order
 //          - data segment is re-adjusted with the IPv4 header length
 // MAC header:
-//          - source and destination addresses are switched
+//          - the destination addresses is set as the MAC packet source address
+//          - the source address is the MAC address of the coresponding packet interface (which should be set!) 
 //          - data segment is re-adjusted with the MAC header length
 //
+// setChecksum:
+//          - if true, the IPv4 header checksum is updated for the IPv4 header
 // TCPIP_MAC_PKT_FLAG_TX flag is set
-void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt)
+void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum)
 {
     IPV4_HEADER* pIpv4Hdr;
-    uint32_t  destAdd;
-    pIpv4Hdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
 
-    destAdd = pIpv4Hdr->DestAddress.Val;
+    pIpv4Hdr = (IPV4_HEADER*)pRxPkt->pNetLayer;
     pIpv4Hdr->DestAddress.Val = pIpv4Hdr->SourceAddress.Val;
-    pIpv4Hdr->SourceAddress.Val = destAdd;
+    pIpv4Hdr->SourceAddress.Val = _TCPIPStackNetAddress((TCPIP_NET_IF*)pRxPkt->pktIf);
 
     pIpv4Hdr->TotalLength = TCPIP_Helper_htons(pIpv4Hdr->TotalLength);
     pIpv4Hdr->FragmentInfo.val = TCPIP_Helper_htons(pIpv4Hdr->FragmentInfo.val);
@@ -1158,14 +1160,19 @@ void TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt)
     uint8_t headerLen = pIpv4Hdr->IHL << 2;  
     pRxPkt->pDSeg->segLen += headerLen;
 
-    // switch macHdr source and destination
+    if(setChecksum)
+    {
+        pIpv4Hdr->HeaderChecksum = 0;
+        pIpv4Hdr->HeaderChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pIpv4Hdr, headerLen, 0);
+    }
+
+    // set macHdr source and destination
     TCPIP_MAC_ETHERNET_HEADER* macHdr;
     macHdr = (TCPIP_MAC_ETHERNET_HEADER*)pRxPkt->pMacLayer;
-    TCPIP_MAC_ADDR macSource;
 
-    memcpy(&macSource, &macHdr->SourceMACAddr, sizeof(TCPIP_MAC_ADDR));
-    memcpy(&macHdr->SourceMACAddr, &macHdr->DestMACAddr, sizeof(TCPIP_MAC_ADDR));
-    memcpy(&macHdr->DestMACAddr, &macSource, sizeof(TCPIP_MAC_ADDR));
+    memcpy(&macHdr->DestMACAddr, &macHdr->SourceMACAddr, sizeof(TCPIP_MAC_ADDR));
+    memcpy(&macHdr->SourceMACAddr, _TCPIPStack_NetMACAddressGet((TCPIP_NET_IF*)pRxPkt->pktIf), sizeof(TCPIP_MAC_ADDR));
+
     pRxPkt->pDSeg->segLen += sizeof(TCPIP_MAC_ETHERNET_HEADER);
     pRxPkt->pktFlags |= TCPIP_MAC_PKT_FLAG_TX; 
 }
@@ -1486,6 +1493,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
     // this is just a new fragment;
     if(pParent->nFrags >= TCPIP_IPV4_FRAGMENT_MAX_NUMBER)
     {   // more fragments than allowed
+        // TODO aa: could be detected from the previous step, if not complete
+        // or at least see if there's overlap first and a segment gets discarded
         TCPIP_Helper_SingleListNextRemove(&ipv4FragmentQueue, (SGL_LIST_NODE*)pPrevParent);
         _IPv4FragmentDbg(pParent, pRxPkt, TCPIP_IPV4_FRAG_DISCARD_EXCEEDED);
         TCPIP_IPV4_RxFragmentDiscard(pParent, TCPIP_MAC_PKT_ACK_FRAGMENT_ERR);
@@ -1694,6 +1703,10 @@ static void TCPIP_IPV4_RxFragmentListPurge(SINGLE_LIST* pL)
 
 
 // TX packet needs fragmentation; each fragment will contain the IPv4 header and a fragment of data
+// TODO aa: this function does NOT support split segments!
+// If the incoming packet spans multiple segments bad things will happen.
+// ICMP and TCP take care of themselves
+// Problem is for UDP and, most important, for user constructed packets!
 static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16_t pktPayload)
 {
     int ix;

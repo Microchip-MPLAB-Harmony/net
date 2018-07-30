@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-05-02T16:40:23Z */
+/* file generated from device description version 2018-06-05T16:39:35Z */
 #ifndef SAME_SAME70_AES_MODULE_H
 #define SAME_SAME70_AES_MODULE_H
 
@@ -178,25 +178,25 @@
 #define AES_ISR_TAGRDY(value)                 (AES_ISR_TAGRDY_Msk & ((value) << AES_ISR_TAGRDY_Pos))
 #define AES_ISR_Msk                           (0x0001F101UL)                                 /**< (AES_ISR) Register Mask  */
 
-/* -------- AES_KEYWR : (AES Offset: 0x20) ( /W 32) Key Word Register 0 -------- */
+/* -------- AES_KEYWR : (AES Offset: 0x20) ( /W 32) Key Word Register -------- */
 #define AES_KEYWR_KEYW_Pos                    (0U)                                           /**< (AES_KEYWR) Key Word Position */
 #define AES_KEYWR_KEYW_Msk                    (0xFFFFFFFFU << AES_KEYWR_KEYW_Pos)            /**< (AES_KEYWR) Key Word Mask */
 #define AES_KEYWR_KEYW(value)                 (AES_KEYWR_KEYW_Msk & ((value) << AES_KEYWR_KEYW_Pos))
 #define AES_KEYWR_Msk                         (0xFFFFFFFFUL)                                 /**< (AES_KEYWR) Register Mask  */
 
-/* -------- AES_IDATAR : (AES Offset: 0x40) ( /W 32) Input Data Register 0 -------- */
+/* -------- AES_IDATAR : (AES Offset: 0x40) ( /W 32) Input Data Register -------- */
 #define AES_IDATAR_IDATA_Pos                  (0U)                                           /**< (AES_IDATAR) Input Data Word Position */
 #define AES_IDATAR_IDATA_Msk                  (0xFFFFFFFFU << AES_IDATAR_IDATA_Pos)          /**< (AES_IDATAR) Input Data Word Mask */
 #define AES_IDATAR_IDATA(value)               (AES_IDATAR_IDATA_Msk & ((value) << AES_IDATAR_IDATA_Pos))
 #define AES_IDATAR_Msk                        (0xFFFFFFFFUL)                                 /**< (AES_IDATAR) Register Mask  */
 
-/* -------- AES_ODATAR : (AES Offset: 0x50) (R/  32) Output Data Register 0 -------- */
+/* -------- AES_ODATAR : (AES Offset: 0x50) (R/  32) Output Data Register -------- */
 #define AES_ODATAR_ODATA_Pos                  (0U)                                           /**< (AES_ODATAR) Output Data Position */
 #define AES_ODATAR_ODATA_Msk                  (0xFFFFFFFFU << AES_ODATAR_ODATA_Pos)          /**< (AES_ODATAR) Output Data Mask */
 #define AES_ODATAR_ODATA(value)               (AES_ODATAR_ODATA_Msk & ((value) << AES_ODATAR_ODATA_Pos))
 #define AES_ODATAR_Msk                        (0xFFFFFFFFUL)                                 /**< (AES_ODATAR) Register Mask  */
 
-/* -------- AES_IVR : (AES Offset: 0x60) ( /W 32) Initialization Vector Register 0 -------- */
+/* -------- AES_IVR : (AES Offset: 0x60) ( /W 32) Initialization Vector Register -------- */
 #define AES_IVR_IV_Pos                        (0U)                                           /**< (AES_IVR) Initialization Vector Position */
 #define AES_IVR_IV_Msk                        (0xFFFFFFFFU << AES_IVR_IV_Pos)                /**< (AES_IVR) Initialization Vector Mask */
 #define AES_IVR_IV(value)                     (AES_IVR_IV_Msk & ((value) << AES_IVR_IV_Pos))
@@ -214,13 +214,13 @@
 #define AES_CLENR_CLEN(value)                 (AES_CLENR_CLEN_Msk & ((value) << AES_CLENR_CLEN_Pos))
 #define AES_CLENR_Msk                         (0xFFFFFFFFUL)                                 /**< (AES_CLENR) Register Mask  */
 
-/* -------- AES_GHASHR : (AES Offset: 0x78) (R/W 32) GCM Intermediate Hash Word Register 0 -------- */
+/* -------- AES_GHASHR : (AES Offset: 0x78) (R/W 32) GCM Intermediate Hash Word Register -------- */
 #define AES_GHASHR_GHASH_Pos                  (0U)                                           /**< (AES_GHASHR) Intermediate GCM Hash Word x Position */
 #define AES_GHASHR_GHASH_Msk                  (0xFFFFFFFFU << AES_GHASHR_GHASH_Pos)          /**< (AES_GHASHR) Intermediate GCM Hash Word x Mask */
 #define AES_GHASHR_GHASH(value)               (AES_GHASHR_GHASH_Msk & ((value) << AES_GHASHR_GHASH_Pos))
 #define AES_GHASHR_Msk                        (0xFFFFFFFFUL)                                 /**< (AES_GHASHR) Register Mask  */
 
-/* -------- AES_TAGR : (AES Offset: 0x88) (R/  32) GCM Authentication Tag Word Register 0 -------- */
+/* -------- AES_TAGR : (AES Offset: 0x88) (R/  32) GCM Authentication Tag Word Register -------- */
 #define AES_TAGR_TAG_Pos                      (0U)                                           /**< (AES_TAGR) GCM Authentication Tag x Position */
 #define AES_TAGR_TAG_Msk                      (0xFFFFFFFFU << AES_TAGR_TAG_Pos)              /**< (AES_TAGR) GCM Authentication Tag x Mask */
 #define AES_TAGR_TAG(value)                   (AES_TAGR_TAG_Msk & ((value) << AES_TAGR_TAG_Pos))
@@ -232,7 +232,7 @@
 #define AES_CTRR_CTR(value)                   (AES_CTRR_CTR_Msk & ((value) << AES_CTRR_CTR_Pos))
 #define AES_CTRR_Msk                          (0xFFFFFFFFUL)                                 /**< (AES_CTRR) Register Mask  */
 
-/* -------- AES_GCMHR : (AES Offset: 0x9C) (R/W 32) GCM H Word Register 0 -------- */
+/* -------- AES_GCMHR : (AES Offset: 0x9C) (R/W 32) GCM H Word Register -------- */
 #define AES_GCMHR_H_Pos                       (0U)                                           /**< (AES_GCMHR) GCM H Word x Position */
 #define AES_GCMHR_H_Msk                       (0xFFFFFFFFU << AES_GCMHR_H_Pos)               /**< (AES_GCMHR) GCM H Word x Mask */
 #define AES_GCMHR_H(value)                    (AES_GCMHR_H_Msk & ((value) << AES_GCMHR_H_Pos))
@@ -245,16 +245,16 @@
 #define AES_IDR_OFFSET                 (0x14)         /**< (AES_IDR) Interrupt Disable Register Offset */
 #define AES_IMR_OFFSET                 (0x18)         /**< (AES_IMR) Interrupt Mask Register Offset */
 #define AES_ISR_OFFSET                 (0x1C)         /**< (AES_ISR) Interrupt Status Register Offset */
-#define AES_KEYWR_OFFSET               (0x20)         /**< (AES_KEYWR) Key Word Register 0 Offset */
-#define AES_IDATAR_OFFSET              (0x40)         /**< (AES_IDATAR) Input Data Register 0 Offset */
-#define AES_ODATAR_OFFSET              (0x50)         /**< (AES_ODATAR) Output Data Register 0 Offset */
-#define AES_IVR_OFFSET                 (0x60)         /**< (AES_IVR) Initialization Vector Register 0 Offset */
+#define AES_KEYWR_OFFSET               (0x20)         /**< (AES_KEYWR) Key Word Register Offset */
+#define AES_IDATAR_OFFSET              (0x40)         /**< (AES_IDATAR) Input Data Register Offset */
+#define AES_ODATAR_OFFSET              (0x50)         /**< (AES_ODATAR) Output Data Register Offset */
+#define AES_IVR_OFFSET                 (0x60)         /**< (AES_IVR) Initialization Vector Register Offset */
 #define AES_AADLENR_OFFSET             (0x70)         /**< (AES_AADLENR) Additional Authenticated Data Length Register Offset */
 #define AES_CLENR_OFFSET               (0x74)         /**< (AES_CLENR) Plaintext/Ciphertext Length Register Offset */
-#define AES_GHASHR_OFFSET              (0x78)         /**< (AES_GHASHR) GCM Intermediate Hash Word Register 0 Offset */
-#define AES_TAGR_OFFSET                (0x88)         /**< (AES_TAGR) GCM Authentication Tag Word Register 0 Offset */
+#define AES_GHASHR_OFFSET              (0x78)         /**< (AES_GHASHR) GCM Intermediate Hash Word Register Offset */
+#define AES_TAGR_OFFSET                (0x88)         /**< (AES_TAGR) GCM Authentication Tag Word Register Offset */
 #define AES_CTRR_OFFSET                (0x98)         /**< (AES_CTRR) GCM Encryption Counter Value Register Offset */
-#define AES_GCMHR_OFFSET               (0x9C)         /**< (AES_GCMHR) GCM H Word Register 0 Offset */
+#define AES_GCMHR_OFFSET               (0x9C)         /**< (AES_GCMHR) GCM H Word Register Offset */
 
 /** \brief AES register API structure */
 typedef struct
@@ -266,16 +266,16 @@ typedef struct
   __O   uint32_t                       AES_IDR;         /**< Offset: 0x14 ( /W  32) Interrupt Disable Register */
   __I   uint32_t                       AES_IMR;         /**< Offset: 0x18 (R/   32) Interrupt Mask Register */
   __I   uint32_t                       AES_ISR;         /**< Offset: 0x1c (R/   32) Interrupt Status Register */
-  __O   uint32_t                       AES_KEYWR[8];    /**< Offset: 0x20 ( /W  32) Key Word Register 0 */
-  __O   uint32_t                       AES_IDATAR[4];   /**< Offset: 0x40 ( /W  32) Input Data Register 0 */
-  __I   uint32_t                       AES_ODATAR[4];   /**< Offset: 0x50 (R/   32) Output Data Register 0 */
-  __O   uint32_t                       AES_IVR[4];      /**< Offset: 0x60 ( /W  32) Initialization Vector Register 0 */
+  __O   uint32_t                       AES_KEYWR[8];    /**< Offset: 0x20 ( /W  32) Key Word Register */
+  __O   uint32_t                       AES_IDATAR[4];   /**< Offset: 0x40 ( /W  32) Input Data Register */
+  __I   uint32_t                       AES_ODATAR[4];   /**< Offset: 0x50 (R/   32) Output Data Register */
+  __O   uint32_t                       AES_IVR[4];      /**< Offset: 0x60 ( /W  32) Initialization Vector Register */
   __IO  uint32_t                       AES_AADLENR;     /**< Offset: 0x70 (R/W  32) Additional Authenticated Data Length Register */
   __IO  uint32_t                       AES_CLENR;       /**< Offset: 0x74 (R/W  32) Plaintext/Ciphertext Length Register */
-  __IO  uint32_t                       AES_GHASHR[4];   /**< Offset: 0x78 (R/W  32) GCM Intermediate Hash Word Register 0 */
-  __I   uint32_t                       AES_TAGR[4];     /**< Offset: 0x88 (R/   32) GCM Authentication Tag Word Register 0 */
+  __IO  uint32_t                       AES_GHASHR[4];   /**< Offset: 0x78 (R/W  32) GCM Intermediate Hash Word Register */
+  __I   uint32_t                       AES_TAGR[4];     /**< Offset: 0x88 (R/   32) GCM Authentication Tag Word Register */
   __I   uint32_t                       AES_CTRR;        /**< Offset: 0x98 (R/   32) GCM Encryption Counter Value Register */
-  __IO  uint32_t                       AES_GCMHR[4];    /**< Offset: 0x9c (R/W  32) GCM H Word Register 0 */
+  __IO  uint32_t                       AES_GCMHR[4];    /**< Offset: 0x9c (R/W  32) GCM H Word Register */
 } aes_registers_t;
 /** @}  end of Advanced Encryption Standard */
 

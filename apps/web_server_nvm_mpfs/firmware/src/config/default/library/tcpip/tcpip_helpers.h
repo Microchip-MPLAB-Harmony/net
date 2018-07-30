@@ -362,7 +362,7 @@ bool     TCPIP_Helper_MACAddressToString(const TCPIP_MAC_ADDR* macAddr, char* bu
     None.    
  */
 
-#if defined(__PIC32MX__) || defined(__PIC32MZ__)
+#if defined(__PIC32MX__) || defined(__PIC32MZ__) || defined(__PIC32MK__)
 uint32_t __attribute__((nomips16)) TCPIP_Helper_htonl(uint32_t hLong);
 
 uint16_t __attribute__((nomips16)) TCPIP_Helper_htons(uint16_t hShort);

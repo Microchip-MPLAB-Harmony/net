@@ -116,6 +116,8 @@ typedef enum _TCPIP_FTP_CMD
     TCPIP_FTP_CMD_MDTM,
     TCPIP_FTP_CMD_MLST,
     TCPIP_FTP_CMD_MLSD,
+    TCPIP_FTP_CMD_DELE,
+    TCPIP_FTP_CMD_NOOP,
     TCPIP_FTP_CMD_UNKNOWN,
     TCPIP_FTP_CMD_NONE,
    
@@ -131,7 +133,7 @@ typedef enum _TCPIP_FTP_RESP
     TCPIP_FTP_RESP_USER_OK,
     TCPIP_FTP_RESP_PASS_OK,
     TCPIP_FTP_RESP_QUIT_OK,
-    TCPIP_FTP_RESP_STOR_OK,
+    TCPIP_FTP_SYNTAX_ERROR,
     TCPIP_FTP_RESP_UNKNOWN,
     TCPIP_FTP_RESP_LOGIN,
     TCPIP_FTP_RESP_DATA_OPEN,
@@ -148,8 +150,9 @@ typedef enum _TCPIP_FTP_RESP
     TCPIP_FTP_RESP_EXTND_PORT_FAILURE,
     TCPIP_FTP_RESP_FILESYSTEM_FAIL,
     TCPIP_FTP_RESP_SYST,
-    TCPIP_FTP_RESP_NONE ,                      // This must always be the last
-                                        // There is no corresponding string.
+    TCPIP_FTP_FILE_ACTION_OK,
+    TCPIP_FTP_RESP_NONE ,   // This must always be the last
+                            // There is no corresponding string.
 } TCPIP_FTP_RESP;
 
 // FTP Flags

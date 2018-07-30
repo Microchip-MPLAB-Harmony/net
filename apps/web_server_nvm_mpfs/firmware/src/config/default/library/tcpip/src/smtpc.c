@@ -44,6 +44,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/src/tcpip_private.h"
 #include "net/pres/net_pres_socketapi.h"
 
+// TODO aa: regular file system functions should be used?
 #include "tcpip/src/common/sys_fs_wrapper.h"
 
 #if defined(TCPIP_STACK_USE_SMTPC)
@@ -202,6 +203,7 @@ static TCPIP_SMTPC_STATUS smtpDcptRxProcMailDoneWait(TCPIP_SMTPC_MESSAGE_DCPT* p
 static TCPIP_SMTPC_STATUS smtpDcptRxProcTransactResetWait(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, const char* replyBuffer, int nLines);
 static TCPIP_SMTPC_STATUS smtpDcptRxProcTransactQuitWait(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, const char* replyBuffer, int nLines);
 
+// TODO aa: eliminate some of the unneeded states???
 static const SMTP_DCPT_PROCESS_FNC smtpRxProcessTbl[] =
 {
     smtpDcptRxProcNone,             // TCPIP_SMTPC_STAT_WAIT_RETRY
@@ -424,7 +426,8 @@ static bool _SMTPCDebugCond(bool cond, const char* message, int lineNo)
 #define _SMTPCDebugCond(cond, message, lineNo)  (1)
 #endif  // (TCPIP_SMTPC_DEBUG_LEVEL & TCPIP_SMTPC_DEBUG_MASK_BASIC)
 
-#if (TCPIP_SMTPC_DEBUG_LEVEL & (TCPIP_SMTPC_DEBUG_MASK_STATE | TCPIP_SMTPC_DEBUG_MASK_ERROR_STATE) != 0)
+
+#if ((TCPIP_SMTPC_DEBUG_LEVEL & (TCPIP_SMTPC_DEBUG_MASK_STATE | TCPIP_SMTPC_DEBUG_MASK_ERROR_STATE)) != 0)
 static const char* const _SMTPCDbgDcptStateTbl[] = 
 {
     "idle",                 // TCPIP_SMTPC_STAT_WAIT_RETRY
@@ -1299,6 +1302,7 @@ static TCPIP_SMTPC_STATUS smtpDcptMailMsgTo(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt)
 // TCPIP_SMTPC_STAT_MAIL_MSG_HDR_SENDER
 static TCPIP_SMTPC_STATUS smtpDcptMailMsgSender(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt)
 {
+    // TODO aa: for now we skip the sender and assume that "from" is good enough!
     return TCPIP_SMTPC_STAT_MAIL_MSG_HDR_SUBJECT;
 }
 
@@ -1318,7 +1322,7 @@ static TCPIP_SMTPC_STATUS smtpDcptMailMsgMessageId(TCPIP_SMTPC_MESSAGE_DCPT* pDc
 
     NET_PRES_SocketInfoGet(pDcpt->skt, &sktInfo);
     TCPIP_Helper_IPAddressToString(&sktInfo.localIPaddress.v4Add, addBuff, sizeof(addBuff));
-    sprintf(msgIdBuff, "<%4d@%s>", (int)smtpcMailCounter++, addBuff);
+    sprintf(msgIdBuff, "<%4d@%s>", (unsigned int)smtpcMailCounter++, addBuff);
 
     return smtpClientWriteCmd(pDcpt, "Message-ID:",  msgIdBuff);
 }
@@ -1646,6 +1650,16 @@ static TCPIP_SMTPC_STATUS smtpDcptTransactionClose(TCPIP_SMTPC_MESSAGE_DCPT* pDc
 {
     TCPIP_SMTPC_STATUS newStat;
 
+    // TODO aa:
+    // Disconnect should allow to clear the encryption state for this socket,
+    // to be able to start a new un-encrypted connection !
+#if 0
+    if((pDcpt->dcptFlags & TCPIP_SMTPC_DCPT_FLAG_CONNECTED) != 0)
+    {   // disconnect the socket
+        NET_PRES_SocketDisconnect(pDcpt->skt);
+    }
+#endif
+
     if(pDcpt->skt != NET_PRES_INVALID_SOCKET)
     {
         NET_PRES_SocketClose(pDcpt->skt);
@@ -1745,6 +1759,8 @@ static TCPIP_SMTPC_STATUS smtpDcptStateWaitReply(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt
 
         // ok got a full buffer that needs to be processed
         // release the socket buffer
+        // TODO aa: NET_PRES_SocketDiscard(pDcpt->skt); does not discard the bytes from the NET_PRES layer,
+        // just from the socket! So I'll read it again, with the same data!!!
         NET_PRES_SocketRead(pDcpt->skt, smtpcRxBuffer, peekBytes);
         _SMTPCDbgMailStrFromSrv(pDcpt, smtpcRxBuffer);
 
@@ -2337,6 +2353,9 @@ static void smtpcRetryInit(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt)
     smtpcSetErrorJump(pDcpt, TCPIP_SMTPC_STAT_MAIL_DONE_REPORT);
 }
 
+// TODO aa: test or octet-stream only for now!
+// sends the MIME part header corresponding to the selected type
+// if fileName != 0, inserts a Content-Disposition header for file attachment
 static TCPIP_SMTPC_STATUS smtpSendPartHdr(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, const char* fileName)
 {
     char partHdr[200];
@@ -2746,6 +2765,202 @@ static int smtpFilePush(TCPIP_SMTP_READ_DCPT* pRdDcpt, size_t nBytes)
     
     return -1;
 }
+
+////////////////////////////////// TODO aa: left tasks /////////////////////////////
+//
+    //
+    //
+    // - API to abort message; useful for retries
+    //
+    // - Multiple DNS adddresses: To provide reliable mail transmission, the SMTP client MUST be able to try (and retry)
+    //      each of the relevant addresses in this list in order, until a
+    //      delivery attempt succeeds.!
+    //      However, there MAY also be a configurable limit on the number of alternate addresses that can be tried.
+    //      !In any case, the SMTP client SHOULD try at least two addresses.!
+    //
+    // - upon ending sending the mail:
+    //      check the pending list if there are more mails to the same server with the same 
+    //      user credeintials so you can keep the connection open?
+    //      Keep in mind that the server will close it anyway after a tmo, so you may need to issue noops...
+    //
+    //  - There is the limited # of desctiptors: smtpcMessageBusyList and smtpcMessageFreeList
+    //      Is there a way to make sure that a user doesn't request status, etc. after his message expired?
+    //      Difficult w/o thread ID, and even then, how to detect between multiple calls in the same thread?
+    //
+    //
+    //  - Sender must appear
+    //      If the from field contains more than one mailbox specification in the mailboxlist,
+    //      then the sender field, containing the field name "Sender" and a
+    //      single mailbox specification, MUST appear in the message. In either
+    //      case, an optional reply-to field MAY also be included, which contains
+    //      the field name "Reply-To" and a comma-separated list of one or more
+    //      addresses.
+    //      No useless sender!
+    //      if a single mailbox and the author and transmitter are identical, the
+    //      "Sender:" field SHOULD NOT be used. Otherwise, both fields SHOULD
+    //      appear.
+    //
+    //  - See more in C:\aa\dev\Projects-Clean\MCHP_tcp_ip_unified_clean\microchip\tcpip\aa_debug\smtp\smtp_new\smtp_design.txt
+    //
+    //
+    //  DONE:
+    //
+    // - wait until NET_PRES_Status() returns SYS_STATUS_READY???
+    //      and how do I get the SYS_MODULE_OBJ object ??? returned by NET_PRES_Initialize
+    //   No need to. NET_PRES sets the initalized flag that reports Ready as soon as the Initialize
+    //   function is called!
+    //
+    // - do a TCPIP_SMTPC_AUTHENTICATE_FNC for retrieveing uname/pass?
+    //  Meh...
+    //
+    // also reset and quit as API?
+    //      reset and quit commands to the server from user don't seem like much sense...
+    //      abort mail command? maybe; although it has to be at the right time, before is too late...
+    //  Meh...
+    //
+    //
+    //
+    //
+    //
+    //
+////////////////////////////////// TODO aa: MIME + encoding + attachments notes
+//
+
+#if 0 
+- "MIME-Version: 1.0\r\n" - the MIME-Version header field is required at the top level of a message.
+
+- Content-Type Header Field:
+    - "charset" parameter is applicable to any subtype of "text"
+    - "boundary" parameter is REQUIRED for any subtype of the "multipart" media type.
+    - "Content-Type" ":" type "/" subtype(";" parameter)
+    - type := discrete-type / composite-type:
+        - discrete-type := "text" / "image" / "audio" / "video" /"application" / extension-token
+        - composite-type := "message" / "multipart" / extension-token
+
+
+
+    - subtype := extension-token / iana-token
+        iana-token := <A publicly-defined extension token.
+        Tokens of this form must be registered with IANA as specified in RFC 2048.>
+        - subtype specification is MANDATORY!
+    - parameter := attribute "=" value
+
+    -  
+    -Content-Type Defaults:
+        "Content-type: text/plain; charset=us-ascii\r\n"
+
+
+    - text/plain:
+        NOTE: Some protocols defines a maximum line length. E.g. SMTP [RFC-
+        821] allows a maximum of 998 octets before the next CRLF sequence.
+        To be transported by such protocols, data which includes too long
+        segments without CRLF sequences must be encoded with a suitable
+        content-transfer-encoding.
+    
+    - Image Media Type:
+        "Content-type: image/jpeg\r\n"
+        
+    - Audio Media Type:
+        "Content-type: audio/basic\r\n"
+
+
+    - Video Media Type
+        "Content-type: video/mpeg\r\n"
+
+    - Application Media Type
+        "Content-type: application/octet-stream\r\n"
+        "Content-type: application/postscript\r\n"
+
+    - Multipart Media Type
+        After its boundary delimiter line, each body part then consists of a
+        header area, a blank line, and a body area. Thus a body part is
+        similar to an RFC 822 message in syntax, but different in meaning.
+    
+        the absence of a
+        Content-Type header usually indicates that the corresponding body has
+        a content-type of "text/plain; charset=US-ASCII".
+        
+        The grammar for parameters on the Content type
+        field is such that it is often necessary to enclose the boundary
+        parameter values in quotes on the Content-type line. This is not
+        always necessary, but never hurts.
+        Content-Type: multipart/mixed; boundary=gc0p4Jq0M2Yt08j34c0p
+        Content-Type: multipart/mixed; boundary=gc0pJq0M:08jU534c0p - is not valid because of :
+        Content-Type: multipart/mixed; boundary="gc0pJq0M:08jU534c0p" - ok, use ""
+
+        The parts are each preceded by the line
+        --gc0pJq0M:08jU534c0p
+        !
+        Boundary delimiters must not appear within the encapsulated material,
+        and must be no longer than 70 characters, not counting the two
+        leading hyphens.
+        
+        The use of the "multipart" media type with only a single body part
+        may be useful in certain contexts, and is explicitly permitted.
+        NOTE: Experience has shown that a "multipart" media type with a
+        single body part is useful for sending non-text media types.
+
+
+
+
+        - Content-Transfer-Encoding Header Field
+    "Content-Transfer-Encoding: 7bit" is the default, if the content transfer header missing
+    - Definition: "Content-Transfer-Encoding" ":" mechanism
+        mechanism := "7bit" / "8bit" / "binary" - this means "identity", i.e. no transformation has been applied!
+        mechanism := "quoted-printable" / "base64" - transform into an 7 bit range
+        mechanism := / ietf-token / x-token
+    - The proper Content-Transfer-Encoding label must always be used.!
+    - "binary" Content-Transfer-Encoding is invalid in Internet mail!
+    - If an entity is of type "multipart" the Content-Transfer-Encoding is not permitted to
+      have any value other than "7bit", "8bit" or "binary"!
+      It is EXPRESSLY FORBIDDEN to use any encodings other than "7bit", "8bit", or "binary"
+      with any composite media type, i.e. one that recursively includes other Content-Type fields!
+      Currently the only composite media types are "multipart" and "message".
+
+      Any entity with an unrecognized Content-Transfer-Encoding must be
+      treated as if it has a Content-Type of "application/octet-stream",
+      regardless of what the Content-Type header field actually says.
+
+
+
+      RFC 2049:
+        Note that the restriction on
+        line lengths implied by RFC 822 is eliminated if the
+        next step employs either quoted-printable or base64
+        encoding!
+      
+
+    RFC 2183:
+    The Content-Disposition Header Field:
+        disposition := "Content-Disposition" ":"
+            disposition-type
+            *(";" disposition-parm)
+
+            disposition-type := "inline"
+            / "attachment"
+            / extension-token
+            ; values are not case-sensitive
+
+            disposition-parm := filename-parm
+            / creation-date-parm
+            / modification-date-parm
+            / read-date-parm
+            / size-parm
+            / parameter
+
+            filename-parm := "filename" "=" value
+            creation-date-parm := "creation-date" "=" quoted-date-time
+            modification-date-parm := "modification-date" "=" quoted-date-time
+            read-date-parm := "read-date" "=" quoted-date-time
+            size-parm := "size" "=" 1*DIGIT
+            quoted-date-time := quoted-string
+            ; contents MUST be an RFC 822 ‘date-time’
+            ; numeric timezones (+HHMM or -HHMM) MUST be used
+
+
+
+#endif
+
 
 
 #endif //#if defined(TCPIP_STACK_USE_SMTPC)

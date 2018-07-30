@@ -83,8 +83,10 @@ typedef const void* TCPIP_STACK_HEAP_HANDLE;
     Defines a TCP/IP stack heap type.
 
   Description:
-    Definition of the heap type which clients
-    could use to get access to heap statistics functions.
+    Definition of the heap type which the TCP/IP stack
+    uses for internal allocation.
+    Stack clients could use the type to get access
+    to heap statistics functions.
 
  Remarks:
     New types could be added in the future.
@@ -97,10 +99,9 @@ typedef enum
 
     /* internally implemented heap */
     /* Currently the default heap type */
-    /* The default internal memory heap consists of block of data that is */
+    /* The default internal memory heap consists of blocks of data that are */
     /* allocated in chunks using a first fit algorithm. */
-    /* Allocation and deallocation operations are not very fast */
-    /* (but reasonably fast). */
+    /* Allocation and deallocation operations are reasonably fast */
     /* However, the allocation granularity is pretty good. */
     /* This type of heap can become fragmented over time */
     /* There is no data maintained in this heap on a per client basis. */
@@ -112,18 +113,17 @@ typedef enum
                                           
     /* internally implemented pool heap */
     /* Very fast allocation and deallocation without fragmentation */
-    /* However the allocated chunks are fixed size
-       so it can result in a not very efficient memory usage */
+    /* However the allocated chunks are fixed size */
+    /* so it can result in a not very efficient memory usage */
     /* Note: this is a private TCPIP heap */
     /* and multi-threaded protection is provided internally. */
     TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL, 
                           
-    /* external/system maintained heap */
+    /* externally maintained heap */
     /* The heap is maintained externally and allocation
        is done using the supplied functions.
        The TCP/IP stack heap can provide OSAL synchronization
        protection if needed */
-    /* Not supported yet */
     TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP,              
 }TCPIP_STACK_HEAP_TYPE;
 
@@ -563,6 +563,31 @@ size_t                 TCPIP_STACK_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
      None.
 */ 
 size_t                 TCPIP_STACK_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
+
+//*****************************************************************************
+/* Function:
+    size_t TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
+	 
+   Summary:
+    Returns the current heap watermark.
+   
+   Description:
+    The function returns the maximum amount of memory that's been allocated from the heap
+    since the heap was created.
+   
+   Preconditions:
+    heapH       - valid heap handle
+   
+   Parameters:
+    heapH       - handle to a heap
+   
+   Returns:
+    The maximum allocated memory from the heap.
+   
+   Remarks:
+     None.
+*/ 
+size_t                 TCPIP_STACK_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
 
 //*****************************************************************************
 /* Function:      
