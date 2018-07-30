@@ -40,9 +40,21 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/tcpip.h"
 #include "mib.h"
 #include "tcpip/src/common/helpers.h"
-#include "system/random/sys_random.h"
-#include "system/tmr/sys_tmr.h"
+#define APP_SWITCH_1StateGet() SWITCH1_Get()
+#define APP_SWITCH_2StateGet() SWITCH2_Get()
+#define APP_SWITCH_3StateGet() SWITCH3_Get()
 
+#define APP_LED_1StateGet() LED1_Get()
+#define APP_LED_2StateGet() LED2_Get()
+#define APP_LED_3StateGet() LED3_Get()
+
+#define APP_LED_1StateSet() LED1_Set()
+#define APP_LED_2StateSet() LED2_Set()
+#define APP_LED_3StateSet() LED3_Set()
+
+#define APP_LED_1StateClear() LED1_Clear()
+#define APP_LED_2StateClear() LED2_Clear()
+#define APP_LED_3StateClear() LED3_Clear()
 /****************************************************************************
   Section:
     Global Variables
@@ -671,7 +683,7 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
                     {
                         continue;
                     }
-                    analogPotVal.byte = BSP_LEDStateGet(APP_LED_1);
+                    analogPotVal.byte = APP_LED_1StateGet();//BSP_LEDStateGet(APP_LED_1);
                     // Get SNMPv3 messsage model type and security model type
                     TCPIP_SNMPv3_TrapConfigDataGet(targetIndex,&snmpv3MsgModelType,&snmpv3SecModelType);
                     if((snmpv3MsgModelType == SNMPV3_MSG_PROCESSING_MODEL)
@@ -756,7 +768,7 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
                 }
                 analogPotVal.byte = APP_SWITCH_1StateGet();
                 TCPIP_SNMP_TRAPv2Notify(PUSH_BUTTON,analogPotVal,0,snmpTrapIpAddresstype);
-                analogPotVal.byte = BSP_LEDStateGet(APP_LED_1);
+                analogPotVal.byte = APP_LED_1StateGet(); //BSP_LEDStateGet(APP_LED_1);
                 TCPIP_SNMP_TRAPv2Notify(LED_D5,analogPotVal,0,snmpTrapIpAddresstype);
                 TCPIP_SNMP_TrapSendFlagSet(false);
                 {
@@ -1047,9 +1059,11 @@ This ID is only related to trap ID. and this implementaion is only for TRAPv2 sp
     ASCII String trap support . When LED2 and LED1 are on then ASCII string trap will be send.
     TrapCommunity(4) is used as a variable for both TRAPv1 and TRAPv2 PDU.
 */
-    if((!BSP_LEDStateGet(APP_LED_2) && !BSP_LEDStateGet(APP_LED_3)) && (trapIndex >= TCPIP_SNMP_TRAP_TABLE_SIZE))
+    //if((!BSP_LEDStateGet(APP_LED_2) && !BSP_LEDStateGet(APP_LED_3)) && (trapIndex >= TCPIP_SNMP_TRAP_TABLE_SIZE))
+    if((!APP_LED_2StateGet() && !APP_LED_3StateGet()) && (trapIndex >= TCPIP_SNMP_TRAP_TABLE_SIZE))
         asciiStrNotify = false;
-    else if((BSP_LEDStateGet(APP_LED_1) && BSP_LEDStateGet(APP_LED_3)) && (trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE))
+    //else if((BSP_LEDStateGet(APP_LED_1) && BSP_LEDStateGet(APP_LED_3)) && (trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE))
+    else if((APP_LED_1StateGet() && APP_LED_3StateGet()) && (trapIndex < TCPIP_SNMP_TRAP_TABLE_SIZE))
         asciiStrNotify = true;
 
     if(asciiStrNotify)
@@ -1448,11 +1462,19 @@ bool TCPIP_SNMP_VarbindSet(SNMP_ID var, SNMP_INDEX index, uint8_t ref, SNMP_VAL 
     switch(var)
     {
         case LED_D5:
-            BSP_LEDStateSet(APP_LED_3, val.byte);
+            if(val.byte)          
+                APP_LED_3StateSet();
+            else
+                APP_LED_3StateClear();
+            //BSP_LEDStateSet(APP_LED_3, val.byte);
             return true;
 
         case LED_D6:
-            BSP_LEDStateSet(APP_LED_2, val.byte);
+            if(val.byte)          
+                APP_LED_2StateSet();
+            else
+                APP_LED_2StateClear();
+            //BSP_LEDStateSet(APP_LED_2, val.byte);
             return true;
 
         case TRAP_RECEIVER_IP:
@@ -2108,11 +2130,11 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
         }
 
         case LED_D5:
-            val->byte = BSP_LEDStateGet(APP_LED_3);
+            val->byte = APP_LED_3StateGet();//BSP_LEDStateGet(APP_LED_3);
             return true;
 
         case LED_D6:
-            val->byte = BSP_LEDStateGet(APP_LED_2);
+            val->byte = APP_LED_2StateGet();//BSP_LEDStateGet(APP_LED_2);
             return true;
 
         case PUSH_BUTTON:

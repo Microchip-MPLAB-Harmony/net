@@ -42,8 +42,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_IPERF)
 
-//#include "system/command/sys_command.h"
-#include "sys_command.h" //H3_ToDo :  dummy header; decide on common strategy for H3 & H2
+#include "system/console/sys_command.h"
 
 //****************************************************************************
 // CONSTANTS (Defines and enums)
