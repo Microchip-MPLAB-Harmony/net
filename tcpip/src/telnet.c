@@ -39,8 +39,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
 #include "net/pres/net_pres_socketapi.h"
-//#include "system/command/sys_command.h"
-#include "sys_command.h" //H3_ToDo :  dummy header; decide on common strategy for H3 & H2
+#include "system/console/sys_command.h"
+
 
 #if !defined(TCPIP_TELNET_MAX_CONNECTIONS)
     // Maximum number of Telnet connections

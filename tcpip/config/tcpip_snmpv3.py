@@ -144,7 +144,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 				tcpipSnmpv3PrivProtocol[index].setDefaultValue("SNMPV3_NO_PRIV")
 			else:
 				if(index == 2):
-					tcpipSnmpv3PrivProtocol[index].setDefaultValue("")					
+					tcpipSnmpv3PrivProtocol[index].setDefaultValue("SNMPV3_NO_PRIV")					
 		tcpipSnmpv3PrivProtocol[index].setDependencies(tcpipSnmpv3MenuVisibleSingle, [tcpipSnmpV3StackConfigIdx[index].getID()])	
 
 		# Snmpv3 Privacy Protocol Password
@@ -217,6 +217,13 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3SourceFile.setEnabled(True)
 	tcpipSnmpV3SourceFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMP"])
 
+	#Add to system_config.h
+	tcpipSnmpV3HeaderFtl = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3HeaderFtl.setSourcePath("tcpip/config/snmpv3.h.ftl")
+	tcpipSnmpV3HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipSnmpV3HeaderFtl.setMarkup(True)
+	tcpipSnmpV3HeaderFtl.setType("STRING")
+	
 	# H3_ToDo
 	# file TCPIP_SNMPV3_USM_C "$HARMONY_VERSION_PATH/framework/tcpip/src/snmpv3_usm.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/snmpv3_usm.c"
 	# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_AES_PRIV") 

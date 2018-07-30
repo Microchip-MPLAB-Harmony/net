@@ -703,10 +703,9 @@ typedef struct
 <#if (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER)?has_content &&  (tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER) == true>
 #include "tcpip/http_net.h"
 </#if>
-<#if (tcpipSnmp.TCPIP_USE_SNMP)?has_content &&  (tcpipSnmp.TCPIP_USE_SNMP) == true>
+<#if ((tcpipSnmp.TCPIP_USE_SNMP)?has_content &&  (tcpipSnmp.TCPIP_USE_SNMP) == true) ||
+((tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content &&  (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true)>
 #include "tcpip/snmp.h"
-</#if>
-<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content &&  (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
 #include "tcpip/snmpv3.h"
 </#if>
 <#if (tcpipAnnounce.TCPIP_USE_ANNOUNCE)?has_content &&  (tcpipAnnounce.TCPIP_USE_ANNOUNCE) == true>

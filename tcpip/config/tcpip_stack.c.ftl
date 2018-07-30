@@ -582,7 +582,7 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 {
 	.trapEnable             = TCPIP_SNMP_USE_TRAP_SUPPORT,
 	.snmp_trapv2_use        = TCPIP_SNMP_STACK_USE_V2_TRAP,
-<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
+<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content && (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
 	.snmpv3_trapv1v2_use    = TCPIP_SNMPV3_STACK_USE_V1_V2_TRAP,
 <#else>
 	.snmpv3_trapv1v2_use    = false,
@@ -590,7 +590,7 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 	.snmp_bib_file          = TCPIP_SNMP_BIB_FILE_NAME,
 	.read_community_config  = (TCPIP_SNMP_COMMUNITY_CONFIG*)tcpipSNMPInitReadcommunity,
 	.write_community_config = (TCPIP_SNMP_COMMUNITY_CONFIG*)tcpipSNMPInitWritecommunity,
-<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
+<#if (tcpipSnmpv3.TCPIP_USE_SNMPv3)?has_content && (tcpipSnmpv3.TCPIP_USE_SNMPv3) == true>
 	.usm_config             = (TCPIP_SNMPV3_USM_USER_CONFIG*)tcpipSNMPv3InitUSM,
 	.trap_target_config     = (TCPIP_SNMPV3_TARGET_ENTRY_CONFIG*)tcpipSNMPv3InitTargetTrap,
 <#else>
