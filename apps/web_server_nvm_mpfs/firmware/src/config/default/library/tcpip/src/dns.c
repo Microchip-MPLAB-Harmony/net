@@ -330,6 +330,7 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         pDnsDcpt->cacheEntryTMO = dnsData->entrySolvedTmo;
         pDnsDcpt->nIPv4Entries= dnsData->nIPv4Entries;
         pDnsDcpt->nIPv6Entries = dnsData->nIPv6Entries;
+        // TODO aa: further improvements!
 #if defined (TCPIP_STACK_USE_IPV4)
         pDnsDcpt->ipAddressType = IP_ADDRESS_TYPE_IPV4;     // dnsData->ipAddressType;
 #else
@@ -1165,6 +1166,8 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
         TCPIP_UDP_Bind(dnsSocket, IP_ADDRESS_TYPE_IPV4, 0, (IP_MULTI_ADDRESS*)&pDnsHE->currNet->netIPAddr);
         dnsServerAdd.Val = pDnsHE->currNet->dnsServer[pDnsHE->currServerIx].Val;
         TCPIP_UDP_DestinationIPAddressSet(dnsSocket, pDnsDcpt->ipAddressType, (IP_MULTI_ADDRESS*)&dnsServerAdd);
+        // TODO aa: this call can be probably removed if the TCPIP_UDP_Disconnect
+        // doesnt clear the remPort for a client socket!
         TCPIP_UDP_DestinationPortSet(dnsSocket, TCPIP_DNS_SERVER_PORT);
 
         startPtr = wrPtr;

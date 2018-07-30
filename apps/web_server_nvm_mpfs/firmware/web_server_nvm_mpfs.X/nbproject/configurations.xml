@@ -210,21 +210,44 @@
               <itemPath>../src/config/default/peripheral/tc/plib_tc0.h</itemPath>
               <itemPath>../src/config/default/peripheral/tc/plib_tc.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="usart" projectFiles="true">
+            <logicalFolder name="f7" displayName="trng" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/trng/plib_trng0.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="usart" projectFiles="true">
               <itemPath>../src/config/default/peripheral/usart/plib_usart.h</itemPath>
               <itemPath>../src/config/default/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
+              <itemPath>../src/config/default/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/default/system/console/sys_debug.h</itemPath>
+              <itemPath>../src/config/default/system/console/sys_command.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="fs" projectFiles="true">
+              <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
+                <logicalFolder name="f1" displayName="file_system" projectFiles="true">
+                  <itemPath>../src/config/default/system/fs/fat_fs/src/file_system/ff.h</itemPath>
+                  <itemPath>../src/config/default/system/fs/fat_fs/src/file_system/ffconf.h</itemPath>
+                </logicalFolder>
+                <logicalFolder name="f2" displayName="hardware_access" projectFiles="true">
+                  <itemPath>../src/config/default/system/fs/fat_fs/src/hardware_access/diskio.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <logicalFolder name="f2" displayName="mpfs" projectFiles="true">
+                <itemPath>../src/config/default/system/fs/mpfs/mpfs.h</itemPath>
+                <itemPath>../src/config/default/system/fs/mpfs/src/mpfs_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/default/system/fs/sys_fs.h</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_local.h</itemPath>
+              <itemPath>../src/config/default/system/fs/sys_fs_media_manager.h</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_media_manager_local.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="f1" displayName="int" projectFiles="true">
               <itemPath>../src/config/default/system/int/sys_int.h</itemPath>
               <itemPath>../src/config/default/system/int/sys_int_mapping.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="ports" projectFiles="true">
-              <itemPath>../src/config/default/system/ports/sys_ports.h</itemPath>
-              <itemPath>../src/config/default/system/ports/sys_ports_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="time" projectFiles="true">
+            <logicalFolder name="f4" displayName="time" projectFiles="true">
               <itemPath>../src/config/default/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/default/system/time/sys_time_definitions.h</itemPath>
             </logicalFolder>
@@ -235,8 +258,6 @@
             <itemPath>../src/config/default/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/default/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/default/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_cmd_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_console_h2_adapter.h</itemPath>
             <itemPath>../src/config/default/system/sys_random_h2_adapter.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/default/user.h</itemPath>
@@ -245,6 +266,68 @@
           <itemPath>../src/config/default/system_config.h</itemPath>
           <itemPath>../src/config/default/system_definitions.h</itemPath>
         </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="crypto" projectFiles="true">
+        <itemPath>../src/config/default/crypto/crypto.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/aes.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/arc4.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/asn.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/asn_public.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/async.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/certs_test.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/chacha.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/chacha20_poly1305.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/cmac.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/coding.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/compress.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/curve25519.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/des3.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/dh.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/dsa.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/ecc.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/ed25519.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/error-crypt.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/fe_operations.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/fips_test.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/ge_operations.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/hash.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/hc128.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/hmac.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/idea.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/integer.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/logging.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/md2.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/md4.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/md5.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/memory.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/mem_track.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/misc.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/mpi_class.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/mpi_superclass.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/pkcs12.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/pkcs7.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/poly1305.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/pwdbased.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/rabbit.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/random.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/ripemd.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/rsa.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/settings.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/sha.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/sha256.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/sha3.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/sha512.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/signature.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/srp.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/ssl.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/tfm.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/types.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/version.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/visibility.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/wc_encrypt.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/wc_port.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/wolfevent.h</itemPath>
+        <itemPath>../src/config/default/crypto/src/wolfmath.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="osal" projectFiles="true">
         <itemPath>../src/config/default/osal/osal.h</itemPath>
@@ -318,33 +401,6 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="system" projectFiles="true">
-        <logicalFolder name="f1" displayName="fs" projectFiles="true">
-          <logicalFolder name="f2" displayName="fat_fs" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <logicalFolder name="f1" displayName="file_system" projectFiles="true">
-                <itemPath>../src/config/default/system/fs/fat_fs/src/file_system/ff.h</itemPath>
-                <itemPath>../src/config/default/system/fs/fat_fs/src/file_system/ffconf.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="hardware_access" projectFiles="true">
-                <itemPath>../src/config/default/system/fs/fat_fs/src/hardware_access/diskio.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f3" displayName="mpfs" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <itemPath>../src/config/default/system/fs/mpfs/src/mpfs_local.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/default/system/fs/mpfs/mpfs.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="src" projectFiles="true">
-            <itemPath>../src/config/default/system/fs/src/sys_fs_local.h</itemPath>
-            <itemPath>../src/config/default/system/fs/src/sys_fs_media_manager_local.h</itemPath>
-          </logicalFolder>
-          <itemPath>../src/config/default/system/fs/sys_fs.h</itemPath>
-          <itemPath>../src/config/default/system/fs/sys_fs_media_manager.h</itemPath>
-        </logicalFolder>
-      </logicalFolder>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -363,10 +419,6 @@
         <logicalFolder name="f1" displayName="default" projectFiles="true">
           <logicalFolder name="f2" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/default/bsp/bsp.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
-            <itemPath>../src/config/default/crypto/src/md5.c</itemPath>
-            <itemPath>../src/config/default/crypto/src/crypto.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="driver" projectFiles="true">
             <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
@@ -411,10 +463,9 @@
                 </logicalFolder>
                 <itemPath>../src/config/default/library/tcpip/src/tcpip_announce.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/default/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/dns.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/http.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/ipv6.c</itemPath>
@@ -424,6 +475,8 @@
                 <itemPath>../src/config/default/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/smtpc.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/sntp.c</itemPath>
+                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
+                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/default/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -463,15 +516,38 @@
             <logicalFolder name="f6" displayName="tc" projectFiles="true">
               <itemPath>../src/config/default/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="usart" projectFiles="true">
+            <logicalFolder name="f7" displayName="trng" projectFiles="true">
+              <itemPath>../src/config/default/peripheral/trng/plib_trng0.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="usart" projectFiles="true">
               <itemPath>../src/config/default/peripheral/usart/plib_usart1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
+              <itemPath>../src/config/default/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_debug.c</itemPath>
+              <itemPath>../src/config/default/system/console/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="fs" projectFiles="true">
+              <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
+                <itemPath>../src/config/default/system/fs/fat_fs/src/ff.c</itemPath>
+                <itemPath>../src/config/default/system/fs/fat_fs/src/diskio.c</itemPath>
+              </logicalFolder>
+              <logicalFolder name="f2" displayName="mpfs" projectFiles="true">
+                <itemPath>../src/config/default/system/fs/mpfs/src/mpfs.c</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/default/system/fs/src/sys_fs.c</itemPath>
+              <itemPath>../src/config/default/system/fs/src/sys_fs_media_manager.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="f1" displayName="int" projectFiles="true">
               <itemPath>../src/config/default/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="time" projectFiles="true">
+            <logicalFolder name="f4" displayName="time" projectFiles="true">
               <itemPath>../src/config/default/system/time/src/sys_time.c</itemPath>
               <itemPath>../src/config/default/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
@@ -485,24 +561,56 @@
           <itemPath>../src/config/default/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="system" projectFiles="true">
-        <logicalFolder name="f1" displayName="fs" projectFiles="true">
-          <logicalFolder name="f2" displayName="fat_fs" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <itemPath>../src/config/default/system/fs/fat_fs/src/ff.c</itemPath>
-              <itemPath>../src/config/default/system/fs/fat_fs/src/diskio.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f3" displayName="mpfs" projectFiles="true">
-            <logicalFolder name="f1" displayName="src" projectFiles="true">
-              <itemPath>../src/config/default/system/fs/mpfs/src/mpfs.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="src" projectFiles="true">
-            <itemPath>../src/config/default/system/fs/src/sys_fs.c</itemPath>
-            <itemPath>../src/config/default/system/fs/src/sys_fs_media_manager.c</itemPath>
-          </logicalFolder>
-        </logicalFolder>
+      <logicalFolder name="f2" displayName="crypto" projectFiles="true">
+        <itemPath>../src/config/default/crypto/src/arc4.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/asm.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/asn.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/async.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/chacha.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/chacha20_poly1305.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/cmac.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/coding.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/compress.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/crypto.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/curve25519.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/des3.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/dh.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/dsa.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/ecc.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/ecc_fp.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/ed25519.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/error.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/fe_low_mem.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/fe_operations.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/ge_low_mem.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/ge_operations.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/hash.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/hc128.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/hmac.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/idea.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/integer.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/logging.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/md2.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/md4.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/md5.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/memory.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/misc.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/pkcs12.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/pkcs7.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/poly1305.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/pwdbased.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/rabbit.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/ripemd.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/rsa.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/sha3.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/sha512.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/signature.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/srp.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/tfm.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/wc_encrypt.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/wc_port.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/wolfevent.c</itemPath>
+        <itemPath>../src/config/default/crypto/src/wolfmath.c</itemPath>
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
       <itemPath>../src/app.c</itemPath>
@@ -524,7 +632,7 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>seggerjlink</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.10</languageToolchainVersion>
         <platform>3</platform>
@@ -553,6 +661,30 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <AtmelIceTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="4.000"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0x400000-0x5fffff"/>
+        <property key="programoptions.eraseb4program" value="false"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+      </AtmelIceTool>
       <C32>
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
@@ -562,7 +694,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/default;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/default/library;../src/config/default/library/tcpip/src/common"/>
+                  value="../src;../src/config/default;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/default/library;"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -623,7 +755,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="75000"/>
+        <property key="heap-size" value="70000"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -683,48 +815,6 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
-      <ICD4Tool>
-        <property key="AutoSelectMemRanges" value="auto"/>
-        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
-        <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
-        <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="hwtoolclock.frcindebug" value="false"/>
-        <property key="memories.aux" value="false"/>
-        <property key="memories.bootflash" value="true"/>
-        <property key="memories.configurationmemory" value="true"/>
-        <property key="memories.configurationmemory2" value="true"/>
-        <property key="memories.dataflash" value="true"/>
-        <property key="memories.eeprom" value="true"/>
-        <property key="memories.exclude.configurationmemory" value="true"/>
-        <property key="memories.flashdata" value="true"/>
-        <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
-        <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.ranges" value="400000-5fffff"/>
-        <property key="poweroptions.powerenable" value="false"/>
-        <property key="programoptions.donoteraseauxmem" value="false"/>
-        <property key="programoptions.eraseb4program" value="true"/>
-        <property key="programoptions.ledbrightness" value="5"/>
-        <property key="programoptions.pgcconfig" value="pull down"/>
-        <property key="programoptions.pgcresistor.value" value="4.7"/>
-        <property key="programoptions.pgdconfig" value="pull down"/>
-        <property key="programoptions.pgdresistor.value" value="4.7"/>
-        <property key="programoptions.pgmentry.voltage" value="low"/>
-        <property key="programoptions.pgmspeed" value="Med"/>
-        <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preserveeeprom" value="false"/>
-        <property key="programoptions.preserveeeprom.ranges" value=""/>
-        <property key="programoptions.preserveprogram.ranges" value=""/>
-        <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.preserveuserid" value="false"/>
-        <property key="programoptions.programcalmem" value="false"/>
-        <property key="programoptions.programuserotp" value="false"/>
-        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="voltagevalue" value="3.25"/>
-      </ICD4Tool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>

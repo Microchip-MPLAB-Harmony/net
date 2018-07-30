@@ -45,8 +45,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifndef __SMTPC_H
 #define __SMTPC_H
 
-#include "net/pres/net_pres.h"
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -550,8 +548,7 @@ typedef struct
     TCPIP_SMTPC_MESSAGE_STATUS  messageStat;    // the current status of the mail message
     TCPIP_SMTPC_MESSAGE_WARNING messageWarn;    // the current warnings encountered during the message transmission
     int                         messageRetries; // the current number of retries for this message
-    //TODO aa: NET_PRES_SKT_HANDLE_T       messageSkt;     // the socket associated with this message
-    int16_t                     messageSkt;     // the socket associated with this message
+    NET_PRES_SKT_HANDLE_T       messageSkt;     // the socket associated with this message
 }TCPIP_SMTPC_MESSAGE_QUERY;
 
 // *****************************************************************************
@@ -596,6 +593,7 @@ typedef struct
 
     // Optional Mail Fields
     //
+    // TODO aa: these are not currently used and should be added!
     // if sent on behalf of someone else
     const char*                         sender;
     // carbon copy destination address

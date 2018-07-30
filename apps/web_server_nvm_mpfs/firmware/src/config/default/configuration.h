@@ -56,7 +56,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 #include "user.h"
-#include "library/tcpip/tcpip.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -71,6 +70,25 @@ extern "C" {
 // Section: System Service Configuration
 // *****************************************************************************
 // *****************************************************************************
+/* Console System Service Configuration Options */
+#define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
+#define SYS_CONSOLE_INSTANCES_NUMBER       1
+#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH    120
+#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH    120
+#define SYS_CONSOLE_BUFFER_DMA_READY
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+
+#define SYS_CMD_ENABLE
+#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
+#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_BUFFER_DMA_READY
+#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+#define SYS_CMD_REMAP_SYS_DEBUG_MESSAGE
+
 
 /* File System Service Configuration */
 
@@ -102,7 +120,7 @@ extern "C" {
 // *****************************************************************************
 
 /*** MIIM Driver Configuration ***/
-#define DRV_MIIM_ETH_MODULE_ID              GMAC_ID_0
+#define DRV_MIIM_ETH_MODULE_ID              GMAC_BASE_ADDRESS
 #define DRV_MIIM_INSTANCES_NUMBER           1
 #define DRV_MIIM_INSTANCE_OPERATIONS        4
 #define DRV_MIIM_INSTANCE_CLIENTS           2
@@ -118,8 +136,8 @@ extern "C" {
 #define DRV_MEMORY_INDEX_0                   0
 #define DRV_MEMORY_CLIENTS_NUMBER_IDX0       1
 #define DRV_MEMORY_BUFFER_QUEUE_SIZE_IDX0    1
-#define DRV_MEMORY_DEVICE_START_ADDRESS      0x500000 //EFC0_START_ADDRESS
-#define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024     //EFC0_MEDIA_SIZE
+#define DRV_MEMORY_DEVICE_START_ADDRESS      0x500000
+#define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL
 
 
 /* USART Driver Global Configuration Options */
@@ -215,7 +233,7 @@ extern "C" {
                                                     TCPIP_ETH_OPEN_RMII |\
                                                     0
 
-#define TCPIP_INTMAC_MODULE_ID		    			GMAC_ID_0
+#define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
 #define TCPIP_GMAC_INTERRUPT_MODE        			true
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_CLIENTS_NUMBER					1
@@ -227,6 +245,24 @@ extern "C" {
 
 #define DRV_GMAC_INTERRUPT_MODE        			true
 
+
+
+/*** Crypto Library Configuration ***/
+#define WC_NO_HARDEN
+#define NO_DSA
+#define MICROCHIP_MPLAB_HARMONY
+#define HAVE_MCAPI
+#define MICROCHIP_PIC32C
+#define NO_CERTS
+#define NO_PWDBASED
+#define NO_OLD_TLS
+#define NO_SHA
+#define NO_AES
+//#define NO_SHA256
+//#define WC_NO_RNG
+//#define NO_ASN
+//#define NO_RSA
+//#define NO_RNG
 
 
 /* MPLAB Harmony Net Presentation Layer Definitions*/
@@ -256,6 +292,16 @@ extern "C" {
 #define TCPIP_ARP_PRIMARY_CACHE_ONLY		        	true
 
 
+/*** tcpip_cmd Configuration ***/
+#define TCPIP_STACK_COMMAND_ENABLE
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS         4
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DELAY    1000
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_TIMEOUT          5000
+#define TCPIP_STACK_COMMANDS_WIFI_ENABLE             	false
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE    2000
+#define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE    100
+
+
 /*** DHCP Configuration ***/
 #define TCPIP_STACK_USE_DHCP_CLIENT
 #define TCPIP_DHCP_TIMEOUT                          2
@@ -283,27 +329,6 @@ extern "C" {
 #define TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES		4
 #define TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES			true
 #define TCPIP_DNS_CLIENT_USER_NOTIFICATION   false
-
-
-/*** TCPIP Heap Configuration ***/
-
-#define TCPIP_STACK_USE_INTERNAL_HEAP
-#define TCPIP_STACK_DRAM_SIZE                       66000 //39250
-#define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
-
-#define TCPIP_STACK_MALLOC_FUNC                     malloc
-
-#define TCPIP_STACK_CALLOC_FUNC                     calloc
-
-#define TCPIP_STACK_FREE_FUNC                       free
-
-
-
-#define TCPIP_STACK_HEAP_USE_FLAGS                   TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED
-
-#define TCPIP_STACK_HEAP_USAGE_CONFIG                TCPIP_STACK_HEAP_USE_DEFAULT
-
-#define TCPIP_STACK_SUPPORTED_HEAPS                  1
 
 
 /*** HTTP Configuration ***/
@@ -353,6 +378,7 @@ extern "C" {
 
 /*** ICMPv4 Server Configuration ***/
 #define TCPIP_STACK_USE_ICMP_SERVER
+#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
 /*** NBNS Configuration ***/
@@ -416,7 +442,7 @@ extern "C" {
 
 /*** SNTP Configuration ***/
 #define TCPIP_STACK_USE_SNTP_CLIENT
-/** niyas */
+/** H3_ToDo */
 #define TCPIP_NTP_DEFAULT_IF		        		"PIC32CINT"
 #define TCPIP_NTP_VERSION             			    	4
 #define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
@@ -430,6 +456,27 @@ extern "C" {
 #define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
 #define TCPIP_NTP_TASK_TICK_RATE				1100
 #define TCPIP_NTP_RX_QUEUE_LIMIT				2
+
+
+/*** TCPIP Heap Configuration ***/
+
+#define TCPIP_STACK_USE_INTERNAL_HEAP
+#define TCPIP_STACK_DRAM_SIZE                       60000
+#define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
+
+#define TCPIP_STACK_MALLOC_FUNC                     malloc
+
+#define TCPIP_STACK_CALLOC_FUNC                     calloc
+
+#define TCPIP_STACK_FREE_FUNC                       free
+
+
+
+#define TCPIP_STACK_HEAP_USE_FLAGS                   TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED
+
+#define TCPIP_STACK_HEAP_USAGE_CONFIG                TCPIP_STACK_HEAP_USE_DEFAULT
+
+#define TCPIP_STACK_SUPPORTED_HEAPS                  1
 
 
 

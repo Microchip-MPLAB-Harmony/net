@@ -58,48 +58,21 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 #include "configuration.h"
-
-
-/*** Crypto Library Configuration ***/
-#define HAVE_MCAPI
-#define MICROCHIP_PIC32C
-#define NO_CERTS
-#define NO_PWDBASED
-#define NO_OLD_TLS
-#define NO_SHA
-#define NO_AES
-#define NO_ASN
-#define NO_RSA
-
-
-
 #define DRV_NVM_MEDIA_START_ADDRESS         DRV_MEMORY_DEVICE_START_ADDRESS
 #define DRV_NVM_MEDIA_SIZE                  DRV_MEMORY_DEVICE_MEDIA_SIZE
 
+#define APP_LED_1 0
+#define APP_LED_2 1
+#define APP_LED_3 2
 
-#ifndef SYS_DEBUG
-    #define SYS_DEBUG(level,message) do { USART_MSG(message); } while (0)
-	void USART_MSG(const char* str);	
-#endif
+#define APP_SWITCH_1StateGet()      SWITCH_AL_PA11_Get()
+#define APP_SWITCH_2StateGet()      SWITCH_AL_PA11_Get()
+#define APP_SWITCH_3StateGet()      SWITCH_AL_PA11_Get()
 
-#ifndef SYS_ERROR
-    #define SYS_ERROR(level,fmt, ...)   
-#endif
 
-#ifndef SYS_ERROR_PRINT
-    #define SYS_ERROR_PRINT(level,fmt, ...)   do { USART_PRINT(fmt, ##__VA_ARGS__); } while (0)
-    int USART_PRINT(const char* format, ...);
-#endif
-
-#ifndef SYS_CONSOLE_MESSAGE
-    #define SYS_CONSOLE_MESSAGE(message)   do { USART_MSG(message); } while (0)
-    void USART_MSG(const char* str);
-#endif
-
-#ifndef SYS_CONSOLE_PRINT
-    #define SYS_CONSOLE_PRINT(fmt, ...)  do { USART_PRINT(fmt, ##__VA_ARGS__); } while (0)
-    int USART_PRINT(const char* format, ...);
-#endif
+#define BSP_LEDStateSet(x,y)            PIO_PinWrite(PIO_PIN_PC8,y)
+#define BSP_LEDStateGet(APP_LED_1)      PIO_PinReadLatch(PIO_PIN_PC8)
+#define BSP_LEDToggle(APP_LED_1)        LED_AL_PC8_Toggle()
 #endif // SYSTEM_CONFIG_H
 /*******************************************************************************
  End of File

@@ -105,6 +105,9 @@ typedef struct
 #define SENDTCP_KEEP_ALIVE		0x02
 
 // Internal _TcpSend result
+// TODO aa: probably these results have to be promoted to the API.
+// A function like TCPIP_TCP_Disconnect can fail and the user needs to see if the call has to be re-issued
+// or it was a total failure and ignored.
 typedef enum
 {
     // positive success codes
@@ -340,6 +343,9 @@ static  void        _TcpSocketBind(TCB_STUB* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_
 }
 
 
+// TODO aa: checking _TCP_IsConnected() could be tricky in a multi-threaded space.
+// There is no guarantee that the socket is not connecting while we do this op!
+// Protection needed!
 static __inline__ bool __attribute__((always_inline)) _TCP_IsConnected(TCB_STUB* pSkt)
 {
     return (pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_1 || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_2 || pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT);
@@ -376,6 +382,7 @@ static void _TcpSocketSetState(TCB_STUB* pSkt, TCPIP_TCP_STATE newState)
     pSkt->smState = newState;
 }
 
+// TODO aa: multi-threaded protection needed here!
 static uint32_t    _tcpTraceMask = 0;      // currently only first 32 sockets could be traced from the creation moment
 bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
 {
@@ -1524,7 +1531,6 @@ static bool _TCPv4Flush(TCB_STUB * pSkt, IPV4_PACKET* pv4Pkt, uint16_t hdrLen, u
         return true; 
     }
     // failed
-    pv4Pkt->macPkt.pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
     TCPIP_PKT_FlightLogAcknowledge(&pv4Pkt->macPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_IP_REJECT_ERR);
 
     return false;
@@ -2022,7 +2028,7 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
                 // transmitted or the remote node's receive window fills up.
                 tcpFlags = signalFIN? FIN | ACK : ACK;
                 do
-                {   
+                {   // TODO aa: non-blocking approach needed!
                     sendRes = _TcpSend(pSkt, tcpFlags, SENDTCP_RESET_TIMERS);
                     if(sendRes < 0 || pSkt->remoteWindow == 0u)
                         break;
@@ -2034,7 +2040,10 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
             }
 			
             if(sendRes < 0)
-            {   
+            {   // TODO aa: we've failed sending the FIN to the remote node
+                // let the user know
+                // another attempt may be done
+                // if it's followed by an close/abort won't matter anyway
                 pSkt->Flags.failedDisconnect = 1;
             }
             else
@@ -2775,6 +2784,7 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
     {   // not enough data freed to generate a window update
         if(wGetReadyCount - len <= len)
         {   // Send a window update if we've run low on data
+            // TODO aa: what exactly "wReadyCount <= 2*len" tells us?
             pSkt->Flags.bTXASAPWithoutTimerReset = 1;
         }
         else if(!pSkt->Flags.bTimer2Enabled)
@@ -3643,6 +3653,7 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 
     //  Make sure that we have an allocated TX packet
+    // TODO aa: this needs some error checking by the caller !!!
     switch(pSkt->addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
@@ -3667,338 +3678,359 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
         return _TCP_SEND_NO_MEMORY;
     }
 
-    // FINs must be handled specially
-    if(vTCPFlags & FIN)
+    // packet was allocated/marked for TX; try to send it
+    _TCP_SEND_RES sendRes;
+    while(true)
     {
-        pSkt->Flags.bTXFIN = 1;
-        vTCPFlags &= ~FIN;
-    }
+        // FINs must be handled specially
+        if(vTCPFlags & FIN)
+        {
+            pSkt->Flags.bTXFIN = 1;
+            vTCPFlags &= ~FIN;
+        }
 
-    // Status will now be synched, disable automatic future 
-    // status transmissions
-    pSkt->Flags.bTimer2Enabled = 0;
-    pSkt->Flags.bDelayedACKTimerEnabled = 0;
-    pSkt->Flags.bOneSegmentReceived = 0;
-    pSkt->Flags.bTXASAP = 0;
-    pSkt->Flags.bTXASAPWithoutTimerReset = 0;
-    pSkt->Flags.bHalfFullFlush = 0;
+        // Status will now be synched, disable automatic future 
+        // status transmissions
+        pSkt->Flags.bTimer2Enabled = 0;
+        pSkt->Flags.bDelayedACKTimerEnabled = 0;
+        pSkt->Flags.bOneSegmentReceived = 0;
+        pSkt->Flags.bTXASAP = 0;
+        pSkt->Flags.bTXASAPWithoutTimerReset = 0;
+        pSkt->Flags.bHalfFullFlush = 0;
 
 #if defined (TCPIP_STACK_USE_IPV6)
-    if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
-    {
-        header = TCPIP_IPV6_UpperLayerHeaderPtrGet((IPV6_PACKET*)pSendPkt);
-        if(header == 0)
-        {   // something was wrong
-            return _TCP_SEND_NO_PKT;
+        if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        {
+            header = TCPIP_IPV6_UpperLayerHeaderPtrGet((IPV6_PACKET*)pSendPkt);
+            if(header == 0)
+            {   // something was wrong
+                sendRes = _TCP_SEND_NO_PKT;
+                break;
+            }
         }
-    }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-    if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
-    {
-        header = (TCP_HEADER*)((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pTransportLayer;
-    }
+        if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+        {
+            header = (TCP_HEADER*)((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pTransportLayer;
+        }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-    header->DataOffset.Val = 0;
+        header->DataOffset.Val = 0;
 
-    // Put all socket application data in the TX space
-    if(vTCPFlags & (SYN | RST))
-    {
-        // Don't put any data in SYN and RST messages
-        len = 0;
-
-        // Insert the MSS (Maximum Segment Size) TCP option if this is SYN packet
-        if(vTCPFlags & SYN)
+        // Put all socket application data in the TX space
+        if(vTCPFlags & (SYN | RST))
         {
-            options.Kind = TCP_OPTIONS_MAX_SEG_SIZE;
-            options.Length = 0x04;
+            // Don't put any data in SYN and RST messages
+            len = 0;
 
-            // Load MSS and swap to big endian
-#if defined (TCPIP_STACK_USE_IPV6)
-            if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+            // Insert the MSS (Maximum Segment Size) TCP option if this is SYN packet
+            if(vTCPFlags & SYN)
             {
-                mss = TCPIP_IPV6_MaxDatagramDataSizeGet(pSkt->pSktNet) - sizeof(TCP_HEADER); 
-            }
+                options.Kind = TCP_OPTIONS_MAX_SEG_SIZE;
+                options.Length = 0x04;
+
+                // Load MSS and swap to big endian
+#if defined (TCPIP_STACK_USE_IPV6)
+                if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+                {
+                    mss = TCPIP_IPV6_MaxDatagramDataSizeGet(pSkt->pSktNet) - sizeof(TCP_HEADER); 
+                }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
 #if defined (TCPIP_STACK_USE_IPV4)
-            if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                {
+                    if(pSkt->pSktNet == 0)
+                    {   // client socket at 1st connect
+                        if(!_TcpSocketSetSourceInterface(pSkt))
+                        {   // cannot find an route?
+                            sendRes = _TCP_SEND_NO_IF;
+                            break;
+                        }
+                    }
+
+                    mss = TCPIP_IPV4_MaxDatagramDataSizeGet(pSkt->pSktNet) - sizeof(TCP_HEADER);
+                }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+
+                options.MaxSegSize.Val = (((mss)&0x00FF)<<8) | (((mss)&0xFF00)>>8);
+                pSkt->localMSS = mss;
+
+                header->DataOffset.Val   += sizeof(options) >> 2;
+
+#if defined (TCPIP_STACK_USE_IPV6)
+                if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+                {
+                    if (TCPIP_IPV6_TxIsPutReady((IPV6_PACKET*)pSendPkt, sizeof (options)) < sizeof (options))
+                    {
+                        sendRes = _TCP_SEND_NO_MEMORY;
+                        break;
+                    }
+                    TCPIP_IPV6_PutArray((IPV6_PACKET*)pSendPkt, (uint8_t*)&options, sizeof(options));
+                }
+#endif  // defined (TCPIP_STACK_USE_IPV6)
+
+#if defined (TCPIP_STACK_USE_IPV4)
+                if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                {
+                    memcpy(header + 1, &options, sizeof(options));
+                }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+            }
+        }
+        else
+        {
+            // Begin copying any application data over to the TX space
+            maxPayload = pSkt->wRemoteMSS;
+            if(pSkt->txHead == pSkt->txUnackedTail)
             {
-                if(pSkt->pSktNet == 0)
-                {   // client socket at 1st connect
-                    if(!_TcpSocketSetSourceInterface(pSkt))
-                    {   // cannot find an route?
-                        return _TCP_SEND_NO_IF;
+                // All caught up on data TX, no real data for this packet
+                len = 0;
+            }
+            else
+            {   // can transmit something
+                bool isFragmSupported = false;
+
+#if defined (TCPIP_STACK_USE_IPV4)
+                if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+                {
+                    isFragmSupported = TCPIP_IPV4_IsFragmentationEnabled();
+                }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+#if defined (TCPIP_STACK_USE_IPV6)
+                if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+                {
+                    isFragmSupported = TCPIP_IPV6_IsFragmentationEnabled();
+                }
+#endif  // defined (TCPIP_STACK_USE_IPV6)
+
+                if(!isFragmSupported)
+                {
+                    if(pSkt->localMSS < maxPayload)
+                    {   // don't go over the interface MTU if cannot fragment
+                        maxPayload = pSkt->localMSS;
                     }
                 }
 
-                mss = TCPIP_IPV4_MaxDatagramDataSizeGet(pSkt->pSktNet) - sizeof(TCP_HEADER);
-            }
-#endif  // defined (TCPIP_STACK_USE_IPV4)
-
-            options.MaxSegSize.Val = (((mss)&0x00FF)<<8) | (((mss)&0xFF00)>>8);
-            pSkt->localMSS = mss;
-
-            header->DataOffset.Val   += sizeof(options) >> 2;
-
-#if defined (TCPIP_STACK_USE_IPV6)
-            if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
-            {
-                if (TCPIP_IPV6_TxIsPutReady((IPV6_PACKET*)pSendPkt, sizeof (options)) < sizeof (options))
+                if(pSkt->txHead > pSkt->txUnackedTail)
                 {
-                    return _TCP_SEND_NO_MEMORY;
-                }
-                TCPIP_IPV6_PutArray((IPV6_PACKET*)pSendPkt, (uint8_t*)&options, sizeof(options));
-            }
-#endif  // defined (TCPIP_STACK_USE_IPV6)
+                    len = pSkt->txHead - pSkt->txUnackedTail;
+                    if(len > pSkt->remoteWindow)
+                    {
+                        len = pSkt->remoteWindow;
+                    }
 
-#if defined (TCPIP_STACK_USE_IPV4)
-            if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
-            {
-                memcpy(header + 1, &options, sizeof(options));
-            }
-#endif  // defined (TCPIP_STACK_USE_IPV4)
-        }
-    }
-    else
-    {
-        // Begin copying any application data over to the TX space
-        maxPayload = pSkt->wRemoteMSS;
-        if(pSkt->txHead == pSkt->txUnackedTail)
-        {
-            // All caught up on data TX, no real data for this packet
-            len = 0;
-        }
-        else
-        {   // can transmit something
-            bool isFragmSupported = false;
+                    if(len > maxPayload)
+                    {
+                        len = maxPayload;
+                        pSkt->Flags.bTXASAPWithoutTimerReset = 1;
+                    }
 
-#if defined (TCPIP_STACK_USE_IPV4)
-            if(pSkt->addType == IP_ADDRESS_TYPE_IPV4)
-            {
-                isFragmSupported = TCPIP_IPV4_IsFragmentationEnabled();
-            }
-#endif  // defined (TCPIP_STACK_USE_IPV4)
-#if defined (TCPIP_STACK_USE_IPV6)
-            if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
-            {
-                isFragmSupported = TCPIP_IPV6_IsFragmentationEnabled();
-            }
-#endif  // defined (TCPIP_STACK_USE_IPV6)
-
-            if(!isFragmSupported)
-            {
-                if(pSkt->localMSS < maxPayload)
-                {   // don't go over the interface MTU if cannot fragment
-                    maxPayload = pSkt->localMSS;
-                }
-            }
-
-            if(pSkt->txHead > pSkt->txUnackedTail)
-            {
-                len = pSkt->txHead - pSkt->txUnackedTail;
-                if(len > pSkt->remoteWindow)
-                {
-                    len = pSkt->remoteWindow;
-                }
-
-                if(len > maxPayload)
-                {
-                    len = maxPayload;
-                    pSkt->Flags.bTXASAPWithoutTimerReset = 1;
-                }
-
-                // link application data into the TX packet
-                _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, len, 0, 0);
-                pSkt->txUnackedTail += len;
-            }
-            else
-            {
-                lenEnd = pSkt->txEnd - pSkt->txUnackedTail;
-                len = lenEnd + pSkt->txHead - pSkt->txStart;
-
-                if(len > pSkt->remoteWindow)
-                    len = pSkt->remoteWindow;
-
-                if(len > maxPayload)
-                {
-                    len = maxPayload;
-                    pSkt->Flags.bTXASAPWithoutTimerReset = 1;
-                }
-
-                if (lenEnd > len)
-                {
-                    lenEnd = len;
-                }
-                lenStart = len - lenEnd;
-
-                // link application data into the TX packet
-                if(lenStart)
-                {
-                    _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, lenEnd, pSkt->txStart, lenStart);
+                    // link application data into the TX packet
+                    _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, len, 0, 0);
+                    pSkt->txUnackedTail += len;
                 }
                 else
                 {
-                    _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, lenEnd, 0, 0);
-                }
+                    lenEnd = pSkt->txEnd - pSkt->txUnackedTail;
+                    len = lenEnd + pSkt->txHead - pSkt->txStart;
 
-                pSkt->txUnackedTail += len;
-                if(pSkt->txUnackedTail >= pSkt->txEnd)
-                {
-                    pSkt->txUnackedTail -= pSkt->txEnd-pSkt->txStart;
+                    if(len > pSkt->remoteWindow)
+                        len = pSkt->remoteWindow;
+
+                    if(len > maxPayload)
+                    {
+                        len = maxPayload;
+                        pSkt->Flags.bTXASAPWithoutTimerReset = 1;
+                    }
+
+                    if (lenEnd > len)
+                    {
+                        lenEnd = len;
+                    }
+                    lenStart = len - lenEnd;
+
+                    // link application data into the TX packet
+                    if(lenStart)
+                    {
+                        _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, lenEnd, pSkt->txStart, lenStart);
+                    }
+                    else
+                    {
+                        _TCP_PayloadSet(pSkt, pSendPkt, pSkt->txUnackedTail, lenEnd, 0, 0);
+                    }
+
+                    pSkt->txUnackedTail += len;
+                    if(pSkt->txUnackedTail >= pSkt->txEnd)
+                    {
+                        pSkt->txUnackedTail -= pSkt->txEnd-pSkt->txStart;
+                    }
                 }
             }
-        }
 
-        // If we are to transmit a FIN, make sure we can put one in this packet
-        if(pSkt->Flags.bTXFIN)
-        {
-            if((len != pSkt->remoteWindow) && (len != maxPayload))
+            // If we are to transmit a FIN, make sure we can put one in this packet
+            if(pSkt->Flags.bTXFIN)
             {
-                vTCPFlags |= FIN;
+                if((len != pSkt->remoteWindow) && (len != maxPayload))
+                {
+                    vTCPFlags |= FIN;
+                }
             }
         }
-    }
 
     loadLen = (uint16_t)len;  // save the TCP payload size
 
-    // Ensure that all packets with data of some kind are 
-    // retransmitted by TCPIP_TCP_Tick() until acknowledged
-    // Pure ACK packets with no data are not ACKed back in TCP
-    if(len || (vTCPFlags & (SYN | FIN)))
-    {
-        // Transmitting data, update remote window variable to reflect smaller 
-        // window.
-        pSkt->remoteWindow -= len;
-
-        // Push (PSH) all data for enhanced responsiveness on 
-        // the remote end, especially with GUIs
-        if(len)
+        // Ensure that all packets with data of some kind are 
+        // retransmitted by TCPIP_TCP_Tick() until acknowledged
+        // Pure ACK packets with no data are not ACKed back in TCP
+        if(len || (vTCPFlags & (SYN | FIN)))
         {
-            vTCPFlags |= PSH;
-        }
+            // Transmitting data, update remote window variable to reflect smaller 
+            // window.
+            pSkt->remoteWindow -= len;
 
-        if(vSendFlags & SENDTCP_RESET_TIMERS)
-        {
-            pSkt->retryCount = 0;
-            pSkt->retryInterval = (TCPIP_TCP_START_TIMEOUT_VAL * SYS_TMR_TickCounterFrequencyGet())/1000;
-        }	
-
-        pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
-        pSkt->Flags.bTimerEnabled = 1;
-    }
-    else if(vSendFlags & SENDTCP_KEEP_ALIVE)
-    {
-        // Increment Keep Alive TX counter to handle disconnection if not response is returned
-        pSkt->keepAliveCount++;
-
-        // Generate a dummy byte
-        pSkt->MySEQ -= 1;
-        len = 1;
-    }
-    else if(pSkt->Flags.bTimerEnabled) 
-    {
-        // If we have data to transmit, but the remote RX window is zero, 
-        // so we aren't transmitting any right now then make sure to not 
-        // extend the retry counter or timer.  This will stall our TX 
-        // with a periodic ACK sent to the remote node.
-        if(!(vSendFlags & SENDTCP_RESET_TIMERS))
-        {
-            // Roll back retry counters since we can't send anything, 
-            // but only if we incremented it in the first place
-            if(pSkt->retryCount)
+            // Push (PSH) all data for enhanced responsiveness on 
+            // the remote end, especially with GUIs
+            if(len)
             {
-                pSkt->retryCount--;
-                pSkt->retryInterval >>= 1;
+                vTCPFlags |= PSH;
             }
+
+            if(vSendFlags & SENDTCP_RESET_TIMERS)
+            {
+                pSkt->retryCount = 0;
+                pSkt->retryInterval = (TCPIP_TCP_START_TIMEOUT_VAL * SYS_TMR_TickCounterFrequencyGet())/1000;
+            }	
+
+            pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
+            pSkt->Flags.bTimerEnabled = 1;
+        }
+        else if(vSendFlags & SENDTCP_KEEP_ALIVE)
+        {
+            // Increment Keep Alive TX counter to handle disconnection if not response is returned
+            pSkt->keepAliveCount++;
+
+            // Generate a dummy byte
+            pSkt->MySEQ -= 1;
+            len = 1;
+        }
+        else if(pSkt->Flags.bTimerEnabled) 
+        {
+            // If we have data to transmit, but the remote RX window is zero, 
+            // so we aren't transmitting any right now then make sure to not 
+            // extend the retry counter or timer.  This will stall our TX 
+            // with a periodic ACK sent to the remote node.
+            if(!(vSendFlags & SENDTCP_RESET_TIMERS))
+            {
+                // Roll back retry counters since we can't send anything, 
+                // but only if we incremented it in the first place
+                if(pSkt->retryCount)
+                {
+                    pSkt->retryCount--;
+                    pSkt->retryInterval >>= 1;
+                }
+            }
+
+            pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
         }
 
-        pSkt->eventTime = SYS_TMR_TickCountGet() + pSkt->retryInterval;
-    }
+        header->SourcePort			= pSkt->localPort;
+        header->DestPort			= pSkt->remotePort;
+        header->SeqNumber			= pSkt->MySEQ;
+        header->AckNumber			= pSkt->RemoteSEQ;
+        header->Flags.bits.Reserved2	= 0;
+        header->DataOffset.Reserved3	= 0;
+        header->Flags.byte			= vTCPFlags;
+        header->UrgentPointer       = 0;
+        header->Checksum            = 0;
 
-    header->SourcePort			= pSkt->localPort;
-    header->DestPort			= pSkt->remotePort;
-    header->SeqNumber			= pSkt->MySEQ;
-    header->AckNumber			= pSkt->RemoteSEQ;
-    header->Flags.bits.Reserved2	= 0;
-    header->DataOffset.Reserved3	= 0;
-    header->Flags.byte			= vTCPFlags;
-    header->UrgentPointer       = 0;
-    header->Checksum            = 0;
-
-    // Update our send sequence number and ensure retransmissions 
-    // of SYNs and FINs use the right sequence number
-    pSkt->MySEQ += (uint32_t)len;
-    if(vTCPFlags & SYN)
-    {
-        hdrLen = sizeof(options);
-
-        // SEG.ACK needs to be zero for the first SYN packet for compatibility 
-        // with certain paranoid TCP/IP stacks, even though the ACK flag isn't 
-        // set (indicating that the AckNumber field is unused).
-        if(!(vTCPFlags & ACK))
+        // Update our send sequence number and ensure retransmissions 
+        // of SYNs and FINs use the right sequence number
+        pSkt->MySEQ += (uint32_t)len;
+        if(vTCPFlags & SYN)
         {
-            header->AckNumber = 0;
-        }
+            hdrLen = sizeof(options);
 
-        if(pSkt->flags.bSYNSent)
-        {
-            header->SeqNumber--;
+            // SEG.ACK needs to be zero for the first SYN packet for compatibility 
+            // with certain paranoid TCP/IP stacks, even though the ACK flag isn't 
+            // set (indicating that the AckNumber field is unused).
+            if(!(vTCPFlags & ACK))
+            {
+                header->AckNumber = 0;
+            }
+
+            if(pSkt->flags.bSYNSent)
+            {
+                header->SeqNumber--;
+            }
+            else
+            {
+                pSkt->MySEQ++;
+                pSkt->flags.bSYNSent = 1;
+            }
         }
         else
         {
-            pSkt->MySEQ++;
-            pSkt->flags.bSYNSent = 1;
+            hdrLen = 0;
         }
-    }
-    else
-    {
-        hdrLen = 0;
-    }
 
-    if(vTCPFlags & FIN)
-    {
-        pSkt->flags.bFINSent = 1;   // do not advance the seq no for FIN!
-    }
+        if(vTCPFlags & FIN)
+        {
+            pSkt->flags.bFINSent = 1;   // do not advance the seq no for FIN!
+        }
 
-    if(vTCPFlags & ACK)
-    {
-        pSkt->flags.ackSent = 1;   // store the ACK already sent
-    }
+        if(vTCPFlags & ACK)
+        {
+            pSkt->flags.ackSent = 1;   // store the ACK already sent
+        }
 
-    // Calculate the amount of free space in the RX buffer area of this socket
-    if(pSkt->rxHead >= pSkt->rxTail)
-    {
-        header->Window = (pSkt->rxEnd - pSkt->rxStart) - (pSkt->rxHead - pSkt->rxTail);
-    }
-    else
-    {
-        header->Window = pSkt->rxTail - pSkt->rxHead - 1;
-    }
-    pSkt->localWindow = header->Window; // store the last advertised window
+        // Calculate the amount of free space in the RX buffer area of this socket
+        if(pSkt->rxHead >= pSkt->rxTail)
+        {
+            header->Window = (pSkt->rxEnd - pSkt->rxStart) - (pSkt->rxHead - pSkt->rxTail);
+        }
+        else
+        {
+            header->Window = pSkt->rxTail - pSkt->rxHead - 1;
+        }
+        pSkt->localWindow = header->Window; // store the last advertised window
 
-    _TcpSwapHeader(header);
+        _TcpSwapHeader(header);
 
 
-    hdrLen += sizeof(TCP_HEADER);
-    header->DataOffset.Val   += sizeof(TCP_HEADER) >> 2;
+        hdrLen += sizeof(TCP_HEADER);
+        header->DataOffset.Val   += sizeof(TCP_HEADER) >> 2;
 
 #if defined (TCPIP_STACK_USE_IPV6)
-    if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
-    {   // Write IP header
-        TCPIP_IPV6_HeaderPut((IPV6_PACKET*)pSendPkt, IP_PROT_TCP);
-    }
+        if(pSkt->addType == IP_ADDRESS_TYPE_IPV6)
+        {   // Write IP header
+            TCPIP_IPV6_HeaderPut((IPV6_PACKET*)pSendPkt, IP_PROT_TCP);
+        }
 #endif  // defined (TCPIP_STACK_USE_IPV6)
 
-    // Physically start the packet transmission over the network
-    if(!_TCP_Flush (pSkt, pSendPkt, hdrLen, loadLen))
-    {
-        return _TCP_SEND_IP_FAIL;
+        // transmit the packet over the network
+        sendRes = _TCP_Flush (pSkt, pSendPkt, hdrLen, loadLen) ? _TCP_SEND_OK : _TCP_SEND_IP_FAIL;
+        break;
     }
 
-    return _TCP_SEND_OK;
+#if defined (TCPIP_STACK_USE_IPV4)
+    if(sendRes != _TCP_SEND_OK && pSkt->addType == IP_ADDRESS_TYPE_IPV4)
+    {   // release the packet marked for TX
+        ((TCP_V4_PACKET*)pSendPkt)->v4Pkt.macPkt.pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED ;
+    }
+#endif  // defined (TCPIP_STACK_USE_IPV4)
+
+    if(sendRes == _TCP_SEND_OK && (vTCPFlags & RST) != 0 )
+    {   // signal that we reset the connection
+        if(pSkt->sigHandler != 0 && (pSkt->sigMask & TCPIP_TCP_SIGNAL_TX_RST) != 0)
+        {
+            (*pSkt->sigHandler)(pSkt->sktIx, pSkt->pSktNet, TCPIP_TCP_SIGNAL_TX_RST, pSkt->sigParam);
+        } 
+    }
+
+    return sendRes;
 }
 
 /*****************************************************************************
@@ -4263,6 +4295,7 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 	pSkt->Flags.bSocketReset = 1;
 
 
+    // TODO aa: better ordering possible so that we clear all the flags in one op?
 	pSkt->flags.bFINSent = 0;
     pSkt->flags.seqInc = 0;
 	pSkt->flags.bSYNSent = 0;
@@ -4746,7 +4779,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
 
     // Calculate the number of bytes ahead of our head pointer this segment skips
     lMissingBytes = localSeqNumber - pSkt->RemoteSEQ;
-    wMissingBytes = lMissingBytes; 
+    wMissingBytes = lMissingBytes; // TODO aa: why not use directly lMissingBytes?
 
     // Run TCP acceptability tests to verify that this packet has a valid sequence number
     bSegmentAcceptable = false;
@@ -4940,6 +4973,14 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                     *pSktEvent |= TCPIP_TCP_SIGNAL_TX_SPACE; 
                 }
             }
+#if 0
+            // TODO aa: alt approach to avoid retransmitting when the other party keeps sending!
+            else if(dwTemp == 0 && tcpLen != 0)
+            {   // no ACK but the sender keeps sending
+                pSkt->flags.bRXNoneACKed1 = 0;
+                pSkt->flags.bRXNoneACKed2 = 0;
+            }
+#endif
             else
             {   // no acknowledge
                 // See if we have outstanding TX data that is waiting for an ACK
@@ -5260,6 +5301,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
             // FINs are treated as one byte of data for ACK sequencing
             pSkt->RemoteSEQ++;
 
+            *pSktEvent |= TCPIP_TCP_SIGNAL_RX_FIN;
             switch(pSkt->smState)
             {
                 case TCPIP_TCP_STATE_SYN_RECEIVED:
@@ -5275,7 +5317,6 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                 case TCPIP_TCP_STATE_ESTABLISHED:
                     // Go to TCPIP_TCP_STATE_CLOSE_WAIT state
                     _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLOSE_WAIT);
-                    *pSktEvent |= TCPIP_TCP_SIGNAL_RX_FIN; 
 
 #if (TCPIP_TCP_CLOSE_WAIT_TIMEOUT != 0)
                     // If the application doesn't call 
@@ -5308,7 +5349,6 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                     else
                     {
                         _TcpSocketSetState(pSkt, TCPIP_TCP_STATE_CLOSING);
-                        *pSktEvent |= TCPIP_TCP_SIGNAL_RX_FIN;
                     }
                     break;
 
@@ -5422,6 +5462,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     Doing this may disrupt the communication, make the TCP algorithm fail or have an 
     unpredicted behavior!
 
+    TODO aa: This has to be protected user <-> tx + rx threads!
   ***************************************************************************/
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
 bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMinTXSize, TCP_ADJUST_FLAGS vFlags)
@@ -5659,6 +5700,11 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     }
 
     // success
+
+    // TODO aa: socket needs to be RX and/or TX locked!
+    // the buffers are changing!!!
+    // Actually even before, when calculating the number of available/pending bytes
+    // in the buffers, these shouldn't be modified!!!
 
     // adjust new TX pointers
     if(newTxBuff)
@@ -6152,6 +6198,8 @@ static uint16_t _TCP_ClientIPV4RemoteHash(const IPV4_ADDR* pAdd, TCB_STUB* pSkt)
 }
 
 
+// TODO aa: can this be unified for IPv6 as well
+// so that we go directly to _Tcpv4LinkDataSeg/_Tcpv6LinkDataSeg/_TcpLinkDataSeg?
 static void _TCP_PayloadSet(TCB_STUB * pSkt, void* pPkt, uint8_t* payload1, uint16_t len1, uint8_t* payload2, uint16_t len2)
 {
     switch(pSkt->addType)

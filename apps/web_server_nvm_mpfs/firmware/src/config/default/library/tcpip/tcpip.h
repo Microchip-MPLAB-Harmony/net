@@ -1,3 +1,47 @@
+/*******************************************************************************
+  Microchip TCP/IP Stack Include File
+
+  Company:
+    Microchip Technology Inc.
+    
+  File Name:
+    tcpip.h
+
+  Summary:
+    TCP/IP API definitions.
+	
+  Description:
+    This is the global TCP/IP header file that any user of the TCP/IP API should include.
+    It contains the basic TCP/IP types and data structures and includes all the 
+    of the TCP/IP stack modules.
+  
+
+*******************************************************************************/
+//DOM-IGNORE-BEGIN
+/*******************************************************************************
+Copyright 2012-2015 released Microchip Technology Inc.  All rights reserved.
+
+Microchip licenses to you the right to use, modify, copy and distribute
+Software only when embedded on a Microchip microcontroller or digital signal
+controller that is integrated into your product or third party product
+(pursuant to the sublicense terms in the accompanying license agreement).
+
+You should refer to the license agreement accompanying this Software for
+additional information regarding your rights and obligations.
+
+SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND,
+EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
+MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
+IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
+CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
+OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
+INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
+CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
+SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
+(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+*******************************************************************************/
+//DOM-IGNORE-END
+
 
 #ifndef __TCPIP_H__
 #define __TCPIP_H__
@@ -12,7 +56,7 @@
 #include "configuration.h"
 #include "system/system_common.h"
 #include "system/system_module.h"
-
+#include "net/pres/net_pres.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -24,9 +68,9 @@
 
 // TCP/IP stack version
 #define TCPIP_STACK_VERSION_MAJOR         7
-#define TCPIP_STACK_VERSION_MINOR         30
+#define TCPIP_STACK_VERSION_MINOR         31
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "7.30"
+#define TCPIP_STACK_VERSION_STR           "7.31"    // for v2.06
 
 
 // *****************************************************************************
@@ -300,7 +344,8 @@ typedef enum
     TCPIP_MODULE_TFTP_CLIENT,       /* TFTP client module */
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
-
+    TCPIP_MODULE_PTP,               /* PTP module */
+	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
     /* add other modules here */
     //
     /*  */
@@ -598,8 +643,8 @@ typedef struct
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
 
+#include "tcpip/ndp.h"
 #include "tcpip/ipv4.h"
-#include "tcpip/ndp.h"    
 #include "tcpip/ipv6.h"
 #include "tcpip/icmpv6.h"
 #include "tcpip/dhcpv6.h"
@@ -615,6 +660,7 @@ typedef struct
 #include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"
 #include "tcpip/smtpc.h"
+#include "tcpip/tcpip_commands.h"
 
 #endif  // __TCPIP_H__
 

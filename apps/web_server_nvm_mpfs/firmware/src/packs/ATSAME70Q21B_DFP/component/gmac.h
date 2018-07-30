@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-05-02T16:40:23Z */
+/* file generated from device description version 2018-06-05T16:39:35Z */
 #ifndef SAME_SAME70_GMAC_MODULE_H
 #define SAME_SAME70_GMAC_MODULE_H
 

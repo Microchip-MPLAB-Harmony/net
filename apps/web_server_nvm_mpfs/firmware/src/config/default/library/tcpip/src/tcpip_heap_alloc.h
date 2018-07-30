@@ -256,6 +256,23 @@ size_t                 TCPIP_HEAP_MaxSize(TCPIP_STACK_HEAP_HANDLE heapH);
  ********************************************************************/
 size_t                 TCPIP_HEAP_FreeSize(TCPIP_STACK_HEAP_HANDLE heapH);
 
+/*********************************************************************
+ * Function:        size_t TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
+ *
+ * PreCondition:    heapH       - valid heap handle 
+ *
+ * Input:           heapH       - handle to a heap
+ *
+ * Output:          the maximum amount of allocated memory from this heap
+ *
+ * Side Effects:    None
+ *
+ * Overview:        The function returns the maximum amount of memory that has been
+ *                  allocated from this heap
+ *
+ * Note:            This is a cumulative number, maintained over the life time of the heap.
+ ********************************************************************/
+size_t                 TCPIP_HEAP_HighWatermark(TCPIP_STACK_HEAP_HANDLE heapH);
 
 /*********************************************************************
  * Function:      TCPIP_STACK_HEAP_RES TCPIP_HEAP_LastError(TCPIP_STACK_HEAP_HANDLE heapH)
@@ -438,6 +455,7 @@ typedef struct
     size_t              (*TCPIP_HEAP_Size)(TCPIP_STACK_HEAP_HANDLE heapH);
     size_t              (*TCPIP_HEAP_MaxSize)(TCPIP_STACK_HEAP_HANDLE heapH);
     size_t              (*TCPIP_HEAP_FreeSize)(TCPIP_STACK_HEAP_HANDLE heapH);
+    size_t              (*TCPIP_HEAP_HighWatermark)(TCPIP_STACK_HEAP_HANDLE heapH);
     TCPIP_STACK_HEAP_RES      (*TCPIP_HEAP_LastError)(TCPIP_STACK_HEAP_HANDLE heapH);
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
     // returns the actual allocated size for a successfully allocated block
@@ -517,6 +535,12 @@ static __inline__ size_t __attribute__((always_inline)) TCPIP_HEAP_FreeSizeInlin
     return (*((TCPIP_HEAP_OBJECT*)h)->TCPIP_HEAP_FreeSize)(h);
 }
 #define TCPIP_HEAP_FreeSize(h) TCPIP_HEAP_FreeSizeInline(h)
+
+static __inline__ size_t __attribute__((always_inline)) TCPIP_HEAP_HighWatermarkInline(TCPIP_STACK_HEAP_HANDLE h)
+{
+    return (*((TCPIP_HEAP_OBJECT*)h)->TCPIP_HEAP_HighWatermark)(h);
+}
+#define TCPIP_HEAP_HighWatermark(h) TCPIP_HEAP_HighWatermarkInline(h)
 
 static __inline__ TCPIP_STACK_HEAP_RES __attribute__((always_inline)) TCPIP_HEAP_LastErrorInline(TCPIP_STACK_HEAP_HANDLE h)
 {

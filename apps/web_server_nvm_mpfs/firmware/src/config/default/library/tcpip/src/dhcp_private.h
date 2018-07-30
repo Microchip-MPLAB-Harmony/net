@@ -115,6 +115,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define TCPIP_DHCP_EXP_BACKOFF_FUZZ     1
 
 // random variation for lease timeout; seconds
+// TODO aa: could be set as a parameter
 #define TCPIP_DHCP_LEASE_EXPIRE_FUZZ    10
 
 // DHCP RENEWING state retry timeout; seconds

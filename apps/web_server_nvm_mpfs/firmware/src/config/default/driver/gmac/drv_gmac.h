@@ -52,7 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include "tcpip/tcpip_mac.h"
+
 #include "driver/driver_common.h"
 
 // DOM-IGNORE-BEGIN
@@ -961,7 +961,7 @@ TCPIP_MAC_EVENT DRV_GMAC_EventPendingGet(DRV_HANDLE hMac);
   ******************************************************************************/
 void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex );
 
-void GMAC_InterruptHandler(void);
+
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }

@@ -11,8 +11,8 @@
     TC peripheral library source file.
 
   Description
-    This file implements the interface to the TC peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file implements the interface to the TC peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
 *******************************************************************************/
@@ -57,7 +57,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
  
 
-static uint32_t TC0_CH0_TimerStatus;  /* saves interrupt status */	
+static uint32_t TC0_CH0_TimerStatus;  /* saves interrupt status */
 
 /* Callback object for channel 0 */
 TC_CALLBACK_OBJECT TC0_CH0_CallbackObj;
@@ -65,74 +65,75 @@ TC_CALLBACK_OBJECT TC0_CH0_CallbackObj;
 /* Initialize channel in timer mode */
 void TC0_CH0_TimerInitialize (void)
 {
-	/* Use peripheral clock */
-	TC0_REGS->TC_CHANNEL[0].TC_EMR = TC_EMR_NODIVCLK_Msk;
-	/* clock selection and waveform selection */
-	TC0_REGS->TC_CHANNEL[0].TC_CMR =  TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ;
-	
-	/* write period */
-	TC0_REGS->TC_CHANNEL[0].TC_RC= 10000U;
+    /* Use peripheral clock */
+    TC0_REGS->TC_CHANNEL[0].TC_EMR = TC_EMR_NODIVCLK_Msk;
+    /* clock selection and waveform selection */
+    TC0_REGS->TC_CHANNEL[0].TC_CMR =  TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ;
 
-	/* enable interrupt */
-	TC0_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
+    /* write period */
+    TC0_REGS->TC_CHANNEL[0].TC_RC = 10000U;
+
+    /* enable interrupt */
+    TC0_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
+    TC0_CH0_CallbackObj.callback_fn = NULL;
 }
 
 /* Start the timer */
 void TC0_CH0_TimerStart (void)
 {
-	TC0_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
+    TC0_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKEN_Msk | TC_CCR_SWTRG_Msk);
 }
 
 /* Stop the timer */
 void TC0_CH0_TimerStop (void)
 {
-	TC0_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
+    TC0_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
 /* Configure timer period */
 void TC0_CH0_TimerPeriodSet (uint16_t period)
 {
-	TC0_REGS->TC_CHANNEL[0].TC_RC= period;
+    TC0_REGS->TC_CHANNEL[0].TC_RC = period;
 }
 
 /* Read timer period */
 uint16_t TC0_CH0_TimerPeriodGet (void)
 {
-	return TC0_REGS->TC_CHANNEL[0].TC_RC;
+    return TC0_REGS->TC_CHANNEL[0].TC_RC;
 }
 
 /* Read timer counter value */
 uint16_t TC0_CH0_TimerCounterGet (void)
 {
-	return TC0_REGS->TC_CHANNEL[0].TC_CV;
+    return TC0_REGS->TC_CHANNEL[0].TC_CV;
 }
 
 /* Check if timer period status is set */
 bool TC0_CH0_TimerPeriodHasExpired(void)
 {
-	bool timer_status;
-	NVIC_DisableIRQ(TC0_CH0_IRQn);
-	timer_status = (TC0_CH0_TimerStatus | (TC0_REGS->TC_CHANNEL[0].TC_SR & TC_SR_CPCS_Msk)) >> TC_SR_CPCS_Pos;
-	TC0_CH0_TimerStatus = 0U;
-	NVIC_EnableIRQ(TC0_CH0_IRQn);
-	return timer_status;
+    bool timer_status;
+    NVIC_DisableIRQ(TC0_CH0_IRQn);
+    timer_status = ((TC0_CH0_TimerStatus | TC0_REGS->TC_CHANNEL[0].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos;
+    TC0_CH0_TimerStatus = 0U;
+    NVIC_EnableIRQ(TC0_CH0_IRQn);
+    return timer_status;
 }
 
 /* Register callback for period interrupt */
 void TC0_CH0_TimerCallbackRegister(TC_CALLBACK callback, uintptr_t context)
 {
-	TC0_CH0_CallbackObj.callback_fn = callback;
-	TC0_CH0_CallbackObj.context = context;
+    TC0_CH0_CallbackObj.callback_fn = callback;
+    TC0_CH0_CallbackObj.context = context;
 }
 
 void TC0_CH0_InterruptHandler(void)
 {
-	TC0_CH0_TimerStatus = TC0_REGS->TC_CHANNEL[0].TC_SR;
-	/* Call registered callback function */
-	if (TC0_CH0_CallbackObj.callback_fn != NULL)
-	{
-		TC0_CH0_CallbackObj.callback_fn(TC0_CH0_CallbackObj.context);
-	}
+    TC0_CH0_TimerStatus = TC0_REGS->TC_CHANNEL[0].TC_SR;
+    /* Call registered callback function */
+    if (TC0_CH0_CallbackObj.callback_fn != NULL)
+    {
+        TC0_CH0_CallbackObj.callback_fn(TC0_CH0_CallbackObj.context);
+    }
 }
  
 

@@ -92,14 +92,18 @@ bool                    Ipv4DeRegisterFilter(IPV4_FILTER_HANDLE hFilter);
 
 // helper to transform a RX packet to a TX packet
 // IPv4 header:
-//          - source and destination addresses are switched
+//          - the destination addresses is set as the packet source address
+//          - the source address is the IP address of the coresponding packet interface (which should be set!) 
 //          - total length and fragment info are converted to network order
 //          - data segment is re-adjusted with the IPv4 header length
 // MAC header:
-//          - source and destination addresses are switched
+//          - the destination addresses is set as the MAC packet source address
+//          - the source address is the MAC address of the coresponding packet interface (which should be set!) 
 //          - data segment is re-adjusted with the MAC header length
+// setChecksum:
+//          - if true, the IPv4 header checksum is updated for the IPv4 header
 //
-void                    TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt);
+void                    TCPIP_IPV4_MacPacketSwitchTxToRx(TCPIP_MAC_PACKET* pRxPkt, bool setChecksum);
 
 
 // 

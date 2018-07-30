@@ -62,7 +62,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 MEMORY_DEVICE_TRANSFER_STATUS DRV_EFC0_TransferStatusGet( const DRV_HANDLE handle )
 {
-    return (EFC0_ErrorGet());
+    if (EFC0_IsBusy() == true)
+    {
+        return MEMORY_DEVICE_TRANSFER_BUSY;
+    }
+    else
+    {
+        return MEMORY_DEVICE_TRANSFER_COMPLETED;
+    }
 }
 
 bool DRV_EFC0_Read( const DRV_HANDLE handle, void *rx_data, uint32_t rx_data_length, uint32_t address )

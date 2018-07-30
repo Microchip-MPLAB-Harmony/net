@@ -235,18 +235,8 @@ void APP_Initialize ( void );
 
 void APP_Tasks( void );
 
-#define APP_LED_1 0
-#define APP_LED_2 1
-#define APP_LED_3 2
-
-#define APP_SWITCH_1StateGet()      SWITCH_AL_PA11_Get()
-#define APP_SWITCH_2StateGet()      SWITCH_AL_PA11_Get()
-#define APP_SWITCH_3StateGet()      SWITCH_AL_PA11_Get()
 
 
-#define BSP_LEDStateSet(x,y)            PIO_PinWrite(PIO_PIN_PC8,y)
-#define BSP_LEDStateGet(APP_LED_1)      PIO_PinReadLatch(PIO_PIN_PC8)
-#define BSP_LEDToggle(APP_LED_1)        LED_AL_PC8_Toggle()
 #endif /* _APP_H */
 
 //DOM-IGNORE-BEGIN

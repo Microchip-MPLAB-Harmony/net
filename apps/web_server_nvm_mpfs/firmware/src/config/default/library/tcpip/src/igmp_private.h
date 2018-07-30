@@ -105,6 +105,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 
 // pool of General Query messages
+// TODO aa: Only one general query could be present at a time.
+// This is also pretty big!
 #define TCPIP_IGMP_GEN_QUERY_POOL                   2
 
 // pool of Group Query messages
@@ -175,6 +177,13 @@ typedef struct
 {
     int         nSources;                                       // how many sources populated
     uint32_t    sourceAddresses[_TCPIP_IGMP_SOURCE_ADDRESSES_PER_GROUP];  // include/exclude sources
+                                                                    // TODO aa: doubled to accomodate a union result!
+                                                                    // some better approach needed?
+                                                                    //      - for union use just _TCPIP_IGMP_SOURCES_PER_GROUP
+                                                                    //        but use 2 different TCPIP_IGMP_GROUP_SOURCE_ADDRESSES
+                                                                    //        so that when needed, 2 will be used
+                                                                    //        However, TCPIP_IGMP_SC_REPORT_NODE has another next field
+                                                                    //        allowing multiple reports linked into one!!!!
 }TCPIP_IGMP_GROUP_SOURCE_ADDRESSES;
 
 // action to be taken when calculating a (S, if) filter

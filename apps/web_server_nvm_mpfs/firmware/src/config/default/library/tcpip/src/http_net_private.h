@@ -66,6 +66,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN  5
 
 // Buffer overrun protection limit
+// TODO aa: ????
 #define TCPIP_HTTP_NET_DEFAULT_LEN        (10)
 
 
@@ -141,6 +142,7 @@ typedef struct _tag_TCPIP_HTTP_DYNVAR_BUFF_DCPT
     uint16_t    dynBufferSize;                          // size of this buffer
     uint16_t    writeOffset;                            // current write offset: 0 -> dynBufferSize
     uint16_t    dynFlags;                               // flags: TCPIP_HTTP_DYNVAR_BUFF_FLAGS value
+                                                        // TODO aa: only one bit is used here...
     uint16_t    padding;                                // not used                                                        
 }TCPIP_HTTP_DYNVAR_BUFF_DCPT;
 

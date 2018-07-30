@@ -140,7 +140,7 @@ void TC3_CH0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handl
 void TC3_CH1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC3_CH2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void AES_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void TRNG_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void TRNG0_InterruptHandler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void XDMAC_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void ISI_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void PWM1_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -229,7 +229,7 @@ const DeviceVectors exception_table=
   .pfnTC3_CH1_Handler            = (void*)TC3_CH1_Handler,
   .pfnTC3_CH2_Handler            = (void*)TC3_CH2_Handler,
   .pfnAES_Handler                = (void*)AES_Handler,
-  .pfnTRNG_Handler               = (void*)TRNG_Handler,
+  .pfnTRNG_Handler               = (void*)TRNG0_InterruptHandler,
   .pfnXDMAC_Handler              = (void*)XDMAC_Handler,
   .pfnISI_Handler                = (void*)ISI_Handler,
   .pfnPWM1_Handler               = (void*)PWM1_Handler,

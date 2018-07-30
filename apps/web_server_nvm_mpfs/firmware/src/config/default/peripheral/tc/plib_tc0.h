@@ -11,8 +11,8 @@
     TC peripheral library interface.
 
   Description
-    This file defines the interface to the TC peripheral library.  This 
-    library provides access to and control of the associated peripheral 
+    This file defines the interface to the TC peripheral library.  This
+    library provides access to and control of the associated peripheral
     instance.
 
 ******************************************************************************/
@@ -70,7 +70,7 @@ extern "C" {
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this 
+/*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
 
@@ -79,7 +79,7 @@ extern "C" {
 // Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
-/* The following functions make up the methods (set of possible operations) of 
+/* The following functions make up the methods (set of possible operations) of
    this interface.
 */
 

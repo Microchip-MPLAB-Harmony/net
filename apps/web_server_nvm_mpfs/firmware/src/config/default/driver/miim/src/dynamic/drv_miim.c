@@ -55,9 +55,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 //#include "system/tmr/sys_tmr.h"
 #include "system/sys_time_h2_adapter.h"
-//#include "system/debug/sys_debug.h"
-//#include "system/console/sys_console.h"
-#include "system/sys_console_h2_adapter.h"
+#include "system/console/sys_debug.h"
+#include "system/console/sys_console.h"
+
 
 
 // Local Definitions

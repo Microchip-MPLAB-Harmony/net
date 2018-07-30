@@ -194,9 +194,6 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     FPU_Enable();
 #endif
 
-
-
-
     TCM_Configure(0);
 
     /* Disable TCM  */
@@ -206,9 +203,6 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
      * Data initialization from the XC32 .dinit template */
     __pic32c_data_initialization();
 
-    /* Initialize MPU */
-    MPU_Initialize();
-
 #  ifdef SCB_VTOR_TBLOFF_Msk
     /*  Set the vector-table base address in FLASH */
     pSrc = (uint32_t *) & __svectors;
@@ -217,6 +211,15 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
 
     /* Initialize the C library */
     __libc_init_array();
+
+    /* Initialize MPU */
+    MPU_Initialize();
+
+    /* Enable Instruction Cache */
+    ICache_Enable();
+
+    /* Enable Data Cache    */
+    DCache_Enable();
 
     /* Call the optional application-provided _on_bootstrap() function. */
     if (_on_bootstrap)
