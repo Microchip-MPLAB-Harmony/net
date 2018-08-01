@@ -15,6 +15,8 @@ tcpipSnmpv3PrivProtocol = []
 tcpipSnmpv3PrivProtocolPswd = []
 tcpipSnmpv3TrgtEntryMsgProtType =[]
 tcpipSnmpv3TrgtEntrySecModelType = []
+tcpipSnmpv3TrgtEntrySecName = []
+tcpipSnmpv3TrgtEntrySecLvl = []
 
 def instantiateComponent(tcpipSnmpv3Component):
 	print("TCPIP SNMP V3 Component")
@@ -160,12 +162,11 @@ def instantiateComponent(tcpipSnmpv3Component):
 				if(index == 2):
 					tcpipSnmpv3PrivProtocolPswd[index].setDefaultValue("")					
 		tcpipSnmpv3PrivProtocolPswd[index].setDependencies(tcpipSnmpv3MenuVisibleSingle, [tcpipSnmpV3StackConfigIdx[index].getID()])
-		
-		# H3_ToDo; review this with Snmp owner
-		# config TCPIP_SNMPV3_TARGET_ENTRY_SEC_NAME_IDX0
-		# string "Target Entry Security Name"
-		# depends on TCPIP_SNMPV3_STACK_CONFIG_IDX0
-		# depends on TCPIP_SNMPV3_STACK_USM_NAME_IDX0		
+
+		# Snmpv3 Target Entry Security Name		
+		tcpipSnmpv3TrgtEntrySecName.append(tcpipSnmpv3Component.createStringSymbol("TCPIP_SNMPV3_TARGET_ENTRY_SEC_NAME_IDX" + str(index), tcpipSnmpV3StackConfigIdx[index]))
+		tcpipSnmpv3TrgtEntrySecName[index].setLabel("Target Entry Security Name")
+		tcpipSnmpv3TrgtEntrySecName[index].setVisible(False)
 		
 		# Snmpv3 Target Entry Message Protocol Type
 		tcpipSnmpv3TrgtEntryMsgProtType.append(tcpipSnmpv3Component.createComboSymbol("TCPIP_SNMPV3_TARGET_ENTRY_MESSAGE_PROTOCOL_TYPE_IDX" + str(index), tcpipSnmpV3StackConfigIdx[index],TCPIP_SNMPV3_MESSAGE_PROCESSING_MODEL_TYPE))
@@ -181,11 +182,10 @@ def instantiateComponent(tcpipSnmpv3Component):
 		tcpipSnmpv3TrgtEntrySecModelType[index].setDefaultValue("SNMPV3_USM_SECURITY_MODEL")
 		tcpipSnmpv3TrgtEntrySecModelType[index].setDependencies(tcpipSnmpv3MenuVisibleSingle, [tcpipSnmpV3StackConfigIdx[index].getID()])
 
-		# H3_ToDo; review this with Snmp owner
-		# config TCPIP_SNMPV3_TARGET_ENTRY_SEC_LEVEL_IDX0
-		# string "Target Entry Security Level"
-		# depends on TCPIP_SNMPV3_STACK_CONFIG_IDX0
-		# depends on TCPIP_SNMPV3_STACK_SECURITY_LEVEL_IDX0
+		# Snmpv3 Target Entry Security Level	
+		tcpipSnmpv3TrgtEntrySecLvl.append(tcpipSnmpv3Component.createStringSymbol("TCPIP_SNMPV3_TARGET_ENTRY_SEC_LEVEL_IDX" + str(index), tcpipSnmpV3StackConfigIdx[index]))
+		tcpipSnmpv3TrgtEntrySecLvl[index].setLabel("Target Entry Security Level")
+		tcpipSnmpv3TrgtEntrySecLvl[index].setVisible(False)
 	####-----------------------------------------------------------------------------------------##########
 	
 	# V1 and V2 Trap Support
