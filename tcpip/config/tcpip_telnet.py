@@ -8,10 +8,6 @@ def instantiateComponent(tcpipTelnetComponent):
 	tcpipTelnet.setVisible(False)
 	tcpipTelnet.setDescription("Use Telnet Server")
 	tcpipTelnet.setDefaultValue(True) 
-	 # H3_ToDo  
-	 # select NET_PRES_NEEDED
-	 # select USE_SYS_COMMAND_NEEDED
-	#tcpipTelnet.setDependencies(tcpipTelnetMenuVisible, ["tcpipTcp.TCPIP_USE_TCP"])
 
 	# Max Connections
 	tcpipTelnetConnMax = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_MAX_CONNECTIONS", None)

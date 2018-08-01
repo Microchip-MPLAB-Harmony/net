@@ -40,21 +40,48 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/tcpip.h"
 #include "mib.h"
 #include "tcpip/src/common/helpers.h"
-#define APP_SWITCH_1StateGet() SWITCH1_Get()
-#define APP_SWITCH_2StateGet() SWITCH2_Get()
-#define APP_SWITCH_3StateGet() SWITCH3_Get()
 
-#define APP_LED_1StateGet() LED1_Get()
-#define APP_LED_2StateGet() LED2_Get()
-#define APP_LED_3StateGet() LED3_Get()
+#ifndef APP_SWITCH_1StateGet
+#define APP_SWITCH_1StateGet() 0
+#endif
 
-#define APP_LED_1StateSet() LED1_Set()
-#define APP_LED_2StateSet() LED2_Set()
-#define APP_LED_3StateSet() LED3_Set()
+#ifndef APP_SWITCH_2StateGet
+#define APP_SWITCH_2StateGet() 0
+#endif
 
-#define APP_LED_1StateClear() LED1_Clear()
-#define APP_LED_2StateClear() LED2_Clear()
-#define APP_LED_3StateClear() LED3_Clear()
+#ifndef APP_SWITCH_3StateGet
+#define APP_SWITCH_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateGet
+#define APP_LED_1StateGet() 0
+#endif
+#ifndef APP_LED_2StateGet
+#define APP_LED_2StateGet() 0
+#endif
+#ifndef APP_LED_3StateGet
+#define APP_LED_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateSet
+#define APP_LED_1StateSet()
+#endif
+#ifndef APP_LED_2StateSet
+#define APP_LED_2StateSet()
+#endif
+#ifndef APP_LED_3StateSet
+#define APP_LED_3StateSet()
+#endif
+
+#ifndef APP_LED_1StateClear
+#define APP_LED_1StateClear()
+#endif
+#ifndef APP_LED_2StateClear
+#define APP_LED_2StateClear()
+#endif
+#ifndef APP_LED_3StateClear
+#define APP_LED_3StateClear()
+#endif
 /****************************************************************************
   Section:
     Global Variables

@@ -77,9 +77,8 @@ def loadModule():
 	tcpipIcmpComponent.addDependency("Icmp_IPv4_Dependency", "IPv4")
 	
 	tcpipTelnetComponent = Module.CreateComponent("tcpipTelnet", "TELNET", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_telnet.py")
-	tcpipTelnetComponent.addCapability("libtcpipTelnet","TELNET")	
-	tcpipTelnetComponent.addDependency("Telnet_TCP_Dependency", "TCP")
-	tcpipTelnetComponent.addDependency("Telnet_SysCmd_Dependency", "sys_cmd")
+	tcpipTelnetComponent.addCapability("libtcpipTelnet","TELNET")
+	tcpipTelnetComponent.addDependency("Telnet_TcpipCmd_Dependency", "TCPIP_CMD")
 	tcpipTelnetComponent.addDependency("Telnet_NetPres_Dependency", "net_pres")
 	
 	tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_iperf.py")
@@ -115,6 +114,7 @@ def loadModule():
 	tcpipTftpcComponent.addCapability("libtcpipTftpc","TFTPC")
 	tcpipTftpcComponent.addDependency("Tftpc_IPv4_Dependency", "IPv4")
 	tcpipTftpcComponent.addDependency("Tftpc_UDP_Dependency", "UDP")	
+	tcpipTftpcComponent.addDependency("Tftpc_MAC_Dependency", "MAC")
 	tcpipTftpcComponent.addDependency("Tftpc_TcpipFs_Dependency", "TCPIP_FS_WRAPPER")
 
 	tcpipZeroConfComponent = Module.CreateComponent("tcpipZeroConf", "ZEROCONF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_zeroconf.py")
@@ -151,6 +151,7 @@ def loadModule():
 	tcpipSnmpComponent.addCapability("libtcpipSnmp","SNMP")	
 	tcpipSnmpComponent.addDependency("Snmp_UDP_Dependency", "UDP")	
 	tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "TCPIP_FS_WRAPPER")
+	tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO")
 	
 	tcpipSnmpv3Component = Module.CreateComponent("tcpipSnmpv3", "SNMPV3", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmpv3.py")
 	tcpipSnmpv3Component.addCapability("libtcpipSnmpv3","SNMPV3")	
@@ -160,8 +161,7 @@ def loadModule():
 	tcpipSysFsWrapperComponent.addCapability("libtcpipSysFsWrapper","TCPIP_FS_WRAPPER")	
 	tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "SYS_FS")	
 		
-	########################## Driver Modules ####################################################
-	## H3_ToDo : decide on moving driver to core repo
+	########################## Driver Modules to work with TCP/IP ####################################################
 	if "SAME70" in Variables.get("__PROCESSOR"):
 		drvSamv71GmacComponent = Module.CreateComponent("drvSamv71Gmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
 		drvSamv71GmacComponent.addCapability("libdrvSamv71Gmac","MAC")
@@ -180,11 +180,11 @@ def loadModule():
 	drvWifiWinc1500Component = Module.CreateComponent("drvWifiWinc1500", "WINC1500", "/Harmony/Drivers/MAC Driver/WiFi/", "driver/winc1500/config/drv_wifi_winc1500.py")
 	drvWifiWinc1500Component.addCapability("libdrvExtMacEnc28j","MAC")	
 	
-	## H3_ToDo : decide on moving driver to core repo
+	## MIIM Driver
 	drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Harmony/Drivers/", "driver/miim/config/drv_miim.py")
 	drvMiimComponent.addCapability("libdrvMiim","MIIM")	
 	
-	## H3_ToDo : decide on moving driver to core repo
+	## External PHY Driver
 	drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
 	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY")	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM")	
@@ -210,13 +210,5 @@ def loadModule():
 	drvExtPhyLan9303Component.addDependency("LAN9303_MIIM_Dependency", "MIIM")	
 	
 	########################## Network Presentation Module #################################
-	# netPresComponent = Module.CreateSharedComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking", "net/pres/config/net_pres.py")
-	# netPresComponent.addCapability("libNetPres","net_pres_common")	
-	# #netPresComponent.addDependency("NetPres_NetPresInstn_Dependency", "pres_Instn")
-	
-	# netPresInstnComponent = Module.CreateGeneratorComponent("netPresInstn", "Presentation Instance", "/Harmony/Harmony Networking", None,"net/pres/config/net_pres_instn.py")
-	# netPresInstnComponent.addCapability("libNetPresInstn","net_pres")	
-	# netPresInstnComponent.addDependency("NetPresInstn_NetPres_Dependency", "net_pres_common")
-
 	netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net/pres/config/netPres_common.py","net/pres/config/netPres.py")
 	netPresComponent.addCapability("libNetPres","net_pres")	

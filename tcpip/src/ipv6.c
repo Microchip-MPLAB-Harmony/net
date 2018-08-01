@@ -38,7 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/src/ipv6_private.h"
-//#include "crypto/crypto.h" //H3_ToDo :  make sure no build errors with crypto
+#include "crypto/crypto.h"
 
 #if defined(TCPIP_STACK_USE_IPV6)
 

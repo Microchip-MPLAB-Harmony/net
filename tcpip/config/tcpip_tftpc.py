@@ -1,17 +1,7 @@
-#H3_ToDo multiple definition for following; find a method
-TCPIP_STACK_IF_NAME = []
-#H3_ToDo modify the interface name
-TCPIP_STACK_PIC32C_IF_NAME =	["GMAC", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
-TCPIP_STACK_PIC32M_IF_NAME =	["ETHMAC", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]    
 def instantiateComponent(tcpipTftpcComponent):
 	print("TCPIP TFTPC Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
-	
-	if "SAME70" in Variables.get("__PROCESSOR"):
-		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32C_IF_NAME
-	else:
-		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32M_IF_NAME
-		
+
 	# Use TFTP Client Module
 	tcpipTftpc = tcpipTftpcComponent.createBooleanSymbol("TCPIP_USE_TFTPC_MODULE", None)
 	tcpipTftpc.setLabel("Use TFTP Client Module")
@@ -22,19 +12,15 @@ def instantiateComponent(tcpipTftpcComponent):
 	#tcpipTftpc.setDependencies(tcpipTftpcModuleVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipUdp.TCPIP_USE_UDP"])
 
 	# Default Interface
-	tcpipTftpcDefault = tcpipTftpcComponent.createComboSymbol("TCPIP_TFTPC_DEFAULT_IF", None, TCPIP_STACK_IF_NAME)
+	tcpipTftpcDefault = tcpipTftpcComponent.createStringSymbol("TCPIP_TFTPC_DEFAULT_IF", None)	
 	tcpipTftpcDefault.setLabel("Default Interface")
 	tcpipTftpcDefault.setVisible(True)
 	tcpipTftpcDefault.setDescription("Default Interface")
 	if "SAME70" in Variables.get("__PROCESSOR"):
 		tcpipTftpcDefault.setDefaultValue("GMAC")
 	else:
-		tcpipTftpcDefault.setDefaultValue("ETHMAC")
+		tcpipTftpcDefault.setDefaultValue("PIC32INT")
 	
-	# default "PIC32INT" if HAVE_ETH
-	# default "MRF24WN" if HAVE_WIFI
-	#tcpipTftpcDefault.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
-
 	# Maximum Length for Server Address
 	tcpipTftpcSrvrAddrLen= tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_SERVERADDRESS_LEN", None)
 	tcpipTftpcSrvrAddrLen.setLabel("Maximum Length for Server Address")
@@ -129,3 +115,13 @@ def tcpipTftpcMenuVisibleSingle(symbol, event):
 
 def tcpipTftpcGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+def onDependentComponentAdded(tcpipTftpcComponent, id, macComponent):
+    if id == "Tftpc_MAC_Dependency" :
+        tcpipSntpIf = tcpipTftpcComponent.getSymbolByID("TCPIP_TFTPC_DEFAULT_IF")
+        tcpipSntpIf.clearValue()
+        tcpipSntpIf.setValue(macComponent.getDisplayName(), 2)
+        
+def onDependentComponentRemoved(tcpipTftpcComponent, id, macComponent):
+    if id == "Tftpc_MAC_Dependency" :
+        tcpipTftpcComponent.clearSymbolValue("TCPIP_TFTPC_DEFAULT_IF")

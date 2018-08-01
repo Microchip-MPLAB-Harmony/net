@@ -1586,6 +1586,14 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackSysRandomAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
 	tcpipStackSysRandomAdapterHeaderFile.setType("HEADER")
 	tcpipStackSysRandomAdapterHeaderFile.setOverwrite(True)		
+
+	tcpipStackSysResetAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysResetAdapterHeaderFile.setSourcePath("sys_adapter/sys_reset_h2_adapter.h")
+	tcpipStackSysResetAdapterHeaderFile.setOutputName("sys_reset_h2_adapter.h")
+	tcpipStackSysResetAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysResetAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysResetAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysResetAdapterHeaderFile.setOverwrite(True)	
 	
 	tcpipStackSysConfigHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackSysConfigHeaderFile.setSourcePath("sys_adapter/system_config.h")
