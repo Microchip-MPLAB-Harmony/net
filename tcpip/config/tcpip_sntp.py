@@ -1,28 +1,16 @@
 # Global definitions  
 TCPIP_SNTP_PROTOCOL_TYPE = ["SNTP_VERSION_3", "SNTP_VERSION_4"]
-#H3_ToDo multiple definition for following; find a method
 TCPIP_ADDRESS_TYPE_STRICT = ["IP_ADDRESS_TYPE_IPV4", "IP_ADDRESS_TYPE_IPV6"]
 
-TCPIP_STACK_IF_NAME = []
-#H3_ToDo modify the interface name
-TCPIP_STACK_PIC32C_IF_NAME =	["PIC32CINT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
-TCPIP_STACK_PIC32M_IF_NAME =	["PIC32INT", 	"ENCX24J600", 	"ENC28J60", 	"MRF24WN", 		"WINC1500", 	"WILC1000" ]
-
 def instantiateComponent(tcpipSntpComponent):
-	#global TCPIP_STACK_IF_NAME
-	#global TCPIP_ADDRESS_TYPE_STRICT
-
 	print("TCPIP SNTP Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
-	if "SAME70" in Variables.get("__PROCESSOR"):
-		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32C_IF_NAME
-	else:
-		TCPIP_STACK_IF_NAME = TCPIP_STACK_PIC32M_IF_NAME
+	
 	# Use SNTP Client Needed
 	tcpipSntpClientNeeded = tcpipSntpComponent.createBooleanSymbol("TCPIP_USE_SNTP_CLIENT_NEEDED", None)
 	tcpipSntpClientNeeded.setVisible(False)
 	tcpipSntpClientNeeded.setDescription("Use SNTP Client")
-	tcpipSntpClientNeeded.setDefaultValue(False) 
+	tcpipSntpClientNeeded.setDefaultValue(True) 
 
 	# Use SNTP Client
 	tcpipSntpClient = tcpipSntpComponent.createBooleanSymbol("TCPIP_USE_SNTP_CLIENT", None)
@@ -30,35 +18,17 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpClient.setVisible(False)
 	tcpipSntpClient.setDescription("Use SNTP Client")
 	tcpipSntpClient.setDefaultValue(True) 
-	# H3_ToDo  
-	# default n if !TCPIP_USE_SNTP_CLIENT_NEEDED
-	# default y if TCPIP_USE_SNTP_CLIENT_NEEDED
-	#tcpipSntpClient.setDependencies(tcpipSntpMenuVisibleSingle, ["tcpipUdp.TCPIP_USE_UDP"])
-
-	# ifblock !PIC32WK    H3_ToDo
+	
 	# Default Interface
-	#tcpipSntpDefault = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_DEFAULT_IF", None, TCPIP_STACK_IF_NAME)
 	tcpipSntpDefault = tcpipSntpComponent.createStringSymbol("TCPIP_NTP_DEFAULT_IF", None)	
 	tcpipSntpDefault.setLabel("Default Interface")
 	tcpipSntpDefault.setVisible(True)
 	tcpipSntpDefault.setDescription("Default Interface")
-	tcpipSntpDefault.setDefaultValue("")
-	# H3_ToDo
-	# default "PIC32CINT" if USE_PIC32CINT_ETH_MAC_NEEDED
-	# default "PIC32INT" if USE_PIC32INT_ETH_MAC_NEEDED
-	# default "MRF24WN" if HAVE_WIFI
-	#tcpipSntpDefault.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
-
-	# H3_ToDo
-	# ifblock PIC32WK 
-	# config TCPIP_NTP_DEFAULT_IF_WK
-		# string "Default Interface"
-		# depends on TCPIP_USE_SNTP_CLIENT
-		# default "PIC32WK" 
-		# ---help---
-		# IDH_HTML_TCPIP_SNTP_Introduction
-		# ---endhelp---
-	# endif 
+	if "SAME70" in Variables.get("__PROCESSOR"):
+		tcpipSntpDefault.setDefaultValue("GMAC")
+	else:
+		tcpipSntpDefault.setDefaultValue("PIC32INT")
+	tcpipSntpDefault.setReadOnly(True)
 
 	# SNTP Version
 	tcpipSntpVersion = tcpipSntpComponent.createComboSymbol("TCPIP_NTP_STRING_VERSION", None, TCPIP_SNTP_PROTOCOL_TYPE)
@@ -74,9 +44,6 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpConnType.setVisible(True)
 	tcpipSntpConnType.setDescription("Default Connection Type")
 	tcpipSntpConnType.setDefaultValue("IP_ADDRESS_TYPE_IPV4")
-	# H3_ToDo
-	# default "IP_ADDRESS_TYPE_IPV4" if TCPIP_STACK_USE_IPV4
-	# default "IP_ADDRESS_TYPE_IPV6" if TCPIP_STACK_USE_IPV6
 	#tcpipSntpConnType.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Sntp Epoch
@@ -84,7 +51,7 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpEpoch.setLabel("Epoch")
 	tcpipSntpEpoch.setVisible(True)
 	tcpipSntpEpoch.setDescription("Sntp Epoch")
-	tcpipSntpEpoch.setDefaultValue(2147483216)   # H3_ToDo to set the correct value 2208988800
+	tcpipSntpEpoch.setDefaultValue(2147483216)   # H3_ToDo to set the correct value  2208988800  
 	#tcpipSntpEpoch.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# SNTP Reply Time-out in Seconds
@@ -178,7 +145,7 @@ def instantiateComponent(tcpipSntpComponent):
 	tcpipSntpSourceFile.setEnabled(True)
 	tcpipSntpSourceFile.setDependencies(tcpipSntpGenSourceFile, ["TCPIP_USE_SNTP_CLIENT"])
 
-
+		
 def tcpipSntpMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
 		print("SNTP Menu Visible.")		

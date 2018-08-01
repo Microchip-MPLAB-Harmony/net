@@ -1,18 +1,18 @@
 /*******************************************************************************
-  Adapter Random System Service Library Interface Header File
+  Adapter Reset System Service Library Interface Header File
 
   Company
     Microchip Technology Inc.
 
   File Name
-    sys_random_h2_adapter.h
+    sys_reset_h2_adapter.h
 
   Summary
-    Random system service library interface.
+    Reset system service library interface.
 
   Description
-    This is the adapter file defines the interface to the Random system service 
-    library from H2. The random Clock service APIs are used to provide an adapter 
+    This is the adapter file defines the interface to the Reset system service 
+    library from H2. The System Reset service APIs are used to provide an adapter 
     routines which are part of H2.
 
   Remarks:
@@ -44,8 +44,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef SYS_RANDOM_ADPATER_H    // Guards against multiple inclusion
-#define SYS_RANDOM_ADPATER_H
+#ifndef SYS_RESET_ADPATER_H    // Guards against multiple inclusion
+#define SYS_RESET_ADPATER_H
 
 
 // *****************************************************************************
@@ -74,15 +74,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-/*  The following data type definitions are used by the functions in this
-    interface and should be considered part it.
-*/
 
-static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( void )
-{
-    return (uint32_t)rand();
-}
-
+#define SYS_RESET_SoftwareReset() (RSTC_REGS->RSTC_CR |= RSTC_CR_PROCRST_Msk | RSTC_CR_KEY_PASSWD)
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -91,4 +84,4 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( 
 #endif
 // DOM-IGNORE-END
 
-#endif //SYS_TIME_H
+#endif //SYS_RESET_ADPATER_H

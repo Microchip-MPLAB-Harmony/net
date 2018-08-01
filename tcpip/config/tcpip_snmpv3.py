@@ -196,16 +196,87 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3StackV1V2Trap.setDefaultValue(True) 
 	tcpipSnmpV3StackV1V2Trap.setDependencies(tcpipSnmpV3StackConfigV1V2TrapVisible, ["TCPIP_USE_SNMPv3" , "tcpipSnmp.TCPIP_SNMP_USE_TRAP_SUPPORT", "tcpipSnmp.TCPIP_SNMP_STACK_USE_V2_TRAP"])
 
-	# H3_ToDo
+	#Add to system_config.h
+	tcpipSnmpV3HeaderFtl = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3HeaderFtl.setSourcePath("tcpip/config/snmpv3.h.ftl")
+	tcpipSnmpV3HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipSnmpV3HeaderFtl.setMarkup(True)
+	tcpipSnmpV3HeaderFtl.setType("STRING")
+		
 	# file SNMPV3_AES_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes.h"
+	tcpipSnmpV3CryptoAesHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesHeaderFile.setSourcePath("tcpip/src/crypto/aes.h")
+	tcpipSnmpV3CryptoAesHeaderFile.setOutputName("aes.h")
+	tcpipSnmpV3CryptoAesHeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesHeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesHeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesHeaderFile.setEnabled(True)
+	
 	# file SNMPV3_AES_CBC_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cbc.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cbc.h"
+	tcpipSnmpV3CryptoAesCbcHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setSourcePath("tcpip/src/crypto/aes_cbc.h")
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setOutputName("aes_cbc.h")
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesCbcHeaderFile.setEnabled(True)
+	
 	# file SNMPV3_AES_CFB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_cfb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_cfb.h"
+	tcpipSnmpV3CryptoAesCfbHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setSourcePath("tcpip/src/crypto/aes_cfb.h")
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setOutputName("aes_cfb.h")
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesCfbHeaderFile.setEnabled(True)
+	
 	# file SNMPV3_AES_CTR_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ctr.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ctr.h"
+	tcpipSnmpV3CryptoAesCtrHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setSourcePath("tcpip/src/crypto/aes_ctr.h")
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setOutputName("aes_ctr.h")
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesCtrHeaderFile.setEnabled(True)
+	
 	# file SNMPV3_AES_ECB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ecb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ecb.h"
+	tcpipSnmpV3CryptoAesEcbHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setSourcePath("tcpip/src/crypto/aes_ecb.h")
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setOutputName("aes_ecb.h")
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesEcbHeaderFile.setEnabled(True)
+	
+	#H3_ToDo :  check the PIC32 nomenclature
 	# file SNMPV3_AES_ECB_PIC32_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ecb_pic32.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ecb_pic32.h"
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setSourcePath("tcpip/src/crypto/aes_ecb_pic32.h")
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setOutputName("aes_ecb_pic32.h")
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setEnabled(True)
+		
 	# file SNMPV3_AES_OFB_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ofb.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ofb.h"
+	tcpipSnmpV3CryptoAesOfbHeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setSourcePath("tcpip/src/crypto/aes_ofb.h")
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setOutputName("aes_ofb.h")
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setDestPath("library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/crypto/")
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setType("HEADER")
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setOverwrite(True)
+	tcpipSnmpV3CryptoAesOfbHeaderFile.setEnabled(True)
+		
 	# file SNMPV3_DES_H "$HARMONY_VERSION_PATH/framework/crypto/src/des3.h" to "$PROJECT_HEADER_FILES/framework/crypto/src/des3.h"
-
+	# H3_ToDo : include this file from Crypto Module
+		
 	# Add snmpv3.c file
 	tcpipSnmpV3SourceFile = tcpipSnmpv3Component.createFileSymbol(None, None)
 	tcpipSnmpV3SourceFile.setSourcePath("tcpip/src/snmpv3.c")
@@ -215,17 +286,21 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipSnmpV3SourceFile.setType("SOURCE")
 	tcpipSnmpV3SourceFile.setEnabled(True)
-	tcpipSnmpV3SourceFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMP"])
-
-	#Add to system_config.h
-	tcpipSnmpV3HeaderFtl = tcpipSnmpv3Component.createFileSymbol(None, None)
-	tcpipSnmpV3HeaderFtl.setSourcePath("tcpip/config/snmpv3.h.ftl")
-	tcpipSnmpV3HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
-	tcpipSnmpV3HeaderFtl.setMarkup(True)
-	tcpipSnmpV3HeaderFtl.setType("STRING")
+	tcpipSnmpV3SourceFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
 	
-	# H3_ToDo
 	# file TCPIP_SNMPV3_USM_C "$HARMONY_VERSION_PATH/framework/tcpip/src/snmpv3_usm.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/snmpv3_usm.c"
+	tcpipSnmpV3UsmSourceFile = tcpipSnmpv3Component.createFileSymbol(None, None)
+	tcpipSnmpV3UsmSourceFile.setSourcePath("tcpip/src/snmpv3_usm.c")
+	tcpipSnmpV3UsmSourceFile.setOutputName("snmpv3_usm.c")
+	tcpipSnmpV3UsmSourceFile.setOverwrite(True)
+	tcpipSnmpV3UsmSourceFile.setDestPath("library/tcpip/src/")
+	tcpipSnmpV3UsmSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipSnmpV3UsmSourceFile.setType("SOURCE")
+	tcpipSnmpV3UsmSourceFile.setEnabled(True)
+	tcpipSnmpV3UsmSourceFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
+
+	
+	# H3_ToDo : .a library??
 	# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_AES_PRIV") 
 	# library TCPIP_SNMPV3_A "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_pic32mx.a"
 	# endif
@@ -234,7 +309,7 @@ def instantiateComponent(tcpipSnmpv3Component):
 	# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_DES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_DES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_DES_PRIV") 
 	# file SNMPV3_DES_C "$HARMONY_VERSION_PATH/framework/crypto/src/des3.c" to "$PROJECT_SOURCE_FILES/framework/crypto/src/des3.c"
 	# endif
-
+	# H3_ToDo : include this file from Crypto Module
 
 		
 # make SnmpV3 Module Stack Config V1-V2 Trap visible
@@ -261,7 +336,6 @@ def tcpipSnmpv3MenuVisibleSingle(symbol, event):
 def tcpipSnmpv3GenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 	
-#H3_ToDo revisit this implementataion
 def tcpipSnmpv3EnableConfig(symbol, event):
 	global tcpipSnmpV3ConfigNumPrev
 	print("Start tcpipSnmpv3EnableConfig")

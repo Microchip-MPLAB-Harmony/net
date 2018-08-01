@@ -15,9 +15,6 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmp.setVisible(False)
 	tcpipSnmp.setDescription("Use SNMP")
 	tcpipSnmp.setDefaultValue(True) 
-	# H3_ToDo   
-	# select USE_SYS_FS_NEEDED
-	# select USE_CRYPTO_LIB_NEEDED
 	#tcpipSnmp.setDependencies(tcpipSnmpMenuVisibleSingle, ["tcpipUdp.TCPIP_USE_UDP"])
 
 	# SNMP process rate
@@ -237,7 +234,6 @@ def tcpipSnmpMenuVisibleSingle(symbol, event):
 def tcpipSnmpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 
-#H3_ToDo revisit this implementataion
 def tcpipSnmpEnableConfig(symbol, event):
 	global tcpipSnmpConfigNumPrev
 	print("Start tcpipSnmpEnableConfig")

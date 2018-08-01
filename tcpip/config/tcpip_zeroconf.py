@@ -114,19 +114,19 @@ def instantiateComponent(tcpipZeroConfComponent):
 	#tcpipZcDefendInterval.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
 	# Base IP
-	tcpipZcBaseIp = tcpipZeroConfComponent.createStringSymbol("TCPIP_ZC_LL_IPV4_LLBASE", None) # H3_ToDo change datatype to hex
+	tcpipZcBaseIp = tcpipZeroConfComponent.createHexSymbol("TCPIP_ZC_LL_IPV4_LLBASE", None) 
 	tcpipZcBaseIp.setLabel("Base IP")
 	tcpipZcBaseIp.setVisible(True)
 	tcpipZcBaseIp.setDescription("Base IP")
-	tcpipZcBaseIp.setDefaultValue("0xa9fe0100")
+	tcpipZcBaseIp.setDefaultValue(0xa9fe0100)
 	#tcpipZcBaseIp.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
 	# Base Netmask
-	tcpipZcBaseNetmask = tcpipZeroConfComponent.createStringSymbol("TCPIP_ZC_LL_IPV4_LLBASE_MASK", None) # H3_ToDo change datatype to hex
+	tcpipZcBaseNetmask = tcpipZeroConfComponent.createHexSymbol("TCPIP_ZC_LL_IPV4_LLBASE_MASK", None)
 	tcpipZcBaseNetmask.setLabel("Base Netmask")
 	tcpipZcBaseNetmask.setVisible(True)
 	tcpipZcBaseNetmask.setDescription("Base Netmask")
-	tcpipZcBaseNetmask.setDefaultValue("0x0000FFFF")
+	tcpipZcBaseNetmask.setDefaultValue(0x0000FFFF)
 	#tcpipZcBaseNetmask.setDependencies(tcpipZeroConfMenuVisibleSingle, ["TCPIP_USE_LINK_ZERO_CONFIG"])
 
 	# Link Local Task Rate in ms

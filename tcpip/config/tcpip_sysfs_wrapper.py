@@ -39,11 +39,8 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsDrive.setLabel("Memory Drive")
 	tcpipSysFsDrive.setVisible(True)
 	tcpipSysFsDrive.setDescription("Memory Drive")
-	tcpipSysFsDrive.setDefaultValue("FLASH")
-	# H3_ToDo
-	  # default "FLASH" if SYS_FS_MPFS = y
-	  # default "SDCARD" if SYS_FS_FAT = y
-	#tcpipSysFsDrive.setDependencies(tcpipSysFsWrapperMenuVisibleSingle, ["TCPIP_STACK_USE_FS_WRAPPER"])
+	tcpipSysFsDrive.setDefaultValue("SDCARD")
+	tcpipSysFsDrive.setDependencies(tcpipSysFsWrapperMemDrive, ["sys_fs.SYS_FS_FAT" , "sys_fs.SYS_FS_MPFS"])
 
 	# NVM Disk Path
 	tcpipSysFsNvmVol = tcpipSysFsWrapperComponent.createStringSymbol("TCPIP_SYS_FS_NVM_VOL", None)
@@ -113,7 +110,7 @@ def tcpipSysFsWrapperNeeded(symbol, event):
 def tcpipSysFsWrapperVisible(tcpipDependentSymbol, tcpipIPSymbol):	
 	tcpipTcp = Database.getSymbolValue("tcpipTcp","TCPIP_USE_TCP")
 	tcpipUdp= Database.getSymbolValue("tcpipUdp","TCPIP_USE_UDP")
-
+	
 	if(tcpipTcp and tcpipUdp):
 		tcpipDependentSymbol.setVisible(True)
 	else:
@@ -126,6 +123,15 @@ def tcpipSysFsWrapperMenuVisibleSingle(symbol, event):
 	else:
 		print("SysFsWrapper Menu Invisible.")
 		symbol.setVisible(False)	
+	
+def tcpipSysFsWrapperMemDrive(symbol, event):
+	sysFs_FAT = Database.getSymbolValue("sys_fs","SYS_FS_FAT")
+	sysFs_MPFS = Database.getSymbolValue("sys_fs","SYS_FS_MPFS")
+	if(sysFs_MPFS):
+		symbol.setValue("FLASH", 2)
+	elif(sysFs_FAT):
+		symbol.setValue("SDCARD", 2)
+	
 		
 def tcpipSysFsWrapperGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])		

@@ -40,8 +40,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_REBOOT_SERVER)
 
 // #include "system/reset/sys_reset.h"
-#define SYS_RESET_SoftwareReset()////H3_ToDo :  decide on common strategy for H3 & H2
-
+#include "system/sys_reset_h2_adapter.h"
 
 
 static UDP_SOCKET	    rebootSocket = INVALID_UDP_SOCKET;
