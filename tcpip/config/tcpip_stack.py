@@ -177,15 +177,6 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTaskDelay.setDescription("MIIM Driver Task Delay")
 	tcpipStackTaskDelay.setDefaultValue(100)
 	tcpipStackTaskDelay.setDependencies(tcpipStackRTOSTaskDelayMenu, ["TCPIP_STACK_RTOS", "TCPIP_STACK_RTOS_USE_DELAY"])
-
-	
-	tcpipStackDeviceFamily = tcpipStackComponent.createStringSymbol("TCPIP_DEVICE_FAMILY", None)
-	tcpipStackDeviceFamily.setVisible(False)
-	if "SAME70" in Variables.get("__PROCESSOR"):
-		tcpipStackDeviceFamily.setDefaultValue("SAME70")
-	else:
-		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
-
 		
 	###########################################################################################
 	###########################################################################################
@@ -1504,7 +1495,8 @@ def instantiateComponent(tcpipStackComponent):
 	# ifblock !DSTBDPIC32CZ
 	# file TCPIP_HELPERS_C_32 "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_helper_c32.S" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_helper_c32.S"
 	# endif
-	if "SAME70" not in Variables.get("__PROCESSOR"):
+	
+	if not Peripheral.moduleExists("GMAC"):
 		tcpipStackTcpipHelpersC32SourceFile = tcpipStackComponent.createFileSymbol(None, None)
 		tcpipStackTcpipHelpersC32SourceFile.setSourcePath("tcpip/src/tcpip_helper_c32.S")
 		tcpipStackTcpipHelpersC32SourceFile.setOutputName("tcpip_helper_c32.S")
@@ -1544,6 +1536,12 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipPacketSourceFile.setType("SOURCE")
 	tcpipStackTcpipPacketSourceFile.setEnabled(True)
 
+	# set TCP/IP include paths
+	tcpipStackInclPath = tcpipStackComponent.createSettingSymbol("TCPIP_INCLUDE_DIRS", None)
+	tcpipStackInclPath.setCategory("C32")
+	tcpipStackInclPath.setKey("extra-include-directories")
+	tcpipStackInclPath.setValue("../src/config/"+configName+ "/library;../src/config/"+configName+ "/library/tcpip/src;../src/config/"+configName+ "/library/tcpip/src/common")
+	tcpipStackInclPath.setAppend(True, ";")
 #########################################################################################
 #### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
 	tcpipStackSysTimeAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)

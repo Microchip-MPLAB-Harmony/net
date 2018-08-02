@@ -16,7 +16,8 @@ def instantiateComponent(tcpipTftpcComponent):
 	tcpipTftpcDefault.setLabel("Default Interface")
 	tcpipTftpcDefault.setVisible(True)
 	tcpipTftpcDefault.setDescription("Default Interface")
-	if "SAME70" in Variables.get("__PROCESSOR"):
+	
+	if Peripheral.moduleExists("GMAC"):
 		tcpipTftpcDefault.setDefaultValue("GMAC")
 	else:
 		tcpipTftpcDefault.setDefaultValue("PIC32INT")

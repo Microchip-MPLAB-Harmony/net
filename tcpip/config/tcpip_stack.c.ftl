@@ -212,11 +212,7 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 };
 </#if>
 
-
-
-
-
-<#if (TCPIP_DEVICE_FAMILY == "SAME70")&&(drvSamv71Gmac.TCPIP_USE_ETH_MAC)?has_content && (drvSamv71Gmac.TCPIP_USE_ETH_MAC)  == true>
+<#if (drvSamv71Gmac.TCPIP_USE_ETH_MAC)?has_content && (drvSamv71Gmac.TCPIP_USE_ETH_MAC)  == true>
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
