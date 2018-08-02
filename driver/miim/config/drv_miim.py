@@ -17,8 +17,8 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimModuleId.setLabel("ETH Module ID")
 	drvMiimModuleId.setVisible(True)
 	#drvMiimModuleId.setVisible(False)
-	drvMiimModuleId.setDescription("Ethernet MAC Module ID")
-	if "SAME70" in Variables.get("__PROCESSOR"):
+	drvMiimModuleId.setDescription("Ethernet MAC Module ID")	
+	if Peripheral.moduleExists("GMAC"):
 		drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
 	else:
 		drvMiimModuleId.setDefaultValue("ETH_ID_0")

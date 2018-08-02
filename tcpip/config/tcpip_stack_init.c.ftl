@@ -27,30 +27,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 -->
 
 <#if USE_TCPIP_STACK == true>
-<#-- H3_ToDo
-<#if (TCPIP_DEVICE_FAMILY) == "SAME70">
-<#if (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE)?has_content && (drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_MODE) == true>
-    /* set priority for ETHERNET interrupt source */
-    SYS_INT_VectorPrioritySet(${drvSamv71Gmac.DRV_GMAC_INTERRUPT_VECTOR}, ${drvSamv71Gmac.TCPIP_GMAC_INTERRUPT_PRIORITY});
-</#if>  	
-<#else>
-<#if (drvSamv71Gmac.TCPIP_EMAC_INTERRUPT_MODE)?has_content && (drvSamv71Gmac.TCPIP_EMAC_INTERRUPT_MODE) == true>
-    /* set priority for ETHERNET interrupt source */
-    SYS_INT_VectorPrioritySet(INT_VECTOR_ETH, ${TCPIP_EMAC_INTERRUPT_PRIORITY});
-
-    /* set sub-priority for ETHERNET interrupt source */
-    SYS_INT_VectorSubprioritySet(INT_VECTOR_ETH, ${TCPIP_EMAC_INTERRUPT_SUB_PRIORITY});
-</#if>    
-</#if>    
---> 
-<#-- H3_ToDo to do 
-<#if TCPIP_STACK_USE_COMMANDS == true && CONFIG_USE_SYS_COMMAND == false>
-    if (!SYS_CMD_Initialize())
-    {
-        return;
-    }
-</#if>
--->
     /* TCPIP Stack Initialization */
     sysObj.tcpip = TCPIP_STACK_Init();
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );

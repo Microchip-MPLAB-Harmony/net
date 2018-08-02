@@ -44,7 +44,7 @@ void _TCPIP_Tasks(void);
 </#if>
 <#if (TCPIP_TASKS == "TASK_CALL_NO_RTOS") || (TCPIP_TASKS == "TASK_CALL" && (TCPIP_RTOS) != "Standalone")>
  <#if USE_TCPIP_STACK == true>
-  <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content && (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true && (USE_SYS_COMMAND)?has_content && (USE_SYS_COMMAND == false)>
+  <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content && (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true && (sys_console.SYS_COMMAND_ENABLE)?has_content && (sys_console.SYS_COMMAND_ENABLE == false)>
     /* Maintain the TCPIP Native Command Stack */
     SYS_CMD_Tasks();
   </#if>    
@@ -66,7 +66,7 @@ void _TCPIP_Tasks(void)
 </#if> 
     while(1)
     {
-  <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content && (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true && (USE_SYS_COMMAND)?has_content && (USE_SYS_COMMAND == false)>
+  <#if (tcpipCmd.TCPIP_STACK_USE_COMMANDS)?has_content && (tcpipCmd.TCPIP_STACK_USE_COMMANDS) == true && (sys_console.SYS_COMMAND_ENABLE)?has_content && (sys_console.SYS_COMMAND_ENABLE == false)>
         /* Maintain the TCPIP Native Command Stack */
         SYS_CMD_Tasks();
   </#if>    

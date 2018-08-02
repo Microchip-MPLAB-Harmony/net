@@ -3,7 +3,6 @@ def loadModule():
 
 	tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_stack.py")
 	tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE")
-	#tcpipStackComponent.addDependency("Core_TcpipFs_Dependency", "TCPIP FS WRAPPER")
 	tcpipStackComponent.addDependency("Core_NetConfig_Dependency", "NETCONFIG")
 	tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME")
 	
@@ -162,7 +161,7 @@ def loadModule():
 	tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "SYS_FS")	
 		
 	########################## Driver Modules to work with TCP/IP ####################################################
-	if "SAME70" in Variables.get("__PROCESSOR"):
+	if Peripheral.moduleExists("GMAC"):
 		drvSamv71GmacComponent = Module.CreateComponent("drvSamv71Gmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
 		drvSamv71GmacComponent.addCapability("libdrvSamv71Gmac","MAC")
 		drvSamv71GmacComponent.addDependency("GMAC_PHY_Dependency", "PHY")	
