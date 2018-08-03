@@ -140,11 +140,14 @@ def loadModule():
 	tcpipHttpComponent.addCapability("libtcpipHttp","HTTP")	
 	tcpipHttpComponent.addDependency("Http_TCP_Dependency", "TCP")
 	tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "TCPIP_FS_WRAPPER")
+	tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO")
 	
 	tcpipHttpNetComponent = Module.CreateComponent("tcpipHttpNet", "HTTP NET SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_httpnet.py")
 	tcpipHttpNetComponent.addCapability("libtcpipHttpNet","HTTPNET")	
 	tcpipHttpNetComponent.addDependency("HttpNet_TCP_Dependency", "TCP")	
 	tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "TCPIP_FS_WRAPPER")
+	tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO")
+	tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres")
 	
 	tcpipSnmpComponent = Module.CreateComponent("tcpipSnmp", "SNMP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmp.py")
 	tcpipSnmpComponent.addCapability("libtcpipSnmp","SNMP")	

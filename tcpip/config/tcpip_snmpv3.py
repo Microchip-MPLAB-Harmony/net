@@ -253,7 +253,6 @@ def instantiateComponent(tcpipSnmpv3Component):
 	tcpipSnmpV3CryptoAesEcbHeaderFile.setOverwrite(True)
 	tcpipSnmpV3CryptoAesEcbHeaderFile.setEnabled(True)
 	
-	#H3_ToDo :  check the PIC32 nomenclature
 	# file SNMPV3_AES_ECB_PIC32_H "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_ecb_pic32.h" to "$PROJECT_HEADER_FILES/framework/tcpip/src/crypto/aes_ecb_pic32.h"
 	tcpipSnmpV3CryptoAesEcbPic32HeaderFile = tcpipSnmpv3Component.createFileSymbol(None, None)
 	tcpipSnmpV3CryptoAesEcbPic32HeaderFile.setSourcePath("tcpip/src/crypto/aes_ecb_pic32.h")

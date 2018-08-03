@@ -11,10 +11,6 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttp.setVisible(False)
 	tcpipHttp.setDescription("Enable HTTP Server")
 	tcpipHttp.setDefaultValue(True)
-	# H3_ToDo 
-	# select USE_SYS_FS_NEEDED
-	# select USE_CRYPTO_LIB_NEEDED
-
 
 	# Maximum Header Length
 	tcpipHttpHeaderLenMax = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MAX_HEADER_LEN", None)
@@ -110,8 +106,8 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpBase64Decode.setLabel("Use Base 64 Decode")
 	tcpipHttpBase64Decode.setVisible(True)
 	tcpipHttpBase64Decode.setDescription("Use Base 64 Decode")
-	tcpipHttpBase64Decode.setDefaultValue(False)
-	#tcpipHttpBase64Decode.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	tcpipHttpBase64Decode.setDefaultValue(True)
+	
 
 	# Enable Basic Authenication Support
 	tcpipHttpAuth = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_USE_AUTHENTICATION", None)
@@ -119,8 +115,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpAuth.setVisible(True)
 	tcpipHttpAuth.setDescription("Enable Basic Authenication Support")
 	tcpipHttpAuth.setDefaultValue(True)
-	# select TCPIP_HTTP_USE_BASE64_DECODE    H3_ToDo
-	#tcpipHttpAuth.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
+	tcpipHttpBase64Decode.setDependencies(tcpipHttpBase64DecodeOpt, ["TCPIP_HTTP_USE_AUTHENTICATION"])
 
 	# Require Secure Connection Before Requesting a Password
 	tcpipHttpNoAuthWithoutSsl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_NO_AUTH_WITHOUT_SSL", None)
@@ -170,15 +165,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpConfigFlags.setDefaultValue("TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS")
 	#tcpipHttpConfigFlags.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
-	# H3_ToDo
-	#   config TCPIP_HTTP_CONFIG_FLAGS
-	#   int
-	#    depends on TCPIP_STACK_USE_HTTP_SERVER
-	#    default 0 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_DEFAULT"
-	#   default 1 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_ADJUST_SKT_FIFOS"
-	#    default 2 if TCPIP_HTTP_CFG_FLAGS = "TCPIP_HTTP_MODULE_FLAG_NO_DELAY"
-
-	# HTTP Config Flag - H3_ToDo
+	# HTTP Config Flag 
 	tcpipHttpConfigFlag = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_CONFIG_FLAGS", None)
 	tcpipHttpConfigFlag.setVisible(False)	
 	tcpipHttpConfigFlag.setDefaultValue(1)
@@ -213,31 +200,16 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpCustomTemplate.setDefaultValue(True)
 	#tcpipHttpCustomTemplate.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
-	# H3_ToDo
-	# config TCPIP_HTTP_CUSTOM_TEMPLATE_SL
-	#   depends on TCPIP_STACK_USE_HTTP_SERVER
-	#    bool
-	#    default y if (USE_SYS_FS = y) && (SYS_FS_MPFS = y)
-	#   default n
 	tcpipHttpCustomTemplateSl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE_SL", None)
 	tcpipHttpCustomTemplateSl.setVisible(False)	
-	tcpipHttpCustomTemplateSl.setDefaultValue(True)
+	tcpipHttpCustomTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
 	
-	#config TCPIP_STACK_USE_HTTP_SERVER_DUMMY
-	#   bool "HTTP Server" 
-	#    depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_STACK_USE_HTTP_NET_SERVER
-	#    default n
-	#   persistent
-
 	#Add to system_config.h
 	tcpipHttpHeaderFtl = tcpipHttpComponent.createFileSymbol(None, None)
 	tcpipHttpHeaderFtl.setSourcePath("tcpip/config/http.h.ftl")
 	tcpipHttpHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipHttpHeaderFtl.setMarkup(True)
 	tcpipHttpHeaderFtl.setType("STRING")
-
-	# H3_ToDo
-	# file SYS_FS_HTTP_H "$HARMONY_VERSION_PATH/framework/system/fs/sys_fs.h" to "$PROJECT_HEADER_FILES/framework/system/fs/sys_fs.h"
 
 	# Add http.c file
 	tcpipHttpSourceFile = tcpipHttpComponent.createFileSymbol(None, None)
@@ -249,15 +221,6 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpSourceFile.setType("SOURCE")
 	tcpipHttpSourceFile.setEnabled(True)
 	tcpipHttpSourceFile.setDependencies(tcpipHttpGenSourceFile, ["TCPIP_STACK_USE_HTTP_SERVER"])
-
-	# H3_ToDo to do
-	# file DRV_NVM_STATIC_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
-	# file DRV_NVM_STATIC_LOCAL_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
-	# file DRV_NVM_STATIC_VAR_MAP_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
-
-	# file DRV_NVM_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
-	# file DRV_NVM_LOCAL_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
-	# file DRV_NVM_VAR_MAP_HTTP_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
 
 	# ifblock TCPIP_HTTP_CUSTOM_TEMPLATE
 
@@ -326,12 +289,17 @@ def tcpipHttpFileUploadVisible(symbol, event):
 		
 		
 def tcpipHttpMenuVisibleSingle(symbol, event):
-	if (event["value"] == True):
-		print("TFTPC Menu Visible.")		
+	if (event["value"] == True):	
 		symbol.setVisible(True)
 	else:
-		print("TFTPC Menu Invisible.")
 		symbol.setVisible(False)
+
+def tcpipHttpBase64DecodeOpt(symbol, event):
+	symbol.clearValue()
+	if (event["value"] == True):		
+		symbol.setValue(True,2)
+	else:
+		symbol.setValue(False,2)
 		
 def tcpipHttpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])

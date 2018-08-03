@@ -30,7 +30,7 @@ extern "C" {
         bool inUse;
         NET_PRES_SKT_ERROR_T lastError;
         NET_PRES_SKT_T socketType;
-        uint16_t transHandle;
+        int16_t transHandle;
         uint8_t providerData[8];
         NET_PRES_EncSessionStatus status;
         NET_PRES_TransportObject * transObject;

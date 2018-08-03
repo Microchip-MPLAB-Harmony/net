@@ -177,6 +177,14 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTaskDelay.setDescription("MIIM Driver Task Delay")
 	tcpipStackTaskDelay.setDefaultValue(100)
 	tcpipStackTaskDelay.setDependencies(tcpipStackRTOSTaskDelayMenu, ["TCPIP_STACK_RTOS", "TCPIP_STACK_RTOS_USE_DELAY"])
+
+	
+	tcpipStackDeviceFamily = tcpipStackComponent.createStringSymbol("TCPIP_DEVICE_FAMILY", None)
+	tcpipStackDeviceFamily.setVisible(False)
+	if "SAME70" in Variables.get("__PROCESSOR"):
+		tcpipStackDeviceFamily.setDefaultValue("SAME70")
+	elif "PIC32M" in Variables.get("__PROCESSOR"):
+		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
 		
 	###########################################################################################
 	###########################################################################################

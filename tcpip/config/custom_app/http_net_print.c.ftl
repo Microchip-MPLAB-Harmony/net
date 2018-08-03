@@ -40,8 +40,8 @@
 
 #include "configuration.h"
 #include "tcpip/tcpip.h"
-<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_DYNVAR_PROCESS -->
-<#if TCPIP_HTTP_NET_DYNVAR_PROCESS == true>
+
+<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 /****************************************************************************
 Section:
     Dynamic Variables Function Prototypes
@@ -99,7 +99,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_smtps_en(TCPIP_HTTP_NET_CONN_HANDLE co
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_snmp_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_read_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fwver(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ssid(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_scan(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
@@ -114,7 +114,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_nextSSID(TCPIP_HTTP_NET_CONN_HANDLE co
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_prevWLAN(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_currWLAN(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_nextWLAN(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+</#if><#-- ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo")) -->
 
 /****************************************************************************
   Section:
@@ -179,7 +179,7 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
     {"snmp_en",                     TCPIP_HTTP_Print_snmp_en},
     {"read_comm",                   TCPIP_HTTP_Print_read_comm},
     {"write_comm",                  TCPIP_HTTP_Print_write_comm},
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
     {"fwver",                       TCPIP_HTTP_Print_fwver},
     {"ssid",                        TCPIP_HTTP_Print_ssid},
     {"scan",                        TCPIP_HTTP_Print_scan},
@@ -194,7 +194,7 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
     {"prevWLAN",                    TCPIP_HTTP_Print_prevWLAN},
     {"currWLAN",                    TCPIP_HTTP_Print_currWLAN},
     {"nextWLAN",                    TCPIP_HTTP_Print_nextWLAN},
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+</#if><#-- ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo")) -->
 };
 
 // Function that processes the dynamic variables

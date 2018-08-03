@@ -42,7 +42,8 @@
 /**************************************
  * MPFS2 Image Data
  **************************************/
-<#if CONFIG_USE_DRV_WIFI_WK!false == true && CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true && CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE == true>
+ 
+<#if ((USE_DRV_WIFI_WK?has_content) && (USE_DRV_WIFI_WK  == true)) && ((tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER?has_content) && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER  == true)) && ((tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE?has_content) && (tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE  == true))>
 	uint8_t SRAM_MEDIA_0_DATA[] = { \
 	0x4d,0x50,0x46,0x53,0x02,0x01,0x16,0x00,0x6a,0xfd,0xf0,0x94,0xca,0xa7,0xf0,0xd6, /* MPFS....j....... */ \
 	0x26,0x4f,0x26,0x2d,0x0a,0xa3,0x46,0xce,0x2a,0xcf,0x3e,0x67,0x8a,0x10,0xe6,0xd2, /* &O&-..F...>g.... */ \
@@ -1444,10 +1445,9 @@ struct MEDIA_STORAGE_PARTITION_INFO
 	(unsigned long)SRAM_MEDIA_0_DATA,
 	sizeof(SRAM_MEDIA_0_DATA),
 };
-<#else><#-- CONFIG_USE_DRV_WIFI_WK -->
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" != "Easy Configuration Demo">
-<#-- H3_ToDo CONFIG_TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL -->
-  <#if CONFIG_TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL!false == true>
+<#else><#-- USE_DRV_WIFI_WK -->
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
+  <#if ((tcpipHttpNet.TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL  == true))>
     <#-- Following NVM_MEDIA_DATA[] is for web_net_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
 	const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))
 	NVM_MEDIA_DATA[DRV_MEMORY_DEVICE_MEDIA_SIZE*1024] = { \
@@ -3490,8 +3490,8 @@ struct MEDIA_STORAGE_PARTITION_INFO
 
 
 };
-	<#-- H3_ToDo CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE_SL -->
-  <#elseif CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE_SL!true == true>
+
+  <#elseif ((tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE_SL?has_content) && (tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE_SL  == true))>
     <#-- Following NVM_MEDIA_DATA[] is for web_server_nvm_mpfs demo -->
 	const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))
 	NVM_MEDIA_DATA[DRV_MEMORY_DEVICE_MEDIA_SIZE*1024] = { \
@@ -5416,8 +5416,8 @@ struct MEDIA_STORAGE_PARTITION_INFO
 
 
 };
-  </#if><#-- CONFIG_TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL == true || CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE_SL == true -->
-<#else><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+  </#if><#-- TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL == true || TCPIP_HTTP_CUSTOM_TEMPLATE_SL == true -->
+<#else><#-- DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
     <#-- Following NVM_MEDIA_DATA[] is for wifi_easy_configuration demo -->
 const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep)) NVM_MEDIA_DATA[DRV_MEMORY_DEVICE_MEDIA_SIZE*1024] = { \
 	0x4d,0x50,0x46,0x53,0x02,0x01,0x17,0x00,0x6a,0xfd,0xf0,0x94,0xca,0xa7,0x92,0x6c, /* MPFS....j......l */ \
@@ -6942,7 +6942,7 @@ const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS
 
 
 };
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE -->
+</#if><#-- DRV_WIFI_HTTP_CUSTOM_TEMPLATE -->
 /**************************************
  * MPFS2 C linkable symbols
  **************************************/
@@ -6961,7 +6961,7 @@ struct MEDIA_STORAGE_PARTITION_INFO
 	(unsigned long)NVM_MEDIA_DATA,
 	sizeof(NVM_MEDIA_DATA),
 };
-</#if><#-- CONFIG_USE_DRV_WIFI_WK -->
+</#if><#-- USE_DRV_WIFI_WK -->
 
 /**************************************************************
  * End of MPFS

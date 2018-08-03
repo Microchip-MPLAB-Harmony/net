@@ -195,9 +195,17 @@ bool NET_PRES_EncProvider${TYPE}${CONNECTION}Init${INST}(NET_PRES_TransportObjec
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject = transObject;
         <#if TYPE="Stream">
             <#if CONNECTION="Client">
+				<#if WOLFSSL_HAVE_TLS13>
+    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
+				<#else>
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
+				</#if>
             <#else>
+				<#if WOLFSSL_HAVE_TLS13>
+    net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfTLSv1_3_server_method());
+				<#else>
     net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
+				</#if>
             </#if>
         <#else>
             <#if CONNECTION="Client">
@@ -472,6 +480,47 @@ int32_t NET_PRES_EncProviderPeek${INST}(void * providerData, uint8_t * buffer, u
     </#if>
 }
 </#macro> 
+
+<#macro NET_PRES_ENC_GLUE_OUT_SIZE
+        INST>
+int32_t NET_PRES_EncProviderOutputSize${INST}(void * providerData, int32_t inSize)
+{
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    WOLFSSL* ssl;
+    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    int ret = wolfSSL_GetOutputSize(ssl, inSize);
+    if (ret < 0)
+    {
+        return 0;
+    }  
+    return ret;
+    <#else>
+    //TODO: Enter in  code to get the provider output size
+    return 0;
+    </#if>
+}
+</#macro> 
+
+<#macro NET_PRES_ENC_GLUE_MAX_OUT_SIZE
+        INST>
+int32_t NET_PRES_EncProviderMaxOutputSize${INST}(void * providerData)
+{
+    <#if .vars["NET_PRES_USE_WOLF_SSL_IDX${INST}"]>
+    WOLFSSL* ssl;
+    memcpy(&ssl, providerData, sizeof(WOLFSSL*));
+    int ret = wolfSSL_GetMaxOutputSize(ssl);
+    if (ret < 0)
+    {
+        return 0;
+    }  
+    return ret;
+    <#else>
+    //TODO: Enter in  code to get the provider max output size
+    return 0;
+    </#if>
+}
+</#macro> 
+
 <#macro NET_PRES_ENC_GLUE_IS_INIT
         INST
         CONNECTION
@@ -582,6 +631,9 @@ int NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, i
     }
 
     bufferSize =  (*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpWrite)((uintptr_t)fd, (uint8_t*)buf, (uint16_t)sz);
+	<#if TYPE = "DataGram">
+	(*net_pres_wolfSSLInfo${TYPE}${CONNECTION}${INST}.transObject->fpFlush)((uintptr_t)fd);
+	</#if>
     return bufferSize;
 }
     </#if>

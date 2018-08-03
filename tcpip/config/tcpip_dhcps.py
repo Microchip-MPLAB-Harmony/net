@@ -9,7 +9,7 @@ tcpipDhcpsPrimDnsAddr = []
 tcpipDhcpsSecDnsAddr = []
 tcpipDhcpsIfIdx = []
 tcpipDhcpsPoolEn = []
-tcpipNetConfigNumMax = 10  # H3_ToDo check this hard coded value
+tcpipNetConfigNumMax = 10  # hard coded value
 ############################################################################
 def instantiateComponent(tcpipDhcpsComponent):
 
@@ -170,8 +170,6 @@ def instantiateComponent(tcpipDhcpsComponent):
 	tcpipDhcpSourceFile.setDependencies(tcpipDhcpsGenSourceFile, ["TCPIP_STACK_USE_DHCP_SERVER"])
 	
 #############################################################################################################
-#H3_ToDo revisit this implementataion
-#global tcpipNetConfigNum
 def tcpipDhcpsEnableInstance(tcpipNetDependentSymbol, event):
 	global tcpipDhcpsInstancesNumPrev
 	print("Start tcpipDhcpsEnableInstance")

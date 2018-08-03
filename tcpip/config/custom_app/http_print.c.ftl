@@ -37,10 +37,10 @@
  * (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.
  *
  *********************************************************************/
-
+ 
 #include "tcpip/tcpip.h"
 
-<#if CONFIG_USE_DRV_WIFI_WK!false == true && TCPIP_STACK_USE_HTTP_SERVER == true && TCPIP_HTTP_CUSTOM_TEMPLATE == true>
+<#if ((USE_DRV_WIFI_WK?has_content) && (USE_DRV_WIFI_WK  == true)) && ((tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER?has_content) && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER  == true)) && ((tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE?has_content) && (tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE  == true)) >
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
 void TCPIP_HTTP_Print_version(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle);
@@ -158,8 +158,8 @@ TCP_SOCKET sktHTTP;
 
 	return;
 }
-<#else><#-- CONFIG_USE_DRV_WIFI_WK -->
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" != "Easy Configuration Demo">
+<#else><#-- USE_DRV_WIFI_WK -->   
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
 
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
@@ -198,7 +198,7 @@ void TCPIP_HTTP_Print_ddns_service(HTTP_CONN_HANDLE connHandle,uint16_t);
 void TCPIP_HTTP_Print_ddns_user(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_ddns_pass(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_ddns_host(HTTP_CONN_HANDLE connHandle);
-<#else><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+<#elseif ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 <#-- Following content is for wifi_easy_configuration demo -->
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
 void TCPIP_HTTP_Print_version(HTTP_CONN_HANDLE connHandle);
@@ -222,14 +222,15 @@ void TCPIP_HTTP_Print_wlan(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_strength(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_btn(HTTP_CONN_HANDLE connHandle,uint16_t);
 void TCPIP_HTTP_Print_pot(HTTP_CONN_HANDLE connHandle);
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE -->
+</#if><#-- DRV_WIFI_HTTP_CUSTOM_TEMPLATE -->
 
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
 {
     TCP_SOCKET sktHTTP; 
     switch(callbackID)
     {
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" != "Easy Configuration Demo">
+	
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
         case 0x00000000:
 			TCPIP_HTTP_FileInclude(connHandle,(const uint8_t *)"header.inc");
@@ -381,7 +382,7 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
         case 0x00000031:
 			TCPIP_HTTP_Print_ddns_host(connHandle);
 			break;
-<#else><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+<#elseif (DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo")>
 <#-- Following content is for wifi_easy_configuration demo -->
         case 0x00000000:
 			TCPIP_HTTP_FileInclude(connHandle,(const uint8_t *)"header.inc");
@@ -464,7 +465,7 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
         case 0x0000001a:
 			TCPIP_HTTP_Print_pot(connHandle);
 			break;
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE -->
+</#if><#-- DRV_WIFI_HTTP_CUSTOM_TEMPLATE -->
         default:
             // Output notification for undefined values
             sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
@@ -472,7 +473,7 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
     }
     return;
 }
-</#if><#-- CONFIG_USE_DRV_WIFI_WK -->
+</#if><#-- USE_DRV_WIFI_WK -->
 
 void TCPIP_HTTP_Print_myVariable(HTTP_CONN_HANDLE connHandle)
 {
