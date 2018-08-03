@@ -102,8 +102,8 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetBase64Decode.setLabel("Use Base 64 Decode")
 	tcpipHttpNetBase64Decode.setVisible(True)
 	tcpipHttpNetBase64Decode.setDescription("Use Base 64 Decode")
-	tcpipHttpNetBase64Decode.setDefaultValue(False) # H3_ToDo to check the default value
-	#tcpipHttpNetBase64Decode.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+	tcpipHttpNetBase64Decode.setDefaultValue(False) 
+	
 
 	# Enable Basic Authenication Support
 	tcpipHttpNetAuth = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_AUTHENTICATION", None)
@@ -111,9 +111,8 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetAuth.setVisible(True)
 	tcpipHttpNetAuth.setDescription("Enable Basic Authenication Support")
 	tcpipHttpNetAuth.setDefaultValue(True)
-	# H3_ToDo
-	# select TCPIP_HTTP_NET_USE_BASE64_DECODE
-	#tcpipHttpNetAuth.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+	tcpipHttpNetBase64Decode.setDependencies(tcpipHttpNetBase64DecodeOpt, ["TCPIP_HTTP_NET_USE_AUTHENTICATION"])
+
 
 	# Maximum Data Length (bytes) for Reading Cookie and GET/POST Arguments
 	tcpipHttpNetDataLenMax = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_MAX_DATA_LEN", None)
@@ -190,16 +189,10 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetConfigFlagSecureDefault.setVisible(True)
 	tcpipHttpNetConfigFlagSecureDefault.setDescription("HTTP security is based on the port numbers")
 	tcpipHttpNetConfigFlagSecureDefault.setDefaultValue(True)
-	
-		# H3_ToDo to verify this dependency
+
 	tcpipHttpNetConfigFlagSecureDefault.setDependencies(tcpipHttpNetSrvConfigFlagSecureDefaultEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON"])
 	tcpipHttpNetConfigFlagSecureOn.setDependencies(tcpipHttpNetSrvConfigFlagSecureOnEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
 	tcpipHttpNetConfigFlagSecureOff.setDependencies(tcpipHttpNetSrvConfigFlagSecureOffEnable, ["TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
-
-	# # H3_ToDo to verify this dependency
-	# tcpipHttpNetConfigFlagSecureDefault.setDependencies(tcpipHttpNetSrvConfigFlagSecureDefaultEnable, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON"])
-	# tcpipHttpNetConfigFlagSecureOn.setDependencies(tcpipHttpNetSrvConfigFlagSecureOnEnable, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
-	# tcpipHttpNetConfigFlagSecureOff.setDependencies(tcpipHttpNetSrvConfigFlagSecureOffEnable, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON", "TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT"])
 
 	# HTTP NET Task Rate - ms
 	tcpipHttpNetTskRate = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_TASK_RATE", None)
@@ -393,16 +386,11 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetCustTemplate.setDefaultValue(True)
 	#tcpipHttpNetCustTemplate.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
-
-	# H3_ToDo to check below component
 	# Include HTTP NET Custom Template SL
 	tcpipHttpNetCustTemplateSl = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL", None)
 	tcpipHttpNetCustTemplateSl.setVisible(False)
 	tcpipHttpNetCustTemplateSl.setDescription("Include HTTP NET Custom Template SL")
-	tcpipHttpNetCustTemplateSl.setDefaultValue(False)
-	# # H3_ToDo check below
-	# # default y if (USE_SYS_FS = y) && (SYS_FS_MPFS = y)
-	#tcpipHttpNetCustTemplateSl.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+	tcpipHttpNetCustTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
 
 	# Persistent Connection Idle Time-out
 	tcpipHttpNetConnTimeout = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CONNECTION_TIMEOUT", None)
@@ -428,13 +416,6 @@ def instantiateComponent(tcpipHttpNetComponent):
 	#tcpipHttpNetFreeFunct.setDefaultValue("")
 	#tcpipHttpNetFreeFunct.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
-	# H3_ToDo to check the dummy 
-	# config TCPIP_STACK_USE_HTTP_NET_SERVER_DUMMY
-	# bool "HTTP NET Server"
-	# depends on USE_TCPIP_STACK && TCPIP_USE_TCP && TCPIP_STACK_USE_HTTP_SERVER
-	# default n
-	# persistent
-
 	#Add to system_config.h
 	tcpipHttpNetHeaderFtl = tcpipHttpNetComponent.createFileSymbol(None, None)
 	tcpipHttpNetHeaderFtl.setSourcePath("tcpip/config/http_net.h.ftl")
@@ -454,16 +435,6 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetSourceFile.setType("SOURCE")
 	tcpipHttpNetSourceFile.setEnabled(True)
 	tcpipHttpNetSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
-	# H3_ToDo
-	# file DRV_NVM_STATIC_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
-	# file DRV_NVM_STATIC_LOCAL_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
-	# file DRV_NVM_STATIC_VAR_MAP_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
-
-	# file DRV_NVM_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/drv_nvm.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/drv_nvm.h"
-	# file DRV_NVM_LOCAL_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_local.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_local.h"
-	# file DRV_NVM_VAR_MAP_HTTP_NET_H "$HARMONY_VERSION_PATH/framework/driver/nvm/src/drv_nvm_variant_mapping.h" to "$PROJECT_HEADER_FILES/framework/driver/nvm/src/drv_nvm_variant_mapping.h"
-
 
 	# ifblock TCPIP_HTTP_NET_CUSTOM_TEMPLATE
 
@@ -610,6 +581,13 @@ def tcpipHttpNetMenuVisibleSingle(symbol, event):
 	else:
 		print("TFTPC Menu Invisible.")
 		symbol.setVisible(False)
+
+def tcpipHttpNetBase64DecodeOpt(symbol, event):
+	symbol.clearValue()
+	if (event["value"] == True):		
+		symbol.setValue(True,2)
+	else:
+		symbol.setValue(False,2)
 		
 def tcpipHttpNetGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])

@@ -33,15 +33,17 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
-<#if CONFIG_USE_DRV_WIFI_WK!false == true && CONFIG_TCPIP_STACK_USE_HTTP_SERVER == true && CONFIG_TCPIP_HTTP_CUSTOM_TEMPLATE == true >
 
+<#if ((USE_DRV_WIFI_WK?has_content) && (USE_DRV_WIFI_WK  == true)) && ((tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER?has_content) && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER  == true)) && ((tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE?has_content) && (tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE  == true))>
 #include "configuration.h"
 
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 #include<ctype.h>
 #include "tcpip/tcpip.h"
 //#include "system/tmr/sys_tmr.h"
-#include "system/random/sys_random.h"
+//#include "system/sys_time_h2_adapter.h"
+//#include "system/random/sys_random.h"
+#include "system/sys_random_h2_adapter.h"
 //#include "tcpip/src/common/hashes.h"
 #include "tcpip/src/common/helpers.h"
 
@@ -58,6 +60,57 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
   Section:
     Definitions
   ***************************************************************************/
+#ifndef APP_SWITCH_1StateGet
+#define APP_SWITCH_1StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_2StateGet
+#define APP_SWITCH_2StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_3StateGet
+#define APP_SWITCH_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateGet
+#define APP_LED_1StateGet() 0
+#endif
+#ifndef APP_LED_2StateGet
+#define APP_LED_2StateGet() 0
+#endif
+#ifndef APP_LED_3StateGet
+#define APP_LED_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateSet
+#define APP_LED_1StateSet()
+#endif
+#ifndef APP_LED_2StateSet
+#define APP_LED_2StateSet()
+#endif
+#ifndef APP_LED_3StateSet
+#define APP_LED_3StateSet()
+#endif
+
+#ifndef APP_LED_1StateClear
+#define APP_LED_1StateClear()
+#endif
+#ifndef APP_LED_2StateClear
+#define APP_LED_2StateClear()
+#endif
+#ifndef APP_LED_3StateClear
+#define APP_LED_3StateClear()
+#endif
+
+#ifndef APP_LED_1StateToggle
+#define APP_LED_1StateToggle()
+#endif
+#ifndef APP_LED_2StateToggle
+#define APP_LED_2StateToggle()
+#endif
+#ifndef APP_LED_3StateToggle
+#define APP_LED_3StateToggle()
+#endif
 
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
@@ -357,13 +410,29 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         // Seek out each of the four LED strings, and if it exists set the LED states
         ptr = TCPIP_HTTP_ArgGet(httpDataBuff, (const uint8_t *)"led2");
         if(ptr)
-            BSP_LEDStateSet(APP_TCPIP_LED_3, (*ptr == '1'));
-            //LED2_IO = (*ptr == '1');
+        {
+            if(*ptr == '1')
+            {
+                APP_LED_2StateSet();
+            }
+            else
+            {
+                APP_LED_2StateClear();
+            }
+        }
 
         ptr = TCPIP_HTTP_ArgGet(httpDataBuff, (const uint8_t *)"led1");
         if(ptr)
-            BSP_LEDStateSet(APP_TCPIP_LED_2, (*ptr == '1'));
-            //LED1_IO = (*ptr == '1');
+		{
+            if(*ptr == '1')
+            {
+                APP_LED_1StateSet();
+            }
+            else
+            {
+                APP_LED_1StateClear();
+            }
+        }
 #endif            
     }
 
@@ -388,11 +457,11 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         // Toggle the specified LED
         switch(*ptr) {
             case '1':
-                BSP_LEDToggle(APP_TCPIP_LED_2);
+                APP_LED_1StateToggle();
                 //LED1_IO ^= 1;
                 break;
             case '2':
-                BSP_LEDToggle(APP_TCPIP_LED_3);
+                APP_LED_2StateToggle();
                 //LED2_IO ^= 1;
                 break;
         }
@@ -2431,7 +2500,7 @@ void TCPIP_HTTP_Print_config_hostname(HTTP_CONN_HANDLE connHandle)
 
 void TCPIP_HTTP_Print_config_dhcpchecked(HTTP_CONN_HANDLE connHandle)
 {
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
     TCP_SOCKET sktHTTP;
     sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
     if(TCPIP_DHCP_IsEnabled(TCPIP_TCP_SocketNetGet(sktHTTP)))
@@ -2444,7 +2513,8 @@ void TCPIP_HTTP_Print_config_dhcpchecked(HTTP_CONN_HANDLE connHandle)
 void TCPIP_HTTP_Print_config_ip(HTTP_CONN_HANDLE connHandle)
 {
     IPV4_ADDR ipAddress;
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+	
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
     TCP_SOCKET sktHTTP;
     sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
     TCPIP_NET_HANDLE netH = TCPIP_TCP_SocketNetGet(sktHTTP);
@@ -2459,7 +2529,7 @@ void TCPIP_HTTP_Print_config_ip(HTTP_CONN_HANDLE connHandle)
 void TCPIP_HTTP_Print_config_gw(HTTP_CONN_HANDLE connHandle)
 {
     IPV4_ADDR gwAddress;
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
     TCP_SOCKET sktHTTP;
     sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
     TCPIP_NET_HANDLE netH = TCPIP_TCP_SocketNetGet(sktHTTP);
@@ -2474,7 +2544,7 @@ void TCPIP_HTTP_Print_config_gw(HTTP_CONN_HANDLE connHandle)
 void TCPIP_HTTP_Print_config_subnet(HTTP_CONN_HANDLE connHandle)
 {
     IPV4_ADDR ipMask;
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
     TCP_SOCKET sktHTTP;
     sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
     TCPIP_NET_HANDLE netH = TCPIP_TCP_SocketNetGet(sktHTTP);
@@ -2488,7 +2558,7 @@ void TCPIP_HTTP_Print_config_subnet(HTTP_CONN_HANDLE connHandle)
 void TCPIP_HTTP_Print_config_dns1(HTTP_CONN_HANDLE connHandle)
 {
     IPV4_ADDR priDnsAddr;
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
     TCP_SOCKET sktHTTP;
     sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
     TCPIP_NET_HANDLE netH = TCPIP_TCP_SocketNetGet(sktHTTP);
@@ -2503,7 +2573,7 @@ void TCPIP_HTTP_Print_config_dns1(HTTP_CONN_HANDLE connHandle)
 void TCPIP_HTTP_Print_config_dns2(HTTP_CONN_HANDLE connHandle)
 {
     IPV4_ADDR secondDnsAddr;
-<#if CONFIG_TCPIP_STACK_USE_IPV4 == true>
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
     TCP_SOCKET sktHTTP;
     sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
     TCPIP_NET_HANDLE netH = TCPIP_TCP_SocketNetGet(sktHTTP);
@@ -2511,7 +2581,7 @@ void TCPIP_HTTP_Print_config_dns2(HTTP_CONN_HANDLE connHandle)
 <#else>
     secondDnsAddr.Val = 0;
 </#if>
-
+niyas
     HTTPPrintIP(connHandle, secondDnsAddr);
 }
 
@@ -3058,9 +3128,8 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 
 #endif
 
-<#else><#-- if CONFIG_USE_DRV_WIFI_WK!false == false -->
-
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#else><#-- if ((USE_DRV_WIFI_WK?has_content) && (USE_DRV_WIFI_WK  == false)) -->
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 #include <ctype.h>
 </#if>
 #include "configuration.h"
@@ -3069,10 +3138,13 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 
 #include "crypto/crypto.h"
-#include "system/random/sys_random.h"
-#include "system/tmr/sys_tmr.h"
+//#include "system/random/sys_random.h"
+#include "system/sys_random_h2_adapter.h"
+//#include "system/tmr/sys_tmr.h"
+//#include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip.h"
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 #include "tcpip/src/tcpip_types.h"
 </#if>
 #include "tcpip/src/common/helpers.h"
@@ -3081,6 +3153,57 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
   Section:
     Definitions
  ****************************************************************************/
+ #ifndef APP_SWITCH_1StateGet
+#define APP_SWITCH_1StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_2StateGet
+#define APP_SWITCH_2StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_3StateGet
+#define APP_SWITCH_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateGet
+#define APP_LED_1StateGet() 0
+#endif
+#ifndef APP_LED_2StateGet
+#define APP_LED_2StateGet() 0
+#endif
+#ifndef APP_LED_3StateGet
+#define APP_LED_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateSet
+#define APP_LED_1StateSet()
+#endif
+#ifndef APP_LED_2StateSet
+#define APP_LED_2StateSet()
+#endif
+#ifndef APP_LED_3StateSet
+#define APP_LED_3StateSet()
+#endif
+
+#ifndef APP_LED_1StateClear
+#define APP_LED_1StateClear()
+#endif
+#ifndef APP_LED_2StateClear
+#define APP_LED_2StateClear()
+#endif
+#ifndef APP_LED_3StateClear
+#define APP_LED_3StateClear()
+#endif
+
+#ifndef APP_LED_1StateToggle
+#define APP_LED_1StateToggle()
+#endif
+#ifndef APP_LED_2StateToggle
+#define APP_LED_2StateToggle()
+#endif
+#ifndef APP_LED_3StateToggle
+#define APP_LED_3StateToggle()
+#endif
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
 
@@ -3094,7 +3217,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 #define HTTP_APP_USE_EMAIL
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 #if defined(TCPIP_IF_MRF24WN) || defined(TCPIP_IF_WINC1500) || defined(TCPIP_IF_WILC1000)
 #define HTTP_APP_USE_WIFI
 #endif
@@ -3126,7 +3249,8 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
         static HTTP_IO_RESULT HTTPPostDDNSConfig(HTTP_CONN_HANDLE connHandle);
     #endif
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+	
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
     #if defined(HTTP_APP_USE_WIFI)
         static HTTP_IO_RESULT HTTPPostWIFIConfig(HTTP_CONN_HANDLE connHandle);
     #endif
@@ -3137,7 +3261,8 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
   Section:
     Variables
  ****************************************************************************/
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+ 
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 extern bool g_wifi_redirection_signal;
 extern WF_CONFIG g_wifi_cfg;
 extern WF_DEVICE_INFO g_wifi_deviceInfo;
@@ -3167,7 +3292,7 @@ static bool lastSuccess = false;
 // Stick status message variable.  See lastSuccess for details.
 static bool lastFailure = false;
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 /****************************************************************************
   Section:
     Helper Functions
@@ -3380,7 +3505,7 @@ static HTTP_IO_RESULT HTTP_APP_ConfigFailure(HTTP_CONN_HANDLE connHandle, uint8_
     return HTTP_IO_DONE;
 }
 
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+</#if><#-- DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
 /****************************************************************************
   Section:
     GET Form Handlers
@@ -3411,13 +3536,28 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         // Seek out each of the four LED strings, and if it exists set the LED states.
         ptr = TCPIP_HTTP_ArgGet(httpDataBuff, (const uint8_t *)"led2");
         if(ptr)
-            BSP_LEDStateSet(APP_LED_3, (*ptr == '1'));
-            //LED2_IO = (*ptr == '1');
-
+        {
+            if(*ptr == '1')
+            {
+                APP_LED_2StateSet();
+            }
+            else
+            {
+                APP_LED_2StateClear();
+            }
+        }
         ptr = TCPIP_HTTP_ArgGet(httpDataBuff, (const uint8_t *)"led1");
         if(ptr)
-            BSP_LEDStateSet(APP_LED_2, (*ptr == '1'));
-            //LED1_IO = (*ptr == '1');
+		{
+            if(*ptr == '1')
+            {
+                APP_LED_1StateSet();
+            }
+            else
+            {
+                APP_LED_1StateClear();
+            }
+        }
     }
 
     else if(!memcmp(filename, "cookies.htm", 11))
@@ -3439,21 +3579,18 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         // Toggle the specified LED.
         switch(*ptr) {
             case '0':
-                BSP_LEDToggle(APP_LED_1);
-                //LED0_IO ^= 1;
+               APP_LED_1StateToggle();
                 break;
             case '1':
-                BSP_LEDToggle(APP_LED_2);
-                //LED1_IO ^= 1;
+                APP_LED_2StateToggle();
                 break;
             case '2':
-                BSP_LEDToggle(APP_LED_3);
-                //LED2_IO ^= 1;
+                APP_LED_3StateToggle();
                 break;
         }
     }
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
     else if(!memcmp(filename, "scan.cgi", 8))
     {
         uint8_t bssIdx;
@@ -3559,7 +3696,7 @@ HTTP_IO_RESULT TCPIP_HTTP_PostExecute(HTTP_CONN_HANDLE connHandle)
         return HTTPPostDDNSConfig(connHandle);
 #endif
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 #if defined(HTTP_APP_USE_WIFI)
     if(!memcmp(filename, "configure.htm", 13))
         return HTTPPostWIFIConfig(connHandle);
@@ -4383,11 +4520,11 @@ static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle)
 
             // Write the header and button strings
             TCPIP_SMTP_StringPut("LEDs:,");
-            TCPIP_SMTP_Put(BSP_LEDStateGet(APP_LED_1) + '0');
+            TCPIP_SMTP_Put(APP_LED_1StateGet() + '0');
             TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(BSP_LEDStateGet(APP_LED_2) + '0');
+            TCPIP_SMTP_Put(APP_LED_2StateGet() + '0');
             TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(BSP_LEDStateGet(APP_LED_3) + '0');
+            TCPIP_SMTP_Put(APP_LED_3StateGet() + '0');
             TCPIP_SMTP_Put('\r');
             TCPIP_SMTP_Put('\n');
             TCPIP_SMTP_Flush();
@@ -4604,7 +4741,7 @@ static HTTP_IO_RESULT HTTPPostDDNSConfig(HTTP_CONN_HANDLE connHandle)
 }
 #endif // #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 /*******************************************************************************
   Function:
     static HTTP_IO_RESULT HTTPPostWIFIConfig(HTTP_CONN_HANDLE connHandle)
@@ -4940,12 +5077,12 @@ void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle)
 
 void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle)
 {
-<#-- H3_ToDo CONFIG_TCPIP_STACK_USE_FS_WRAPPER -->
-<#if CONFIG_TCPIP_STACK_USE_FS_WRAPPER!false == true> 
-<#if CONFIG_TCPIP_SYS_FS_DRIVE?has_content >
-<#if CONFIG_TCPIP_SYS_FS_DRIVE == "FLASH">
+
+<#if ((tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER?has_content) && (tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER  == true))> 
+<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE?has_content >
+<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "FLASH">
     TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_MPFS_STRING);
-<#elseif CONFIG_TCPIP_SYS_FS_DRIVE == "SDCARD">
+<#elseif tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "SDCARD">
     TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_FATFS_STRING);
 </#if>
 </#if>
@@ -5007,13 +5144,13 @@ void TCPIP_HTTP_Print_led(HTTP_CONN_HANDLE connHandle, uint16_t num)
     switch(num)
     {
         case 0:
-            num = BSP_LEDStateGet(APP_LED_1);
+            num = APP_LED_1StateGet();
             break;
         case 1:
-            num = BSP_LEDStateGet(APP_LED_2);
+            num = APP_LED_2StateGet();
             break;
         case 2:
-            num = BSP_LEDStateGet(APP_LED_3);
+            num = APP_LED_3StateGet();
             break;
         default:
             num = 0;
@@ -5029,13 +5166,13 @@ void TCPIP_HTTP_Print_ledSelected(HTTP_CONN_HANDLE connHandle, uint16_t num, uin
     switch(num)
     {
         case 0:
-            num = BSP_LEDStateGet(APP_LED_1);
+            num = APP_LED_1StateGet();
             break;
         case 1:
-            num = BSP_LEDStateGet(APP_LED_2);
+            num = APP_LED_2StateGet();
             break;
         case 2:
-            num = BSP_LEDStateGet(APP_LED_3);
+            num = APP_LED_3StateGet();
             break;
         default:
             num = 0;
@@ -5355,8 +5492,8 @@ void TCPIP_HTTP_Print_ddns_status_msg(HTTP_CONN_HANDLE connHandle)
 }
 
 void TCPIP_HTTP_Print_reboot(HTTP_CONN_HANDLE connHandle)
-{ <#-- H3_ToDo CONFIG_TCPIP_STACK_IF_UP_DOWN_OPERATION -->
-<#if TCPIP_STACK_IF_UP_DOWN_OPERATION!false == true>
+{ 
+<#if ((tcpipStack.TCPIP_STACK_IF_UP_DOWN_OPERATION?has_content) && (tcpipStack.TCPIP_STACK_IF_UP_DOWN_OPERATION == true))>
     // This is not so much a print function, but causes the interface to restart
     // when the configuration is changed.  If called via an AJAX call, this
     // will gracefully restart the interface and bring it back online immediately
@@ -5444,7 +5581,7 @@ void TCPIP_HTTP_Print_write_comm(HTTP_CONN_HANDLE connHandle, uint16_t num)
 #endif
 }
 
-<#if CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE!"H3_ToDo" == "Easy Configuration Demo">
+<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 void TCPIP_HTTP_Print_fwver(HTTP_CONN_HANDLE connHandle)
 {
     static bool firstTime = true;
@@ -5651,7 +5788,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
         TCPIP_TCP_StringPut(sktHTTP, (const uint8_t *)"Unknown");
 }
 
-</#if><#-- CONFIG_DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
+</#if><#-- DRV_WIFI_HTTP_CUSTOM_TEMPLATE == "Easy Configuration Demo" -->
 #endif // #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 
-</#if><#-- if CONFIG_USE_DRV_WIFI_WK!false == true -->
+</#if><#-- if ((USE_DRV_WIFI_WK?has_content) && (USE_DRV_WIFI_WK  == true)) -->

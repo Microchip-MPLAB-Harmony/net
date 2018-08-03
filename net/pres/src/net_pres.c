@@ -719,6 +719,28 @@ uint16_t NET_PRES_SocketRead(NET_PRES_SKT_HANDLE_T handle, void * buffer, uint16
             pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
             return 0;
         }
+
+        if(buffer == 0)
+        {   // this means discard for the TCP/IP
+            // but the provider might not support it
+            int ix;
+            uint8_t discard_buff[100];
+
+            uint16_t nDiscards = size / sizeof(discard_buff);
+            uint16_t nLeft = size % sizeof(discard_buff);
+            uint16_t discardBytes = 0;
+
+            for(ix = 0; ix < nDiscards; ix++)
+            {
+                discardBytes += (*fp)(pSkt->providerData, discard_buff, sizeof(discard_buff));    
+            }
+
+            if(nLeft)
+            {
+                discardBytes += (*fp)(pSkt->providerData, discard_buff, nLeft);    
+            }
+            return discardBytes;
+        }
         return (*fp)(pSkt->providerData, buffer, size);    
     }
     NET_PRES_TransRead fpc = pSkt->transObject->fpRead;
