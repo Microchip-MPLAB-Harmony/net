@@ -203,6 +203,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpCustomTemplateSl = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_CUSTOM_TEMPLATE_SL", None)
 	tcpipHttpCustomTemplateSl.setVisible(False)	
 	tcpipHttpCustomTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
+	tcpipHttpCustomTemplateSl.setDependencies(tcpipHttpCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
 	
 	#Add to system_config.h
 	tcpipHttpHeaderFtl = tcpipHttpComponent.createFileSymbol(None, None)
@@ -297,6 +298,14 @@ def tcpipHttpMenuVisibleSingle(symbol, event):
 def tcpipHttpBase64DecodeOpt(symbol, event):
 	symbol.clearValue()
 	if (event["value"] == True):		
+		symbol.setValue(True,2)
+	else:
+		symbol.setValue(False,2)
+
+
+def tcpipHttpCustomSlSet(symbol, event):
+	symbol.clearValue()
+	if (event["value"] == True):
 		symbol.setValue(True,2)
 	else:
 		symbol.setValue(False,2)

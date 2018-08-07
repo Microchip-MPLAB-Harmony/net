@@ -159,9 +159,8 @@ TCP_SOCKET sktHTTP;
 	return;
 }
 <#else><#-- USE_DRV_WIFI_WK -->   
-<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
+<#if (!(DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) || (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
-
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
 void TCPIP_HTTP_Print_hellomsg(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_cookiename(HTTP_CONN_HANDLE connHandle);
@@ -230,7 +229,7 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
     switch(callbackID)
     {
 	
-<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
+<#if (!(DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) || (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
 <#-- Following content is for web_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
         case 0x00000000:
 			TCPIP_HTTP_FileInclude(connHandle,(const uint8_t *)"header.inc");

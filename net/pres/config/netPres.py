@@ -36,19 +36,13 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnStreamConn = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_STREAM_IDX" + str(index),None)
 	netPresInstnStreamConn.setLabel("Support Stream Connections?")
 	netPresInstnStreamConn.setVisible(True)
-	netPresInstnStreamConn.setDefaultValue(True)
-	# H3_ToDo
-	#default y if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && TCPIP_USE_TCP
-    #default n if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && !TCPIP_USE_TCP
+	netPresInstnStreamConn.setDefaultValue((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True) and (netPresInstnTcpipTransLayer.getValue() == True))
 
 	# Enable Data-gram Connections?
 	netPresInstnDatagramConn = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_DATAGRAM_IDX" + str(index),None)
 	netPresInstnDatagramConn.setLabel("Support Data-gram Connections?")
 	netPresInstnDatagramConn.setVisible(True)
-	netPresInstnDatagramConn.setDefaultValue(True)
-	# H3_ToDo
-	# default y if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && TCPIP_USE_UDP
-    # default n if NET_PRES_TRANSPORT_AS_TCPIP_IDX${INSTANCE} && !TCPIP_USE_UDP
+	netPresInstnDatagramConn.setDefaultValue((Database.getSymbolValue("tcpipUdp", "TCPIP_USE_UDP") == True) and (netPresInstnTcpipTransLayer.getValue() == True))
 
 	# Enable Server Connections?
 	netPresInstnSrvrConn = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_SERVER_IDX" + str(index),None)
