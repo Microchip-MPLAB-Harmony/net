@@ -33,7 +33,6 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
-
 <#if ((USE_DRV_WIFI_WK?has_content) && (USE_DRV_WIFI_WK  == true)) && ((tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER?has_content) && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER  == true)) && ((tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE?has_content) && (tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE  == true))>
 #include "configuration.h"
 
@@ -41,7 +40,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include<ctype.h>
 #include "tcpip/tcpip.h"
 //#include "system/tmr/sys_tmr.h"
-//#include "system/sys_time_h2_adapter.h"
 //#include "system/random/sys_random.h"
 #include "system/sys_random_h2_adapter.h"
 //#include "tcpip/src/common/hashes.h"
@@ -119,7 +117,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 //#define HTTP_APP_USE_MD5
 
 // Use the e-mail demo web page
-#if defined (TCPIP_STACK_USE_SMTP_CLIENT)
+#if defined(TCPIP_STACK_USE_SMTPC)
 #define HTTP_APP_USE_EMAIL
 #endif
 
@@ -141,7 +139,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
         static HTTP_IO_RESULT HTTPPostSNMPCommunity(HTTP_CONN_HANDLE connHandle);
         #endif
     #endif
-    #if defined(HTTP_APP_USE_EMAIL) || defined(TCPIP_STACK_USE_SMTP_CLIENT)
+    #if defined(HTTP_APP_USE_EMAIL) 
         static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle);
     #endif
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
@@ -880,7 +878,7 @@ HTTP_IO_RESULT TCPIP_HTTP_PostExecute(HTTP_CONN_HANDLE connHandle)
     #endif
 #endif
 
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#if defined(HTTP_APP_USE_EMAIL)
     if(!strcmp((char*)filename, "email/index.htm"))
         return HTTPPostEmail(connHandle);
 #endif
@@ -1726,7 +1724,7 @@ static HTTP_IO_RESULT HTTPPostMD5(HTTP_CONN_HANDLE connHandle)
 }
 #endif // #if defined(HTTP_APP_USE_MD5)
 
-/*****************************************************************************
+/****************************************************************************
   Function:
     static HTTP_IO_RESULT HTTPPostEmail(void)
 
@@ -1734,22 +1732,13 @@ static HTTP_IO_RESULT HTTPPostMD5(HTTP_CONN_HANDLE connHandle)
     Processes the e-mail form on email/index.htm
 
   Description:
-    This function sends an e-mail message using the SMTP client and
-    optionally encrypts the connection to the SMTP server.  It
-    demonstrates the use of the SMTP client, waiting for asynchronous
-    processes in an HTTP callback, and how to send e-mail attachments using
-    the stack.
-
-    Messages with attachments are sent using multipart/mixed MIME encoding,
-    which has three sections.  The first has no headers, and is only to be
-    displayed by old clients that cannot interpret the MIME format.  (The
-    overwhelming majority of these clients have been obseleted, but the
-    so-called "ignored" section is still used.)  The second has a few
-    headers to indicate that it is the main body of the message in plain-
-    text encoding.  The third section has headers indicating an attached
-    file, along with its name and type.  All sections are separated by a
-    boundary string, which cannot appear anywhere else in the message.
-
+    This function sends an e-mail message using the SMTPC client.
+    If encryption is needed it is done by the SMTPC module communicating with the SMTP server.
+    (the NET_PRES layer has to be configured for encryption support).
+    
+    It demonstrates the use of the SMTPC client, waiting for asynchronous
+    processes in an HTTP callback.
+    
   Precondition:
     None
 
@@ -1760,362 +1749,217 @@ static HTTP_IO_RESULT HTTPPostMD5(HTTP_CONN_HANDLE connHandle)
     HTTP_IO_DONE - the message has been sent
     HTTP_IO_WAITING - the function is waiting for the SMTP process to complete
     HTTP_IO_NEED_DATA - data needed by this function has not yet arrived
-  ***************************************************************************/
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+ ****************************************************************************/
+#if defined(HTTP_APP_USE_EMAIL)
+// size of an email parameter
+#define HTTP_APP_EMAIL_PARAM_SIZE           30 
+// maximum size of the mail body
+#define HTTP_APP_EMAIL_BODY_SIZE            200 
+// maximum size of the mail attachment
+#define HTTP_APP_EMAIL_ATTACHMENT_SIZE      200 
+
+// handle of the mail message submitted to SMTPC
+static TCPIP_SMTPC_MESSAGE_HANDLE postMailHandle = 0;
+
+// structure describing the post email operation
+typedef struct
+{
+    char*   ptrParam;       // pointer to the current parameter being retrieved
+    int     paramSize;      // size of the buffer to retrieve the parameter
+    int     attachLen;      // length of the attachment buffer
+    bool    mailParamsDone; // flag that signals that all parameters were retrieved
+    TCPIP_SMTPC_ATTACH_BUFFER attachBuffer; // descriptor for the attachment
+    TCPIP_SMTPC_MESSAGE_RESULT mailRes;     // operation outcome
+
+    // storage area
+    char serverName[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char username[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char password[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char mailTo[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char serverPort[10 + 1];
+    char mailBody[HTTP_APP_EMAIL_BODY_SIZE + 1];
+    char mailAttachment[HTTP_APP_EMAIL_ATTACHMENT_SIZE];
+
+}HTTP_POST_EMAIL_DCPT;
+
+static HTTP_POST_EMAIL_DCPT postEmail;
+
+// callback for getting the signal of mail completion
+static void postMailCallback(TCPIP_SMTPC_MESSAGE_HANDLE messageHandle, const TCPIP_SMTPC_MESSAGE_REPORT* pMailReport)
+{
+    postEmail.mailRes = pMailReport->messageRes;
+    if(postEmail.mailRes < 0)
+    {
+        SYS_CONSOLE_PRINT("SMTPC mail FAILED! Callback result: %d\r\n", postEmail.mailRes);
+    }
+    else
+    {
+        SYS_CONSOLE_MESSAGE("SMTPC mail SUCCESS!\r\n");
+    }
+}
+
 static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle)
 {
-    static uint8_t *ptrData;
-    static uint8_t *szPort;
-    static TCPIP_SMTP_CLIENT_MESSAGE mySMTPClient;
-    uint16_t len, rem;
-    uint8_t cName[8];
-    uint8_t* httpDataBuff;
-    uint16_t httpBuffSize;
-    TCP_SOCKET sktHTTP;
 
-    #define SM_EMAIL_CLAIM_MODULE               (0u)
-    #define SM_EMAIL_READ_PARAM_NAME            (1u)
-    #define SM_EMAIL_READ_PARAM_VALUE           (2u)
-    #define SM_EMAIL_PUT_IGNORED                (3u)
-    #define SM_EMAIL_PUT_BODY                   (4u)
-    #define SM_EMAIL_PUT_ATTACHMENT_HEADER      (5u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS   (6u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS   (7u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_POT    (8u)
-    #define SM_EMAIL_PUT_TERMINATOR             (9u)
-    #define SM_EMAIL_FINISHING                  (10u)
+    TCPIP_SMTPC_MAIL_MESSAGE mySMTPMessage;
+    char paramName[HTTP_APP_EMAIL_PARAM_SIZE + 1];
 
-    httpDataBuff = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
-    httpBuffSize = TCPIP_HTTP_CurrentConnectionDataBufferSizeGet(connHandle);
-    sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
+    #define SM_EMAIL_INIT                       (0)
+    #define SM_EMAIL_READ_PARAM_NAME            (1)
+    #define SM_EMAIL_READ_PARAM_VALUE           (2)
+    #define SM_EMAIL_SEND_MESSAGE               (3)
+    #define SM_EMAIL_WAIT_RESULT                (4)
+
     switch(TCPIP_HTTP_CurrentConnectionPostSmGet(connHandle))
     {
-        case SM_EMAIL_CLAIM_MODULE:
-            // Try to claim module
-            if(TCPIP_SMTP_UsageBegin())
-            {// Module was claimed, so set up static parameters
-                memset(&mySMTPClient, 0, sizeof(mySMTPClient));
-                mySMTPClient.Subject = "Microchip TCP/IP Stack Status Update";
-                mySMTPClient.From = "\"SMTP Service\" <mchpboard@picsaregood.com>";
-
-                // The following two lines indicate to the receiving client that
-                // this message has an attachment.  The boundary field *must not*
-                // be included anywhere in the content of the message.  In real
-                // applications it is typically a long random string.
-                mySMTPClient.OtherHeaders = "MIME-version: 1.0\r\nContent-type: multipart/mixed; boundary=\"frontier\"\r\n";
-
-                // Move our state machine forward
-                ptrData = httpDataBuff;
-                szPort = NULL;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
-            }
-            return HTTP_IO_WAITING;
-
-        case SM_EMAIL_READ_PARAM_NAME:
-            // Search for a parameter name in POST data
-            if(TCPIP_HTTP_PostNameRead(connHandle, cName, sizeof(cName)) == HTTP_READ_INCOMPLETE)
-                return HTTP_IO_NEED_DATA;
-
-            // Try to match the name value
-            if(!strcmp((char*)cName, (const char*)"server"))
-            {// Read the server name
-                mySMTPClient.Server = (char*)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char*)cName, (const char*)"port"))
-            {// Read the server port
-                szPort = ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char*)cName, (const char*)"user"))
-            {// Read the user name
-                mySMTPClient.Username = (char*)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char*)cName, (const char*)"pass"))
-            {// Read the password
-                mySMTPClient.Password = (char*)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char*)cName, (const char*)"to"))
-            {// Read the To string
-                mySMTPClient.To = (char*)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char*)cName, (const char*)"msg"))
-            {// Done with headers, move on to the message
-                // Delete paramters that are just null strings (no data from user) or illegal (ex: password without username)
-                if(mySMTPClient.Server )
-                    if(*mySMTPClient.Server == 0x00u)
-                        mySMTPClient.Server = NULL;
-                if(mySMTPClient.Username )
-                    if(*mySMTPClient.Username == 0x00u)
-                        mySMTPClient.Username = NULL;
-                if(mySMTPClient.Password)
-                    if((*mySMTPClient.Password == 0x00u) || (mySMTPClient.Username == NULL))
-                        mySMTPClient.Password = NULL;
-
-                // Decode server port string if it exists
-                if(szPort)
-                    if(*szPort)
-                        mySMTPClient.ServerPort = (uint16_t)atol((char*)szPort);
-
-                // Start sending the message
-                TCPIP_SMTP_MailSend(&mySMTPClient);
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_IGNORED);
+        case SM_EMAIL_INIT:
+            if(postMailHandle != 0)
+            {   // some other operation on going
                 return HTTP_IO_WAITING;
             }
-            else
-            {// Don't know what we're receiving
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
 
-            // No break...continue to try reading the value
-
-        case SM_EMAIL_READ_PARAM_VALUE:
-            // Search for a parameter value in POST data
-            rem = httpBuffSize - (ptrData - httpDataBuff);
-            if(TCPIP_HTTP_PostValueRead(connHandle, ptrData, rem) == HTTP_READ_INCOMPLETE)
-                return HTTP_IO_NEED_DATA;
-
-            // Move past the data that was just read
-            ptrData += strlen((char*)ptrData);
-            if(ptrData < httpDataBuff + httpBuffSize - 1)
-                ptrData += 1;
-
-            // Try reading the next parameter
+            memset(&postEmail, 0, sizeof(postEmail));
             TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
             return HTTP_IO_WAITING;
 
-        case SM_EMAIL_PUT_IGNORED:
-            // This section puts a message that is ignored by compatible clients.
-            // This text will not display unless the receiving client is obselete
-            // and does not understand the MIME structure.
-            // The "--frontier" indicates the start of a section, then any
-            // needed MIME headers follow, then two CRLF pairs, and then
-            // the actual content (which will be the body text in the next state).
 
-            // Check to see if a failure occured
-            if(!TCPIP_SMTP_IsBusy())
+        case SM_EMAIL_READ_PARAM_NAME:
+            // Search for a parameter name in POST data
+            if(TCPIP_HTTP_PostNameRead(connHandle, (uint8_t*)paramName, sizeof(paramName)) == HTTP_READ_INCOMPLETE)
             {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
+                return HTTP_IO_NEED_DATA;
             }
 
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 90u)
-                return HTTP_IO_WAITING;
-
-            // Write the ignored text
-            TCPIP_SMTP_StringPut("This is a multi-part message in MIME format.\r\n");
-            TCPIP_SMTP_StringPut("--frontier\r\nContent-type: text/plain\r\n\r\n");
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_BODY);
-
-        case SM_EMAIL_PUT_BODY:
-            // Write as much body text as is available from the TCP buffer
-            // return HTTP_IO_NEED_DATA or HTTP_IO_WAITING
-            // On completion, => PUT_ATTACHMENT_HEADER and continue
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
+            // Try to match the name value
+            if(!strcmp(paramName, (const char *)"server"))
+            {   // Read the server name
+                postEmail.ptrParam = postEmail.serverName;
+                postEmail.paramSize = sizeof(postEmail.serverName) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"user"))
+            {   // Read the user name
+                postEmail.ptrParam = postEmail.username;
+                postEmail.paramSize = sizeof(postEmail.username) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"pass"))
+            {   // Read the password
+                postEmail.ptrParam = postEmail.password;
+                postEmail.paramSize = sizeof(postEmail.password) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"to"))
+            {   // Read the To string
+                postEmail.ptrParam = postEmail.mailTo;
+                postEmail.paramSize = sizeof(postEmail.mailTo) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"port"))
+            {   // Read the server port
+                postEmail.ptrParam = postEmail.serverPort;
+                postEmail.paramSize = sizeof(postEmail.serverPort) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"msg"))
+            {   // Read the server port
+                postEmail.ptrParam = postEmail.mailBody;
+                postEmail.paramSize = sizeof(postEmail.mailBody) - 1;
+                postEmail.mailParamsDone = true;
+            }
+            else
+            {   // unknown parameter
+                postEmail.ptrParam = 0;
+                postEmail.paramSize = 0;
             }
 
-            // Loop as long as data remains to be read
-            while(TCPIP_HTTP_CurrentConnectionByteCountGet(connHandle))
-            {
-                // See if space is available to write
-                len = TCPIP_SMTP_IsPutReady();
-                if(len == 0u)
-                    return HTTP_IO_WAITING;
-
-                // See if data is ready to be read
-                rem = TCPIP_TCP_GetIsReady(sktHTTP);
-                if(rem == 0u)
-                    return HTTP_IO_NEED_DATA;
-
-                // Only write as much as we can handle
-                if(len > rem)
-                    len = rem;
-                if(len > httpBuffSize - 2)
-                    len = httpBuffSize - 2;
-
-                // Read the data from HTTP POST buffer and send it to SMTP
-                TCPIP_HTTP_CurrentConnectionByteCountDec(connHandle, TCPIP_TCP_ArrayGet(sktHTTP, httpDataBuff, len));
-                httpDataBuff[len] = '\0';
-                TCPIP_HTTP_URLDecode(httpDataBuff);
-                TCPIP_SMTP_StringPut((char*)httpDataBuff);
-                TCPIP_SMTP_Flush();
-            }
-
-            // We're done with the POST data, so continue
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_HEADER);
-
-        case SM_EMAIL_PUT_ATTACHMENT_HEADER:
-            // This section writes the attachment to the message.
-            // This portion generally will not display in the reader, but
-            // will be downloadable to the local machine.  Use caution
-            // when selecting the content-type and file name, as certain
-            // types and extensions are blocked by virus filters.
-
-            // The same structure as the message body is used.
-            // Any attachment must not include high-bit ASCII characters or
-            // binary data.  If binary data is to be sent, the data should
-            // be encoded using Base64 and a MIME header should be added:
-            // Content-transfer-encoding: base64
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 100u)
-                return HTTP_IO_WAITING;
-
-            // Write the attachment header
-            TCPIP_SMTP_StringPut("\r\n--frontier\r\nContent-type: text/csv\r\nContent-Disposition: attachment; filename=\"status.csv\"\r\n\r\n");
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS:
-            // The following states output the system status as a CSV file.
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 36u)
-                return HTTP_IO_WAITING;
-
-            // Write the header and button strings
-            TCPIP_SMTP_StringPut("SYSTEM STATUS\r\n");
-            TCPIP_SMTP_StringPut("Buttons:,");
-            TCPIP_SMTP_Put(BSP_SwitchStateGet(APP_TCPIP_SWITCH_1) + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(BSP_SwitchStateGet(APP_TCPIP_SWITCH_2) + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(BSP_SwitchStateGet(APP_TCPIP_SWITCH_3) + '0');
-            TCPIP_SMTP_Put('\r');
-            TCPIP_SMTP_Put('\n');
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS:
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 30u)
-                return HTTP_IO_WAITING;
-
-            // Write the header and button strings
-            TCPIP_SMTP_StringPut("LEDs:,");
-            TCPIP_SMTP_Put(BSP_LEDStateGet(APP_TCPIP_LED_1) + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(BSP_LEDStateGet(APP_TCPIP_LED_2) + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(BSP_LEDStateGet(APP_TCPIP_LED_3) + '0');
-            TCPIP_SMTP_Put('\r');
-            TCPIP_SMTP_Put('\n');
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_POT);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_POT:
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 16u)
-                return HTTP_IO_WAITING;
-
-            // Display Random Number
-            len = (uint16_t)SYS_RANDOM_PseudoGet();
-
-            uitoa(len, (uint8_t*)&httpDataBuff[1]);
-
-            // Write the header and button strings
-            TCPIP_SMTP_StringPut("Pot:,");
-            TCPIP_SMTP_StringPut((char*)(httpDataBuff+1));
-            TCPIP_SMTP_Put('\r');
-            TCPIP_SMTP_Put('\n');
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_TERMINATOR);
-
-        case SM_EMAIL_PUT_TERMINATOR:
-            // This section finishes the message
-            // This consists of two dashes, the boundary, and two more dashes
-            // on a single line, followed by a CRLF pair to terminate the message.
-
-            // Check to see if a failure occured
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 16u)
-                return HTTP_IO_WAITING;
-
-            // Write the ignored text
-            TCPIP_SMTP_StringPut("--frontier--\r\n");
-            TCPIP_SMTP_PutIsDone();
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-
-        case SM_EMAIL_FINISHING:
-            // Wait for status
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                // Release the module and check success
-                // Redirect the user based on the result
-                if(TCPIP_SMTP_UsageEnd() == SMTP_SUCCESS)
-                    lastSuccess = true;
-                else
-                    lastFailure = true;
-
-                // Redirect to the page
-                strcpy((char*)httpDataBuff, "/email/index.htm");
-                TCPIP_HTTP_CurrentConnectionStatusSet(connHandle, HTTP_REDIRECT);
-                return HTTP_IO_DONE;
-            }
-
+            // read the parameter now
+            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
             return HTTP_IO_WAITING;
+
+
+        case SM_EMAIL_READ_PARAM_VALUE:
+            // Search for a parameter value in POST data
+            if(TCPIP_HTTP_PostValueRead(connHandle, (uint8_t*)postEmail.ptrParam, postEmail.paramSize) == HTTP_READ_INCOMPLETE)
+                return HTTP_IO_NEED_DATA;
+
+            // end parameter properly
+            postEmail.ptrParam[postEmail.paramSize] = 0;
+
+            // check if we're done with the parameters
+            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, postEmail.mailParamsDone == true ? SM_EMAIL_SEND_MESSAGE : SM_EMAIL_READ_PARAM_NAME);
+            return HTTP_IO_WAITING;
+
+        case SM_EMAIL_SEND_MESSAGE:
+            // prepare the message attachment
+            // output the system status as a CSV file.
+            // Write the header and button strings
+            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", APP_SWITCH_1StateGet() + '0', APP_SWITCH_2StateGet() + '0', APP_SWITCH_3StateGet() + '0');
+            // Write the header and button strings
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", BSP_LEDStateGet(APP_LED_1) + '0', BSP_LEDStateGet(APP_LED_2) + '0', BSP_LEDStateGet(APP_LED_3) + '0');
+            // add a potentiometer read: a random string
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", SYS_RANDOM_PseudoGet());
+
+            // prepare the message itself
+            memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
+            mySMTPMessage.body = (const uint8_t*)postEmail.mailBody;
+            mySMTPMessage.bodySize = strlen(postEmail.mailBody);
+            mySMTPMessage.smtpServer = postEmail.serverName;
+            mySMTPMessage.serverPort = (uint16_t)atol(postEmail.serverPort);
+            mySMTPMessage.username = postEmail.username;
+            mySMTPMessage.password = postEmail.password;
+            mySMTPMessage.to = postEmail.mailTo;
+            mySMTPMessage.from = "\"SMTP Service\" <mchpboard@picsaregood.com>";
+            mySMTPMessage.subject = "Microchip TCP/IP Stack Status Update";
+
+            // set the buffer attachment
+            postEmail.attachBuffer.attachType = TCPIP_SMTPC_ATTACH_TYPE_TEXT;
+            postEmail.attachBuffer.attachEncode = TCPIP_SMTPC_ENCODE_TYPE_7BIT;
+            postEmail.attachBuffer.attachName = "status.csv";
+            postEmail.attachBuffer.attachBuffer = (const uint8_t*)postEmail.mailAttachment;
+            postEmail.attachBuffer.attachSize = postEmail.attachLen;
+            mySMTPMessage.attachBuffers = &postEmail.attachBuffer;
+            mySMTPMessage.nBuffers = 1;
+            // set the notification function
+            mySMTPMessage.messageCallback = postMailCallback;
+            
+            postMailHandle = TCPIP_SMTPC_MailMessage(&mySMTPMessage, &postEmail.mailRes);
+            if(postMailHandle == 0)
+            {   // failed
+                SYS_CONSOLE_PRINT("SMTPC mail: Failed to submit message: %d!\r\n", postEmail.mailRes);
+            }
+            else
+            {
+                postEmail.mailRes = TCPIP_SMTPC_RES_PENDING;
+                SYS_CONSOLE_MESSAGE("SMTPC mail: Submitted the mail message!\r\n");
+            }
+
+            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_WAIT_RESULT);
+            return HTTP_IO_WAITING;
+
+        case SM_EMAIL_WAIT_RESULT:
+            // Wait for status done
+            if(postEmail.mailRes == TCPIP_SMTPC_RES_PENDING)
+            {   // not done yet
+                return HTTP_IO_WAITING;
+            }
+
+            // done
+            postMailHandle = 0;
+
+            if(postEmail.mailRes == TCPIP_SMTPC_RES_OK)
+            {
+                lastSuccess = true;
+            }
+            else
+            {
+                lastFailure = true;
+            }
+
+            // Redirect to the page
+            strcpy((char *)TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle), "/email/index.htm");
+            TCPIP_HTTP_CurrentConnectionStatusSet(connHandle, HTTP_REDIRECT);
+            return HTTP_IO_DONE;
     }
 
     return HTTP_IO_DONE;
 }
-#endif  // #if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#endif // #if defined(HTTP_APP_USE_EMAIL)
 
 /****************************************************************************
   Function:
@@ -2581,7 +2425,7 @@ void TCPIP_HTTP_Print_config_dns2(HTTP_CONN_HANDLE connHandle)
 <#else>
     secondDnsAddr.Val = 0;
 </#if>
-niyas
+
     HTTPPrintIP(connHandle, secondDnsAddr);
 }
 
@@ -3213,7 +3057,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 #endif
 
 // Use the e-mail demo web page
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#if defined(TCPIP_STACK_USE_SMTPC)
 #define HTTP_APP_USE_EMAIL
 #endif
 
@@ -3243,7 +3087,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
         static HTTP_IO_RESULT HTTPPostSNMPCommunity(HTTP_CONN_HANDLE connHandle);
         #endif
     #endif
-    #if defined(HTTP_APP_USE_EMAIL) || defined(TCPIP_STACK_USE_SMTP_CLIENT)
+    #if defined(HTTP_APP_USE_EMAIL) 
         static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle);
     #endif
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
@@ -3686,7 +3530,7 @@ HTTP_IO_RESULT TCPIP_HTTP_PostExecute(HTTP_CONN_HANDLE connHandle)
     #endif
 #endif
 
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#if defined(HTTP_APP_USE_EMAIL)
     if(!strcmp((char *)filename, "email/index.htm"))
         return HTTPPostEmail(connHandle);
 #endif
@@ -4224,22 +4068,13 @@ static HTTP_IO_RESULT HTTPPostSNMPCommunity(HTTP_CONN_HANDLE connHandle)
     Processes the e-mail form on email/index.htm
 
   Description:
-    This function sends an e-mail message using the SMTP client and
-    optionally encrypts the connection to the SMTP server.  It
-    demonstrates the use of the SMTP client, waiting for asynchronous
-    processes in an HTTP callback, and how to send e-mail attachments using
-    the stack.
-
-    Messages with attachments are sent using multipart/mixed MIME encoding,
-    which has three sections.  The first has no headers, and is only to be
-    displayed by old clients that cannot interpret the MIME format.  (The
-    overwhelming majority of these clients have been obseleted, but the
-    so-called "ignored" section is still used.)  The second has a few
-    headers to indicate that it is the main body of the message in plain-
-    text encoding.  The third section has headers indicating an attached
-    file, along with its name and type.  All sections are separated by a
-    boundary string, which cannot appear anywhere else in the message.
-
+    This function sends an e-mail message using the SMTPC client.
+    If encryption is needed it is done by the SMTPC module communicating with the SMTP server.
+    (the NET_PRES layer has to be configured for encryption support).
+    
+    It demonstrates the use of the SMTPC client, waiting for asynchronous
+    processes in an HTTP callback.
+    
   Precondition:
     None
 
@@ -4251,361 +4086,216 @@ static HTTP_IO_RESULT HTTPPostSNMPCommunity(HTTP_CONN_HANDLE connHandle)
     HTTP_IO_WAITING - the function is waiting for the SMTP process to complete
     HTTP_IO_NEED_DATA - data needed by this function has not yet arrived
  ****************************************************************************/
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#if defined(HTTP_APP_USE_EMAIL)
+// size of an email parameter
+#define HTTP_APP_EMAIL_PARAM_SIZE           30 
+// maximum size of the mail body
+#define HTTP_APP_EMAIL_BODY_SIZE            200 
+// maximum size of the mail attachment
+#define HTTP_APP_EMAIL_ATTACHMENT_SIZE      200 
+
+// handle of the mail message submitted to SMTPC
+static TCPIP_SMTPC_MESSAGE_HANDLE postMailHandle = 0;
+
+// structure describing the post email operation
+typedef struct
+{
+    char*   ptrParam;       // pointer to the current parameter being retrieved
+    int     paramSize;      // size of the buffer to retrieve the parameter
+    int     attachLen;      // length of the attachment buffer
+    bool    mailParamsDone; // flag that signals that all parameters were retrieved
+    TCPIP_SMTPC_ATTACH_BUFFER attachBuffer; // descriptor for the attachment
+    TCPIP_SMTPC_MESSAGE_RESULT mailRes;     // operation outcome
+
+    // storage area
+    char serverName[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char username[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char password[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char mailTo[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char serverPort[10 + 1];
+    char mailBody[HTTP_APP_EMAIL_BODY_SIZE + 1];
+    char mailAttachment[HTTP_APP_EMAIL_ATTACHMENT_SIZE];
+
+}HTTP_POST_EMAIL_DCPT;
+
+static HTTP_POST_EMAIL_DCPT postEmail;
+
+// callback for getting the signal of mail completion
+static void postMailCallback(TCPIP_SMTPC_MESSAGE_HANDLE messageHandle, const TCPIP_SMTPC_MESSAGE_REPORT* pMailReport)
+{
+    postEmail.mailRes = pMailReport->messageRes;
+    if(postEmail.mailRes < 0)
+    {
+        SYS_CONSOLE_PRINT("SMTPC mail FAILED! Callback result: %d\r\n", postEmail.mailRes);
+    }
+    else
+    {
+        SYS_CONSOLE_MESSAGE("SMTPC mail SUCCESS!\r\n");
+    }
+}
+
 static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle)
 {
-    static uint8_t *ptrData;
-    static uint8_t *szPort;
-    static TCPIP_SMTP_CLIENT_MESSAGE mySMTPClient;
-    uint16_t len, rem;
-    uint8_t cName[8];
-    uint8_t *httpDataBuff;
-    uint16_t httpBuffSize;
-    TCP_SOCKET sktHTTP;
 
-    #define SM_EMAIL_CLAIM_MODULE               (0u)
-    #define SM_EMAIL_READ_PARAM_NAME            (1u)
-    #define SM_EMAIL_READ_PARAM_VALUE           (2u)
-    #define SM_EMAIL_PUT_IGNORED                (3u)
-    #define SM_EMAIL_PUT_BODY                   (4u)
-    #define SM_EMAIL_PUT_ATTACHMENT_HEADER      (5u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS   (6u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS   (7u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_POT    (8u)
-    #define SM_EMAIL_PUT_TERMINATOR             (9u)
-    #define SM_EMAIL_FINISHING                  (10u)
+    TCPIP_SMTPC_MAIL_MESSAGE mySMTPMessage;
+    char paramName[HTTP_APP_EMAIL_PARAM_SIZE + 1];
 
-    httpDataBuff = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
-    httpBuffSize = TCPIP_HTTP_CurrentConnectionDataBufferSizeGet(connHandle);
-    sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
+    #define SM_EMAIL_INIT                       (0)
+    #define SM_EMAIL_READ_PARAM_NAME            (1)
+    #define SM_EMAIL_READ_PARAM_VALUE           (2)
+    #define SM_EMAIL_SEND_MESSAGE               (3)
+    #define SM_EMAIL_WAIT_RESULT                (4)
+
     switch(TCPIP_HTTP_CurrentConnectionPostSmGet(connHandle))
     {
-        case SM_EMAIL_CLAIM_MODULE:
-            // Try to claim module
-            if(TCPIP_SMTP_UsageBegin())
-            {   // Module was claimed, so set up static parameters
-                memset(&mySMTPClient, 0, sizeof(mySMTPClient));
-                mySMTPClient.Subject = "Microchip TCP/IP Stack Status Update";
-                mySMTPClient.From = "\"SMTP Service\" <mchpboard@picsaregood.com>";
-
-                // The following two lines indicate to the receiving client that
-                // this message has an attachment.  The boundary field *must not*
-                // be included anywhere in the content of the message.  In real
-                // applications it is typically a long random string.
-                mySMTPClient.OtherHeaders = "MIME-version: 1.0\r\nContent-type: multipart/mixed; boundary=\"frontier\"\r\n";
-
-                // Move our state machine forward
-                ptrData = httpDataBuff;
-                szPort = NULL;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
-            }
-            return HTTP_IO_WAITING;
-
-        case SM_EMAIL_READ_PARAM_NAME:
-            // Search for a parameter name in POST data
-            if(TCPIP_HTTP_PostNameRead(connHandle, cName, sizeof(cName)) == HTTP_READ_INCOMPLETE)
-                return HTTP_IO_NEED_DATA;
-
-            // Try to match the name value
-            if(!strcmp((char *)cName, (const char *)"server"))
-            {   // Read the server name
-                mySMTPClient.Server = (char *)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"port"))
-            {   // Read the server port
-                szPort = ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"user"))
-            {   // Read the user name
-                mySMTPClient.Username = (char *)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"pass"))
-            {   // Read the password
-                mySMTPClient.Password = (char *)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"to"))
-            {   // Read the To string
-                mySMTPClient.To = (char *)ptrData;
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"msg"))
-            {   // Done with headers, move on to the message
-                // Delete parameters that are just null strings (no data from user) or illegal (ex: password without username)
-                if(mySMTPClient.Server )
-                    if(*mySMTPClient.Server == 0x00u)
-                        mySMTPClient.Server = NULL;
-                if(mySMTPClient.Username )
-                    if(*mySMTPClient.Username == 0x00u)
-                        mySMTPClient.Username = NULL;
-                if(mySMTPClient.Password)
-                    if((*mySMTPClient.Password == 0x00u) || (mySMTPClient.Username == NULL))
-                        mySMTPClient.Password = NULL;
-
-                // Decode server port string if it exists
-                if(szPort)
-                    if(*szPort)
-                        mySMTPClient.ServerPort = (uint16_t)atol((char *)szPort);
-
-                // Start sending the message
-                TCPIP_SMTP_MailSend(&mySMTPClient);
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_IGNORED);
+        case SM_EMAIL_INIT:
+            if(postMailHandle != 0)
+            {   // some other operation on going
                 return HTTP_IO_WAITING;
             }
-            else
-            {   // Don't know what we're receiving
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
 
-            // No break...continue to try reading the value
-
-        case SM_EMAIL_READ_PARAM_VALUE:
-            // Search for a parameter value in POST data
-            rem = httpBuffSize - (ptrData - httpDataBuff);
-            if(TCPIP_HTTP_PostValueRead(connHandle, ptrData, rem) == HTTP_READ_INCOMPLETE)
-                return HTTP_IO_NEED_DATA;
-
-            // Move past the data that was just read
-            ptrData += strlen((char *)ptrData);
-            if(ptrData < httpDataBuff + httpBuffSize - 1)
-                ptrData += 1;
-
-            // Try reading the next parameter
+            memset(&postEmail, 0, sizeof(postEmail));
             TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
             return HTTP_IO_WAITING;
 
-        case SM_EMAIL_PUT_IGNORED:
-            // This section puts a message that is ignored by compatible clients.
-            // This text will not display unless the receiving client is obselete
-            // and does not understand the MIME structure.
-            // The "--frontier" indicates the start of a section, then any
-            // needed MIME headers follow, then two CRLF pairs, and then
-            // the actual content (which will be the body text in the next state).
 
-            // Check to see if a failure occured
-            if(!TCPIP_SMTP_IsBusy())
+        case SM_EMAIL_READ_PARAM_NAME:
+            // Search for a parameter name in POST data
+            if(TCPIP_HTTP_PostNameRead(connHandle, (uint8_t*)paramName, sizeof(paramName)) == HTTP_READ_INCOMPLETE)
             {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
+                return HTTP_IO_NEED_DATA;
             }
 
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 90u)
-                return HTTP_IO_WAITING;
-
-            // Write the ignored text
-            TCPIP_SMTP_StringPut("This is a multi-part message in MIME format.\r\n");
-            TCPIP_SMTP_StringPut("--frontier\r\nContent-type: text/plain\r\n\r\n");
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_BODY);
-
-        case SM_EMAIL_PUT_BODY:
-            // Write as much body text as is available from the TCP buffer
-            // return HTTP_IO_NEED_DATA or HTTP_IO_WAITING
-            // On completion, => PUT_ATTACHMENT_HEADER and continue
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
+            // Try to match the name value
+            if(!strcmp(paramName, (const char *)"server"))
+            {   // Read the server name
+                postEmail.ptrParam = postEmail.serverName;
+                postEmail.paramSize = sizeof(postEmail.serverName) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"user"))
+            {   // Read the user name
+                postEmail.ptrParam = postEmail.username;
+                postEmail.paramSize = sizeof(postEmail.username) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"pass"))
+            {   // Read the password
+                postEmail.ptrParam = postEmail.password;
+                postEmail.paramSize = sizeof(postEmail.password) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"to"))
+            {   // Read the To string
+                postEmail.ptrParam = postEmail.mailTo;
+                postEmail.paramSize = sizeof(postEmail.mailTo) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"port"))
+            {   // Read the server port
+                postEmail.ptrParam = postEmail.serverPort;
+                postEmail.paramSize = sizeof(postEmail.serverPort) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"msg"))
+            {   // Read the server port
+                postEmail.ptrParam = postEmail.mailBody;
+                postEmail.paramSize = sizeof(postEmail.mailBody) - 1;
+                postEmail.mailParamsDone = true;
+            }
+            else
+            {   // unknown parameter
+                postEmail.ptrParam = 0;
+                postEmail.paramSize = 0;
             }
 
-            // Loop as long as data remains to be read
-            while(TCPIP_HTTP_CurrentConnectionByteCountGet(connHandle))
-            {
-                // See if space is available to write
-                len = TCPIP_SMTP_IsPutReady();
-                if(len == 0u)
-                    return HTTP_IO_WAITING;
-
-                // See if data is ready to be read
-                rem = TCPIP_TCP_GetIsReady(sktHTTP);
-                if(rem == 0u)
-                    return HTTP_IO_NEED_DATA;
-
-                // Only write as much as we can handle
-                if(len > rem)
-                    len = rem;
-                if(len > httpBuffSize - 2)
-                    len = httpBuffSize - 2;
-
-                // Read the data from HTTP POST buffer and send it to SMTP
-                TCPIP_HTTP_CurrentConnectionByteCountDec(connHandle, TCPIP_TCP_ArrayGet(sktHTTP, httpDataBuff, len));
-                httpDataBuff[len] = '\0';
-                TCPIP_HTTP_URLDecode(httpDataBuff);
-                TCPIP_SMTP_StringPut((char *)httpDataBuff);
-                TCPIP_SMTP_Flush();
-            }
-
-            // We're done with the POST data, so continue
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_HEADER);
-
-        case SM_EMAIL_PUT_ATTACHMENT_HEADER:
-            // This section writes the attachment to the message.
-            // This portion generally will not display in the reader, but
-            // will be downloadable to the local machine.  Use caution
-            // when selecting the content-type and file name, as certain
-            // types and extensions are blocked by virus filters.
-
-            // The same structure as the message body is used.
-            // Any attachment must not include high-bit ASCII characters or
-            // binary data.  If binary data is to be sent, the data should
-            // be encoded using Base64 and a MIME header should be added:
-            // Content-transfer-encoding: base64
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 100u)
-                return HTTP_IO_WAITING;
-
-            // Write the attachment header
-            TCPIP_SMTP_StringPut("\r\n--frontier\r\nContent-type: text/csv\r\nContent-Disposition: attachment; filename=\"status.csv\"\r\n\r\n");
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS:
-            // The following states output the system status as a CSV file.
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 36u)
-                return HTTP_IO_WAITING;
-
-            // Write the header and button strings
-            TCPIP_SMTP_StringPut("SYSTEM STATUS\r\n");
-            TCPIP_SMTP_StringPut("Buttons:,");
-            TCPIP_SMTP_Put(APP_SWITCH_1StateGet() + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(APP_SWITCH_2StateGet() + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(APP_SWITCH_3StateGet() + '0');
-            TCPIP_SMTP_Put('\r');
-            TCPIP_SMTP_Put('\n');
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS:
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 30u)
-                return HTTP_IO_WAITING;
-
-            // Write the header and button strings
-            TCPIP_SMTP_StringPut("LEDs:,");
-            TCPIP_SMTP_Put(APP_LED_1StateGet() + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(APP_LED_2StateGet() + '0');
-            TCPIP_SMTP_Put(',');
-            TCPIP_SMTP_Put(APP_LED_3StateGet() + '0');
-            TCPIP_SMTP_Put('\r');
-            TCPIP_SMTP_Put('\n');
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_POT);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_POT:
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 16u)
-                return HTTP_IO_WAITING;
-
-            // Display Random Number
-            len = (uint16_t)SYS_RANDOM_PseudoGet();
-
-            uitoa(len, (uint8_t *)&httpDataBuff[1]);
-
-            // Write the header and button strings
-            TCPIP_SMTP_StringPut("Pot:,");
-            TCPIP_SMTP_StringPut((char *)(httpDataBuff + 1));
-            TCPIP_SMTP_Put('\r');
-            TCPIP_SMTP_Put('\n');
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_PUT_TERMINATOR);
-
-        case SM_EMAIL_PUT_TERMINATOR:
-            // This section finishes the message
-            // This consists of two dashes, the boundary, and two more dashes
-            // on a single line, followed by a CRLF pair to terminate the message.
-
-            // Check to see if a failure occured
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return HTTP_IO_WAITING;
-            }
-
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < 16u)
-                return HTTP_IO_WAITING;
-
-            // Write the ignored text
-            TCPIP_SMTP_StringPut("--frontier--\r\n");
-            TCPIP_SMTP_PutIsDone();
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-
-        case SM_EMAIL_FINISHING:
-            // Wait for status
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                // Release the module and check success
-                // Redirect the user based on the result
-                if(TCPIP_SMTP_UsageEnd() == SMTP_SUCCESS)
-                    lastSuccess = true;
-                else
-                    lastFailure = true;
-
-                // Redirect to the page
-                strcpy((char *)httpDataBuff, "/email/index.htm");
-                TCPIP_HTTP_CurrentConnectionStatusSet(connHandle, HTTP_REDIRECT);
-                return HTTP_IO_DONE;
-            }
-
+            // read the parameter now
+            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
             return HTTP_IO_WAITING;
+
+
+        case SM_EMAIL_READ_PARAM_VALUE:
+            // Search for a parameter value in POST data
+            if(TCPIP_HTTP_PostValueRead(connHandle, (uint8_t*)postEmail.ptrParam, postEmail.paramSize) == HTTP_READ_INCOMPLETE)
+                return HTTP_IO_NEED_DATA;
+
+            // end parameter properly
+            postEmail.ptrParam[postEmail.paramSize] = 0;
+
+            // check if we're done with the parameters
+            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, postEmail.mailParamsDone == true ? SM_EMAIL_SEND_MESSAGE : SM_EMAIL_READ_PARAM_NAME);
+            return HTTP_IO_WAITING;
+
+        case SM_EMAIL_SEND_MESSAGE:
+            // prepare the message attachment
+            // output the system status as a CSV file.
+            // Write the header and button strings
+            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", APP_SWITCH_1StateGet() + '0', APP_SWITCH_2StateGet() + '0', APP_SWITCH_3StateGet() + '0');
+            // Write the header and button strings
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", BSP_LEDStateGet(APP_LED_1) + '0', BSP_LEDStateGet(APP_LED_2) + '0', BSP_LEDStateGet(APP_LED_3) + '0');
+            // add a potentiometer read: a random string
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", SYS_RANDOM_PseudoGet());
+
+            // prepare the message itself
+            memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
+            mySMTPMessage.body = (const uint8_t*)postEmail.mailBody;
+            mySMTPMessage.bodySize = strlen(postEmail.mailBody);
+            mySMTPMessage.smtpServer = postEmail.serverName;
+            mySMTPMessage.serverPort = (uint16_t)atol(postEmail.serverPort);
+            mySMTPMessage.username = postEmail.username;
+            mySMTPMessage.password = postEmail.password;
+            mySMTPMessage.to = postEmail.mailTo;
+            mySMTPMessage.from = "\"SMTP Service\" <mchpboard@picsaregood.com>";
+            mySMTPMessage.subject = "Microchip TCP/IP Stack Status Update";
+
+            // set the buffer attachment
+            postEmail.attachBuffer.attachType = TCPIP_SMTPC_ATTACH_TYPE_TEXT;
+            postEmail.attachBuffer.attachEncode = TCPIP_SMTPC_ENCODE_TYPE_7BIT;
+            postEmail.attachBuffer.attachName = "status.csv";
+            postEmail.attachBuffer.attachBuffer = (const uint8_t*)postEmail.mailAttachment;
+            postEmail.attachBuffer.attachSize = postEmail.attachLen;
+            mySMTPMessage.attachBuffers = &postEmail.attachBuffer;
+            mySMTPMessage.nBuffers = 1;
+            // set the notification function
+            mySMTPMessage.messageCallback = postMailCallback;
+            
+            postMailHandle = TCPIP_SMTPC_MailMessage(&mySMTPMessage, &postEmail.mailRes);
+            if(postMailHandle == 0)
+            {   // failed
+                SYS_CONSOLE_PRINT("SMTPC mail: Failed to submit message: %d!\r\n", postEmail.mailRes);
+            }
+            else
+            {
+                postEmail.mailRes = TCPIP_SMTPC_RES_PENDING;
+                SYS_CONSOLE_MESSAGE("SMTPC mail: Submitted the mail message!\r\n");
+            }
+
+            TCPIP_HTTP_CurrentConnectionPostSmSet(connHandle, SM_EMAIL_WAIT_RESULT);
+            return HTTP_IO_WAITING;
+
+        case SM_EMAIL_WAIT_RESULT:
+            // Wait for status done
+            if(postEmail.mailRes == TCPIP_SMTPC_RES_PENDING)
+            {   // not done yet
+                return HTTP_IO_WAITING;
+            }
+
+            // done
+            postMailHandle = 0;
+
+            if(postEmail.mailRes == TCPIP_SMTPC_RES_OK)
+            {
+                lastSuccess = true;
+            }
+            else
+            {
+                lastFailure = true;
+            }
+
+            // Redirect to the page
+            strcpy((char *)TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle), "/email/index.htm");
+            TCPIP_HTTP_CurrentConnectionStatusSet(connHandle, HTTP_REDIRECT);
+            return HTTP_IO_DONE;
     }
 
     return HTTP_IO_DONE;
 }
-#endif // #if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#endif // #if defined(HTTP_APP_USE_EMAIL)
 
 /****************************************************************************
   Function:

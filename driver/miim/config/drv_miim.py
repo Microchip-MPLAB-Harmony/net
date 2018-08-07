@@ -10,8 +10,7 @@ def instantiateComponent(drvMiimComponent):
 	drvUseMiim.setDescription("Use MIIM Driver?")
 	drvUseMiim.setDefaultValue(True)
 	#drvUseMiim.setDependencies(drvMiimMenuVisibleSingle, ["drvSamv71Gmac.TCPIP_USE_ETH_MAC"])
-	
-	# H3_ToDo : see whether this parameter is needed
+
 	# Ethernet MAC Module ID
 	drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", None) 
 	drvMiimModuleId.setLabel("ETH Module ID")

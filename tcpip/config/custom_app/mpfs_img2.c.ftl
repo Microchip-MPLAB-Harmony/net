@@ -1446,9 +1446,10 @@ struct MEDIA_STORAGE_PARTITION_INFO
 	sizeof(SRAM_MEDIA_0_DATA),
 };
 <#else><#-- USE_DRV_WIFI_WK -->
-<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>
-  <#if ((tcpipHttpNet.TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL  == true))>
+<#if (!(DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) ||(DRV_WIFI_HTTP_CUSTOM_TEMPLATE  != "Easy Configuration Demo"))>	
+  <#if (TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL?has_content) && (TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL  == true)>
     <#-- Following NVM_MEDIA_DATA[] is for web_net_server_nvm_mpfs demo, please keep the above if condition as is, which makes it easy for other non-Wi-Fi users -->
+	
 	const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))
 	NVM_MEDIA_DATA[DRV_MEMORY_DEVICE_MEDIA_SIZE*1024] = { \
 	0x4d,0x50,0x46,0x53,0x02,0x01,0x18,0x00,0x4a,0xce,0xea,0x81,0xf0,0x94,0x2a,0xba, /* MPFS....J....... */ \
@@ -3491,8 +3492,8 @@ struct MEDIA_STORAGE_PARTITION_INFO
 
 };
 
-  <#elseif ((tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE_SL?has_content) && (tcpipHttp.TCPIP_HTTP_CUSTOM_TEMPLATE_SL  == true))>
-    <#-- Following NVM_MEDIA_DATA[] is for web_server_nvm_mpfs demo -->
+  <#elseif (((TCPIP_HTTP_CUSTOM_TEMPLATE_SL)?has_content) && ((TCPIP_HTTP_CUSTOM_TEMPLATE_SL)  == true))>
+    <#-- Following NVM_MEDIA_DATA[] is for web_server_nvm_mpfs demo -->	
 	const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))
 	NVM_MEDIA_DATA[DRV_MEMORY_DEVICE_MEDIA_SIZE*1024] = { \
 	0x4d,0x50,0x46,0x53,0x02,0x01,0x18,0x00,0x4a,0xce,0xea,0x81,0xf0,0x94,0x2a,0xba, /* MPFS....J....... */ \
