@@ -1889,11 +1889,11 @@ static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle)
             // prepare the message attachment
             // output the system status as a CSV file.
             // Write the header and button strings
-            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", APP_SWITCH_1StateGet() + '0', APP_SWITCH_2StateGet() + '0', APP_SWITCH_3StateGet() + '0');
+            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", (int)APP_SWITCH_1StateGet() + '0', (int)APP_SWITCH_2StateGet() + '0', (int)APP_SWITCH_3StateGet() + '0');
             // Write the header and button strings
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", BSP_LEDStateGet(APP_LED_1) + '0', BSP_LEDStateGet(APP_LED_2) + '0', BSP_LEDStateGet(APP_LED_3) + '0');
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", (int)APP_LED_1StateGet() + '0', (int)APP_LED_2StateGet() + '0', (int)APP_LED_3StateGet(APP_LED_3) + '0');
             // add a potentiometer read: a random string
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", SYS_RANDOM_PseudoGet());
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", (int)SYS_RANDOM_PseudoGet());
 
             // prepare the message itself
             memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
@@ -2167,16 +2167,16 @@ void TCPIP_HTTP_Print_led(HTTP_CONN_HANDLE connHandle, uint16_t num)
         case 0:
             // This is a temporary work-around
 #if defined(EX16)
-            num = BSP_LEDStateGet(APP_TCPIP_LED_1);
+            num = APP_LED_1StateGet();
 #else
-            num = BSP_LEDStateGet(APP_TCPIP_LED_3);
+            num = APP_LED_3StateGet();
 #endif
             break;
         case 1:
-            num = BSP_LEDStateGet(APP_TCPIP_LED_2);
+            num = APP_LED_2StateGet();
             break;
         case 2:
-            num = BSP_LEDStateGet(APP_TCPIP_LED_3);
+            num = APP_LED_3StateGet();
             break;
         default:
             num = 0;
@@ -2194,13 +2194,13 @@ void TCPIP_HTTP_Print_ledSelected(HTTP_CONN_HANDLE connHandle, uint16_t num, uin
     switch(num)
     {
         case 0:
-            num = BSP_LEDStateGet(APP_TCPIP_LED_1);
+            num = APP_LED_1StateGet();
             break;
         case 1:
-            num = BSP_LEDStateGet(APP_TCPIP_LED_2);
+            num = APP_LED_2StateGet();
             break;
         case 2:
-            num = BSP_LEDStateGet(APP_TCPIP_LED_3);
+            num = APP_LED_3StateGet();
             break;
         default:
             num = 0;
@@ -4225,11 +4225,11 @@ static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle)
             // prepare the message attachment
             // output the system status as a CSV file.
             // Write the header and button strings
-            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", APP_SWITCH_1StateGet() + '0', APP_SWITCH_2StateGet() + '0', APP_SWITCH_3StateGet() + '0');
+            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", (int)APP_SWITCH_1StateGet() + '0', (int)APP_SWITCH_2StateGet() + '0', (int)APP_SWITCH_3StateGet() + '0');
             // Write the header and button strings
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", BSP_LEDStateGet(APP_LED_1) + '0', BSP_LEDStateGet(APP_LED_2) + '0', BSP_LEDStateGet(APP_LED_3) + '0');
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", (int)APP_LED_1StateGet() + '0', (int)APP_LED_2StateGet() + '0',(int)APP_LED_3StateGet() + '0');
             // add a potentiometer read: a random string
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", SYS_RANDOM_PseudoGet());
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", (int)SYS_RANDOM_PseudoGet());
 
             // prepare the message itself
             memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));

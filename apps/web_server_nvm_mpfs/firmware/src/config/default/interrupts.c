@@ -160,6 +160,9 @@ void GMAC_Q5_Handler            ( void ) __attribute__((weak, alias("Dummy_Handl
 
 
 
+/* Mutiple handlers for vector */
+
+
 __attribute__ ((section(".vectors")))
 const DeviceVectors exception_table=
 {

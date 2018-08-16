@@ -80,6 +80,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "system/sys_int_h2_adapter.h"
 #include "system/sys_clk_h2_adapter.h"
 #include "system/sys_random_h2_adapter.h"
+#include "system/sys_reset_h2_adapter.h"
 #include "peripheral/trng/plib_trng0.h"
 #include "peripheral/usart/plib_usart1.h"
 #include "app.h"
@@ -140,7 +141,6 @@ extern "C" {
 */
 
 void SYS_Initialize( void *data );
-
 
 // *****************************************************************************
 /* System Tasks Function
@@ -217,6 +217,7 @@ typedef struct
     SYS_MODULE_OBJ  tcpip;
 
 } SYSTEM_OBJECTS;
+
 
 // *****************************************************************************
 // *****************************************************************************

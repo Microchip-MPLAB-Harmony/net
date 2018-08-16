@@ -96,11 +96,7 @@ DRV_MEMORY_Tasks(sysObj.drvMemory0);
 
 
     /* Maintain the application's state machine. */
-        /* Call Application task APP. */
-    APP_Tasks();
-
-
-
+     APP_Tasks();
 }
 
 

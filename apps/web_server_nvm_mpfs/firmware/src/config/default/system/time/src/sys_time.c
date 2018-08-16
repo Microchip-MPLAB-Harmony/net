@@ -31,7 +31,12 @@ static SYS_TIME_TIMER_OBJ * time_getTimerObject(SYS_TIME_HANDLE handle)
 {
     /* The buffer index is the contained in the lower 16 bits of the buffer
      * handle */
-    return (&timers[handle & _SYS_TIME_HANDLE_TOKEN_MAX]);
+    if(handle != SYS_TIME_HANDLE_INVALID)
+    {      
+        return (&timers[handle & _SYS_TIME_HANDLE_TOKEN_MAX]);
+    }
+    
+    return NULL;
 }
 
 static void timerHardwarePeriod_update(SYS_TIME_COUNTER_OBJ *counterObj)
@@ -524,7 +529,6 @@ SYS_TIME_RESULT SYS_TIME_TimerDestroy(SYS_TIME_HANDLE handle)
     SYS_TIME_RESULT result = SYS_TIME_ERROR;
 
     tmr = time_getTimerObject(handle);
-
     if(tmr->inuse == true)
     {
         time_resourceLock();
@@ -538,7 +542,7 @@ SYS_TIME_RESULT SYS_TIME_TimerDestroy(SYS_TIME_HANDLE handle)
         time_resourceUnlock();
         result = SYS_TIME_SUCCESS;
     }
-
+    
     return result;
 }
 

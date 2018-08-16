@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Package name="net">
+    <Dependencies>
+        <Dependency name="core" version="3.0"/>
+    </Dependencies>
+</Package>

@@ -347,6 +347,7 @@ extern "C" {
 #define TCPIP_HTTP_CONFIG_FLAGS		        		1
 #define TCPIP_HTTP_USE_POST
 #define TCPIP_HTTP_USE_COOKIES
+#define TCPIP_HTTP_USE_BASE64_DECODE
 #define TCPIP_HTTP_USE_AUTHENTICATION
 #define TCPIP_HTTP_TASK_RATE					33
 #define TCPIP_HTTP_MALLOC_FUNC                     0
@@ -442,8 +443,7 @@ extern "C" {
 
 /*** SNTP Configuration ***/
 #define TCPIP_STACK_USE_SNTP_CLIENT
-/** H3_ToDo */
-#define TCPIP_NTP_DEFAULT_IF		        		"PIC32CINT"
+#define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
 #define TCPIP_NTP_VERSION             			    	4
 #define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
 #define TCPIP_NTP_EPOCH		                		2147483216ul

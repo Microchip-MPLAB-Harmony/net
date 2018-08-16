@@ -33,8 +33,6 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdarg.h>
-#include "configuration.h"
-#include "definitions.h"
 #include "system_config.h"
 #include "system_definitions.h"
 // DOM-IGNORE-BEGIN
@@ -50,7 +48,14 @@ extern "C" {
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
+#define APP_SWITCH_1StateGet()      SWITCH1_PA11_Get()
 
+
+
+#define APP_LED_1StateSet()         LED1_PC8_Set()
+#define APP_LED_1StateGet()         LED1_PC8_Get()
+#define APP_LED_1StateClear()       LED1_PC8_Clear()
+#define APP_LED_1StateToggle()      LED1_PC8_Toggle()
 // *****************************************************************************
 /* Application states
 

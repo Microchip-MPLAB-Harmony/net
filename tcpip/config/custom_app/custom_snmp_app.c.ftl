@@ -2128,15 +2128,15 @@ bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL
 {
    uint8_t myRef;
    static uint8_t AN0String[8];
-<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && ((tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME70") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M")) >
+<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && ((tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME70") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))) >
    uint16_t     randPotVal=0;
 </#if>
 
     // Convert potentiometer result into ASCII string
-<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && ((tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME70") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M")) >
+<#if ((tcpipStack.TCPIP_DEVICE_FAMILY?has_content) && ((tcpipStack.TCPIP_DEVICE_FAMILY  == "SAME70") || (tcpipStack.TCPIP_DEVICE_FAMILY  == "PIC32M"))) >
     randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
     uitoa(randPotVal,AN0String);
-<#else
+<#else>
    uitoa((uint16_t) ADC1BUF0, AN0String);
 </#if>
 
