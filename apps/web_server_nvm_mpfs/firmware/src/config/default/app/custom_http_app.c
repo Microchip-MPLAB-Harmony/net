@@ -33,22 +33,75 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
  *******************************************************************************/
-
-#include "system_config.h"
-#include "system_definitions.h"
+#include "configuration.h"
+#include "definitions.h"
 
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 
 #include "crypto/crypto.h"
 //#include "system/random/sys_random.h"
+#include "system/sys_random_h2_adapter.h"
 //#include "system/tmr/sys_tmr.h"
+//#include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip.h"
+
 #include "tcpip/src/common/helpers.h"
 
 /****************************************************************************
   Section:
     Definitions
  ****************************************************************************/
+#ifndef APP_SWITCH_1StateGet
+#define APP_SWITCH_1StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_2StateGet
+#define APP_SWITCH_2StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_3StateGet
+#define APP_SWITCH_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateGet
+#define APP_LED_1StateGet() 0
+#endif
+#ifndef APP_LED_2StateGet
+#define APP_LED_2StateGet() 0
+#endif
+#ifndef APP_LED_3StateGet
+#define APP_LED_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateSet
+#define APP_LED_1StateSet()
+#endif
+#ifndef APP_LED_2StateSet
+#define APP_LED_2StateSet()
+#endif
+#ifndef APP_LED_3StateSet
+#define APP_LED_3StateSet()
+#endif
+
+#ifndef APP_LED_1StateClear
+#define APP_LED_1StateClear()
+#endif
+#ifndef APP_LED_2StateClear
+#define APP_LED_2StateClear()
+#endif
+#ifndef APP_LED_3StateClear
+#define APP_LED_3StateClear()
+#endif
+
+#ifndef APP_LED_1StateToggle
+#define APP_LED_1StateToggle()
+#endif
+#ifndef APP_LED_2StateToggle
+#define APP_LED_2StateToggle()
+#endif
+#ifndef APP_LED_3StateToggle
+#define APP_LED_3StateToggle()
+#endif
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
 
@@ -87,12 +140,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
         static HTTP_IO_RESULT HTTPPostDDNSConfig(HTTP_CONN_HANDLE connHandle);
     #endif
+	
 #endif
 
 /****************************************************************************
   Section:
     Variables
  ****************************************************************************/
+ 
 static uint8_t s_buf_ipv4addr[HTTP_APP_IPV4_ADDRESS_BUFFER_SIZE];
 
 extern const char *const ddnsServiceHosts[];
@@ -141,13 +196,28 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         // Seek out each of the four LED strings, and if it exists set the LED states.
         ptr = TCPIP_HTTP_ArgGet(httpDataBuff, (const uint8_t *)"led2");
         if(ptr)
-            BSP_LEDStateSet(APP_LED_3, (*ptr == '1'));
-            //LED2_IO = (*ptr == '1');
-
+        {
+            if(*ptr == '1')
+            {
+                APP_LED_2StateSet();
+            }
+            else
+            {
+                APP_LED_2StateClear();
+            }
+        }
         ptr = TCPIP_HTTP_ArgGet(httpDataBuff, (const uint8_t *)"led1");
         if(ptr)
-            BSP_LEDStateSet(APP_LED_2, (*ptr == '1'));
-            //LED1_IO = (*ptr == '1');
+		{
+            if(*ptr == '1')
+            {
+                APP_LED_1StateSet();
+            }
+            else
+            {
+                APP_LED_1StateClear();
+            }
+        }
     }
 
     else if(!memcmp(filename, "cookies.htm", 11))
@@ -169,16 +239,13 @@ HTTP_IO_RESULT TCPIP_HTTP_GetExecute(HTTP_CONN_HANDLE connHandle)
         // Toggle the specified LED.
         switch(*ptr) {
             case '0':
-                BSP_LEDToggle(APP_LED_1);
-                //LED0_IO ^= 1;
+               APP_LED_1StateToggle();
                 break;
             case '1':
-                BSP_LEDToggle(APP_LED_2);
-                //LED1_IO ^= 1;
+                APP_LED_2StateToggle();
                 break;
             case '2':
-                BSP_LEDToggle(APP_LED_3);
-                //LED2_IO ^= 1;
+                APP_LED_3StateToggle();
                 break;
         }
     }
@@ -915,11 +982,11 @@ static HTTP_IO_RESULT HTTPPostEmail(HTTP_CONN_HANDLE connHandle)
             // prepare the message attachment
             // output the system status as a CSV file.
             // Write the header and button strings
-            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", (uint8_t)(APP_SWITCH_1StateGet() + '0'), (uint8_t)(APP_SWITCH_2StateGet() + '0'), (uint8_t)(APP_SWITCH_3StateGet() + '0'));
+            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", (int)APP_SWITCH_1StateGet() + '0', (int)APP_SWITCH_2StateGet() + '0', (int)APP_SWITCH_3StateGet() + '0');
             // Write the header and button strings
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", BSP_LEDStateGet(APP_LED_1) + '0', BSP_LEDStateGet(APP_LED_2) + '0', BSP_LEDStateGet(APP_LED_3) + '0');
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", (int)APP_LED_1StateGet() + '0', (int)APP_LED_2StateGet() + '0',(int)APP_LED_3StateGet() + '0');
             // add a potentiometer read: a random string
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", (int)(SYS_RANDOM_PseudoGet()));
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%d\r\n", (int)SYS_RANDOM_PseudoGet());
 
             // prepare the message itself
             memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
@@ -1235,6 +1302,7 @@ void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle)
 
 void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle)
 {
+
     TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_MPFS_STRING);
 }
 
@@ -1293,13 +1361,13 @@ void TCPIP_HTTP_Print_led(HTTP_CONN_HANDLE connHandle, uint16_t num)
     switch(num)
     {
         case 0:
-            num = BSP_LEDStateGet(APP_LED_1);
+            num = APP_LED_1StateGet();
             break;
         case 1:
-            num = BSP_LEDStateGet(APP_LED_2);
+            num = APP_LED_2StateGet();
             break;
         case 2:
-            num = BSP_LEDStateGet(APP_LED_3);
+            num = APP_LED_3StateGet();
             break;
         default:
             num = 0;
@@ -1315,13 +1383,13 @@ void TCPIP_HTTP_Print_ledSelected(HTTP_CONN_HANDLE connHandle, uint16_t num, uin
     switch(num)
     {
         case 0:
-            num = BSP_LEDStateGet(APP_LED_1);
+            num = APP_LED_1StateGet();
             break;
         case 1:
-            num = BSP_LEDStateGet(APP_LED_2);
+            num = APP_LED_2StateGet();
             break;
         case 2:
-            num = BSP_LEDStateGet(APP_LED_3);
+            num = APP_LED_3StateGet();
             break;
         default:
             num = 0;

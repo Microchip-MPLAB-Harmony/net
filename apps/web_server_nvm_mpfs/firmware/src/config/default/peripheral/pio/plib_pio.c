@@ -198,7 +198,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
 
 // *****************************************************************************
 /* Function:
-    uint32_t PIO_PortReadLatch ( PIO_PORT port )
+    uint32_t PIO_PortLatchRead ( PIO_PORT port )
 
   Summary:
     Read the latched value on all the I/O lines of the selected port.
@@ -206,7 +206,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value)
   Remarks:
     See plib_pio.h for more details.
 */
-uint32_t PIO_PortReadLatch(PIO_PORT port)
+uint32_t PIO_PortLatchRead(PIO_PORT port)
 {
     return ((pio_registers_t*)port)->PIO_ODSR;
 }

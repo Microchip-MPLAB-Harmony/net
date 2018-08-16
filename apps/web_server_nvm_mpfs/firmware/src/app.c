@@ -86,15 +86,7 @@ APP_LED_STATE LEDstate = APP_LED_STATE_OFF;
   Remarks:
     See prototype in app.h.
  */
-int _mon_getc(int canblock)
-{
-    return 0;
-}
 
-void _mon_putc(char c)
-{
-    
-}
 void APP_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
@@ -191,7 +183,14 @@ void APP_Tasks ( void )
             {
                 startTick = SYS_TMR_TickCountGet();
                 LEDstate ^= APP_LED_STATE_ON;
-                BSP_LEDStateSet(APP_LED_1, LEDstate);
+                if(LEDstate == 1)
+                {
+                    APP_LED_1StateSet();
+                }
+                else if(LEDstate == 0)
+                {
+                    APP_LED_1StateClear();
+                }
             }
 
             // if the IP address of an interface has changed
