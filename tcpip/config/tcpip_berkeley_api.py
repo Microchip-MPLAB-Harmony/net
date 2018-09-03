@@ -44,3 +44,7 @@ def tcpipBerkeleyApiMenuVisible(symbol, event):
 		
 def tcpipBerkeleyApiGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipBerkeleyApi", "TCPIP_STACK_USE_BERKELEY_API", False, 2)

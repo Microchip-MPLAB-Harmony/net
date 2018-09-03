@@ -77,3 +77,6 @@ def tcpipTelnetMenuVisible(symbol, event):
 		
 def tcpipTelnetGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipTelnet", "TCPIP_USE_TELNET", False, 2)

@@ -273,3 +273,6 @@ def tcpipSnmpEnableConfig(symbol, event):
 			
 	print("END tcpipSnmpEnableConfig")
 	
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipSnmp", "TCPIP_USE_SNMP", False, 2)

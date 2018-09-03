@@ -111,3 +111,6 @@ def tcpipIgmpMenuVisibleSingle(symbol, event):
 
 def tcpipIgmpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipIgmp", "TCPIP_USE_IGMP", False, 2)

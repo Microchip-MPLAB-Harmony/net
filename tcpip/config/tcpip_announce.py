@@ -72,3 +72,6 @@ def tcpipAnnounceMenuVisibleSingle(symbol, event):
 
 def tcpipAnnounceGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipAnnounce", "TCPIP_USE_ANNOUNCE", False, 2)

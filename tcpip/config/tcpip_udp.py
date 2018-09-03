@@ -123,7 +123,7 @@ def tcpipUdpMenuVisible(symbol, tcpipIPSymbol):
 	tcpipIPv4 = Database.getSymbolValue("tcpipIPv4","TCPIP_STACK_USE_IPV4")
 	tcpipIPv6 = Database.getSymbolValue("tcpipIPv6","TCPIP_STACK_USE_IPV6")
 	
-	print(Database.getSymbolValue("tcpip","TCPIP_USE_UDP"))
+	print(Database.getSymbolValue("tcpipUdp","TCPIP_USE_UDP"))
 	if(tcpipIPv4 or tcpipIPv6):
 		symbol.setVisible(True)
 		symbol.setValue(True,1)
@@ -137,3 +137,19 @@ def tcpipUdpMenuVisible(symbol, tcpipIPSymbol):
 	
 def tcpipUdpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+def onGenericDependencySatisfied(dependencyID, satisfierID):
+	print("satisfied: " + dependencyID + ", " + satisfierID)
+	if (satisfierID == "tcpipIPv4") or (satisfierID == "tcpipIPv6"):
+		Database.clearSymbolValue("tcpipUdp", "TCPIP_USE_UDP")
+		Database.setSymbolValue("tcpipUdp", "TCPIP_USE_UDP", True, 2)
+
+def onGenericDependencyUnsatisfied(dependencyID, satisfierID):
+	print("unsatisfied: " + dependencyID + ", " + satisfierID)
+
+	if (satisfierID == "tcpipIPv4") or (satisfierID == "tcpipIPv6"):
+		Database.clearSymbolValue("tcpipUdp", "TCPIP_USE_UDP")
+		Database.setSymbolValue("tcpipUdp", "TCPIP_USE_UDP", False, 2)
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipUdp", "TCPIP_USE_UDP", False, 2)

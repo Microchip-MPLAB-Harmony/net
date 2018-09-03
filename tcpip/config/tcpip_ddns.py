@@ -58,3 +58,7 @@ def tcpipDdnsMenuVisible(symbol, event):
 		
 def tcpipDdnsGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipDdns", "TCPIP_USE_DDNS", False, 2)

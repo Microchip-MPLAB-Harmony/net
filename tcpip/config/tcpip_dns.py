@@ -151,4 +151,6 @@ def tcpipDnsMenuVisible(symbol, event):
 	else:
 		print("DNS Client Menu Invisible.")
 		symbol.setVisible(False)	
-		
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipDns", "TCPIP_USE_DNS_CLIENT", False, 2)		

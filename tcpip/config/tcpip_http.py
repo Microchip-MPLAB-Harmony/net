@@ -312,3 +312,6 @@ def tcpipHttpCustomSlSet(symbol, event):
 		
 def tcpipHttpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipHttp", "TCPIP_STACK_USE_HTTP_SERVER", False, 2)

@@ -136,8 +136,8 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackRtosMenu.setLabel("RTOS Configuration")
 	tcpipStackRtosMenu.setDescription("RTOS Configuration")
 	tcpipStackRtosMenu.setVisible(False)
-	tcpipStackRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
-	tcpipStackRtosMenu.setDependencies(tcpipStackshowRTOSMenu, ["Harmony.SELECT_RTOS"])
+	tcpipStackRtosMenu.setVisible((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal") and (Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != None))
+	tcpipStackRtosMenu.setDependencies(tcpipStackshowRTOSMenu, ["HarmonyCore.SELECT_RTOS"])
 
 	# Menu for RTOS options
 	tcpipStackInstnExecMode = tcpipStackComponent.createComboSymbol("TCPIP_STACK_RTOS", tcpipStackRtosMenu, ["Standalone"]) 
@@ -1773,7 +1773,10 @@ def tcpipStackHeapPoolExpBlkMenu(symbol, event):
 		symbol.setVisible(False)		
 
 def tcpipStackshowRTOSMenu(symbol, event):
-	if (event["value"] != 0):
+	if (event["value"] == None):
+		symbol.setVisible(False)
+		print("tcpip stack: OSAL Disabled")
+	elif (event["value"] != "BareMetal"):
 		# If not Bare Metal
 		symbol.setVisible(True)
 		print("tcpip stack rtos")
@@ -1796,3 +1799,7 @@ def tcpipStackRTOSTaskDelayMenu(symbol, event):
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
+		
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipStack", "USE_TCPIP_STACK", False, 2)

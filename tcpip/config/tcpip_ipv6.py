@@ -201,3 +201,6 @@ def tcpipIPv6MenuVisible(symbol, event):
 		
 def tcpipIpv6GenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipIPv6", "TCPIP_STACK_USE_IPV6", False, 2)

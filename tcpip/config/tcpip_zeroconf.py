@@ -385,3 +385,7 @@ def onDependentComponentRemoved(tcpipZeroConfComponent, id, remoteComponent):
 	if id == "ZeroConf_UDP_Dependency":
 		tcpipZcMulticastDns = tcpipZeroConfComponent.getSymbolByID("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG")
 		tcpipZcMulticastDns.setVisible(False)
+		
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipZeroConf", "TCPIP_USE_LINK_ZERO_CONFIG", False, 2)

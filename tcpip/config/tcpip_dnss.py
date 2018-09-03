@@ -105,3 +105,6 @@ def tcpipDnssIpv6EntryVisible(symbol, event):
 		
 def tcpipDnssGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipDnss", "TCPIP_USE_DNSS", False, 2)	

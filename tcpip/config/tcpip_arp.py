@@ -144,3 +144,7 @@ def tcpipArpEnable(symbol, event):
 		
 def tcpipArpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipArp", "TCPIP_USE_ARP", False, 2)

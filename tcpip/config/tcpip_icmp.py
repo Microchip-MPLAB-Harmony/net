@@ -88,3 +88,7 @@ def tcpipIcmpGenSourceFile(sourceFile, event):
 	tcpipIcmpServer = Database.getSymbolValue("tcpipIcmp","TCPIP_STACK_USE_ICMP_SERVER")
 	if(tcpipIcmpClient or tcpipIcmpServer ):
 		sourceFile.setEnabled(event["value"])
+		
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipIcmp", "TCPIP_STACK_USE_ICMPV4", False, 2)

@@ -379,3 +379,6 @@ def tcpipSnmpv3EnableConfig(symbol, event):
 				#Do Nothing
 			
 	print("END tcpipSnmpv3EnableConfig")
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipSnmpv3", "TCPIP_USE_SNMPv3", False, 2)

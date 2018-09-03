@@ -82,3 +82,7 @@ def tcpipIPv4MenuVisible(symbol, event):
 		
 def tcpipIpv4GenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipIPv4", "TCPIP_STACK_USE_IPV4", False, 2)

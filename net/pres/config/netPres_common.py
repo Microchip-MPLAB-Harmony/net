@@ -20,8 +20,8 @@ def instantiateComponent(netPresCommonComponent):
 	netPresRtosMenu.setLabel("RTOS Configuration")
 	netPresRtosMenu.setDescription("RTOS Configuration")
 	netPresRtosMenu.setVisible(False)
-	netPresRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
-	netPresRtosMenu.setDependencies(netPresshowRTOSMenu, ["Harmony.SELECT_RTOS"])
+	netPresRtosMenu.setVisible((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal") and (Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != None))
+	netPresRtosMenu.setDependencies(netPresshowRTOSMenu, ["HarmonyCore.SELECT_RTOS"])
 	
 	# Net Pres Execution mode
 	netPresExecMode = netPresCommonComponent.createComboSymbol("NET_PRES_RTOS", netPresRtosMenu, ["Standalone"]) 
@@ -338,6 +338,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresCertStoreSourceFile.setProjectPath("config/" + configName + "/net/pres/")
 	netPresCertStoreSourceFile.setType("SOURCE")
 	netPresCertStoreSourceFile.setMarkup(True)
+	netPresCertStoreSourceFile.setEnabled(False)
 	netPresCertStoreSourceFile.setDependencies(netPresGenSourceFile, ["NET_PRES_BLOB_CERT_REPO","NET_PRES_CERT_STORE_STUBS"])
 	
 def netPresRtosVisible(symbol, event):
@@ -368,8 +369,10 @@ def netPresCertRepo(symbol, event):
 		symbol.setVisible(False)
 		
 def netPresshowRTOSMenu(symbol, event):
-
-	if (event["value"] != 0):
+	if (event["value"] == None):
+		symbol.setVisible(False)
+		print("NetPres: OSAL Disabled")
+	elif (event["value"] != "BareMetal"):
 		# If not Bare Metal
 		symbol.setVisible(True)
 		print("NetPres rtos")
@@ -390,7 +393,7 @@ def netPresGenSourceFile(sourceFile, event):
 	netPresStub = Database.getSymbolValue("netPres","NET_PRES_CERT_STORE_STUBS")
 	
 	if(netPresBlob or netPresStub):
-		sourceFile.setMarkup(True)	
+		sourceFile.setEnabled(True)
 	else:
-		sourceFile.setMarkup(False)	
+		sourceFile.setEnabled(False)
 		

@@ -126,3 +126,6 @@ def onDependentComponentAdded(tcpipTftpcComponent, id, macComponent):
 def onDependentComponentRemoved(tcpipTftpcComponent, id, macComponent):
     if id == "Tftpc_MAC_Dependency" :
         tcpipTftpcComponent.clearSymbolValue("TCPIP_TFTPC_DEFAULT_IF")
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipTftpc", "TCPIP_USE_TFTPC_MODULE", False, 2)

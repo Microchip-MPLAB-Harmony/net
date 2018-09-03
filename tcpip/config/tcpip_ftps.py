@@ -131,3 +131,6 @@ def tcpipFtpsModuleMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
 		
 def tcpipFtpsGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipFtps", "TCPIP_USE_FTP_MODULE", False, 2)

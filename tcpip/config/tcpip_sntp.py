@@ -167,4 +167,6 @@ def onDependentComponentAdded(tcpipSntpComponent, id, macComponent):
 def onDependentComponentRemoved(tcpipSntpComponent, id, macComponent):
     if id == "Sntp_MAC_Dependency" :
         tcpipSntpComponent.clearSymbolValue("TCPIP_NTP_DEFAULT_IF")	
-		
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipSntp", "TCPIP_USE_SNTP_CLIENT", False, 2)
