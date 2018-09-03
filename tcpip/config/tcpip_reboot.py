@@ -74,3 +74,7 @@ def tcpipRebootMenuSingle(symbol, event):
 		
 def tcpipRebootGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipReboot", "TCPIP_USE_REBOOT_SERVER", False, 2)

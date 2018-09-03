@@ -92,3 +92,6 @@ def tcpipIperfMenuVisible(symbol, event):
 		
 def tcpipIperfGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipIperf", "TCPIP_USE_IPERF", False, 2)

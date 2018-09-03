@@ -58,3 +58,6 @@ def tcpipNbnsMenuVisibleSingle(symbol, event):
 
 def tcpipNbnsGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipNbns", "TCPIP_USE_NBNS", False, 2)

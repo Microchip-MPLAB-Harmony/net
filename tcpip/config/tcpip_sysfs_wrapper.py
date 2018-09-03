@@ -128,10 +128,13 @@ def tcpipSysFsWrapperMemDrive(symbol, event):
 	sysFs_FAT = Database.getSymbolValue("sys_fs","SYS_FS_FAT")
 	sysFs_MPFS = Database.getSymbolValue("sys_fs","SYS_FS_MPFS")
 	if(sysFs_MPFS):
-		symbol.setValue("FLASH", 2)
+		symbol.setValue("FLASH", 2)		
 	elif(sysFs_FAT):
 		symbol.setValue("SDCARD", 2)
-	
+
 		
 def tcpipSysFsWrapperGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])		
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipSysFsWrapper", "TCPIP_STACK_USE_FS_WRAPPER", False, 2)

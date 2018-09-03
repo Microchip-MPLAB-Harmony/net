@@ -69,8 +69,6 @@ def instantiateComponent(tcpipDhcpsComponent):
 	######################################################################################################################################
 
 	# Number of DHCP Server Driver Instances
-	#tcpipDhcpsNetConfigNum = Database.getSymbolValue("tcpip", "TCPIP_STACK_NETWORK_CONFIG_NUMBER")
-	#print(tcpipDhcpsNetConfigNum)
 	tcpipDhcpsInstancesNum = tcpipDhcpsComponent.createIntegerSymbol("TCPIP_DHCP_SERVER_INSTANCES_NUMBER", None)
 	tcpipDhcpsInstancesNum.setLabel("Number of DHCP Server Driver Instances")
 	tcpipDhcpsInstancesNum.setMax(tcpipNetConfigNumMax)
@@ -355,3 +353,7 @@ def tcpipDhcpsInstnPoolEnMenu(symbol, event):
 		symbol.setVisible(False)		
 def tcpipDhcpsGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipDhcps", "TCPIP_STACK_USE_DHCP_SERVER", False, 2)

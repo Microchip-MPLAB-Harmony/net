@@ -85,8 +85,8 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimRtosMenu.setLabel("RTOS Configuration")
 	drvMiimRtosMenu.setDescription("RTOS Configuration")
 	drvMiimRtosMenu.setVisible(False)
-	drvMiimRtosMenu.setVisible((Database.getSymbolValue("Harmony", "SELECT_RTOS") != 0))
-	drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["Harmony.SELECT_RTOS"])
+	drvMiimRtosMenu.setVisible((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal") and (Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != None))
+	drvMiimRtosMenu.setDependencies(drvMiimshowRTOSMenu, ["HarmonyCore.SELECT_RTOS"])
 	
 	# MIIM Driver Execution mode
 	drvMiimInstnExecMode = drvMiimComponent.createComboSymbol("DRV_MIIM_RTOS", drvMiimRtosMenu, ["Standalone"]) 
@@ -230,7 +230,10 @@ def drvMiimMenuVisibleSingle(symbol, event):
 
 def drvMiimshowRTOSMenu(symbol, event):
 
-	if (event["value"] != 0):
+	if (event["value"] == None):
+		symbol.setVisible(False)
+		print("MIIM: OSAL Disabled")
+	elif (event["value"] != "BareMetal"):
 		# If not Bare Metal
 		symbol.setVisible(True)
 		print("MIIM rtos")

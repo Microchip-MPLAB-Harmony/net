@@ -168,3 +168,6 @@ def tcpipSmtpcMenuVisibleSingle(symbol, event):
 
 def tcpipSmtpcGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipSmtpc", "TCPIP_USE_SMTPC_CLIENT", False, 2)

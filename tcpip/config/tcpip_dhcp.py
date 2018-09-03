@@ -97,3 +97,7 @@ def tcpipDhcpcMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
 	else:
 		tcpipDependentSymbol.setVisible(False)	
 		print("DHCP IPv4 UDP  Menu Off.")		
+
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipDhcp", "TCPIP_STACK_USE_DHCP_CLIENT", False, 2)

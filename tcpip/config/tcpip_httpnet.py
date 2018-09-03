@@ -591,3 +591,6 @@ def tcpipHttpNetBase64DecodeOpt(symbol, event):
 		
 def tcpipHttpNetGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipHttpNet", "TCPIP_STACK_USE_HTTP_NET_SERVER", False, 2)

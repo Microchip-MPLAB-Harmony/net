@@ -136,3 +136,7 @@ def tcpipNdpMenuVisible(symbol, event):
 		
 def tcpipNdpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
+	
+
+def destroyComponent(component):
+	Database.setSymbolValue("tcpipNdp", "TCPIP_USE_NDP", False, 2)
