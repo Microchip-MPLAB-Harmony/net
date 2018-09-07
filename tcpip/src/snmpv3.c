@@ -1678,8 +1678,10 @@ bool TCPIP_SNMPv3_V3MsgDataProcess(PDU_INFO* pduDbPtr,uint8_t * headWrPtr)
                 smSnmp++;
             case SM_POPULATE_REQ_OID:
                 for(OIDlen=0;OIDlen<sizeof(OIDValue);OIDlen++)
+                {
                     OIDValue[OIDlen]=0;
-                    OIDlen=0;
+                }
+                OIDlen=0;
                 if(TCPIP_SNMP_OIDIsValid(OIDValue,&OIDlen) == false)
                 {
                     _SNMPv3_SetErrorStatus(errorStatusOffset,errorIndexOffset,SNMP_GEN_ERR,varIndex,dynScopedBufPtr);

@@ -1322,7 +1322,7 @@ static TCPIP_SMTPC_STATUS smtpDcptMailMsgMessageId(TCPIP_SMTPC_MESSAGE_DCPT* pDc
 
     NET_PRES_SocketInfoGet(pDcpt->skt, &sktInfo);
     TCPIP_Helper_IPAddressToString(&sktInfo.localIPaddress.v4Add, addBuff, sizeof(addBuff));
-    sprintf(msgIdBuff, "<%4d@%s>", smtpcMailCounter++, addBuff);
+    sprintf(msgIdBuff, "<%4d@%s>", (int)smtpcMailCounter++, addBuff);
 
     return smtpClientWriteCmd(pDcpt, "Message-ID:",  msgIdBuff);
 }

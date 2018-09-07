@@ -163,8 +163,6 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 #define mMIN(a, b)	((a<b)?a:b)
 
 
-static const char TCPIP_FTP_USER_NAME_DEFAULT[]    = TCPIP_FTP_USER_NAME;
-static const char TCPIP_FTP_USER_PASS_DEFAULT[]    = TCPIP_FTP_PASSWORD;
 static const char TCPIP_FTP_ANNONYMOUS_USER_NAME[]    = "anonymous";
 
 static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE;
@@ -779,7 +777,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             }
             fileSize = SYS_FS_FileSize(fp);
             strcpy(tempMsg,"");
-            sprintf(tempMsg,"213 %u\r\n",fileSize);
+            sprintf(tempMsg,"213 %u\r\n",(int)fileSize);
 
             if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(tempMsg))
             {
@@ -1468,7 +1466,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                                     (newNode->file_stat.ftime & 0x07E0) >> 5);
  //                                   (newNode->file_stat.ftime & 0x001F) << 1 );
 
-                sprintf(FileRecordssize, "%d", newNode->file_stat.fsize );
+                sprintf(FileRecordssize, "%d", (int)newNode->file_stat.fsize );
                 if(newNode->file_stat.fattrib & SYS_FS_ATTR_DIR)
                 {
                     FileRecordInformation = 1;
@@ -1942,7 +1940,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                                     (fs_stat.ftime & 0x07E0) >> 5, // min
                                     (fs_stat.ftime & 0x001F) << 1 ); // sec
 
-            sprintf(FileRecordssize, "%d", fs_stat.fsize );
+            sprintf(FileRecordssize, "%d",(int) fs_stat.fsize );
             FileRecordInformation = 0;
 
             memset(fileNameList,0,sizeof(fileNameList));
@@ -2159,7 +2157,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                                     (newNode->file_stat.ftime & 0x07E0) >> 5,
                                     (newNode->file_stat.ftime & 0x001F) << 1 );
 
-                sprintf(FileRecordssize, "%d", newNode->file_stat.fsize );
+                sprintf(FileRecordssize, "%d",(int) newNode->file_stat.fsize );
                 if(newNode->file_stat.fattrib & SYS_FS_ATTR_DIR)
                 {
                     FileRecordInformation = 1;
