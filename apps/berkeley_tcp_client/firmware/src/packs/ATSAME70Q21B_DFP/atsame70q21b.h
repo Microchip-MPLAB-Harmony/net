@@ -344,7 +344,7 @@ void GMAC_Q5_Handler               ( void );
 /*
  * \brief CMSIS includes
  */
-#include <core_cm7.h>
+#include "core_cm7.h"
 
 /** @}  end of SAME70Q21B_cmsis CMSIS Definitions */
 
