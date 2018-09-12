@@ -4,10 +4,10 @@
 # NOCDDL
 #
 CND_BASEDIR=`pwd`
-# default configuration
-CND_ARTIFACT_DIR_default=dist/default/production
-CND_ARTIFACT_NAME_default=tcpip_udp_client.X.production.hex
-CND_ARTIFACT_PATH_default=dist/default/production/tcpip_udp_client.X.production.hex
-CND_PACKAGE_DIR_default=${CND_DISTDIR}/default/package
-CND_PACKAGE_NAME_default=tcpipudpclient.x.tar
-CND_PACKAGE_PATH_default=${CND_DISTDIR}/default/package/tcpipudpclient.x.tar
+# sam_e70_xult configuration
+CND_ARTIFACT_DIR_sam_e70_xult=dist/sam_e70_xult/production
+CND_ARTIFACT_NAME_sam_e70_xult=tcpip_udp_client.X.production.hex
+CND_ARTIFACT_PATH_sam_e70_xult=dist/sam_e70_xult/production/tcpip_udp_client.X.production.hex
+CND_PACKAGE_DIR_sam_e70_xult=${CND_DISTDIR}/sam_e70_xult/package
+CND_PACKAGE_NAME_sam_e70_xult=tcpipudpclient.x.tar
+CND_PACKAGE_PATH_sam_e70_xult=${CND_DISTDIR}/sam_e70_xult/package/tcpipudpclient.x.tar

@@ -5,235 +5,236 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="default" projectFiles="true">
+        <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
           <logicalFolder name="f2" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/default/bsp/bsp.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="driver" projectFiles="true">
             <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/default/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
-                  <itemPath>../src/config/default/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/default/driver/ethphy/src/drv_ethphy_local.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/drv_ethphy_local.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/default/driver/ethphy/drv_ethphy.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/default/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
-                  <itemPath>../src/config/default/driver/gmac/src/dynamic/drv_gmac_lib.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/gmac/src/dynamic/drv_gmac_lib.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/default/driver/gmac/src/drv_gmac_local.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/driver/gmac/src/drv_gmac_local.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/default/driver/gmac/drv_gmac.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/driver/gmac/drv_gmac.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/default/driver/miim/config/drv_miim_config.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/driver/miim/config/drv_miim_config.h</itemPath>
               </logicalFolder>
               <logicalFolder name="f2" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/default/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/default/driver/miim/src/drv_miim_local.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/driver/miim/src/drv_miim_local.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/default/driver/miim/drv_miim.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/driver/miim/drv_miim.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/default/driver/driver.h</itemPath>
-            <itemPath>../src/config/default/driver/driver_common.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/driver/driver.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/driver/driver_common.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f6" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath>../src/config/default/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/default/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/library/tcpip/src/common/helpers.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ndp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ndp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ipv4_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ipv4_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ipv6_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/icmpv6_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/icmp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/arp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/arp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/udp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/udp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcps_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcps_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/zero_conf_helper.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/zero_conf_link_local_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/zero_conf_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dns_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dns_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dnss_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dnss_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ftp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ftp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/nbns_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ddns_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/telnet_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/smtp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/sntp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/http_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/http_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/http_net_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/http_net_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/snmp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/snmp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/snmpv3_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_announce_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/smtpc_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/smtpc_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/igmp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/igmp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tftpc_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tftpc_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/iperf_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_commands_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/hash_fnv.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/link_list.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/oahash.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_helpers_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_manager_control.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_module_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_notify.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_packet.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_types.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/berkeley_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcpv6_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcpv6_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/lldp_manager.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/lldp_private.h</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/lldp_tlv.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ndp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ndp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv6_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv6_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmpv6_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/udp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/udp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcps_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcps_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/zero_conf_helper.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/zero_conf_link_local_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/zero_conf_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dns_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dns_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dnss_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dnss_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ftp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/nbns_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ddns_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/telnet_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/smtp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/sntp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/http_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/http_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/http_net_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/http_net_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/snmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/snmp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/snmpv3_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_announce_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/smtpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/smtpc_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/igmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/igmp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tftpc_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/iperf_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/hash_fnv.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/link_list.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/oahash.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_helpers_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_manager_control.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_module_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_notify.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_packet.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_types.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/berkeley_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcpv6_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcpv6_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/lldp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/lldp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/lldp_tlv.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/default/library/tcpip/tcpip_common_ports.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_mac.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_mac_object.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_manager.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_heap.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_helpers.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/ndp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/ipv4.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/ipv6.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/icmpv6.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/dhcpv6.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/arp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/udp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/berkeley_api.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/dhcp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/dhcps.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/zero_conf_link_local.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/zero_conf_multicast_dns.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/dns.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/dnss.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/ftp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/icmp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/nbns.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/ddns.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/telnet.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/smtp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/sntp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/http.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/http_net.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/snmp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/snmpv3.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_announce.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/lldp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/smtpc.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/igmp.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tftpc.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_reboot.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/iperf.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_commands.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip.h</itemPath>
-              <itemPath>../src/config/default/library/tcpip/tcpip_ethernet.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_common_ports.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_mac.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_mac_object.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_manager.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_heap.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_helpers.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/ndp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/ipv4.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/ipv6.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/icmpv6.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/dhcpv6.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/arp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/udp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/berkeley_api.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/dhcp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/dhcps.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/zero_conf_link_local.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/zero_conf_multicast_dns.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/dns.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/dnss.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/icmp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/nbns.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/ddns.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/telnet.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/smtp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/sntp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/http.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/http_net.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/snmp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/snmpv3.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_announce.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/lldp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/smtpc.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/igmp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tftpc.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_reboot.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/iperf.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_commands.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f5" displayName="net" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/default/net/pres/src/net_pres_local.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/net/pres/src/net_pres_local.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/default/net/pres/net_pres.h</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_certstore.h</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_encryptionproviderapi.h</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_socketapi.h</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_transportapi.h</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_socketapiconversion.h</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_enc_glue.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_encryptionproviderapi.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_transportapi.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/clk/plib_clk.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="mpu" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/mpu/plib_mpu.h</itemPath>
-              <itemPath>../src/config/default/peripheral/mpu/plib_mpu_local.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/mpu/plib_mpu.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/mpu/plib_mpu_local.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/nvic/plib_nvic.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="pio" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/pio/plib_pio.h</itemPath>
-              <itemPath>../src/config/default/peripheral/pio/plib_pio_pin.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio_pin.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="tc" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/tc/plib_tc0.h</itemPath>
-              <itemPath>../src/config/default/peripheral/tc/plib_tc.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/tc/plib_tc0.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/tc/plib_tc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="usart" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/usart/plib_usart.h</itemPath>
-              <itemPath>../src/config/default/peripheral/usart/plib_usart1.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
             <logicalFolder name="f2" displayName="console" projectFiles="true">
-              <itemPath>../src/config/default/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/default/system/console/sys_debug.h</itemPath>
-              <itemPath>../src/config/default/system/console/sys_command.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/sys_debug.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/sys_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="int" projectFiles="true">
-              <itemPath>../src/config/default/system/int/sys_int.h</itemPath>
-              <itemPath>../src/config/default/system/int/sys_int_mapping.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/int/sys_int.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/int/sys_int_mapping.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="time" projectFiles="true">
-              <itemPath>../src/config/default/system/time/sys_time.h</itemPath>
-              <itemPath>../src/config/default/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/time/sys_time.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/time/sys_time_definitions.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/default/system/system.h</itemPath>
-            <itemPath>../src/config/default/system/system_common.h</itemPath>
-            <itemPath>../src/config/default/system/system_module.h</itemPath>
-            <itemPath>../src/config/default/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_int_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/default/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/system.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/system_common.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/system_module.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_int_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/default/user.h</itemPath>
-          <itemPath>../src/config/default/configuration.h</itemPath>
-          <itemPath>../src/config/default/definitions.h</itemPath>
-          <itemPath>../src/config/default/system_config.h</itemPath>
-          <itemPath>../src/config/default/system_definitions.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/definitions.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/user.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/configuration.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/system_config.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/system_definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="osal" projectFiles="true">
-        <itemPath>../src/config/default/osal/osal.h</itemPath>
-        <itemPath>../src/config/default/osal/osal_definitions.h</itemPath>
-        <itemPath>../src/config/default/osal/osal_impl_basic.h</itemPath>
+        <itemPath>../src/config/sam_e70_xult/osal/osal.h</itemPath>
+        <itemPath>../src/config/sam_e70_xult/osal/osal_definitions.h</itemPath>
+        <itemPath>../src/config/sam_e70_xult/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f2" displayName="ATSAME70Q21B_DFP" projectFiles="true">
@@ -290,6 +291,7 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f2" displayName="DSP" projectFiles="true">
@@ -312,115 +314,117 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="default" projectFiles="true">
-          <logicalFolder name="f2" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/default/bsp/bsp.c</itemPath>
+        <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
+          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_e70_xult/bsp/bsp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="driver" projectFiles="true">
+          <logicalFolder name="f5" displayName="driver" projectFiles="true">
             <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/default/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
-                  <itemPath>../src/config/default/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f3" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/default/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
-                  <itemPath>../src/config/default/driver/gmac/src/dynamic/drv_gmac_lib.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/gmac/src/dynamic/drv_gmac_lib.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f2" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/default/driver/miim/src/dynamic/drv_miim.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/driver/miim/src/dynamic/drv_miim.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="library" projectFiles="true">
+          <logicalFolder name="f7" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath>../src/config/default/library/tcpip/src/helpers.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/default/library/tcpip/src/arp.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/berkeley_api.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_commands.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dhcp.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/dns.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/ipv4.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_heap_internal.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/hash_fnv.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/oahash.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_helpers.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_manager.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_notify.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcpip_packet.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/default/library/tcpip/src/udp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/berkeley_api.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/hash_fnv.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/oahash.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_helpers.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_manager.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_notify.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net" projectFiles="true">
+          <logicalFolder name="f6" displayName="net" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/default/net/pres/src/net_pres.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/net/pres/src/net_pres.c</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/default/net/pres/net_pres_enc_glue.c</itemPath>
-              <itemPath>../src/config/default/net/pres/net_pres_cert_store.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f1" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/clk/plib_clk.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="mpu" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/mpu/plib_mpu.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/mpu/plib_mpu.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/nvic/plib_nvic.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="pio" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/pio/plib_pio.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="tc" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/tc/plib_tc0.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="usart" projectFiles="true">
-              <itemPath>../src/config/default/peripheral/usart/plib_usart1.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
+          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
+            <itemPath>../src/config/sam_e70_xult/stdio/xc32_monitor.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f4" displayName="system" projectFiles="true">
             <logicalFolder name="f2" displayName="console" projectFiles="true">
-              <itemPath>../src/config/default/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/default/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/default/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/default/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath>../src/config/default/system/console/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/default/system/console/src/sys_debug.c</itemPath>
-              <itemPath>../src/config/default/system/console/src/sys_command.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_debug.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="int" projectFiles="true">
-              <itemPath>../src/config/default/system/int/src/sys_int.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="time" projectFiles="true">
-              <itemPath>../src/config/default/system/time/src/sys_time.c</itemPath>
-              <itemPath>../src/config/default/system/time/src/sys_time_local.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/time/src/sys_time.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/default/system/sys_time_h2_adapter.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/default/initialization.c</itemPath>
-          <itemPath>../src/config/default/tasks.c</itemPath>
-          <itemPath>../src/config/default/interrupts.c</itemPath>
-          <itemPath>../src/config/default/exceptions.c</itemPath>
-          <itemPath>../src/config/default/startup.c</itemPath>
-          <itemPath>../src/config/default/libc_syscalls.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult/initialization.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult/interrupts.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult/exceptions.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult/startup.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult/libc_syscalls.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult/tasks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/main.c</itemPath>
@@ -437,7 +441,7 @@
   </sourceRootList>
   <projectmakefile>Makefile</projectmakefile>
   <confs>
-    <conf name="default" type="2">
+    <conf name="sam_e70_xult" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>ATSAME70Q21B</targetDevice>
@@ -481,7 +485,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/default;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/default/library;../src/config/default/library/tcpip/src;../src/config/default/library/tcpip/src/common;"/>
+                  value="../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/sam_e70_xult/library;../src/config/sam_e70_xult/library/tcpip/src;../src/config/sam_e70_xult/library/tcpip/src/common;../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
