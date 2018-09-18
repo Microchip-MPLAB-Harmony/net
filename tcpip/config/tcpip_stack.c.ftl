@@ -368,7 +368,7 @@ const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 /*** DHCP server initialization data ***/
 TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
 {
-<#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX0) == true>
+<#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX0)?has_content && (tcpipDhcps.TCPIP_DHCP_SERVER_IDX0) == true>
     {
         .interfaceIndex     = TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX0,
         .serverIPAddress    = TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX0,
@@ -379,7 +379,7 @@ TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
         .poolEnabled        = TCPIP_DHCP_SERVER_POOL_ENABLED_IDX0,
     },
 </#if>
-<#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX1) == true>
+<#if (tcpipDhcps.TCPIP_DHCP_SERVER_IDX1)?has_content && (tcpipDhcps.TCPIP_DHCP_SERVER_IDX1) == true>
     {
         .interfaceIndex     = TCPIP_DHCP_SERVER_INTERFACE_INDEX_IDX1,
         .serverIPAddress    = TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS_IDX1,
@@ -433,7 +433,7 @@ const TCPIP_DNSS_MODULE_CONFIG tcpipDNSServerInitData =
     .deleteOldLease			= TCPIP_DNSS_DELETE_OLD_LEASE,
     .replyBoardAddr			= TCPIP_DNSS_REPLY_BOARD_ADDR,
     .IPv4EntriesPerDNSName 	= TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS,
-<#if (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true >
+<#if (tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true>
 	.IPv6EntriesPerDNSName 	= TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS,
 <#else>
 	.IPv6EntriesPerDNSName 	= 0,
