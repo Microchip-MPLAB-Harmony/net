@@ -673,7 +673,7 @@ typedef struct
 #include "tcpip/zero_conf_link_local.h"
 #include "tcpip/zero_conf_multicast_dns.h"
 </#if>
-<#if (tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content &&  (tcpipDns.TCPIP_USE_DNS_CLIENT) == true>
+<#if ((tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content &&  (tcpipDns.TCPIP_USE_DNS_CLIENT) == true) || ((tcpipDnss.TCPIP_USE_DNSS)?has_content &&  (tcpipDnss.TCPIP_USE_DNSS) == true)>
 #include "tcpip/dns.h"
 </#if>
 <#if (tcpipDnss.TCPIP_USE_DNSS)?has_content &&  (tcpipDnss.TCPIP_USE_DNSS) == true>

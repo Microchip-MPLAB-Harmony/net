@@ -3,10 +3,15 @@ TCPIP_STACK_PHY_TYPE =	["National_DP83640", "National_DP83848", "SMSC_LAN8700", 
 SYS_MODULE_POWER_STATE =	["SYS_MODULE_POWER_OFF","SYS_MODULE_POWER_SLEEP","SYS_MODULE_POWER_IDLE_STOP","SYS_MODULE_POWER_IDLE_RUN","SYS_MODULE_POWER_RUN_FULL"]
 
 __TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
+
+
 def instantiateComponent(drvSamv71GmacComponent):
-	print("TCPIP Ethernet MAC Component")
-	configName = Variables.get("__CONFIGURATION_NAME")	
+	global interruptVector
+	global interruptHandler
+	global interruptHandlerLock
 	
+	print("TCPIP Ethernet MAC Component")	
+	configName = Variables.get("__CONFIGURATION_NAME")		
 	
 	# Use Internal Ethernet MAC Driver?	
 	drvSamv71Gmac = drvSamv71GmacComponent.createBooleanSymbol("TCPIP_USE_ETH_MAC", None)
@@ -518,6 +523,22 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacIntrMode.setDescription("Driver GMAC Interrupt Mode")
 	drvGmacIntrMode.setDefaultValue(True)
 	
+	interruptVector = "GMAC_INTERRUPT_ENABLE"
+	interruptHandler = "GMAC_INTERRUPT_HANDLER"
+	interruptHandlerLock = "GMAC_INTERRUPT_HANDLER_LOCK"
+
+	Database.clearSymbolValue("core", interruptVector)
+	Database.setSymbolValue("core", interruptVector, True, 2)
+	Database.clearSymbolValue("core", interruptHandler)
+	Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
+	Database.clearSymbolValue("core", interruptHandlerLock)
+	Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+
+	# NVIC Dynamic settings
+	drvGmacinterruptControl = drvSamv71GmacComponent.createBooleanSymbol("NVIC_GMAC_ENABLE", None)
+	drvGmacinterruptControl.setDependencies(interruptControl, ["DRV_GMAC_INTERRUPT_MODE"])
+	drvGmacinterruptControl.setVisible(False)
+	
 	# Driver GMAC Interrupt Source
 	drvGmacIntrSource = drvSamv71GmacComponent.createStringSymbol("DRV_GMAC_INTERRUPT_SOURCE", drvGmacIntrMode)
 	drvGmacIntrSource.setLabel("GMAC Interrupt Source")
@@ -525,14 +546,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacIntrSource.setDescription("Driver GMAC Interrupt Source")
 	drvGmacIntrSource.setDefaultValue("GMAC_IRQn")
 	drvGmacIntrSource.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_GMAC_INTERRUPT_MODE"])
-
-	# Driver GMAC Interrupt Vector
-	drvGmacIntrVector = drvSamv71GmacComponent.createStringSymbol("DRV_GMAC_INTERRUPT_VECTOR", drvGmacIntrMode)
-	drvGmacIntrVector.setLabel("GMAC Interrupt Vector")
-	drvGmacIntrVector.setVisible(True)
-	drvGmacIntrVector.setDescription("Driver GMAC Interrupt Vector")
-	drvGmacIntrVector.setDefaultValue("GMAC_IRQn")
-	drvGmacIntrVector.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_GMAC_INTERRUPT_MODE"])
 
 	# Interrupt Priority
 	tcpipGmacIntrPriority = drvSamv71GmacComponent.createStringSymbol("TCPIP_GMAC_INTERRUPT_PRIORITY", tcpipGmacIntrMode)  # H3_ToDo: use the below combo symbol instead of string
@@ -637,55 +650,25 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacLibSourceFile.setType("SOURCE")
 	drvGmacLibSourceFile.setEnabled(True)
 	#drvGmacLibSourceFile.setDependencies(tcpipGmacGenSourceFile, ["TCPIP_USE_ETH_MAC"])
-
-	# H3_ToDo :moved this system def to tcpip module as there is dependency for th eorder of inclusion
-	# drvGmacSystemDefFile = drvSamv71GmacComponent.createFileSymbol("GMAC_H_FILE", None)
-	# drvGmacSystemDefFile.setType("STRING")
-	# drvGmacSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	# drvGmacSystemDefFile.setSourcePath("driver/gmac/templates/system/system_definitions.h.ftl")
-	# drvGmacSystemDefFile.setMarkup(True)
 	
-	# ifblock TCPIP_GMAC_INTERRUPT_MODE = y
-	# add "pfnGMAC_Handler GMAC_Handler"  to list SYSTEM_STARTUP_PIC32C_INTERRUPT_HANDLERS
-	# endif
-	# H3_ToDo GMAC interrupt Handler 
-	global peripId
-	global NVICVector
-	global NVICHandler
-	global NVICHandlerLock
-
-	peripId = Interrupt.getInterruptIndex("GMAC")
-	NVICVector = "NVIC_" + str(peripId) + "_ENABLE"
-	NVICHandler = "NVIC_" + str(peripId) + "_HANDLER"
-	NVICHandlerLock = "NVIC_" + str(peripId) + "_HANDLER_LOCK"
-
-	Database.clearSymbolValue("core", "PMC_ID_GMAC")
-	Database.setSymbolValue("core", "PMC_ID_GMAC", True, 2)
-	Database.clearSymbolValue("core", NVICVector)
-	Database.setSymbolValue("core", NVICVector, True, 2)
-	Database.clearSymbolValue("core", NVICHandler)
-	Database.setSymbolValue("core", NVICHandler, "GMAC_InterruptHandler", 2)
-	Database.clearSymbolValue("core", NVICHandlerLock)
-	Database.setSymbolValue("core", NVICHandlerLock, True, 2)
-
-	def NVICControl(NVIC, event):
-		global NVICVector
-		global NVICHandler
-		Database.clearSymbolValue("core", NVICVector)
-		Database.clearSymbolValue("core", NVICHandler)
-		if (event["value"] == True):
-			Database.setSymbolValue("core", NVICVector, True, 2)
-			Database.setSymbolValue("core", NVICHandler, "GMAC_InterruptHandler", 2)
-		else :
-			Database.setSymbolValue("core", NVICVector, False, 2)
-			Database.setSymbolValue("core", NVICHandler, "GMAC_Handler", 2)
-			
-	# NVIC Dynamic settings
-	drvGmacNVICControl = drvSamv71GmacComponent.createBooleanSymbol("NVIC_GMAC_ENABLE", None)
-	drvGmacNVICControl.setDependencies(NVICControl, ["DRV_GMAC_INTERRUPT_MODE"])
-	drvGmacNVICControl.setVisible(False)
-
-
+global interruptVector
+global interruptHandler
+global interruptHandlerLock
+def interruptControl(gmacNVIC, event):
+	global interruptVector
+	global interruptHandler
+	Database.clearSymbolValue("core", interruptVector)
+	Database.clearSymbolValue("core", interruptHandler)
+	Database.clearSymbolValue("core", interruptHandlerLock)
+	if (event["value"] == True):
+		Database.setSymbolValue("core", interruptVector, True, 2)
+		Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
+		Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+	else :
+		Database.setSymbolValue("core", interruptVector, False, 2)
+		Database.setSymbolValue("core", interruptHandler, "GMAC_Handler", 2)
+		Database.setSymbolValue("core", interruptHandlerLock, False, 2)
+		
 def tcpipEthMacMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
 		print("EthMac Menu Visible.")		
