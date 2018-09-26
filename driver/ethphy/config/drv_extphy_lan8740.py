@@ -1,6 +1,5 @@
-__TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
 def instantiateComponent(drvExtPhyLan8740Component):
-	print("KSZ8061 PHY Driver Component")
+	print("LAN8740 PHY Driver Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
 
 	# Delay for the Link Initialization in ms

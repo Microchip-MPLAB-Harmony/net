@@ -1,10 +1,3 @@
-TCPIP_STACK_PHY_TYPE =	["National_DP83640", "National_DP83848", "SMSC_LAN8700", "SMSC_LAN8720", "SMSC_LAN8740", "SMSC_LAN9303", "KSZ8061", "KSZ8041", "KSZ8863", "IP_IP101GR" ]
-#H3_ToDo :  global enum from SYS module
-SYS_MODULE_POWER_STATE =	["SYS_MODULE_POWER_OFF","SYS_MODULE_POWER_SLEEP","SYS_MODULE_POWER_IDLE_STOP","SYS_MODULE_POWER_IDLE_RUN","SYS_MODULE_POWER_RUN_FULL"]
-
-__TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
-
-
 def instantiateComponent(drvSamv71GmacComponent):
 	global interruptVector
 	global interruptHandler
@@ -478,15 +471,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	tcpipEmacModuleId.setVisible(True)
 	tcpipEmacModuleId.setDescription("GMAC Module ID")
 	tcpipEmacModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
-	
-	# GMAC Interrupt mode 
-	#H3_ToDo : this sysmbol need more review
-	tcpipGmacIntrMode = drvSamv71GmacComponent.createBooleanSymbol("TCPIP_GMAC_INTERRUPT_MODE", None)
-	tcpipGmacIntrMode.setLabel("")
-	tcpipGmacIntrMode.setVisible(False)
-	tcpipGmacIntrMode.setDescription("GMAC Interrupt mode")
-	tcpipGmacIntrMode.setDefaultValue(True)
-	#tcpipGmacIntrMode.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
 	# Driver GMAC Instances Number
 	drvGmacInstanceNum = drvSamv71GmacComponent.createIntegerSymbol("DRV_GMAC_INSTANCES_NUMBER", None)
@@ -542,27 +526,9 @@ def instantiateComponent(drvSamv71GmacComponent):
 	# Driver GMAC Interrupt Source
 	drvGmacIntrSource = drvSamv71GmacComponent.createStringSymbol("DRV_GMAC_INTERRUPT_SOURCE", drvGmacIntrMode)
 	drvGmacIntrSource.setLabel("GMAC Interrupt Source")
-	drvGmacIntrSource.setVisible(True)
+	drvGmacIntrSource.setVisible(False)
 	drvGmacIntrSource.setDescription("Driver GMAC Interrupt Source")
 	drvGmacIntrSource.setDefaultValue("GMAC_IRQn")
-	drvGmacIntrSource.setDependencies(tcpipEthMacMenuVisibleSingle, ["DRV_GMAC_INTERRUPT_MODE"])
-
-	# Interrupt Priority
-	tcpipGmacIntrPriority = drvSamv71GmacComponent.createStringSymbol("TCPIP_GMAC_INTERRUPT_PRIORITY", tcpipGmacIntrMode)  # H3_ToDo: use the below combo symbol instead of string
-	#tcpipGmacIntrPriority = drvSamv71GmacComponent.createComboSymbol("TCPIP_GMAC_INTERRUPT_PRIORITY", tcpipGmacIntrMode, INT_PRIORITY_LEVEL)
-	tcpipGmacIntrPriority.setLabel("Interrupt Priority")
-	tcpipGmacIntrPriority.setVisible(False)
-	tcpipGmacIntrPriority.setDescription("Interrupt Priority")
-	tcpipGmacIntrPriority.setDefaultValue("INT_PRIORITY_LEVEL1")
-	tcpipGmacIntrPriority.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_INTERRUPT_MODE"])
-
-	# Power State
-	drvGmacPowerState = drvSamv71GmacComponent.createComboSymbol("DRV_GMAC_POWER_STATE", None, SYS_MODULE_POWER_STATE)
-	drvGmacPowerState.setLabel("Power State")
-	drvGmacPowerState.setVisible(True)
-	drvGmacPowerState.setDescription("Power State")
-	drvGmacPowerState.setDefaultValue("SYS_MODULE_POWER_RUN_FULL")
-	#drvGmacPowerState.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 	
 	# PHY Connected to GMAC
 	drvGmacPhyType = drvSamv71GmacComponent.createStringSymbol("DRV_GMAC_PHY_TYPE", None)
@@ -588,7 +554,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacHeaderFile.setProjectPath("config/" + configName + "/driver/gmac/")
 	drvGmacHeaderFile.setType("HEADER")
 	drvGmacHeaderFile.setOverwrite(True)
-	#drvGmacHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
 	# file TCPIP_MAC_LOCAL_H "$HARMONY_VERSION_PATH/framework/driver/gmac/src/drv_gmac_local.h" to         "$PROJECT_HEADER_FILES/framework/driver/gmac/src/drv_gmac_local.h"	
 
@@ -600,7 +565,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacLocalHeaderFile.setProjectPath("config/" + configName + "/driver/gmac/src/")
 	drvGmacLocalHeaderFile.setType("HEADER")
 	drvGmacLocalHeaderFile.setOverwrite(True)
-	#drvGmacLocalHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
 	# file TCPIP_MAC_DESC_H "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/_gmac_dcpt_lists.h" to "$PROJECT_HEADER_FILES/framework/driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
 
@@ -623,7 +587,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacLibHeaderFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
 	drvGmacLibHeaderFile.setType("HEADER")
 	drvGmacLibHeaderFile.setOverwrite(True)
-	#drvGmacLibHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
 
 
 
@@ -637,7 +600,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacSourceFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
 	drvGmacSourceFile.setType("SOURCE")
 	drvGmacSourceFile.setEnabled(True)
-	#drvGmacSourceFile.setDependencies(tcpipGmacGenSourceFile, ["TCPIP_USE_ETH_MAC"])
 
 	# file TCPIP_MAC_LIB_C "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/drv_gmac_lib.c" to     "$PROJECT_SOURCE_FILES/framework/driver/gmac/drv_gmac_lib.c"
 	# Add drv_gmac_lib.c file
@@ -649,7 +611,6 @@ def instantiateComponent(drvSamv71GmacComponent):
 	drvGmacLibSourceFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
 	drvGmacLibSourceFile.setType("SOURCE")
 	drvGmacLibSourceFile.setEnabled(True)
-	#drvGmacLibSourceFile.setDependencies(tcpipGmacGenSourceFile, ["TCPIP_USE_ETH_MAC"])
 	
 global interruptVector
 global interruptHandler
@@ -693,18 +654,12 @@ def drvGmacGenHeaderFile(headerFile, event):
 	headerFile.setEnabled(event["value"])
 
 
+def onGenericDependencySatisfied(dependencyID, satisfierID):
+	print("satisfied: " + dependencyID + ", " + satisfierID)
+	satisfierComponent = Database.getComponentByID(satisfierID)
+	Database.clearSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE")
+	Database.setSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE", satisfierComponent.getDisplayName(),2)
 
-
-def onDependentComponentAdded(drvSamv71GmacComponent, id, remoteComponent):
-	if id == "GMAC_PHY_Dependency":
-		#tcpipNetConfigIndex = int(tcpipNetConfigComponent.getID().strip("tcpipNetConfig_"))
-		PhyInterface = drvSamv71GmacComponent.getSymbolByID("DRV_GMAC_PHY_TYPE")
-		PhyInterface.clearValue()
-		#print(tcpipNetConfigIndex)
-		PhyInterface.setValue(remoteComponent.getDisplayName(), 2)
-
-def onDependentComponentRemoved(drvSamv71GmacComponent, id, remoteComponent):
-	if id == "GMAC_PHY_Dependency":
-		drvSamv71GmacComponent.clearSymbolValue("DRV_GMAC_PHY_TYPE")		
-
-
+def onGenericDependencyUnsatisfied(dependencyID, satisfierID):
+	print("unsatisfied: " + dependencyID + ", " + satisfierID)
+	Database.clearSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE")
