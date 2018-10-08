@@ -100,47 +100,25 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 	tcpipNetStartupFlag.setLabel("Network Configuration Start-up Flags")
 	tcpipNetStartupFlag.setVisible(True)	
 	#tcpipNetStartupFlag[index].setDependencies(tcpipNetConfigMenuVisible, [tcpipNetConfig[index].getID()])
-	
-	# Enable DHCP Client on this Network Configuration
-	tcpipNetDhcpClientEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_CLIENT_IDX"+str(index),tcpipNetStartupFlag)
-	tcpipNetDhcpClientEnable.setLabel("DHCP Client Enabled on this Interface")
-	tcpipNetDhcpClientEnable.setVisible(True)
-	tcpipNetDhcpClientEnable.setDefaultValue(True)
-	
-	
-	# Enable ZeroConf Link Local on this Network Configuration
-	tcpipNetZConfLLEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_ZCLL_IDX"+str(index),tcpipNetStartupFlag)
-	tcpipNetZConfLLEnable.setLabel("ZeroConf Link Local Enabled on this Interface")
-	tcpipNetZConfLLEnable.setVisible(True)
-	tcpipNetZConfLLEnable.setDefaultValue(False)
-	tcpipNetZConfLLEnable.setReadOnly(True)	
-	
-	
-	# Enable DHCP Server on this Network Configuration
-	tcpipNetDhcpServerEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_SERVER_IDX"+str(index),tcpipNetStartupFlag)
-	tcpipNetDhcpServerEnable.setLabel("DHCP Server Enabled on this Interface")
-	tcpipNetDhcpServerEnable.setVisible(True)
-	tcpipNetDhcpServerEnable.setDefaultValue(False)
-	tcpipNetDhcpServerEnable.setReadOnly(True)	
-	tcpipNetDhcpServerEnable.setDependencies(tcpipNetStartupFlagDhcpServer, [tcpipNetDhcpClientEnable.getID(), tcpipNetZConfLLEnable.getID()])
-	tcpipNetZConfLLEnable.setDependencies(tcpipNetStartupFlagZConf, [tcpipNetDhcpClientEnable.getID(), tcpipNetDhcpServerEnable.getID()])
-	tcpipNetDhcpClientEnable.setDependencies(tcpipNetStartupFlagDhcpClient, [tcpipNetZConfLLEnable.getID(), tcpipNetDhcpServerEnable.getID()])
-	
-	# Enable DNS Client on this Network Configuration
-	tcpipNetDnsClientEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DNS_CLIENT_IDX"+str(index),tcpipNetStartupFlag)
-	tcpipNetDnsClientEnable.setLabel("DNS Client Enabled on this Interface")
-	tcpipNetDnsClientEnable.setVisible(True)
-	tcpipNetDnsClientEnable.setDefaultValue(True)		
-	
-	
-	# Enable DNS Server on this Network Configuration
-	tcpipNetDnsServerEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DNS_SERVER_IDX"+str(index),tcpipNetStartupFlag)
-	tcpipNetDnsServerEnable.setLabel("DNS Server Enabled on this Interface")
-	tcpipNetDnsServerEnable.setVisible(True)
-	tcpipNetDnsServerEnable.setDefaultValue(False)
-	tcpipNetDnsServerEnable.setReadOnly(True)	
-	tcpipNetDnsServerEnable.setDependencies(tcpipNetStartupFlagDnsServer, [tcpipNetDnsClientEnable.getID()])
-	tcpipNetDnsClientEnable.setDependencies(tcpipNetStartupFlagDnsClient, [tcpipNetDnsServerEnable.getID()])
+
+	tcpipNetDhcpFlag = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_IDX"+str(index),tcpipNetStartupFlag)
+	tcpipNetDhcpFlag.setVisible(True)
+	tcpipNetDhcpFlag.setLabel("DHCP Flag")
+	tcpipNetDhcpFlag.addKey("DHCP_CLIENT_ENABLE", "0", "Enable DHCP Client")
+	tcpipNetDhcpFlag.addKey("DHCP_SERVER_ENABLE", "1", "Enable DHCP Server")
+	tcpipNetDhcpFlag.addKey("ZEROCONF_LL_ENABLE", "2", "Enable ZeroConf LL")
+	tcpipNetDhcpFlag.setDisplayMode("Description")
+	tcpipNetDhcpFlag.setOutputMode("Key")
+	tcpipNetDhcpFlag.setDefaultValue(0)
+
+	tcpipNetDnsFlag = tcpipNetConfigComponent.createKeyValueSetSymbol("TCPIP_NETWORK_INTERFACE_FLAG_DNS_IDX"+str(index),tcpipNetStartupFlag)
+	tcpipNetDnsFlag.setVisible(True)
+	tcpipNetDnsFlag.setLabel("DNS Flag")
+	tcpipNetDnsFlag.addKey("DNS_CLIENT_ENABLE", "0", "Enable DNS Client")
+	tcpipNetDnsFlag.addKey("DNS_SERVER_ENABLE", "1", "Enable DNS Server")
+	tcpipNetDnsFlag.setDisplayMode("Description")
+	tcpipNetDnsFlag.setOutputMode("Key")
+	tcpipNetDnsFlag.setDefaultValue(0)	
 	
 	# Enable Multicast on this Network Configuration
 	tcpipNetMcastEnable = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_CONFIG_MULTICAST_IDX"+str(index),tcpipNetStartupFlag)
@@ -354,91 +332,6 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
 
 	print("END tcpipNetMACDrvObjUpdate")	
 	
-
-
-def tcpipNetStartupFlagZConf(symbol, event):	
-	print("Start tcpipNetStartupFlagZConf")
-	#print(symbol.getID())
-	#print(event["id"])
-	tcpipNetStartupZConfIndex = int(symbol.getID().strip("TCPIP_NETWORK_INTERFACE_FLAG_ZCLL_IDX"))
-		
-	#print(tcpipNetStartupZConfIndex)
-	data = symbol.getComponent()
-	dhcpServerEnable = data.getSymbolValue("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_SERVER_IDX"+str(tcpipNetStartupZConfIndex))
-	dhcpClientEnable = data.getSymbolValue("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_CLIENT_IDX"+str(tcpipNetStartupZConfIndex))
-
-	if((dhcpServerEnable == False) and (dhcpClientEnable == False)) :
-		symbol.setReadOnly(False)			
-	else:
-		symbol.setReadOnly(True)
-	
-	print("END tcpipNetStartupFlagZConf")	
-	
-def tcpipNetStartupFlagDhcpClient(symbol, event):	
-	print("Start tcpipNetStartupFlagDhcpClient")
-	#print(symbol.getID())
-	#print(event["id"])
-
-	tcpipNetStartupDhcpClientIndex = int(symbol.getID().strip("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_CLIENT_IDX"))
-		
-	#print(tcpipNetStartupDhcpClientIndex)
-	data = symbol.getComponent()
-	dhcpServerEnable = data.getSymbolValue("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_SERVER_IDX"+str(tcpipNetStartupDhcpClientIndex))
-	zConfLLEnable = data.getSymbolValue("TCPIP_NETWORK_INTERFACE_FLAG_ZCLL_IDX"+str(tcpipNetStartupDhcpClientIndex))
-	#print(dhcpServerEnable,zConfLLEnable)
-	if((dhcpServerEnable == False) and (zConfLLEnable == False)) :
-		symbol.setReadOnly(False)			
-	else:
-		symbol.setReadOnly(True)
-	
-	print("END tcpipNetStartupFlagDhcpClient")
-	
-
-def tcpipNetStartupFlagDhcpServer(symbol, event):	
-	print("Start tcpipNetStartupFlagDhcpServer")
-	#print(symbol.getID())
-	#print(event["id"])
-	tcpipNetStartupDhcpServerIndex = int(symbol.getID().strip("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_SERVER_IDX"))
-	data = symbol.getComponent()
-	dhcpClientEnable = data.getSymbolValue("TCPIP_NETWORK_INTERFACE_FLAG_DHCP_CLIENT_IDX"+str(tcpipNetStartupDhcpServerIndex))
-	zConfLLEnable = data.getSymbolValue("TCPIP_NETWORK_INTERFACE_FLAG_ZCLL_IDX"+str(tcpipNetStartupDhcpServerIndex))
-	
-	if((dhcpClientEnable == False) and (zConfLLEnable == False)) :
-		symbol.setReadOnly(False)			
-	else:
-		symbol.setReadOnly(True)
-	
-	print("END tcpipNetStartupFlagDhcpClient")
-	
-def tcpipNetStartupFlagDnsServer(symbol, event):	
-	print("Start tcpipNetStartupFlagDnsServer")
-	#print(symbol.getID())
-	#print(event["id"])
-	#tcpipNetStartupDnsServerIndex = int(symbol.getID().strip("TCPIP_NETWORK_INTERFACE_FLAG_DNS_SERVER_IDX"))
-		
-	#print(tcpipNetStartupDnsServerIndex)
-		
-	if(event["value"] == False) :
-		symbol.setReadOnly(False)			
-	else:
-		symbol.setReadOnly(True)
-	
-	print("END tcpipNetStartupFlagDnsServer")
-	
-def tcpipNetStartupFlagDnsClient(symbol, event):	
-	print("Start tcpipNetStartupFlagDnsClient")
-	#print(symbol.getID())
-	#print(event["id"])
-	#tcpipNetStartupDnsClientIndex = int(symbol.getID().strip("TCPIP_NETWORK_INTERFACE_FLAG_DNS_CLIENT_IDX"))
-		
-	#print(tcpipNetStartupDnsClientIndex)
-	
-	if(event["value"] == False)  :
-		symbol.setReadOnly(False)			
-	else:
-		symbol.setReadOnly(True)
-		
-	print("END tcpipNetStartupFlagDnsClient")
 ###############################################################################################################	
 
 def onDependentComponentAdded(tcpipNetConfigComponent, id, remoteComponent):
