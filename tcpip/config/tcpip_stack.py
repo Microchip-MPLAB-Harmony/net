@@ -146,16 +146,16 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackInstnExecMode.setDescription("Rtos Options")
 	tcpipStackInstnExecMode.setDefaultValue("Standalone")
 	
-	# RTOS Task Size
-	tcpipStackTaskSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_RTOS_TASK_SIZE", tcpipStackRtosMenu)
+	# RTOS Task Stack Size
+	tcpipStackTaskSize = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_STACK_SIZE", tcpipStackRtosMenu)
 	tcpipStackTaskSize.setLabel("Task Size")
 	tcpipStackTaskSize.setVisible(True)
-	tcpipStackTaskSize.setDescription("Rtos Task Size")
+	tcpipStackTaskSize.setDescription("Rtos Task Stack Size")
 	tcpipStackTaskSize.setDefaultValue(1024)
 	tcpipStackTaskSize.setDependencies(tcpipStackRTOSStandaloneMenu, ["TCPIP_STACK_RTOS"])
 	
 	# RTOS Task Priority
-	tcpipStackTaskPriority = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_RTOS_TASK_PRIORITY", tcpipStackRtosMenu)
+	tcpipStackTaskPriority = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_PRIORITY", tcpipStackRtosMenu)
 	tcpipStackTaskPriority.setLabel("Task Priority")
 	tcpipStackTaskPriority.setVisible(True)
 	tcpipStackTaskPriority.setDescription("Rtos Task Priority")
@@ -175,7 +175,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTaskDelay.setLabel("Task Delay")
 	tcpipStackTaskDelay.setVisible(True)
 	tcpipStackTaskDelay.setDescription("MIIM Driver Task Delay")
-	tcpipStackTaskDelay.setDefaultValue(100)
+	tcpipStackTaskDelay.setDefaultValue(1)
 	tcpipStackTaskDelay.setDependencies(tcpipStackRTOSTaskDelayMenu, ["TCPIP_STACK_RTOS", "TCPIP_STACK_RTOS_USE_DELAY"])
 
 	
@@ -404,7 +404,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipStackHeaderFtl.setMarkup(True)
 	tcpipStackHeaderFtl.setType("STRING")
-
+	
 	# file TCPIP_COMMON_PORTS_H "$HARMONY_VERSION_PATH/framework/tcpip/tcpip_common_ports.h" to "$PROJECT_HEADER_FILES/framework/tcpip/tcpip_common_ports.h"
 	tcpipStackCommonPortHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackCommonPortHeaderFile.setSourcePath("tcpip/tcpip_common_ports.h")
@@ -1441,13 +1441,6 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackInitSourceFtl.setSourcePath("tcpip/config/tcpip_stack_init.c.ftl")
 	tcpipStackInitSourceFtl.setMarkup(True)
 		
-	# add "<#include \"/framework/tcpip/config/tcpip_stack_tasks.c.ftl\">"  to list SYSTEM_TASKS_C_CALL_LIB_TASKS
-	tcpipStackTaskSourceFtl = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackTaskSourceFtl.setType("STRING")
-	tcpipStackTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
-	tcpipStackTaskSourceFtl.setSourcePath("tcpip/config/tcpip_stack_tasks.c.ftl")
-	tcpipStackTaskSourceFtl.setMarkup(True)
-		
 	# file TCPIP_COMMON_HELPERS_C "$HARMONY_VERSION_PATH/framework/tcpip/src/common/helpers.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/common/helpers.c"
 	tcpipStackHelpersSourceFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackHelpersSourceFile.setSourcePath("tcpip/src/common/helpers.c")
@@ -1487,7 +1480,27 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTcpipHelpersSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTcpipHelpersSourceFile.setType("SOURCE")
 	tcpipStackTcpipHelpersSourceFile.setEnabled(True)	
+	
+	tcpipStackSystemConfFile = tcpipStackComponent.createFileSymbol("TCPIP_CONFIGURATION_H", None)
+	tcpipStackSystemConfFile.setType("STRING")
+	tcpipStackSystemConfFile.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+	tcpipStackSystemConfFile.setSourcePath("tcpip/templates/system/system_config.h.ftl")
+	tcpipStackSystemConfFile.setMarkup(True)
 
+	tcpipStackSystemTaskFile = tcpipStackComponent.createFileSymbol("TCPIP_SYSTEM_TASKS_C", None)
+	tcpipStackSystemTaskFile.setType("STRING")
+	tcpipStackSystemTaskFile.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
+	tcpipStackSystemTaskFile.setSourcePath("tcpip/templates/system/system_tasks.c.ftl")
+	tcpipStackSystemTaskFile.setMarkup(True)
+
+	tcpipStackSystemRtosTasksFile = tcpipStackComponent.createFileSymbol("TCPIP_SYS_RTOS_TASK", None)
+	tcpipStackSystemRtosTasksFile.setType("STRING")
+	tcpipStackSystemRtosTasksFile.setOutputName("core.LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS")
+	tcpipStackSystemRtosTasksFile.setSourcePath("tcpip/templates/system/system_rtos_tasks.c.ftl")
+	tcpipStackSystemRtosTasksFile.setMarkup(True)
+	tcpipStackSystemRtosTasksFile.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
+	tcpipStackSystemRtosTasksFile.setDependencies(genRtosTask, ["HarmonyCore.SELECT_RTOS"])
+	
 	tcpipStackSystemDefFile = tcpipStackComponent.createFileSymbol("TCPIP_H_FILE", None)
 	tcpipStackSystemDefFile.setType("STRING")
 	tcpipStackSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
@@ -1799,7 +1812,9 @@ def tcpipStackRTOSTaskDelayMenu(symbol, event):
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
-		
+
+def genRtosTask(symbol, event):
+    symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))		
 
 def destroyComponent(component):
 	Database.setSymbolValue("tcpipStack", "USE_TCPIP_STACK", False, 2)

@@ -54,7 +54,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/gmac/src/dynamic/_gmac_dcpt_lists.h"
 #include "driver/gmac/src/drv_gmac_local.h"
-
+#include "device.h"
 /******************************************************************************/
 
 // *****************************************************************************

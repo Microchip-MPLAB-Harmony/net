@@ -1,1 +1,0 @@
-<#include "/framework/net/pres/templates/system_tasks.c.ftl">
