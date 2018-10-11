@@ -31,7 +31,7 @@ def instantiateComponent(netPresCommonComponent):
 	netPresExecMode.setDefaultValue("Standalone")
 	
 	# Net Pres Task Size
-	netPresTaskSize = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_TASK_SIZE", netPresRtosMenu)
+	netPresTaskSize = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_STACK_SIZE", netPresRtosMenu)
 	netPresTaskSize.setLabel("Task Size")
 	netPresTaskSize.setVisible(True)
 	netPresTaskSize.setDescription("Net Pres Task Size")
@@ -264,30 +264,30 @@ def instantiateComponent(netPresCommonComponent):
 	netPresSysInitDataSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysInitDataSourceFtl.setType("STRING")
 	netPresSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
-	netPresSysInitDataSourceFtl.setSourcePath("net/pres/templates/system_init.c.data.ftl")
+	netPresSysInitDataSourceFtl.setSourcePath("net/pres/templates/system/system_data_initialize.c.ftl")
 	netPresSysInitDataSourceFtl.setMarkup(True)
 	
 	# add "<#include \"/framework/net/templates/system_init.c.call.ftl\">"  to list SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE
 	netPresSysInitCallSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysInitCallSourceFtl.setType("STRING")
 	netPresSysInitCallSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE")
-	netPresSysInitCallSourceFtl.setSourcePath("net/pres/templates/system_init.c.call.ftl")
+	netPresSysInitCallSourceFtl.setSourcePath("net/pres/templates/system/system_initialize.c.ftl")
 	netPresSysInitCallSourceFtl.setMarkup(True)
 
 	netPresSystemDefFile = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSystemDefFile.setType("STRING")
 	netPresSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	netPresSystemDefFile.setSourcePath("net/pres/templates/system_definitions.h.include.ftl")
+	netPresSystemDefFile.setSourcePath("net/pres/templates/system/system_definitions.h.ftl")
 	netPresSystemDefFile.setMarkup(True)
 	
 	netPresSystemDefObjFile = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSystemDefObjFile.setType("STRING")
 	netPresSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
-	netPresSystemDefObjFile.setSourcePath("net/pres/templates/system_definitions.h.object.ftl")
+	netPresSystemDefObjFile.setSourcePath("net/pres/templates/system/system_definitions_object.h.ftl")
 	netPresSystemDefObjFile.setMarkup(True)
 	
 	netPresSystemConfigFtl = netPresCommonComponent.createFileSymbol(None, None)
-	netPresSystemConfigFtl.setSourcePath("net/pres/templates/system_config.h.ftl")
+	netPresSystemConfigFtl.setSourcePath("net/pres/templates/system/system_config.h.ftl")
 	netPresSystemConfigFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	netPresSystemConfigFtl.setMarkup(True)
 	netPresSystemConfigFtl.setType("STRING")
@@ -296,9 +296,17 @@ def instantiateComponent(netPresCommonComponent):
 	netPresSysTaskSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysTaskSourceFtl.setType("STRING")
 	netPresSysTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
-	netPresSysTaskSourceFtl.setSourcePath("net/pres/templates/system_tasks.c.ftl")
+	netPresSysTaskSourceFtl.setSourcePath("net/pres/templates/system/system_tasks.c.ftl")
 	netPresSysTaskSourceFtl.setMarkup(True)
 
+	netPresSystemRtosTasksFile = netPresCommonComponent.createFileSymbol("NET_PRES_SYS_RTOS_TASK", None)
+	netPresSystemRtosTasksFile.setType("STRING")
+	netPresSystemRtosTasksFile.setOutputName("core.LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS")
+	netPresSystemRtosTasksFile.setSourcePath("net/pres/templates/system/system_rtos_tasks.c.ftl")
+	netPresSystemRtosTasksFile.setMarkup(True)
+	netPresSystemRtosTasksFile.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
+	netPresSystemRtosTasksFile.setDependencies(genRtosTask, ["HarmonyCore.SELECT_RTOS"])
+	
 	# file NET_PRES_C "$HARMONY_VERSION_PATH/framework/net/pres/src/net_pres.c" to "$PROJECT_SOURCE_FILES/framework/net/pres/src/net_pres.c"
 	netPresSourceFile = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSourceFile.setSourcePath("net/pres/src/net_pres.c")
@@ -387,7 +395,10 @@ def netPresRTOSStandaloneMenu(symbol, event):
 	else:
 		symbol.setVisible(False)
 		print("netPres Combined")		
-		
+
+def genRtosTask(symbol, event):
+    symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
+	
 def netPresGenSourceFile(sourceFile, event):
 	netPresBlob = Database.getSymbolValue("netPres","NET_PRES_BLOB_CERT_REPO")
 	netPresStub = Database.getSymbolValue("netPres","NET_PRES_CERT_STORE_STUBS")

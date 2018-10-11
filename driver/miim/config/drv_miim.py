@@ -96,8 +96,8 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimInstnExecMode.setDefaultValue("Standalone")
 	#drvMiimInstnExecMode.setDependencies(drvMiimMenuVisibleSingle, ["DRV_MIIM_USE_DRIVER"])
 
-	# MIIM Driver Task Size
-	drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_TASK_SIZE", drvMiimRtosMenu)
+	# MIIM Driver Task Stack Size
+	drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_STACK_SIZE", drvMiimRtosMenu)
 	drvMiimDrvTaskSize.setLabel("Task Size")
 	drvMiimDrvTaskSize.setVisible(True)
 	drvMiimDrvTaskSize.setDescription("MIIM Driver Task Size")
@@ -128,7 +128,7 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimDrvTaskDelay.setLabel("Task Delay")
 	drvMiimDrvTaskDelay.setVisible(True)
 	drvMiimDrvTaskDelay.setDescription("MIIM Driver Task Delay")
-	drvMiimDrvTaskDelay.setDefaultValue(100)
+	drvMiimDrvTaskDelay.setDefaultValue(1)
 	drvMiimDrvTaskDelay.setDependencies(drvMiimRTOSTaskDelayMenu, ["DRV_MIIM_RTOS", "DRV_MIIM_RTOS_USE_DELAY"])
 		
 	# Add drv_miim.h file to project
@@ -194,11 +194,11 @@ def instantiateComponent(drvMiimComponent):
 	drvMiimInitSourceFtl.setMarkup(True)
 	
 	#add "<#include \"/framework/driver/miim/config/drv_miim_tasks.c.ftl\">"  to list SYSTEM_TASKS_C_CALL_DRIVER_TASKS
-	drvMiimSysTaskSourceFtl = drvMiimComponent.createFileSymbol(None, None)
-	drvMiimSysTaskSourceFtl.setType("STRING")
-	drvMiimSysTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS")
-	drvMiimSysTaskSourceFtl.setSourcePath("driver/miim/config/drv_miim_tasks.c.ftl")
-	drvMiimSysTaskSourceFtl.setMarkup(True)
+	# drvMiimSysTaskSourceFtl = drvMiimComponent.createFileSymbol(None, None)
+	# drvMiimSysTaskSourceFtl.setType("STRING")
+	# drvMiimSysTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS")
+	# drvMiimSysTaskSourceFtl.setSourcePath("driver/miim/config/drv_miim_tasks.c.ftl")
+	# drvMiimSysTaskSourceFtl.setMarkup(True)
 	
 	#add "<#include \"/framework/driver/miim/config/drv_miim.h.ftl\">"  to list SYSTEM_CONFIG_H_DRIVER_CONFIGURATION 
 	drvMiimSysConfigSourceFtl = drvMiimComponent.createFileSymbol(None, None)
@@ -213,11 +213,31 @@ def instantiateComponent(drvMiimComponent):
 	# drvMiimSystemDefFile.setSourcePath("driver/miim/templates/system/system_definitions.h.ftl")
 	# drvMiimSystemDefFile.setMarkup(True)	
 
-	drvMiimSystemDefObjFile = drvMiimComponent.createFileSymbol("TCPIP_DEF_OBJ", None)
+	drvMiimSystemDefObjFile = drvMiimComponent.createFileSymbol("DRV_MIIM_DEF_OBJ", None)
 	drvMiimSystemDefObjFile.setType("STRING")
 	drvMiimSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
 	drvMiimSystemDefObjFile.setSourcePath("driver/miim/templates/system/system_definitions_objects.h.ftl")
-	drvMiimSystemDefObjFile.setMarkup(True)
+	drvMiimSystemDefObjFile.setMarkup(True)	
+
+	drvMiimSystemConfFile = drvMiimComponent.createFileSymbol("DRV_MIIM_CONFIGURATION_H", None)
+	drvMiimSystemConfFile.setType("STRING")
+	drvMiimSystemConfFile.setOutputName("core.LIST_SYSTEM_CONFIG_H_DRIVER_CONFIGURATION")
+	drvMiimSystemConfFile.setSourcePath("driver/miim/templates/system/system_config.h.ftl")
+	drvMiimSystemConfFile.setMarkup(True)	
+
+	drvMiimSystemTaskFile = drvMiimComponent.createFileSymbol("DRV_SDHC_SYSTEM_TASKS_C", None)
+	drvMiimSystemTaskFile.setType("STRING")
+	drvMiimSystemTaskFile.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_DRIVER_TASKS")
+	drvMiimSystemTaskFile.setSourcePath("driver/miim/templates/system/system_tasks.c.ftl")
+	drvMiimSystemTaskFile.setMarkup(True)
+
+	drvMiimSystemRtosTasksFile = drvMiimComponent.createFileSymbol("DRV_SDHC_SYS_RTOS_TASK", None)
+	drvMiimSystemRtosTasksFile.setType("STRING")
+	drvMiimSystemRtosTasksFile.setOutputName("core.LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS")
+	drvMiimSystemRtosTasksFile.setSourcePath("driver/miim/templates/system/system_rtos_tasks.c.ftl")
+	drvMiimSystemRtosTasksFile.setMarkup(True)
+	drvMiimSystemRtosTasksFile.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
+	drvMiimSystemRtosTasksFile.setDependencies(genRtosTask, ["HarmonyCore.SELECT_RTOS"])
 	
 def drvMiimMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
@@ -256,6 +276,9 @@ def drvMiimRTOSTaskDelayMenu(symbol, event):
 		symbol.setVisible(True)
 	else:
 		symbol.setVisible(False)
-		
+
+def genRtosTask(symbol, event):
+    symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
+	
 def drvMiimGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])

@@ -1,1 +1,0 @@
-<#include "/framework/net/pres/templates/system_interrupt_a.s.ftl">
