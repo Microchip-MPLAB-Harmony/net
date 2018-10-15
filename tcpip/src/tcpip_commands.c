@@ -113,7 +113,9 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_DefaultInterfaceSet (SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #if defined(TCPIP_STACK_USE_IPV4)
 static int _Command_AddressService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, TCPIP_STACK_ADDRESS_SERVICE_TYPE svcType);
+#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
 static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif 
 static int _Command_DHCPSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_ZcllOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_PrimaryDNSAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -359,7 +361,9 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
     {"netinfo",     _Command_NetInfo,              ": Get network information"},
     {"defnet",      _Command_DefaultInterfaceSet,  ": Set default network interface"},
 #if defined(TCPIP_STACK_USE_IPV4)
+#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
     {"dhcp",        _CommandDhcpOptions,           ": DHCP client commands"},
+#endif
     {"dhcps",       _Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
     {"zcll",        _Command_ZcllOnOff,            ": Turn ZCLL on/off"},
     {"setdns",      _Command_PrimaryDNSAddressSet, ": Set DNS address"},
@@ -551,7 +555,6 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 #if defined(TCPIP_STACK_USE_IPV4)
     const char  *msgAdd;
-    bool      dhcpActive;
     IPV4_ADDR ipAddr;
 #endif // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -647,35 +650,42 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
 #if defined(TCPIP_STACK_USE_IPV4)
+        
+#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
+        bool      dhcpActive;
         dhcpActive = false;
         if(TCPIP_DHCP_IsActive(netH))
         {
             msgAdd = "dhcp";
             dhcpActive = true;
         }
+        else 
+#endif
 #if defined(TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL)
-        else if(TCPIP_ZCLL_IsEnabled(netH))
+        if(TCPIP_ZCLL_IsEnabled(netH))
         {
             msgAdd = "zcll";
         }
+        else 
 #endif
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
-        else if(TCPIP_DHCPS_IsEnabled(netH))
+        if(TCPIP_DHCPS_IsEnabled(netH))
         {
             msgAdd = "dhcps";
         }
-#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER)
         else
+#endif  // defined(TCPIP_STACK_USE_DHCP_SERVER)        
         {
             msgAdd = "default IP address";
         }
 
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s is ON\r\n", msgAdd);
-
+#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
         if(!dhcpActive)
         {
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "dhcp is %s\r\n", TCPIP_DHCP_IsEnabled(netH) ? "enabled" : "disabled");
         }
+#endif
 #endif  // defined(TCPIP_STACK_USE_IPV4)
         
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Link is %s\r\n", TCPIP_STACK_NetIsLinked(netH) ? "UP" : "DOWN");
@@ -768,7 +778,7 @@ static int _Command_DefaultInterfaceSet (SYS_CMD_DEVICE_NODE* pCmdIO, int argc, 
     return true;
 }
 
-#if defined(TCPIP_STACK_USE_IPV4)
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
 static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     TCPIP_NET_HANDLE netH;
@@ -888,7 +898,7 @@ static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 
     return true;
 }
-#endif  // defined(TCPIP_STACK_USE_IPV4)
+#endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
 
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
 static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -1012,10 +1022,12 @@ static int _Command_AddressService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
 
     switch(svcType)
     {
+#if defined(TCPIP_STACK_USE_DHCP_CLIENT)
         case TCPIP_STACK_ADDRESS_SERVICE_DHCPC:
             addFnc = svcEnable?TCPIP_DHCP_Enable:TCPIP_DHCP_Disable;
             break;
-
+#endif 
+            
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
         case TCPIP_STACK_ADDRESS_SERVICE_DHCPS:
             addFnc = svcEnable?TCPIP_DHCPS_Enable:TCPIP_DHCPS_Disable;
