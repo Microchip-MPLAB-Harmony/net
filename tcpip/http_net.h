@@ -161,6 +161,13 @@ typedef enum
     /* The connection was closed by the client */
     TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE,    
 
+    /* a HTTP file was successfully opened */
+    TCPIP_HTTP_NET_EVENT_FILE_OPEN,
+
+    /* a HTTP file was closed */
+    TCPIP_HTTP_NET_EVENT_FILE_CLOSE,
+
+
     /* errors */
     /* an error occurred when opening a HTTP file */
     TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR                = -1,
@@ -2262,6 +2269,8 @@ void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
                     - TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT: 0    
                     - TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR: 0    
                     - TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE: 0    
+                    - TCPIP_HTTP_NET_EVENT_FILE_OPEN: file name pointer
+                    - TCPIP_HTTP_NET_EVENT_FILE_CLOSE: file name pointer
 
                     - TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR: 0

@@ -817,6 +817,7 @@ static void _HTTP_CloseConnections(TCPIP_NET_IF* pNetIf)
                 {
                     SYS_FS_FileClose(pHttpCon->file);
                     pHttpCon->file = SYS_FS_HANDLE_INVALID;
+                    _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHttpCon->fileName);
                 }
 
                 if(pNetIf == 0)
@@ -1706,11 +1707,13 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileOpen(TCPIP_HTTP_NET_CONN* pHttpC
 
     if(pHttpCon->file == SYS_FS_HANDLE_INVALID)
     {   // failed
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR, pHttpCon->httpData + 1);
         pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_NOT_FOUND;
         pHttpCon->flags.requestError = 1;
         return TCPIP_HTTP_CONN_STATE_PARSE_HEADERS;
     }
 
+    _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_OPEN, pHttpCon->httpData + 1);
     if(strlen((char*)pHttpCon->httpData + 1) > sizeof(pHttpCon->fileName))
     {
         _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR, pHttpCon->httpData + 1);
@@ -2321,6 +2324,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessDone(TCPIP_HTTP_NET_CONN* pHttpCon
         if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
         {
             SYS_FS_FileClose(pHttpCon->file);
+            _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHttpCon->fileName);
             pHttpCon->file = SYS_FS_HANDLE_INVALID;
         }
         *pWait = true;
@@ -2345,6 +2349,7 @@ static bool _HTTP_ConnCleanDisconnect(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_
     if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
     {
         SYS_FS_FileClose(pHttpCon->file);
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHttpCon->fileName);
         pHttpCon->file = SYS_FS_HANDLE_INVALID;
     }
 
@@ -2936,6 +2941,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_IncludeFile(TCPIP_HTTP_NET_CONN* pHttpCon, TCP
         return TCPIP_HTTP_CHUNK_RES_FILE_ERR;
     }
 
+    _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_OPEN, fName);
     // add valid file for processing
     return _HTTP_AddFileChunk(pHttpCon, fp, fName, pChDcpt);
 }
@@ -3588,6 +3594,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, SY
         if(fH != SYS_FS_HANDLE_INVALID)
         {
             SYS_FS_FileClose(fH);
+            _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, fName);
         }
         if(pChDcpt != 0)
         {
@@ -3716,6 +3723,7 @@ static void _HTTP_FreeChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DCPT
         if(pHead->fileChDcpt.fHandle != SYS_FS_HANDLE_INVALID)
         {
             SYS_FS_FileClose(pHead->fileChDcpt.fHandle);
+            _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHead->chunkFName);
         }
 
         if(pHead->fileChDcpt.fileBuffDcpt)
