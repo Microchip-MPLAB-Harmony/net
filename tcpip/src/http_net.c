@@ -38,6 +38,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #include <stdio.h>
 #include <stdarg.h>
+#include <string.h>
 #include <alloca.h>
 
 #include "tcpip/src/tcpip_private.h"
@@ -1206,6 +1207,7 @@ static void TCPIP_HTTP_NET_Process(void)
             {   // some disconnect initiated by the remote party
                 pHttpCon->flags.discardRxBuff = 1;
                 pHttpCon->connState = TCPIP_HTTP_CONN_STATE_ERROR;
+                pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE;
             }
         }
 
@@ -1221,6 +1223,7 @@ static void TCPIP_HTTP_NET_Process(void)
             {   // timeout; kill the connection
                 _HTTP_DbgConnTmo(pHttpCon);
                 pHttpCon->connActiveSec = currSec;  // disconnect may take a while, avoid a new disconnect request
+                pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT;
                 pHttpCon->connState = TCPIP_HTTP_CONN_STATE_DISCONNECT;
             }
         }
@@ -1525,6 +1528,11 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessIdle(TCPIP_HTTP_NET_CONN* pHttpCon
     pHttpCon->byteCount = 0;
     pHttpCon->smPost = 0x00;
     pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_GET; // show no error condition
+    pHttpCon->closeEvent = 0;
+    if(pHttpCon->flags.sktIsConnected == 0)
+    {   // report it once
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_OPEN, 0);
+    }
     pHttpCon->flags.val = 0;
     pHttpCon->flags.sktIsConnected = 1;
 
@@ -1561,6 +1569,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseRequest(TCPIP_HTTP_NET_CONN* pHttpCo
         if((int32_t)(SYS_TMR_TickCountGet() - pHttpCon->httpTick) > 0)
         {   // A timeout has occurred
             pHttpCon->flags.discardRxBuff = 1;
+            pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT;
             return TCPIP_HTTP_CONN_STATE_ERROR;
         }
         // wait some more
@@ -1817,6 +1826,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
             if((int32_t)(SYS_TMR_TickCountGet() - pHttpCon->httpTick) > 0)
             {   // A timeout has occured
                 pHttpCon->flags.discardRxBuff = 1;
+                pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT;
                 return TCPIP_HTTP_CONN_STATE_ERROR;
             }
 
@@ -1861,7 +1871,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
         parseFail = false;
         for(ix = 0; ix < sizeof(HTTPRequestHeaders)/sizeof(HTTPRequestHeaders[0]); ix++)
         {
-            if(strcmp((char*)buffer, (const char *)HTTPRequestHeaders[ix]) == 0)
+            if(stricmp((char*)buffer, (const char *)HTTPRequestHeaders[ix]) == 0)
             {   // Parse the header and stop the loop
                 parseFail = _HTTP_HeaderParseLookup(pHttpCon, ix) == false;
                 clearLine = true;
@@ -1956,6 +1966,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessPost(TCPIP_HTTP_NET_CONN* pHttpCon
     {
         if((int32_t)(SYS_TMR_TickCountGet() - pHttpCon->httpTick) > 0)
         {   // If a timeout has occured, disconnect
+            pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT;
             return TCPIP_HTTP_CONN_STATE_ERROR;
         }
     }
@@ -2010,6 +2021,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessPost(TCPIP_HTTP_NET_CONN* pHttpCon
             }
             else if(ioRes == TCPIP_HTTP_NET_IO_RES_ERROR)
             {   // some error, abort
+                pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR;
                 return TCPIP_HTTP_CONN_STATE_ERROR;
             }
 
@@ -2316,6 +2328,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessDone(TCPIP_HTTP_NET_CONN* pHttpCon
     }
 
     // else nonpersistent: disconnect
+    pHttpCon->closeEvent = TCPIP_HTTP_NET_EVENT_CLOSE_DONE;
     return TCPIP_HTTP_CONN_STATE_DISCONNECT;
 }
 
@@ -2367,6 +2380,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessError(TCPIP_HTTP_NET_CONN* pHttpCo
 {
 
     _HTTP_ConnCleanDisconnect(pHttpCon, pHttpCon->flags.discardRxBuff != 0 ? TCPIP_HTTP_DISCARD_WAIT_NOT : TCPIP_HTTP_DISCARD_NOT);
+    _HTTP_Report_ConnectionEvent(pHttpCon, (TCPIP_HTTP_NET_EVENT_TYPE)pHttpCon->closeEvent, 0);
 
     *pWait = true;
     return TCPIP_HTTP_CONN_STATE_IDLE;
@@ -2384,6 +2398,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessDisconnect(TCPIP_HTTP_NET_CONN* pH
 
     if(disconRes)
     {
+        _HTTP_Report_ConnectionEvent(pHttpCon, (TCPIP_HTTP_NET_EVENT_TYPE)pHttpCon->closeEvent, 0);
         return TCPIP_HTTP_CONN_STATE_IDLE;
     }
 

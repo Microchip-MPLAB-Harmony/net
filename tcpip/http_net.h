@@ -145,6 +145,21 @@ typedef enum
     /* Notification that a FS upload operation was completed successfully */
     TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE,
 
+    /* An attempt to open the connection was made, data received.
+     * Subject to parsing and other validation, it may result into a valid connection */
+    TCPIP_HTTP_NET_EVENT_OPEN,    
+
+    /* The non-persistent connection was done and closed */
+    TCPIP_HTTP_NET_EVENT_CLOSE_DONE,    
+
+    /* The connection was closed due to a client timeout */
+    TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT,    
+
+    /* The connection was closed due to a POST processing error */
+    TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR,    
+
+    /* The connection was closed by the client */
+    TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE,    
 
     /* errors */
     /* an error occurred when opening a HTTP file */
@@ -2242,6 +2257,11 @@ void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
     evType      - the HTTP event that occurred
     evInfo      - additional info for that particular event
                     - TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE: file name pointer
+                    - TCPIP_HTTP_NET_EVENT_OPEN: 0    
+                    - TCPIP_HTTP_NET_EVENT_CLOSE_DONE: 0    
+                    - TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT: 0    
+                    - TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR: 0    
+                    - TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE: 0    
 
                     - TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR: file name pointer
                     - TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR: 0
