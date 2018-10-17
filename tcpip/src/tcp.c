@@ -793,6 +793,9 @@ static void _TcpCleanup(void)
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 // netMask is the mask of interfaces going down: 1 << netIx
+// TODO aa: the ifMask is limited here to 32 bits/interfaces!
+// Actually see the TCPIP_MODULE_SIGNAL_ENTRY::signalParam, which is 16 bit only! So max 16 interfaces supported!!!
+// It should be increased!
 static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
 {
     int ix;
@@ -802,15 +805,19 @@ static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
     {
         if((pSkt = TCBStubs[ix]) != 0)  
         {
-            uint32_t sktIfMask = 1 << TCPIP_STACK_NetIxGet(pSkt->pSktNet);
-            if((sktIfMask & netMask) != 0)
-            {   // match
-                // just disconnect, don't kill sockets
-                bool isServer = pSkt->Flags.bServer;
-                pSkt->Flags.bServer = 1;
-                _TcpAbort(pSkt, _TCP_ABORT_FLAG_REGULAR, sigType);
-                // restore the setting
-                pSkt->Flags.bServer = isServer;
+            int netIx = TCPIP_STACK_NetIxGet(pSkt->pSktNet);
+            if(netIx >= 0 )
+            {   // interface exists
+                uint32_t sktIfMask = 1 << netIx;
+                if((sktIfMask & netMask) != 0)
+                {   // match
+                    // just disconnect, don't kill sockets
+                    bool isServer = pSkt->Flags.bServer;
+                    pSkt->Flags.bServer = 1;
+                    _TcpAbort(pSkt, _TCP_ABORT_FLAG_REGULAR, sigType);
+                    // restore the setting
+                    pSkt->Flags.bServer = isServer;
+                }
             }
         }
     }
@@ -1960,8 +1967,12 @@ bool TCPIP_TCP_WasReset(TCP_SOCKET hTCP)
   	false - The socket is not currently connected.
 
   Remarks:
-	A socket is said to be connected only if it is in the TCPIP_TCP_STATE_ESTABLISHED
-	state.  Sockets in the process of opening or closing will return false.
+    A socket is said to be connected only if it is in one of the states:
+    TCPIP_TCP_STATE_ESTABLISHED, TCPIP_TCP_STATE_FIN_WAIT_1, TCPIP_TCP_STATE_FIN_WAIT_2 or TCPIP_TCP_STATE_CLOSE_WAIT
+    In all of these states the socket can exchange data with the other end of the connection (either full duplex or
+    only TX/RX).
+
+    Otherwise the call will return false.
   ***************************************************************************/
 bool TCPIP_TCP_IsConnected(TCP_SOCKET hTCP)
 {

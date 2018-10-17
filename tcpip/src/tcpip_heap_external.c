@@ -258,10 +258,14 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
 static TCPIP_STACK_HEAP_RES _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_HEAP_EXT_OBJ_INSTANCE*   hInst = _TCPIP_HEAP_ObjInstance(heapH);
+    TCPIP_HEAP_EXT_DCPT*   hDcpt = _TCPIP_HEAP_ObjDcpt(heapH);
 
-    if(hInst)
+    if(hDcpt)
     {
-        OSAL_SEM_Delete(&hInst->heapDcpt._heapSemaphore);
+        if (hDcpt->heapDoProtect)
+        {
+            OSAL_SEM_Delete(&hDcpt->_heapSemaphore);
+        }
         // invalidate it
         memset(&hInst->heapObj, 0, sizeof(hInst->heapObj));
         (*hInst->heapDcpt.heapConfig.free_fnc)(hInst);

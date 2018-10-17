@@ -3991,6 +3991,7 @@ static void _CommandMiimOp(unsigned int rIx, SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_
     }
     else
     {
+        _MiimClose(true);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "miim %s: an error occurred: %d!\r\n", opMsg, miimRes);
     }
         

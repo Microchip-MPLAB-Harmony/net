@@ -124,7 +124,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // after this timeout.
 // If the value is set to 0 then the socket will wait forever
 // for the application to close the socket (default behavior). 
-#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		(200ul)
+// Default should be 0
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		(0)
 
 // Maximum number of retransmission attempts
 #define TCPIP_TCP_MAX_RETRIES			(5u)

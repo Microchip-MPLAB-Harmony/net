@@ -67,11 +67,33 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define TELNET_CMD_WILL         "\xfb"
 
 #define TELNET_CMD_IAC_CODE     '\xff'
-#define TELNET_CMD_DONT_CODE    '\xfe'
-#define TELNET_CMD_DO_CODE      '\xfd'
-#define TELNET_CMD_WONT_CODE    '\xfc'
-#define TELNET_CMD_WILL_CODE    '\xfb'
 
+// command option codes
+#define TELNET_CMD_OPT_CODE_BEG   '\xfb'
+#define TELNET_CMD_OPT_CODE_END   '\xfe'
+
+#define TELNET_CMD_WILL_CODE    '\xfb'
+#define TELNET_CMD_WONT_CODE    '\xfc'
+#define TELNET_CMD_DO_CODE      '\xfd'
+#define TELNET_CMD_DONT_CODE    '\xfe'
+
+// other telnet commands codes (not negotiated options)
+#define TELNET_CMD_NOPT_CODE_BEG   '\xf0'
+#define TELNET_CMD_NOPT_CODE_END   '\xf9'
+
+#define TELNET_CMD_SE_CODE      '\xf0'
+#define TELNET_CMD_NOP_CODE     '\xf1'
+#define TELNET_CMD_DM_CODE      '\xf2'
+#define TELNET_CMD_BREAK_CODE   '\xf3'
+#define TELNET_CMD_IP_CODE      '\xf4'
+#define TELNET_CMD_AO_CODE      '\xf5'
+#define TELNET_CMD_AYT_CODE     '\xf6'
+#define TELNET_CMD_EC_CODE      '\xf7'
+#define TELNET_CMD_EL_CODE      '\xf8'
+#define TELNET_CMD_GA_CODE      '\xf9'
+
+// subnegotiation start command
+#define TELNET_CMD_SB_CODE    '\xfa'
 
 
 // limited set of supported telnet options
@@ -112,10 +134,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // buffering defines
 #define TELNET_PRINT_BUFF           200     // internal print buffer
-#define TELNET_LINE_BUFF            (80 +3) // assembled line buffer for password, authentication, etc
+#define TELNET_LINE_BUFF            (80 +3) // assembled line buffer for password, authentication, and regular characters
                                             // + extra room for \r\n
 #define TELNET_SKT_MESSAGE_SPACE    80      // min space needed in the socket buffer for displaying messages
 
+// if !0, sends the commands, options, etc. in the messages passed to the console
+// by default they are removed
+// TODO aa: should go to telnet settings
+#define TELNET_SEND_COMMANDS_TO_CONSOLE     0
+
+// TODO aa: telnet settings should add RX/TX buffer size
 
 // machine state
 typedef	enum
@@ -164,8 +192,8 @@ static void _Telnet_Cleanup(void);
 
 static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSocket, TELNET_STATE tState);
 static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSocket, TELNET_STATE tState);
-static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, char* lineBuffer, int bufferSize, int* readBytes);
-static char* _Telnet_CommandsSkip(const char* strMsg);
+static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, char** pLineBuffer, int bufferSize, int* readBytes);
+static char* _Telnet_Process_CmdOptions(const char* strMsg, int avlblBytes);
 
 static void TCPIP_TELNET_Process(void);
 
@@ -322,7 +350,7 @@ static void _Telnet_MSG(const void* cmdIoParam, const char* str)
     NET_PRES_SKT_HANDLE_T tSkt = (NET_PRES_SKT_HANDLE_T)(int)cmdIoParam;
     if(tSkt != INVALID_SOCKET)
     {
-        // TODO aa: internal buffering may be needed for very long commands
+        // TODO aa: size of the buffer needs to be configurable to support long commands/strings
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)str, strlen(str));
     }
 }
@@ -355,26 +383,54 @@ static bool _Telnet_DATA_RDY(const void* cmdIoParam)
 }
 
 // Telnet's getc
+// it removes the control characters from the stream
 static char _Telnet_GETC(const void* cmdIoParam)
 {
+    uint8_t bData;
 
     NET_PRES_SKT_HANDLE_T tSkt = (NET_PRES_SKT_HANDLE_T)(int)cmdIoParam;
-    if(tSkt != INVALID_SOCKET)
+    if(tSkt == INVALID_SOCKET)
     {
-        uint8_t bData;
-        if (NET_PRES_SocketRead(tSkt, &bData, 1))
+        return 0;
+    }
+
+#if (TELNET_SEND_COMMANDS_TO_CONSOLE != 0)
+    if (NET_PRES_SocketRead(tSkt, &bData, 1))
+    {
+        return (char)bData;
+    }
+#else
+    // remove the control chars from the console stream
+    char    lineBuffer[TELNET_LINE_BUFF];    // telnet line buffer
+
+    int avlblBytes = NET_PRES_SocketPeek(tSkt, (uint8_t*)lineBuffer, sizeof(lineBuffer) - 1);
+
+    if(avlblBytes)
+    {
+        char* lineEnd = lineBuffer + avlblBytes;
+        *lineEnd = 0;
+        
+        char* linePtr = _Telnet_Process_CmdOptions(lineBuffer, avlblBytes);
+    
+        avlblBytes = lineEnd - linePtr;
+
+        if(avlblBytes)
         {
+            bData = *linePtr++;
+            // discard consumed and unused
+            NET_PRES_SocketRead(tSkt, 0, linePtr - lineBuffer);
             return (char)bData;
         }
     }
+#endif  // TELNET_SEND_COMMANDS_TO_CONSOLE
 
     return 0;
+
 }
 
 void TCPIP_TELNET_Task(void)
 {
     TCPIP_MODULE_SIGNAL sigPend;
-
     sigPend = _TCPIPStackModuleSignalGet(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_MASK_ALL);
 
     if(sigPend != 0)
@@ -414,6 +470,7 @@ static void TCPIP_TELNET_Process(void)
         // Reset our state if the remote client disconnected from us
         if(NET_PRES_SocketWasReset(tSocket))
         {
+            NET_PRES_SocketDisconnect(tSocket);
             // Deregister IO and free its space
             _Telnet_Deregister(pDcpt);
             tState = SM_PRINT_LOGIN;
@@ -491,7 +548,8 @@ static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE t
         return tState;
     }
 
-    lineRes = _Telnet_MessageLineCheck(tSkt, userMessage, sizeof(userMessage), &avlblBytes);
+    lineStr = userMessage;
+    lineRes = _Telnet_MessageLineCheck(tSkt, &lineStr, sizeof(userMessage), &avlblBytes);
 
     if(lineRes == TELNET_MSG_LINE_PENDING)
     {   // wait some more
@@ -506,9 +564,6 @@ static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE t
     }
 
     // TELNET_MSG_LINE_DONE
-    // ignore telnet commands/advertisments sent to us by the client
-    // we do not support them!
-    lineStr = _Telnet_CommandsSkip(userMessage);
     // remove the line termination 
     lineStr = strtok(lineStr, TELNET_LINE_TERM);
     // find the user name
@@ -543,7 +598,8 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
         return tState;
     }
 
-    lineRes = _Telnet_MessageLineCheck(tSkt, passMessage, sizeof(passMessage), &avlblBytes);
+    lineStr = passMessage;
+    lineRes = _Telnet_MessageLineCheck(tSkt, &lineStr, sizeof(passMessage), &avlblBytes);
 
     if(lineRes == TELNET_MSG_LINE_PENDING)
     {   // wait some more
@@ -558,9 +614,6 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
     }
     else
     {   // TELNET_MSG_LINE_DONE
-        // ignore telnet commands/advertisments sent to us by the client
-        // we do not support them!
-        lineStr = _Telnet_CommandsSkip(passMessage);
         // remove the line termination 
         lineStr = strtok(lineStr, TELNET_LINE_TERM);
         if(tState != SM_GET_PASSWORD || strcmp(lineStr, TCPIP_TELNET_PASSWORD) != 0)
@@ -592,17 +645,34 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
 
 
 // checks if a complete line is assembled
-static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, char* lineBuffer, int bufferSize, int* readBytes)
+static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, char** pLineBuffer, int bufferSize, int* readBytes)
 {
-    int     avlblBytes;
-    char    *lineTerm;
+    int     avlblBytes, skipBytes;
+    char    *lineBuffer, *lineTerm, *cmdSkip;
 
+    lineBuffer = *pLineBuffer;
     avlblBytes = NET_PRES_SocketPeek(tSkt, (uint8_t*)lineBuffer, bufferSize - 1);
     
+    skipBytes = 0;
     if(avlblBytes)
     {   // we need at least one terminator character
         // make sure we have a complete line
         lineBuffer[avlblBytes] = 0;
+
+        // check for (unsupported) commands/options
+        cmdSkip = _Telnet_Process_CmdOptions(lineBuffer, avlblBytes);
+        skipBytes = cmdSkip - lineBuffer;
+        avlblBytes -= skipBytes;
+    }
+
+    if(skipBytes)
+    {   // discard
+        NET_PRES_SocketRead(tSkt, 0, skipBytes);
+        lineBuffer += skipBytes;
+    }
+
+    if(avlblBytes)
+    {
         lineTerm = strstr(lineBuffer, TELNET_LINE_RETURN);
         if(lineTerm == 0)
         {
@@ -611,6 +681,7 @@ static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, 
 
         if(lineTerm != 0)
         {
+            *pLineBuffer = lineBuffer;
             *readBytes = avlblBytes;
             return TELNET_MSG_LINE_DONE;
         }
@@ -627,10 +698,15 @@ static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, 
 
 }
 
-static char* _Telnet_CommandsSkip(const char* strMsg)
+// process telnet commands and options
+// returns a pointer to the message after the options were processed
+// Note: for now no telnet commands or options are supported
+// The options are simply removed from the telnet message
+static char* _Telnet_Process_CmdOptions(const char* strMsg, int avlblBytes)
 {
     char c;
-    while(true)
+
+    while(avlblBytes)
     {
         if(*strMsg != TELNET_CMD_IAC_CODE)
         {
@@ -643,12 +719,48 @@ static char* _Telnet_CommandsSkip(const char* strMsg)
             break;
         }
         // valid command sequence
-        if(c == TELNET_CMD_DO_CODE || c == TELNET_CMD_DONT_CODE || c == TELNET_CMD_WILL_CODE || c == TELNET_CMD_WONT_CODE)
-        {   // skip option character that follows
+        if(c >= TELNET_CMD_OPT_CODE_BEG && c <= TELNET_CMD_OPT_CODE_END)
+        {   // 3 Bytes option codes: skip option character that follows
             strMsg += 2;
         }
-        else
+        else if(c >= TELNET_CMD_NOPT_CODE_BEG && c <= TELNET_CMD_NOPT_CODE_END)
+        {   // 2 Bytes option codes;
+            strMsg++;
+        }
+        else if(c == TELNET_CMD_SB_CODE)
+        {   // eat up chars until you get to the end of option: TELNET_CMD_IAC_CODE + TELNET_CMD_SE_CODE
+            const char* endSubOpt = 0;
+            if(avlblBytes > 2)
+            {   // at least "command + subnegotiation" bytes needed
+                const char* srchEnd = strMsg + 1;
+                avlblBytes -= 2;
+                while(avlblBytes > 1)
+                {
+                    if(*srchEnd == TELNET_CMD_IAC_CODE && *(srchEnd + 1) == TELNET_CMD_SE_CODE)
+                    {   // found the option end
+                        endSubOpt = srchEnd + 2;
+                        avlblBytes -= 2;
+                        break;
+                    }
+                    // continue
+                    srchEnd++;
+                    avlblBytes--;
+                }
+            }
+
+            if(endSubOpt == 0)
+            {   // not found
+                --strMsg;
+                break;
+            }
+            else
+            {
+                strMsg = endSubOpt;
+            }
+        }
+        else 
         {   // we don't support other commands for now
+            --strMsg;
             break;
         }
     }
