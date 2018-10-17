@@ -1090,7 +1090,7 @@ bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
 
     if(pDownIf)
     {
-        if(pDownIf->Flags.bInterfaceEnabled)
+        if(pDownIf->Flags.bInterfaceEnabled || pDownIf->Flags.bMacInitialize)
         {
             // kill interface
             // if this is primary, kill all its aliases
@@ -1644,7 +1644,7 @@ static bool _TCPIPStackIsRunState(void)
         {   // failed initializing all interfaces;
             for(netIx = 0, pNetIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pNetIf++)
             {
-                if(pNetIf->Flags.bInterfaceEnabled)
+                if(pNetIf->Flags.bInterfaceEnabled || pNetIf->Flags.bMacInitialize)
                 {
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
                     if(_TCPIPStackNetIsPrimary(pNetIf))
@@ -3303,8 +3303,10 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
         TCPIP_STACK_DNS_SERVICE_TYPE addDynamicNameService = TCPIP_STACK_DNSServiceSelect(pNetIf, pUsrConfig->startFlags);
 
         if(addDynamicNameService == TCPIP_STACK_DNS_SERVICE_NONE)
-        {   // TODO aa: why do we automatically start the DNS client if the user didn't select it?
+        {   // automatically select the DNS client as default, if possible
+#if defined(TCPIP_STACK_USE_DNS)
             pNetIf->Flags.bIsDnsClientEnabled = 1;
+#endif  // defined(TCPIP_STACK_USE_DNS)
         }
 #else
         TCPIP_STACK_AddressServiceDefaultSet(pNetIf);
