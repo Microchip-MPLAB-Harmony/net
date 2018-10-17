@@ -266,3 +266,23 @@ size_t strncpy_m(char* destStr, size_t destSize, int nStrings, ...)
     return len;
 }
 
+int stricmp(const char *s1, const char *s2)
+{
+    if (s1 == 0 || s2 == 0)
+    {
+        return s1 == 0 ? s2 == 0 ? 0 : -(*s2) : *s1;
+    }
+
+    uint8_t c1, c2;
+    do
+    {
+        c1 = tolower(*s1++);
+        c2 = tolower(*s2++);
+    }while(c1 != 0 && c1 == c2);
+
+    return (int)(c1 - c2); 
+}
+
+
+
+

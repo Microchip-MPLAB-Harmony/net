@@ -862,7 +862,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                     // Compare header read to ones we're interested in
                     for(i = 0; i < sizeof(HTTPRequestHeaders)/sizeof(HTTPRequestHeaders[0]); i++)
                     {
-                        if(strcmp((char*)buffer, (const char *)HTTPRequestHeaders[i]) == 0)
+                        if(stricmp((char*)buffer, (const char *)HTTPRequestHeaders[i]) == 0)
                         {// Parse the header and stop the loop
                         _HTTP_HeaderParseLookup(pHttpCon, i);
                             isDone = true;
