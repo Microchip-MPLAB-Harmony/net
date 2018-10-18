@@ -19,25 +19,26 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-SOFTWARE AND DOCUMENTATION ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
 
@@ -57,10 +58,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
  
 
-static uint32_t TC0_CH0_TimerStatus;  /* saves interrupt status */
-
 /* Callback object for channel 0 */
-TC_CALLBACK_OBJECT TC0_CH0_CallbackObj;
+TC_TIMER_CALLBACK_OBJECT TC0_CH0_CallbackObj;
 
 /* Initialize channel in timer mode */
 void TC0_CH0_TimerInitialize (void)
@@ -71,10 +70,11 @@ void TC0_CH0_TimerInitialize (void)
     TC0_REGS->TC_CHANNEL[0].TC_CMR =  TC_CMR_WAVSEL_UP_RC | TC_CMR_WAVE_Msk ;
 
     /* write period */
-    TC0_REGS->TC_CHANNEL[0].TC_RC = 60060U;
+    TC0_REGS->TC_CHANNEL[0].TC_RC = 60000U;
+
 
     /* enable interrupt */
-    TC0_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPCS_Msk;
+    TC0_REGS->TC_CHANNEL[0].TC_IER = TC_IER_CPAS_Msk;
     TC0_CH0_CallbackObj.callback_fn = NULL;
 }
 
@@ -90,10 +90,21 @@ void TC0_CH0_TimerStop (void)
     TC0_REGS->TC_CHANNEL[0].TC_CCR = (TC_CCR_CLKDIS_Msk);
 }
 
+uint32_t TC0_CH0_TimerFrequencyGet()
+{
+    return (uint32_t)(150000000UL);
+}
+
 /* Configure timer period */
 void TC0_CH0_TimerPeriodSet (uint16_t period)
 {
     TC0_REGS->TC_CHANNEL[0].TC_RC = period;
+}
+
+/* Configure timer compare */
+void TC0_CH0_TimerCompareSet (uint16_t compare)
+{
+    TC0_REGS->TC_CHANNEL[0].TC_RA = compare;
 }
 
 /* Read timer period */
@@ -108,19 +119,8 @@ uint16_t TC0_CH0_TimerCounterGet (void)
     return TC0_REGS->TC_CHANNEL[0].TC_CV;
 }
 
-/* Check if timer period status is set */
-bool TC0_CH0_TimerPeriodHasExpired(void)
-{
-    bool timer_status;
-    NVIC_DisableIRQ(TC0_CH0_IRQn);
-    timer_status = ((TC0_CH0_TimerStatus | TC0_REGS->TC_CHANNEL[0].TC_SR) & TC_SR_CPCS_Msk) >> TC_SR_CPCS_Pos;
-    TC0_CH0_TimerStatus = 0U;
-    NVIC_EnableIRQ(TC0_CH0_IRQn);
-    return timer_status;
-}
-
 /* Register callback for period interrupt */
-void TC0_CH0_TimerCallbackRegister(TC_CALLBACK callback, uintptr_t context)
+void TC0_CH0_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context)
 {
     TC0_CH0_CallbackObj.callback_fn = callback;
     TC0_CH0_CallbackObj.context = context;
@@ -128,13 +128,14 @@ void TC0_CH0_TimerCallbackRegister(TC_CALLBACK callback, uintptr_t context)
 
 void TC0_CH0_InterruptHandler(void)
 {
-    TC0_CH0_TimerStatus = TC0_REGS->TC_CHANNEL[0].TC_SR;
+    TC_TIMER_STATUS timer_status = TC0_REGS->TC_CHANNEL[0].TC_SR & TC_TIMER_STATUS_MSK;
     /* Call registered callback function */
     if (TC0_CH0_CallbackObj.callback_fn != NULL)
     {
-        TC0_CH0_CallbackObj.callback_fn(TC0_CH0_CallbackObj.context);
+        TC0_CH0_CallbackObj.callback_fn(timer_status, TC0_CH0_CallbackObj.context);
     }
 }
+
  
 
  

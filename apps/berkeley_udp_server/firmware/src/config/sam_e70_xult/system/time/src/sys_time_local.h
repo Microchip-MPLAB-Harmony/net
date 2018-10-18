@@ -16,26 +16,26 @@
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2017 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 //DOM-IGNORE-END
 
@@ -51,19 +51,13 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 #include <stdint.h>
 #include "system/time/sys_time.h"
+#include "osal/osal.h"
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-
-//////////////////////////Counter//////////////////////////////////////////////
-#define HW_COUNTER_ROLLOVER_CYCLE    1
-#define HW_COUNTER_WIDTH             16
-#define HW_COUNTER_MAX               0xFFFF
-#define COUNTER_MAX                  0xFFFFFFFF
-#define COUNTER_WIDTH                32
 
 // *****************************************************************************
 /* Timer Handle Macros
@@ -82,16 +76,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     None
 */
 
-#define _SYS_TIME_HANDLE_TOKEN_MAX         (0xFFFF)
-#define _SYS_TIME_MAKE_HANDLE(token, index) ((token) << 16 | (index))
-#define _SYS_TIME_UPDATE_HANDLE_TOKEN(token) \
-{ \
-    (token)++; \
-    if ((token) >= _SYS_TIME_HANDLE_TOKEN_MAX) \
-        (token) = 0; \
-    else \
-        (token) = (token); \
-}
+#define _SYS_TIME_HANDLE_TOKEN_MAX              (0xFFFF)
+#define _SYS_TIME_INDEX_MASK                    (0x0000FFFFUL)
 
 // *****************************************************************************
 /* SYS TIME OBJECT INSTANCE structure
@@ -107,15 +93,16 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 
 typedef struct _SYS_TIME_TIMER_OBJ{
-  int inuse;    /* TRUE if in use */
-  int active;    /* TRUE if soft timer enabled */
+  bool inUse;    /* TRUE if in use */
+  bool active;    /* TRUE if soft timer enabled */
   SYS_TIME_CALLBACK_TYPE type;    /* periodic or not */
-  uint32_t time;    /* time requested */
-  uint32_t timeRemaining;    /* time to wait, relative incase of timers in the list */
+  uint32_t requestedTime;    /* time requested */
+  uint32_t relativeTimePending;    /* time to wait, relative incase of timers in the list */
   SYS_TIME_CALLBACK callback;    /* set to TRUE at timeout */
   uintptr_t context; /* context */
-  int tmrElapsed;   /* Useful only for single shot timer */
-  struct _SYS_TIME_TIMER_OBJ * tmrNext; /* Next timer */
+  bool tmrElapsedFlag;   /* Set on every timer expiry. Cleared after user reads the status. */
+  bool tmrElapsed;    /* Set on every timer expiry. Cleared after timer is added back to the list */
+  struct _SYS_TIME_TIMER_OBJ* tmrNext; /* Next timer */
   SYS_TIME_HANDLE tmrHandle; /* Unique handle for object */
 } SYS_TIME_TIMER_OBJ;
 
@@ -123,16 +110,19 @@ typedef struct _SYS_TIME_TIMER_OBJ{
 typedef struct{
     SYS_STATUS status;
     TIME_PLIB_API *timePlib;
-    INT_SOURCE timeInterrupt;
-    uint32_t timeFrequency;
-    uint32_t timePeriodPrevious;
-    uint32_t timePeriod;
-    volatile uint32_t counter;    /* Software counter */
-    volatile uint32_t highCounter;    /* Software 64-bit counter */
-    volatile uint32_t timeToCounter;     /* Active timer expiry point or software period */
-    int tmrElapsed;    /* On every active timer elapsed */
-    int interruptContext;    /* On every active timer elapsed */
+    INT_SOURCE hwTimerIntNum;
+    uint32_t hwTimerFrequency;
+    uint32_t hwTimerPreviousValue;
+    uint32_t hwTimerCurrentValue;
+    uint32_t hwTimerPeriodValue;
+    uint32_t hwTimerCompareValue;
+    uint32_t hwTimerCompareMargin;
+    volatile uint32_t swCounter64Low;           /* Software counter */
+    volatile uint32_t swCounter64High;          /* Software 64-bit counter */
+    uint8_t interruptNestingCount;
     SYS_TIME_TIMER_OBJ * tmrActive;
+    /* Mutex to protect access to the shared resources */
+    OSAL_MUTEX_DECLARE(timerMutex);
 
 } SYS_TIME_COUNTER_OBJ;   /* set of timers */
 

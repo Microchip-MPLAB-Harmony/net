@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-06-05T16:39:35Z */
+/* file generated from device description version 2018-09-19T14:04:45Z */
 #ifndef SAME_SAME70_I2SC_MODULE_H
 #define SAME_SAME70_I2SC_MODULE_H
 
@@ -81,13 +81,6 @@
 #define I2SC_MR_DATALENGTH_16_BITS_COMPACT    (I2SC_MR_DATALENGTH_16_BITS_COMPACT_Val << I2SC_MR_DATALENGTH_Pos) /**< (I2SC_MR) Data length is set to 16-bit compact stereo. Left sample in bits 15:0 and right sample in bits 31:16 of same word. Position  */
 #define I2SC_MR_DATALENGTH_8_BITS             (I2SC_MR_DATALENGTH_8_BITS_Val << I2SC_MR_DATALENGTH_Pos) /**< (I2SC_MR) Data length is set to 8 bits Position  */
 #define I2SC_MR_DATALENGTH_8_BITS_COMPACT     (I2SC_MR_DATALENGTH_8_BITS_COMPACT_Val << I2SC_MR_DATALENGTH_Pos) /**< (I2SC_MR) Data length is set to 8-bit compact stereo. Left sample in bits 7:0 and right sample in bits 15:8 of the same word. Position  */
-#define I2SC_MR_FORMAT_Pos                    (6U)                                           /**< (I2SC_MR) Data Format Position */
-#define I2SC_MR_FORMAT_Msk                    (0x3U << I2SC_MR_FORMAT_Pos)                   /**< (I2SC_MR) Data Format Mask */
-#define I2SC_MR_FORMAT(value)                 (I2SC_MR_FORMAT_Msk & ((value) << I2SC_MR_FORMAT_Pos))
-#define   I2SC_MR_FORMAT_I2S_Val              (0U)                                           /**< (I2SC_MR) I2S format, stereo with I2SC_WS low for left channel, and MSB of sample starting one I2SC_CK period after I2SC_WS edge  */
-#define   I2SC_MR_FORMAT_LJ_Val               (1U)                                           /**< (I2SC_MR) Left-justified format, stereo with I2SC_WS high for left channel, and MSB of sample starting on I2SC_WS edge  */
-#define I2SC_MR_FORMAT_I2S                    (I2SC_MR_FORMAT_I2S_Val << I2SC_MR_FORMAT_Pos) /**< (I2SC_MR) I2S format, stereo with I2SC_WS low for left channel, and MSB of sample starting one I2SC_CK period after I2SC_WS edge Position  */
-#define I2SC_MR_FORMAT_LJ                     (I2SC_MR_FORMAT_LJ_Val << I2SC_MR_FORMAT_Pos)  /**< (I2SC_MR) Left-justified format, stereo with I2SC_WS high for left channel, and MSB of sample starting on I2SC_WS edge Position  */
 #define I2SC_MR_RXMONO_Pos                    (8U)                                           /**< (I2SC_MR) Receive Mono Position */
 #define I2SC_MR_RXMONO_Msk                    (0x1U << I2SC_MR_RXMONO_Pos)                   /**< (I2SC_MR) Receive Mono Mask */
 #define I2SC_MR_RXMONO(value)                 (I2SC_MR_RXMONO_Msk & ((value) << I2SC_MR_RXMONO_Pos))
@@ -142,7 +135,7 @@
 #define I2SC_MR_IWS_Pos                       (31U)                                          /**< (I2SC_MR) I2SC_WS Slot Width Position */
 #define I2SC_MR_IWS_Msk                       (0x1U << I2SC_MR_IWS_Pos)                      /**< (I2SC_MR) I2SC_WS Slot Width Mask */
 #define I2SC_MR_IWS(value)                    (I2SC_MR_IWS_Msk & ((value) << I2SC_MR_IWS_Pos))
-#define I2SC_MR_Msk                           (0xFF3F77DDUL)                                 /**< (I2SC_MR) Register Mask  */
+#define I2SC_MR_Msk                           (0xFF3F771DUL)                                 /**< (I2SC_MR) Register Mask  */
 
 /* -------- I2SC_SR : (I2SC Offset: 0x08) (R/  32) Status Register -------- */
 #define I2SC_SR_RXEN_Pos                      (0U)                                           /**< (I2SC_SR) Receiver Enabled Position */

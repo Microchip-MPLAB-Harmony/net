@@ -1296,8 +1296,13 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 		for(index = 0; index < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt; index++ )
 		{
 			if(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] != 0)
+            {
 				(*pMACDrv->sGmacData.pktFreeF)(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index]);
+                pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] = 0; //remove rx packet from rx desc
+                pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_buffaddr.val &= ~GMAC_ADDRESS_MASK; //clear the buffer address bitfields                
+            }
 		}
+        __DMB();
 	}
 	
 }

@@ -171,6 +171,11 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpCustTemplate.setDefaultValue(True) 
 	#tcpipSnmpCustTemplate.setDependencies(tcpipSnmpMenuVisibleSingle, ["TCPIP_USE_SNMP"])
 
+	tcpipSnmpCustTemplateSl = tcpipSnmpComponent.createBooleanSymbol("TCPIP_SNMP_CUSTOM_TEMPLATE_SL", None)
+	tcpipSnmpCustTemplateSl.setVisible(False)	
+	tcpipSnmpCustTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
+	tcpipSnmpCustTemplateSl.setDependencies(tcpipSnmpCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
+	
 	# Add snmp.c file
 	tcpipSnmpSourceFile = tcpipSnmpComponent.createFileSymbol(None, None)
 	tcpipSnmpSourceFile.setSourcePath("tcpip/src/snmp.c")
@@ -216,12 +221,12 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpMpfsImg2SourceFile = tcpipSnmpComponent.createFileSymbol(None, None)
 	tcpipSnmpMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2.c.ftl")
 	tcpipSnmpMpfsImg2SourceFile.setOutputName("mpfs_img2.c")
-	#tcpipSnmpMpfsImg2SourceFile.setDestPath("app/")
-	#tcpipSnmpMpfsImg2SourceFile.setProjectPath("app/")
+	tcpipSnmpMpfsImg2SourceFile.setDestPath("app/")
+	tcpipSnmpMpfsImg2SourceFile.setProjectPath("app/")
 	tcpipSnmpMpfsImg2SourceFile.setType("SOURCE")
 	tcpipSnmpMpfsImg2SourceFile.setMarkup(True)
-	tcpipSnmpMpfsImg2SourceFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_SNMP_CUSTOM_TEMPLATE"])
-		
+	tcpipSnmpMpfsImg2SourceFile.setEnabled(False)
+	tcpipSnmpMpfsImg2SourceFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_SNMP_CUSTOM_TEMPLATE_SL"])
 		
 def tcpipSnmpMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
@@ -230,6 +235,14 @@ def tcpipSnmpMenuVisibleSingle(symbol, event):
 	else:
 		print("SNMP Menu Invisible.")
 		symbol.setVisible(False)
+
+
+def tcpipSnmpCustomSlSet(symbol, event):
+	symbol.clearValue()
+	if (event["value"] == True):
+		symbol.setValue(True,2)
+	else:
+		symbol.setValue(False,2)
 		
 def tcpipSnmpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])

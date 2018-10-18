@@ -20,26 +20,26 @@
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
-Copyright (c) 2017-2018 released Microchip Technology Inc.  All rights reserved.
-
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
-
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
-
-SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 // DOM-IGNORE-END
 
@@ -67,6 +67,16 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
+// Section: System Configuration
+// *****************************************************************************
+// *****************************************************************************
+#define DCACHE_CLEAN_BY_ADDR(data, size)       SCB_CleanDCache_by_Addr((uint32_t *)data, size)
+#define DCACHE_INVALIDATE_BY_ADDR(data, size)  SCB_InvalidateDCache_by_Addr((uint32_t *)data, size)
+
+#define DATA_CACHE_ENABLED                     true
+
+// *****************************************************************************
+// *****************************************************************************
 // Section: System Service Configuration
 // *****************************************************************************
 // *****************************************************************************
@@ -81,6 +91,7 @@ extern "C" {
 #define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
 #define SYS_DEBUG_PRINT_BUFFER_SIZE        200
 #define SYS_DEBUG_BUFFER_DMA_READY
+#define SYS_DEBUG_USE_CONSOLE              
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
@@ -90,8 +101,12 @@ extern "C" {
 #define SYS_CMD_REMAP_SYS_DEBUG_MESSAGE
 
 /* TIME System Service Configuration Options */
+#define SYS_TIME_INDEX_0                     0
 #define SYS_TIME_MAX_TIMERS                  10
-
+#define SYS_TIME_HW_COUNTER_WIDTH            16
+#define SYS_TIME_HW_COUNTER_PERIOD           0xFFFF
+#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
+#define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
 
 
 // *****************************************************************************
@@ -109,6 +124,9 @@ extern "C" {
 #define DRV_MIIM_COMMANDS   false
 #define DRV_MIIM_DRIVER_OBJECT              DRV_MIIM_OBJECT_BASE_Default
 #define DRV_MIIM_DRIVER_INDEX               DRV_MIIM_INDEX_0              
+
+
+
 
 
 
@@ -195,14 +213,12 @@ extern "C" {
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
-#define TCPIP_GMAC_INTERRUPT_MODE        			true
+
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_CLIENTS_NUMBER					1
 #define DRV_GMAC_INDEX	    	    			1
 #define DRV_GMAC_PERIPHERAL_ID					1
-#define DRV_GMAC_INTERRUPT_VECTOR				GMAC_IRQn
 #define DRV_GMAC_INTERRUPT_SOURCE				GMAC_IRQn
-#define DRV_GMAC_POWER_STATE		    		SYS_MODULE_POWER_RUN_FULL
 
 #define DRV_GMAC_INTERRUPT_MODE        			true
 
@@ -318,6 +334,11 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+
+
+
+
+/*** TCP/IP Configuration ***/
 
 
 /*** UDP Configuration ***/

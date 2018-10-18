@@ -967,7 +967,6 @@ static bool _MacPacketAck(TCPIP_MAC_PACKET* pPkt,  const void* param)
             pCurrPkt = (TCPIP_MAC_PACKET*)((uint32_t)(pPkt->pDSeg->next) - ((uint32_t)(pPkt->pDSeg) - (uint32_t)(pPkt)));
         }
 		(*pMacDrv->sGmacData.pktFreeF)(pPkt);
-        pPkt->pDSeg = 0;
 		pPkt = pCurrPkt;
         
 	}

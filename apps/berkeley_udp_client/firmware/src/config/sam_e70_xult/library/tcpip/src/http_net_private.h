@@ -423,6 +423,7 @@ typedef struct _tag_TCPIP_HTTP_NET_CONN
     uint16_t                    fileBufferRetry;                // retry counter for file buffer empty condition
     uint16_t                    connActiveSec;                  // last second the connection was active                  
     TCPIP_HTTP_NET_CONN_FLAGS   flags;                          // connection flags
+    uint8_t                     closeEvent;                     // the event for the reported connection close
     // 
     char                        fileName[SYS_FS_MAX_PATH];      // file name storage
 

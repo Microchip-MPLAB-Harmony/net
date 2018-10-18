@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-06-05T16:39:35Z */
+/* file generated from device description version 2018-09-19T14:04:45Z */
 #ifndef SAME_SAME70_HSMCI_MODULE_H
 #define SAME_SAME70_HSMCI_MODULE_H
 

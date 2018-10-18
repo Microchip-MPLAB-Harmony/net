@@ -170,19 +170,20 @@ typedef enum
     UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT    = 0x0001,   // Union of the !UDP_OPTION_STRICT_NET, !UDP_OPTION_STRICT_ADDRESS and !UDP_OPTION_STRICT_PORT  
                                                         // This is the default behavior for a multicast socket.
                                                         // The same bahvior can be obtained by setting individual options.
-                                                        // It is the default behavior of a server socket but not for a client socket.
+                                                        // It is the default behavior of a newly created server socket but not for a client socket.
     UDP_MCAST_FLAG_IGNORE_SOURCE_ADD        = 0x0002,   // Ignore the source address of a packet and reply to the currently set (multicast)
                                                         // destination address.
                                                         // Normally a socket would reply to the sender of the packet.
                                                         // But probably this is not what you want for multicast.
                                                         // This option allows the socket to reply to the multicast group instead, no matter
                                                         // from what source it received the multicast traffic.
-                                                        // Default for a socket is disabled, i.e. the source address is not ignored
+                                                        // This option is disabled by default when a socket is created and should be enforced when needed.
     UDP_MCAST_FLAG_IGNORE_SOURCE_PORT       = 0x0004,   // Ignore the source port of a packet and reply to the currently set destination port.
                                                         // Normally a socket would reply to the sender of the packet using the source port of the sender.
                                                         // This option allows the socket to reply using the current destination/remote port
-                                                        // no matter the source port of the received multicast traffic.
-                                                        // Default for a socket is disabled, i.e. the source port is not ignored
+                                                        // no matter the source port of the received multicast traffic - which would be the expected
+                                                        // behavior from a multicast socket. 
+                                                        // This option is disabled by default when a socket is created and should be enforced when needed.
     UDP_MCAST_FLAG_IGNORE_UNICAST           = 0x0008,   // Ignore a packet if its destination is not multicast
     UDP_MCAST_FLAG_LOOP                     = 0x0010,   // When set, the multicast packets sent by the UDP socket will be routed on the internal multicast interface as well.
                                                         // Default is cleared.
@@ -201,7 +202,8 @@ typedef enum
 
     //
     UDP_MCAST_FLAG_DEFAULT                  = (UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT | UDP_MCAST_FLAG_IGNORE_UNICAST)
-                                                        // default flags for the multicast sockets
+                                                        // the default flags intended for the multicast sockets
+                                                        // note that these flags are different from the defaults for a regular socket, client or server.
 
 }UDP_MULTICAST_FLAGS;
 
@@ -219,8 +221,9 @@ typedef enum
 //
 typedef struct
 {
-    UDP_MULTICAST_FLAGS     flagsMask;      // mask of flags to be changed by the operation
-    UDP_MULTICAST_FLAGS     flagsValue;     // value of flags to be changed
+    UDP_MULTICAST_FLAGS     flagsMask;      // mask of flags to be touched (changed) by the operation
+    UDP_MULTICAST_FLAGS     flagsValue;     // new value of flags to be changed to,
+                                            // for the flags that are touched, according to the mask 
 }UDP_OPTION_MULTICAST_DATA;
 
 // *****************************************************************************
@@ -549,7 +552,6 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
 
   Description:
     Various options can be set at the socket level.
-    This function provides compatibility with BSD implementations.
 
   Precondition:
 	UDP socket should have been opened with TCPIP_UDP_ServerOpen()/TCPIP_UDP_ClientOpen()().
@@ -581,6 +583,11 @@ bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT r
   Returns:
  	- true  - Indicates success
     - false - Indicates failure
+
+  Remarks:  
+    This function provides the run-time functionality
+    required to implement some of the standard BSD socket options API.
+
   */	
 bool                TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optParam);
 
@@ -868,7 +875,8 @@ bool                TCPIP_UDP_TxOffsetSet(UDP_SOCKET hUDP, uint16_t wOffset, boo
     If this is needed use TCPIP_UDP_OptionsSet.
     The count variable is not used.
 
-    The function is similar to the TCPIP_UDP_PutIsReady and maintained for backward compatibility.
+    This function is deprecated and it will be eventually removed.
+    The function is identical to the TCPIP_UDP_PutIsReady and maintained for backward compatibility only.
 
   */
 uint16_t            TCPIP_UDP_TxPutIsReady(UDP_SOCKET hUDP, unsigned short count);
@@ -885,6 +893,7 @@ uint16_t            TCPIP_UDP_TxPutIsReady(UDP_SOCKET hUDP, unsigned short count
   Description:
 	This function determines how many bytes can be written to the specified UDP
 	socket.
+    This function performs TX buffer allocation for the socket.
   
   Precondition:
 	UDP socket should have been opened with TCPIP_UDP_ServerOpen/TCPIP_UDP_ClientOpen.
@@ -901,6 +910,11 @@ uint16_t            TCPIP_UDP_TxPutIsReady(UDP_SOCKET hUDP, unsigned short count
 	a new TX buffer.
     Otherwise the current TX buffer will be used.
 
+    The function SHOULD be called before using TCPIP_UDP_ArrayPut
+    for the first time or after any TCPIP_UDP_Flush.
+    There is no harm in calling it everytime before any TCPIP_UDP_ArrayPut
+    (except the overhead).
+
   */
 uint16_t            TCPIP_UDP_PutIsReady(UDP_SOCKET hUDP);
 
@@ -916,7 +930,8 @@ uint16_t            TCPIP_UDP_PutIsReady(UDP_SOCKET hUDP);
   Description:
 	This function writes an array of bytes to the UDP socket, 
 	while incrementing the socket write pointer.
-    TCPIP_UDP_PutIsReady could be used before calling this function
+
+    TCPIP_UDP_PutIsReady should be used before calling this function
     to verify that there is room in the socket buffer.
 
   Precondition:
@@ -933,6 +948,14 @@ uint16_t            TCPIP_UDP_PutIsReady(UDP_SOCKET hUDP);
   	The number of bytes successfully placed in the UDP transmit buffer.
     If this value is less than wDataLen, then the buffer became full and the
   	input was truncated.
+
+  Remarks:
+    The return value could be 0 if there is no TX buffer available
+    (for example the socket has TX data queued and the TCPIP_UDP_PutIsReady
+    has not been called or the TX buffer allocation failed).
+
+    The return value could be < than wDataLen depending on the size and the available space
+    of the socket TX buffer
 
   */
 uint16_t            TCPIP_UDP_ArrayPut(UDP_SOCKET hUDP, const uint8_t *cData, uint16_t wDataLen);
