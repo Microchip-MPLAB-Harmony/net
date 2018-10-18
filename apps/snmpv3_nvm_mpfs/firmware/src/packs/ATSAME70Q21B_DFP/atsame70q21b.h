@@ -19,7 +19,7 @@
  *
  */
 
-/* file generated from device description version 2018-06-04T16:37:13Z */
+/* file generated from device description version 2018-09-19T14:04:45Z */
 #ifndef SAME70Q21B_H
 #define SAME70Q21B_H
 
@@ -47,6 +47,7 @@
 /** \addtogroup SAME70Q21B_cmsis CMSIS Definitions
  *  @{
  */
+
 /* ************************************************************************** */
 /*   CMSIS DEFINITIONS FOR SAME70Q21B                                         */
 /* ************************************************************************** */
@@ -344,7 +345,7 @@ void GMAC_Q5_Handler               ( void );
 /*
  * \brief CMSIS includes
  */
-#include <core_cm7.h>
+#include "core_cm7.h"
 
 /** @}  end of SAME70Q21B_cmsis CMSIS Definitions */
 
@@ -391,6 +392,7 @@ void GMAC_Q5_Handler               ( void );
 #include "component/utmi.h"
 #include "component/wdt.h"
 #include "component/xdmac.h"
+
 /** @}  end of Peripheral Software API */
 
 /** \addtogroup SAME70Q21B_id Peripheral Ids Definitions
@@ -449,6 +451,7 @@ void GMAC_Q5_Handler               ( void );
 #define ID_XDMAC         ( 58) /**< \brief Extensible DMA Controller (XDMAC) */
 
 #define ID_PERIPH_MAX  ( 71) /**< \brief Number of peripheral IDs */
+
 /** @}  end of Peripheral Ids Definitions */
 
 /** \addtogroup SAME70Q21B_base Peripheral Base Address Definitions
@@ -584,6 +587,7 @@ void GMAC_Q5_Handler               ( void );
 /*   PIO DEFINITIONS FOR SAME70Q21B                                           */
 /* ************************************************************************** */
 #include "pio/same70q21b.h"
+
 /** @}  end of Peripheral Pio Definitions */
 
 /* ************************************************************************** */

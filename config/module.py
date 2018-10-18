@@ -121,7 +121,7 @@ def loadModule():
 	tcpipHttpNetComponent.addCapability("libtcpipHttpNet","HTTPNET",True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TCP_Dependency", "TCP", None, True, True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-	tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
+	tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO")
 	tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres")
 	tcpipHttpNetComponent.setDisplayType("TCP/IP Library")
 	
@@ -129,7 +129,7 @@ def loadModule():
 	tcpipHttpComponent.addCapability("libtcpipHttp","HTTP",True)
 	tcpipHttpComponent.addDependency("Http_TCP_Dependency", "TCP", None, True, True)
 	tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-	tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
+	tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO")
 	tcpipHttpComponent.setDisplayType("TCP/IP Library")
 
 	tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_iperf.py")
@@ -160,7 +160,7 @@ def loadModule():
 	tcpipSnmpComponent.addCapability("libtcpipSnmp","SNMP",True)	
 	tcpipSnmpComponent.addDependency("Snmp_UDP_Dependency", "UDP", None, True, True)	
 	tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-	tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
+	tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO")
 	tcpipSnmpComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipSnmpv3Component = Module.CreateComponent("tcpipSnmpv3", "SNMPV3", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmpv3.py")

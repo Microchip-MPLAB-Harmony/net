@@ -47,6 +47,7 @@ uint8_t     btohexa_high(uint8_t b);
 uint8_t     btohexa_low(uint8_t b);
 
 size_t      strncpy_m(char* destStr, size_t destSize, int nStrings, ...);
+int         stricmp ( const char * s1, const char * s2 );
 
 #endif  // __HELPERS_H_
 

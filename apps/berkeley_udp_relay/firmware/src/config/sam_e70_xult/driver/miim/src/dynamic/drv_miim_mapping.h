@@ -52,7 +52,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-
+#include "device.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Type Definitions

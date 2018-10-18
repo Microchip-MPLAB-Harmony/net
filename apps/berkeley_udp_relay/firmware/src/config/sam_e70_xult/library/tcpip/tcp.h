@@ -700,8 +700,12 @@ bool  TCPIP_TCP_OptionsGet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optP
     - false - The socket is not currently connected.
 
   Remarks:
-    A socket is said to be connected only if it is in the TCPIP_TCP_STATE_ESTABLISHED
-    state.  Sockets in the process of opening or closing will return false.
+    A socket is said to be connected only if it is in one of the states:
+    TCPIP_TCP_STATE_ESTABLISHED, TCPIP_TCP_STATE_FIN_WAIT_1, TCPIP_TCP_STATE_FIN_WAIT_2 or TCPIP_TCP_STATE_CLOSE_WAIT
+    In all of these states the socket can exchange data with the other end of the connection (either full duplex or
+    only TX/RX).
+
+    Otherwise the call will return false.
   */
 bool  TCPIP_TCP_IsConnected(TCP_SOCKET hTCP);
 

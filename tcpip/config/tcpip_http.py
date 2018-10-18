@@ -255,6 +255,7 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpMpfsImg2SourceFile.setProjectPath("app/")
 	tcpipHttpMpfsImg2SourceFile.setType("SOURCE")
 	tcpipHttpMpfsImg2SourceFile.setMarkup(True)
+	tcpipHttpMpfsImg2SourceFile.setEnabled(False)
 	tcpipHttpMpfsImg2SourceFile.setDependencies(tcpipHttpGenSourceFile, ["TCPIP_HTTP_CUSTOM_TEMPLATE_SL"])
 
 
