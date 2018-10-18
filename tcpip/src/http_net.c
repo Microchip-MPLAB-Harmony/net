@@ -4501,7 +4501,12 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_DynVarCallback(TCPIP_HTTP_NET_CONN* pHttpCon, 
     pDynDcpt = &pDynChunkDcpt->pDynAllocDcpt->dynDcpt;
 
     printRes = TCPIP_HTTP_DYN_PRINT_RES_DONE;
-    pHttpCon->callbackPos = 0;
+    
+    if((pChDcpt->flags & TCPIP_HTTP_CHUNK_FLAG_DYNVAR_AGAIN) == 0)
+    {   // 1st pass
+        pHttpCon->callbackPos = 0;
+    }
+
     if((pChDcpt->flags & TCPIP_HTTP_CHUNK_FLAG_DYNVAR_DEFAULT_PROCESS) == 0)
     {   // call the user processing
         if(!_HTTP_DbgKillUserDynVar())
