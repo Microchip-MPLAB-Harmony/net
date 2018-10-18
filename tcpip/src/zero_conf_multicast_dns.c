@@ -1659,7 +1659,7 @@ _mDNSProcessIncomingRR(MDNS_RR_GROUP     tag
    uint8_t rxBuffer[6];
 
    bMsgIsAQuery = (pmDNSMsgHeader->flags.bits.qr == 0);
-   bSenderHasAuthority = (pmDNSMsgHeader->flags.bits.qr == 1);
+   bSenderHasAuthority = (pmDNSMsgHeader->flags.bits.aa == 1);
 
    res_rec.name = name; // for temporary name storage.
 
