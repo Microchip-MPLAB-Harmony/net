@@ -1,5 +1,5 @@
 /*******************************************************************************
-  File Transfer Protocol (FTP) Client
+  File Transfer Protocol (FTP) Server
 
   Summary:
     Module for Microchip TCP/IP Stack
