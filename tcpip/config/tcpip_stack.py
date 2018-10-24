@@ -216,7 +216,7 @@ def instantiateComponent(tcpipStackComponent):
 	# Number of Heap Pool Entries
 	tcpipStackHeapPoolEntryNum = tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRIES_NUMBER", tcpipStackHeap)
 	tcpipStackHeapPoolEntryNum.setLabel("Number of Heap Pool Entries")
-	tcpipStackHeapPoolEntryNum.setVisible(True)
+	tcpipStackHeapPoolEntryNum.setVisible(False)
 	tcpipStackHeapPoolEntryNum.setDescription("Number of Heap Pool Entries")
 	tcpipStackHeapPoolEntryNum.setMin(1)
 	tcpipStackHeapPoolEntryNum.setMax(20)
@@ -226,7 +226,7 @@ def instantiateComponent(tcpipStackComponent):
 	# The Expansion Size for the Internal Heap Pool
 	tcpipStackHeapStackPoolExpnSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_POOL_EXPANSION_SIZE", tcpipStackHeap)
 	tcpipStackHeapStackPoolExpnSize.setLabel("The Expansion Size for the Internal Heap Pool")
-	tcpipStackHeapStackPoolExpnSize.setVisible(True)
+	tcpipStackHeapStackPoolExpnSize.setVisible(False)
 	tcpipStackHeapStackPoolExpnSize.setDescription("The Expansion Size for the Internal Heap Pool")
 	tcpipStackHeapStackPoolExpnSize.setDefaultValue(51200)
 	tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
