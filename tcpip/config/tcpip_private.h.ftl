@@ -1,4 +1,4 @@
-/*******************************************************************************
+ /*******************************************************************************
   Microchip TCP/IP Stack Include File
 
   Company:
@@ -38,6 +38,7 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
 // DOM-IGNORE-END
 
 #ifndef __TCPIP_STACK_PRIVATE_H__
