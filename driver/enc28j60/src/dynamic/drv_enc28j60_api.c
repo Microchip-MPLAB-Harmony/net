@@ -441,7 +441,6 @@ SYS_MODULE_OBJ DRV_ENC28J60_StackInitialize(SYS_MODULE_INDEX index, const SYS_MO
 DRV_HANDLE DRV_ENC28J60_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
 {
     uint8_t x;
-    //TODO: Fix this, there should be a stack open function instead.
     DRV_ENC28J60_DriverInfo * pDrvInst = &(drvENC28J60DrvInst[index - TCPIP_MODULE_MAC_ENCJ60]);
     DRV_ENC28J60_ClientInfo * ptr = NULL;
     if (!_DRV_ENC28J60_ValidateDriverInstance(pDrvInst))

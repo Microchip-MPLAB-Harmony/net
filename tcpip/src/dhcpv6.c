@@ -313,7 +313,6 @@ static const TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_MASK_TBL[TCPIP_DHC
 
 // default TCPIP_DHCPV6_OPT_CODE_OPTION_REQ option request mask;
 // could be changed by the user
-// TODO aa: API needed
 static TCPIP_DHCPV6_OPTION_MASK_SET_3       DHCPV6_ORO_OPTION_MASK_TBL = 
 {
     3,
@@ -334,7 +333,6 @@ static TCPIP_DHCPV6_OPTION_MASK_SET_3       DHCPV6_ORO_OPTION_MASK_TBL =
 
 // default/current  DHCPV6 messages option mask
 // could be changed by the user
-// TODO aa: API needed
 static TCPIP_DHCPV6_OPTION_MASK_SET_0 DHCPV6_MSG_OPTION_CURR_MASK_TBL[TCPIP_DHCPV6_CLIENT_MSG_TYPE_NUMBER] =
 {
     {                       // TCPIP_DHCPV6_CLIENT_MSG_TYPE_SOLICIT
@@ -641,10 +639,7 @@ static void         _DHCPV6Close(TCPIP_NET_IF* pNetIf, bool disable, bool releas
 
 static UDP_SOCKET   _DHCPV6OpenSocket(TCPIP_NET_IF* pNetIf);
 
-// TODO aa: run time enable disable functions needed
 static void         _DHCPV6Enable(TCPIP_NET_IF* pNetIf, int opType);
-// TODO aa: run time enable disable functions needed
-// static void         _DHCPV6Disable(TCPIP_NET_IF* pNetIf, int opType);
 
 // client specific functions
 static bool         _DHCPV6Client_Init(TCPIP_DHCPV6_CLIENT_DCPT* pClient);
@@ -797,8 +792,6 @@ static void _DHCPV6MsgGet_InfoMaxRt(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHC
 // table with server transmitted options that this client processes
 // if retrieveing an option fails, the option is silently ignored
 // Table entries having optFnc == 0 are unused
-// TODO aa: has to match the DHCPV6_ORO_OPTION_MASK_TBL somehow! 
-// TODO: dynamic selection of options should be made available to the user!
 static const _DHCPV6MsgGet_OptionEntry    _DHCPV6MsgGet_OptionRetrieveTbl[] = 
 {
     // optCode                              // optFnc
@@ -825,7 +818,6 @@ static bool         _DHCPV6MsgValidate(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPI
 //
 static __inline__ uint32_t __attribute__((always_inline)) _DHCPV6SecondCountGet(void)
 {
-    // TODO aa: should be replaced by a system service!
     return dhcpv6SecondCount;
 }
 
@@ -1235,7 +1227,6 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
 
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
-        // TODO aa: use pClient->configFlags & TCPIP_DHCPV6_FLAG_START_ENABLE to enable this automatically
         {
             _DHCPV6Enable(stackCtrl->pNetIf, 0);
         }
@@ -1252,7 +1243,6 @@ bool TCPIP_DHCPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
 
     // sanity checks
     //
-    // TODO aa: temp check; for now only LL type DUID is supported
     if(pDhcpConfig->duidType != TCPIP_DHCPV6_DUID_TYPE_LL)
     {
         return false;
@@ -1469,7 +1459,6 @@ static void TCPIP_DHCPV6_Process(bool isTmo)
 // TCPIP_DHCPV6_CLIENT_STATE_INIT
 static void   _DHCPV6Client_StateProcInit(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 {
-    // TODO aa: add initialization timeout!
     if(_DHCPV6Client_Init(pClient))
     {   // advance
         _DHCPV6Client_SetState(pClient, TCPIP_DHCPV6_CLIENT_STATE_IDLE);
@@ -1480,8 +1469,6 @@ static void   _DHCPV6Client_StateProcInit(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 // TCPIP_DHCPV6_CLIENT_STATE_IDLE
 static void   _DHCPV6Client_StateProcIdle(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
 {
-    // TODO aa: always for now
-    // TODO aa: use pClient->configFlags & TCPIP_DHCPV6_FLAG_START_ENABLE to enable this 
     _DHCPV6Enable(pClient->pDhcpIf, 0);
 }
 
@@ -1920,12 +1907,10 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_SubStateDadStart(TCPIP_DHCPV6_I
     }
     
     // insert it for DAD
-    // TODO aa: how do I set the valid + pref LTimes???
     skipDad = (pIa->pParent->configFlags & TCPIP_DHCPV6_FLAG_DAD_DISABLE) != 0;
     addrPtr = TCPIP_IPV6_UnicastAddressAdd (pIa->pParent->pDhcpIf, &pIa->addBody.ipv6Addr, 0, skipDad);
     if(addrPtr == 0)
     {   // failed inserting new address; try again next time
-        // TODO aa: a retry counter should be added here!
         _DHCPV6DbgCond(false, __func__, __LINE__);
         return TCPIP_DHCPV6_IA_SUBSTATE_RES_PENDING;
     }
@@ -2072,7 +2057,6 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_SubStateConfirmStart(TCPIP_DHCP
 }
 
 // TCPIP_DHCPV6_IA_STATE_RELEASE, TCPIP_DHCPV6_IA_SUBSTATE_START
-// TODO aa: a rapid release procedure is needed for situations like shut down, deinitialize, etc.
 static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_SubStateReleaseStart(TCPIP_DHCPV6_IA_DCPT* pIa)
 {
     TCPIP_DHCPV6_IA_SUBSTATE_RESULT subRes;
@@ -2102,10 +2086,8 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT   _DHCPV6Ia_SubStateErrorFatal(TCPIP_DHCP
 
 static void _DHCPV6Close(TCPIP_NET_IF* pNetIf, bool disable, bool release)
 {
-    // TODO aa:
 }
 
-// TODO aa: what else needed here?
 static void _DHCPV6Enable(TCPIP_NET_IF* pNetIf, int opType)
 {
     if(dhcpv6ClientDcpt)
@@ -2245,7 +2227,6 @@ static UDP_SOCKET _DHCPV6OpenSocket(TCPIP_NET_IF* pNetIf)
 
 
 // status reporting
-// TODO aa: keep a TCPIP_DHCPV6_CLIENT_INFO inside the client, so it's easy to copy all!
 bool TCPIP_DHCPV6_ClientInfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCPV6_CLIENT_INFO* pClientInfo)
 {
     size_t copyBytes;
@@ -2346,7 +2327,7 @@ bool TCPIP_DHCPV6_IaInfoGet(TCPIP_NET_HANDLE hNet, int iaIx, TCPIP_DHCPV6_IA_INF
 static bool _DHCPV6Duid_Generate(TCPIP_DHCPV6_DUID_TYPE duidType, TCPIP_DHCPV6_DUID_DCPT* pDuid, TCPIP_NET_IF* pDuidIf)
 {
     if(duidType != TCPIP_DHCPV6_DUID_TYPE_LL)
-    {   // TODO aa: only LL type supported for now!
+    {   
         return false;
     }
 
@@ -2455,8 +2436,6 @@ static TCPIP_DHCPV6_MSG_TX_RESULT _DHCPV6Ia_CheckMsgTransmitStatus(TCPIP_DHCPV6_
     }
 
 
-    // TODO aa: pDcpt->waitTick = tickCurr + (tBase * sysFreq) + ((tFuzz * 1000 - tFuzzMinus) * sysFreq) / 1000 + SYS_RANDOM_PseudoGet() % ((tFuzzPlus * sysFreq) / 1000);
-    // test this!
     pDcpt->waitTick = tickCurr + (tBase * sysFreq) + (((tFuzz * 1000 - tFuzzMinus) * sysFreq) + SYS_RANDOM_PseudoGet() % (tFuzzPlus * sysFreq)) / 1000;
     pDcpt->rt = tBase;
     pDcpt->rc++;
@@ -2641,7 +2620,6 @@ static int _DHCPV6Option_WriteIA_NA(TCPIP_DHCPV6_IA_DCPT* pIa)
 
     }
 #if defined(_TCPIP_DHCPV6_WRITE_IA_WITH_ADDRESSES_ONLY)
-    // TODO aa: check if this is needed?
     if(addrOptSize == 0)
     {   // no addresses to be tx-ed in this IA; ignore
         return 0;
@@ -2697,7 +2675,6 @@ static int _DHCPV6Option_WriteIA_TA(TCPIP_DHCPV6_IA_DCPT* pIa)
     }
 
 #if defined(_TCPIP_DHCPV6_WRITE_IA_WITH_ADDRESSES_ONLY)
-    // TODO aa: do we need this?
     if(addrOptSize == 0)
     {   // no addresses to be tx-ed in this IA; ignore
         return 0;
@@ -3146,8 +3123,6 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseSelect(TCPIP_DHCPV6_IA
     {   // couldn't find any server; check if we must select one!
         if(isTmo || pIa->msgTxDcpt.rc > 1)
         {   // either tmo or it's a retry; for a retry any advertisment will do!
-            // TODO aa: an algorithm needs to select a server that best matches our requested options
-            // for now we select the 1st server that replies with addresses and the highest preference value!
             pMaxMsg = 0;   // server with max preference
             maxPref = -1;
 
@@ -3228,12 +3203,6 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_AdvertiseCopy(TCPIP_DHCPV6_MSG_
         return TCPIP_DHCPV6_IA_SUBSTATE_RES_ERROR_FATAL;
     }
 
-    // TODO aa:
-    // other stuff to be retrieved (probably at reply time!)
-    // get if unicast/multicast?
-    //
-    //
-
     return TCPIP_DHCPV6_IA_SUBSTATE_RES_OK;
 }
 
@@ -3285,7 +3254,7 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyMsgSrvMatchProcess(TCPIP_D
             }
             else if(serverStatCode == TCPIP_DHCPV6_SERVER_STAT_USE_MULTICAST)
             {
-                pIa->flags.iaUnicast = 0;    // TODO aa: shouldn't happen
+                pIa->flags.iaUnicast = 0;
                 subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RETRANSMIT;
                 _DHCPV6DbgSetFailReason(failReason, "Unicast Fail");
             }
@@ -3461,7 +3430,6 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyConfirmProcess(TCPIP_DHCPV
         {   
             subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_RETRANSMIT;
         }
-        // TODO aa: else if there is one message w/o NOT_ON_LINK, the IA should be usable!; so keep waiting
 
         // done with this message
         TCPIP_Helper_SingleListTailAdd(&discardIaList, (SGL_LIST_NODE*)pMsgBuffer);
@@ -3490,7 +3458,6 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyConfirmProcess(TCPIP_DHCPV
 
 // processes the server reply when in rebind state
 // (TCPIP_DHCPV6_IA_STATE_REBIND , TCPIP_DHCPV6_IA_SUBSTATE_WAIT_REPLY)
-// TODO aa: this is not finished! see 18.1.8. Receipt of Reply Messages!
 static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyRebindProcess(TCPIP_DHCPV6_IA_DCPT* pIa)
 {
     TCPIP_DHCPV6_IA_SUBSTATE_RESULT subRes;
@@ -3574,7 +3541,6 @@ static TCPIP_DHCPV6_IA_SUBSTATE_RESULT _DHCPV6Ia_ReplyRebindProcess(TCPIP_DHCPV6
                 break;
             }
 
-            // TODO aa: this should not fail now, already checked above
             if(!_DHCPV6MsgGet_LeaseParams(pIa, pMsgBuffer, false))
             {  
                 subRes = TCPIP_DHCPV6_IA_SUBSTATE_RES_ERROR_FATAL;
@@ -3991,8 +3957,6 @@ static bool _DHCPV6MsgValidate(TCPIP_DHCPV6_MSG_BUFFER* pMsgBuffer, TCPIP_DHCPV6
     TCPIP_DHCPV6_MESSAGE_HEADER* pHdr = (TCPIP_DHCPV6_MESSAGE_HEADER*)pMsgBuffer->pMsgData;
 
     // allow only server originating message types
-    // TODO aa: TCPIP_DHCPV6_MSG_TYPE_RECONFIGURE messages are discarded for now!
-    // They have to include authentication anyway.
     if(pHdr->msg_type == TCPIP_DHCPV6_MSG_TYPE_ADVERTISE || pHdr->msg_type == TCPIP_DHCPV6_MSG_TYPE_REPLY)
     {
         msgMask |= TCPIP_DHCPV6_VALID_MASK_TYPE;
@@ -4049,9 +4013,6 @@ static void _DHCPV6Client_ProcessTask(TCPIP_DHCPV6_CLIENT_DCPT* pClient)
         _DHCPV6MsgGet_Options(pClient, pRxBuffer);
 
         // check if we have a server status code
-        // TODO aa: the status message should be retrieved by an API function!
-        // TODO aa: a signal/event for these kinds of messages? the handler should be passed the message and code?
-        // Well, there is too much info here! Better, after receiving the notification, the user just calls for info API!
         serverStatCode = _DHCPV6MsgGet_StatusCode(pClient->lastStatusMsg, pRxBuffer, sizeof(pClient->lastStatusMsg), 0);
         if(serverStatCode != TCPIP_DHCPV6_SERVER_STAT_EXT_ERROR)
         {
@@ -4542,52 +4503,6 @@ static TCPIP_DHCPV6_OPTION_GENERIC* _DHCPV6OptionFind_OptCode(TCPIP_DHCPV6_MSG_B
     return 0;
 }    
 
-
-// gets/copies an option to the user supplied buffer
-// the destination buffer can be safely cast to a TCPIP_DHCPV6_OPTION_GENERIC*
-// the optCode and optLen in the copied buffer are converted to host endian!
-// returns the number of option data bytes copied to the destination buffer or 0, if buffer not provided or too small
-// if provided, pNeedSize is updated with the size of the option data!
-// Note: both the return value and the value stored at pNeedSize are number of bytes in the option data - i.e. they do not count the 4 bytes pOptG header!!
-// TODO aa: not used for now!
-#if 0
-static uint16_t     _DHCPV6OptionGet(uint8_t* pDestBuffer, TCPIP_DHCPV6_OPTION_GENERIC* pOptG, uint16_t destBuffSize, uint16_t* pNeedSize);
-static uint16_t _DHCPV6OptionGet(uint8_t* pDestBuffer, TCPIP_DHCPV6_OPTION_GENERIC* pOptG, uint16_t destBuffSize, uint16_t* pNeedSize)
-{
-    TCPIP_DHCPV6_OPTION_CODE optCode;
-    uint16_t optLen;
-    uint16_t copiedLen;
-
-
-    if(pNeedSize)
-    {
-        *pNeedSize = 0;
-    }
-
-    optCode = (TCPIP_DHCPV6_OPTION_CODE)TCPIP_Helper_ntohs(pOptG->optCode);
-    optLen = TCPIP_Helper_ntohs(pOptG->optLen);
-
-    copiedLen = 0;
-    if(pDestBuffer != 0 && destBuffSize >= optLen + sizeof(*pOptG))
-    {
-        TCPIP_DHCPV6_OPTION_GENERIC* pCopyOpt = (TCPIP_DHCPV6_OPTION_GENERIC*)pDestBuffer;
-        memcpy(pCopyOpt->optData, pOptG, optLen);
-        pCopyOpt->optCode = optCode;
-        pCopyOpt->optLen = optLen;
-        copiedLen = optLen;
-    }
-
-    if(pNeedSize)
-    {
-       *pNeedSize = optLen;
-    }
-
-    return copiedLen;
-
-}    
-#endif
-
-
 // iterative search for an option code
 // searches for an option with the specified code inside the message buffer
 // first search needs pMsgBuffer != 0;
@@ -4798,36 +4713,4 @@ static void _DHCPV6MsgGet_InfoMaxRt(TCPIP_DHCPV6_CLIENT_DCPT* pClient, TCPIP_DHC
 
 
 #endif  // defined TCPIP_STACK_USE_IPV6 && defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-
-
-//  TODO aa:
-//  - disable the global addresses gneration through stateless configuration of addresses
-//    of network interfaces?
-//    Add #define/config flag
-//
-//  - Add information-request/reply API - if only a info request is needed.
-//  - Add rapid commit option???
-//      probably useful for Wi-Fi.
-//
-//  Support for:
-//      TCPIP_DHCPV6_OPT_CODE_BOOTFILE_URL          = 59,       // 
-//      TCPIP_DHCPV6_OPT_CODE_BOOTFILE_PARAM        = 60,       // 
-// What other options need to be supported???
-//
-//
-// ! When using the TCPIP_IPV6_UnicastAddressAdd() the IPv6 addresses have a lifetime of their own?
-//      How do I use the prefLTime and validLTime here, I mean out side of the DHCPv6?
-//      Is this actually needed ??
-//
-//  Add a way to update the ORO mask; r/w access needed?
-//
-//  Start/stop DHCP ?
-//
-//  Check rebind
-//
-//  Check Confirm;
-//
-//
-
-
 

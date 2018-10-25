@@ -59,8 +59,6 @@ typedef struct _DRV_ENC28J60_DriverInfo
     /* The mutex to protect the */
     OSAL_MUTEX_HANDLE_TYPE  drvMutex;
     /* A copy of the driver configuration*/
-    // TODO aa: wrong name!
-    // it doesn't contain gthe open flags for FD/HD, maybe more!
     DRV_ENC28J60_Configuration drvCfg;
     /* A copy of the stack configuration*/
     TCPIP_MAC_MODULE_CTRL stackCfg;

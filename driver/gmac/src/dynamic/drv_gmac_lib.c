@@ -79,7 +79,6 @@ __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000)))
 
 static void _EthMacReset(void)
 {
-    //TODO  Implement PHY Reset
 }
 
 
@@ -770,7 +769,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
 		rx_index = startIndex;
 		
 		//calculate the size of frame
-		frameSize = (pRxDesc[endIndex].rx_desc_status.val & GMAC_LENGTH_FRAME); // TODO: consider FCS
+		frameSize = (pRxDesc[endIndex].rx_desc_status.val & GMAC_LENGTH_FRAME); 
 		
 		pPkt = (DRV_PIC32CGMAC_PKT_DCPT *)(*pRxPkt)->pDSeg; //backup of data Segment for later use
 		

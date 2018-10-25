@@ -95,7 +95,6 @@ int32_t DRV_ENC28J60_ChkTxStatusStateTask(struct _DRV_ENC28J60_DriverInfo * pDrv
                 curSt->state = DRV_ENC28J60_CTS_WAIT_PHSTAT2;
             }
             // else error; retry
-            // TODO aa: retry counter is needed!
             break;
 
         case DRV_ENC28J60_CTS_WAIT_PHSTAT2:

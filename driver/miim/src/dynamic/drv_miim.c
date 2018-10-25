@@ -308,7 +308,6 @@ SYS_MODULE_OBJ DRV_MIIM_Initialize(const SYS_MODULE_INDEX iModule, const SYS_MOD
 
 void DRV_MIIM_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT* const init)
 {
-    // TODO aa: provide implementation
     // Currently NOT implemented
 }
 
@@ -890,7 +889,6 @@ static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpD
             _DRV_MIIM_MNGMNT_PORT_ENABLE(ethphyId);
             if( _DRV_MIIM_IS_BUSY(ethphyId) )
             {   // some previous operation; wait
-                // TODO aa: add and check tmo and go to DRV_MIIM_TXFER_TMO_START state?
                 break;
             }
 
@@ -948,8 +946,6 @@ static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpD
             {   // there's data available
                 pOpDcpt->opData = _DRV_MIIM_OP_READ_DATA_GET(ethphyId);
                 _DRV_MIIM_CLEAR_DATA_VALID(ethphyId);
-                // TODO aa: a scan counter could be implemented to count how many scan results available
-                // between 2 user reads; For now we have only 2 positions: fresh/stale
                 pOpDcpt->opStat = DRV_MIIM_TXFER_SCAN_VALID;
             }
             break;
@@ -1210,8 +1206,6 @@ static void _DRV_MIIM_PurgeClientOp(DRV_MIIM_CLIENT_DCPT* pClient)
     }
 
 }
-
-// TODO aa: single linked lists implementation: duplication!
 
 void  Helper_SingleListInitialize(SINGLE_LIST* pL)
 {

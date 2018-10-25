@@ -664,45 +664,7 @@ static bool wol_enabled(DRV_HANDLE hClientObj)
     DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
     return (wol & _WOL_EN_MASK) ? true : false;
 }
-#if 0
-// TODO : This API can be used later
-/****************************************************************************
- * Function:        wol_intr_enabled
- *
- * PreCondition:    Ethernet Initiazation should be completed.
- *
- * Input:         hClientObj - A valid open-instance handle, returned from the driver's open routine
- *
- * Output:         true or false
- *
- *
- * Side Effects:    None
- *
- * Overview:       This api is used to get the interupt status of WOL event.
- *                       and is only used for IP101GR PHY driver . 
- *                      
- *
- * Note:            None
- *****************************************************************************/
 
-static bool wol_intr_enabled(DRV_HANDLE hClientObj)
-{
-    unsigned short intr;
-
-    if(!wol_intr32_pin_enabled(hClientObj))
-        return false;
-    
-    if (!wol_enabled(hClientObj))      
-        return false; 
-
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_17);
-    DRV_ETHPHY_SMIReadStart(hClientObj,PHY_REG_WOL_STATUS);
-    intr=DRV_ETHPHY_SMIReadResultGet(hClientObj);
-
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
-    return (intr & _WOL_PLUS_INTR_DIS_MASK) ? true : false;
-}
-#endif
 /****************************************************************************
  * Function:        wol_intr32_pin_enabled
  *
@@ -902,39 +864,7 @@ static void set_sense_magic_pkt(DRV_HANDLE hClientObj,int magic)
     
     DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
 }
-#if 0
-// TODO : This API can be used later
-/****************************************************************************
- * Function:        read_sense_magic_pkt
- *
- * PreCondition:    Ethernet Initiazation should be completed.
- *
- * Input:         hClientObj - A valid open-instance handle, returned from the driver's open routine
- *
- * Output:         true or false
- *
- *
- * Side Effects:    None
- *
- * Overview:       This api is used get result if driver has sensed a magic packet for a WOL event
- *                       and is only used for IP101GR PHY driver . 
- *                      
- *
- * Note:            None
- *****************************************************************************/
 
-static bool read_sense_magic_pkt(DRV_HANDLE hClientObj)
-{
-    unsigned short magic;
-    
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_4);
-    DRV_ETHPHY_SMIReadStart(hClientObj,PHY_REG_WOL_CNTRL);
-    magic = DRV_ETHPHY_SMIReadResultGet(hClientObj);
-    
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
-    return (magic & _WOL_SENSE_MAGIC_PKT_MASK) ? true : false;
-}
-#endif
 /****************************************************************************
  * Function:        set_sense_any_pkt
  *
@@ -973,38 +903,7 @@ static void set_sense_any_pkt(DRV_HANDLE hClientObj,int anypkt)
     DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_WOL_CNTRL, wol);
     DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
 }
-#if 0
-// TODO : This API can be used later
-/****************************************************************************
- * Function:        read_sense_any_pkt
- *
- * PreCondition:    Ethernet Initiazation should be completed.
- *
- * Input:         hClientObj - A valid open-instance handle, returned from the driver's open routine
- *
- * Output:         true or false
- *
- *
- * Side Effects:    None
- *
- * Overview:       This api is used get the result if Any packet is sensed when for WOL event
- *                       and is only used for IP101GR PHY driver . 
- *                      
- *
- * Note:            None
- *****************************************************************************/
-static bool read_sense_any_pkt(DRV_HANDLE hClientObj)
-{
-    unsigned short anypkt;
-    
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_4);
-    DRV_ETHPHY_SMIReadStart(hClientObj,PHY_REG_WOL_CNTRL);
-    anypkt = DRV_ETHPHY_SMIReadResultGet(hClientObj);
-    
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
-    return (anypkt & _WOL_SENSE_ANY_PKT_MASK) ? true : false;
-}
-#endif
+
 /****************************************************************************
  * Function:        manual_set_wol
  *
@@ -1036,47 +935,7 @@ static void manual_set_wol(DRV_HANDLE hClientObj)
     
     DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
 }
-#if 0
-// TODO : This API can be used later
-/****************************************************************************
- * Function:        set_wol_dnspd_en
- *
- * PreCondition:    Ethernet Initiazation should be completed.
- *
- * Input:         hClientObj - A valid open-instance handle, returned from the driver's open routine
- *                  en - down speed enable and disable
- *
- * Output:         none
- *
- *
- * Side Effects:    None
- *
- * Overview:       This api is used for WOL down soeed enable and disable and is only used for IP101GR PHY driver . 
- *                      
- *
- * Note:            None
- *****************************************************************************/
-static void set_wol_dnspd_en(DRV_HANDLE hClientObj,int en)
-{
-    unsigned short wol;
-    
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_4);
-    DRV_ETHPHY_SMIReadStart(hClientObj,PHY_REG_WOL_CNTRL);
-    wol = DRV_ETHPHY_SMIReadResultGet(hClientObj);
 
-    if (en)
-    {
-        wol =  wol | _WOL_PLUS_DOWN_SPEED_MASK;  
-    }
-    else
-    {
-        wol =  wol & ~_WOL_PLUS_DOWN_SPEED_MASK;  
-    }
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_WOL_CNTRL, wol);
-    DRV_ETHPHY_SMIWriteStart(hClientObj,PHY_REG_PAGE_SEL, PAGENUM_0);
-}
-
-#endif
 /****************************************************************************
  * Function:        DRV_EXTPHY_IntInit
  *
@@ -1164,7 +1023,6 @@ static void IP101GRWOLIsr(void *p)
  *
  * Overview:       Configure WOL for IP101GR with a Source MAC address or a 6 byte magic packet mac address.
  *
- * Note:            TODO: This function needs to be converted to the non-blocking Harmony model!
  *****************************************************************************/
 void  DRV_EXTPHY_WOLConfiguration(DRV_HANDLE hClientObj,unsigned char bAddr[])
 {

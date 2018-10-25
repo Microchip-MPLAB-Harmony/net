@@ -194,7 +194,7 @@ static void TCPIP_IPV4_CheckRxPkt(TCPIP_MAC_PACKET* pRxPkt)
         }
     }
     else if(pHeader->Protocol == IP_PROT_TCP)
-    {   // TODO aa: add minimal debug for TCP packets
+    {   
     }
 
 }
@@ -581,7 +581,6 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
         }
 #else
         // MAC transmit will fail anyway
-        // TODO aa: the MAC max frame has to be taken into consideration too!
         return false;
 #endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
 
@@ -1493,8 +1492,6 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
     // this is just a new fragment;
     if(pParent->nFrags >= TCPIP_IPV4_FRAGMENT_MAX_NUMBER)
     {   // more fragments than allowed
-        // TODO aa: could be detected from the previous step, if not complete
-        // or at least see if there's overlap first and a segment gets discarded
         TCPIP_Helper_SingleListNextRemove(&ipv4FragmentQueue, (SGL_LIST_NODE*)pPrevParent);
         _IPv4FragmentDbg(pParent, pRxPkt, TCPIP_IPV4_FRAG_DISCARD_EXCEEDED);
         TCPIP_IPV4_RxFragmentDiscard(pParent, TCPIP_MAC_PKT_ACK_FRAGMENT_ERR);
@@ -1703,10 +1700,6 @@ static void TCPIP_IPV4_RxFragmentListPurge(SINGLE_LIST* pL)
 
 
 // TX packet needs fragmentation; each fragment will contain the IPv4 header and a fragment of data
-// TODO aa: this function does NOT support split segments!
-// If the incoming packet spans multiple segments bad things will happen.
-// ICMP and TCP take care of themselves
-// Problem is for UDP and, most important, for user constructed packets!
 static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16_t pktPayload)
 {
     int ix;

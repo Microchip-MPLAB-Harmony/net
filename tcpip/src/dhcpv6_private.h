@@ -110,10 +110,6 @@ typedef enum
 
 // DHCPV6 Parameter Default value/description
 //
-// TODO aa: Delay values
-// Confirm - TCPIP_DHCPV6_MSG_TYPE_CONFIRM
-// Info request - TCPIP_DHCPV6_MSG_TYPE_INFO_REQUEST
-
 // IRT, MRT, MRC, MRD values
 // constants for all client messages
 // order: iDelay, irt, mrt, mrc, mrd
@@ -1222,10 +1218,6 @@ typedef struct _tag_TCPIP_DHCPV6_IA_DCPT
     TCPIP_DHCPV6_OPTION_MASK_SET_3*         pOroOptMask;    // pointer to current ORO options mask
     TCPIP_DHCPV6_MSG_WRITE_DCPT             wrDcpt;         // current write descriptor
     TCPIP_DHCPV6_MSG_BUFFER*                msgBuffer;      // buffer for the DHCP message to be assembled
-    // TODO aa: maybe multiple IAs, having the same SERVER and the same DEST address!,
-    // can be grouped in the same msgBuffer, wrDcpt!
-    // TODO aa: makes sense to combine wrDcpt + msgBuffer? 
-    // it's the same thing for write, though not for read!!
     // status
     volatile TCPIP_DHCPV6_IA_STATE          iaState;
     volatile TCPIP_DHCPV6_IA_SUBSTATE       iaSubState;

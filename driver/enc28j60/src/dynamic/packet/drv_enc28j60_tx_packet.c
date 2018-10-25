@@ -66,7 +66,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_WRITE_TXST;
                 break;
             }
@@ -81,7 +80,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 		case DRV_ENC28J60_TP_SET_ETXND:
             count = 0;
 
-            // TODO aa: there should be a TCPIP packet function available
             pkt->pDSeg = pkt->macPkt->pDSeg;
             while (pkt->pDSeg != NULL)
             {
@@ -90,14 +88,12 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             }
 
             pkt->pktLen = count;
-            // TODO aa: note that the packet ends at count + 1 because of the control byte
-            // but ETXND points to the last byte of the message, so offset is count
             reg.value = pDrvInst->encMemTxStart + count;
 
             if((reg.value >= pDrvInst->encRamForAppStartAdr) || (reg.value < pDrvInst->encMemTxStart))
             {
                 DRV_ENC28J60_Assert(false, __func__, __LINE__);
-                break;  // TODO aa: error processing needed!
+                break;  
             }
 
             ret = (*pDrvInst->busVTable->fpSfrWr16)(pDrvInst, DRV_ENC28J60_SFR_ETXNDL, reg.value, false);
@@ -113,7 +109,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_SET_ETXND;
                 break;
             }
@@ -142,7 +137,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_SET_WRPT;
                 break;
             }
@@ -161,8 +155,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             {   // retry needed
                 break;
             }
-            // TODO aa: actually it can happen if the packet is larger than the space reserved for ENC copy buffer!
-            // TODO aa: if failed, packet needs to be discarded somehow and acknowledged!
             DRV_ENC28J60_Assert(macTxRes != TCPIP_MAC_RES_PACKET_ERR, __func__, __LINE__);
 
             pkt->state = DRV_ENC28J60_TP_SEND_PKT_WAIT;
@@ -172,7 +164,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_SEND_PKT;
                 break;
             }
@@ -181,7 +172,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
                 break;
             }
             // successfully sent the packet to ENC
-            DRV_ENC28J60_AddGpData(pDrvInst, pkt->pktLen);  // TODO aa: what is this good for???
+            DRV_ENC28J60_AddGpData(pDrvInst, pkt->pktLen);  
             pkt->gpPtr = pDrvInst->encMemTxStart;
 
             // before transmitting the packet, take care of the TX stall - errata
@@ -202,7 +193,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, pkt->operation, &reg, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_READ_EIR;
                 break;
             }
@@ -237,7 +227,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_SET_TXRST;
                 break;
             }
@@ -265,7 +254,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_CLR_TXRST;
                 break;
             }
@@ -294,7 +282,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_CLR_TXERIF;
                 break;
             }
@@ -329,7 +316,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_RQ_PKT_TX;
                 break;
             }
@@ -348,7 +334,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 		case DRV_ENC28J60_TP_RST_EIR:
             if(pkt->macPkt != NULL)
             {   // update the packet status
-                // TODO aa: the packet should be discarded from the beginning if the link was down!!!
                 if (!pDrvInst->mainStateInfo.runningInfo.chkStaInfo.linkState)
                 {
                     pkt->macPkt->ackRes = TCPIP_MAC_PKT_ACK_LINK_DOWN;
@@ -363,7 +348,7 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
 
                 DRV_ENC28J60_SetEvent(pDrvInst, TCPIP_MAC_EV_TX_DONE);
                 pkt->macPkt = NULL;
-                DRV_ENC28J60_TxAck(pDrvInst, pkt->pktLen);    // TODO aa: ???
+                DRV_ENC28J60_TxAck(pDrvInst, pkt->pktLen);    
                 pDrvInst->mainStateInfo.runningInfo.nTxOkPackets ++;
                 pkt->gpPtr = DRV_ENC28J60_MEM_SIZE;
             }
@@ -389,7 +374,6 @@ int32_t DRV_ENC28J60_TxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error; retry
-                // TODO aa: retry count is needed!
                 pkt->state = DRV_ENC28J60_TP_CLR_EIR;
                 break;
             }

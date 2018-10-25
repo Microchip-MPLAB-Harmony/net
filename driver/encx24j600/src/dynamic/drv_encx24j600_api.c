@@ -352,7 +352,6 @@ void DRV_ENCX24J600_SetMacCtrlInfo(SYS_MODULE_OBJ object, TCPIP_MAC_MODULE_CTRL 
     }
     memcpy(&(pDrvInst->stackCfg), init, sizeof(TCPIP_MAC_MODULE_CTRL));
     pDrvInst->stackCfgReady = true;
-    //TODO: Add in selection of which interface.
     int32_t res = DRV_ENCX24J600_SPI_InitializeInterface(pDrvInst);
     res = res;// Silly compiler warning fix
     SYS_ASSERT(res == 0, "Could not initialize the bus interface");
@@ -436,7 +435,6 @@ SYS_MODULE_OBJ DRV_ENCX24J600_StackInitialize(SYS_MODULE_INDEX index, const SYS_
 DRV_HANDLE DRV_ENCX24J600_Open(SYS_MODULE_INDEX index, DRV_IO_INTENT intent)
 {
     uint8_t x;
-    //TODO: Fix this, there should be a stack open function instead.
     DRV_ENCX24J600_DriverInfo * pDrvInst = &(drvEncX24J600DrvInst[index - TCPIP_MODULE_MAC_ENCJ600]);
     DRV_ENCX24J600_ClientInfo * ptr = NULL;
     if (!_DRV_ENCX24J600_ValidateDriverInstance(pDrvInst))
@@ -896,7 +894,6 @@ size_t DRV_ENCX24J600_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSi
 */
 bool DRV_ENCX24J600_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents, bool enable)
 {
-    //TODO fix up this function so that it pays attention to the enable flag
     DRV_ENCX24J600_ClientInfo * pClient = (DRV_ENCX24J600_ClientInfo *)hMac;
     DRV_ENCX24J600_DriverInfo * pDrvInst = _DRV_ENCX24J600_ValidateClientHandle(pClient);
     if (pDrvInst == NULL)

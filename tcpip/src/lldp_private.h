@@ -111,7 +111,6 @@ typedef enum
 #define MAX_TXBUFF_SIZE 500
 #define PORT_ID MAC_ADDR
 
-//TODO These are default settings and can be changed by the user. Find a good spot to place
 #define txCreditMax     5/**< IEEE 802.1AB 9.2.5.17*/ //default 5
 #define msgTxHold       4/**< IEEE 802.1AB 10.5.1  */ //default 4
 #define msgTxInterval   30/**< IEEE 802.1AB 10.5.1  */ //default 30s
@@ -122,7 +121,7 @@ typedef enum
 /*************************LLDP TX TIMER****************************/
 typedef struct
 {
-    uint16_t txDelay;       /**< IEEE 802.1AB 10.5.3  */ //TODO Whats the purpose of this one?
+    uint16_t txDelay;       /**< IEEE 802.1AB 10.5.3  */ 
     uint16_t txTTR;         /**< IEEE 802.1AB 9.2.2.3 - transmit on expire. */
     uint16_t txShutdownWhile;/**< IEEE 802.1AB 9.2.2.3*/
     uint16_t txDelayWhile;
@@ -142,7 +141,7 @@ typedef struct
     uint8_t  *frame;            /**< The tx frame buffer */
     uint64_t sendsize;          /**< The size of our tx frame */
     uint8_t  state;             /**< The tx state for this interface */
-    bool     localChange;       /**< IEEE 802.1AB var (from where?) */ //TODO: Look at 9.2.7.8
+    bool     localChange;       /**< IEEE 802.1AB var (from where?) */ 
     uint16_t txTTL;             /**< IEEE 802.1AB var (from where?) */
     lldp_tx_timers_t timers;    /**< The lldp tx state machine timers for this interface */
     lldp_tx_stats_t txStats;    /**< The lldp tx statistics for this interface */
@@ -190,12 +189,7 @@ typedef struct lldp_per_port_t
   bool remoteChanges;   /**< IEEE 802.1AB 9.2.5.11*/
   uint8_t adminStatus;  /**< IEEE 802.1AB 9.2.5.1 */
 
-  /* TODO: not sure where this goes... the state machine indicates it's per-port */
   uint8_t rxChanges;    /**< IEEE 802.1AB 9.2.5.12*/
-
-  // TODO: unsure about the best way to handle this...
-  // uint8_t tick;
-  // time_t last_tick;
 
   struct lldp_msap *msap_cache;
 

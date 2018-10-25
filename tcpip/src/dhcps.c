@@ -1748,7 +1748,6 @@ TCPIP_DHCPS_LEASE_HANDLE TCPIP_DHCPS_LeaseEntryGet(TCPIP_NET_HANDLE netH, TCPIP_
     }
 
     pDSHashDcpt = &gPdhcpsHashDcpt;
-    // TODO HS: add info as to what network this lease belongs!
 
     pOH = pDSHashDcpt->hashDcpt;
     if(pOH != 0)

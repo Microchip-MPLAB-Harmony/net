@@ -107,8 +107,6 @@ typedef struct
 {
     OA_HASH_ENTRY               hEntry;         // hash header;
     uint8_t*                    memblk;         // memory block for IPv4 and IPv6 and TTL block of memory. Hostname is not part of this block
-    // TODO aa: since A and AAAA resolutions are independent, tInsert and tRetry should be maintained
-    // separately for IPv4 and IPv6 addresses!
     uint32_t                    tInsert;        // one time per hash entry
     uint32_t                    tRetry;         // retry time per hash entry
     IPV4_ADDR*                  pip4Address;    // pointer to an array of IPv4: nIPv4Entries entries 

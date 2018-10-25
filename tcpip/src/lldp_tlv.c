@@ -100,14 +100,6 @@ static TCPIP_LLDP_TLV_PROCESS_RES    processTTLTlv(TCPIP_LLDP_TLV* pTlv, uint8_t
 
 
 static TCPIP_LLDP_TLV_PROCESS_RES    processOptionalTlv(TCPIP_LLDP_TLV* pTlv, uint8_t tlvType, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
-#if 0
-// TODO aa: further management functions will be later added
-static TCPIP_LLDP_TLV_PROCESS_RES    processPortDescTlv(TCPIP_LLDP_TLV* pTlv, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
-static TCPIP_LLDP_TLV_PROCESS_RES    processSystemNameTlv(TCPIP_LLDP_TLV* pTlv, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
-static TCPIP_LLDP_TLV_PROCESS_RES    processSystemDescTlv(TCPIP_LLDP_TLV* pTlv, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
-static TCPIP_LLDP_TLV_PROCESS_RES    processSystemCpblTlv(TCPIP_LLDP_TLV* pTlv, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
-static TCPIP_LLDP_TLV_PROCESS_RES    processMgmtAddrTlv(TCPIP_LLDP_TLV* pTlv, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
-#endif
 
 static TCPIP_LLDP_TLV_PROCESS_RES    processOrgSpecificTlv(TCPIP_LLDP_TLV* pTlv, uint8_t tlvType, uint16_t tlvLen, TCPIP_LLDP_TLV_TYPE lastType);
 
@@ -597,7 +589,6 @@ bool TCPIP_LLDP_OrgProcessFlagsGet(TCPIP_LLDP_ORG_FLAGS* pFlags)
 // length has to be even
 static void swapEvenBytes(uint8_t *buff, uint8_t len)
 {
-    // TODO aa: easier way? what's the intent here?
     uint8_t spare, x, times;
     times = len >> 1;
     for (x = 0; x < times; x++)

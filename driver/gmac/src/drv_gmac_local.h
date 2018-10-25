@@ -288,7 +288,6 @@ typedef struct {
 	uint32_t                        _linkWaitTick;				// tick value to wait for
 	DRV_ETHPHY_NEGOTIATION_RESULT   _negResult;		// negotiation result storage
 	DRV_GMAC_LINK_CHECK_STATE       _linkCheckState;    // link state machine current status
-	// todo : each queue got different interrupt source; move to  gmac queue structure
 	INT_SOURCE                      _macIntSrc;							// this MAC interrupt source
 	
 	DRV_GMAC_EVENT_DCPT             _pic32c_ev_group_dcpt;

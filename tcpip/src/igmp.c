@@ -575,8 +575,6 @@ static uint32_t igmpLLockCount = 0;
 #endif
 // locks access to the IGMP report lists 
 // between user threads and manager/dispatcher thread
-// TODO aa: mutex blocks the IGMP thread...which is BAD if it's dispatcher but OK if it's IGMP separate thread by itself!
-// anyway lock is only to wait for IGMP code itself, so we make sure it's short!
 static void igmpListsLock(void)
 {
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
@@ -602,8 +600,6 @@ static void igmpListsUnlock(void)
 
 // locks access to the IGMP global descriptor 
 // between user threads and manager/dispatcher thread
-// TODO aa: add proper lock here
-// could it be the same lock?
 #if ((TCPIP_IGMP_DEBUG_LEVEL & TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK) != 0)
 static uint32_t igmpDLockCount = 0;
 #endif
@@ -713,8 +709,6 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
             igmpInterfaces = stackCtrl->nIfs;
         }
 
-        // TODO aa: this will change for dynamic implementation
-        // right now is needed because fields are statically allocated!
         if(igmpInterfaces > TCPIP_IGMP_INTERFACES)
         {
             return false;
@@ -940,7 +934,6 @@ static void TCPIP_IGMP_Process(void)
 
             // get the query version
             // right now just v3 queries are processed
-            // TODO aa: add v2, v1 support!
             if(igmpTotLength < sizeof(TCPIP_IGMPv3_QUERY_MESSAGE))
             {   // discard unknown IGMP version
                 ackRes = TCPIP_MAC_PKT_ACK_TYPE_ERR;
@@ -1019,7 +1012,6 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
 
             if(sendRes == false)
             {   // failed to transmit; reappend to pending
-                // TODO aa: some retry counter needed??
                 TCPIP_Helper_SingleListAppend(&pendingList, &toReportList);
             }
             else
@@ -1051,7 +1043,6 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
         TCPIP_Helper_SingleListAppend(&igmpScReportList, &pendingList);
 
         // process the filters done list
-        // TODO aa: some proper tests need to be done to run into this!
         while((pRNode = (TCPIP_IGMP_SC_REPORT_NODE*)TCPIP_Helper_SingleListHeadRemove(&filtersDoneList)) != 0)
         {
             // find a pending SLC report for this group
@@ -1136,7 +1127,6 @@ static void TCPIP_IGMP_GenQueryTimeout(void)
     // finally process the remaining lists
     igmpListsLock();
     // failed list will be rescheduled
-    // TODO aa: a retry counter needed???
     TCPIP_Helper_SingleListAppend(&igmpGenQueryReportList, &failSendList);
     
     // release the sent list
@@ -1147,7 +1137,6 @@ static void TCPIP_IGMP_GenQueryTimeout(void)
 
 
 // the Group Query list timeout processing
-// // TODO aa: could it be collapsed with TCPIP_IGMP_GenQueryTimeout()?
 static void TCPIP_IGMP_GroupQueryTimeout(void)
 {
     TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pQNode;
@@ -1207,7 +1196,6 @@ static void TCPIP_IGMP_GroupQueryTimeout(void)
     // finally process the remaining lists
     igmpListsLock();
     // failed list will be rescheduled
-    // TODO aa: a retry counter needed???
     TCPIP_Helper_SingleListAppend(&igmpGroupQueryReportList, &failSendList);
     
     // release the sent list
@@ -1244,7 +1232,6 @@ static bool _IGMP_SendScReport(int ifIx, SINGLE_LIST* pReportList)
         groupSize = sizeof(TCPIP_IGMPv3_GROUP_RECORD) + pRNode->repSources.nSources * sizeof(*pGroupRec->sourceAddress);
         if(pktOvrhead + pktSize + groupSize > linkMtu)
         {   // exceeded MTU; truncate
-            // TODO aa: some other processing might be found for this!
             _IGMPDebugCond(true, __func__, __LINE__);
             evType |= TCPIP_IGMP_EVENT_PACKET_EXCEED_MTU;
             break;
@@ -1373,7 +1360,6 @@ static bool _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int nEnt
             groupSize = sizeof(TCPIP_IGMPv3_GROUP_RECORD) + pQuery->repSources.nSources * sizeof(pQuery->repSources.sourceAddresses[0]);
             if(pktOvrhead + pktSize + groupSize > linkMtu)
             {   // exceeded MTU; truncate;
-                // TODO aa: some other processing might be found for this!
                 _IGMPDebugCond(true, __func__, __LINE__);
                 evType |= TCPIP_IGMP_EVENT_PACKET_EXCEED_MTU;
                 break;
@@ -2759,8 +2745,6 @@ static void _IGMP_DeleteScReport(SINGLE_LIST* pList, TCPIP_IGMP_SC_REPORT_NODE* 
 
 // schedule a source list change (SLC)
 // returns TCPIP_IGMP_OK or TCPIP_IGMP_REPORT_POOL_EMPTY if no report node could be found
-// TODO aa: stack overflow could occur if these TCPIP_IGMP_GROUP_SOURCE_ADDRESSES start to get big!
-// Dynamic approach should take care of it!
 static TCPIP_IGMP_RESULT _IGMP_ScheduleSlcReport(IPV4_ADDR groupAddress, int ifIx, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewAllow, TCPIP_IGMP_GROUP_SOURCE_ADDRESSES* pNewBlock)
 {
     TCPIP_IGMP_SC_REPORT_NODE *pAllowRep, *pBlockRep, *pFmcRep;
@@ -3424,97 +3408,6 @@ static void _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_N
     igmpListsUnlock();
 
 }
-
-///////////////////////// TODO aa: ////////////////////////////////////////////////
-//
-//
-//  - UDP socket listening on multiple addresses:
-//        in mcast, it looks like I can listen with the same UDP socket on multiple addresses, right?
-//        (in unicast, the destination address is that of the interface, so that's only one address 
-//          - actuallly, the same problem with multiple IP addresses per interface!: socket listens on lultiple IP addresses!)
-//        So, for mcast is perfcectly fine to have:
-//        listen(s1, if1, G1, list)
-//        listen(s1, if1, G2, list)
-//        test!
-//
-//
-//  - check for all APIs that the IGMP is there?
-//      Not critical, it is a requirement that IGMP should be used only after
-//      stack initialization succeeded...
-//
-//  - add a dynamic allocation version?
-//      this TCPIP_IGMP_SC_REPORT_NODE   igmpScReportPool[TCPIP_IGMP_MCAST_GROUPS * 2];    // IGMP State Change reports pool
-//      could be real tricky because it also needs per interface data!
-//      Much easier with dynamic allocation, at least you don't keep blocked so much memory which you may not use anyway!
-//      Whenever there is a new subscribe, you can allocate new structures, including the reports, depending on the inc/exc type, etc.
-//      But you need to maintain list manipulations for reports, more flexible.
-//      With hashes...how do you return the memory and add/delete entries ???!!!
-//      The hash->memblk needs to be contiguous...
-//      Create a new bigger/smaller hash, init it and then copy...probably more trouble than it's worth for this architecture...
-//      lists it is then. And I can return to one single list!!!
-//
-//  - global igmpGroupsDcpt all over the place is not good...use TCPIP_IGMP_GROUPS_DCPT*! 
-//      
-//  - Enable an v2 style version only: join/leave, build time #define. This v3 with sources is really big!
-//    This can be easily acheived using TCPIP_IGMP_SOURCES_PER_GROUP == 1
-//    While this minimizes the RAM usage, doesn't have a big impact on code size!
-//    A true solution would mean, among other things, probably:
-//      - no need for a source hash anymore - it has only one entry
-//      - so no searches for the source: just check is there TCPIP_IGMP_ASM_ALL_SOURCES or not?
-//      - union, intersection, subtract greatly simplified...
-//
-//  - Socket check: looks like if Group is ASM IGMP will just let the traffic through, irrespective of S, i.e.
-//    if there's a socket listening on G?
-//    If G is SSM, then IGMP will let it through only if the socket listens on G from source S, registered.
-//    Check the RFC here!!!
-//    Make an option...we already have one but maybe we need to change the ASM default...?
-//
-//
-// - using TCPIP_IGMP_IsMcastEnabled() could be expensive if checked for every multicast packet!
-//   Maybe UDP can store a flag showing that the check was done (but only for a small number of groups)
-//   And then IGMP can signal back to UDP when the socket changed its filter for that group...
-//   Meh...
-//   Better set another UDP option: TCPIP_UDP_OPTION_MCAST_DONT_CHECK...by default check is enabled!
-//
-//  - UDP should use the TCPIP_STACK_NetMulticastGet() too ???
-//
-//  - What about a UDP socket close; Should automatically trigger 
-//    TCPIP_IGMP_Unsubscribe() i.e. TCPIP_IGMP_Leave() i.e. TCPIP_IGMP_Subscribe(INCLUDE, {}) ???
-//
-//  - Check that the socket passed to TCPIP_IGMP_Subscribe() et all, is a valid socket?
-//    What would be the advantage here?
-//
-//
-#if 0
-// needed? Debugging maybe
-// gathers all the sockets in (G, if) with a certain filter
-// deposits the list in pGSockets
-static void     _IGMP_CollectGifSockets(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_IGMP_FILTER_TYPE sktFilter, TCPIP_IGMP_GROUP_SOCKETS* pGSockets);
-static void _IGMP_CollectGifSockets(TCPIP_IGMP_GROUP_ENTRY* pGEntry, int ifIx, TCPIP_IGMP_FILTER_TYPE sktFilter, TCPIP_IGMP_GROUP_SOCKETS* pGSockets)
-{
-    int srcIx, recIx;
-    OA_HASH_DCPT *sHashDcpt;
-    TCPIP_IGMP_SOURCE_ENTRY* pSEntry;
-    TCPIP_IGMP_SKT_RECORD* pRec;
-
-    sHashDcpt = _IGMP_GetSourceHashDcpt(pGEntry);
-    for(srcIx = 0; srcIx < sHashDcpt->hEntries; srcIx++)
-    {
-        pSEntry = (TCPIP_IGMP_SOURCE_ENTRY*)TCPIP_OAHASH_EntryGet(sHashDcpt, srcIx);
-        if(pSEntry->hEntry.flags.busy != 0)
-        {   // found a valid source entry
-            pRec = pSEntry->sktRec;
-            for(recIx = 0; recIx < sizeof(pSEntry->sktRec) / sizeof(*pSEntry->sktRec); recIx++, pRec++)
-            {
-                if(pRec->filter == sktFilter && pRec->ifIndex == ifIx)
-                {   // found matching socket
-                    pGSockets->sockets[pGSockets->nSockets++] = pRec->sktNo;
-                }
-            }
-        }
-    }
-}
-#endif  // 0
 
 
 #endif  // defined(TCPIP_STACK_USE_IGMP)

@@ -186,7 +186,6 @@ static size_t           _TCPIP_HEAP_Free(TCPIP_STACK_HEAP_HANDLE heapH, const vo
 
 
 // allows a more efficient allocation based on the size that needs to be allocated (for pool type heaps)
-// TODO aa: enable this for packet allocation !
 //#define TCPIP_STACK_HEAP_SIZE_ALLOCATION
 
 #if defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
@@ -226,7 +225,6 @@ static const TCPIP_HEAP_OBJECT      _tcpip_heap_object =
     .TCPIP_HEAP_AllocSize = _TCPIP_HEAP_AllocSize,
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 #if defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
-    // TODO aa: add to the tcpip_heap_alloc.h::TCPIP_HEAP_OBJECT definition 
     _TCPIP_HEAP_HandleBySize,
     _TCPIP_HEAP_MallocBySize,
 #endif  // defined(TCPIP_STACK_HEAP_SIZE_ALLOCATION)
@@ -588,7 +586,6 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternalPool(const TCPIP_STACK_HEAP_POO
 
         pPool->nEntries = nEntries;
         // always alloc uncached!
-        // TODO aa: this should be done only for packet heap!
         pPool->flags = pHeapConfig->heapFlags | TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED;
         pPool->lastPoolErr = TCPIP_STACK_HEAP_RES_OK;
         pPool->poolEnd = pEntry;
@@ -792,9 +789,6 @@ static int _PoolEntryCompare(const void* p1, const void* p2)
 //
 
 // destroys a pool
-// TODO aa: locking the semaphore should be done for all heap delete functions!
-// TODO aa: all OSAL_SEM_Pend() results should be checked! It can return OSAL_RESULT_FALSE if a semaphore is no longer valid
-// (due to a thread delete)!
 static TCPIP_STACK_HEAP_RES   _TCPIP_HEAP_Delete(TCPIP_STACK_HEAP_HANDLE heapH)
 {
     TCPIP_POOL_DCPT*     pPool;
@@ -1184,15 +1178,3 @@ bool TCPIP_HEAP_POOL_EntryList(TCPIP_STACK_HEAP_HANDLE heapH, int entryIx, TCPIP
 }
 
 
-// TODO aa:
-// - Is there any way to improve the binary search when finding the slot corresponding
-//   to a certain size?
-//   If slots were power of 2, then:
-//   slot = log2(size);
-//   But I think that's a too drastic limitation.
-//
-//   For modules like UDP, where the allocation size is known, they could before hand get
-//   a pool entry handle. This is per socket.
-//   When changing the TX/RX buffer sizes, change the handle...
-//   Yup, this may work and will make it super fast!!!
-//

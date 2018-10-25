@@ -47,7 +47,6 @@ int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
     switch(curSt->state)
     {
         case DRV_ENC28J60_CI_WAIT:
-            //TODO aa: ENC28J60 interrupts are not supported for now!
             curSt->state = DRV_ENC28J60_CI_READ_EIR;
             // no break
 
@@ -65,7 +64,7 @@ int32_t DRV_ENC28J60_ChkIntStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             reg.value = 0;
             res = (*pDrvInst->busVTable->fpSfrRdResult)(pDrvInst, curSt->op, &reg, true);
             if(res < 0)
-            {   // some error occurred; retry; TODO aa: retry counter needed!!!
+            {   // some error occurred; retry; 
                 curSt->state = DRV_ENC28J60_CI_READ_EIR;
                 break;
             }

@@ -456,8 +456,6 @@ typedef struct _tag_MAC_DATA_SEGMENT
   Remarks:
     MACs have different hardware support for the received packet status.
 
-TODO:aa The MAC specific data should be moved to MAC specific headers!
-
 */
 
 typedef struct __attribute__ ((__packed__))

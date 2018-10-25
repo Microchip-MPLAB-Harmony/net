@@ -973,8 +973,6 @@ static void LAN8740WOLIsr(void *p)
  * Overview:       Configure WOL for SMSC8740 with a Source MAC address or a 6 byte magic packet mac address.
  *                      wuFrame = Frame type need to be set.
  *
- * Note:            TODO: This function needs to be converted to the non-blocking Harmony model!
- *                      
  *****************************************************************************/
 void  DRV_EXTPHY_WOLConfiguration(DRV_HANDLE hClientObj,unsigned char bAddr[])
 {

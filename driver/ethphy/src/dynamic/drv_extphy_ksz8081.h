@@ -43,7 +43,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #define _KSZ8081_H_
 
-// TODO: this should be in the system_config.h!
 // define the type of PHY: KSZ8081RNB (RMII) if 1, else KSZ8081MNX (MII)
 #define KSZ8081RNB      1
 
