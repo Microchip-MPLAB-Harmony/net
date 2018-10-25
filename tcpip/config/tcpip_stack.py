@@ -16,22 +16,23 @@ tcpipStackHeapPoolExpBlkNum = []
 def instantiateComponent(tcpipStackComponent):
 	print("TCPIP main Stack Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
-
+	res = Database.activateComponents(["HarmonyCore"])
+	
 	# Enable dependent Harmony core components
-	Database.clearSymbolValue("Harmony", "ENABLE_SYS_COMMON")
-	Database.setSymbolValue("Harmony", "ENABLE_SYS_COMMON", True, 2)
+	Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON")
+	Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True, 2)
 	
-	Database.clearSymbolValue("Harmony", "ENABLE_DRV_COMMON")
-	Database.setSymbolValue("Harmony", "ENABLE_DRV_COMMON", True, 2)
-	
-	Database.clearSymbolValue("Harmony", "ENABLE_SYS_INT")
-	Database.setSymbolValue("Harmony", "ENABLE_SYS_INT", True, 2)
+	Database.clearSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON")
+	Database.setSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON", True, 2)
 
-	Database.clearSymbolValue("Harmony", "ENABLE_OSAL")
-	Database.setSymbolValue("Harmony", "ENABLE_OSAL", True, 2)
+	Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_INT")
+	Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_INT", True, 2)
 
-	Database.clearSymbolValue("Harmony", "ENABLE_APP_FILE")
-	Database.setSymbolValue("Harmony", "ENABLE_APP_FILE", True, 2)
+	Database.clearSymbolValue("HarmonyCore", "ENABLE_OSAL")
+	Database.setSymbolValue("HarmonyCore", "ENABLE_OSAL", True, 2)
+
+	Database.clearSymbolValue("HarmonyCore", "ENABLE_APP_FILE")
+	Database.setSymbolValue("HarmonyCore", "ENABLE_APP_FILE", True, 2)
 	
 	# TCP/IP Stack Enable 
 	tcpipStackEnable = tcpipStackComponent.createBooleanSymbol("USE_TCPIP_STACK", None)
@@ -183,6 +184,8 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackDeviceFamily.setVisible(False)
 	if "SAME70" in Variables.get("__PROCESSOR"):
 		tcpipStackDeviceFamily.setDefaultValue("SAME70")
+	elif "SAMV71" in Variables.get("__PROCESSOR"):
+		tcpipStackDeviceFamily.setDefaultValue("SAMV71")
 	elif "PIC32M" in Variables.get("__PROCESSOR"):
 		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
 		
