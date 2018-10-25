@@ -1,4 +1,5 @@
 /********************************************************************
+ Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
  * FileName:		AES_32_bit.h
  * Dependencies:
  * Processor:		PIC32MX
@@ -28,7 +29,9 @@
  *
  * $Id: INT.h,v 1.6 2006/11/07 23:29:45 C12923 Exp $
  * $Name:  $
+****************************************************************************/
 
+/****************************************************************************
 // advanced encryption standard
 // author: karl malbrain, malbrain@yahoo.com
 //

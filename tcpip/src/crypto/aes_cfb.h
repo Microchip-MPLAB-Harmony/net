@@ -3,7 +3,10 @@
  Advanced Encryption Standard (AES) Include Header for 
    cipher feeback (CFB) mode
 
-****************************************************************************
+****************************************************************************/
+
+/****************************************************************************
+ Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
  File Name:     AES_CFB.h
  Dependencies:  AES.h
  Processor:		PIC24F, PIC24H, dsPIC30F, or dsPIC33F

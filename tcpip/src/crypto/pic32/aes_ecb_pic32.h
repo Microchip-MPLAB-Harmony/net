@@ -1,4 +1,5 @@
 /********************************************************************
+ Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
  * FileName:		AES_32_bit.h
  * Dependencies:
  * Processor:		PIC32MX

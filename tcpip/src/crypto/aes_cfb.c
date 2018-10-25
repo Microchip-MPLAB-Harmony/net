@@ -2,7 +2,10 @@
 
  Advanced Encryption Standard (AES)
 
-****************************************************************************
+****************************************************************************/
+
+/****************************************************************************
+ Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
  FileName:      AES_CFB.c
  Dependencies:  AES.h
  Processor:		PIC24F, PIC24H, dsPIC30F, or dsPIC33F

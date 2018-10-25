@@ -4,7 +4,10 @@
    128 bit key, 128 bit data block
    For more information see, AN1044
 
-****************************************************************************
+****************************************************************************/
+
+/****************************************************************************
+ Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
  File Name:		AES.h
  Dependencies:	AES.s
  Processor:		PIC24F, PIC24H, dsPIC30F, or dsPIC33F
