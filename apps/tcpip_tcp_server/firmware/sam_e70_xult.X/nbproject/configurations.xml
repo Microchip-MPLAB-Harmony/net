@@ -344,6 +344,7 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
