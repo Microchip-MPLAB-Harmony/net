@@ -389,9 +389,6 @@ void TCPIP_ANNOUNCE_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_DEINIT) // stack shut down
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN) // interface down
 
-    // TODO aa: any action to be taken for ifdown?
-    // Is interface to be marked as invalid?
-
     if(announceInitCount > 0)
     {   // we're up and running
         if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN)

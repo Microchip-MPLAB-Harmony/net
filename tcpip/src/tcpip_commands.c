@@ -439,8 +439,6 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 };
 
-// TODO aa: this should be decoupled from the stack initialization
-// so that it can be an independent module!
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
 {
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
@@ -454,7 +452,6 @@ bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
     // create command group
     if (!SYS_CMD_ADDGRP(tcpipCmdTbl, sizeof(tcpipCmdTbl)/sizeof(*tcpipCmdTbl), "tcpip", ": stack commands"))
     {
-        // TODO aa: release the allocated _SYS_CMD_ADDGRP()
         SYS_ERROR(SYS_ERROR_ERROR, "Failed to create TCPIP Commands\r\n");
         return false;
     }
@@ -537,7 +534,6 @@ void TCPIP_Commands_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         }
 #endif  // defined(_TCPIP_COMMAND_PING6)
         
-        // TODO aa: release the allocated _SYS_CMD_ADDGRP()
     }
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)

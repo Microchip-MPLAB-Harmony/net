@@ -141,7 +141,6 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             // else wait some more
             break;
 
-            // TODO aa: probably no need to set the WRPT here since it's done before sending the packet data with WBM!
         case DRV_ENC28J60_CS_SET_EWRPT:
             ret = (*pDrvInst->busVTable->fpSfrWr16)(pDrvInst, DRV_ENC28J60_SFR_EWRPTL, pDrvInst->encMemTxStart, false);
             if (ret != 0)
@@ -197,7 +196,7 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
         case DRV_ENC28J60_CS_SET_MACON3:
             // Pad packets to 60 bytes, add CRC, and check Type/Length field.	
             reg.value = 0x00;
-            reg.macon3.FULDPX = 0; // TODO aa: Half Duplex set manually for now
+            reg.macon3.FULDPX = 0; 
             reg.macon3.FRMLNEN = 1;
             reg.macon3.TXCRCEN = 1;
             reg.macon3.PADCFG = 1;
@@ -229,7 +228,7 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             // requirements.  The meaning of the MABBIPG value changes with the duplex
             // state, so it must be updated in this function.
             // In full duplex, 0x15 represents 9.6us; 0x12 is 9.6us in half duplex
-            reg.value = 0x12;   // TODO aa: HD set manually here for now!
+            reg.value = 0x12;   
             ret = (*pDrvInst->busVTable->fpSfrWr)(pDrvInst, DRV_ENC28J60_SFR_MABBIPG, reg, false);
             if (ret != 0)
             {
@@ -502,10 +501,6 @@ int32_t DRV_ENC28J60_ConfigStateTask(DRV_ENC28J60_DriverInfo * pDrvInst)
             
         case DRV_ENC28J60_CS_SET_PHCON1:
             // Set the MAC and PHY into the proper duplex state
-            // TODO aa: ENC28J60 doesn't support automatic detection, it needs to be configured manually!
-            // The DRV_ENC28J60_Configuration (drvCfg) structure needs to be updated to contain
-            // the duplex mode! (it should be there anyway, like for any PHY, anyway...)
-            // for now it's just manually set to HD!
             reg.value = 0;
             reg.phcon1.PDPXMD = 0; 
             phyRes = (*pDrvInst->busVTable->fpPhyWrStart)(pDrvInst, DRV_ENC28J60_PHY_SFR_PHCON1, reg.value);
@@ -642,7 +637,6 @@ int32_t DRV_ENC28J60_ConfigStateEnter(DRV_ENC28J60_DriverInfo * pDrvInst)
 
 	pDrvInst->encRamForAppSize = 1024;
 	pDrvInst->encRamForAppStartAdr = DRV_ENC28J60_MEM_SIZE - pDrvInst->encRamForAppSize;
-    // TODO aa: match with DRV_ENC28J60_OP_EXT_BUFFER_SIZE instead of hard coded 1514 value!
 	pDrvInst->encMemTxStart=pDrvInst->encRamForAppStartAdr - (1514 + 7 + 1);    // max packet + 7 bytes TSV + 1 Control Byte; Should be even!
 	pDrvInst->encMemRxStart = 0x0000;
     pDrvInst->encMemRxEnd = pDrvInst->encMemTxStart - 3;  //  2 bytes gap Tx <-> RX

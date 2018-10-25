@@ -238,7 +238,6 @@ bool TCPIP_SMTP_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
             return false;
         }
         // calculate the needed socket TX buffer
-        // TODO aa: this calculation depends on the current encryption provider NET_PRES_SocketWriteIsReady implementation!
         maxWriteSize = TCPIP_SMTP_MAX_WRITE_SIZE * 2;
         if(maxWriteSize > 1024)
         {
@@ -1157,13 +1156,11 @@ uint16_t TCPIP_SMTP_IsPutReady(void)
     {
         uint16_t reqSpace = TCPIP_SMTP_WRITE_READY_SPACE;
 
-        // TODO aa: this value depends on the current encryption provider NET_PRES_SocketWriteIsReady implementation!
         if((reqSpace * 18) / 10 > smtpSktTxSize)
         {   // make sure we don't exceed the socket space and always fail
             reqSpace = (smtpSktTxSize * 10) / 18;
         }
 
-        // TODO aa: TCPIP_SMTP_WRITE_READY_SPACE needs to be removed if the NET_PRES_SocketWriteIsReady changes (config, MHC)
         putReady = NET_PRES_SocketWriteIsReady(MySocket, reqSpace, 0);
     }
 
@@ -1325,7 +1322,6 @@ uint16_t TCPIP_SMTP_ArrayPut(uint8_t* dataStr, uint16_t dataLen)
         }
 
         putReady = NET_PRES_SocketWrite(MySocket, putBuffer.out, nOut);
-        // TODO aa: this should not happen!
         _SMTPDbgCond(putReady == nOut, __func__, __LINE__);
     }
 

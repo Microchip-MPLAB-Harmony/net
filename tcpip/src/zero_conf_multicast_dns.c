@@ -2313,7 +2313,6 @@ void TCPIP_MDNS_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     // if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_DOWN) // interface down
 
     // one way or another this interface is going down
-    // TODO aa: stop mDNS on this interface!
     if(mDNSInitCount > 0)
     {   // we're up and running
         DNSDesc_t *pDNSdesc = gDNSdesc + stackCtrl->netIx;

@@ -1757,9 +1757,6 @@ static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t byte
             }               
             else
             {
-                //TODO HS: TFTP doesn't know the disk space size and 
-                //There is no support to find out total disk space available.
-                //support is not present in the SYS_FS to find out the disk space
                 tftp_con->options.tsize = (uint32_t)atoi(value_holder);
             }
         }

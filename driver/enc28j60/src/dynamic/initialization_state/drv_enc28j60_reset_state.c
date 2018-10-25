@@ -33,7 +33,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "drv_enc28j60_reset_state.h"
 #include "../drv_enc28j60_local.h"
 
-// TODO aa: some retry mechanism must be implemented
 int32_t DRV_ENC28J60_ResetStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     DRV_ENC28J60_RegUnion reg;

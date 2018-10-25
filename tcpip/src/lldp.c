@@ -262,7 +262,7 @@ static void TCPIP_LLDP_Timeout(void)
 static bool TCPIP_LLDP_SetMulticastFilter(void)
 {
     while(lldpMcastFilterSet == false)
-    {   // TODO aa: this sets it for all interfaces!
+    {   
         int netIx;
         TCPIP_NET_IF* pNetIf;
         const TCPIP_MAC_OBJECT*  pMacObj;
@@ -418,7 +418,7 @@ static void rxStateMachine(void)
             lldp_port.rx.rxInfoAge = false;
             if(lldp_port.rx.rcvFrame == true)
             {
-                bool rxChanges = lldp_port.rxChanges;   // TODO aa: rxChanges is NOT updated!
+                bool rxChanges = lldp_port.rxChanges;   
                 lldp_port.rx.rcvFrame = false;
                 lldp_port.rxChanges = false;
                 if(lldp_port.rx.timers.rxTTL == 0)
@@ -638,8 +638,6 @@ static void txStateMachine(void)
             break;
 
         case TX_SHUTDOWN_FRAME:
-            // txFrame(mibConstrShutdownLLDPDU());
-            // TODO if transition to disabled or portEnabled transitioning to false set TTL to '0'
             lldp_tx_timers.txShutdownWhile = reinitDelay;
             if(!lldp_tx_timers.txShutdownWhile)
             {

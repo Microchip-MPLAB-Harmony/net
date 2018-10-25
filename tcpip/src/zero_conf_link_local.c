@@ -763,7 +763,6 @@ static void TCPIP_ZCLL_Process(void)
                     hZcll->temp_IP_addr.Val = TCPIP_Helper_ntohl((uint32_t) hZcll->temp_IP_addr.Val);
                 }
 
-                // TODO: check the max probe limit and probing rate
                 if((hZcll->zcll_flags.probe_conflict == 1) || (hZcll->probe_count < PROBE_NUM))
                 {
 

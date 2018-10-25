@@ -45,7 +45,6 @@ int32_t DRV_ENCX24J600_ChkIntStateTask(struct _DRV_ENCX24J600_DriverInfo * pDrvI
     {
         case DRV_ENCX24J600_CI_WAIT:
         {
-            //TODO: For ISR mode put in some logic here.  Check the state of the pin
             curSt->state = DRV_ENCX24J600_CI_READ_EIR;
         }
         case DRV_ENCX24J600_CI_READ_EIR:

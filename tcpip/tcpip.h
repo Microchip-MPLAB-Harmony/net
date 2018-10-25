@@ -67,8 +67,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // TCP/IP stack version
 #define TCPIP_STACK_VERSION_MAJOR         7
 #define TCPIP_STACK_VERSION_MINOR         31
-#define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "7.31"    // for v2.06
+#define TCPIP_STACK_VERSION_PATCH         1
+#define TCPIP_STACK_VERSION_STR           "7.31 - H3"
 
 
 // *****************************************************************************
@@ -347,7 +347,6 @@ typedef enum
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
 	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
-    // TCPIP_MODULE_PTP,               /* TODO: PTP module */
 
     /* add other modules here */
     //

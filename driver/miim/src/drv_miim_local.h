@@ -213,9 +213,6 @@ typedef enum
 }DRV_MIIM_OBJ_FLAGS;
 
 // MIIM Driver Hardware Instance Object
-// TODO aa: it'd be nice to allow clients to use their own ethphyId? But not requesting that all clients perform set up...
-//          So the MIIM object has a default ethphyId, that's used when a client doesn't specify its own...
-//          This could lead to further optimizations, allowing parallel operations when ID's are different!
 typedef struct _tag_DRV_MIIM_OBJ_STRUCT
 {
     OSAL_SEM_HANDLE_TYPE objSem;  // synchronization object: protection for access to the IGMP

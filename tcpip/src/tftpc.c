@@ -482,7 +482,6 @@ static void TCPIP_TFTPC_Process(void)
             }
             else
             {
-                //TODO@ HS: IPV6 address support is not yet provided
                 break;
             }
             pClient->smState++;

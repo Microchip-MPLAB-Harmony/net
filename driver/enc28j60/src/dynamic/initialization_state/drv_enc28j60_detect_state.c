@@ -35,7 +35,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "../drv_enc28j60_utils.h"
 
 
-// TODO aa: a retry counter should be implemented!
 int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
 {
     uint16_t    phyID1Value;
@@ -68,7 +67,6 @@ int32_t DRV_ENC28J60_DetectStateTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst)
             // success; check it's the proper ID
             if(phyID1Value != DRV_ENC28J60_PHY_ID1_VALUE)
             {   // failed; retry
-                // TODO aa: retry count needed!
                 pInfo->state = DRV_ENC28J60_DS_PHID1_READ; 
                 break;
             }

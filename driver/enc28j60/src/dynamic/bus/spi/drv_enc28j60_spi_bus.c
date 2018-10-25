@@ -112,7 +112,6 @@ static DRV_ENC28J60_PHY_RES DRV_ENC28J60_SPI_PhyProcess(DRV_ENC28J60_DriverInfo*
 static void _DRV_ReleaseOpDcpt(DRV_ENC28J60_spiBusData* pBusData, DRV_ENC28J60_OP_DCPT* pOpDcpt);
 static DRV_ENC28J60_BUS_RESULT _DRV_ENC28J60_OpStatusToResult(DRV_ENC28J60_OP_DCPT* pOpDcpt);
 
-// TODO aa: autoAck from clients should be avoided for now!
 static void _DRV_AutoAcknowledge(DRV_ENC28J60_spiBusData* pBusData)
 {
     DRV_ENC28J60_BUS_RESULT res;
@@ -503,7 +502,6 @@ DRV_ENC28J60_BUS_RESULT DRV_ENC28J60_SPI_OperationResult( DRV_ENC28J60_DriverInf
 
 // selects a new register bank
 // returns true if succes or fail and needs retry
-// TODO aa: proper implementation should wait and make sure that the op was completed successfuly!
 static bool _DRV_ENC28J60_DoBankSet(DRV_ENC28J60_DriverInfo *  pDrvInstance, DRV_ENC28J60_SFR_MAP sfr)
 {
     uint8_t     sfrBank;
@@ -1621,7 +1619,6 @@ TCPIP_MAC_RES DRV_ENC28J60_SPI_WritePacket(DRV_ENC28J60_DriverInfo *  pDrvInstan
     }
 
     // Calculate packet size and number of segments
-    // TODO aa: use a standard packet function here
     while(pSeg != 0)
     {
         nTxSegs++;

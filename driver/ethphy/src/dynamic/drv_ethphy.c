@@ -267,8 +267,6 @@ static DRV_ETHPHY_LINK_STATUS _Phy2LinkStat(__BMSTATbits_t phyStat)
 }
 
 #if (DRV_ETHPHY_USE_DRV_MIIM)
-// TODO aa: apparently this op never failed before...
-// well, that's changed; smth needs to be done about it! but it's not easy...
 static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_MIIM_OPERATION_HANDLE miimOpHandle;
@@ -785,8 +783,6 @@ DRV_HANDLE  DRV_ETHPHY_Open ( const SYS_MODULE_INDEX iModule,
 
     /* Setup client operations */
 
-    /* TODO: OSAL - Lock Mutex */
-
     hPhyObj = gDrvETHPHYObj + iModule;
     /* Allocate the client object and set the flag as in use */
     hClientObj = _DRV_ETHPHY_ClientObjectAllocate(hPhyObj, &clientIx) ;
@@ -812,8 +808,6 @@ DRV_HANDLE  DRV_ETHPHY_Open ( const SYS_MODULE_INDEX iModule,
         hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_NONE;
         _DRV_PHY_SetOperPhase(hClientObj, 0, 0);
         hPhyObj->numClients++;
-
-        /* TODO: OSAL - Unlock Mutex */
 
         /* Update the Client Status */
         hClientObj->status = DRV_ETHPHY_CLIENT_STATUS_READY;
@@ -852,8 +846,6 @@ void DRV_ETHPHY_Close( DRV_HANDLE handle )
 
     if(hClientObj != 0)
     {
-        /* TODO: OSAL - lock Mutex */
-
 #if (DRV_ETHPHY_USE_DRV_MIIM)
         hClientObj->pMiimBase->DRV_MIIM_Close(hClientObj->miimHandle);
 #endif  // (DRV_ETHPHY_USE_DRV_MIIM)
@@ -861,8 +853,6 @@ void DRV_ETHPHY_Close( DRV_HANDLE handle )
         /* Free the Client Instance */
         hClientObj->clientInUse = false ;
         hClientObj->hDriver->numClients--;
-
-        /* TODO: OSAL - unlock Mutex */
 
         /* Update the Client Status */
         hClientObj->status = DRV_ETHPHY_CLIENT_STATUS_CLOSED;

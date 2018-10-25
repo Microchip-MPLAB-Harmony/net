@@ -37,7 +37,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
 
-// TODO aa: this fixes linker relocation error for errno. <errno.h> should be included...
 extern __attribute__((section(".bss.errno"))) int errno;
 #include <sys/errno.h>
 
@@ -569,10 +568,6 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
 	s - Socket identifier returned from a prior socket() call.
 	backlog - Maximum number of connection requests that can be queued.  Note 
 		that each backlog requires a TCP socket to be allocated.
-        TODO aa: update comments!
-		Also, ensure that BSD_SOCKET_COUNT (also in tcpip_config.h) is greater 
-		than the backlog by at least 1 (more if you have other BSD sockets in 
-		use).
 	
   Returns:
 	Returns 0 on success, else return SOCKET_ERROR.
@@ -1336,7 +1331,6 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
         }
         else
         {
-            //TODO: Look into broadcast for IPv6
             if ((udpSockInfo.remoteIPaddress.v6Add.d[0] != remoteIp6.d[0]) ||
                 (udpSockInfo.remoteIPaddress.v6Add.d[1] != remoteIp6.d[1]) ||
                 (udpSockInfo.remoteIPaddress.v6Add.d[2] != remoteIp6.d[2]) ||
@@ -1710,7 +1704,6 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
   Remarks:
 	The function returns the host name as set on the default network interface.
 
-TODO: Add a gethostbyname/gethostbyaddr/getnameinfo function to be able to list all interfaces names
 
   ***************************************************************************/
 int gethostname(char* name, int namelen)
@@ -2375,8 +2368,6 @@ int getsockopt(SOCKET s,
     }
 }
 
-//TODO: When we do multi-threaded programming, this will have to be moved to
-// thread local storage.
 static IPV4_ADDR sAddr;
 static char * sHostArray[2] = {
     (char *)&sAddr,

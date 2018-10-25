@@ -241,7 +241,6 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateInternal(const TCPIP_STACK_HEAP_INTERNA
 
 
         // check if mapping needed; always alloc uncached!
-        // TODO aa: this should be done only for packet heap!
         // if((pHeapConfig->heapFlags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0) 
         {
             alignHeapBuffer = (uint8_t*)_TCPIP_HEAP_BufferMapNonCached(alignHeapBuffer, heapBufferSize);

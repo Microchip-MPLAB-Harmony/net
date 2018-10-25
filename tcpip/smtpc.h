@@ -593,7 +593,6 @@ typedef struct
 
     // Optional Mail Fields
     //
-    // TODO aa: these are not currently used and should be added!
     // if sent on behalf of someone else
     const char*                         sender;
     // carbon copy destination address

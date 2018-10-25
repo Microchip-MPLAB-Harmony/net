@@ -59,11 +59,6 @@ typedef struct __attribute__((aligned(32)))
 typedef uint32_t _heap_Align;
 #endif  // defined(__PIC32MZ__) || defined(__PIC32WK__)
 
-// TODO aa:
-// add a TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN flag so that the buffer alignment
-// does not need to be done in here!
-// In this case, the originally allocated pointer can be deduced from the mapped pointer
-// so that the extra _headNode allocation is not needed!
 typedef union __attribute__((aligned(16))) _tag_headNode
 {
     _heap_Align x;
@@ -223,7 +218,6 @@ TCPIP_STACK_HEAP_HANDLE TCPIP_HEAP_CreateExternal(const TCPIP_STACK_HEAP_EXTERNA
         hInst->heapObj = _tcpip_heap_object;
 
         // check if mapping needed; always alloc uncached!
-        // TODO aa: this should be done only for packet heap!
         // if((hDcpt->heapConfig.heapFlags & TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED) != 0)
         {
             const void* testPtr = _TCPIP_HEAP_BufferMapNonCached(hInst, sizeof(*hInst));
@@ -354,8 +348,6 @@ static void* _TCPIP_HEAP_Malloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
     return alignPtr;
 }
 
-// TODO aa: due to alignment requirements and to keep the code size small,
-// the external calloc is not currently used!
 static void* _TCPIP_HEAP_Calloc(TCPIP_STACK_HEAP_HANDLE heapH, size_t nElems, size_t elemSize)
 {
     size_t nBytes = nElems * elemSize;

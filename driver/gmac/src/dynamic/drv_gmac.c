@@ -727,7 +727,6 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
 	_DRV_GMAC_RxLock(pMACDrv);	
 	//get Rx packet from Queue 0
 	ethRes = DRV_PIC32CGMAC_LibRxGetPacket (pMACDrv, &pRxPkt, &buffsPerRxPkt, &pRxPktStat, GMAC_QUE_0);
-	//TODO : read rx packet from multiple queues
 	_DRV_GMAC_RxUnlock(pMACDrv);
 
 	if(buffsPerRxPkt > 1)

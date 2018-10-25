@@ -74,7 +74,7 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             }
 
             if(pDrvInst->rxPtrVal >= pDrvInst->encMemTxStart)
-            {   // TODO aa: Some form of error processing is needed!
+            {   
                 break;
             }
 
@@ -145,14 +145,12 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
                 pkt->state = DRV_ENC28J60_RX_WAIT_FOR_READ;
             }
             // else retry
-            // TODO aa: retry count needed!
             break;
 
         case DRV_ENC28J60_RX_WAIT_FOR_READ:
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error, retry
-                // TODO aa: retry count needed!
                 pkt->state = DRV_ENC28J60_RX_READ_PKT;
                 break;
             }
@@ -162,8 +160,6 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             }
 
             // success
-            // TODO aa: so what happens if more packets are RX-ed and waiting in the memory?
-            // It looks like ERDPT is always initialized to rxPtrVal which is initialized to ->encMemRxStart  which is fixed!!!
             pDrvInst->rxPtrVal = pkt->rsv.pNextPacket;
             pkt->macPkt->pDSeg->segLen = pkt->rsv.rxByteCount;
             pkt->macPkt->pMacLayer = pkt->macPkt->pDSeg->segLoad;
@@ -185,7 +181,6 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error, retry
-                // TODO aa: retry count needed!
                 pkt->state = DRV_ENC28J60_RX_PKTDEC;
                 break;
             }
@@ -244,7 +239,6 @@ int32_t DRV_ENC28J60_RxPacketTask(struct _DRV_ENC28J60_DriverInfo * pDrvInst, DR
             busRes = (*pDrvInst->busVTable->fpOpResult)(pDrvInst, pkt->operation, true);
             if(busRes < 0)
             {   // some error, retry
-                // TODO aa: retry count needed!
                 pkt->state = DRV_ENC28J60_RX_RESET_ERXRDPTR;
                 break;
             }

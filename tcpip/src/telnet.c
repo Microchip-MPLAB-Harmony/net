@@ -140,10 +140,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 // if !0, sends the commands, options, etc. in the messages passed to the console
 // by default they are removed
-// TODO aa: should go to telnet settings
 #define TELNET_SEND_COMMANDS_TO_CONSOLE     0
-
-// TODO aa: telnet settings should add RX/TX buffer size
 
 // machine state
 typedef	enum
@@ -350,7 +347,6 @@ static void _Telnet_MSG(const void* cmdIoParam, const char* str)
     NET_PRES_SKT_HANDLE_T tSkt = (NET_PRES_SKT_HANDLE_T)(int)cmdIoParam;
     if(tSkt != INVALID_SOCKET)
     {
-        // TODO aa: size of the buffer needs to be configurable to support long commands/strings
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)str, strlen(str));
     }
 }

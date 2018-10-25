@@ -55,7 +55,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
-// TODO aa: should be a HTTP parameter!
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE   (4 * 1024)
 
 #include "tcpip/src/common/sys_fs_wrapper.h"
@@ -115,7 +114,6 @@ static const char * const httpContentTypes[] =
 };
 
 // File type extensions that can carry dynamic content
-// TODO aa: a way of maintaining this with an API is needed!
 static const char* httpDynFileExtensions[] =
 {
     "inc",          // include file
@@ -311,7 +309,6 @@ static const TCPIP_HTTP_DYN_VAR_KEYWORD_ENTRY httpDynVarKeywords[] =
     { "inc",        TCPIP_HTTP_CHUNK_FLAG_DYNVAR_DEFAULT_PROCESS,   TCPIP_HTTP_NET_DefaultIncludeFile},
 
 
-    // TODO aa: other keywords could be added here
 };
 
    
@@ -346,20 +343,6 @@ static uint16_t             httpDynVarRetries = 0;  // max dynamic variable retr
 
 // this is a parameter to allow working persistent or not
 // if not persistent, then no chunks, etc!
-// TODO aa: besides allowing the stack user to select persistent/or not
-// the HTTP server needs to understand "Connection: close" request header from the
-// clients (low priority, unlikely, though for a browser...but possible for other clients...)!
-// See "6.6. Tear-down" in RFC 7230 pg 56/89!
-//
-// TODO aa: RFC 7230 pg 50/89:
-// The use of persistent connections places no requirements on the length
-// (or existence) of this timeout for either the client or the server."
-// So, it may not timeout or choose really big timeouts!
-//
-// TODO aa: RFC 7231 pg 22/101:
-// "All general-purpose servers MUST support the methods GET and HEAD.
-// All other methods are OPTIONAL." 
-// This implementation does not support HEAD!!!!
 //
 //
 //
@@ -487,7 +470,6 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessError(TCPIP_HTTP_NET_CONN* pHttpCo
 static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessDisconnect(TCPIP_HTTP_NET_CONN* pHttpCon, bool* pWait);
 
 // rough HTTP time keeping
-// TODO aa: should be replaced by a system service!
 static __inline__ uint32_t __attribute__((always_inline)) _HTTP_SecondCountGet(void)
 {
     return httpSecondCount;
@@ -1637,7 +1619,6 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileUpload(TCPIP_HTTP_NET_CONN* pHtt
 #if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
     if(memcmp(&pHttpCon->httpData[1], TCPIP_HTTP_NET_FILE_UPLOAD_NAME, sizeof(TCPIP_HTTP_NET_FILE_UPLOAD_NAME)) == 0)
     {   // Read remainder of line, and bypass all file opening, etc.
-        // TODO aa: this should be handled just once in File open, not duplicated here!
         if(strlen((char*)pHttpCon->httpData + 1) > sizeof(pHttpCon->fileName))
         {
             _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR, pHttpCon->httpData + 1);
@@ -2044,8 +2025,6 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessPost(TCPIP_HTTP_NET_CONN* pHttpCon
 // Note: all the previous parsing states should branch here after parsing the headers
 // when an error detected // (except timeouts/file errors that go to TCPIP_HTTP_CONN_STATE_ERROR)!
 // Processing should get here with all headers processed!
-// TODO aa: should detect if everything went out or break needed!
-// But this means calculating the total size beforehand or adding stupid sub-states...
 //
 static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeHeaders(TCPIP_HTTP_NET_CONN* pHttpCon, bool* pWait)
 {
@@ -2061,7 +2040,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
     {   // output headers now; Send header corresponding to the current state
         headerLen = sprintf(responseBuffer, TCPIP_HTTP_NET_HEADER_PREFIX "%s", HTTPResponseHeaders[pHttpCon->httpStatus]);
         if(pHttpCon->httpStatus == TCPIP_HTTP_NET_STAT_REDIRECT)
-        {   // special case here, this header message takes arguments; TODO aa: make it general, available for all headers!
+        {   // special case here, this header message takes arguments; 
             headerLen += sprintf(responseBuffer + headerLen, "%s \r\n", (char*)pHttpCon->httpData);
         }
 
@@ -2139,7 +2118,6 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
     }
 
     // Output the cache-control
-    // TODO aa: deciding the dynamic variable content after the file name is not 100% correct!
     if((pHttpCon->httpStatus == TCPIP_HTTP_NET_STAT_POST) || (fileGzipped == 0 && _HTTP_FileTypeIsDynamic(pHttpCon->fileName)))
     {   // This is a dynamic page or a POST request, so no cache
         responseLen += sprintf(responseBuffer + responseLen,  "Cache-Control: no-cache\r\n");
@@ -2159,8 +2137,6 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
 
     // Check if we should output cookies
     return (pHttpCon->hasArgs != 0) ? TCPIP_HTTP_CONN_STATE_SERVE_HEADERS + 1 : TCPIP_HTTP_CONN_STATE_SERVE_BODY_INIT;
-    // TODO aa: _HTTP_ServeCookies could be called directly here!
-    // However, monitoring of the socket space is needed and calculation of the amount of data to be output.
 
 }
 
@@ -2168,8 +2144,6 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
 // serve connection cookies state: TCPIP_HTTP_CONN_STATE_SERVE_COOKIES
 // returns the next connection state:
 // also signals if waiting for resources
-// TODO aa: should detect if everything went out or break needed!
-// But this means calculating the total size before hand or adding stupid sub-states...
 static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeCookies(TCPIP_HTTP_NET_CONN* pHttpCon, bool* pWait)
 {
 #if defined(TCPIP_HTTP_NET_USE_COOKIES)
@@ -2726,15 +2700,9 @@ static TCPIP_HTTP_NET_READ_STATUS _HTTP_ReadTo(TCPIP_HTTP_NET_CONN* pHttpCon, ui
     This function is only available when FS uploads are enabled and
     the FS image could be stored (EEPROM, flash, etc.)
 
-    TODO: Internal:
-    After the headers, the first line from the form will be the MIME
-    separator.  Following that is more headers about the file, which
-    are discarded.  After another CRLFCRLF pair the file data begins,
-    which is read 16 bytes at a time and written to external memory.
-    TODO aa: this should be handled as a regular request, not having a completely different handling than the rest!!!
   ***************************************************************************/
 #if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
-#define     SYS_FS_MEDIA_SECTOR_SIZE        512     // TODO aa: use a SYS_FS symbol here!
+#define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHttpCon)
 {
     uint8_t mpfsBuffer[sizeof(MPFS_SIGNATURE) - 1];  // large enough to hold the MPFS signature
@@ -3222,58 +3190,7 @@ static bool _HTTP_DataTryOutput(TCPIP_HTTP_NET_CONN* pHttpCon, const char* data,
     return false;
 }
 
-#if 0
-// TODO aa: this is for sockets supporting sequential peeks, taking a start offset into the buffer.
-// Currently the network presentation layer does not support that!
-static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* str, uint16_t startOffs, uint16_t searchLen)
-{
-    char* srchBuff = alloca(httpPeekBufferSize + 1);
-    uint16_t    peekOffs, peekReqLen, peekSize;
-    char*   queryStr;
 
-    const char* findStr = (const char*)str;
-
-    size_t findLen = strlen(findStr);
-
-    bool    doSearch = false;
-
-    // sanity check
-    if(findLen < httpPeekBufferSize)
-    {   // make sure enough room to find such string
-        if(searchLen == 0 || searchLen >= findLen)
-        {
-            doSearch = true;
-            peekOffs = startOffs;
-            peekReqLen = searchLen == 0 ? httpPeekBufferSize : searchLen;
-        }
-    }
-
-
-    while(doSearch)
-    {
-        peekSize =  NET_PRES_SocketPeek(pHttpCon->socket, srchBuff, peekReqLen, peekOffs);
-
-        if(peekSize < findLen)
-        {   // not enough data present
-            break;
-        }
-        
-        srchBuff[peekSize] = 0; // end string properly
-        queryStr = strstr(srchBuff, findStr);
-        if(queryStr != 0)
-        {
-            return peekOffs + queryStr - srchBuff;
-        }
-
-        // continue searching
-        peekOffs += peekSize - (findLen - 1);
-    }
-            
-    return 0xffff;
-}
-#endif
-
-// TODO aa: version that does the whole peek into one operation
 // Note that the search will fail if there's more data in the TCP socket than could be read at once.
 static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* str, uint16_t startOffs, uint16_t searchLen)
 {
@@ -3535,8 +3452,6 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, SY
         chunkFlags = (pOwnDcpt == 0) ? (TCPIP_HTTP_CHUNK_FLAG_TYPE_FILE | TCPIP_HTTP_CHUNK_FLAG_TYPE_FILE_ROOT) : TCPIP_HTTP_CHUNK_FLAG_TYPE_FILE;
         if(fName != 0)
         {
-            // TODO aa: probably gzip is not really needed , name should take precedence???
-            // how is this attribute set for a file anyway?
             SYS_FS_FSTAT fs_attr = {0};
             bool fileGzipped = false;
 
@@ -3818,7 +3733,6 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_ProcessChunks(TCPIP_HTTP_NET_CONN* pHttpCon)
 
 //
 // Processes a chunk for a dynamic variable or binary file
-// TODO aa: is this function getting too complex? Is it beter to split like we had before?
 static TCPIP_HTTP_CHUNK_RES _HTTP_ProcessFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DCPT* pChDcpt)
 {
     size_t fileBytes, fileReadBytes;
@@ -4123,7 +4037,6 @@ static char* _HTTP_ProcessFileLine(TCPIP_HTTP_CHUNK_DCPT* pChDcpt, char* lineBuf
 // - pEndProcess stores where it ends 
 // - if verifyOnly is true, the position of the front delim is returned and the buffer is not changed
 // - else the position past the delim is returned and zeroes are stored in the buffer where the variable ends 
-// TODO aa: not very efficient to parse both...
 static char* _HTTP_FileLineParse(TCPIP_HTTP_CHUNK_DCPT* pChDcpt, char* lineBuff, char** pEndProcess, bool verifyOnly)
 {
     char    *procStart = 0;
@@ -4387,8 +4300,6 @@ static bool  _HTTP_DynVarExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK
         pDynChDcpt->dynChDcpt.pDynAllocDcpt = pAllocDcpt;
     
 
-        // TODO aa: if external process is registered for internal keywords,
-        // then this search may be skipped and let the external process the dynamic variable!
         pKEntry = _HTTP_SearchDynVarKeyEntry(pDestDcpt->dynName);
         if(pKEntry != 0 && (pKEntry->keyFlags & TCPIP_HTTP_CHUNK_FLAG_DYNVAR_DEFAULT_PROCESS) != 0)
         {
@@ -5055,7 +4966,6 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIInclude(TCPIP_HTTP_NET_CONN* pHttpCon, TCPI
 {
     // process one attribute pair at a time
     pChDcpt->ssiChDcpt.nCurrAttrib++;
-    // TODO aa: any differentiation needed between virtual/file ???
     if(strcmp(pAttr->attribute, "virtual") == 0 || strcmp(pAttr->attribute, "file") == 0)
     {   // open the requested file
         return _HTTP_IncludeFile(pHttpCon, pChDcpt, pAttr->value);
@@ -5762,37 +5672,4 @@ static uint16_t _HTTP_ConnectionDiscard(TCPIP_HTTP_NET_CONN* pHttpCon, uint16_t 
 
 
 #endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-
-// major TODO aa: list and features
-/*      
-
-        - a timeout should be needed to close an idle connection for persistent connections.
-          For now it's probably safe enough to rely on the client to close the connection...
-
-
- - is there a way to pass the internal keywords processing (like "inc", SSI <--#include,#exec,#set, etc.) to be processed externally?
-    Does it make sense?
-    Yup, just add (yet) another function for HTTP registration to process the internal keywords!
-
-    - Size is bigger than I would have expected. Investigation needed.
-      And maybe some selection of features...    
-        http_net -O1: 16628+2532 = 19368        -Os: 15256+2532=17996
-        http     -O1: 9652+2456 = 12140         -Os: 8916+2456 = 11404
-
-    - When the browser uses for upload a  header like:
-    Content-Type: multipart/form-data; boundary=----WebKitFormBoundaryMM1PA61kppXoJkDh
-    then the last line sent to the server is:
-    ------WebKitFormBoundaryMM1PA61kppXoJkDh--
-    For some reason this line is not eaten up and some characters remain in the socket buffer
-    ("--\r\n") causing the parser to reject the request saying file not found....
-    What to do?
-
-    - Performance comparison:
-        - skt buffer - really matters
-        - file read buffer?
-        - compare for the same TX buffer size
-        - turn on/off persistent conn
-        - binary file transfer comparison!!! make this one quick!
-
-*/
 

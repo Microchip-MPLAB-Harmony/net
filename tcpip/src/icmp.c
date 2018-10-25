@@ -86,7 +86,6 @@ typedef struct  _TAG_ICMP_LIST_NODE
 }ICMP_LIST_NODE;
 
 
-// TODO aa: a list could be added here...but protected: inserted by user, removed in RX dispacther/ICMP rx context
 static TCPIP_ICMP_ECHO_REQUEST     icmpEchoRequest;            // one and only request (for now)
 static TCPIP_ICMP_ECHO_REQUEST*    pIcmpEchoRequest = 0;       // one and only request (for now)
 static uint32_t                    icmpEchoStart;              // tick when the request started 
@@ -310,7 +309,7 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequest (TCPIP_ICMP_ECHO_REQUEST* pEchoRequest, 
         pICMPPkt->wChecksum = 0x0000;
         pICMPPkt->wIdentifier = pEchoRequest->identifier;
         pICMPPkt->wSequenceNumber = pEchoRequest->sequenceNumber;
-        // TODO aa: make it zc? Currently IPv4 cannot handle fragmentation over a split packet
+        
         memcpy(pICMPPkt->wData, pEchoRequest->pData, pEchoRequest->dataSize);
         pICMPPkt->wChecksum = TCPIP_Helper_CalcIPChecksum((uint8_t*)pICMPPkt, pktSize, 0);
         pTxPkt->destAddress.Val = pEchoRequest->targetAddr.Val;
@@ -367,17 +366,6 @@ ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequestCancel (TCPIP_ICMP_REQUEST_HANDLE icmpHan
     return ICMP_ECHO_BAD_HANDLE;
 }
 
-// TODO aa: a better model would be something like this:
-//      - hIcmp = TCPIP_ICMP_CallbackRegister(notifyFunc);
-//      - TCPIP_ICMP_EchoRequestSend(hIcmp, IPV4_ADDR targetAdd, void* pData, uint16_t dataSize);
-//      - send an query packet; use sequence++ internal; use identifier = hIcmp;
-//      - upon receive, find the hIcmp and match the identifier;
-//          - match also the sequence; i.e. store the sequence that you sent and see that it matches
-//      - call only that client: notify(hNetIf, hIcmp, pRxBuff, rxData);
-//      - the client has then to acknowledge, so that we release the packet
-//      - also, once you have a pending query, the client cannot call for another one
-//      - but it can call another TCPIP_ICMP_CallbackRegister()
-//
 ICMP_ECHO_RESULT TCPIP_ICMP_EchoRequestSend (TCPIP_NET_HANDLE netH, IPV4_ADDR * targetAddr, uint16_t sequenceNumber, uint16_t identifier)
 {
     IPV4_PACKET*    pTxPkt;

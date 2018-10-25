@@ -139,7 +139,6 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             }
             pkt->pkt->pMacLayer = pkt->pkt->pDSeg->segLoad;
             pkt->pkt->pNetLayer = pkt->pkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
-            // TODO put in error checking
             pkt->state = DRV_ENCX24J600_RX_SET_ERXTAIL;
         }
         case DRV_ENCX24J600_RX_SET_ERXTAIL:

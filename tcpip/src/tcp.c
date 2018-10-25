@@ -105,9 +105,6 @@ typedef struct
 #define SENDTCP_KEEP_ALIVE		0x02
 
 // Internal _TcpSend result
-// TODO aa: probably these results have to be promoted to the API.
-// A function like TCPIP_TCP_Disconnect can fail and the user needs to see if the call has to be re-issued
-// or it was a total failure and ignored.
 typedef enum
 {
     // positive success codes
@@ -343,9 +340,6 @@ static  void        _TcpSocketBind(TCB_STUB* pSkt, TCPIP_NET_IF* pNet, IP_MULTI_
 }
 
 
-// TODO aa: checking _TCP_IsConnected() could be tricky in a multi-threaded space.
-// There is no guarantee that the socket is not connecting while we do this op!
-// Protection needed!
 static __inline__ bool __attribute__((always_inline)) _TCP_IsConnected(TCB_STUB* pSkt)
 {
     return (pSkt->smState == TCPIP_TCP_STATE_ESTABLISHED || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_1 || pSkt->smState == TCPIP_TCP_STATE_FIN_WAIT_2 || pSkt->smState == TCPIP_TCP_STATE_CLOSE_WAIT);
@@ -382,7 +376,6 @@ static void _TcpSocketSetState(TCB_STUB* pSkt, TCPIP_TCP_STATE newState)
     pSkt->smState = newState;
 }
 
-// TODO aa: multi-threaded protection needed here!
 static uint32_t    _tcpTraceMask = 0;      // currently only first 32 sockets could be traced from the creation moment
 bool TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable)
 {
@@ -793,9 +786,6 @@ static void _TcpCleanup(void)
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 // netMask is the mask of interfaces going down: 1 << netIx
-// TODO aa: the ifMask is limited here to 32 bits/interfaces!
-// Actually see the TCPIP_MODULE_SIGNAL_ENTRY::signalParam, which is 16 bit only! So max 16 interfaces supported!!!
-// It should be increased!
 static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType)
 {
     int ix;
@@ -2039,7 +2029,7 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
                 // transmitted or the remote node's receive window fills up.
                 tcpFlags = signalFIN? FIN | ACK : ACK;
                 do
-                {   // TODO aa: non-blocking approach needed!
+                {   
                     sendRes = _TcpSend(pSkt, tcpFlags, SENDTCP_RESET_TIMERS);
                     if(sendRes < 0 || pSkt->remoteWindow == 0u)
                         break;
@@ -2051,7 +2041,7 @@ static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN)
             }
 			
             if(sendRes < 0)
-            {   // TODO aa: we've failed sending the FIN to the remote node
+            {   
                 // let the user know
                 // another attempt may be done
                 // if it's followed by an close/abort won't matter anyway
@@ -2795,7 +2785,6 @@ uint16_t TCPIP_TCP_ArrayGet(TCP_SOCKET hTCP, uint8_t* buffer, uint16_t len)
     {   // not enough data freed to generate a window update
         if(wGetReadyCount - len <= len)
         {   // Send a window update if we've run low on data
-            // TODO aa: what exactly "wReadyCount <= 2*len" tells us?
             pSkt->Flags.bTXASAPWithoutTimerReset = 1;
         }
         else if(!pSkt->Flags.bTimer2Enabled)
@@ -3664,7 +3653,6 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 
     //  Make sure that we have an allocated TX packet
-    // TODO aa: this needs some error checking by the caller !!!
     switch(pSkt->addType)
     {
 #if defined (TCPIP_STACK_USE_IPV6)
@@ -4306,7 +4294,6 @@ static void _TcpSocketSetIdleState(TCB_STUB* pSkt)
 	pSkt->Flags.bSocketReset = 1;
 
 
-    // TODO aa: better ordering possible so that we clear all the flags in one op?
 	pSkt->flags.bFINSent = 0;
     pSkt->flags.seqInc = 0;
 	pSkt->flags.bSYNSent = 0;
@@ -4790,7 +4777,7 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
 
     // Calculate the number of bytes ahead of our head pointer this segment skips
     lMissingBytes = localSeqNumber - pSkt->RemoteSEQ;
-    wMissingBytes = lMissingBytes; // TODO aa: why not use directly lMissingBytes?
+    wMissingBytes = lMissingBytes; 
 
     // Run TCP acceptability tests to verify that this packet has a valid sequence number
     bSegmentAcceptable = false;
@@ -4984,14 +4971,6 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
                     *pSktEvent |= TCPIP_TCP_SIGNAL_TX_SPACE; 
                 }
             }
-#if 0
-            // TODO aa: alt approach to avoid retransmitting when the other party keeps sending!
-            else if(dwTemp == 0 && tcpLen != 0)
-            {   // no ACK but the sender keeps sending
-                pSkt->flags.bRXNoneACKed1 = 0;
-                pSkt->flags.bRXNoneACKed2 = 0;
-            }
-#endif
             else
             {   // no acknowledge
                 // See if we have outstanding TX data that is waiting for an ACK
@@ -5473,7 +5452,6 @@ static void _TcpHandleSeg(TCB_STUB* pSkt, TCP_HEADER* h, uint16_t tcpLen, TCPIP_
     Doing this may disrupt the communication, make the TCP algorithm fail or have an 
     unpredicted behavior!
 
-    TODO aa: This has to be protected user <-> tx + rx threads!
   ***************************************************************************/
 #if (TCPIP_TCP_DYNAMIC_OPTIONS != 0)
 bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMinTXSize, TCP_ADJUST_FLAGS vFlags)
@@ -5711,11 +5689,6 @@ bool TCPIP_TCP_FifoSizeAdjust(TCP_SOCKET hTCP, uint16_t wMinRXSize, uint16_t wMi
     }
 
     // success
-
-    // TODO aa: socket needs to be RX and/or TX locked!
-    // the buffers are changing!!!
-    // Actually even before, when calculating the number of available/pending bytes
-    // in the buffers, these shouldn't be modified!!!
 
     // adjust new TX pointers
     if(newTxBuff)
@@ -6209,8 +6182,6 @@ static uint16_t _TCP_ClientIPV4RemoteHash(const IPV4_ADDR* pAdd, TCB_STUB* pSkt)
 }
 
 
-// TODO aa: can this be unified for IPv6 as well
-// so that we go directly to _Tcpv4LinkDataSeg/_Tcpv6LinkDataSeg/_TcpLinkDataSeg?
 static void _TCP_PayloadSet(TCB_STUB * pSkt, void* pPkt, uint8_t* payload1, uint16_t len1, uint8_t* payload2, uint16_t len2)
 {
     switch(pSkt->addType)
