@@ -128,7 +128,7 @@ typedef struct
 		uint16_t bTXASAPWithoutTimerReset : 1;	    // Transmit as soon as possible (for Flush), but do not reset retransmission timers
 		uint16_t bTXFIN : 1;					    // FIN needs to be transmitted
 		uint16_t bSocketReset : 1;				    // Socket has been reset (self-clearing semaphore)
-		uint16_t bInitialized : 1;				    // Future expansion
+		uint16_t reserved : 1;				        // not used; future expansion
 		uint16_t failedDisconnect : 1;			    // Failed to send a FIN
 		uint16_t halfThresType : 2; 		        // a TCP_OPTION_THRES_FLUSH_TYPE value
         uint16_t keepAlive : 1;  		            // keep alive option enabled

@@ -93,6 +93,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "tcpip/src/icmp_manager.h"
 #include "tcpip/src/dhcp_manager.h"
 #include "tcpip/src/arp_manager.h"
+#include "tcpip/src/dns_manager.h"
 #include "tcpip/src/tcp_manager.h"
 #include "tcpip/src/tcpip_commands_manager.h"
 #include "tcpip/src/udp_manager.h"

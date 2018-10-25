@@ -380,6 +380,7 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
@@ -534,7 +535,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/sam_e70_xult_freertos/library;../src/config/sam_e70_xult_freertos/library/tcpip/src;../src/config/sam_e70_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include"/>
+                  value="../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/sam_e70_xult_freertos/library;../src/config/sam_e70_xult_freertos/library/tcpip/src;../src/config/sam_e70_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include;"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
