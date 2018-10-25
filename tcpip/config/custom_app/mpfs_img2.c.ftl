@@ -9,6 +9,9 @@
  * ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS2 GENERATOR
  * Generated Fri Jun 16 2017 07:02:08
  *
+***************************************************************/
+
+/***************************************************************
  * Software License Agreement
  *
  * Copyright (C) 2012 Microchip Technology Inc.  All rights

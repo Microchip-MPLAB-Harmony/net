@@ -7,7 +7,9 @@
   Description:
     -Implements the application
  *******************************************************************************/
+-->
 
+<#--
 /*******************************************************************************
 File Name: custom_http_net_app.c
 Copyright (C) 2012 released Microchip Technology Inc.  All rights

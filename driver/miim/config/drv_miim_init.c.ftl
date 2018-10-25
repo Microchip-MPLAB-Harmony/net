@@ -15,7 +15,9 @@
     that contains the object handles to all the MPLAB Harmony module objects in
     the system.
  *******************************************************************************/
+-->
 
+<#--
 /*******************************************************************************
 Copyright (c) 2016 released Microchip Technology Inc.  All rights reserved.
 

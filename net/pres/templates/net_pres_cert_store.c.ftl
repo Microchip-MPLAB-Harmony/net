@@ -8,7 +8,9 @@
   Description:
 
 *******************************************************************************/
+-->
 
+<#--
 /*******************************************************************************
 File Name: net_pres_cert_stroe.c
 Copyright (c) 2015 released Microchip Technology Inc.  All rights
