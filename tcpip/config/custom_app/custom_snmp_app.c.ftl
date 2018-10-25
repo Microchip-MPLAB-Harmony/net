@@ -7,7 +7,9 @@
   Description:
     - Implements the SNMP application
 *******************************************************************************/
+-->
 
+<#--
 /*******************************************************************************
 File Name: custom_snmp_app.c
 Copyright (C) 2012 released Microchip Technology Inc.  All rights

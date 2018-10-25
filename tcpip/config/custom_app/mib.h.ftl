@@ -6,6 +6,9 @@
  * Do not modify this file manually.
  * Include this file in your application source file that handles SNMP callbacks and TRAP.
  * 
+*******************************************************************/
+
+/*******************************************************************
  * Software License Agreement
  *
  * Copyright (C) 2012 Microchip Technology Inc.  All rights

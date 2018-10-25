@@ -8,7 +8,9 @@
     -Implements the application
     -Reference: RFC 1002
  *******************************************************************************/
+-->
 
+<#--
 /*******************************************************************************
 File Name: custom_http_app.c
 Copyright (C) 2012 released Microchip Technology Inc.  All rights
