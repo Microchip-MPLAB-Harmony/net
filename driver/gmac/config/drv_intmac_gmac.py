@@ -5,7 +5,8 @@ def instantiateComponent(drvSamv71GmacComponent):
 	
 	print("TCPIP Ethernet MAC Component")	
 	configName = Variables.get("__CONFIGURATION_NAME")		
-	
+	# Enable GMAC clock
+	Database.setSymbolValue("core", "GMAC_CLOCK_ENABLE", True, 2)
 	# Use Internal Ethernet MAC Driver?	
 	drvSamv71Gmac = drvSamv71GmacComponent.createBooleanSymbol("TCPIP_USE_ETH_MAC", None)
 	drvSamv71Gmac.setLabel("Use Internal Ethernet MAC Driver?")

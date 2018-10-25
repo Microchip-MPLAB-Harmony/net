@@ -219,7 +219,7 @@ def loadModule():
 	
 	## External PHY Driver
 	drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
-	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY")	
+	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)	
 	
 	drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")

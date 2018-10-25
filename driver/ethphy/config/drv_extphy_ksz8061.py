@@ -1,4 +1,4 @@
-__TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
+
 def instantiateComponent(drvExtPhyKsz8061Component):
 	print("KSZ8061 PHY Driver Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
