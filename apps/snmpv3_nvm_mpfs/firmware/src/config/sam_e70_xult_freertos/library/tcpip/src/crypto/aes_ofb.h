@@ -3,7 +3,9 @@
  Advanced Encryption Standard (AES) Include Header for 
    output feedback (OFB) mode
 
-****************************************************************************
+****************************************************************************/
+
+/****************************************************************************
  File Name:     AES_OFB.h
  Dependencies:  AES.h
  Processor:		PIC24F, PIC24H, dsPIC30F, or dsPIC33F

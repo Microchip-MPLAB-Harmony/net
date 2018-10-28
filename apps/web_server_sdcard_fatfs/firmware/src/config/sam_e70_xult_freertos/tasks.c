@@ -165,7 +165,6 @@ void SYS_Tasks ( void )
         (TaskHandle_t*)NULL
     );
 
-
     xTaskCreate( _SYS_FS_Tasks,
         "SYS_FS_TASKS",
         SYS_FS_STACK_SIZE,
@@ -189,6 +188,7 @@ void SYS_Tasks ( void )
 
 
     /* Maintain Middleware & Other Libraries */
+    
         xTaskCreate( _NET_PRES_Tasks,
         "NET_PRES_Tasks",
         NET_PRES_RTOS_STACK_SIZE,
@@ -196,6 +196,7 @@ void SYS_Tasks ( void )
         NET_PRES_RTOS_TASK_PRIORITY,
         (TaskHandle_t*)NULL
     );
+
 
 
     xTaskCreate( _TCPIP_STACK_Task,
