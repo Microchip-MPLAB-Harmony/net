@@ -4,52 +4,33 @@
    128 bit key, 128 bit data block
    For more information see, AN1044
 
-****************************************************************************
- File Name:		AES.h
- Dependencies:	AES.s
- Processor:		PIC24F, PIC24H, dsPIC30F, or dsPIC33F
- Compiler:		MPLAB C30 2.02 or later
- Linker:		MPLAB LINK30 2.02 or later
- Company:		Microchip Technology Inc.
+****************************************************************************/
 
- Software License Agreement
+/*****************************************************************************
+ Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
 
- The software supplied herewith by Microchip Technology Inc.
- (the “Company”) for its PIC Microcontroller is intended and
- supplied to you, the Company’s customer, for use solely and
- exclusively on Microchip PIC Microcontroller products. The
- software is owned by the Company and/or its supplier, and is
- protected under applicable copyright laws. All rights are reserved.
- Any use in violation of the foregoing restrictions may subject the
- user to criminal sanctions under applicable laws, as well as to
- civil liability for the breach of the terms and conditions of this
- license.
+Microchip Technology Inc. and its subsidiaries.
 
- Microchip Technology Inc. (“Microchip”) licenses this software to 
- you solely for use with Microchip products.  The software is owned 
- by Microchip and is protected under applicable copyright laws.  
- All rights reserved.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
- You may not export or re-export Software, technical data, direct 
- products thereof or any other items which would violate any applicable
- export control laws and regulations including, but not limited to, 
- those of the United States or United Kingdom.  You agree that it is
- your responsibility to obtain copies of and to familiarize yourself
- fully with these laws and regulations to avoid violation.
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
 
- SOFTWARE IS PROVIDED “AS IS.”  MICROCHIP EXPRESSLY DISCLAIM ANY 
- WARRANTY OF ANY KIND, WHETHER EXPRESS OR IMPLIED, INCLUDING BUT NOT 
- LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY, FITNESS FOR A
- PARTICULAR PURPOSE, OR NON-INFRINGEMENT. IN NO EVENT SHALL MICROCHIP
- BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR CONSEQUENTIAL DAMAGES,
- LOST PROFITS OR LOST DATA, HARM TO YOUR EQUIPMENT, COST OF PROCUREMENT
- OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS BY THIRD PARTIES
- (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), ANY CLAIMS FOR 
- INDEMNITY OR CONTRIBUTION, OR OTHER SIMILAR COSTS. 
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
 
- Rev		Comment
-~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
- ****************************************************************************/
 #ifndef AES_H
 #define AES_H
 

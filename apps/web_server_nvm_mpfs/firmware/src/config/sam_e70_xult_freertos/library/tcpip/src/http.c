@@ -10,30 +10,38 @@
     - Reference: RFC 2616
 *******************************************************************************/
 
-/*******************************************************************************
-File Name:  HTTP.c
-Copyright © 2012 released Microchip Technology Inc.  All rights
-reserved.
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_HTTP_SERVER
 
 #include "tcpip/src/tcpip_private.h"
@@ -54,7 +62,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
-// TODO aa: should be a HTTP parameter!
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE   (4 * 1024)
 
 #include "tcpip/src/common/sys_fs_wrapper.h"
@@ -1453,7 +1460,7 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
                 pHttpCon->TxFile.dynVarCntr-=1;
                 pHttpCon->file_sm=SM_GET_DYN_VAR_FILE_RCRD;
                 if(pHttpCon->TxFile.dynVarCntr == 0)
-                {       // TODO: may need add SYS_FS_feof() for additional check
+                {       
                     if (pHttpCon->TxFile.numBytes != 0)
                     {
                         pHttpCon->file_sm =SM_SERVE_TEXT_DATA;
@@ -2111,14 +2118,9 @@ static HTTP_READ_STATUS _HTTP_ReadTo(HTTP_CONN* pHttpCon, uint8_t cDelim, uint8_
     This function is only available when MPFS uploads are enabled and
     the MPFS image is stored in EEPROM.
 
-  TODO Internal:
-    After the headers, the first line from the form will be the MIME
-    separator.  Following that is more headers about the file, which
-    are discarded.  After another CRLFCRLF pair the file data begins,
-    which is read 16 bytes at a time and written to external memory.
   ***************************************************************************/
 #if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND) && !defined(DRV_WIFI_OTA_ENABLE)
-#define     SYS_FS_MEDIA_SECTOR_SIZE        512     // TODO aa: use a SYS_FS symbol here!
+#define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE       (4 * 1024)
 static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
 {
