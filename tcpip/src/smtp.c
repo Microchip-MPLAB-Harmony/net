@@ -3,7 +3,7 @@
   Module for Microchip TCP/IP Stack
 
   Summary:
-    ARCFOUR Cryptography Library
+    Mail Client Library
     
   Description:
     -Provides ability to send Emails
