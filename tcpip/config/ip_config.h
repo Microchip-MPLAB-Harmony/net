@@ -10,6 +10,8 @@
 	
   Description:
     This file contains the IP module configuration options.
+
+    This file is not part of the project, it is a configuration template file only. 
   **********************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
