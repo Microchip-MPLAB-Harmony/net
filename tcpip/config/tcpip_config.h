@@ -13,6 +13,8 @@ Microchip TCP/IP Stack Demo Application Configuration Header
   Description:
     This file contains the TCP/IP commands configuration options
 
+    This file is not part of the project, it is a configuration template file only. 
+
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************

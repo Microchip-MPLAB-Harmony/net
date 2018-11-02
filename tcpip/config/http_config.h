@@ -13,6 +13,8 @@
   Description:
     This file contains the HTTP module configuration options
 
+    This file is not part of the project, it is a configuration template file only. 
+
 *******************************************************************************/
 // DOM-IGNORE-BEGIN
 /*****************************************************************************
