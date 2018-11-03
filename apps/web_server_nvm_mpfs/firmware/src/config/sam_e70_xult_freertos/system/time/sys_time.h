@@ -1353,8 +1353,10 @@ SYS_TIME_RESULT SYS_TIME_TimerStop ( SYS_TIME_HANDLE handle );
        expiration so that each period expiration will only be reported once.
 
    Precondition:
-       The SYS_TIME_Initialize and SYS_TIME_Create functions must have been
-       called before calling this function.
+       The SYS_TIME_Initialize and SYS_TIME_Create or SYS_TIME_CallbackRegisterMS/
+       SYS_TIME_CallbackRegisterUS functions (with callback type set to
+       SYS_TIME_PERIODIC) must have been called before calling
+       this function.
 
    Parameters:
        handle   - Handle to a software timer instance, returned by a call to
@@ -1388,6 +1390,10 @@ SYS_TIME_RESULT SYS_TIME_TimerStop ( SYS_TIME_HANDLE handle );
            be used instead of the SYS_TIME_TimerPeriodHasExpired routine, as
            SYS_TIME_DelayIsComplete additionally deletes the delay timer object
            once the delay has expired.
+
+       4.  Since single shot timers does not support polling (registration of a callback
+           is mandatory for single shot timers), the SYS_TIME_CallbackRegisterMS
+           routine must not be used to poll the status of the single shot timers.
 */
 
 bool SYS_TIME_TimerPeriodHasExpired ( SYS_TIME_HANDLE handle );

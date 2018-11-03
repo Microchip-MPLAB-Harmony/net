@@ -52,10 +52,10 @@ extern "C" {
 
 
 
-#define APP_LED_1StateSet()         LED1_PC8_Set()
-#define APP_LED_1StateGet()         LED1_PC8_Get()
-#define APP_LED_1StateClear()       LED1_PC8_Clear()
-#define APP_LED_1StateToggle()      LED1_PC8_Toggle()
+#define APP_LED_1StateSet()         LED1_Set()
+#define APP_LED_1StateGet()         LED1_Get()
+#define APP_LED_1StateClear()       LED1_Clear()
+#define APP_LED_1StateToggle()      LED1_Toggle()
 // *****************************************************************************
 /* Application states
 

@@ -59,8 +59,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     #include "crypto/src/sha256.h"
 #endif
 
-#if defined(WOLFSSL_PIC32C_HASH)
-#include "crypto/src/pic32c-hash.h"
+#if defined(WOLFSSL_SAME70_HASH)
+#include "crypto/src/same70-hash.h"
 #endif
 
 
@@ -89,7 +89,7 @@ enum {
 
 /* Sha256 digest */
 typedef struct Sha256 {
-#if defined(WOLFSSL_PIC32C_HASH)
+#if defined(WOLFSSL_SAME70_HASH)
     struct icm_descriptor icm_descriptor __attribute__((aligned (64)));
     uint8_t  buffer[SHA256_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
     uint32_t digest[SHA256_DIGEST_SIZE/4] __attribute__((aligned (128)));

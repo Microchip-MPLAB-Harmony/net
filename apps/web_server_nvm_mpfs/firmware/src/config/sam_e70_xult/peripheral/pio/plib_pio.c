@@ -69,6 +69,10 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_A)->PIO_PPDDR = 0xFFFFFFFF;
     /* PORTA Output Write Enable */
     ((pio_registers_t*)PIO_PORT_A)->PIO_OWER = PIO_OWER_Msk;
+    /* PORTA Output Direction Enable */
+    ((pio_registers_t*)PIO_PORT_A)->PIO_OER = 0x20;
+    /* PORTA Initial state High */
+    ((pio_registers_t*)PIO_PORT_A)->PIO_SODR = 0x20;
 
     /************************ PIO B Initialization ************************/
     /* PORTB Peripheral Function Selection */

@@ -78,7 +78,7 @@ static const NET_PRES_TransportObject netPresTransObject${INST_NUMBER}DC = {
 };
         </#if>
     </#macro>
-    <#assign numInstance= NET_PRES_INSTANCES?number>
+    <#assign numInstance= __INSTANCE_COUNT?number>
     <#list 0..(numInstance-1) as idx>
 	<#assign netPresIdx = "netPres_${idx}.NET_PRES_IDX${idx}"?eval>
 		<#if netPresIdx??>

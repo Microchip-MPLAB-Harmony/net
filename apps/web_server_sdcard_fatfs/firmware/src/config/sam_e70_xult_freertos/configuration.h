@@ -129,6 +129,8 @@ extern "C" {
 #define SYS_TIME_HW_COUNTER_PERIOD           0xFFFF
 #define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
+#define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
+
 
 
 // *****************************************************************************
@@ -269,15 +271,17 @@ extern "C" {
 #define NO_DSA
 #define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
-#define MICROCHIP_PIC32C
+#define MICROCHIP_SAME70
 #define NO_CERTS
 #define NO_PWDBASED
 #define NO_OLD_TLS
 #define NO_AES
-//#define NO_ASN
-//#define NO_RSA
-//#define NO_RNG
-
+#define NO_ASN
+#define NO_RSA
+#define NO_HMAC
+#define NO_DES3
+#define NO_RNG
+#define NO_RNG_TEST
 
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE 1

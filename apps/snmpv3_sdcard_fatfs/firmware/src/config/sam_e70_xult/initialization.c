@@ -251,6 +251,7 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
 };
 
 
+
 // <editor-fold defaultstate="collapsed" desc="TCP/IP Stack Initialization Data">
 // *****************************************************************************
 // *****************************************************************************
@@ -706,6 +707,7 @@ void SYS_Initialize ( void* data )
 {
     CLK_Initialize();
 	PIO_Initialize();
+
 
     NVIC_Initialize();
     XDMAC_Initialize();

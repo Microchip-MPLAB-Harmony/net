@@ -71,14 +71,14 @@
 #define SWITCH1_PA11_InputEnable()       (PIOA_REGS->PIO_ODR = (1<<11))
 #define SWITCH1_PA11_PIN                  PIO_PIN_PA11
 
-/*** Macros for LED1_PC8 pin ***/
-#define LED1_PC8_Set()               (PIOC_REGS->PIO_SODR = (1<<8))
-#define LED1_PC8_Clear()             (PIOC_REGS->PIO_CODR = (1<<8))
-#define LED1_PC8_Toggle()            (PIOC_REGS->PIO_ODSR ^= (1<<8))
-#define LED1_PC8_Get()               ((PIOC_REGS->PIO_PDSR >> 8) & 0x1)
-#define LED1_PC8_OutputEnable()      (PIOC_REGS->PIO_OER = (1<<8))
-#define LED1_PC8_InputEnable()       (PIOC_REGS->PIO_ODR = (1<<8))
-#define LED1_PC8_PIN                  PIO_PIN_PC8
+/*** Macros for LED1 pin ***/
+#define LED1_Set()               (PIOA_REGS->PIO_SODR = (1<<5))
+#define LED1_Clear()             (PIOA_REGS->PIO_CODR = (1<<5))
+#define LED1_Toggle()            (PIOA_REGS->PIO_ODSR ^= (1<<5))
+#define LED1_Get()               ((PIOA_REGS->PIO_PDSR >> 5) & 0x1)
+#define LED1_OutputEnable()      (PIOA_REGS->PIO_OER = (1<<5))
+#define LED1_InputEnable()       (PIOA_REGS->PIO_ODR = (1<<5))
+#define LED1_PIN                  PIO_PIN_PA5
 
 
 // *****************************************************************************

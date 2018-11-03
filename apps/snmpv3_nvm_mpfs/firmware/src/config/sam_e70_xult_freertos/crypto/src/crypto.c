@@ -364,8 +364,8 @@ int CRYPT_RNG_Initialize(CRYPT_RNG_CTX* rng)
     if (rng == NULL)
         return BAD_FUNC_ARG;
 
-#ifdef WOLFSSL_MICROCHIP_PIC32C
-	return pic32c_InitRng();
+#ifdef WOLFSSL_MICROCHIP_SAME70
+	return same70_InitRng();
 #else
     return wc_InitRng((WC_RNG*)rng);
 #endif
@@ -389,8 +389,8 @@ int CRYPT_RNG_BlockGenerate(CRYPT_RNG_CTX* rng, unsigned char* b,
     if (rng == NULL || b == NULL)
         return BAD_FUNC_ARG;
 
-#if defined(WOLFSSL_MICROCHIP_PIC32C)
-    return pic32c_RNG_GenerateBlock(b, sz);
+#if defined(WOLFSSL_MICROCHIP_SAME70)
+    return same70_RNG_GenerateBlock(b, sz);
 #else
     return wc_RNG_GenerateBlock((WC_RNG*)rng, b, sz);
 #endif

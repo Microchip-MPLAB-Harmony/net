@@ -8,11 +8,6 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnIndex.setVisible(False)
 	netPresInstnIndex.setDefaultValue(index)
 	
-	numInstances  = Database.getSymbolValue("netPres", "NET_PRES_INSTANCES")
-	numInstances = numInstances + 1
-	Database.setSymbolValue("netPres", "NET_PRES_INSTANCES", numInstances, 1)
-	print(numInstances)
-	
 	# Network Presentation Instance
 	netPresInstnEnable = netPresComponent.createBooleanSymbol("NET_PRES_IDX" + str(index),None)
 	netPresInstnEnable.setLabel("Net Presentation Instance " + str(index))

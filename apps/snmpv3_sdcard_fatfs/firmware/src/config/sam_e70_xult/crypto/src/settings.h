@@ -72,7 +72,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 /* Uncomment next line if using Microchip PIC32 ethernet starter kit */
 /* #define MICROCHIP_PIC32 */
 /* We use configuration.h to pass this in */
-#if !(defined(MICROCHIP_PIC32) || defined(MICROCHIP_PIC32C))
+#if !(defined(MICROCHIP_PIC32) || defined(MICROCHIP_SAME70))
 #define MICROCHIP_PIC32
 #endif
 
@@ -249,7 +249,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     #define WOLFSSL_HAVE_MIN
     #define WOLFSSL_HAVE_MAX
     #define NO_BIG_INT
-#elif defined(MICROCHIP_PIC32C)
+#elif defined(MICROCHIP_SAME70)
     #define SIZEOF_LONG_LONG 8
     #define SINGLE_THREADED
     #define WOLFSSL_USER_IO
@@ -270,10 +270,10 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     #define WOLFSSL_PIC32MZ_RNG
     #define WOLFSSL_PIC32MZ_HASH
     #define NO_BIG_INT
-#elif defined(WOLFSSL_MICROCHIP_PIC32C)
-    #define WOLFSSL_PIC32C_CRYPT
-    #define CUSTOM_RAND_GENERATE_BLOCK pic32c_RNG_GenerateBlock
-    #define CUSTOM_RAND_GENERATE_SEED  pic32c_RNG_GenerateSeed
+#elif defined(WOLFSSL_MICROCHIP_SAME70)
+    #define WOLFSSL_SAME70_CRYPT
+    #define CUSTOM_RAND_GENERATE_BLOCK same70_RNG_GenerateBlock
+    #define CUSTOM_RAND_GENERATE_SEED  same70_RNG_GenerateSeed
     #define HAVE_AES_ENGINE
     #define HAVE_AESGCM
     #define NO_BIG_INT

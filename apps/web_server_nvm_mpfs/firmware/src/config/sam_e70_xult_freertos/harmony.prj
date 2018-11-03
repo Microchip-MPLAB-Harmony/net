@@ -9,7 +9,7 @@
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">adler32.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8014C52B487ECD6ECD97A0BAC3C0537F</GeneratedChecksum>
           <UserChecksum dnOrder="5">8014C52B487ECD6ECD97A0BAC3C0537F</UserChecksum>
@@ -17,7 +17,7 @@
         <File dnOrder="1">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">aes.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">11F33E8D09937BC10BE3A23D7C0DF7DC</GeneratedChecksum>
           <UserChecksum dnOrder="5">11F33E8D09937BC10BE3A23D7C0DF7DC</UserChecksum>
@@ -33,7 +33,7 @@
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">arc4.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">26074B03A8B496B1681811FD4D51C6C0</GeneratedChecksum>
           <UserChecksum dnOrder="5">26074B03A8B496B1681811FD4D51C6C0</UserChecksum>
@@ -49,7 +49,7 @@
         <File dnOrder="5">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">asm.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">321A04B0BD0A09F35BFBE89C6C92E966</GeneratedChecksum>
           <UserChecksum dnOrder="5">321A04B0BD0A09F35BFBE89C6C92E966</UserChecksum>
@@ -57,7 +57,7 @@
         <File dnOrder="6">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">asn.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">6289E181D0DEB04A7626D2E8993AA7FA</GeneratedChecksum>
           <UserChecksum dnOrder="5">6289E181D0DEB04A7626D2E8993AA7FA</UserChecksum>
@@ -65,7 +65,7 @@
         <File dnOrder="7">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">async.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D41D8CD98F00B204E9800998ECF8427E</GeneratedChecksum>
           <UserChecksum dnOrder="5">D41D8CD98F00B204E9800998ECF8427E</UserChecksum>
@@ -73,7 +73,7 @@
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">chacha.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">CE9878D2B69FFA0B4CDF919CEFBE95A2</GeneratedChecksum>
           <UserChecksum dnOrder="5">CE9878D2B69FFA0B4CDF919CEFBE95A2</UserChecksum>
@@ -81,7 +81,7 @@
         <File dnOrder="9">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">chacha20_poly1305.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">4570A649F7E9AB712851C612A5630B78</GeneratedChecksum>
           <UserChecksum dnOrder="5">4570A649F7E9AB712851C612A5630B78</UserChecksum>
@@ -89,7 +89,7 @@
         <File dnOrder="10">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">cmac.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F95F557E04606F902C0B8F717B6492B2</GeneratedChecksum>
           <UserChecksum dnOrder="5">F95F557E04606F902C0B8F717B6492B2</UserChecksum>
@@ -97,7 +97,7 @@
         <File dnOrder="11">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">coding.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2949EB47D9AA176D87D6347CB607BA3C</GeneratedChecksum>
           <UserChecksum dnOrder="5">2949EB47D9AA176D87D6347CB607BA3C</UserChecksum>
@@ -105,7 +105,7 @@
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">compress.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">9474E26F6A58E717C396E2B6803495D4</GeneratedChecksum>
           <UserChecksum dnOrder="5">9474E26F6A58E717C396E2B6803495D4</UserChecksum>
@@ -113,7 +113,7 @@
         <File dnOrder="13">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">crc32.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A56B399B9141DA952FB8A56F3D5F971A</GeneratedChecksum>
           <UserChecksum dnOrder="5">A56B399B9141DA952FB8A56F3D5F971A</UserChecksum>
@@ -129,15 +129,15 @@
         <File dnOrder="15">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">crypto.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">54E30CFDC1F94D2ACB0198856280C17A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">54E30CFDC1F94D2ACB0198856280C17A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">52216939E785EDCD3C6BFBF6A4F9DEFD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">52216939E785EDCD3C6BFBF6A4F9DEFD</UserChecksum>
         </File>
         <File dnOrder="16">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">curve25519.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">9A8EC8786A47F0139F966A5EFA17EC7E</GeneratedChecksum>
           <UserChecksum dnOrder="5">9A8EC8786A47F0139F966A5EFA17EC7E</UserChecksum>
@@ -153,7 +153,7 @@
         <File dnOrder="18">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">deflate.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">1D9326409CCB9045DF9278BB53C80AA3</GeneratedChecksum>
           <UserChecksum dnOrder="5">1D9326409CCB9045DF9278BB53C80AA3</UserChecksum>
@@ -161,7 +161,7 @@
         <File dnOrder="19">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">des3.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">196133A99BC50DB926E7360E9475D741</GeneratedChecksum>
           <UserChecksum dnOrder="5">196133A99BC50DB926E7360E9475D741</UserChecksum>
@@ -169,7 +169,7 @@
         <File dnOrder="20">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">dh.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">B2996A3CCCD169D4C856F504BBBEB980</GeneratedChecksum>
           <UserChecksum dnOrder="5">B2996A3CCCD169D4C856F504BBBEB980</UserChecksum>
@@ -265,7 +265,7 @@
         <File dnOrder="32">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">dsa.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">800CDA7EA77CACF74CA2A09EFBF0669B</GeneratedChecksum>
           <UserChecksum dnOrder="5">800CDA7EA77CACF74CA2A09EFBF0669B</UserChecksum>
@@ -273,15 +273,15 @@
         <File dnOrder="33">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">ecc.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">BE429213622DCCE41064838FCE7BED12</GeneratedChecksum>
-          <UserChecksum dnOrder="5">BE429213622DCCE41064838FCE7BED12</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7201F7075C9E1CF23482D1E95B22CBCD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7201F7075C9E1CF23482D1E95B22CBCD</UserChecksum>
         </File>
         <File dnOrder="34">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">ecc_fp.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">76ECF132194D8D0F0DB94D4D0F775214</GeneratedChecksum>
           <UserChecksum dnOrder="5">76ECF132194D8D0F0DB94D4D0F775214</UserChecksum>
@@ -289,7 +289,7 @@
         <File dnOrder="35">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">ed25519.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A35FDC5BD2533D2CED6D78C917CADFF4</GeneratedChecksum>
           <UserChecksum dnOrder="5">A35FDC5BD2533D2CED6D78C917CADFF4</UserChecksum>
@@ -297,7 +297,7 @@
         <File dnOrder="36">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">error.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C6B268E9B24C34700B9D288BA750348E</GeneratedChecksum>
           <UserChecksum dnOrder="5">C6B268E9B24C34700B9D288BA750348E</UserChecksum>
@@ -315,13 +315,13 @@
           <Name dnOrder="1">exceptions.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">83F3D2DC64FAD64604349F563B819485</GeneratedChecksum>
-          <UserChecksum dnOrder="5">83F3D2DC64FAD64604349F563B819485</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AC89AA0F2AF07C0733678D30AE1A5E02</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AC89AA0F2AF07C0733678D30AE1A5E02</UserChecksum>
         </File>
         <File dnOrder="39">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">fe_low_mem.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">051A9ABB2AA19393BDF09886D7F934B8</GeneratedChecksum>
           <UserChecksum dnOrder="5">051A9ABB2AA19393BDF09886D7F934B8</UserChecksum>
@@ -329,7 +329,7 @@
         <File dnOrder="40">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">fe_operations.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3BA18171FBBEF78B2DC15DB92A9D3357</GeneratedChecksum>
           <UserChecksum dnOrder="5">3BA18171FBBEF78B2DC15DB92A9D3357</UserChecksum>
@@ -353,7 +353,7 @@
         <File dnOrder="43">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">ge_low_mem.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">4054BBCD4BD01734809715D6043E47F0</GeneratedChecksum>
           <UserChecksum dnOrder="5">4054BBCD4BD01734809715D6043E47F0</UserChecksum>
@@ -361,7 +361,7 @@
         <File dnOrder="44">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">ge_operations.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">58B20CA8ACE0AE4001FDEEE507AA95AC</GeneratedChecksum>
           <UserChecksum dnOrder="5">58B20CA8ACE0AE4001FDEEE507AA95AC</UserChecksum>
@@ -369,7 +369,7 @@
         <File dnOrder="45">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">hash.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">39B6733C08F918F60E09FD7858663813</GeneratedChecksum>
           <UserChecksum dnOrder="5">39B6733C08F918F60E09FD7858663813</UserChecksum>
@@ -385,7 +385,7 @@
         <File dnOrder="47">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">hc128.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">12262917BBE966448C7711144AC77DD3</GeneratedChecksum>
           <UserChecksum dnOrder="5">12262917BBE966448C7711144AC77DD3</UserChecksum>
@@ -409,7 +409,7 @@
         <File dnOrder="50">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">hmac.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">4CA3AE7A23B5BDCC5602C888D6E275C3</GeneratedChecksum>
           <UserChecksum dnOrder="5">4CA3AE7A23B5BDCC5602C888D6E275C3</UserChecksum>
@@ -449,7 +449,7 @@
         <File dnOrder="55">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">idea.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">30BDD64C37BFEC8305629C7A45B6C131</GeneratedChecksum>
           <UserChecksum dnOrder="5">30BDD64C37BFEC8305629C7A45B6C131</UserChecksum>
@@ -457,7 +457,7 @@
         <File dnOrder="56">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">inffast.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">66AD8B0995044095A2D557C7FA1FF1F2</GeneratedChecksum>
           <UserChecksum dnOrder="5">66AD8B0995044095A2D557C7FA1FF1F2</UserChecksum>
@@ -465,7 +465,7 @@
         <File dnOrder="57">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">inflate.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">729DF5AB333A7300240405BD65DED9DE</GeneratedChecksum>
           <UserChecksum dnOrder="5">729DF5AB333A7300240405BD65DED9DE</UserChecksum>
@@ -473,7 +473,7 @@
         <File dnOrder="58">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">inftrees.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">5721BCA2A33A1723DDA7FA55ACC27348</GeneratedChecksum>
           <UserChecksum dnOrder="5">5721BCA2A33A1723DDA7FA55ACC27348</UserChecksum>
@@ -489,7 +489,7 @@
         <File dnOrder="60">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">integer.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">1F91F54F443C0B5CA76045E6E69A3EC0</GeneratedChecksum>
           <UserChecksum dnOrder="5">1F91F54F443C0B5CA76045E6E69A3EC0</UserChecksum>
@@ -537,7 +537,7 @@
         <File dnOrder="66">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">logging.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">CA6DEA50C84268E54C2AACCB48DA0A63</GeneratedChecksum>
           <UserChecksum dnOrder="5">CA6DEA50C84268E54C2AACCB48DA0A63</UserChecksum>
@@ -553,7 +553,7 @@
         <File dnOrder="68">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">md2.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">0B4ACD73D3518DA12278C45D61EB74A3</GeneratedChecksum>
           <UserChecksum dnOrder="5">0B4ACD73D3518DA12278C45D61EB74A3</UserChecksum>
@@ -561,7 +561,7 @@
         <File dnOrder="69">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">md4.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">242B58974B28DACC60930F77A7B7A5B3</GeneratedChecksum>
           <UserChecksum dnOrder="5">242B58974B28DACC60930F77A7B7A5B3</UserChecksum>
@@ -569,7 +569,7 @@
         <File dnOrder="70">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">md5.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">5F5892C997F3B99B39D1E39D5EC662B6</GeneratedChecksum>
           <UserChecksum dnOrder="5">5F5892C997F3B99B39D1E39D5EC662B6</UserChecksum>
@@ -577,7 +577,7 @@
         <File dnOrder="71">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">memory.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">EA45D0246F75BA031E7B35EEAD740DBD</GeneratedChecksum>
           <UserChecksum dnOrder="5">EA45D0246F75BA031E7B35EEAD740DBD</UserChecksum>
@@ -585,7 +585,7 @@
         <File dnOrder="72">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">misc.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">67464A28DED8A67D296EB9B6816E278E</GeneratedChecksum>
           <UserChecksum dnOrder="5">67464A28DED8A67D296EB9B6816E278E</UserChecksum>
@@ -657,7 +657,7 @@
         <File dnOrder="81">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">pkcs12.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">833F894C5C285759524D7DB1F7AEDF30</GeneratedChecksum>
           <UserChecksum dnOrder="5">833F894C5C285759524D7DB1F7AEDF30</UserChecksum>
@@ -665,7 +665,7 @@
         <File dnOrder="82">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">pkcs7.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">610CF31B506D76CF742E0B932920BD6D</GeneratedChecksum>
           <UserChecksum dnOrder="5">610CF31B506D76CF742E0B932920BD6D</UserChecksum>
@@ -707,8 +707,8 @@
           <Name dnOrder="1">plib_pio.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6BB23E3F8607A9DD808AA02E3CAB770A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6BB23E3F8607A9DD808AA02E3CAB770A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7791FEAD6CCB219990847B9515CEDC64</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7791FEAD6CCB219990847B9515CEDC64</UserChecksum>
         </File>
         <File dnOrder="88">
           <Type dnOrder="0">SOURCE</Type>
@@ -729,7 +729,7 @@
         <File dnOrder="90">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">poly1305.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">9FBB2D2E706E1F94FB3814FDB20E1F61</GeneratedChecksum>
           <UserChecksum dnOrder="5">9FBB2D2E706E1F94FB3814FDB20E1F61</UserChecksum>
@@ -745,7 +745,7 @@
         <File dnOrder="92">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">pwdbased.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">ADE5B8568339E5F321E9BB85704F1CA4</GeneratedChecksum>
           <UserChecksum dnOrder="5">ADE5B8568339E5F321E9BB85704F1CA4</UserChecksum>
@@ -761,7 +761,7 @@
         <File dnOrder="94">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">rabbit.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F4B8640D91FE66F83EED0EFD1EC9331B</GeneratedChecksum>
           <UserChecksum dnOrder="5">F4B8640D91FE66F83EED0EFD1EC9331B</UserChecksum>
@@ -769,23 +769,23 @@
         <File dnOrder="95">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">random.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D4CF38539EF18016E3A559BF482D3451</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D4CF38539EF18016E3A559BF482D3451</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BDE0405A274020E265339BC3FFBC75B4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BDE0405A274020E265339BC3FFBC75B4</UserChecksum>
         </File>
         <File dnOrder="96">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">random_pic32c.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <Name dnOrder="1">random_same70.c</Name>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B95E54FF1A79BAD73CBAE838ED7EE7FD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B95E54FF1A79BAD73CBAE838ED7EE7FD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B1496955036518ECC94A9AB582818161</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B1496955036518ECC94A9AB582818161</UserChecksum>
         </File>
         <File dnOrder="97">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">ripemd.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">4113D1EC68A5A99CA37B5F634635F1DA</GeneratedChecksum>
           <UserChecksum dnOrder="5">4113D1EC68A5A99CA37B5F634635F1DA</UserChecksum>
@@ -793,7 +793,7 @@
         <File dnOrder="98">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">rsa.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C7B593CFCB751735FC3A200095D64BE6</GeneratedChecksum>
           <UserChecksum dnOrder="5">C7B593CFCB751735FC3A200095D64BE6</UserChecksum>
@@ -801,7 +801,7 @@
         <File dnOrder="99">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">sha.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">85E568F07E04429AA0DBBDD1380BF171</GeneratedChecksum>
           <UserChecksum dnOrder="5">85E568F07E04429AA0DBBDD1380BF171</UserChecksum>
@@ -809,7 +809,7 @@
         <File dnOrder="100">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">sha256.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F4C219D27AD32388F00AC563E3E0124D</GeneratedChecksum>
           <UserChecksum dnOrder="5">F4C219D27AD32388F00AC563E3E0124D</UserChecksum>
@@ -817,7 +817,7 @@
         <File dnOrder="101">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">sha3.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">DE5AF7B53ED7254D621F14DC9B5EFAA2</GeneratedChecksum>
           <UserChecksum dnOrder="5">DE5AF7B53ED7254D621F14DC9B5EFAA2</UserChecksum>
@@ -825,7 +825,7 @@
         <File dnOrder="102">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">sha512.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">58EC38F2D95D3CC366C632470FE4131B</GeneratedChecksum>
           <UserChecksum dnOrder="5">58EC38F2D95D3CC366C632470FE4131B</UserChecksum>
@@ -833,7 +833,7 @@
         <File dnOrder="103">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">signature.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8DE1630B9B119A54268A9DCDB90FB277</GeneratedChecksum>
           <UserChecksum dnOrder="5">8DE1630B9B119A54268A9DCDB90FB277</UserChecksum>
@@ -857,7 +857,7 @@
         <File dnOrder="106">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">srp.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A2CA88642A20FF3758CD4770A9E817DB</GeneratedChecksum>
           <UserChecksum dnOrder="5">A2CA88642A20FF3758CD4770A9E817DB</UserChecksum>
@@ -971,8 +971,8 @@
           <Name dnOrder="1">sys_time.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/system/time/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/time/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">17D464A2204B54EA269452934046A972</GeneratedChecksum>
-          <UserChecksum dnOrder="5">17D464A2204B54EA269452934046A972</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8A1D378A86909137A33772F0CC757952</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8A1D378A86909137A33772F0CC757952</UserChecksum>
         </File>
         <File dnOrder="121">
           <Type dnOrder="0">SOURCE</Type>
@@ -1081,7 +1081,7 @@
         <File dnOrder="134">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">tfm.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8048C8A64CE973C3D12D21CFAD4DB296</GeneratedChecksum>
           <UserChecksum dnOrder="5">8048C8A64CE973C3D12D21CFAD4DB296</UserChecksum>
@@ -1097,7 +1097,7 @@
         <File dnOrder="136">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">trees.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D8202BF3FF33EA255961EF62AFC520C2</GeneratedChecksum>
           <UserChecksum dnOrder="5">D8202BF3FF33EA255961EF62AFC520C2</UserChecksum>
@@ -1113,7 +1113,7 @@
         <File dnOrder="138">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">wc_encrypt.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F65D36F965CE4F791DA7A5726FDBF642</GeneratedChecksum>
           <UserChecksum dnOrder="5">F65D36F965CE4F791DA7A5726FDBF642</UserChecksum>
@@ -1121,7 +1121,7 @@
         <File dnOrder="139">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">wc_port.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">6AE4DA4956088B0A4D175C71F2CEE664</GeneratedChecksum>
           <UserChecksum dnOrder="5">6AE4DA4956088B0A4D175C71F2CEE664</UserChecksum>
@@ -1129,7 +1129,7 @@
         <File dnOrder="140">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">wolfevent.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">751A25061F01E20E06B56E7E0BEDBC2E</GeneratedChecksum>
           <UserChecksum dnOrder="5">751A25061F01E20E06B56E7E0BEDBC2E</UserChecksum>
@@ -1137,7 +1137,7 @@
         <File dnOrder="141">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">wolfmath.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">5EF6CF8D23812A9952D7CE137AFE982B</GeneratedChecksum>
           <UserChecksum dnOrder="5">5EF6CF8D23812A9952D7CE137AFE982B</UserChecksum>
@@ -1153,7 +1153,7 @@
         <File dnOrder="143">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">zutil.c</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3E3C02EB1AF2E940562CF17AB9904657</GeneratedChecksum>
           <UserChecksum dnOrder="5">3E3C02EB1AF2E940562CF17AB9904657</UserChecksum>
@@ -1201,10 +1201,10 @@
         <File dnOrder="149">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">aes.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8BDA2907B46B02BB5B68A4D8EDB2DC7F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8BDA2907B46B02BB5B68A4D8EDB2DC7F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D7DE2779A9752234FE7C79E00C3663E5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D7DE2779A9752234FE7C79E00C3663E5</UserChecksum>
         </File>
         <File dnOrder="150">
           <Type dnOrder="0">HEADER</Type>
@@ -1225,7 +1225,7 @@
         <File dnOrder="152">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">arc4.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C40B02DA08E4805A3989062FB92D5B84</GeneratedChecksum>
           <UserChecksum dnOrder="5">C40B02DA08E4805A3989062FB92D5B84</UserChecksum>
@@ -1281,7 +1281,7 @@
         <File dnOrder="159">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">asn.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F1E6361CC963294EA594BDF7499B8270</GeneratedChecksum>
           <UserChecksum dnOrder="5">F1E6361CC963294EA594BDF7499B8270</UserChecksum>
@@ -1289,7 +1289,7 @@
         <File dnOrder="160">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">asn_public.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">FD48950A504CB70E1AFC33F2B235B5F7</GeneratedChecksum>
           <UserChecksum dnOrder="5">FD48950A504CB70E1AFC33F2B235B5F7</UserChecksum>
@@ -1297,7 +1297,7 @@
         <File dnOrder="161">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">async.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D41D8CD98F00B204E9800998ECF8427E</GeneratedChecksum>
           <UserChecksum dnOrder="5">D41D8CD98F00B204E9800998ECF8427E</UserChecksum>
@@ -1329,7 +1329,7 @@
         <File dnOrder="165">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">certs_test.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">DA87927BB64CA59BEE92B61D38F30773</GeneratedChecksum>
           <UserChecksum dnOrder="5">DA87927BB64CA59BEE92B61D38F30773</UserChecksum>
@@ -1337,7 +1337,7 @@
         <File dnOrder="166">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">chacha.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">9FDE72E62C14A827C53BF34AA7755EEF</GeneratedChecksum>
           <UserChecksum dnOrder="5">9FDE72E62C14A827C53BF34AA7755EEF</UserChecksum>
@@ -1345,7 +1345,7 @@
         <File dnOrder="167">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">chacha20_poly1305.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D37350747065C12FB1BE6A434F3EDDD2</GeneratedChecksum>
           <UserChecksum dnOrder="5">D37350747065C12FB1BE6A434F3EDDD2</UserChecksum>
@@ -1361,7 +1361,7 @@
         <File dnOrder="169">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">cmac.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">DCA8563BBF0BF7AE71E34D5BA53189D5</GeneratedChecksum>
           <UserChecksum dnOrder="5">DCA8563BBF0BF7AE71E34D5BA53189D5</UserChecksum>
@@ -1393,7 +1393,7 @@
         <File dnOrder="173">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">coding.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">81330553317C09642E264497519960A7</GeneratedChecksum>
           <UserChecksum dnOrder="5">81330553317C09642E264497519960A7</UserChecksum>
@@ -1401,7 +1401,7 @@
         <File dnOrder="174">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">compress.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">764F7DBFC69B499D313E3B0280FD6919</GeneratedChecksum>
           <UserChecksum dnOrder="5">764F7DBFC69B499D313E3B0280FD6919</UserChecksum>
@@ -1411,8 +1411,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">68FAAB9CF13CC99CB076B81A624E3A79</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F33304444771BE7DB930A5168E3D1A52</UserChecksum>
+          <GeneratedChecksum dnOrder="4">406C5F9339385BF24239AA532C18F5A9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">406C5F9339385BF24239AA532C18F5A9</UserChecksum>
         </File>
         <File dnOrder="176">
           <Type dnOrder="0">HEADER</Type>
@@ -1425,7 +1425,7 @@
         <File dnOrder="177">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">crc32.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F8E8369C029D0E4FFF1A4319D082AD0B</GeneratedChecksum>
           <UserChecksum dnOrder="5">F8E8369C029D0E4FFF1A4319D082AD0B</UserChecksum>
@@ -1441,7 +1441,7 @@
         <File dnOrder="179">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">crypto.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C77DE3320FAF19806539F9343251DC3D</GeneratedChecksum>
           <UserChecksum dnOrder="5">C77DE3320FAF19806539F9343251DC3D</UserChecksum>
@@ -1449,7 +1449,7 @@
         <File dnOrder="180">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">curve25519.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A216796AB166D0E03114DE8692394576</GeneratedChecksum>
           <UserChecksum dnOrder="5">A216796AB166D0E03114DE8692394576</UserChecksum>
@@ -1489,7 +1489,7 @@
         <File dnOrder="185">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">deflate.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2DAD999D4F762C2556CD557C1751FB82</GeneratedChecksum>
           <UserChecksum dnOrder="5">2DAD999D4F762C2556CD557C1751FB82</UserChecksum>
@@ -1505,7 +1505,7 @@
         <File dnOrder="187">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">des3.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">159785756A8AA053FF2D38BC472A8BC4</GeneratedChecksum>
           <UserChecksum dnOrder="5">159785756A8AA053FF2D38BC472A8BC4</UserChecksum>
@@ -1521,7 +1521,7 @@
         <File dnOrder="189">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">dh.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">1208C1EB1B2ECAD33413E7D348F87394</GeneratedChecksum>
           <UserChecksum dnOrder="5">1208C1EB1B2ECAD33413E7D348F87394</UserChecksum>
@@ -1731,16 +1731,16 @@
           <Name dnOrder="1">drv_memory.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/driver/memory/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/memory/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E608235058C6CB7F3A7FE4AAE80CB0B9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E608235058C6CB7F3A7FE4AAE80CB0B9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">675293FAA8CDF905E03C798A46A1B4F3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">675293FAA8CDF905E03C798A46A1B4F3</UserChecksum>
         </File>
         <File dnOrder="216">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">drv_memory_definitions.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/driver/memory/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/memory/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A0F25B3C684AEB5F9D7465237ED12611</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A0F25B3C684AEB5F9D7465237ED12611</UserChecksum>
+          <GeneratedChecksum dnOrder="4">84315A9F6AC3124622A9B2905B1BEC29</GeneratedChecksum>
+          <UserChecksum dnOrder="5">84315A9F6AC3124622A9B2905B1BEC29</UserChecksum>
         </File>
         <File dnOrder="217">
           <Type dnOrder="0">HEADER</Type>
@@ -1801,7 +1801,7 @@
         <File dnOrder="224">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">dsa.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">ECFD0D2CD190B8E67A70A1E71F60A160</GeneratedChecksum>
           <UserChecksum dnOrder="5">ECFD0D2CD190B8E67A70A1E71F60A160</UserChecksum>
@@ -1809,7 +1809,7 @@
         <File dnOrder="225">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ecc.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">0EFEBBE9DAEF4C2A016FA2E285ACDE0C</GeneratedChecksum>
           <UserChecksum dnOrder="5">0EFEBBE9DAEF4C2A016FA2E285ACDE0C</UserChecksum>
@@ -1817,7 +1817,7 @@
         <File dnOrder="226">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ed25519.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A010BDB4172EF8B09FA59057C49F97E9</GeneratedChecksum>
           <UserChecksum dnOrder="5">A010BDB4172EF8B09FA59057C49F97E9</UserChecksum>
@@ -1833,7 +1833,7 @@
         <File dnOrder="228">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">error-crypt.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">76D11119E750E77143446E43A5E5DD73</GeneratedChecksum>
           <UserChecksum dnOrder="5">76D11119E750E77143446E43A5E5DD73</UserChecksum>
@@ -1849,7 +1849,7 @@
         <File dnOrder="230">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">fe_operations.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C8B98B6218EAA93356C62D39AFDA2964</GeneratedChecksum>
           <UserChecksum dnOrder="5">C8B98B6218EAA93356C62D39AFDA2964</UserChecksum>
@@ -1873,7 +1873,7 @@
         <File dnOrder="233">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">fips_test.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">261B762BC2AA8DD100A181BD4F5628E3</GeneratedChecksum>
           <UserChecksum dnOrder="5">261B762BC2AA8DD100A181BD4F5628E3</UserChecksum>
@@ -1905,7 +1905,7 @@
         <File dnOrder="237">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ge_operations.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">34A0746AD9280EB14E5725DB35DB0F1F</GeneratedChecksum>
           <UserChecksum dnOrder="5">34A0746AD9280EB14E5725DB35DB0F1F</UserChecksum>
@@ -1929,7 +1929,7 @@
         <File dnOrder="240">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">gzguts.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">1E84284CC639C65ED5117A7DE2560021</GeneratedChecksum>
           <UserChecksum dnOrder="5">1E84284CC639C65ED5117A7DE2560021</UserChecksum>
@@ -1937,7 +1937,7 @@
         <File dnOrder="241">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">hash.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">B2DEE1C6D7E9FC6E6F6BBBCAF92AB87D</GeneratedChecksum>
           <UserChecksum dnOrder="5">B2DEE1C6D7E9FC6E6F6BBBCAF92AB87D</UserChecksum>
@@ -1953,7 +1953,7 @@
         <File dnOrder="243">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">hc128.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">59D73B7D8AEF346E5FF5564FCCEBD919</GeneratedChecksum>
           <UserChecksum dnOrder="5">59D73B7D8AEF346E5FF5564FCCEBD919</UserChecksum>
@@ -1969,7 +1969,7 @@
         <File dnOrder="245">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">hmac.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8D865D31B8791A4884C9DA5E61AC2D6B</GeneratedChecksum>
           <UserChecksum dnOrder="5">8D865D31B8791A4884C9DA5E61AC2D6B</UserChecksum>
@@ -2081,7 +2081,7 @@
         <File dnOrder="259">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">idea.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">FD20497BAECA42F53E8051AA4F938293</GeneratedChecksum>
           <UserChecksum dnOrder="5">FD20497BAECA42F53E8051AA4F938293</UserChecksum>
@@ -2113,7 +2113,7 @@
         <File dnOrder="263">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">inffast.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">29F652423B766560C26EC8B784F995E2</GeneratedChecksum>
           <UserChecksum dnOrder="5">29F652423B766560C26EC8B784F995E2</UserChecksum>
@@ -2121,7 +2121,7 @@
         <File dnOrder="264">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">inffixed.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">BFAD0DE7201F1E06AE1FABE62BCE806C</GeneratedChecksum>
           <UserChecksum dnOrder="5">BFAD0DE7201F1E06AE1FABE62BCE806C</UserChecksum>
@@ -2129,7 +2129,7 @@
         <File dnOrder="265">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">inflate.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8C004E5965269A6B845DE1EA55BE326F</GeneratedChecksum>
           <UserChecksum dnOrder="5">8C004E5965269A6B845DE1EA55BE326F</UserChecksum>
@@ -2137,7 +2137,7 @@
         <File dnOrder="266">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">inftrees.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">BFA6AA1B45F8DE69185DBAE2A51BF0CD</GeneratedChecksum>
           <UserChecksum dnOrder="5">BFA6AA1B45F8DE69185DBAE2A51BF0CD</UserChecksum>
@@ -2145,7 +2145,7 @@
         <File dnOrder="267">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">integer.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">0A498D9312A2A64C50D503E17C5D6F22</GeneratedChecksum>
           <UserChecksum dnOrder="5">0A498D9312A2A64C50D503E17C5D6F22</UserChecksum>
@@ -2273,7 +2273,7 @@
         <File dnOrder="283">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">logging.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">73939708D0164A496C08A611E1585371</GeneratedChecksum>
           <UserChecksum dnOrder="5">73939708D0164A496C08A611E1585371</UserChecksum>
@@ -2297,7 +2297,7 @@
         <File dnOrder="286">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">md2.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">82845515E731EBEB473F454531C2723D</GeneratedChecksum>
           <UserChecksum dnOrder="5">82845515E731EBEB473F454531C2723D</UserChecksum>
@@ -2305,7 +2305,7 @@
         <File dnOrder="287">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">md4.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F15C6F387228B4384CCA60CDA61FCF5B</GeneratedChecksum>
           <UserChecksum dnOrder="5">F15C6F387228B4384CCA60CDA61FCF5B</UserChecksum>
@@ -2313,7 +2313,7 @@
         <File dnOrder="288">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">md5.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3175D43634836A6FB8BAF368660237F3</GeneratedChecksum>
           <UserChecksum dnOrder="5">3175D43634836A6FB8BAF368660237F3</UserChecksum>
@@ -2321,7 +2321,7 @@
         <File dnOrder="289">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">mem_track.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">ADA0227DFCA0E7E748AF53189D0C4234</GeneratedChecksum>
           <UserChecksum dnOrder="5">ADA0227DFCA0E7E748AF53189D0C4234</UserChecksum>
@@ -2329,7 +2329,7 @@
         <File dnOrder="290">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">memory.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">08D7E0D655EF511C2E0926DC5C09AAB0</GeneratedChecksum>
           <UserChecksum dnOrder="5">08D7E0D655EF511C2E0926DC5C09AAB0</UserChecksum>
@@ -2345,7 +2345,7 @@
         <File dnOrder="292">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">misc.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">CCC2BAE944502138988FCD72D182AE8F</GeneratedChecksum>
           <UserChecksum dnOrder="5">CCC2BAE944502138988FCD72D182AE8F</UserChecksum>
@@ -2369,7 +2369,7 @@
         <File dnOrder="295">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">mpi_class.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C4276C1FABB84A8DF80B46E09F074420</GeneratedChecksum>
           <UserChecksum dnOrder="5">C4276C1FABB84A8DF80B46E09F074420</UserChecksum>
@@ -2377,7 +2377,7 @@
         <File dnOrder="296">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">mpi_superclass.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8B24A82F537A549C5F46D0F850424563</GeneratedChecksum>
           <UserChecksum dnOrder="5">8B24A82F537A549C5F46D0F850424563</UserChecksum>
@@ -2553,7 +2553,7 @@
         <File dnOrder="318">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">pkcs12.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">09B1EE0ED82E7B576B98113FE83A9DD4</GeneratedChecksum>
           <UserChecksum dnOrder="5">09B1EE0ED82E7B576B98113FE83A9DD4</UserChecksum>
@@ -2561,7 +2561,7 @@
         <File dnOrder="319">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">pkcs7.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">011FB1BF80BA3BB53FE6C0C9224D4C98</GeneratedChecksum>
           <UserChecksum dnOrder="5">011FB1BF80BA3BB53FE6C0C9224D4C98</UserChecksum>
@@ -2611,16 +2611,16 @@
           <Name dnOrder="1">plib_pio.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/peripheral/pio/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/pio/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DF8F9E0D8AFF183CEEBA4A54E3F511D7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DF8F9E0D8AFF183CEEBA4A54E3F511D7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E54504FE4677DC17872EE5F470D796A0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E54504FE4677DC17872EE5F470D796A0</UserChecksum>
         </File>
         <File dnOrder="326">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">plib_tc0.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/peripheral/tc/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/tc/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">29E4600EA4866F74B8846F3F508CDDE5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">29E4600EA4866F74B8846F3F508CDDE5</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A1528AC4A26A927323D0F2EE71D21A97</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A1528AC4A26A927323D0F2EE71D21A97</UserChecksum>
         </File>
         <File dnOrder="327">
           <Type dnOrder="0">HEADER</Type>
@@ -2657,7 +2657,7 @@
         <File dnOrder="331">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">poly1305.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A4DAEB714C0F2BBE1497C9C9B6858C42</GeneratedChecksum>
           <UserChecksum dnOrder="5">A4DAEB714C0F2BBE1497C9C9B6858C42</UserChecksum>
@@ -2689,7 +2689,7 @@
         <File dnOrder="335">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">pwdbased.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">ABB73C521E26CF0DCFD3D5D877F7AB34</GeneratedChecksum>
           <UserChecksum dnOrder="5">ABB73C521E26CF0DCFD3D5D877F7AB34</UserChecksum>
@@ -2721,7 +2721,7 @@
         <File dnOrder="339">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">rabbit.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">01861435C37CB33648C44531A68D9851</GeneratedChecksum>
           <UserChecksum dnOrder="5">01861435C37CB33648C44531A68D9851</UserChecksum>
@@ -2729,15 +2729,15 @@
         <File dnOrder="340">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">random.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9DBB6832105839E882A8DE7C27542DF2</GeneratedChecksum>
-          <UserChecksum dnOrder="5">9DBB6832105839E882A8DE7C27542DF2</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FA3EF48965F100A0BA4447BD4FFD4C55</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FA3EF48965F100A0BA4447BD4FFD4C55</UserChecksum>
         </File>
         <File dnOrder="341">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ripemd.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">F92C075C18010BE0623BDB898C955E48</GeneratedChecksum>
           <UserChecksum dnOrder="5">F92C075C18010BE0623BDB898C955E48</UserChecksum>
@@ -2745,7 +2745,7 @@
         <File dnOrder="342">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">rsa.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">37B3496576F8D3E30BAF9CE0AF49477C</GeneratedChecksum>
           <UserChecksum dnOrder="5">37B3496576F8D3E30BAF9CE0AF49477C</UserChecksum>
@@ -2809,31 +2809,31 @@
         <File dnOrder="350">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">settings.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">423ABE5D299C4B91D6CD274F0F007457</GeneratedChecksum>
-          <UserChecksum dnOrder="5">423ABE5D299C4B91D6CD274F0F007457</UserChecksum>
+          <GeneratedChecksum dnOrder="4">63720F96204AD563B65615FB5E3B6427</GeneratedChecksum>
+          <UserChecksum dnOrder="5">63720F96204AD563B65615FB5E3B6427</UserChecksum>
         </File>
         <File dnOrder="351">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">sha.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B86645580EDD1BD322FBEBF8741ED3D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B86645580EDD1BD322FBEBF8741ED3D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5D329F71D2081BF39CA3413F47C94741</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5D329F71D2081BF39CA3413F47C94741</UserChecksum>
         </File>
         <File dnOrder="352">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">sha256.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B7ECF9D4C215C18E99E13D9072403677</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B7ECF9D4C215C18E99E13D9072403677</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4CBE3269ED2853BED5A0EB769CDB85B5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4CBE3269ED2853BED5A0EB769CDB85B5</UserChecksum>
         </File>
         <File dnOrder="353">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">sha3.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">7EED6E0B5D66CAC158F233D090A9F71C</GeneratedChecksum>
           <UserChecksum dnOrder="5">7EED6E0B5D66CAC158F233D090A9F71C</UserChecksum>
@@ -2841,7 +2841,7 @@
         <File dnOrder="354">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">sha512.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">DFEA228542A50AA84CD888C69CFDE604</GeneratedChecksum>
           <UserChecksum dnOrder="5">DFEA228542A50AA84CD888C69CFDE604</UserChecksum>
@@ -2849,7 +2849,7 @@
         <File dnOrder="355">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">signature.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">58CCC9F58A61AEA49BC4518CCBF0910A</GeneratedChecksum>
           <UserChecksum dnOrder="5">58CCC9F58A61AEA49BC4518CCBF0910A</UserChecksum>
@@ -2969,7 +2969,7 @@
         <File dnOrder="370">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">srp.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">C083331C08D28D6A03F48CEC42558F58</GeneratedChecksum>
           <UserChecksum dnOrder="5">C083331C08D28D6A03F48CEC42558F58</UserChecksum>
@@ -2985,7 +2985,7 @@
         <File dnOrder="372">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">ssl.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">11A169A9A995A69D97EF1B42E7441702</GeneratedChecksum>
           <UserChecksum dnOrder="5">11A169A9A995A69D97EF1B42E7441702</UserChecksum>
@@ -3131,8 +3131,8 @@
           <Name dnOrder="1">sys_time.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/system/time/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/time/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FB0B765AD1B4FF5EBDF58C8133D3C9D1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FB0B765AD1B4FF5EBDF58C8133D3C9D1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1E7CA67199D4FE611DF87EBB3270C507</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1E7CA67199D4FE611DF87EBB3270C507</UserChecksum>
         </File>
         <File dnOrder="391">
           <Type dnOrder="0">HEADER</Type>
@@ -3433,7 +3433,7 @@
         <File dnOrder="428">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">tfm.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">EA8AC6A3C5B596FAC938E5F525849548</GeneratedChecksum>
           <UserChecksum dnOrder="5">EA8AC6A3C5B596FAC938E5F525849548</UserChecksum>
@@ -3473,7 +3473,7 @@
         <File dnOrder="433">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">trees.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">8680E7EC08055823E55C5D71151E1776</GeneratedChecksum>
           <UserChecksum dnOrder="5">8680E7EC08055823E55C5D71151E1776</UserChecksum>
@@ -3497,7 +3497,7 @@
         <File dnOrder="436">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">types.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E1770F1899D763A942B8B95CD73EF91</GeneratedChecksum>
           <UserChecksum dnOrder="5">2E1770F1899D763A942B8B95CD73EF91</UserChecksum>
@@ -3577,7 +3577,7 @@
         <File dnOrder="446">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">version.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">19272B350D59BE5C5786535164D69F94</GeneratedChecksum>
           <UserChecksum dnOrder="5">19272B350D59BE5C5786535164D69F94</UserChecksum>
@@ -3585,7 +3585,7 @@
         <File dnOrder="447">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">visibility.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">FBC49CA638215405639FD9CCA6817903</GeneratedChecksum>
           <UserChecksum dnOrder="5">FBC49CA638215405639FD9CCA6817903</UserChecksum>
@@ -3593,7 +3593,7 @@
         <File dnOrder="448">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">wc_encrypt.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">745B787E5E6E3D32FACAC02E2E6CD36F</GeneratedChecksum>
           <UserChecksum dnOrder="5">745B787E5E6E3D32FACAC02E2E6CD36F</UserChecksum>
@@ -3601,7 +3601,7 @@
         <File dnOrder="449">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">wc_port.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3D04B5560F6C65A6068E214609E2F7FF</GeneratedChecksum>
           <UserChecksum dnOrder="5">3D04B5560F6C65A6068E214609E2F7FF</UserChecksum>
@@ -3617,7 +3617,7 @@
         <File dnOrder="451">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">wolfevent.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">A093A2F21B6C54988F918884630911DE</GeneratedChecksum>
           <UserChecksum dnOrder="5">A093A2F21B6C54988F918884630911DE</UserChecksum>
@@ -3625,7 +3625,7 @@
         <File dnOrder="452">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">wolfmath.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">3ACA318B49E760133B9A699462BF22B0</GeneratedChecksum>
           <UserChecksum dnOrder="5">3ACA318B49E760133B9A699462BF22B0</UserChecksum>
@@ -3641,7 +3641,7 @@
         <File dnOrder="454">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">zconf.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">DA9B15F52FFED041815268DF3545FC18</GeneratedChecksum>
           <UserChecksum dnOrder="5">DA9B15F52FFED041815268DF3545FC18</UserChecksum>
@@ -3689,7 +3689,7 @@
         <File dnOrder="460">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">zlib.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">DED7DEA8A49DBCDC9D992B3D866BA979</GeneratedChecksum>
           <UserChecksum dnOrder="5">DED7DEA8A49DBCDC9D992B3D866BA979</UserChecksum>
@@ -3697,7 +3697,7 @@
         <File dnOrder="461">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">zutil.h</Name>
-          <LogicalPath dnOrder="2">crypto/</LogicalPath>
+          <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/zlib-1.2.7/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">D963CDCA661EAE509C2D6DAAC46CF30A</GeneratedChecksum>
           <UserChecksum dnOrder="5">D963CDCA661EAE509C2D6DAAC46CF30A</UserChecksum>

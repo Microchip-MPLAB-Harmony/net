@@ -122,7 +122,7 @@ typedef struct Aes {
 #ifdef WOLFSSL_AES_COUNTER
     word32  left;            /* unused bytes left from last call */
 #endif
-#if defined( WOLFSSL_PIC32MZ_CRYPT ) || defined (WOLFSSL_PIC32C_CRYPT)
+#if defined( WOLFSSL_PIC32MZ_CRYPT ) || defined (WOLFSSL_SAME70_CRYPT)
     word32 key_ce[AES_BLOCK_SIZE*2/sizeof(word32)];
     word32 iv_ce [AES_BLOCK_SIZE  /sizeof(word32)];
 #endif

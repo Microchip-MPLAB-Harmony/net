@@ -68,14 +68,6 @@ def instantiateComponent(netPresCommonComponent):
 	netPresSocketCnt.setVisible(True)
 	netPresSocketCnt.setDescription("Number of Presentation Sockets")
 	netPresSocketCnt.setDefaultValue(10)
-	
-	# Number of Presentation Instances
-	netPresInstnNum = netPresCommonComponent.createIntegerSymbol("NET_PRES_INSTANCES", None)
-	netPresInstnNum.setLabel("Number of Presentation Instances")
-	netPresInstnNum.setVisible(True)
-	netPresInstnNum.setDescription("Number of Presentation Instances?")
-	netPresInstnNum.setDefaultValue(0)
-	netPresInstnNum.setUseSingleDynamicValue(True)
 
 	# Use Fixed Flash Based Certificate Repository for Encryption?
 	netPresBlobCertRepo = netPresCommonComponent.createBooleanSymbol("NET_PRES_BLOB_CERT_REPO", None)

@@ -10,30 +10,38 @@
     -Reference: AN833
 *******************************************************************************/
 
-/*******************************************************************************
-File Name:  tcpip_manager.c
-Copyright ©2012 released Microchip Technology Inc.  All rights
-reserved.
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED ?AS IS?WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_MANAGER
 
 #include "tcpip/src/tcpip_private.h"
@@ -141,8 +149,6 @@ static TCPIP_MODULE_SIGNAL_ENTRY  TCPIP_STACK_MODULE_SIGNAL_TBL [TCPIP_MODULES_N
 //           use them to push RX packets.
 //           Currently only TCP and UDP have this behavior.
 //
-// TODO aa: any way of reducing the size when protocols are absent?
-// plus NDP and ICMPv6 do not use the queues! so their entries are wasted!
 static SINGLE_LIST      TCPIP_MODULES_QUEUE_TBL [TCPIP_MODULE_LAYER3] = 
 {
     // 0 layer handling
@@ -295,10 +301,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIPInsertMacRxPacket(TC
 }
 
 // protection against MAC ISR
-// TODO aa: Note: 
-// (*pNetIf->pMacObj->TCPIP_MAC_EventMaskSet)(pNetIf->hIfMac, TCPIP_STACK_MAC_ALL_EVENTS, false/true);
-// could be used too; However this call doe not return the prev status of interrupts so it
-// could be risky
 static __inline__ uint32_t __attribute__((always_inline)) _TCPIPMacIsrSuspend(TCPIP_NET_IF* pNetIf)
 {
 #if defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
@@ -770,7 +772,7 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             // check the power mode
             powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
             if(powerMode != TCPIP_MAC_POWER_FULL)
-            {   // TODO aa: for now only TCPIP_MAC_POWER_FULL is supported for primary!
+            {   
                 SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
                 initFail = 7;
                 break;
@@ -812,7 +814,7 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             // check the power mode
             powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
             if(powerMode != TCPIP_MAC_POWER_FULL && powerMode != TCPIP_MAC_POWER_DOWN)
-            {   // TODO aa: for now only TCPIP_MAC_POWER_FULL and TCPIP_MAC_POWER_DOWN for aliases!
+            {   
                 SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
                 initFail = 9;
                 break;
@@ -1064,7 +1066,7 @@ bool TCPIP_STACK_NetUp(TCPIP_NET_HANDLE netH, const TCPIP_NETWORK_CONFIG* pUsrCo
 
         powerMode = TCPIP_Helper_StringToPowerMode(pUsrConfig->powerMode);
         if(powerMode != TCPIP_MAC_POWER_FULL)
-        {   // TODO aa: for now only TCPIP_MAC_POWER_FULL is supported. Fix!
+        {   
             SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Power Mode initialization fail: %d\r\n", powerMode);
             return false;
         }
@@ -1259,7 +1261,6 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
     }
     while (pEntry != TCPIP_STACK_MODULE_ENTRY_TBL);
 
-    // TODO aa: purge for all modules needed?
     _TCPIPStackModuleRxPurge(TCPIP_MODULE_MANAGER, pNetIf);
     if(_TCPIPStackNetIsPrimary(pNetIf))
     {   // primary interface
@@ -1470,7 +1471,6 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
         if((tcpipEvent = TCPIP_STACK_Mac2TcpipEvent(activeEvents)) != TCPIP_EV_NONE)
         {
             TCPIP_Notification_Lock(&pNetIf->registeredClients);
-            // TODO aa: alias interfaces do NOT receive the MAC events notifications!
             for(tNode = (TCPIP_EVENT_LIST_NODE*)pNetIf->registeredClients.list.head; tNode != 0; tNode = tNode->next)
             {
                 if((tNode->evMask & tcpipEvent) != 0 )
@@ -1802,10 +1802,6 @@ static void    _TCPIP_MacEventCB(TCPIP_MAC_EVENT event, const void* hParam)
 }
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
 
-// TODO aa: Note: 
-// (*pNetIf->pMacObj->TCPIP_MAC_EventMaskSet)(pNetIf->hIfMac, TCPIP_STACK_MAC_ALL_EVENTS, false/true);
-// could be used too; However this call doe not return the prev status of interrupts so it
-// could be risky
 static void _TCPIP_NetIfEvent(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT event, bool isrProtect)
 {
     uint32_t isrSuspLvl = 0;
@@ -2361,7 +2357,6 @@ IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_
     }
     else
     {
-        // TODO aa: we can add stricter checking that passed node really belongs to the selected address list!
         addrNode = ((IPV6_ADDR_STRUCT*)addHandle)->next;
     }
 
@@ -2744,10 +2739,6 @@ static void* _NetConfigStringToBuffer(void** ppDstBuff, void* pSrcBuff, size_t* 
 }
 
 // restores pNetConfig from configBuff
-// TODO aa: better error checking needed that the supplied data is really 
-// saved by TCPIP_STACK_NetConfigGet
-// TODO aa: A more automated mechanism to save/restore the TCPIP_NETWORK_CONFIG
-// structure fields.
 TCPIP_NETWORK_CONFIG*   TCPIP_STACK_NetConfigSet(void* configStoreBuff, void* netConfigBuff, size_t buffSize, size_t* pNeededSize)
 {
     TCPIP_NETWORK_CONFIG* pNetConf;            
@@ -3296,8 +3287,6 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
         _TCPIP_StackSetDefaultDns(pNetIf);
 
         // Let DHCP update the DNS server
-        // TODO aa: this has to be based on a configuration flag! if the DHCP updates the DNS server:
-        // and always set to true, except when user expressly disables it!
         pNetIf->Flags.bIsDNSServerAuto = 1;
 
         TCPIP_STACK_DNS_SERVICE_TYPE addDynamicNameService = TCPIP_STACK_DNSServiceSelect(pNetIf, pUsrConfig->startFlags);
@@ -3532,7 +3521,6 @@ void _TCPIPStackSetConfig(TCPIP_NET_IF* pNetIf, bool config)
         for(ix = 0; ix < sizeof(TCPIP_STACK_MODULE_SIGNAL_CHANGE_TBL) / sizeof(*TCPIP_STACK_MODULE_SIGNAL_CHANGE_TBL); ix++, pModIx++)
         {
             TCPIP_MODULE_SIGNAL_ENTRY*  pSigEntry = TCPIP_STACK_MODULE_SIGNAL_TBL + *pModIx;
-            // TODO aa: add _TCPIPSignalEntrySetParam(pSigEntry, signal, param); if needed
             pSigEntry->signalVal |= (uint16_t)TCPIP_MODULE_SIGNAL_INTERFACE_CHANGE;
             pSigEntry->signalParam |= sigParam;
         }
@@ -3752,8 +3740,6 @@ static bool TCPIP_STACK_CheckEventsPending(void)
 }
 
 
-// TODO aa: this happens from the tasks initialization 
-// protection shouldn't be necessary
 tcpipSignalHandle _TCPIPStackSignalHandlerRegister(TCPIP_STACK_MODULE modId, tcpipModuleSignalHandler signalHandler, int16_t asyncTmoMs)
 {
 
@@ -3779,8 +3765,6 @@ tcpipSignalHandle _TCPIPStackSignalHandlerRegister(TCPIP_STACK_MODULE modId, tcp
 }
 
 
-// TODO aa: this happens from the tasks initialization 
-// protection shouldn't be necessary
 bool _TCPIPStackSignalHandlerSetParams(TCPIP_STACK_MODULE modId, tcpipSignalHandle handle, int16_t asyncTmoMs)
 {
     TCPIP_MODULE_SIGNAL_ENTRY* pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle;
@@ -4239,7 +4223,6 @@ TCPIP_NETWORK_TYPE TCPIP_STACK_NetGetType(TCPIP_NET_HANDLE hNet)
 // Note: if limited broadcast we cannot replicate on all alias interfaces.
 // So, the incoming, primary interface is selected.
 // Net directed broadcast should be used, and is preferred!
-// TODO aa: does it matter ?
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
 TCPIP_NET_IF* _TCPIPStackMapAliasInterface(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pDestAddress)
 {

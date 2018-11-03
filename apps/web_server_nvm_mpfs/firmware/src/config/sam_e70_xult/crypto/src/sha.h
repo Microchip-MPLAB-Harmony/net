@@ -54,8 +54,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #include "crypto/src/sha.h"
 #endif
 
-#if defined(WOLFSSL_PIC32C_HASH)
-#include "crypto/src/pic32c-hash.h"
+#if defined(WOLFSSL_SAME70_HASH)
+#include "crypto/src/same70-hash.h"
 #endif
 
 #ifdef __cplusplus
@@ -86,7 +86,7 @@ enum {
 #ifndef WOLFSSL_TI_HASH
 /* Sha digest */
 typedef struct Sha {
-#if defined(WOLFSSL_PIC32C_HASH)
+#if defined(WOLFSSL_SAME70_HASH)
     struct icm_descriptor icm_descriptor __attribute__((aligned (64)));
     uint8_t  buffer[SHA_BLOCK_SIZE]   __attribute__((aligned (64)));
     uint32_t digest[SHA_DIGEST_SIZE/4] __attribute__((aligned (128)));
