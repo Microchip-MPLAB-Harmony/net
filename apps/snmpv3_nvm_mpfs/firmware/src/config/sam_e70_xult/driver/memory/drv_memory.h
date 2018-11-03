@@ -1,5 +1,5 @@
 /*******************************************************************************
-  MEMORY Driver Interface Definition
+  Memory Driver Interface Definition
 
   Company:
     Microchip Technology Inc.
@@ -8,12 +8,12 @@
     drv_memory.h
 
   Summary:
-    MEMORY Driver Interface Definition
+    Memory Driver Interface Definition
 
   Description:
-    The MEMORY driver provides a simple interface to manage the MEMORYVF series
+    The Memory driver provides a simple interface to manage the MEMORYVF series
     of SQI Flash Memory connected to Microchip micro controllers. This file
-    defines the interface definition for the MEMORY driver.
+    defines the interface definition for the Memory driver.
 *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -67,10 +67,9 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* MEMORY Driver command handle.
-
+/*
   Summary:
-    Handle identifying commands queued in the driver.
+    Handle to identify commands queued in the driver.
 
   Description:
     A command handle is returned by a call to the Read, Write, Erase or
@@ -86,31 +85,29 @@
     been retired by the driver if no event handler callback was set.
 
   Remarks:
-    None.
+    Refer sys_media.h for definition of SYS_MEDIA_BLOCK_COMMAND_HANDLE.
 */
 
 typedef SYS_MEDIA_BLOCK_COMMAND_HANDLE  DRV_MEMORY_COMMAND_HANDLE;
 
 // *****************************************************************************
-/* MEMORY Driver Invalid Command Handle.
-
+/*
   Summary:
-    This value defines the MEMORY Driver's Invalid Command Handle.
+    This value defines the Memory Driver's Invalid Command Handle.
 
   Description:
-    This value defines the MEMORY Driver's Invalid Command Handle. This value is
+    This value defines the Memory Driver's Invalid Command Handle. This value is
     returned by read/write/erase/erasewrite routines when the command request
     was not accepted.
 
   Remarks:
-    None.
+    Refer sys_media.h for definition of SYS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID.
 */
 
 #define DRV_MEMORY_COMMAND_HANDLE_INVALID SYS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID
 
 // *****************************************************************************
-/* MEMORY Driver Events
-
+/*
    Summary
     Identifies the possible events that can result from a request.
 
@@ -122,6 +119,8 @@ typedef SYS_MEDIA_BLOCK_COMMAND_HANDLE  DRV_MEMORY_COMMAND_HANDLE;
     One of these values is passed in the "event" parameter of the event
     handling callback function that client registered with the driver by
     calling the DRV_MEMORY_TransferHandlerSet function when a request is completed.
+
+    Refer sys_media.h for SYS_MEDIA_XXX definitions.
 */
 
 typedef enum
@@ -135,17 +134,16 @@ typedef enum
 } DRV_MEMORY_EVENT;
 
 // ***********************************************************************
-/* MEMORY Driver Command Status
-
+/*
   Summary:
-    MEMORY Driver command Status
+    Memory Driver command Status
 
   Description:
     Specifies the status of the command for the read, write, erase and
     erasewrite operations.
 
   Remarks:
-    None.
+    Refer sys_media.h for SYS_MEDIA_XXX definitions.
 */
 typedef enum
 {
@@ -164,13 +162,12 @@ typedef enum
 } DRV_MEMORY_COMMAND_STATUS;
 
 // *****************************************************************************
-/* MEMORY Driver Event Handler Function Pointer
-
+/*
    Summary
-    Pointer to a MEMORY Driver Event handler function
+    Pointer to a Memory Driver Event handler function
 
    Description
-    This data type defines the required function signature for the MEMORY event
+    This data type defines the required function signature for the Memory event
     handling callback function. A client must register a pointer to an event
     handling function whose function signature (parameter and return value
     types) match the types specified by this function pointer in order to
@@ -231,14 +228,9 @@ typedef enum
     the client's data) instance of the client that made the read/write/erase
     request.
 
-    The event handler function executes in the driver peripherals interrupt
-    context when the driver is configured for interrupt mode operation. It is
-    recommended of the application to not perform process intensive or blocking
-    operations within this function.
-
     Used in Asynchronous mode of operation.
 
-    Refer to sys_media.h for definition.
+    Refer sys_media.h for definition of SYS_MEDIA_EVENT_HANDLER.
 */
 typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
 
@@ -250,7 +242,7 @@ typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: MEMORY Driver Module Interface Routines
+// Section: Memory Driver Module Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
@@ -263,10 +255,10 @@ typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
     );
 
   Summary:
-    Initializes the MEMORY instance for the specified driver index
+    Initializes the Memory instance for the specified driver index
 
   Description:
-    This routine initializes the MEMORY driver instance for the specified
+    This routine initializes the Memory driver instance for the specified
     driver index, making it ready for clients to open and use it.
 
   Precondition:
@@ -283,7 +275,7 @@ typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
 
   Example:
     <code>
-    // This code snippet shows an example of initializing the MEMORY Driver
+    // This code snippet shows an example of initializing the Memory Driver
     // with SST26 serial flash device attached and File system Enabled.
 
     SYS_MODULE_OBJ  objectHandle;
@@ -328,7 +320,7 @@ typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
     </code>
 
   Remarks:
-    This routine must be called before any other MEMORY routine is called.
+    This routine must be called before any other Memory routine is called.
 
     This routine should only be called once during system initialization.
 
@@ -336,7 +328,6 @@ typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
     requires time to allow the hardware to initialize, it will be reported by
     the DRV_MEMORY_Status operation. The system must use DRV_MEMORY_Status to
     find out when the driver is in the ready state.
-
 */
 
 SYS_MODULE_OBJ DRV_MEMORY_Initialize
@@ -350,10 +341,10 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
     SYS_STATUS DRV_MEMORY_Status( SYS_MODULE_OBJ object );
 
   Summary:
-    Gets the current status of the MEMORY driver module.
+    Gets the current status of the Memory driver module.
 
   Description:
-    This routine provides the current status of the MEMORY driver module.
+    This routine provides the current status of the Memory driver module.
 
   Preconditions:
     Function DRV_MEMORY_Initialize should have been called before calling
@@ -391,16 +382,13 @@ SYS_STATUS DRV_MEMORY_Status( SYS_MODULE_OBJ object );
     void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object );
 
   Summary:
-    Maintains the MEMORY driver's internal state machine.
+    Maintains the Memory driver's internal state machine.
 
   Description:
-    This routine maintains the driver's internal state machine. Part of the
-    driver initialization is done in this routine.
-    - Updates the Geometry information of the attached memory device.
+    This routine maintains the driver's internal state machine.
 
-    Once the above configuration is done DRV_MEMORY is put to Idle state
-    so that, driver can accept transfer requests(open, erase, read,
-    write, etc) from client.
+    Initial state is put to process Queue so that driver can accept
+    transfer requests(open, erase, read, write, etc) from client.
 
     This routine is also responsible for checking the status of Erase and Write
     transfer requests and notify the client through transferHandler registered
@@ -411,7 +399,7 @@ SYS_STATUS DRV_MEMORY_Status( SYS_MODULE_OBJ object );
 
   Preconditions:
     The DRV_MEMORY_Initialize routine must have been called for the specified
-    MEMORY driver instance.
+    Memory driver instance.
 
   Parameters:
     object -  Driver object handle, returned from the DRV_MEMORY_Initialize
@@ -432,21 +420,19 @@ SYS_STATUS DRV_MEMORY_Status( SYS_MODULE_OBJ object );
     </code>
 
   Remarks:
-    This routine is normally not called directly by an application.
-    Bare Metal:
-        It will be called by the system's Tasks routine (SYS_Tasks).
+    This routine is generated only in Asynchronous mode.
 
-    RTOS:
-        A separate Thread will be created for this task and will be
-        called in the thread context when RTOS is used.
-
+    This routine should not be called directly by application.
+    - For Bare Metal it will be called by the system Task routine (SYS_Tasks).
+    - For RTOS a separate Thread will be created for this task and will be
+      called in the thread context.
 */
 
 void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object );
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: MEMORY Driver Client Routines
+// Section: Memory Driver Client Routines
 // *****************************************************************************
 // *****************************************************************************
 
@@ -459,12 +445,16 @@ void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object );
     );
 
   Summary:
-    Opens the specified MEMORY driver instance and returns a handle to it
+    Opens the specified Memory driver instance and returns a handle to it
 
   Description:
-    This routine opens the specified MEMORY driver instance and provides a handle.
-    This handle must be provided to all other client-level operations to identify
-    the caller and the instance of the driver.
+    This routine opens the specified Memory driver instance and provides a handle.
+
+    When Open is called for the first time for specified Memory driver instance it
+    opens the attached media device and reads the geomerty details.
+
+    This handle returned must be provided to all other client-level operations to
+    identify the caller and the instance of the driver.
 
   Preconditions:
     Function DRV_MEMORY_Initialize must have been called before calling this
@@ -472,6 +462,7 @@ void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object );
 
   Parameters:
     drvIndex   -  Identifier for the instance to be opened
+
     ioIntent   -  Zero or more of the values from the enumeration
                   DRV_IO_INTENT "ORed" together to indicate the intended use
                   of the driver
@@ -482,6 +473,7 @@ void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object );
 
     If an error occurs, DRV_HANDLE_INVALID is returned. Errors can occur
     under the following circumstances:
+        - if the attached media device is not ready or the geometry get fails.
         - if the number of client objects allocated via DRV_MEMORY_CLIENTS_NUMBER
           is insufficient
         - if the client is trying to open the driver but driver has been opened
@@ -505,7 +497,8 @@ void DRV_MEMORY_Tasks( SYS_MODULE_OBJ object );
 
   Remarks:
     The handle returned is valid until the DRV_MEMORY_Close routine is called.
-    This routine will NEVER block waiting for hardware. If the driver has
+
+    This routine will NEVER block wait for hardware. If the driver has
     has already been opened, it cannot be opened again.
 */
 
@@ -520,16 +513,13 @@ DRV_HANDLE DRV_MEMORY_Open
     void DRV_MEMORY_Close( const DRV_HANDLE handle );
 
   Summary:
-    Closes an opened-instance of the MEMORY driver
+    Closes an opened-instance of the Memory driver
 
   Description:
-    This routine closes an opened-instance of the MEMORY driver, invalidating
+    This routine closes an opened-instance of the Memory driver, invalidating
     the handle.
 
   Precondition:
-    The DRV_MEMORY_Initialize routine must have been called for the specified
-    MEMORY driver instance.
-
     DRV_MEMORY_Open must have been called to obtain a valid opened device handle.
 
   Parameters:
@@ -575,11 +565,12 @@ void DRV_MEMORY_Close( const DRV_HANDLE handle );
     This function schedules a non-blocking sector erase operation on attached
     memory device.
 
-    The function returns with a valid erase handle in the commandHandle argument if
-    the erase request was scheduled successfully. The function adds the request
-    to the hardware instance queue and returns immediately. The function returns
-    DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle argument under the
-    following circumstances:
+    The function returns with a valid erase handle in the commandHandle argument
+    if the erase request was scheduled successfully. The function adds the request
+    to the hardware instance queue and returns immediately.
+
+    The function returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle
+    argument under the following circumstances:
     - if a buffer object could not be allocated to the request
     - if the client opened the driver for read only
     - if the number of blocks to be erased is either zero or more than the number
@@ -593,7 +584,7 @@ void DRV_MEMORY_Close( const DRV_HANDLE handle );
     erase operation was not successful.
 
     If the requesting client has not registered any transfer handler callback
-    with the driver, he can call DRV_MEMORY_CommandStatus() API to know
+    with the driver, he can call DRV_MEMORY_CommandStatusGet() API to know
     the current status of the request.
 
   Preconditions:
@@ -762,13 +753,17 @@ bool DRV_MEMORY_SyncErase
     sector.
 
     This function schedules a non-blocking operation to erase and write blocks
-    of data into attached device memory. The function returns with a valid command handle
-    in the commandHandle argument if the write request was scheduled
-    successfully. The function adds the request to the hardware instance queue
-    and returns immediately. While the request is in the queue, the application
-    buffer is owned by the driver and should not be modified. The function
-    returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle argument
-    under the following circumstances:
+    of data into attached device memory.
+
+    The function returns with a valid command handle in the commandHandle argument
+    if the write request was scheduled successfully. The function adds the request
+    to the hardware instance queue and returns immediately.
+
+    While the request is in the queue, the application buffer is owned by the driver
+    and should not be modified.
+
+    The function returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle
+    argument under the following circumstances:
     - if a buffer could not be allocated to the request
     - if the sourceBuffer pointer is NULL
     - if the client opened the driver for read only
@@ -782,7 +777,7 @@ bool DRV_MEMORY_SyncErase
     buffer was not processed successfully.
 
     If the requesting client has not registered any transfer handler callback
-    with the driver, he can call DRV_MEMORY_CommandStatus() API to know
+    with the driver, he can call DRV_MEMORY_CommandStatusGet() API to know
     the current status of the request.
 
   Precondition:
@@ -797,8 +792,8 @@ bool DRV_MEMORY_SyncErase
     commandHandle - Pointer to an argument that will contain the return command
                     handle. If NULL, then command handle is not returned.
 
-    sourceBuffer  - The source buffer containing data to be programmed into MEMORY
-                    Flash
+    sourceBuffer  - The source buffer containing data to be programmed into media
+                    device memory
 
     blockStart    - Write block start where the write should begin.
 
@@ -901,8 +896,8 @@ void DRV_MEMORY_AsyncEraseWrite
     handle        - A valid open-instance handle, returned from the driver's
                     open function
 
-    sourceBuffer  - The source buffer containing data to be programmed into MEMORY
-                    Flash
+    sourceBuffer  - The source buffer containing data to be programmed into media
+                    device memory
 
     blockStart    - block start where the write should begin.
 
@@ -967,12 +962,16 @@ bool DRV_MEMORY_SyncEraseWrite
 
   Description:
     This function schedules a non-blocking write operation for writing blocks
-    of data into attached devices memory. The function returns with a valid
-    command handle in the commandHandle argument if the write request was scheduled
-    successfully. The function adds the request to the hardware instance queue
-    and returns immediately. While the request is in the queue, the application
-    buffer is owned by the driver and should not be modified. The function
-    returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle argument
+    of data into attached devices memory.
+
+    The function returns with a valid command handle in the commandHandle argument
+    if the write request was scheduled successfully.
+
+    The function adds the request to the hardware instance queue and returns immediately.
+    While the request is in the queue, the application buffer is owned by the driver
+    and should not be modified.
+
+    The function returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle argument
     under the following circumstances:
     - if a buffer object could not be allocated to the request
     - if the source buffer pointer is NULL
@@ -987,7 +986,7 @@ bool DRV_MEMORY_SyncEraseWrite
     buffer was not processed successfully.
 
     If the requesting client has not registered any transfer handler callback
-    with the driver, he can call DRV_MEMORY_CommandStatusGet() API to know
+    with the driver, he can call DRV_MEMORY_CommandStatusGetGet() API to know
     the current status of the request.
 
   Preconditions:
@@ -1004,8 +1003,8 @@ bool DRV_MEMORY_SyncEraseWrite
     commandHandle - Pointer to an argument that will contain the return buffer
                     handle
 
-    sourceBuffer  - The source buffer containing data to be programmed into MEMORY
-                    Flash
+    sourceBuffer  - The source buffer containing data to be programmed into media
+                    device memory
 
     blockStart    - Block start from where the data should be written to.
 
@@ -1116,8 +1115,8 @@ void DRV_MEMORY_AsyncWrite
     handle        - A valid open-instance handle, returned from the driver's
                     open function
 
-    sourceBuffer  - The source buffer containing data to be programmed into MEMORY
-                    Flash
+    sourceBuffer  - The source buffer containing data to be programmed into media
+                    device memory
 
     blockStart    - Block start from where the data should be written to.
 
@@ -1186,12 +1185,16 @@ Summary:
 
   Description:
     This function schedules a non-blocking read operation for reading blocks of
-    data from the memory device attached. The function returns with a valid command
-    handle in the commandHandle argument if the request was scheduled
-    successfully. The function adds the request to the hardware instance queue
-    and returns immediately. While the request is in the queue, the application
-    buffer is owned by the driver and should not be modified. The function
-    returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle argument
+    data from the memory device attached.
+
+    The function returns with a valid command handle in the commandHandle argument
+    if the request was scheduled successfully.
+
+    The function adds the request to the hardware instance queue and returns
+    immediately. While the request is in the queue, the application
+    buffer is owned by the driver and should not be modified.
+
+    The function returns DRV_MEMORY_COMMAND_HANDLE_INVALID in the commandHandle argument
     under the following circumstances:
     - if a buffer object could not be allocated to the request
     - if the target buffer pointer is NULL
@@ -1211,7 +1214,7 @@ Summary:
 
     commandHandle - Pointer to an argument that will contain the command handle
 
-    targetBuffer  - Buffer into which the data read from the MEMORY Flash memory
+    targetBuffer  - Buffer into which the data read from the media device memory
                     will be placed
 
     blockStart    - Block start from where the data should be read.
@@ -1309,7 +1312,7 @@ Summary:
     handle        - A valid open-instance handle, returned from the driver's
                     open function
 
-    targetBuffer  - Buffer into which the data read from the MEMORY Flash memory
+    targetBuffer  - Buffer into which the data read from the media device memory
                     will be placed
 
     blockStart    - Block start from where the data should be read.
@@ -1489,9 +1492,10 @@ MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_TransferStatusGet
 
   Description:
     This routine gets the current status of the buffer. The application must use
-    this routine where the status of a scheduled buffer needs to polled on. The
-    function may return DRV_MEMORY_COMMAND_HANDLE_INVALID in a case where the buffer
-    handle has expired. A buffer handle expires when the internal buffer object
+    this routine where the status of a scheduled buffer needs to polled on.
+
+    The function may return DRV_MEMORY_COMMAND_HANDLE_INVALID in a case where the
+    buffer handle has expired. A buffer handle expires when the internal buffer object
     is re-assigned to another erase or write request. It is recommended that this
     function be called regularly in order to track the buffer status correctly.
 
@@ -1526,8 +1530,9 @@ MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_TransferStatusGet
     <code>
 
      // memoryHandle is the handle returned by the DRV_MEMORY_Open function.
+     // commandHandle is the handle returned by any read/write/erase block operation.
 
-    if (DRV_MEMORY_COMMAND_COMPLETED == DRV_MEMORY_TransferStatusGet(memoryHandle))
+    if (DRV_MEMORY_COMMAND_COMPLETED == DRV_MEMORY_CommandStatusGet(memoryHandle, commandHandle))
     {
         // Operation Done
     }
@@ -1559,11 +1564,12 @@ DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
     call back when queued operation has completed.
 
   Description:
-    This function allows a client to identify an event handling function for
-    the driver to call back when queued operation has completed.  When a client
-    calls a read, write, erase or a erasewrite function, it is provided with a
-    handle identifying the command that was added to the driver's buffer queue.
-    The driver will pass this handle back to the client by calling
+    This function allows a client to set an event handling function for
+    the driver to call back when queued operation has completed.
+
+    When a client calls a read, write, erase or a erasewrite function, it is
+    provided with a handle identifying the command that was added to the driver's
+    buffer queue. The driver will pass this handle back to the client by calling
     "transferHandler" function when the queued operation has completed.
 
     The event handler should be set before the client performs any operations
@@ -1627,7 +1633,7 @@ DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
     If the client does not want to be notified when the queued operation has
     completed, it does not need to register a callback.
 
-    Used in Async Mode of operation
+    Used in Asynchronous Mode of operation.
 */
 
 void DRV_MEMORY_TransferHandlerSet
@@ -1645,10 +1651,10 @@ void DRV_MEMORY_TransferHandlerSet
     );
 
   Summary:
-    Returns the physical attach status of the MEMORY.
+    Returns the physical attach status of the Media.
 
   Description:
-    This function returns the physical attach status of the MEMORY.
+    This function returns the physical attach status of the Media device.
 
   Precondition:
     The DRV_MEMORY_Open() routine must have been called to obtain a valid opened
@@ -1686,10 +1692,10 @@ bool DRV_MEMORY_IsAttached
     );
 
   Summary:
-    Returns the write protect status of the MEMORY.
+    Returns the write protect status of the Memory.
 
   Description:
-    This function returns the write protect status of the MEMORY.
+    This function returns the write protect status of the Memory.
 
   Precondition:
     The DRV_MEMORY_Open() routine must have been called to obtain a valid opened
@@ -1728,10 +1734,10 @@ bool DRV_MEMORY_IsWriteProtected
     );
 
   Summary:
-    Returns the MEMORY media start address
+    Returns the Memory media start address
 
   Description:
-    This function returns the MEMORY Media start address.
+    This function returns the Memory Media start address.
 
   Precondition:
     The DRV_MEMORY_Open() routine must have been called to obtain a valid opened
@@ -1742,7 +1748,7 @@ bool DRV_MEMORY_IsWriteProtected
                    open function
 
   Returns:
-    Start address of the MEMORY Media if the handle is valid otherwise NULL.
+    Start address of the Memory Media if the handle is valid otherwise NULL.
 
   Example:
     <code>

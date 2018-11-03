@@ -126,6 +126,8 @@ extern "C" {
 #define SYS_TIME_HW_COUNTER_PERIOD           0xFFFF
 #define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
+#define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
+
 
 
 // *****************************************************************************
@@ -261,20 +263,22 @@ extern "C" {
 #define NO_DSA
 #define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
-#define MICROCHIP_PIC32C
+#define MICROCHIP_SAME70
 #define NO_CERTS
 #define NO_PWDBASED
 #define NO_OLD_TLS
 #define NO_AES
-//keep following lines commented
-//#define NO_ASN
-//#define NO_RSA
-//#define NO_RNG
-
+#define NO_ASN
+#define NO_RSA
+#define NO_HMAC
+#define NO_DES3
+#define NO_RNG
+#define NO_RNG_TEST
 
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE 1
 #define NET_PRES_NUM_SOCKETS 10
+
 
 
 
@@ -283,6 +287,7 @@ extern "C" {
 #define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512
 #define TCPIP_ANNOUNCE_TASK_RATE    333
 #define TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST             			false
+
 
 
 /*** ARP Configuration ***/
@@ -300,6 +305,7 @@ extern "C" {
 #define TCPIP_ARP_PRIMARY_CACHE_ONLY		        	true
 
 
+
 /*** tcpip_cmd Configuration ***/
 #define TCPIP_STACK_COMMAND_ENABLE
 #define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS         4
@@ -310,6 +316,7 @@ extern "C" {
 #define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE    100
 
 
+
 /*** DHCP Configuration ***/
 #define TCPIP_STACK_USE_DHCP_CLIENT
 #define TCPIP_DHCP_TIMEOUT                          2
@@ -318,6 +325,7 @@ extern "C" {
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
 #define TCPIP_DHCP_SERVER_LISTEN_PORT               67
 #define TCPIP_DHCP_CLIENT_ENABLED                   true
+
 
 
 
@@ -337,6 +345,7 @@ extern "C" {
 #define TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES		4
 #define TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES			true
 #define TCPIP_DNS_CLIENT_USER_NOTIFICATION   false
+
 
 
 /*** HTTP Configuration ***/
@@ -361,7 +370,9 @@ extern "C" {
 #define TCPIP_HTTP_MALLOC_FUNC                     0
 #define TCPIP_HTTP_FREE_FUNC                        0
 
+
 /*** IPv4 Configuration ***/
+
 
 
 
@@ -385,14 +396,17 @@ extern "C" {
 
 #define TCPIP_STACK_USE_ICMPV6_SERVER
 
+
 /*** ICMPv4 Server Configuration ***/
 #define TCPIP_STACK_USE_ICMP_SERVER
 #define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
+
 /*** NBNS Configuration ***/
 #define TCPIP_STACK_USE_NBNS
 #define TCPIP_NBNS_TASK_TICK_RATE   110
+
 
 
 #define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY 	1
@@ -408,6 +422,7 @@ extern "C" {
 #define TCPIP_IPV6_NDP_VALID_LIFETIME_TWO_HOURS 	(60 * 60 * 2)
 #define TCPIP_IPV6_MTU_INCREASE_TIMEOUT 			600
 #define TCPIP_IPV6_NDP_TASK_TIMER_RATE 				32
+
 
 /* Network Configuration Index 0 */
 #define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"GMAC"
@@ -430,6 +445,7 @@ extern "C" {
 #define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
 
 
+
 /*** SMTPC Configuration ***/
 #define TCPIP_STACK_USE_SMTPC
 #define TCPIP_SMTPC_MAIL_CONNECTIONS 	            2
@@ -447,6 +463,7 @@ extern "C" {
 #define TCPIP_SMTPC_SKT_TX_BUFF_SIZE			    0
 #define TCPIP_SMTPC_SKT_RX_BUFF_SIZE			    0
 #define TCPIP_SMTPC_TASK_TICK_RATE			        55
+
 
 
 
@@ -479,6 +496,7 @@ extern "C" {
 /*** SNMP Stack Configuration Index 2 ***/
 #define TCPIP_SNMP_STACK_READCOMMUNITY_NAME_IDX2		0
 #define TCPIP_SNMP_STACK_WRITECOMMUNITY_NAME_IDX2 	"public" 
+
 
 
 /*** SNMPv3 Configuration ***/
@@ -535,6 +553,7 @@ extern "C" {
 #define TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN_MEM_USE (TCPIP_SNMPV3_PRIV_LOCALIZED_PASSWORD_KEY_LEN+1)
 
 
+
 /*** SNTP Configuration ***/
 #define TCPIP_STACK_USE_SNTP_CLIENT
 #define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
@@ -550,6 +569,7 @@ extern "C" {
 #define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
 #define TCPIP_NTP_TASK_TICK_RATE				1100
 #define TCPIP_NTP_RX_QUEUE_LIMIT				2
+
 
 
 /*** TCPIP Heap Configuration ***/
@@ -571,6 +591,7 @@ extern "C" {
 #define TCPIP_STACK_HEAP_USAGE_CONFIG                TCPIP_STACK_HEAP_USE_DEFAULT
 
 #define TCPIP_STACK_SUPPORTED_HEAPS                  1
+
 
 
 
@@ -604,7 +625,9 @@ extern "C" {
 
 
 
+
 /*** TCP/IP Configuration ***/
+
 
 
 /*** TCPIP SYS FS Wrapper ***/
@@ -615,6 +638,7 @@ extern "C" {
 #define SYS_FS_NVM_VOL						"/dev/nvma1"
 #define SYS_FS_FATFS_STRING					"FATFS"
 #define SYS_FS_MPFS_STRING					"MPFS2"
+
 
 
 /*** TCP Configuration ***/
@@ -637,6 +661,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+
 
 
 /*** UDP Configuration ***/

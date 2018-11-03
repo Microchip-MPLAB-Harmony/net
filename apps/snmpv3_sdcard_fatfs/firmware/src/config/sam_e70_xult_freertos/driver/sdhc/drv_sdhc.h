@@ -60,8 +60,7 @@
 #include "system/system_media.h"
 
 // *****************************************************************************
-/* SDHC Driver command handle.
-
+/*
   Summary:
     Handle identifying commands queued in the driver.
 
@@ -85,8 +84,7 @@ typedef SYS_MEDIA_BLOCK_COMMAND_HANDLE DRV_SDHC_COMMAND_HANDLE;
 
 
 // *****************************************************************************
-/* SDHC Driver Invalid Command Handle.
-
+/*
   Summary:
     SDHC Driver's Invalid Command Handle.
 
@@ -102,8 +100,7 @@ typedef SYS_MEDIA_BLOCK_COMMAND_HANDLE DRV_SDHC_COMMAND_HANDLE;
 #define DRV_SDHC_COMMAND_HANDLE_INVALID SYS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID
 
 // *****************************************************************************
-/* SDHC Driver Events
-
+/*
    Summary
     Identifies the possible events that can result from a request.
 
@@ -129,10 +126,9 @@ typedef enum
 
 
 // *****************************************************************************
-/* SDHC Driver Events
-
+/*
    Summary
-    Identifies the possible events that can result from a request.
+    SDHC Driver Command Events
 
    Description
     This enumeration identifies the possible events that can result from a
@@ -160,17 +156,15 @@ typedef enum
 } DRV_SDHC_COMMAND_STATUS;
 
 // *****************************************************************************
-/* SD Card Driver Module Index Numbers
+/*
 
   Summary:
-    SD Card driver index definitions
+    SDHC Driver Module Index Numbers
 
   Description:
-    These constants provide SD Card driver index definitions.
+    These constants provide SDHC driver index definitions.
 
   Remarks:
-    These constants should be used in place of hard-coded numeric literals.
-
     These values should be passed into the DRV_SDHC_Initialize and
     DRV_SDHC_Open routines to identify the driver instance in use.
 */
@@ -179,17 +173,14 @@ typedef enum
 
 
 // *****************************************************************************
-/* SD Card Driver Module Index Count
-
+/*
   Summary:
-    Number of valid SD Card driver indices
+    SDHC Driver Module Index Count
 
   Description:
-    This constant identifies number of valid SD Card driver indices.
+    This constant identifies number of valid SDHC driver indices.
 
   Remarks:
-    This constant should be used in place of hard-coded numeric literals.
-
     This value is derived from part-specific header files defined as part of the
     peripheral libraries.
 */
@@ -197,17 +188,14 @@ typedef enum
 #define DRV_SDHC_INDEX_COUNT                     (1)
 
 // *****************************************************************************
-/* SD Card Driver Maximum allowed limit
-
+/*
   Summary:
- Maximum allowed SD card instances
+     SDHC Driver Maximum allowed limit
 
   Description:
     This constant identifies number of valid SD Card driver indices.
 
   Remarks:
-    This constant should be used in place of hard-coded numeric literals.
-
     This value is derived from part-specific header files defined as part of the
     peripheral libraries.
 */
@@ -216,13 +204,12 @@ typedef enum
 
 
 // *****************************************************************************
-/* System events
-
+/*
   Summary:
-    Defines the different system events
+    SD Card Detection Logic
 
   Description:
-    This enum defines different system events.
+    This enum defines Card detection logic levels.
 
   Remarks:
     None.
@@ -238,12 +225,38 @@ typedef enum
 
 }SDHC_DETECTION_LOGIC;
 
+// *****************************************************************************
+/*
+  Summary:
+    SDHC Bus Width
+
+  Description:
+    This enum defines SDHC Transfer bus widths.
+
+  Remarks:
+    None.
+*/
 
 typedef enum
 {
     DRV_SDHC_BUS_WIDTH_1_BIT = 0,
     DRV_SDHC_BUS_WIDTH_4_BIT,
 } DRV_SDHC_BUS_WIDTH;
+
+// *****************************************************************************
+/*
+  Summary:
+    SDHC Bus Speed
+
+  Description:
+    This enum defines SDHC bus Speeds Supported.
+
+    - Standard SD-Cards only support Default Speed.
+    - SD-Cards with High Capacity support Both Default and High Speed
+
+  Remarks:
+    None.
+*/
 
 typedef enum
 {
@@ -252,10 +265,9 @@ typedef enum
 } DRV_SDHC_SPEED_MODE;
 
 // *****************************************************************************
-/* SD Host Controller Driver Initialization Data
-
+/*
   Summary:
-    Contains all the data necessary to initialize the SD Host Controller
+    SD Host Controller Driver Initialization Data
 
   Description:
     This structure contains all the data necessary to initialize the SD Card
@@ -266,11 +278,8 @@ typedef enum
     initialization data must be passed into the DRV_SDHC_Initialize routine.
 */
 
-typedef struct _DRV_SDHC_INIT
+typedef struct
 {
-    /* System module initialization */
-    SYS_MODULE_INIT moduleInit;
-
     bool sdCardDetectEnable;
 
     bool sdWriteProtectEnable;
@@ -285,10 +294,9 @@ typedef struct _DRV_SDHC_INIT
 
 
 // *****************************************************************************
-/* SDHC Driver Event Handler Function Pointer
-
+/*
    Summary
-    Pointer to a SDHCDriver Event handler function
+    SDHC Driver Event Handler Function Pointer
 
    Description
     This data type defines the required function signature for the SDHC event
@@ -372,7 +380,6 @@ typedef SYS_MEDIA_EVENT_HANDLER DRV_SDHC_EVENT_HANDLER;
 
   Summary:
     Initializes the SD Card driver.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine initializes the SD Card driver, making it ready for clients to
@@ -408,7 +415,7 @@ typedef SYS_MEDIA_EVENT_HANDLER DRV_SDHC_EVENT_HANDLER;
     </code>
 
   Remarks:
-    This routine must be called before any other SD Card routine is called.
+    This routine must be called before any other SDHC routine is called.
 
     This routine should only be called once during system initialization
     unless DRV_SDHC_Deinitialize is called to deinitialize the driver instance.
@@ -417,10 +424,6 @@ typedef SYS_MEDIA_EVENT_HANDLER DRV_SDHC_EVENT_HANDLER;
     time to allow the hardware to reinitialize, it will be reported by the
     DRV_SDHC_Status operation. The system must use DRV_SDHC_Status to find out
     when the driver is in the ready state.
-
-    Build configuration options may be used to statically override options in the
-    "init" structure and will take precedence over initialization data passed
-    using this routine.
 */
 
 SYS_MODULE_OBJ DRV_SDHC_Initialize
@@ -440,7 +443,6 @@ SYS_MODULE_OBJ DRV_SDHC_Initialize
 
   Summary:
     Reinitializes the driver and refreshes any associated hardware settings.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine reinitializes the driver and refreshes any associated hardware
@@ -462,10 +464,10 @@ SYS_MODULE_OBJ DRV_SDHC_Initialize
 
   Example:
     <code>
-	DRV_SDHC_INIT     init;
+    DRV_SDHC_INIT     init;
     SYS_MODULE_OBJ      objectHandle;  //  Returned from DRV_SDHC_Initialize
 
-	// Update the required fields of the SD Card initialization structure
+    // Update the required fields of the SD Card initialization structure
 
     DRV_SDHC_Reinitialize (objectHandle, (SYS_MODULE_INIT*)&init);
     </code>
@@ -481,10 +483,6 @@ SYS_MODULE_OBJ DRV_SDHC_Initialize
     time to allow the hardware to reinitialize, it will be reported by the
     DRV_SDHC_Status operation. The system must use DRV_SDHC_Status to find out
     when the driver is in the ready state.
-
-    Build configuration options may be used to statically override options in the
-    "init" structure and will take precedence over initialization data passed
-    using this routine.
 */
 
 void DRV_SDHC_Reinitialize
@@ -502,7 +500,6 @@ void DRV_SDHC_Reinitialize
 
   Summary:
     Deinitializes the specified instance of the SD Card driver module.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     Deinitializes the specified instance of the SD Card driver module, disabling
@@ -514,7 +511,7 @@ void DRV_SDHC_Reinitialize
 
   Parameters:
     object          - Driver object handle, returned from the
-					  DRV_SDHC_Initialize routine.
+                      DRV_SDHC_Initialize routine.
 
   Returns:
     None.
@@ -541,7 +538,7 @@ void DRV_SDHC_Reinitialize
     This routine will NEVER block waiting for hardware. If the operation
     requires time to allow the hardware to complete, this will be reported by
     the DRV_SDHC_Status operation.  The system has to use DRV_SDHC_Status to
-	check if the de-initialization is complete.
+    check if the de-initialization is complete.
 */
 
 void DRV_SDHC_Deinitialize
@@ -552,40 +549,6 @@ void DRV_SDHC_Deinitialize
 
 // *****************************************************************************
 /* Function:
-    void DRV_SDHC_InterruptServiceRoutine
-     (
-         SYS_MODULE_OBJ object
-     );
-
-  Summary:
-    Services interrupts from the SDHC Module
-	<p><b>Implementation:</b> Dynamic</p>
-
-  Description:
-    Services interrupts from the SDHC Module
-
-  Precondition:
-    Function DRV_SDHC_Initialize must have been called before calling this
-    routine and a valid SYS_MODULE_OBJ must have been returned.
-
-  Parameters:
-    object          - Driver object handle, returned from the
-					  DRV_SDHC_Initialize routine.
-
-  Returns:
-    None.
-
-  Remarks:
-    None.
-*/
-
-void DRV_SDHC_InterruptServiceRoutine
-(
-    SYS_MODULE_OBJ object
-);
-
-// *****************************************************************************
-/* Function:
     SYS_STATUS DRV_SDHC_Status
      (
          SYS_MODULE_OBJ object
@@ -593,7 +556,6 @@ void DRV_SDHC_InterruptServiceRoutine
 
   Summary:
     Provides the current status of the SD Card driver module.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine provides the current status of the SD Card driver module.
@@ -679,7 +641,6 @@ SYS_STATUS DRV_SDHC_Status
 
   Summary:
     Maintains the driver's state machine.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine is used to maintain the driver's internal state machine.
@@ -737,7 +698,6 @@ void DRV_SDHC_Tasks
 
   Summary:
     Opens the specified SD Card driver instance and returns a handle to it.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine opens the specified SD Card driver instance and provides a
@@ -802,16 +762,12 @@ DRV_HANDLE DRV_SDHC_Open
 
   Summary:
     Closes an opened-instance of the SD Card driver.
-	<p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine closes an opened-instance of the SD Card driver, invalidating
     the handle.
 
   Precondition:
-    The DRV_SDHC_Initialize routine must have been called for the specified
-    SD Card driver instance.
-
     DRV_SDHC_Open must have been called to obtain a valid opened device
     handle.
 
@@ -888,9 +844,6 @@ void DRV_SDHC_Close
     event if the buffer was not processed successfully.
 
   Precondition:
-    The DRV_SDHC_Initialize routine must have been called for the specified SDHC
-    driver instance.
-
     DRV_SDHC_Open must have been called with DRV_IO_INTENT_READ or
     DRV_IO_INTENT_READWRITE as the ioIntent to obtain a valid opened device handle.
 
@@ -988,9 +941,6 @@ void DRV_SDHC_Read
     event if the buffer was not processed successfully.
 
   Precondition:
-    The DRV_SDHC_Initialize() routine must have been called for the specified
-    SDHC driver instance.
-
     DRV_SDHC_Open() routine must have been called to obtain a valid opened device
     handle. DRV_IO_INTENT_WRITE or DRV_IO_INTENT_READWRITE must have been specified
     as a parameter to this routine.
@@ -1100,8 +1050,6 @@ void DRV_SDHC_Write
     write operation completion events.
 
   Preconditions:
-    The DRV_SDHC_Initialize() routine must have been called.
-
     The DRV_SDHC_Open() must have been called to obtain a valid opened device handle.
 
   Parameters:
@@ -1109,9 +1057,9 @@ void DRV_SDHC_Write
                    open routine
 
   Returns:
-    A DRV_SDHC_COMMAND_STATUS value describing the current status of the command.
-    Returns DRV_SDHC_COMMAND_HANDLE_INVALID if the client handle or the command
-    handle is not valid.
+    - A DRV_SDHC_COMMAND_STATUS value describing the current status of the command.
+    - DRV_SDHC_COMMAND_HANDLE_INVALID if the client handle or the command
+      handle is not valid.
 
   Example:
     <code>
@@ -1154,9 +1102,6 @@ DRV_SDHC_COMMAND_STATUS DRV_SDHC_CommandStatus
     - Number of Blocks and their size in each region of the device
 
   Precondition:
-    The DRV_SDHC_Initialize() routine must have been called for the
-    specified SDHC driver instance.
-
     The DRV_SDHC_Open() routine must have been called to obtain a valid opened device
     handle.
 
@@ -1224,9 +1169,6 @@ SYS_MEDIA_GEOMETRY * DRV_SDHC_GeometryGet
     be a "NULL" pointer to indicate no callback).
 
   Precondition:
-    The DRV_SDHC_Initialize() routine must have been called for the specified
-    SDHC driver instance.
-
     The DRV_SDHC_Open() routine must have been called to obtain a valid opened
     device handle.
 
@@ -1322,9 +1264,6 @@ void DRV_SDHC_EventHandlerSet
     This function returns the physical attach status of the SD Card.
 
   Precondition:
-    The DRV_SDHC_Initialize() routine must have been called for the specified
-    SDHC driver instance.
-
     The DRV_SDHC_Open() routine must have been called to obtain a valid opened
     device handle.
 
@@ -1370,9 +1309,6 @@ bool DRV_SDHC_IsAttached
     returns true if the SD Card is write protected otherwise it returns false.
 
   Precondition:
-    The DRV_SDHC_Initialize() routine must have been called for the specified
-    SDHC driver instance.
-
     The DRV_SDHC_Open() routine must have been called to obtain a valid opened
     device handle.
 
@@ -1399,15 +1335,6 @@ bool DRV_SDHC_IsWriteProtected
 (
     const DRV_HANDLE handle
 );
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files (continued)
-// *****************************************************************************
-// *****************************************************************************
-/*  The file included below maps the interface definitions above to appropriate
-    static implementations, depending on build mode.
-*/
 
 #endif // #ifndef _DRV_SDHC_H
 

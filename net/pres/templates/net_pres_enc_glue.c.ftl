@@ -46,7 +46,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/random.h"
 
 <#assign needSysConsole=false/>
-<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
 	<#if .vars["NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${idx}"]>
 		<#assign needSysConsole=true/>
     </#if>
@@ -669,24 +669,24 @@ int  InitRng(RNG* rng)
 }
 
 </#if>
-<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
     <@NET_PRES_ENC_PROV_INFOS idx/>
 </#list>
-<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
 	<#assign netPresUseWolfSSL = "NET_PRES_USE_WOLF_SSL_IDX${idx}">
 	<#assign netPresGenEncStub = "NET_PRES_GENERATE_ENC_STUBS_IDX${idx}">
     <#if .vars[netPresUseWolfSSL]?has_content || .vars[netPresGenEncStub]?has_content>
         <@NET_PRES_ENC_GLUE_WOLF_INFO idx/>
     </#if>
 </#list>
-<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
     <#assign netPresUseWolfSSL = "NET_PRES_USE_WOLF_SSL_IDX${idx}">
 	<#assign netPresGenEncStub = "NET_PRES_GENERATE_ENC_STUBS_IDX${idx}">
     <#if .vars[netPresUseWolfSSL]?has_content || .vars[netPresGenEncStub]?has_content>
         <@NET_PRES_WOLF_CBS idx/>
     </#if>
 </#list>
-<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
 	<#assign netPresUseWolfSSL = "NET_PRES_USE_WOLF_SSL_IDX${idx}">
 	<#assign netPresGenEncStub = "NET_PRES_GENERATE_ENC_STUBS_IDX${idx}">
     <#if .vars[netPresUseWolfSSL]?has_content || .vars[netPresGenEncStub]?has_content>

@@ -108,7 +108,7 @@ int32_t NET_PRES_EncProviderOutputSize${INST_NUMBER}(void * providerData, int32_
 int32_t NET_PRES_EncProviderMaxOutputSize${INST_NUMBER}(void * providerData);
     </#if>
 </#macro>
-<#list 0..(NET_PRES_INSTANCES?number-1) as idx>
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
     <@netPresEncGlueHeader idx/>
 </#list>
 #ifdef __CPLUSPLUS

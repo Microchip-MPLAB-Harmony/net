@@ -100,9 +100,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 
 #if defined(CUSTOM_RAND_GENERATE_BLOCK)
-    extern int pic32c_RNG_GenerateBlock(byte* output, word32 sz);
-    extern int pic32c_GenerateSeed(byte* output, word32 sz);
-    extern int pic32c_InitRng(void);
+    extern int same70_RNG_GenerateBlock(byte* output, word32 sz);
+    extern int same70_GenerateSeed(byte* output, word32 sz);
+    extern int same70_InitRng(void);
     /* To use define the following: 
      * # define CUSTOM_RAND_GENERATE_BLOCK myRngFunc
      * extern int myRngFunc(byte* output, word32 sz);
@@ -119,8 +119,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     #error No RNG source defined!
 #endif
 
-#ifdef MICROCHIP_PIC32C
-extern int pic32c_RNG_GenerateSeed(byte* output, word32 sz);
+#ifdef MICROCHIP_SAME70
+extern int same70_RNG_GenerateSeed(byte* output, word32 sz);
 #endif
 
 #ifdef HAVE_WNR

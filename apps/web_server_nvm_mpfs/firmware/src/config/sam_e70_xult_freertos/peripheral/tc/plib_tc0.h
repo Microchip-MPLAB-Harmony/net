@@ -56,6 +56,7 @@
 */
 
 #include "plib_tc_common.h"
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

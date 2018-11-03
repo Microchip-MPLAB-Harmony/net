@@ -3,7 +3,9 @@
  Advanced Encryption Standard (AES) Include Header for 
    electronic codebook (ECB) mode
 
-****************************************************************************
+****************************************************************************/
+
+/****************************************************************************
  File Name:     AES_CFB.h
  Dependencies:  AES.h
  Processor:		PIC24F, PIC24H, dsPIC30F, or dsPIC33F

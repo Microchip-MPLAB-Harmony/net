@@ -621,6 +621,7 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	PIO_Initialize();
 
+
     NVIC_Initialize();
 	RSWDT_REGS->RSWDT_MR = RSWDT_MR_WDDIS_Msk;	// Disable RSWDT 
 

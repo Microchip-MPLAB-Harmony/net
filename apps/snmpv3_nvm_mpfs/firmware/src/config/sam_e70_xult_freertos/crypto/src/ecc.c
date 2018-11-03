@@ -2981,8 +2981,8 @@ static int wc_ecc_gen_k(WC_RNG* rng, int size, mp_int* k, mp_int* order)
     size += 8;
 
     /* make up random string */
-#ifdef WOLFSSL_MICROCHIP_PIC32C
-    err = pic32c_RNG_GenerateBlock(buf, size);
+#ifdef WOLFSSL_MICROCHIP_SAME70
+    err = same70_RNG_GenerateBlock(buf, size);
 #else
     err = wc_RNG_GenerateBlock(rng, buf, size);
 #endif
