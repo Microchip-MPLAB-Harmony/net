@@ -73,6 +73,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // Maximum size of a host name to be advertised to the DHCP server
+// default value is 20
 #define TCPIP_DHCP_HOST_NAME_SIZE       20
 
 // enable the usage of the Boot file name received from the DHCP server
