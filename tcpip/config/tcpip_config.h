@@ -62,20 +62,22 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //   disabled the following high-level application modules.
 
 #define TCPIP_STACK_USE_IPV4                // enable IPv4 functionality
-#define TCPIP_STACK_USE_ICMP_SERVER         // Ping query and response capability
-#define TCPIP_STACK_USE_HTTP_SERVER        // HTTP server with POST, Cookies, Authentication, etc.
+#define TCPIP_STACK_USE_ICMP_SERVER         // Ping response capability
+#define TCPIP_STACK_USE_ICMP_CLIENT         // Ping query capability
+#define TCPIP_STACK_USE_HTTP_NET_SERVER     // HTTP NET server with POST, Cookies, Authentication, etc. and encryption support
 #define TCPIP_STACK_USE_DHCP_CLIENT         // Dynamic Host Configuration Protocol client for obtaining IP address and other parameters
-//#define TCPIP_STACK_USE_SMTP_CLIENT       // Simple Mail Transfer Protocol for sending email
+#define TCPIP_STACK_USE_SMTPC               // Simple Mail Transfer Protocol for sending email with encryption support
 #define TCPIP_STACK_USE_TELNET_SERVER       // Telnet server
 #define TCPIP_STACK_USE_ANNOUNCE            // Microchip Embedded Ethernet Device Discoverer server/client
 #define TCPIP_STACK_USE_DNS                 // Domain Name Service Client for resolving hostname strings to IP addresses
 #define TCPIP_STACK_USE_DNS_SERVER          // Domain Name Service Server for redirection to the local device
 #define TCPIP_STACK_USE_NBNS                // NetBIOS Name Service Server for responding to NBNS hostname broadcast queries
-//#define TCPIP_STACK_USE_REBOOT_SERVER     // Module for resetting this PIC remotely.  Primarily useful for a Bootloader.
+#define TCPIP_STACK_USE_REBOOT_SERVER       // Module for resetting this PIC remotely.  Primarily useful for a Bootloader.
 #define TCPIP_STACK_USE_SNTP_CLIENT         // Simple Network Time Protocol for obtaining current date/time from Internet
-//#define TCPIP_STACK_USE_DYNAMICDNS_CLIENT  // Dynamic DNS client updater module
-//#define TCPIP_STACK_USE_BERKELEY_API       // Berkeley Sockets APIs are available
+#define TCPIP_STACK_USE_BERKELEY_API        // Berkeley Sockets APIs are available
 #define TCPIP_STACK_USE_IPV6                // enable IPv6 functionality
+#define TCPIP_STACK_USE_DHCPV6_CLIENT       // enable IPv6 DHCP client functionality
+#define TCPIP_STACK_USE_ICMPV6_SERVER       // enable IPv6 ICMP functionality
 #define TCPIP_STACK_USE_TCP                 // Enable the TCP module
 #define TCPIP_STACK_USE_UDP                 // Enable the UDP module
 #define TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL // Zeroconf IPv4 Link-Local Addressing;
@@ -83,10 +85,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define TCPIP_STACK_COMMAND_ENABLE          // TCPIP_COMMANDS for network configuration or debug
 #define TCPIP_STACK_USE_IPERF               // Enable the Iperf module for standard network benchmarking
-//#define TCPIP_STACK_USE_SNMP_SERVER        // Simple Network Management Protocol v2C Community Agent
-//#define TCPIP_STACK_USE_SNMPV3_SERVER      // SNMP v3 agent
+#define TCPIP_STACK_USE_SNMP_SERVER         // Simple Network Management Protocol v2C Community Agent
+#define TCPIP_STACK_USE_SNMPV3_SERVER       // SNMP v3 agent
 #define TCPIP_STACK_USE_FTP_SERVER          // File Transfer Protocol
 #define TCPIP_STACK_USE_DHCP_SERVER         // DHCP server
+#define TCPIP_STACK_USE_IGMP                // IGMPv3 functionality
+#define TCPIP_STACK_USE_TFTP_CLIENT         // TFTP client functionality
+#define TCPIP_STACK_COMMAND_ENABLE          // TCP/IP commands support - requires the system console and the command processor
+
+//#define TCPIP_STACK_USE_HTTP_SERVER        // obsolete HTTP server with POST, Cookies, Authentication, etc.
+//#define TCPIP_STACK_USE_SMTP_CLIENT       // obsolete Simple Mail Transfer Protocol for sending email
+//#define TCPIP_STACK_USE_DYNAMICDNS_CLIENT  // Dynamic DNS client updater module
+#define TCPIP_STACK_USE_LLDP                // LLDP limited beta functionality - not supported through MHC configuration
 
 // =======================================================================
 //   Dynamic memory allocation Options

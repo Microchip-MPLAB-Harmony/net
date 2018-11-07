@@ -67,7 +67,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_IGMP_MCAST_GROUPS         7
 
 // If this symbol is !0, then only Join and Leave operations
-// are suported, without support for source addresses required by IGMPv3
+// are supported, without support for source addresses required by IGMPv3
 // This results in smaller code and less RAM needed by the IGMP module.  
 #define TCPIP_IGMPV2_SUPPORT_ONLY       0
 

@@ -1556,6 +1556,8 @@ int TCPIP_IPV6_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH);
     The IPv6 fragmentation support is always enabled.
 
  */
+bool TCPIP_IPV6_IsFragmentationEnabled(void);
+
 static __inline__ bool __attribute__((always_inline)) TCPIP_IPV6_IsFragmentationEnabled(void)
 {
     return true;

@@ -1095,7 +1095,6 @@ typedef enum
 
 */
 
-// 
 typedef enum
 {
     /*  unknown power mode */
