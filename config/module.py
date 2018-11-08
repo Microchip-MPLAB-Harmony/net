@@ -245,3 +245,7 @@ def loadModule():
 	########################## Harmony Network Presentation Module #################################
 	netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net/pres/config/netPres_common.py","net/pres/config/netPres.py")
 	netPresComponent.addCapability("libNetPres","net_pres")	
+
+	############################### Third Party wolfSSL Module #####################################
+    tlsComponent = Module.CreateComponent("lib_wolfssl", "wolfSSL Library", "//Third Party Libraries/wolfSSL/", "config\wolfssl.py")
+
