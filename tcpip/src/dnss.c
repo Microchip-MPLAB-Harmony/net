@@ -238,7 +238,7 @@ bool TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
             }
 #endif
             // allocate Hostname
-            if(TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN != 0)
+            if(TCPIP_DNSS_HOST_NAME_LEN != 0)
             {
                 pE->pHostName = (uint8_t *)(pMemoryBlock+(pDnsSDcpt->IPv4EntriesPerDNSName*(sizeof(IPV4_ADDR)))
 #if defined(TCPIP_STACK_USE_IPV6)
@@ -297,9 +297,9 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
     _DNSSGetRecordType(s,&recordType);
     switch(recordType.Val)
     {
-        case TCPIP_DNS_TYPE_A:
+        case TCPIP_DNSS_TYPE_A:
 #if defined(TCPIP_STACK_USE_IPV6)
-        case TCPIP_DNS_TYPE_AAAA:
+        case TCPIP_DNSS_TYPE_AAAA:
 #endif
             break;
         default:            
@@ -322,7 +322,7 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
     // If the client Query answer is zero, then Response will have all the answers which is present in the cache
     // else if the client query answer count is more than the available answer counts  of the cache, then Answer RRs should
     // be the value of available entries in the cache , else if only the limited Answer RRs
-    if(recordType.Val == TCPIP_DNS_TYPE_A)
+    if(recordType.Val == TCPIP_DNSS_TYPE_A)
     {
         if(pDnsSrvDcpt->replyWithBoardInfo)
         {
@@ -358,7 +358,7 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
         }
     }
 #if defined(TCPIP_STACK_USE_IPV6)
-    else if(recordType.Val == TCPIP_DNS_TYPE_AAAA)
+    else if(recordType.Val == TCPIP_DNSS_TYPE_AAAA)
     {
         if(pDnsSrvDcpt->replyWithBoardInfo)
         {
@@ -397,13 +397,13 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
     offset = 0xC00C; // that is the location at 0x0c ( 12) DNS packet compression RFC 1035
     servTxMsgSize = sizeof(DNSS_HEADER)         // DNS header
                     + countWithLen+2+2;  // Query hostname + type + class
-    if(recordType.Val == TCPIP_DNS_TYPE_A)
+    if(recordType.Val == TCPIP_DNSS_TYPE_A)
     {
         // offset + record type+class+ttl+ip type+size of IP address * number of answers present in the HASH table
         servTxMsgSize += resAnswerRRs*(2+2+2+4+2+sizeof(IPV4_ADDR));
     }
 #if defined(TCPIP_STACK_USE_IPV6)
-    else if(recordType.Val == TCPIP_DNS_TYPE_AAAA)
+    else if(recordType.Val == TCPIP_DNSS_TYPE_AAAA)
     {
         // offset + record type+class+ttl+ip type+size of IP address * number of answers present ih HASH table
         servTxMsgSize += resAnswerRRs*(2+2+2+4+2+sizeof(IPV6_ADDR));
@@ -484,7 +484,7 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
         TCPIP_DNSS_DataPut(txbuf,txBufPos++,ttlTime>>16&0xFF);
         TCPIP_DNSS_DataPut(txbuf,txBufPos++,ttlTime>>8&0xFF);
         TCPIP_DNSS_DataPut(txbuf,txBufPos++,ttlTime&0xFF);
-        if(recordType.Val == TCPIP_DNS_TYPE_A)
+        if(recordType.Val == TCPIP_DNSS_TYPE_A)
         {
             // Length for TYPE_A
             TCPIP_DNSS_DataPut(txbuf,txBufPos++,0x00);
@@ -510,7 +510,7 @@ static bool _DNSS_SendResponse(DNSS_HEADER *dnsHeader,TCPIP_NET_IF *pNet)
             }
         }
 #if defined(TCPIP_STACK_USE_IPV6)
-        else if(recordType.Val == TCPIP_DNS_TYPE_AAAA)
+        else if(recordType.Val == TCPIP_DNSS_TYPE_AAAA)
         {
             // Length for TYPE_A
             TCPIP_DNSS_DataPut(txbuf,txBufPos++,0x00);     // Data Length 16 bytes
@@ -624,11 +624,11 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index,uint8_t * hostName,uint8_t 
     pOH = pDnsSDcpt->dnssHashDcpt;
     if((hostName == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
     {
-        return DNSS_RES_MEMORY_FAIL;
+        return TCPIP_DNSS_RES_MEMORY_FAIL;
     }
     if(index >= pOH->hEntries)
     {
-        return DNSS_RES_NO_SERVICE;
+        return TCPIP_DNSS_RES_NO_SERVICE;
     }
 
     hE = TCPIP_OAHASH_EntryGet(pOH, index);
@@ -640,9 +640,9 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_AddressCntGet(int index,uint8_t * hostName,uint8_t 
 #if defined(TCPIP_STACK_USE_IPV6)
         *ipCount += pDnsSHE->nIPv6Entries;
 #endif
-        return DNSS_RES_OK;
+        return TCPIP_DNSS_RES_OK;
     }
-    return DNSS_RES_NO_ENTRY;
+    return TCPIP_DNSS_RES_NO_ENTRY;
 
 }
 
@@ -659,12 +659,12 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
     pDnsSDcpt = &gDnsSrvDcpt;
     if((hostName == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
     {
-        return DNSS_RES_NO_ENTRY;
+        return TCPIP_DNSS_RES_NO_ENTRY;
     }
     hE = TCPIP_OAHASH_EntryLookup(pDnsSDcpt->dnssHashDcpt, (uint8_t *)hostName);
     if(hE == 0)
     {  
-        return DNSS_RES_NO_ENTRY;
+        return TCPIP_DNSS_RES_NO_ENTRY;
     }
     dnsSHE = (DNSS_HASH_ENTRY*)hE;
     
@@ -673,10 +673,10 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
     if(type == IP_ADDRESS_TYPE_IPV4)
     {
         if(index >= dnsSHE->nIPv4Entries)
-            return DNSS_RES_NO_SERVICE;
+            return TCPIP_DNSS_RES_NO_SERVICE;
         dnsSHE->pip4Address = (IPV4_ADDR *)pMemoryBlock;
         if(dnsSHE->pip4Address == 0)
-            return DNSS_RES_NO_ENTRY;
+            return TCPIP_DNSS_RES_NO_ENTRY;
 
         if(dnsSHE->pip4Address[index].Val != 0)
         {
@@ -684,7 +684,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
         }
         else
         {
-            return DNSS_RES_NO_IPADDRESS;
+            return TCPIP_DNSS_RES_NO_IPADDRESS;
         }
         
         if(dnsSHE->validityTime.Val != 0)
@@ -700,10 +700,10 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
     if(type == IP_ADDRESS_TYPE_IPV6)
     {
         if(index >= dnsSHE->nIPv6Entries)
-            return DNSS_RES_NO_SERVICE;
+            return TCPIP_DNSS_RES_NO_SERVICE;
         dnsSHE->pip6Address = (IPV6_ADDR *)(pMemoryBlock+pDnsSDcpt->IPv4EntriesPerDNSName*sizeof(IPV4_ADDR));
         if(dnsSHE->pip6Address == 0)
-            return DNSS_RES_NO_ENTRY;
+            return TCPIP_DNSS_RES_NO_ENTRY;
 
         if(memcmp(dnsSHE->pip6Address[i].v,&nullval,sizeof(IPV6_ADDR)) != 0)
         {
@@ -711,7 +711,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
         }
         else
         {
-            return DNSS_RES_NO_IPADDRESS;
+            return TCPIP_DNSS_RES_NO_IPADDRESS;
         }
         
         if(dnsSHE->validityTime.Val != 0)
@@ -724,7 +724,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryGet(uint8_t * hostName,IP_ADDRESS_TYPE type,in
         }
     }
 #endif
-    return DNSS_RES_OK;
+    return TCPIP_DNSS_RES_OK;
 }
 
 
@@ -739,7 +739,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryAdd(const char* name, IP_ADDRESS_TYPE type, IP
 	
     if((name == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
     {
-        return DNSS_RES_MEMORY_FAIL;
+        return TCPIP_DNSS_RES_MEMORY_FAIL;
     }
 
     dnssCacheEntry.sHostNameData = (uint8_t *)name;
@@ -757,7 +757,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_EntryAdd(const char* name, IP_ADDRESS_TYPE type, IP
 #endif	
     else
     {
-        return DNSS_RES_NO_ENTRY;
+        return TCPIP_DNSS_RES_NO_ENTRY;
     }
     hE = TCPIP_OAHASH_EntryLookup(pDnsSDcpt->dnssHashDcpt, dnssCacheEntry.sHostNameData);
     if(hE != 0)
@@ -782,15 +782,15 @@ static  TCPIP_DNSS_RESULT  _DNSSUpdateHashEntry( DNSS_HASH_ENTRY *dnsSHE,TCPIP_D
     if(dnssCacheEntry.recordType == IP_ADDRESS_TYPE_IPV4)
     {
         if(dnsSHE->nIPv4Entries >= pDnsSDcpt->IPv4EntriesPerDNSName)
-            return DNSS_RES_CACHE_FULL;
+            return TCPIP_DNSS_RES_CACHE_FULL;
         dnsSHE->pip4Address = (IPV4_ADDR *)pMemoryBlock;
         if(dnsSHE->pip4Address == 0)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         for(i=0;i<pDnsSDcpt->IPv4EntriesPerDNSName;i++)
         {
             if(dnsSHE->pip4Address[i].Val == dnssCacheEntry.ip4Address.Val )
             {
-                return DNSS_RES_DUPLICATE_ENTRY;
+                return TCPIP_DNSS_RES_DUPLICATE_ENTRY;
             }
         }
         dnsSHE->pip4Address[dnsSHE->nIPv4Entries].Val = 
@@ -801,15 +801,15 @@ static  TCPIP_DNSS_RESULT  _DNSSUpdateHashEntry( DNSS_HASH_ENTRY *dnsSHE,TCPIP_D
     if(dnssCacheEntry.recordType == IP_ADDRESS_TYPE_IPV6)
     {
         if(dnsSHE->nIPv6Entries >= pDnsSDcpt->IPv6EntriesPerDNSName)
-            return DNSS_RES_CACHE_FULL;
+            return TCPIP_DNSS_RES_CACHE_FULL;
         dnsSHE->pip6Address = (IPV6_ADDR *)(pMemoryBlock+pDnsSDcpt->IPv4EntriesPerDNSName*sizeof(IPV4_ADDR));
         if(dnsSHE->pip6Address == 0)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         for(i=0;i<pDnsSDcpt->IPv6EntriesPerDNSName;i++)
         {
             if(memcmp(&dnsSHE->pip6Address[i],&dnssCacheEntry.ip6Address,sizeof(IPV6_ADDR)) == 0)
             {
-                return DNSS_RES_DUPLICATE_ENTRY;
+                return TCPIP_DNSS_RES_DUPLICATE_ENTRY;
             }
         }
         memcpy( &dnsSHE->pip6Address[dnsSHE->nIPv6Entries],&dnssCacheEntry.ip6Address,sizeof(IPV6_ADDR));
@@ -818,7 +818,7 @@ static  TCPIP_DNSS_RESULT  _DNSSUpdateHashEntry( DNSS_HASH_ENTRY *dnsSHE,TCPIP_D
 #endif
     dnsSHE->validityTime = dnssCacheEntry.entryTimeout;
     
-    return DNSS_RES_OK;
+    return TCPIP_DNSS_RES_OK;
 }
 
 static  TCPIP_DNSS_RESULT  _DNSSSetHashEntry( DNSS_HASH_ENTRY_FLAGS newFlags,TCPIP_DNSS_CACHE_ENTRY dnssCacheEntry)
@@ -831,12 +831,12 @@ static  TCPIP_DNSS_RESULT  _DNSSSetHashEntry( DNSS_HASH_ENTRY_FLAGS newFlags,TCP
     pDnsSDcpt = &gDnsSrvDcpt;
     if(pDnsSDcpt->dnssHashDcpt==NULL)
     {
-        return DNSS_RES_MEMORY_FAIL;
+        return TCPIP_DNSS_RES_MEMORY_FAIL;
     }
     hE = TCPIP_OAHASH_EntryLookupOrInsert(pDnsSDcpt->dnssHashDcpt, dnssCacheEntry.sHostNameData);
     if(hE == 0)
     {
-        return DNSS_RES_CACHE_FULL;
+        return TCPIP_DNSS_RES_CACHE_FULL;
     }
     dnsSHE = (DNSS_HASH_ENTRY*)hE;
     pMemoryBlock = dnsSHE->memblk;
@@ -848,10 +848,10 @@ static  TCPIP_DNSS_RESULT  _DNSSSetHashEntry( DNSS_HASH_ENTRY_FLAGS newFlags,TCP
     if(dnssCacheEntry.recordType == IP_ADDRESS_TYPE_IPV4)
     {
         if(dnsSHE->nIPv4Entries >= pDnsSDcpt->IPv4EntriesPerDNSName)
-            return DNSS_RES_CACHE_FULL;
+            return TCPIP_DNSS_RES_CACHE_FULL;
         dnsSHE->pip4Address = (IPV4_ADDR *)pMemoryBlock;
         if(dnsSHE->pip4Address == 0)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         dnsSHE->pip4Address[dnsSHE->nIPv4Entries].Val = 
                             dnssCacheEntry.ip4Address.Val;
         dnsSHE->nIPv4Entries ++ ;
@@ -860,10 +860,10 @@ static  TCPIP_DNSS_RESULT  _DNSSSetHashEntry( DNSS_HASH_ENTRY_FLAGS newFlags,TCP
     if(dnssCacheEntry.recordType == IP_ADDRESS_TYPE_IPV6)
     {
         if(dnsSHE->nIPv6Entries >= pDnsSDcpt->IPv6EntriesPerDNSName)
-            return DNSS_RES_CACHE_FULL;
+            return TCPIP_DNSS_RES_CACHE_FULL;
         dnsSHE->pip6Address = (IPV6_ADDR *)(pMemoryBlock+pDnsSDcpt->IPv4EntriesPerDNSName*sizeof(IPV4_ADDR));
         if(dnsSHE->pip6Address == 0)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         memcpy( &dnsSHE->pip6Address[dnsSHE->nIPv6Entries],&dnssCacheEntry.ip6Address,sizeof(IPV6_ADDR));
         dnsSHE->nIPv6Entries ++ ;
     }
@@ -871,7 +871,7 @@ static  TCPIP_DNSS_RESULT  _DNSSSetHashEntry( DNSS_HASH_ENTRY_FLAGS newFlags,TCP
 
     dnsSHE->tInsert = SYS_TMR_TickCountGet();
     dnsSHE->validityTime = dnssCacheEntry.entryTimeout;
-    return DNSS_RES_OK;
+    return TCPIP_DNSS_RES_OK;
 }
 
 TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE type, IP_MULTI_ADDRESS* pAdd)
@@ -886,27 +886,27 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE 
     pDnsSDcpt = &gDnsSrvDcpt;
     if((name == 0) || (pDnsSDcpt->dnssHashDcpt==NULL))
     {
-        return DNSS_RES_MEMORY_FAIL;
+        return TCPIP_DNSS_RES_MEMORY_FAIL;
     }
     hE = TCPIP_OAHASH_EntryLookup(pDnsSDcpt->dnssHashDcpt, (uint8_t *)name);
     if(hE == 0)
     {  
-        return DNSS_RES_NO_ENTRY;
+        return TCPIP_DNSS_RES_NO_ENTRY;
     }
     dnsSHE = (DNSS_HASH_ENTRY*)hE;
     if(type != dnsSHE->recordType)
     {  
-        return DNSS_RES_NO_ENTRY;
+        return TCPIP_DNSS_RES_NO_ENTRY;
     }
     pMemoryBlock = (uint8_t*)dnsSHE->memblk;
 
     if(dnsSHE->recordType == IP_ADDRESS_TYPE_IPV4)
     {
         if(dnsSHE->nIPv4Entries > pDnsSDcpt->IPv4EntriesPerDNSName)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         dnsSHE->pip4Address = (IPV4_ADDR *)pMemoryBlock;
         if(dnsSHE->pip4Address == 0)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         for(i=0;i<pDnsSDcpt->IPv4EntriesPerDNSName;i++)
         {
             if(dnsSHE->pip4Address[i].Val == pAdd->v4Add.Val)
@@ -922,10 +922,10 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE 
     if(dnsSHE->recordType == IP_ADDRESS_TYPE_IPV6)
     {
         if(dnsSHE->nIPv6Entries > pDnsSDcpt->IPv6EntriesPerDNSName)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         dnsSHE->pip6Address = (IPV6_ADDR *)(pMemoryBlock+pDnsSDcpt->IPv4EntriesPerDNSName*sizeof(IPV4_ADDR));
         if(dnsSHE->pip6Address == 0)
-            return DNSS_RES_MEMORY_FAIL;
+            return TCPIP_DNSS_RES_MEMORY_FAIL;
         for(i=0;i<pDnsSDcpt->IPv6EntriesPerDNSName;i++)
         {
             if(memcmp(&dnsSHE->pip6Address[i],&pAdd->v6Add,sizeof(IPV6_ADDR)) == 0)
@@ -941,7 +941,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE 
 
     if(addrISPresent == false)
     {
-        return DNSS_RES_NO_ENTRY;
+        return TCPIP_DNSS_RES_NO_ENTRY;
     }
 
    // Free Hash entry and free the allocated memory for this HostName if there
@@ -954,7 +954,7 @@ TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE 
     {       
         TCPIP_OAHASH_EntryRemove(pDnsSDcpt->dnssHashDcpt,hE);
     }
-   return DNSS_RES_OK;
+   return TCPIP_DNSS_RES_OK;
     
 }
 
@@ -1422,7 +1422,7 @@ void TCPIP_OAHASH_DNSS_KeyCopy(OA_HASH_DCPT* pOH, OA_HASH_ENTRY* dstEntry, const
     if(dnsHostNameKey)
     {
         if(pDnssHE->pHostName == NULL) return;
-        memset(pDnssHE->pHostName,0,TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN);
+        memset(pDnssHE->pHostName,0,TCPIP_DNSS_HOST_NAME_LEN);
         memcpy(pDnssHE->pHostName,dnsHostNameKey,hostnameLen);
         pDnssHE->pHostName[hostnameLen]='\0';
     }
