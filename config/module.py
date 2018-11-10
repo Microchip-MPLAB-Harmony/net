@@ -43,14 +43,13 @@ def loadModule():
 	tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv4.py")
 	tcpipIPv4Component.addCapability("libTcpipIPv4","IPv4",True)
 	tcpipIPv4Component.addCapability("libTcpipIPv4IP","IP",True)
-	tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_CORE", None, True, True)	
+	#niyas tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_CORE", None, True, True)	
 	tcpipIPv4Component.addDependency("Ipv4_Arp_Dependency", "ARP", None, True, True)	
 	tcpipIPv4Component.setDisplayType("TCP/IP Library")
 	
 	tcpipIPv6Component = Module.CreateSharedComponent("tcpipIPv6", "IPv6", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv6.py")
 	tcpipIPv6Component.addCapability("libTcpipIPv6","IPv6",True)
 	tcpipIPv6Component.addCapability("libTcpipIPv6IP","IP",True)
-	tcpipIPv6Component.addDependency("Ipv6_Stack_Dependency", "TCPIP_CORE", None, True, True)
 	tcpipIPv6Component.addDependency("Ipv6_Ndp_Dependency", "NDP", None, True, True)
 	tcpipIPv6Component.setDisplayType("TCP/IP Library")
 	
@@ -111,7 +110,7 @@ def loadModule():
 	tcpipDnssComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipFtpsComponent = Module.CreateComponent("tcpipFtps", "FTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ftps.py")
-	tcpipFtpsComponent.addCapability("libtcpipDdns","FTPS",True)	
+	tcpipFtpsComponent.addCapability("libtcpipFtps","FTPS",True)	
 	tcpipFtpsComponent.addDependency("Ftps_TCP_Dependency", "TCP", None, True, True)	
 	tcpipFtpsComponent.addDependency("Ftps_IPv4_Dependency", "IPv4", None, True, True)	
 	tcpipFtpsComponent.addDependency("Ftps_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
@@ -212,14 +211,15 @@ def loadModule():
 		drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
 		drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
 	
-	drvExtMacEncx24jComponent = Module.CreateComponent("drvExtMacEncx24j", "ENCX24J600", "/Harmony/Drivers/MAC Driver/External/", "driver/encx24j600/config/drv_extmac_encx24j600.py")
-	drvExtMacEncx24jComponent.addCapability("libdrvExtMacEncx24j","MAC")
+	# Commenting as these modules are not part of release
+	# drvExtMacEncx24jComponent = Module.CreateComponent("drvExtMacEncx24j", "ENCX24J600", "/Harmony/Drivers/MAC Driver/External/", "driver/encx24j600/config/drv_extmac_encx24j600.py")
+	# drvExtMacEncx24jComponent.addCapability("libdrvExtMacEncx24j","MAC")
 	
-	drvExtMacEnc28jComponent = Module.CreateComponent("drvExtMacEnc28j", "ENC28J60", "/Harmony/Drivers/MAC Driver/External/", "driver/enc28j60/config/drv_extmac_enc28j60.py")
-	drvExtMacEnc28jComponent.addCapability("libdrvExtMacEnc28j","MAC")	
+	# drvExtMacEnc28jComponent = Module.CreateComponent("drvExtMacEnc28j", "ENC28J60", "/Harmony/Drivers/MAC Driver/External/", "driver/enc28j60/config/drv_extmac_enc28j60.py")
+	# drvExtMacEnc28jComponent.addCapability("libdrvExtMacEnc28j","MAC")	
 	
-	drvWifiWinc1500Component = Module.CreateComponent("drvWifiWinc1500", "WINC1500", "/Harmony/Drivers/MAC Driver/WiFi/", "driver/winc1500/config/drv_wifi_winc1500.py")
-	drvWifiWinc1500Component.addCapability("libdrvExtMacEnc28j","MAC")	
+	# drvWifiWinc1500Component = Module.CreateComponent("drvWifiWinc1500", "WINC1500", "/Harmony/Drivers/MAC Driver/WiFi/", "driver/winc1500/config/drv_wifi_winc1500.py")
+	# drvWifiWinc1500Component.addCapability("libdrvExtMacEnc28j","MAC")	
 	
 	## MIIM Driver
 	drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Harmony/Drivers/", "driver/miim/config/drv_miim.py")
@@ -230,30 +230,21 @@ def loadModule():
 	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)	
 	
-	drvExtPhyKsz8041Component = Module.CreateComponent("drvExtPhyKsz8041", "KSZ8041", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8041.py")
-	drvExtPhyKsz8041Component.addCapability("libdrvExtPhyKsz8041","PHY",True)	
-	drvExtPhyKsz8041Component.addDependency("KSZ8041_MIIM_Dependency", "MIIM", None, True, True)	
 	
 	drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
 	drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)	
 	drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)		
 	
-	drvExtPhyLan8720Component = Module.CreateComponent("drvExtPhyLan8720", "LAN8720", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8720.py")
-	drvExtPhyLan8720Component.addCapability("libdrvExtPhyLan8720","PHY",True)	
-	drvExtPhyLan8720Component.addDependency("LAN8720_MIIM_Dependency", "MIIM", None, True, True)
 	
-	drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
-	drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",True)	
-	drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)	
+	# drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
+	# drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",True)	
+	# drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)	
 	
-	drvExtPhyLan9303Component = Module.CreateComponent("drvExtPhyLan9303", "LAN9303", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan9303.py")
-	drvExtPhyLan9303Component.addCapability("libdrvExtPhyLan9303","PHY",True)	
-	drvExtPhyLan9303Component.addDependency("LAN9303_MIIM_Dependency", "MIIM", None, True, True)
 	
 	########################## Harmony Network Presentation Module #################################
 	netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net/pres/config/netPres_common.py","net/pres/config/netPres.py")
 	netPresComponent.addCapability("libNetPres","net_pres")	
-
+	
 	############################### Third Party wolfSSL Module #####################################
     tlsComponent = Module.CreateComponent("lib_wolfssl", "wolfSSL Library", "//Third Party Libraries/wolfSSL/", "config\wolfssl.py")
 
