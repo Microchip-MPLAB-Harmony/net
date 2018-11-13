@@ -275,7 +275,7 @@ SYS_MODULE_OBJ DRV_MIIM_Initialize(const SYS_MODULE_INDEX iModule, const SYS_MOD
     }
 
     // create synchronization object
-    if(OSAL_SEM_Create(&pMiimObj->objSem, OSAL_SEM_TYPE_BINARY, 1, 0) != OSAL_RESULT_TRUE)
+    if(OSAL_SEM_Create(&pMiimObj->objSem, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
     {   // failed
         return SYS_MODULE_OBJ_INVALID;
     }
