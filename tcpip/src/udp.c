@@ -102,7 +102,7 @@ static OSAL_SEM_HANDLE_TYPE userSem;
 static __inline__ OSAL_RESULT  __attribute__((always_inline))   _UserGblLockCreate(void)
 {
     // create the shared Data Lock
-    return OSAL_SEM_Create(&userSem, OSAL_SEM_TYPE_BINARY, 1, 0);
+    return OSAL_SEM_Create(&userSem, OSAL_SEM_TYPE_BINARY, 1, 1);
 }    
 
 static __inline__ void  __attribute__((always_inline))          _UserGblLockDelete(void)
