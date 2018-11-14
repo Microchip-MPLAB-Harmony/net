@@ -829,7 +829,7 @@ public class SnmpCommand {
         fincout.write("/*******************************************************************\r\n" +
 
 "* FileName: mib.h\r\n"+
-"* This file was automatically generated on Mon Aug 11 2014 11:34:06\r\n"+
+"* This file was automatically generated on "+ sdf.format(date)+ " \r\n"+
 "* by mib2bib utility.\r\n"+
 "* This file contains 'C' defines for dynamic OIDs and AgentID only.\r\n"+
 "* Do not modify this file manually.\r\n"+
