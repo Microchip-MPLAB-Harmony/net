@@ -211,16 +211,7 @@ def loadModule():
 		drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
 		drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
 	
-	# Commenting as these modules are not part of release
-	# drvExtMacEncx24jComponent = Module.CreateComponent("drvExtMacEncx24j", "ENCX24J600", "/Harmony/Drivers/MAC Driver/External/", "driver/encx24j600/config/drv_extmac_encx24j600.py")
-	# drvExtMacEncx24jComponent.addCapability("libdrvExtMacEncx24j","MAC")
-	
-	# drvExtMacEnc28jComponent = Module.CreateComponent("drvExtMacEnc28j", "ENC28J60", "/Harmony/Drivers/MAC Driver/External/", "driver/enc28j60/config/drv_extmac_enc28j60.py")
-	# drvExtMacEnc28jComponent.addCapability("libdrvExtMacEnc28j","MAC")	
-	
-	# drvWifiWinc1500Component = Module.CreateComponent("drvWifiWinc1500", "WINC1500", "/Harmony/Drivers/MAC Driver/WiFi/", "driver/winc1500/config/drv_wifi_winc1500.py")
-	# drvWifiWinc1500Component.addCapability("libdrvExtMacEnc28j","MAC")	
-	
+
 	## MIIM Driver
 	drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Harmony/Drivers/", "driver/miim/config/drv_miim.py")
 	drvMiimComponent.addCapability("libdrvMiim","MIIM",True)	
@@ -230,21 +221,22 @@ def loadModule():
 	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)	
 	
-	
 	drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
 	drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)	
 	drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)		
-	
-	
-	# drvExtPhyLan8700Component = Module.CreateComponent("drvExtPhyLan8700", "LAN8700", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8700.py")
-	# drvExtPhyLan8700Component.addCapability("libdrvExtPhyLan8700","PHY",True)	
-	# drvExtPhyLan8700Component.addDependency("LAN8700_MIIM_Dependency", "MIIM", None, True, True)	
-	
-	
+
 	########################## Harmony Network Presentation Module #################################
 	netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net/pres/config/netPres_common.py","net/pres/config/netPres.py")
 	netPresComponent.addCapability("libNetPres","net_pres")	
 	
 	############################### Third Party wolfSSL Module #####################################
-    tlsComponent = Module.CreateComponent("lib_wolfssl", "wolfSSL Library", "//Third Party Libraries/wolfSSL/", "config\wolfssl.py")
+	#tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
+
+	tcpipAutoConfigAppsComponent = Module.CreateComponent("tcpip_apps_config", "TCP/IP Application Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_apps.py")
+
+	tcpipAutoConfigTransportComponent = Module.CreateComponent("tcpip_transport_config", "TCP/IP Transport Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_transport.py")
+
+	tcpipAutoConfigNetworkComponent = Module.CreateComponent("tcpip_network_config", "TCP/IP Network Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_network.py")
+
+	tcpipAutoConfigDriverComponent = Module.CreateComponent("tcpip_driver_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_driver.py")
 
