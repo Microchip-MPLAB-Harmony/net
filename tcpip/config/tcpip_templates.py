@@ -325,7 +325,11 @@ def enableTcpipAutoConfig(enable):
 			tcpipAutoConfigBasicGroup.setNodeVisible("tcpipNetConfig", "libtcpipNetConfig")			
 			
 			tcpipAutoConfigStackGroup.setNodeVisible("tcpipStack", "Core_SysTime_Dependency") #niyas: not working 
-			res = Database.activateComponents(["sys_time"], None)
+
+			rootGroup = Database.getRootGroup()
+			rootGroup.addComponent("sys_time")
+			res = Database.activateComponents(["sys_time"])
+			
 			res = Database.connectDependencies(autoConnectTableTIME)
 
 			isEnabled = True
@@ -344,6 +348,7 @@ def tcpipAutoConfigICMPEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIcmp"], "NETWORK LAYER")	
 		tcpipAutoConfigNetworkGroup.setNodeVisible("tcpipIcmp", "libtcpipIcmp")
+		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipIcmp"])
 
@@ -352,6 +357,7 @@ def tcpipAutoConfigIGMPEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIgmp"],"NETWORK LAYER")	
 		tcpipAutoConfigNetworkGroup.setNodeVisible("tcpipIgmp", "libtcpipIgmp")
+		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipIgmp"])
 	
@@ -360,6 +366,7 @@ def tcpipAutoConfigIPv4Enable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIPv4"],"NETWORK LAYER")	
 		tcpipAutoConfigNetworkGroup.setNodeVisible("tcpipIPv4", "libTcpipIPv4")
+		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_ARP", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipIPv4"])
 	
@@ -368,6 +375,7 @@ def tcpipAutoConfigIPv6Enable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIPv6"],"NETWORK LAYER")	
 		tcpipAutoConfigNetworkGroup.setNodeVisible("tcpipIPv6", "libTcpipIPv6")
+		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_NDP", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipIPv6"])
 	
@@ -457,7 +465,11 @@ def tcpipAutoConfigFTPSERVEREnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipFtps", "libtcpipFtps")
 		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
+		
+		rootGroup = Database.getRootGroup()
+		rootGroup.addComponent("sys_fs")		
 		res = Database.activateComponents(["sys_fs"])
+		
 		res = Database.connectDependencies(autoConnectTableFS)
 		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
 		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -473,8 +485,11 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipHttpNet", "HttpNet_NetPres_Dependency")
 		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
+		rootGroup = Database.getRootGroup()
+		rootGroup.addComponent("sys_fs")
 		res = Database.activateComponents(["sys_fs"])
 		res = Database.connectDependencies(autoConnectTableFS)
+		rootGroup.addComponent("lib_crypto")
 		res = Database.activateComponents(["lib_crypto"])
 		res = Database.connectDependencies(autoConnectTableCRYPTOHttpNet)
 		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -490,8 +505,11 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
 		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
 		#tcpipAutoConfigStackGroup.setNodeVisible("tcpipHttp", "Http_Crypto_Dependency") #Niyas : This node visibility not working
+		rootGroup = Database.getRootGroup()
+		rootGroup.addComponent("sys_fs")
 		res = Database.activateComponents(["sys_fs"])
 		res = Database.connectDependencies(autoConnectTableFS)
+		rootGroup.addComponent("lib_crypto")
 		res = Database.activateComponents(["lib_crypto"])
 		res = Database.connectDependencies(autoConnectTableCRYPTOHttp)
 		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -546,6 +564,10 @@ def tcpipAutoConfigSNMPEnable(symbol, event):
 		# tcpipAutoConfigAppsGroup.setNodeVisible("tcpipSnmp", "Snmp_TcpipFs_Dependency")
 		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
+		rootGroup = Database.getRootGroup()
+		rootGroup.addComponent("sys_fs")
+		res = Database.activateComponents(["sys_fs"])
+		res = Database.connectDependencies(autoConnectTableFS)
 	else:
 		res = Database.deactivateComponents(["tcpipSnmp"])
 
@@ -582,6 +604,10 @@ def tcpipAutoConfigTFTPCLIENTEnable(symbol, event):
 		# tcpipAutoConfigAppsGroup.setNodeVisible("tcpipTftpc", "Tftpc_TcpipFs_Dependency")
 		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
+		rootGroup = Database.getRootGroup()
+		rootGroup.addComponent("sys_fs")
+		res = Database.activateComponents(["sys_fs"])
+		res = Database.connectDependencies(autoConnectTableFS)
 	else:
 		res = Database.deactivateComponents(["tcpipTftpc"])
 	
@@ -649,7 +675,8 @@ def tcpipAutoConfigMIIMDriverEnable(symbol, event):
 def tcpipAutoConfigKSZ8061Enable(symbol, event):
 	enableTcpipAutoConfig(True)
 	if (event["value"] == True):
-		res = Database.activateComponents(["drvExtPhyKsz8061"],"DRIVER LAYER")			
+		res = Database.activateComponents(["drvExtPhyKsz8061"],"DRIVER LAYER")	
+		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)		
 	else:
 		res = Database.deactivateComponents(["drvExtPhyKsz8061"])
 	
@@ -657,7 +684,8 @@ def tcpipAutoConfigKSZ8061Enable(symbol, event):
 def tcpipAutoConfigLAN8740Enable(symbol, event):
 	enableTcpipAutoConfig(True)
 	if (event["value"] == True):
-		res = Database.activateComponents(["drvExtPhyLan8740"],"DRIVER LAYER")			
+		res = Database.activateComponents(["drvExtPhyLan8740"],"DRIVER LAYER")	
+		Database.setSymbolValue("tcpip_template", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)		
 	else:
 		res = Database.deactivateComponents(["drvExtPhyLan8740"])
 	
