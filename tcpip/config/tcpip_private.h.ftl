@@ -170,6 +170,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if (tcpipTftpc.TCPIP_USE_TFTPC_MODULE)?has_content &&  (tcpipTftpc.TCPIP_USE_TFTPC_MODULE) == true>
 #include "tcpip/src/tftpc_manager.h"
 </#if>
+<#if (tcpipTftps.TCPIP_USE_TFTPS_MODULE)?has_content &&  (tcpipTftps.TCPIP_USE_TFTPS_MODULE) == true>
+#include "tcpip/src/tftps_manager.h"
+</#if>
 <#if (tcpipIperf.TCPIP_USE_IPERF)?has_content &&  (tcpipIperf.TCPIP_USE_IPERF) == true>
 #include "tcpip/src/iperf_manager.h"
 </#if>

@@ -1166,6 +1166,33 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackTftpcPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
 	tcpipStackTftpcPrivateHeaderFile.setType("HEADER")
 	tcpipStackTftpcPrivateHeaderFile.setOverwrite(True)
+	
+	# Add tftps.h file to project
+	tcpipStackTftpsHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackTftpsHeaderFile.setSourcePath("tcpip/tftps.h")
+	tcpipStackTftpsHeaderFile.setOutputName("tftps.h")
+	tcpipStackTftpsHeaderFile.setDestPath("library/tcpip/")
+	tcpipStackTftpsHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
+	tcpipStackTftpsHeaderFile.setType("HEADER")
+	tcpipStackTftpsHeaderFile.setOverwrite(True)
+
+	# Add tftps_manager.h file to project
+	tcpipStackTftpsManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackTftpsManagerHeaderFile.setSourcePath("tcpip/src/tftps_manager.h")
+	tcpipStackTftpsManagerHeaderFile.setOutputName("tftps_manager.h")
+	tcpipStackTftpsManagerHeaderFile.setDestPath("library/tcpip/src/")
+	tcpipStackTftpsManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipStackTftpsManagerHeaderFile.setType("HEADER")
+	tcpipStackTftpsManagerHeaderFile.setOverwrite(True)
+
+	# Add tftps_private.h file to project
+	tcpipStackTftpsPrivateHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackTftpsPrivateHeaderFile.setSourcePath("tcpip/src/tftps_private.h")
+	tcpipStackTftpsPrivateHeaderFile.setOutputName("tftps_private.h")
+	tcpipStackTftpsPrivateHeaderFile.setDestPath("library/tcpip/src/")
+	tcpipStackTftpsPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipStackTftpsPrivateHeaderFile.setType("HEADER")
+	tcpipStackTftpsPrivateHeaderFile.setOverwrite(True)
 		
 	# file TCPIP_REBOOT_H "$HARMONY_VERSION_PATH/framework/tcpip/tcpip_reboot.h" to "$PROJECT_HEADER_FILES/framework/tcpip/tcpip_reboot.h"
 	tcpipStackRebootHeaderFile = tcpipStackComponent.createFileSymbol(None, None)

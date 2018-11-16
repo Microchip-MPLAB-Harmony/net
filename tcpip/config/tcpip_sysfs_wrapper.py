@@ -16,7 +16,7 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsWrapper.setVisible(False)
 	tcpipSysFsWrapper.setDescription("Use TCPIP File System Wrapper")
 	tcpipSysFsWrapper.setDefaultValue(True) 
-	#tcpipSysFsWrapper.setDependencies(tcpipSysFsWrapperNeeded, ["tcpipSnmp.TCPIP_USE_SNMP","tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER","tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipFtps.TCPIP_USE_FTP_MODULE","tcpipTftpc.TCPIP_USE_TFTPC_MODULE"])
+	#tcpipSysFsWrapper.setDependencies(tcpipSysFsWrapperNeeded, ["tcpipSnmp.TCPIP_USE_SNMP","tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER","tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipFtps.TCPIP_USE_FTP_MODULE","tcpipTftpc.TCPIP_USE_TFTPC_MODULE","tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
 	
 	# Maximum Length of Full Web Path
 	tcpipSysFsPathLenMax = tcpipSysFsWrapperComponent.createIntegerSymbol("TCPIP_SYS_FS_MAX_PATH", None)
@@ -96,8 +96,9 @@ def tcpipSysFsWrapperNeeded(symbol, event):
 	tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
 	tcpipFtps = Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE")
 	tcpipTftpc = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
-
-	if(tcpipSnmp or tcpipHttp or tcpipHttpNet or tcpipFtps or tcpipTftpc):
+	tcpipTftps = Database.getSymbolValue("tcpipTftps","TCPIP_USE_TFTPS_MODULE")
+	
+	if(tcpipSnmp or tcpipHttp or tcpipHttpNet or tcpipFtps or tcpipTftpc or tcpipTftps):
 		print("SysFsWrapper Needed.")
 		symbol.setVisible(True)
 		symbol.setValue(True, 1)
