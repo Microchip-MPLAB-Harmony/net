@@ -188,6 +188,14 @@ def loadModule():
 	tcpipTftpcComponent.addDependency("Tftpc_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
 	tcpipTftpcComponent.setDisplayType("TCP/IP Library")
 	
+	tcpipTftpsComponent = Module.CreateComponent("tcpipTftps", "TFTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_tftps.py")
+	tcpipTftpsComponent.addCapability("libtcpipTftps","TFTPS",True)
+	tcpipTftpsComponent.addDependency("Tftps_IPv4_Dependency", "IPv4", None, True, True)
+	tcpipTftpsComponent.addDependency("Tftps_UDP_Dependency", "UDP", None, True, True)	
+	#tcpipTftpsComponent.addDependency("Tftps_MAC_Dependency", "MAC")
+	tcpipTftpsComponent.addDependency("Tftpc_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+	tcpipTftpsComponent.setDisplayType("TCP/IP Library")
+	
 	tcpipZeroConfComponent = Module.CreateComponent("tcpipZeroConf", "ZEROCONF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_zeroconf.py")
 	tcpipZeroConfComponent.addCapability("libtcpipZeroConf","ZEROCONF",True)
 	tcpipZeroConfComponent.addDependency("ZeroConf_IPv4_Dependency", "IPv4", None, True, True)

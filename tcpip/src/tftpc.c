@@ -84,7 +84,7 @@ static void TCPIP_TFTPC_Cleanup(void);
 
 static void _TFTPSendFileName(TFTP_OPCODE opcode, uint8_t *fileName);
 static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode);
-static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int *len);
+static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int32_t *len);
 static void _TFTPSendAck(TCPIP_UINT16_VAL blockNumber);
 static TFTP_RESULT TFTPIsPutReady(void);
 #if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
@@ -819,7 +819,7 @@ static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode)
 }
 
 
-static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int *len)
+static TFTP_RESULT TFTPIsGetReady(uint8_t *getData, int32_t *len)
 {
     TCPIP_UINT16_VAL opCode;
     TCPIP_UINT16_VAL blockNumber;

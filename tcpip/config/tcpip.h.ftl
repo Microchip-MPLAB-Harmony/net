@@ -724,6 +724,9 @@ typedef struct
 <#if (tcpipTftpc.TCPIP_USE_TFTPC_MODULE)?has_content &&  (tcpipTftpc.TCPIP_USE_TFTPC_MODULE) == true>
 #include "tcpip/tftpc.h"
 </#if>
+<#if (tcpipTftps.TCPIP_USE_TFTPS_MODULE)?has_content &&  (tcpipTftps.TCPIP_USE_TFTPS_MODULE) == true>
+#include "tcpip/tftps.h"
+</#if>
 <#if (tcpipReboot.TCPIP_USE_REBOOT_SERVER)?has_content &&  (tcpipReboot.TCPIP_USE_REBOOT_SERVER) == true>
 #include "tcpip/tcpip_reboot.h"
 </#if>

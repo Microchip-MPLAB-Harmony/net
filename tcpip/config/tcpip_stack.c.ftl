@@ -365,6 +365,13 @@ const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 };
 </#if>
 
+<#if (tcpipTftps.TCPIP_USE_TFTPS_MODULE)?has_content && (tcpipTftps.TCPIP_USE_TFTPS_MODULE) == true>
+/*** TFTP Server Initialization Data ***/
+const TCPIP_TFTPS_MODULE_CONFIG tcpipTFTPSInitData =
+{
+};
+</#if>
+
 <#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content && (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
 /*** DHCP server initialization data ***/
 TCPIP_DHCPS_ADDRESS_CONFIG DHCP_POOL_CONFIG[]=
@@ -824,6 +831,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 </#if>
 <#if (tcpipTftpc.TCPIP_USE_TFTPC_MODULE)?has_content && (tcpipTftpc.TCPIP_USE_TFTPC_MODULE) == true>
     {TCPIP_MODULE_TFTP_CLIENT,      &tcpipTFTPCInitData},           // TCPIP_MODULE_TFTP_CLIENT
+</#if>
+<#if (tcpipTftps.TCPIP_USE_TFTPS_MODULE)?has_content && (tcpipTftps.TCPIP_USE_TFTPS_MODULE) == true>
+    {TCPIP_MODULE_TFTP_SERVER,      &tcpipTFTPSInitData},           // TCPIP_MODULE_TFTP_SERVER
 </#if>
 <#if (tcpipIgmp.TCPIP_USE_IGMP)?has_content && (tcpipIgmp.TCPIP_USE_IGMP) == true>
     {TCPIP_MODULE_IGMP, &tcpipIGMPInitData},            // TCPIP_MODULE_IGMP
