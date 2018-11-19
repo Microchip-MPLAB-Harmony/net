@@ -19,9 +19,9 @@ def loadModule():
 	tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "SYS_FS")	
 	tcpipSysFsWrapperComponent.setDisplayType("TCP/IP Library")
 	
-	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_cmd.py")
+	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_cmd.py")
 	tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD",True)	
-	tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_CORE", None, True, True)
+	# tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_CORE", None, True, True)
 	tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "SYS_CONSOLE")
 	tcpipCmdComponent.setDisplayType("TCP/IP Library")
 
@@ -240,3 +240,4 @@ def loadModule():
 
 	tcpipAutoConfigDriverComponent = Module.CreateComponent("tcpip_driver_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_driver.py")
 
+	tcpipAutoConfigBasicComponent = Module.CreateComponent("tcpip_basic_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_basic.py")

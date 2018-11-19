@@ -315,12 +315,12 @@ def enableTcpipAutoConfig(enable):
 			tcpipAutoConfigTransportGroup = Database.createGroup("TCP/IP STACK", "TRANSPORT LAYER")
 			tcpipAutoConfigNetworkGroup = Database.createGroup("TCP/IP STACK", "NETWORK LAYER")	
 			tcpipAutoConfigDriverGroup = Database.createGroup("TCP/IP STACK", "DRIVER LAYER")
-			tcpipAutoConfigBasicGroup = Database.createGroup("TCP/IP STACK", "TCP/IP BASIC CONFIGURATION")
+			tcpipAutoConfigBasicGroup = Database.createGroup("TCP/IP STACK", "BASIC CONFIGURATION")
 			
-			res = Database.activateComponents(["tcpipStack"], "TCP/IP BASIC CONFIGURATION")
+			res = Database.activateComponents(["tcpipStack"], "BASIC CONFIGURATION")
 			tcpipAutoConfigBasicGroup.setNodeVisible("tcpipStack", "Core_SysTime_Dependency")
 			tcpipAutoConfigBasicGroup.setNodeVisible("tcpipStack", "libtcpipStack")
-			res = Database.activateComponents(["tcpipNetConfig"], "TCP/IP BASIC CONFIGURATION")
+			res = Database.activateComponents(["tcpipNetConfig"], "BASIC CONFIGURATION")
 			tcpipAutoConfigBasicGroup.setNodeVisible("tcpipNetConfig", "NETCONFIG_MAC_Dependency") #niyas: not working 
 			tcpipAutoConfigBasicGroup.setNodeVisible("tcpipNetConfig", "libtcpipNetConfig")			
 			
@@ -463,7 +463,7 @@ def tcpipAutoConfigFTPSERVEREnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipFtps"],"APPLICATION LAYER")	
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipFtps", "libtcpipFtps")
-		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
+		res = Database.activateComponents(["tcpipSysFsWrapper"], "BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
 		
 		rootGroup = Database.getRootGroup()
@@ -483,7 +483,7 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipHttpNet", "libtcpipHttpNet")
 		#tcpipAutoConfigAppsGroup.setNodeVisible("tcpipHttpNet", "HttpNet_Crypto_Dependency")
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipHttpNet", "HttpNet_NetPres_Dependency")
-		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
+		res = Database.activateComponents(["tcpipSysFsWrapper"], "BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
 		rootGroup = Database.getRootGroup()
 		rootGroup.addComponent("sys_fs")
@@ -502,7 +502,7 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
 		res = Database.activateComponents(["tcpipHttp"],"APPLICATION LAYER")	
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipHttp", "libtcpipHttp")
 		#tcpipAutoConfigAppsGroup.setNodeVisible("tcpipHttp", "Http_Crypto_Dependency")
-		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
+		res = Database.activateComponents(["tcpipSysFsWrapper"], "BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
 		#tcpipAutoConfigStackGroup.setNodeVisible("tcpipHttp", "Http_Crypto_Dependency") #Niyas : This node visibility not working
 		rootGroup = Database.getRootGroup()
@@ -562,7 +562,7 @@ def tcpipAutoConfigSNMPEnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipSnmp", "libtcpipSnmp")
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipSnmp", "Snmp_Crypto_Dependency")
 		# tcpipAutoConfigAppsGroup.setNodeVisible("tcpipSnmp", "Snmp_TcpipFs_Dependency")
-		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
+		res = Database.activateComponents(["tcpipSysFsWrapper"], "BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
 		rootGroup = Database.getRootGroup()
 		rootGroup.addComponent("sys_fs")
@@ -602,7 +602,7 @@ def tcpipAutoConfigTFTPCLIENTEnable(symbol, event):
 		res = Database.activateComponents(["tcpipTftpc"],"APPLICATION LAYER")	
 		tcpipAutoConfigAppsGroup.setNodeVisible("tcpipTftpc", "libtcpipTftpc")
 		# tcpipAutoConfigAppsGroup.setNodeVisible("tcpipTftpc", "Tftpc_TcpipFs_Dependency")
-		res = Database.activateComponents(["tcpipSysFsWrapper"], "TCP/IP BASIC CONFIGURATION")
+		res = Database.activateComponents(["tcpipSysFsWrapper"], "BASIC CONFIGURATION")
 		tcpipAutoConfigBasicGroup.setNodeVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
 		rootGroup = Database.getRootGroup()
 		rootGroup.addComponent("sys_fs")
