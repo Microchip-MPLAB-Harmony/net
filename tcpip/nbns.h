@@ -14,10 +14,7 @@
   Description:
     The NetBIOS Name Service protocol associates host names with IP addresses, 
     similarly to DNS, but on the same IP subnet. Practically, this allows the 
-    assignment of human-name hostnames to access boards on the same subnet. For 
-    example. in the "TCP/IP Demo App" demonstration project, the demo board is 
-    programmed with the human name 'mchpboard' so it can be accessed directly 
-    instead of with its IP address.
+    assignment of human-name hostnames to access boards on the same subnet.
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*****************************************************************************

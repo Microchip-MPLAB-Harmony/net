@@ -1,5 +1,5 @@
 /*******************************************************************************
-Microchip TCP/IP Stack Demo Application Configuration Header
+Microchip TCP/IP Stack Configuration Header
 
   Company:
     Microchip Technology Inc.
