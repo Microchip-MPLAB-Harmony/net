@@ -16,8 +16,9 @@ tcpipStackHeapPoolExpBlkNum = []
 def instantiateComponent(tcpipStackComponent):
 	print("TCPIP main Stack Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
+	# res = Database.activateComponents(["HarmonyCore"], Database.getRootGroup().getID(), True)
+
 	res = Database.activateComponents(["HarmonyCore"])
-	
 	# Enable dependent Harmony core components
 	Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON")
 	Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True, 2)

@@ -240,4 +240,4 @@ def loadModule():
 
 	tcpipAutoConfigDriverComponent = Module.CreateComponent("tcpip_driver_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_driver.py")
 
-	tcpipAutoConfigBasicComponent = Module.CreateComponent("tcpip_basic_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_basic.py")
+	tcpipAutoConfigBasicComponent = Module.CreateComponent("tcpip_basic_config", "TCP/IP Basic Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_basic.py")
