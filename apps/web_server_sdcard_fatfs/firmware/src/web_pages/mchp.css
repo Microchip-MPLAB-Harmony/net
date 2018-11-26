@@ -37,7 +37,7 @@ body {
 }
 
 #title {
-	background: #B45F04;
+	background: #d72622;
 	padding: 4px;
 	font-weight: bold;
 	color: #fff;
@@ -60,7 +60,7 @@ body {
 #menu a {
 	width: 140px;
 	display: block;
-	background: #B45F04;
+	background: #d72622;
 	color: white;
 	padding: 8px;
 	font-weight: bold;
@@ -69,7 +69,7 @@ body {
 }
 
 #menu a:hover {
-	background: #8A0808;
+	background: #c02f51;
 }
 
 #content {
