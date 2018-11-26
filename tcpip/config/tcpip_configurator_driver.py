@@ -33,11 +33,11 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
 	global tcpipAutoConfigStackGroup
 	global tcpipAutoConfigDriverGroup
 
-	tcpipAutoConfigStackGroup = Database.getGroup("TCP/IP STACK")
+	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
 		tcpipAutoConfigStackGroup = Database.createGroup(None, "TCP/IP STACK")
 		
-	tcpipAutoConfigDriverGroup = Database.getGroup("DRIVER LAYER")
+	tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
 	if (tcpipAutoConfigDriverGroup == None):
 		tcpipAutoConfigDriverGroup = Database.createGroup("TCP/IP STACK", "DRIVER LAYER")
 
@@ -87,46 +87,46 @@ def enableTcpipAutoConfigDrv(enable):
 	global tcpipAutoConfigBasicGroup
 	global isEnabled
 	if(enable == True):
-		tcpipAutoConfigAppsGroup = Database.getGroup("APPLICATION LAYER")
+		tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
 		if (tcpipAutoConfigAppsGroup == None):
 			tcpipAutoConfigAppsGroup = Database.createGroup("TCP/IP STACK", "APPLICATION LAYER")
 			
-		tcpipAutoConfigTransportGroup = Database.getGroup("TRANSPORT LAYER")
+		tcpipAutoConfigTransportGroup = Database.findGroup("TRANSPORT LAYER")
 		if (tcpipAutoConfigTransportGroup == None):
 			tcpipAutoConfigTransportGroup = Database.createGroup("TCP/IP STACK", "TRANSPORT LAYER")
 
-		tcpipAutoConfigNetworkGroup = Database.getGroup("NETWORK LAYER")
+		tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 		if (tcpipAutoConfigNetworkGroup == None):
 			tcpipAutoConfigNetworkGroup = Database.createGroup("TCP/IP STACK", "NETWORK LAYER")
 			
-		tcpipAutoConfigDriverGroup = Database.getGroup("DRIVER LAYER")
+		tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
 		if (tcpipAutoConfigDriverGroup == None):
 			tcpipAutoConfigDriverGroup = Database.createGroup("TCP/IP STACK", "DRIVER LAYER")
 
-		tcpipAutoConfigBasicGroup = Database.getGroup("BASIC CONFIGURATION")
+		tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
 		if (tcpipAutoConfigBasicGroup == None):
 			tcpipAutoConfigBasicGroup = Database.createGroup("TCP/IP STACK", "BASIC CONFIGURATION")
 		
 		if(Database.getComponentByID("tcpip_apps_config") == None):
 			res = tcpipAutoConfigAppsGroup.addComponent("tcpip_apps_config")
-			res = Database.activateComponents(["tcpip_apps_config"], "APPLICATION LAYER")
+			res = Database.activateComponents(["tcpip_apps_config"], "APPLICATION LAYER", False)
 			
 		if(Database.getComponentByID("tcpip_transport_config") == None):
 			res = tcpipAutoConfigTransportGroup.addComponent("tcpip_transport_config")
-			res = Database.activateComponents(["tcpip_transport_config"], "TRANSPORT LAYER")
+			res = Database.activateComponents(["tcpip_transport_config"], "TRANSPORT LAYER", False)
 		
 		if(Database.getComponentByID("tcpip_network_config") == None):
 			res = tcpipAutoConfigNetworkGroup.addComponent("tcpip_network_config")
-			res = Database.activateComponents(["tcpip_network_config"], "NETWORK LAYER")
+			res = Database.activateComponents(["tcpip_network_config"], "NETWORK LAYER", False)
 			
 		if(Database.getComponentByID("tcpip_basic_config") == None):
 			res = tcpipAutoConfigBasicGroup.addComponent("tcpip_basic_config")
-			res = Database.activateComponents(["tcpip_basic_config"], "BASIC CONFIGURATION")			
+			res = Database.activateComponents(["tcpip_basic_config"], "BASIC CONFIGURATION", False)			
 			
-		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True)
+		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
 			
-		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True)
+		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True, 2)				
 
 #################Business Logic- Driver Layer #########################################	
@@ -134,7 +134,7 @@ def tcpipAutoConfigGMACEnable(symbol, event):
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["drvSamv71Gmac"],"DRIVER LAYER")	
-		tcpipAutoConfigDriverGroup.setNodeVisible("drvSamv71Gmac", "libdrvSamv71Gmac")
+		tcpipAutoConfigDriverGroup.setAttachmentVisible("drvSamv71Gmac", "libdrvSamv71Gmac")
 	else:
 		res = Database.deactivateComponents(["drvSamv71Gmac"])
 	
@@ -142,7 +142,7 @@ def tcpipAutoConfigETHMACEnable(symbol, event):
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["drvPic32mEthmac"],"DRIVER LAYER")	
-		tcpipAutoConfigDriverGroup.setNodeVisible("drvPic32mEthmac", "libdrvPic32mEthmac")
+		tcpipAutoConfigDriverGroup.setAttachmentVisible("drvPic32mEthmac", "libdrvPic32mEthmac")
 	else:
 		res = Database.deactivateComponents(["drvPic32mEthmac"])
 	
@@ -158,7 +158,7 @@ def tcpipAutoConfigKSZ8061Enable(symbol, event):
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["drvExtPhyKsz8061"],"DRIVER LAYER")	
-		if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True)
+		if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
 			Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)		
 	else:
 		res = Database.deactivateComponents(["drvExtPhyKsz8061"])
@@ -168,7 +168,7 @@ def tcpipAutoConfigLAN8740Enable(symbol, event):
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["drvExtPhyLan8740"],"DRIVER LAYER")	
-		if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True)
+		if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
 			Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)		
 	else:
 		res = Database.deactivateComponents(["drvExtPhyLan8740"])
