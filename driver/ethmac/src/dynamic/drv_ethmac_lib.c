@@ -412,7 +412,7 @@ void* DRV_ETHMAC_LibDescriptorGetBuffer (DRV_ETHMAC_INSTANCE_DCPT* pMacD,  void 
 
     if(pEDcpt->hwDcpt.pEDBuff != 0)
     {
-        pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((int)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((int)pEDcpt->hwDcpt.pEDBuff));
+        pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
     }
 
     return pBuff;
@@ -491,7 +491,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
         }
         // ok valid descriptor
         // pas it to hw, always use linked descriptors
-        pEDcpt->hwDcpt.pEDBuff=(unsigned char*)KVA_TO_PA(pBuff);
+        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(pBuff);
 
         pEDcpt->hwDcpt.hdr.w=_SDCPT_HDR_NPV_MASK_|_SDCPT_HDR_EOWN_MASK_;    // hw owned
 
@@ -579,7 +579,7 @@ static DRV_ETHMAC_RESULT _EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, cons
     if(pEDcpt)
     {   // ok valid descriptor
         // pass it to hw, always use linked descriptors, set proper size
-        pEDcpt->hwDcpt.pEDBuff=(unsigned char*)KVA_TO_PA(pBuff);
+        pEDcpt->hwDcpt.pEDBuff=(uint8_t*)KVA_TO_PA(pBuff);
         pEDcpt->hwDcpt.hdr.w=_SDCPT_HDR_NPV_MASK_|_SDCPT_HDR_EOWN_MASK_|(nBytes<<_SDCPT_HDR_BCOUNT_POS_);   // hw owned
 
         if(IS_KVA0(pBuff))
@@ -817,7 +817,7 @@ static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* p
 
     for(pEDcpt=pRemList->head; pEDcpt!=0; pEDcpt=next)
     {
-        if(pEDcpt->hwDcpt.hdr.SOP && (pPkt==0 || pEDcpt->hwDcpt.pEDBuff==(unsigned char*)KVA_TO_PA(pPkt)))
+        if(pEDcpt->hwDcpt.hdr.SOP && (pPkt==0 || pEDcpt->hwDcpt.pEDBuff==(uint8_t*)KVA_TO_PA(pPkt)))
         { // found the beg of a packet
             pktFound=1;
 
@@ -837,7 +837,7 @@ static DRV_ETHMAC_RESULT _EthAckPacket(const void* pPkt, DRV_ETHMAC_DCPT_LIST* p
                 if(ackFnc)
                 {
                     void* pBuff;
-                    pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((int)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((int)pEDcpt->hwDcpt.pEDBuff));
+                    pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
                     (*ackFnc)(pBuff, buffIx++, fParam); // call user's acknowledge
                 }
 
@@ -1047,7 +1047,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxGetPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV
             {   // either way, we have to parse the packet
                 if(pBuffDcpt)
                 {
-                    pBuffDcpt->pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((int)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((int)pEDcpt->hwDcpt.pEDBuff));
+                    pBuffDcpt->pBuff=(pEDcpt->hwDcpt.hdr.kv0?PA_TO_KVA0((uint32_t)pEDcpt->hwDcpt.pEDBuff):PA_TO_KVA1((uint32_t)pEDcpt->hwDcpt.pEDBuff));
                     pBuffDcpt->nBytes=pEDcpt->hwDcpt.hdr.bCount;
                     pBuffDcpt=pBuffDcpt->next;
                     reportBuffs++;
