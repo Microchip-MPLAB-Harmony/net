@@ -29,6 +29,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define __ETH_DCPT_LISTS_H_
 
 #include <sys/kmem.h>
+#include <stdint.h>
 
 // *****************************************************************************
 /*  Packet Descriptor
@@ -54,7 +55,7 @@ typedef struct _tag_DRV_ETHMAC_PKT_DCPT
     void                   *pBuff;
 
     // Number of bytes in the buffer 0-2047 allowed
-    unsigned short int      nBytes;
+    uint16_t                nBytes;
 
 } /*DOM-IGNORE-BEGIN*/ __attribute__ ((__packed__)) /*DOM-IGNORE-END*/ DRV_ETHMAC_PKT_DCPT;
 
@@ -77,68 +78,68 @@ typedef union
     struct
     {
         // Total bytes transmitted
-        unsigned        totTxBytes   :16;
+        uint64_t        totTxBytes   :16;
 
         // Control frame transmitted
-        unsigned         txCtrl      : 1;
+        uint64_t         txCtrl      : 1;
 
         // Pause control frame transmitted
-        unsigned         txPause     : 1;
+        uint64_t         txPause     : 1;
 
         // Transmit backpressure applied
-        unsigned         txBPres     : 1;
+        uint64_t         txBPres     : 1;
 
         // Transmit VLAN tagged frame
-        unsigned         txVLAN      : 1;
+        uint64_t         txVLAN      : 1;
 
-        unsigned                     : 12;
+        uint64_t                     : 12;
 
         // Transmit bytes count
-        unsigned         bCount      :16;
+        uint64_t         bCount      :16;
 
         // Transmit collision count
-        unsigned        collCount   : 4;
+        uint64_t        collCount   : 4;
 
         // Transmit CRC error
-        unsigned         crcError    : 1;
+        uint64_t         crcError    : 1;
 
         // Transmit length check error
-        unsigned         lenError    : 1;
+        uint64_t         lenError    : 1;
 
         // Transmit length out of range
-        unsigned         lenRange    : 1;
+        uint64_t         lenRange    : 1;
 
         // Transmit done
-        unsigned         txDone      : 1;
+        uint64_t         txDone      : 1;
 
         // Transmit multicast
-        unsigned         mcast       : 1;
+        uint64_t         mcast       : 1;
 
         // Transmit broadcast
-        unsigned         bcast       : 1;
+        uint64_t         bcast       : 1;
 
         // Transmit packet defer
-        unsigned         defer       : 1;
+        uint64_t         defer       : 1;
 
         // Transmit excessive packet defer
-        unsigned         excDefer    : 1;
+        uint64_t         excDefer    : 1;
 
         // Transmit maximum collision
-        unsigned         maxColl     : 1;
+        uint64_t         maxColl     : 1;
 
         // Transmit late collision
-        unsigned         lateColl    : 1;
+        uint64_t         lateColl    : 1;
 
         // Transmit giant frame (set when pktSz>MaxFrameSz && HugeFrameEn==0)
-        unsigned         giant       : 1;
+        uint64_t         giant       : 1;
 
         // Transmit underrun
-        unsigned         underrun    : 1;
+        uint64_t         underrun    : 1;
 
     } __attribute__ ((__packed__));
 
     // Status is 2 words always
-    unsigned long long  w;
+    uint64_t            w;
 
 } DRV_ETHMAC_PKT_STAT_TX;
 
@@ -161,88 +162,88 @@ typedef union
     struct
     {
         // Packet payload checksum
-        unsigned        pktChecksum     :16;
+        uint64_t        pktChecksum     :16;
 
-        unsigned                        : 8;
+        uint64_t                        : 8;
 
         // Runt packet received
-        unsigned        runtPkt         : 1;
+        uint64_t        runtPkt         : 1;
 
         // Unicast, not me packet,
-        unsigned        notMeUcast      : 1;
+        uint64_t        notMeUcast      : 1;
 
         // Hash table match
-        unsigned        htMatch         : 1;
+        uint64_t        htMatch         : 1;
 
         // Magic packet match
-        unsigned        magicMatch      : 1;
+        uint64_t        magicMatch      : 1;
 
         // Pattern match match
-        unsigned        pmMatch         : 1;
+        uint64_t        pmMatch         : 1;
 
         // Unicast match
-        unsigned        uMatch          : 1;
+        uint64_t        uMatch          : 1;
 
         // Broadcast match
-        unsigned        bMatch          : 1;
+        uint64_t        bMatch          : 1;
 
         // Multicast match
-        unsigned        mMatch          : 1;
+        uint64_t        mMatch          : 1;
 
         // Received bytes
-        unsigned        rxBytes         :16;
+        uint64_t        rxBytes         :16;
 
         // Packet previously ignored
-        unsigned        prevIgnore      : 1;
+        uint64_t        prevIgnore      : 1;
 
         // RX data valid event previously seen
-        unsigned        prevDV          : 1;
+        uint64_t        prevDV          : 1;
 
         // Carrier event previously seen
-        unsigned        prevCarrier     : 1;
+        uint64_t        prevCarrier     : 1;
 
         // RX code violation
-        unsigned        rxCodeViol      : 1;
+        uint64_t        rxCodeViol      : 1;
 
         // CRC error in packet
-        unsigned        crcError        : 1;
+        uint64_t        crcError        : 1;
 
         // Receive length check error
-        unsigned        lenError        : 1;
+        uint64_t        lenError        : 1;
 
         // Receive length out of range
-        unsigned        lenRange        : 1;
+        uint64_t        lenRange        : 1;
 
         // Receive OK
-        unsigned        rxOk            : 1;
+        uint64_t        rxOk            : 1;
 
         // Multicast packet
-        unsigned        mcast           : 1;
+        uint64_t        mcast           : 1;
 
         // Broadcast packet
-        unsigned        bcast           : 1;
+        uint64_t        bcast           : 1;
 
         // Dribble nibble
-        unsigned        dribble         : 1;
+        uint64_t        dribble         : 1;
 
         // Control frame received
-        unsigned        rxCtrl          : 1;
+        uint64_t        rxCtrl          : 1;
 
         // Pause control frame received
-        unsigned        rxPause         : 1;
+        uint64_t        rxPause         : 1;
 
         // Received unsupported code
-        unsigned        rxCodeErr       : 1;
+        uint64_t        rxCodeErr       : 1;
 
         // Received VLAN tagged frame
-        unsigned        rxVLAN          : 1;
+        uint64_t        rxVLAN          : 1;
 
-        unsigned                        : 1;
+        uint64_t                        : 1;
 
     }__attribute__ ((__packed__));
 
     // Status is 2 words always
-    unsigned long long  w;
+    uint64_t            w;
 
 } DRV_ETHMAC_PKT_STAT_RX;
 
@@ -253,20 +254,20 @@ typedef union
 {
     struct
     {
-        unsigned        : 7;
-        unsigned EOWN   : 1;
-        unsigned NPV    : 1;
-        unsigned sticky : 1;    // a receive buffer is sticky
-        unsigned kv0    : 1;    // belongs to k0. else k1
-        unsigned rx_wack: 1;    // RX buffer waiting for acknowledge
-        unsigned rx_nack: 1;    // RX descriptor is not acknowledged
-        unsigned        : 3;
-        unsigned bCount : 11;
-        unsigned        : 3;
-        unsigned EOP    : 1;
-        unsigned SOP    : 1;
+        uint32_t        : 7;
+        uint32_t EOWN   : 1;
+        uint32_t NPV    : 1;
+        uint32_t sticky : 1;    // a receive buffer is sticky
+        uint32_t kv0    : 1;    // belongs to k0. else k1
+        uint32_t rx_wack: 1;    // RX buffer waiting for acknowledge
+        uint32_t rx_nack: 1;    // RX descriptor is not acknowledged
+        uint32_t        : 3;
+        uint32_t bCount : 11;
+        uint32_t        : 3;
+        uint32_t EOP    : 1;
+        uint32_t SOP    : 1;
     };
-    unsigned int    w;
+    uint32_t            w;
 }DRV_ETHMAC_DCPT_HDR;  // descriptor header
 
 #define _SDCPT_HDR_EOWN_MASK_       0x00000080
@@ -283,27 +284,27 @@ typedef union
 typedef struct
 {
     volatile DRV_ETHMAC_DCPT_HDR       hdr;        // header
-    unsigned char*          pEDBuff;    // data buffer address
-    volatile unsigned long long stat;       // TX/RX packet status
-    unsigned int            next_ed;    // next descriptor (hdr.NPV==1);
+    uint8_t*                pEDBuff;    // data buffer address
+    volatile uint64_t       stat;       // TX/RX packet status
+    uint32_t                next_ed;    // next descriptor (hdr.NPV==1);
 }__attribute__ ((__packed__)) DRV_ETHMAC_HW_DCPT;   // hardware TX/RX descriptor (linked).
 
 
 typedef struct __attribute__ ((__packed__))
 {
     volatile DRV_ETHMAC_DCPT_HDR       hdr;        // header
-    unsigned char*          pEDBuff;    // data buffer address
+    uint8_t*                pEDBuff;    // data buffer address
     volatile DRV_ETHMAC_PKT_STAT_TX  stat;       // transmit packet status
-    unsigned int            next_ed;    // next descriptor (hdr.NPV==1);
+    uint32_t                next_ed;    // next descriptor (hdr.NPV==1);
 } DRV_ETHMAC_HW_DCPT_TX; // hardware TX descriptor (linked).
 
 
 typedef struct __attribute__ ((__packed__))
 {
     volatile DRV_ETHMAC_DCPT_HDR       hdr;        // header
-    unsigned char*          pEDBuff;    // data buffer address
+    uint8_t*                pEDBuff;    // data buffer address
     volatile DRV_ETHMAC_PKT_STAT_RX  stat;       // transmit packet status
-    unsigned int            next_ed;    // next descriptor (hdr.NPV==1);
+    uint32_t                next_ed;    // next descriptor (hdr.NPV==1);
 } DRV_ETHMAC_HW_DCPT_RX; // hardware Rx descriptor (linked).
 
 
@@ -370,8 +371,8 @@ extern __inline__ int __attribute__((always_inline)) DRV_ETHMAC_LIB_ListCount(DR
 extern __inline__ void __attribute__((always_inline)) DRV_ETHMAC_LIB_ListAddHead(DRV_ETHMAC_DCPT_LIST* pL, DRV_ETHMAC_DCPT_NODE* pN)
 {
     pN->next=pL->head;
-    pL->head=pN;
     pN->hwDcpt.next_ed=KVA_TO_PA(&pL->head->hwDcpt);
+    pL->head=pN;
     if(pL->tail==0)
     {  // empty list
         pL->tail=pN;
