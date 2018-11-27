@@ -1523,7 +1523,9 @@ class staticVar //extends SnmpCommand
             if ( i > 0xffff )
                 mainMib2bib.ShowWarning(file, line, mib2bib.FILE_ERROR_CODE.VALUE_TRUNCATED);
 
-            matchingNode.int16 = intSwap((short)i);
+           //matchingNode.int16 = intSwap((short)i);
+            matchingNode.int16 = (short)i;
+            //System.out.println("INT16_VAL : " + matchingNode.int16 +"\t" + "input Val: "+ i+ "\n");
             matchingNode.dataLen = 2;
             for (j = 0; j < matchingNode.dataLen; j++)
             {
@@ -1544,7 +1546,9 @@ class staticVar //extends SnmpCommand
                 return false;
             }
             intVal = pList.get(2).toString().replace(" ","");
-            matchingNode.int32 = intSwap(Integer.decode(intVal));
+            //matchingNode.int32 = intSwap(Integer.decode(intVal));
+            matchingNode.int32 = Integer.decode(intVal);
+            //System.out.println("INT32_VAL : " + matchingNode.int32 +"\t" + "input Val: "+ intVal+ "\n");
             matchingNode.dataLen = 4;
             for (j = 0; j < matchingNode.dataLen; j++)
             {
