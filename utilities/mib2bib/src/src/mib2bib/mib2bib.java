@@ -36,7 +36,7 @@ import java.util.*;
 
 public class mib2bib {
 
-static String VERSION_INFO = "  v3.0.0  ";
+static String VERSION_INFO = "  v3.0.1  ";
 final int OID_STRING_LEN =  (256);
 
 /*
@@ -1375,7 +1375,7 @@ void mib2BibStart(String argc[])
 
 public static void main(String argc[])
 {
-    VERSION_INFO  = VERSION_INFO + " <Wednesday, Nov 14, 2018>\n";
+    VERSION_INFO  = VERSION_INFO + " <Wednesday, Nov 27, 2018>\n";
     VERSION_MESSAGE = VERSION_MESSAGE + VERSION_INFO + "Copyright (c) 2018 Microchip Technology Inc.\n";
     System.out.println(VERSION_MESSAGE);
 
