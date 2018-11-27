@@ -157,16 +157,16 @@ def tcpipSntpMenuVisibleSingle(symbol, event):
 
 def tcpipSntpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
-	
-def onDependentComponentAdded(tcpipSntpComponent, id, macComponent):
-    if id == "Sntp_MAC_Dependency" :
-        tcpipSntpIf = tcpipSntpComponent.getSymbolByID("TCPIP_NTP_DEFAULT_IF")
-        tcpipSntpIf.clearValue()
-        tcpipSntpIf.setValue(macComponent.getDisplayName(), 2)
-        
-def onDependentComponentRemoved(tcpipSntpComponent, id, macComponent):
-    if id == "Sntp_MAC_Dependency" :
-        tcpipSntpComponent.clearSymbolValue("TCPIP_NTP_DEFAULT_IF")	
+
+def onAttachmentConnected(source, target):
+	if (source["id"] == "Sntp_MAC_Dependency"):	
+		tcpipSntpIf = source["component"].getSymbolByID("TCPIP_NTP_DEFAULT_IF")
+		tcpipSntpIf.clearValue()
+		tcpipSntpIf.setValue(target["component"].getDisplayName(), 2)
+		
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "Sntp_MAC_Dependency"):	
+		source["component"].clearSymbolValue("TCPIP_NTP_DEFAULT_IF")	
 
 def destroyComponent(component):
 	Database.setSymbolValue("tcpipSntp", "TCPIP_USE_SNTP_CLIENT", False, 2)

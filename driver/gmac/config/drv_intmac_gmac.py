@@ -654,13 +654,11 @@ def tcpipGmacGenSourceFile(sourceFile, event):
 def drvGmacGenHeaderFile(headerFile, event):
 	headerFile.setEnabled(event["value"])
 
+def onAttachmentConnected(source, target):
+	if (source["id"] == "GMAC_PHY_Dependency"):	
+		Database.setSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE", target["component"].getDisplayName(),2)
+		
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "GMAC_PHY_Dependency"):	
+		Database.clearSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE")
 
-def onGenericDependencySatisfied(dependencyID, satisfierID):
-	print("satisfied: " + dependencyID + ", " + satisfierID)
-	satisfierComponent = Database.getComponentByID(satisfierID)
-	Database.clearSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE")
-	Database.setSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE", satisfierComponent.getDisplayName(),2)
-
-def onGenericDependencyUnsatisfied(dependencyID, satisfierID):
-	print("unsatisfied: " + dependencyID + ", " + satisfierID)
-	Database.clearSymbolValue("drvSamv71Gmac", "DRV_GMAC_PHY_TYPE")

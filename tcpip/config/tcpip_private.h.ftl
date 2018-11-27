@@ -139,7 +139,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if (tcpipTelnet.TCPIP_USE_TELNET)?has_content &&  (tcpipTelnet.TCPIP_USE_TELNET) == true>
 #include "tcpip/src/telnet_manager.h"
 </#if>
-<#if (tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true>
+<#if ((tcpipUdp.TCPIP_USE_UDP)?has_content &&  (tcpipUdp.TCPIP_USE_UDP) == true) ||
+((tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true)>
 #include "tcpip/src/udp_manager.h"
 </#if>
 <#if (tcpipSntp.TCPIP_USE_SNTP_CLIENT)?has_content &&  (tcpipSntp.TCPIP_USE_SNTP_CLIENT) == true>

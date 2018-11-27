@@ -21,7 +21,7 @@
 # ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 # THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ##############################################################################
-
+autoConnectTableMAC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvSamv71Gmac:libdrvSamv71Gmac"]]
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -30,8 +30,6 @@
 #### Code Generation ####
 ############################################################################
 def instantiateComponent(tcpipAutoConfigDriverComponent):
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigDriverGroup
 
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
@@ -45,9 +43,6 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
 	tcpipAutoConfigDrvEnable = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_DRV_ENABLE", None)
 	tcpipAutoConfigDrvEnable.setVisible(False)
 	tcpipAutoConfigDrvEnable.setDefaultValue(True)
-
-	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_TRANS_ENABLE") != True) and (Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_NET_ENABLE") != True) and (Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_BASIC_ENABLE") != True):
-		Database.setActiveGroup("DRIVER LAYER")
 		
 	# Enable GMAC
 	tcpipAutoConfigGMAC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_GMAC", None)
@@ -76,16 +71,16 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
 	tcpipAutoConfigLAN8740.setVisible(True)
 	tcpipAutoConfigLAN8740.setDescription("Enable LAN8740")
 	tcpipAutoConfigLAN8740.setDependencies(tcpipAutoConfigLAN8740Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8740"])		
+########################################################################################################
+def finalizeComponent(tcpipAutoConfigDriverComponent):
+	tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+	tcpipAutoConfigDriverGroup.addComponent(tcpipAutoConfigDriverComponent.getID())
 	
+	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_TRANS_ENABLE") != True) and (Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_NET_ENABLE") != True) and (Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_BASIC_ENABLE") != True):
+		Database.setActiveGroup("DRIVER LAYER")	
 #######################################################################################################
 def enableTcpipAutoConfigDrv(enable):
-	global tcpipAutoConfigAppsGroup
-	global tcpipAutoConfigTransportGroup
-	global tcpipAutoConfigNetworkGroup	
-	global tcpipAutoConfigDriverGroup
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigBasicGroup
-	global isEnabled
+
 	if(enable == True):
 		tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
 		if (tcpipAutoConfigAppsGroup == None):
@@ -131,14 +126,17 @@ def enableTcpipAutoConfigDrv(enable):
 
 #################Business Logic- Driver Layer #########################################	
 def tcpipAutoConfigGMACEnable(symbol, event):
+	tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["drvSamv71Gmac"],"DRIVER LAYER")	
 		tcpipAutoConfigDriverGroup.setAttachmentVisible("drvSamv71Gmac", "libdrvSamv71Gmac")
+		res = Database.connectDependencies(autoConnectTableMAC)
 	else:
 		res = Database.deactivateComponents(["drvSamv71Gmac"])
 	
 def tcpipAutoConfigETHMACEnable(symbol, event):
+	tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["drvPic32mEthmac"],"DRIVER LAYER")	

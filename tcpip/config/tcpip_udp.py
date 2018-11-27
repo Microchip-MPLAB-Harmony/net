@@ -137,17 +137,14 @@ def tcpipUdpMenuVisible(symbol, tcpipIPSymbol):
 	
 def tcpipUdpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
-	
-def onGenericDependencySatisfied(dependencyID, satisfierID):
-	print("satisfied: " + dependencyID + ", " + satisfierID)
-	if (satisfierID == "tcpipIPv4") or (satisfierID == "tcpipIPv6"):
+
+def onAttachmentConnected(source, target):
+	if (source["id"] == "tcpipIPv4") or (source["id"] == "tcpipIPv6") :	
 		Database.clearSymbolValue("tcpipUdp", "TCPIP_USE_UDP")
 		Database.setSymbolValue("tcpipUdp", "TCPIP_USE_UDP", True, 2)
-
-def onGenericDependencyUnsatisfied(dependencyID, satisfierID):
-	print("unsatisfied: " + dependencyID + ", " + satisfierID)
-
-	if (satisfierID == "tcpipIPv4") or (satisfierID == "tcpipIPv6"):
+		
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "tcpipIPv4") or (source["id"] == "tcpipIPv6") :	
 		Database.clearSymbolValue("tcpipUdp", "TCPIP_USE_UDP")
 		Database.setSymbolValue("tcpipUdp", "TCPIP_USE_UDP", False, 2)
 

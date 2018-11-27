@@ -117,15 +117,15 @@ def tcpipTftpcMenuVisibleSingle(symbol, event):
 def tcpipTftpcGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 	
-def onDependentComponentAdded(tcpipTftpcComponent, id, macComponent):
-    if id == "Tftpc_MAC_Dependency" :
-        tcpipSntpIf = tcpipTftpcComponent.getSymbolByID("TCPIP_TFTPC_DEFAULT_IF")
-        tcpipSntpIf.clearValue()
-        tcpipSntpIf.setValue(macComponent.getDisplayName(), 2)
-        
-def onDependentComponentRemoved(tcpipTftpcComponent, id, macComponent):
-    if id == "Tftpc_MAC_Dependency" :
-        tcpipTftpcComponent.clearSymbolValue("TCPIP_TFTPC_DEFAULT_IF")
-
+def onAttachmentConnected(source, target):
+	if (source["id"] == "Tftpc_MAC_Dependency"):	
+		tcpipTftpcIf = source["component"].getSymbolByID("TCPIP_TFTPC_DEFAULT_IF")
+		tcpipTftpcIf.clearValue()
+		tcpipTftpcIf.setValue(target["component"].getDisplayName(), 2)
+		
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "Tftpc_MAC_Dependency"):	
+		source["component"].clearSymbolValue("TCPIP_TFTPC_DEFAULT_IF")
+	
 def destroyComponent(component):
 	Database.setSymbolValue("tcpipTftpc", "TCPIP_USE_TFTPC_MODULE", False, 2)
