@@ -463,11 +463,14 @@ void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTT
 {
     char *evMsg = (char *)evInfo;
 
-    if(evMsg == 0)
-    {
-        evMsg = "none";
+    if(evType < 0)
+    {   // display errors only
+        if(evMsg == 0)
+        {
+            evMsg = "none";
+        }
+        SYS_CONSOLE_PRINT("HTTP event: %d, info: %s\r\n", evType, evMsg);
     }
-    SYS_CONSOLE_PRINT("HTTP event: %d, info: %s\r\n", evType, evMsg);
 }
 
 <#if ((tcpipHttpNet.TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_SSI_PROCESS  == true))>
