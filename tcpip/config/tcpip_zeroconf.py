@@ -375,17 +375,15 @@ def tcpipZeroConfGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 	
 #########################################################################################################
-
-def onDependentComponentAdded(tcpipZeroConfComponent, id, remoteComponent):
-	if id == "ZeroConf_UDP_Dependency":
-		tcpipZcMulticastDns = tcpipZeroConfComponent.getSymbolByID("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG")
-		tcpipZcMulticastDns.setVisible(True)		
-
-def onDependentComponentRemoved(tcpipZeroConfComponent, id, remoteComponent):
-	if id == "ZeroConf_UDP_Dependency":
-		tcpipZcMulticastDns = tcpipZeroConfComponent.getSymbolByID("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG")
-		tcpipZcMulticastDns.setVisible(False)
+def onAttachmentConnected(source, target):
+	if (source["id"] == "ZeroConf_UDP_Dependency"):	
+		tcpipZcMulticastDns = source["component"].getSymbolByID("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG")
+		tcpipZcMulticastDns.setVisible(True)
 		
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "ZeroConf_UDP_Dependency"):	
+		tcpipZcMulticastDns = source["component"].getSymbolByID("TCPIP_USE_MULTI_CAST_DNS_ZERO_CONFIG")
+		tcpipZcMulticastDns.setVisible(False)
 
 def destroyComponent(component):
 	Database.setSymbolValue("tcpipZeroConf", "TCPIP_USE_LINK_ZERO_CONFIG", False, 2)

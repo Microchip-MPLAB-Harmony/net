@@ -120,15 +120,7 @@ def instantiateComponent(drvExtPhyLan8740Component):
 	drvExtPhyLan8740HeaderFtl.setSourcePath("driver/ethphy/config/drv_extphy_lan8740.h.ftl")
 	drvExtPhyLan8740HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	drvExtPhyLan8740HeaderFtl.setMarkup(True)
-	drvExtPhyLan8740HeaderFtl.setType("STRING")
-	
-	
-	# add "<#include \"/framework/tcpip/config/tcpip_stack.c.ftl\">"  to list SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA
-	drvExtPhyLan8740SourceFtl = drvExtPhyLan8740Component.createFileSymbol(None, None)
-	drvExtPhyLan8740SourceFtl.setType("STRING")
-	drvExtPhyLan8740SourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
-	drvExtPhyLan8740SourceFtl.setSourcePath("driver/ethphy/config/drv_extphy_lan8740.c.ftl")
-	drvExtPhyLan8740SourceFtl.setMarkup(True)
+	drvExtPhyLan8740HeaderFtl.setType("STRING")	
 	
 	# file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
 	# Add drv_ethphy.h file to project

@@ -219,6 +219,51 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 </#if>
 
 <#if (drvSamv71Gmac.TCPIP_USE_ETH_MAC)?has_content && (drvSamv71Gmac.TCPIP_USE_ETH_MAC)  == true>
+<#if (drvSamv71Gmac.DRV_GMAC_PHY_TYPE)?has_content>
+<#if (drvSamv71Gmac.DRV_GMAC_PHY_TYPE)  == "KSZ8061">
+<#assign emac_phy_type = drvExtPhyKsz8061.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (drvSamv71Gmac.DRV_GMAC_PHY_TYPE)  == "LAN8740">
+<#assign emac_phy_type = drvExtPhyLan8740.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_RESET_CALLBACK>
+</#if>
+
+
+/*** ETH PHY Initialization Data ***/
+<#if use_phy_reset_callback == true>
+<#if phy_reset_callback?has_content>
+extern void ${phy_reset_callback}( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
+</#if>
+</#if>
+
+
+
+const DRV_ETHPHY_INIT tcpipPhyInitData =
+{    
+    .ethphyId               = TCPIP_INTMAC_MODULE_ID,
+    .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
+    .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,
+    .pPhyObject             = &DRV_ETHPHY_OBJECT_${emac_phy_type},
+<#if use_phy_reset_callback == true && phy_reset_callback?has_content>
+    .resetFunction          = ${phy_reset_callback},
+<#else>
+    .resetFunction          = 0,
+</#if>
+<#if drvMiim.DRV_MIIM_USE_DRIVER?has_content && drvMiim.DRV_MIIM_USE_DRIVER == true >
+    .pMiimObject            = &${drvMiim.DRV_MIIM_DRIVER_OBJECT},
+    .pMiimInit              = &drvMiimInitData,
+    .miimIndex              = DRV_MIIM_DRIVER_INDEX,
+<#else>
+    .pMiimObject            = 0,
+    .pMiimInit              = 0,
+    .miimIndex              = 0,
+</#if>
+
+};
+</#if>
+
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 

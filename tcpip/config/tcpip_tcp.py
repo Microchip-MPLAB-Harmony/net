@@ -204,16 +204,13 @@ def tcpipTcpMenuVisible(symbol, tcpipIPSymbol):
 def tcpipTcpGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 	
-
-def onGenericDependencySatisfied(dependencyID, satisfierID):
-	print("satisfied: " + dependencyID + ", " + satisfierID)
-	if (satisfierID == "tcpipIPv4") or (satisfierID == "tcpipIPv6"):
+def onAttachmentConnected(source, target):
+	if (source["id"] == "tcpipIPv4") or (source["id"] == "tcpipIPv6") :	
 		Database.clearSymbolValue("tcpipTcp", "TCPIP_USE_TCP")
 		Database.setSymbolValue("tcpipTcp", "TCPIP_USE_TCP", True, 2)
-
-def onGenericDependencyUnsatisfied(dependencyID, satisfierID):
-	print("unsatisfied: " + dependencyID + ", " + satisfierID)
-	if (satisfierID == "tcpipIPv4") or (satisfierID == "tcpipIPv6"):
+		
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "tcpipIPv4") or (source["id"] == "tcpipIPv6") :	
 		Database.clearSymbolValue("tcpipTcp", "TCPIP_USE_TCP")
 		Database.setSymbolValue("tcpipTcp", "TCPIP_USE_TCP", False, 2)
 

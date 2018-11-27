@@ -31,9 +31,6 @@
 ############################################################################
 def instantiateComponent(tcpipAutoConfigTransportComponent):
 
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigTransportGroup
-
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
 		tcpipAutoConfigStackGroup = Database.createGroup(None, "TCP/IP STACK")
@@ -47,9 +44,6 @@ def instantiateComponent(tcpipAutoConfigTransportComponent):
 	tcpipAutoConfigTransEnable.setVisible(False)
 	tcpipAutoConfigTransEnable.setDefaultValue(True)
 
-	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_NET_ENABLE") != True) and (Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_DRV_ENABLE") != True) and (Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_BASIC_ENABLE") != True):
-		Database.setActiveGroup("TRANSPORT LAYER")
-	
 	# Enable TCP
 	tcpipAutoConfigTCP = tcpipAutoConfigTransportComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_TCP", None)
 	tcpipAutoConfigTCP.setLabel("TCP")
@@ -64,15 +58,16 @@ def instantiateComponent(tcpipAutoConfigTransportComponent):
 	tcpipAutoConfigUDP.setDescription("Enable UDP")	
 	tcpipAutoConfigUDP.setDependencies(tcpipAutoConfigUDPEnable, ["TCPIP_AUTOCONFIG_ENABLE_UDP"])
 	
+########################################################################################################
+def finalizeComponent(tcpipAutoConfigTransportComponent):
+	tcpipAutoConfigTransportGroup = Database.findGroup("TRANSPORT LAYER")
+	tcpipAutoConfigTransportGroup.addComponent(tcpipAutoConfigTransportComponent.getID())
+	
+	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_NET_ENABLE") != True) and (Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_DRV_ENABLE") != True) and (Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_BASIC_ENABLE") != True):
+		Database.setActiveGroup("TRANSPORT LAYER")	
 #######################################################################################################
 def enableTcpipAutoConfigTrans(enable):
-	global tcpipAutoConfigAppsGroup
-	global tcpipAutoConfigTransportGroup
-	global tcpipAutoConfigNetworkGroup	
-	global tcpipAutoConfigDriverGroup
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigBasicGroup
-	global isEnabled
+
 	if(enable == True):
 		tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
 		if (tcpipAutoConfigAppsGroup == None):
@@ -119,17 +114,23 @@ def enableTcpipAutoConfigTrans(enable):
 
 #################Business Logic- Transport Layer #########################################	
 def tcpipAutoConfigTCPEnable(symbol, event):
+	tcpipAutoConfigTransportGroup = Database.findGroup("TRANSPORT LAYER")
 	enableTcpipAutoConfigTrans(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipTcp"], "TRANSPORT LAYER")	
+		if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
+			Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
 		tcpipAutoConfigTransportGroup.setAttachmentVisible("tcpipTcp", "libtcpipTcp")
 	else:
 		res = Database.deactivateComponents(["tcpipTcp"])
 	
 def tcpipAutoConfigUDPEnable(symbol, event):
+	tcpipAutoConfigTransportGroup = Database.findGroup("TRANSPORT LAYER")
 	enableTcpipAutoConfigTrans(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipUdp"], "TRANSPORT LAYER")	
+		if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
+			Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
 		tcpipAutoConfigTransportGroup.setAttachmentVisible("tcpipUdp", "libtcpipUdp")		
 	else:
 		res = Database.deactivateComponents(["tcpipUdp"])

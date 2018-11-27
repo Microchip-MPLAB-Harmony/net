@@ -333,16 +333,15 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
 	print("END tcpipNetMACDrvObjUpdate")	
 	
 ###############################################################################################################	
-
-def onDependentComponentAdded(tcpipNetConfigComponent, id, remoteComponent):
-	if id == "NETCONFIG_MAC_Dependency":
-		tcpipNetConfigIndex = int(tcpipNetConfigComponent.getID().strip("tcpipNetConfig_"))
-		macInterface = tcpipNetConfigComponent.getSymbolByID("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))
+def onAttachmentConnected(source, target):
+	if (source["id"] == "NETCONFIG_MAC_Dependency"):
+		tcpipNetConfigIndex = int(source["component"].getID().strip("tcpipNetConfig_"))
+		macInterface = source["component"].getSymbolByID("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))
 		macInterface.clearValue()
-		print(tcpipNetConfigIndex)
-		macInterface.setValue(remoteComponent.getDisplayName(), 2)
+		macInterface.setValue(target["component"].getDisplayName(), 2)
 
-def onDependentComponentRemoved(tcpipNetConfigComponent, id, remoteComponent):
-	if id == "NETCONFIG_MAC_Dependency":
-		tcpipNetConfigIndex = int(tcpipNetConfigComponent.getID().strip("tcpipNetConfig_"))
-		tcpipNetConfigComponent.clearSymbolValue("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))					
+def onAttachmentDisconnected(source, target):
+	if (source["id"] == "NETCONFIG_MAC_Dependency"):	
+		tcpipNetConfigIndex = int(source["component"].getID().strip("tcpipNetConfig_"))
+		source["component"].clearSymbolValue("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))
+			

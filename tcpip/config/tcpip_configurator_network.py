@@ -30,8 +30,6 @@
 #### Code Generation ####
 ############################################################################
 def instantiateComponent(tcpipAutoConfigNetworkComponent):
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigNetworkGroup
 
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
@@ -46,9 +44,7 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
 	tcpipAutoConfigNetEnable.setVisible(False)
 	tcpipAutoConfigNetEnable.setDefaultValue(True)
 
-	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_TRANS_ENABLE") != True) and (Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_DRV_ENABLE") != True) and (Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_BASIC_ENABLE") != True):
-		Database.setActiveGroup("NETWORK LAYER")
-		
+			
 	# Enable ARP
 	tcpipAutoConfigARP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ARP", None)
 	tcpipAutoConfigARP.setLabel("ARP")
@@ -91,15 +87,16 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
 	tcpipAutoConfigNDP.setDescription("Enable NDP")	
 	tcpipAutoConfigNDP.setDependencies(tcpipAutoConfigNDPEnable, ["TCPIP_AUTOCONFIG_ENABLE_NDP"])
 	
+########################################################################################################
+def finalizeComponent(tcpipAutoConfigNetworkComponent):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
+	tcpipAutoConfigNetworkGroup.addComponent(tcpipAutoConfigNetworkComponent.getID())
+	
+	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_TRANS_ENABLE") != True) and (Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_DRV_ENABLE") != True) and (Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_BASIC_ENABLE") != True):
+		Database.setActiveGroup("NETWORK LAYER")		
 #######################################################################################################
 def enableTcpipAutoConfigNet(enable):
-	global tcpipAutoConfigAppsGroup
-	global tcpipAutoConfigTransportGroup
-	global tcpipAutoConfigNetworkGroup	
-	global tcpipAutoConfigDriverGroup
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigBasicGroup
-	global isEnabled
+
 	if(enable == True):
 		tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
 		if (tcpipAutoConfigAppsGroup == None):
@@ -145,6 +142,7 @@ def enableTcpipAutoConfigNet(enable):
 
 #################Business Logic- Network Layer #########################################
 def tcpipAutoConfigARPEnable(symbol, event):	
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)	
 	if (event["value"] == True):		
 		res = Database.activateComponents(["tcpipArp"],"NETWORK LAYER")	
@@ -153,6 +151,7 @@ def tcpipAutoConfigARPEnable(symbol, event):
 		res = Database.deactivateComponents(["tcpipArp"])	
 
 def tcpipAutoConfigICMPEnable(symbol, event):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIcmp"], "NETWORK LAYER")	
@@ -163,6 +162,7 @@ def tcpipAutoConfigICMPEnable(symbol, event):
 		res = Database.deactivateComponents(["tcpipIcmp"])
 
 def tcpipAutoConfigIGMPEnable(symbol, event):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIgmp"],"NETWORK LAYER")	
@@ -173,6 +173,7 @@ def tcpipAutoConfigIGMPEnable(symbol, event):
 		res = Database.deactivateComponents(["tcpipIgmp"])
 	
 def tcpipAutoConfigIPv4Enable(symbol, event):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIPv4"],"NETWORK LAYER")	
@@ -183,6 +184,7 @@ def tcpipAutoConfigIPv4Enable(symbol, event):
 		res = Database.deactivateComponents(["tcpipIPv4"])
 	
 def tcpipAutoConfigIPv6Enable(symbol, event):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIPv6"],"NETWORK LAYER")	
@@ -193,6 +195,7 @@ def tcpipAutoConfigIPv6Enable(symbol, event):
 		res = Database.deactivateComponents(["tcpipIPv6"])
 	
 def tcpipAutoConfigNDPEnable(symbol, event):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipNdp"],"NETWORK LAYER")	

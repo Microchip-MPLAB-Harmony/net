@@ -121,14 +121,7 @@ def instantiateComponent(drvExtPhyKsz8061Component):
 	drvExtPhyKsz8061HeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	drvExtPhyKsz8061HeaderFtl.setMarkup(True)
 	drvExtPhyKsz8061HeaderFtl.setType("STRING")
-	
-	# add "<#include \"/framework/tcpip/config/tcpip_stack.c.ftl\">"  to list SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA
-	drvExtPhyKsz8061SourceFtl = drvExtPhyKsz8061Component.createFileSymbol(None, None)
-	drvExtPhyKsz8061SourceFtl.setType("STRING")
-	drvExtPhyKsz8061SourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
-	drvExtPhyKsz8061SourceFtl.setSourcePath("driver/ethphy/config/drv_extphy_ksz8061.c.ftl")
-	drvExtPhyKsz8061SourceFtl.setMarkup(True)
-	
+		
 	# file TCPIP_ETH_PHY_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/drv_ethphy.h" to                     "$PROJECT_HEADER_FILES/framework/driver/ethphy/drv_ethphy.h"
 	# Add drv_ethphy.h file to project
 	drvExtPhyHeaderFile = drvExtPhyKsz8061Component.createFileSymbol(None, None)

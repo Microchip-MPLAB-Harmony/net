@@ -26,18 +26,17 @@
 #### Business Logic ####
 ################################################################################
 
-autoConnectTableFS = [["tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency", "sys_fs", "sys_fs"]]
-autoConnectTableTIME = [["tcpipStack", "Core_SysTime_Dependency", "sys_time", "sys_time"]]
-autoConnectTableConsole = [["tcpipCmd", "Cmd_SysConsole_Dependency", "sys_console", "sys_console"]]
+# autoConnectTableFS = [["tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableFS = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency", "sys_fs", "sys_fs"]]
+# autoConnectTableTIME = [["tcpipStack", "Core_SysTime_Dependency", "sys_time", "sys_time"]]
+autoConnectTableTIME = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipStack:Core_SysTime_Dependency", "sys_time", "sys_time"]]
+autoConnectTableConsole = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipCmd:Cmd_SysConsole_Dependency", "sys_console", "sys_console"]]
 
 ############################################################################
 #### Code Generation ####
 ############################################################################
 def instantiateComponent(tcpipAutoConfigBasicComponent):
 
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigBasicGroup
-	# res = Database.activateComponents(["HarmonyCore"], Database.getRootGroup().getID(), True) # Niyas : temporary code
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
 		tcpipAutoConfigStackGroup = Database.createGroup(None, "TCP/IP STACK")
@@ -50,9 +49,6 @@ def instantiateComponent(tcpipAutoConfigBasicComponent):
 	tcpipAutoConfigBasicEnable = tcpipAutoConfigBasicComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_BASIC_ENABLE", None)
 	tcpipAutoConfigBasicEnable.setVisible(False)
 	tcpipAutoConfigBasicEnable.setDefaultValue(True)
-
-	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_TRANS_ENABLE") != True) and (Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_NET_ENABLE") != True) and (Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_DRV_ENABLE") != True):
-		Database.setActiveGroup("BASIC CONFIGURATION")
 	
 	# Enable TCP/IP STACK
 	tcpipAutoConfigStack = tcpipAutoConfigBasicComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_STACK", None)
@@ -80,17 +76,18 @@ def instantiateComponent(tcpipAutoConfigBasicComponent):
 	tcpipAutoConfigTcpipCmd.setLabel("TCPIP CMD")
 	tcpipAutoConfigTcpipCmd.setVisible(True)
 	tcpipAutoConfigTcpipCmd.setDescription("Enable TCPIP CMD")	
-	tcpipAutoConfigTcpipCmd.setDependencies(tcpipAutoConfigTcpipCmdEnable, ["TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD"])	
-
+	tcpipAutoConfigTcpipCmd.setDependencies(tcpipAutoConfigTcpipCmdEnable, ["TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD"])
+	
+########################################################################################################
+def finalizeComponent(tcpipAutoConfigBasicComponent):
+	tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
+	tcpipAutoConfigBasicGroup.addComponent(tcpipAutoConfigBasicComponent.getID())	
+	
+	if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_APPS_ENABLE") != True) and (Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_TRANS_ENABLE") != True) and (Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_NET_ENABLE") != True) and (Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_DRV_ENABLE") != True):
+		Database.setActiveGroup("BASIC CONFIGURATION")
 #######################################################################################################
 def enableTcpipAutoConfigBasic(enable):
-	global tcpipAutoConfigAppsGroup
-	global tcpipAutoConfigTransportGroup
-	global tcpipAutoConfigNetworkGroup	
-	global tcpipAutoConfigDriverGroup
-	global tcpipAutoConfigStackGroup
-	global tcpipAutoConfigBasicGroup
-	global isEnabled
+
 	if(enable == True):
 		tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
 		if (tcpipAutoConfigAppsGroup == None):
@@ -128,23 +125,26 @@ def enableTcpipAutoConfigBasic(enable):
 			res = tcpipAutoConfigDriverGroup.addComponent("tcpip_driver_config")
 			res = Database.activateComponents(["tcpip_driver_config"], "DRIVER LAYER", False)	
 			
-		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
-			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
+		# if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
+			# Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
 			
-		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):
-			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True, 2)	
+		# if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):
+			# Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True, 2)	
 
 
 #################Business Logic- Transport Layer #########################################	
 def tcpipAutoConfigStackEnable(symbol, event):
+	tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
+	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	enableTcpipAutoConfigBasic(True)
-	if (event["value"] == True):		
-		# res = Database.activateComponents(["HarmonyCore"], Database.getRootGroup().getID(), True) # Niyas : temporary code
-		# res = Database.activateComponents(["FreeRTOS"], Database.getRootGroup().getID(), True) # Niyas : temporary code
+	if (event["value"] == True):	
+		# res = Database.activateComponents(["HarmonyCore"])
+		# res = Database.activateComponents(["FreeRTOS"])
 		res = Database.activateComponents(["tcpipStack"], "BASIC CONFIGURATION", False)	
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipStack", "libtcpipStack")
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipStack", "Core_NetConfig_Dependency")
-		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipStack", "Core_SysTime_Dependency") #niyas: not working 
+		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipStack", "Core_SysTime_Dependency")
+		tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipStack:Core_SysTime_Dependency")
 		
 		if(Database.getComponentByID("sys_time") == None):
 			# res = Database.activateComponents(["sys_time"], Database.getRootGroup().getID(), True)
@@ -154,35 +154,43 @@ def tcpipAutoConfigStackEnable(symbol, event):
 		res = Database.deactivateComponents(["tcpipStack"])
 	
 def tcpipAutoConfigNetConfigEnable(symbol, event):
+	tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
 	enableTcpipAutoConfigBasic(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipNetConfig"], "BASIC CONFIGURATION", False)
-		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig", "NETCONFIG_MAC_Dependency") #niyas: not working 
+		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig_0", "NETCONFIG_MAC_Dependency")
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipNetConfig", "libtcpipNetConfig")	
 	else:
 		res = Database.deactivateComponents(["tcpipNetConfig"])
 	
 	
 def tcpipAutoConfigSysFSWrapperEnable(symbol, event):
+	tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
+	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	enableTcpipAutoConfigBasic(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipSysFsWrapper"], "BASIC CONFIGURATION", False)
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipSysFsWrapper", "libtcpipSysFsWrapper")
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipSysFsWrapper", "TcpipFsWarapper_SysFS_Dependency")
+		tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency")
 		if(Database.getComponentByID("sys_fs") == None):
-			res = Database.activateComponents(["sys_fs"], Database.getRootGroup().getID(), True)	
+			# res = Database.activateComponents(["sys_fs"], Database.getRootGroup().getID(), True)	
+			res = Database.activateComponents(["sys_fs"])
 			res = Database.connectDependencies(autoConnectTableFS)
 	else:
 		res = Database.deactivateComponents(["tcpipSysFsWrapper"])	
 	
 def tcpipAutoConfigTcpipCmdEnable(symbol, event):
+	tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
+	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	enableTcpipAutoConfigBasic(True)
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipCmd"], "BASIC CONFIGURATION", False)
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipCmd", "libtcpipCmd")
 		tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipCmd", "Cmd_SysConsole_Dependency")
+		tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipCmd:Cmd_SysConsole_Dependency")
 		if(Database.getComponentByID("sys_console") == None):
-			res = Database.activateComponents(["sys_console"], Database.getRootGroup().getID(), True)	
+			res = Database.activateComponents(["sys_console"])	
 			res = Database.connectDependencies(autoConnectTableConsole)
 	else:
 		res = Database.deactivateComponents(["tcpipCmd"])	
