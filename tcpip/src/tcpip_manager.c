@@ -1703,7 +1703,7 @@ static void _TCPIP_ProcessTickEvent(void)
 {
     int     netIx;
     TCPIP_NET_IF* pNetIf;
-    bool    linkCurr;
+    bool    linkCurr, linkPrev;
 
     newTcpipTickAvlbl = 0;
 
@@ -1712,7 +1712,8 @@ static void _TCPIP_ProcessTickEvent(void)
         if(pNetIf->Flags.bInterfaceEnabled)
         {
             linkCurr = (*pNetIf->pMacObj->TCPIP_MAC_LinkCheck)(pNetIf->hIfMac);     // check link status
-            if(pNetIf->exFlags.linkPrev != linkCurr)
+            linkPrev = pNetIf->exFlags.linkPrev != 0;
+            if(linkPrev != linkCurr)
             {   // link status changed
                 // just set directly the events, and do not involve the MAC notification mechanism
                 pNetIf->exFlags.connEvent = 1;
