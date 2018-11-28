@@ -743,7 +743,7 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
 
 
             sec = (currentTime- pIState->lastCheckTime)/SYS_TMR_TickCounterFrequencyGet();
-			msec = ((double) (currentTime - pIState->lastCheckTime)) / (((double)(SYS_TMR_TickCounterFrequencyGet()))/1000);
+			msec = (uint32_t)(((double) (currentTime - pIState->lastCheckTime)) / (((double)(SYS_TMR_TickCounterFrequencyGet()))/1000));
 
             if ( pIState->state == (uint8_t)IPERF_UDP_TX_DONE_STATE )
             {
@@ -790,7 +790,7 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
                 nAttempted = pIState->lastPktId;
             }
 
-			msec = ((double) (pIState->stopTime - pIState->startTime)) / (((double)(SYS_TMR_TickCounterFrequencyGet()))/1000);
+			msec = (uint32_t)(((double) (pIState->stopTime - pIState->startTime)) / (((double)(SYS_TMR_TickCounterFrequencyGet()))/1000));
 
 
 			if ( msec == 0u )
@@ -821,7 +821,7 @@ static void ReportBW_Jitter_Loss(tIperfState* pIState, tIperfReport reportType)
     pIState->lastCheckErrorCount = pIState->errorCount;
     pIState->lastCheckPktCount = pIState->pktCount;
     pIState->lastCheckTime = currentTime;
-    pIState->lastCheckTotalLen = pIState->totalLen;
+    pIState->lastCheckTotalLen = (uint32_t)pIState->totalLen;
 }
 
 
