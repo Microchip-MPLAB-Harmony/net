@@ -67,7 +67,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Placeholder for TFTPS Module Configuration
 typedef struct
 {
-    
+    void* reserved;
 } TCPIP_TFTPS_MODULE_CONFIG;
 
 

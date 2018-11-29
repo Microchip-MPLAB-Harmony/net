@@ -294,6 +294,7 @@ typedef void    (*TCPIP_ANNOUNCE_MESSAGE_CALLBACK)(TCPIP_NET_HANDLE hNet, UDP_SO
 */
 typedef struct
 {
+    void* reserved;
 }TCPIP_ANNOUNCE_MODULE_CONFIG;
 
 // *****************************************************************************

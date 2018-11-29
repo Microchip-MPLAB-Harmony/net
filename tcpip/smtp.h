@@ -139,6 +139,7 @@ typedef struct
 
 typedef struct
 {
+    void* reserved;
 }TCPIP_SMTP_CLIENT_MODULE_CONFIG;
 
 // *****************************************************************************
