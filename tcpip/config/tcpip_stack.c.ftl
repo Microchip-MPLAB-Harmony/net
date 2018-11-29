@@ -52,6 +52,7 @@ const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
 /*** telnet Server Initialization Data ***/
 const TCPIP_TELNET_MODULE_CONFIG tcpipTelnetInitData =
 { 
+    0
 };
 </#if>
 
@@ -59,6 +60,7 @@ const TCPIP_TELNET_MODULE_CONFIG tcpipTelnetInitData =
 /*** Announce Discovery Initialization Data ***/
 const TCPIP_ANNOUNCE_MODULE_CONFIG tcpipAnnounceInitData =
 { 
+    0
 };
 </#if>
 
@@ -149,6 +151,7 @@ const TCPIP_SNTP_MODULE_CONFIG tcpipSNTPInitData =
 /*** SMTP client Initialization Data ***/
 const TCPIP_SMTP_CLIENT_MODULE_CONFIG tcpipSMTPInitData =
 { 
+    0
 };
 </#if>
 
@@ -192,6 +195,7 @@ const BERKELEY_MODULE_CONFIG tcpipBerkeleyInitData =
 /*** ICMP Server Initialization Data ***/
 const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData = 
 {
+    0
 };
 </#if>
 
@@ -199,6 +203,7 @@ const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData =
 /*** NBNS Server Initialization Data ***/
 const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
 { 
+    0
 };
 </#if>
 
@@ -327,14 +332,17 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 <#if DRV_WIFI_DEVICE == "MRF24WN" >
 /*** Wi-Fi Interface MRF24WN Initialization Data ***/
 const TCPIP_MODULE_MAC_MRF24WN_CONFIG macMRF24WNConfigData = {
+    0
 };
 <#elseif DRV_WIFI_DEVICE == "WINC1500">
 /*** Wi-Fi Interface WINC1500 Initialization Data ***/
 const TCPIP_MODULE_MAC_WINC1500_CONFIG macWINC1500ConfigData = {
+    0
 };
 <#elseif DRV_WIFI_DEVICE == "WILC1000">
 /*** Wi-Fi Interface WILC1000 Initialization Data ***/
 const TCPIP_MODULE_MAC_WILC1000_CONFIG macWILC1000ConfigData = {
+    0
 };
 </#if>
 </#if>
@@ -345,6 +353,7 @@ const TCPIP_MODULE_MAC_WILC1000_CONFIG macWILC1000ConfigData = {
 /*** DDNS Initialization Data ***/
 const DDNS_MODULE_CONFIG tcpipDDNSInitData =
 {
+    0
 };
 </#if>
 
@@ -352,6 +361,7 @@ const DDNS_MODULE_CONFIG tcpipDDNSInitData =
 /*** Zeroconfig initialization data ***/
 const ZCLL_MODULE_CONFIG tcpipZCLLInitData =
 {
+    0
 };
 </#if>
 
@@ -369,6 +379,7 @@ const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 /*** TFTP Server Initialization Data ***/
 const TCPIP_TFTPS_MODULE_CONFIG tcpipTFTPSInitData =
 {
+    0
 };
 </#if>
 

@@ -78,6 +78,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 */
 typedef struct
 {
+    void* reserved;
 } TCPIP_NBNS_MODULE_CONFIG;
 
 // *****************************************************************************
