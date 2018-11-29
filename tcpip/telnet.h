@@ -68,6 +68,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 */
 typedef struct
 {
+    void*   reserved;
 }TCPIP_TELNET_MODULE_CONFIG;
 
 // *****************************************************************************

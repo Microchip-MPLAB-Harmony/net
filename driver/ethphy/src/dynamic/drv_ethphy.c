@@ -1980,8 +1980,6 @@ static void _DRV_ETHPHY_NegCompletePhaseRead1(DRV_ETHPHY_CLIENT_OBJ * hClientObj
 
 static void _DRV_ETHPHY_NegCompletePhaseRead2(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
-    __BMCONbits_t   phyBMCon;
-
     // wait the BMCON read to complete
     if(_DRV_PHY_SMITransferDo(hClientObj) != DRV_ETHPHY_SMI_TXFER_OP_DONE)
     {
@@ -1989,7 +1987,7 @@ static void _DRV_ETHPHY_NegCompletePhaseRead2(DRV_ETHPHY_CLIENT_OBJ * hClientObj
     }
 
     // save BMCON read for later
-    hClientObj->operReg[1] = phyBMCon.w = hClientObj->smiData;
+    hClientObj->operReg[1] = hClientObj->smiData;
 
     if(hClientObj->operParam == 0)
     {   // no wait complete
