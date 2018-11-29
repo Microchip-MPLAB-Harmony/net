@@ -708,7 +708,7 @@ DRV_MIIM_CALLBACK_HANDLE DRV_MIIM_RegisterCallback(DRV_HANDLE handle, DRV_MIIM_O
 
         pClient->cbackHandler = cbFunction;
         miimRes = DRV_MIIM_RES_OK;
-        cbHandle = cbFunction;
+        cbHandle = (DRV_MIIM_CALLBACK_HANDLE)cbFunction;
 
         break;
     }
@@ -740,7 +740,7 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
             break;
         }
 
-        if(pClient->cbackHandler != cbHandle)
+        if(pClient->cbackHandler != (DRV_MIIM_OPERATION_CALLBACK)cbHandle)
         {
             res = DRV_MIIM_RES_CALLBACK_HANDLE_ERR;
             break;

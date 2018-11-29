@@ -299,18 +299,22 @@ typedef struct
 
 typedef struct
 {
+    void*   reserved;
 }TCPIP_MODULE_MAC_MRF24WN_CONFIG;
 
 typedef struct
 {
+    void*   reserved;
 }TCPIP_MODULE_MAC_WINC1500_CONFIG;
 
 typedef struct
 {
+    void*   reserved;
 }TCPIP_MODULE_MAC_WILC1000_CONFIG;
 
 typedef struct
 {
+    void*   reserved;
 }TCPIP_MODULE_MAC_PIC32WK_CONFIG;
 
 
