@@ -44,7 +44,7 @@ def instantiateComponent(tcpipCmdComponent):
 	# Enable Wi-Fi Related Commands
 	tcpipCmdWifi = tcpipCmdComponent.createBooleanSymbol("TCPIP_STACK_COMMANDS_WIFI_ENABLE", None)
 	tcpipCmdWifi.setLabel("Enable Wi-Fi Related Commands")
-	tcpipCmdWifi.setVisible(True)
+	tcpipCmdWifi.setVisible(False) # H3_ToDo: Enable this when Wifi is added
 	tcpipCmdWifi.setDescription("Enable Wi-Fi Related Commands")
 	tcpipCmdWifi.setDefaultValue(False) 
 	#tcpipCmdWifi.setDependencies(tcpipCmdMenuVisibleSingle, ["TCPIP_STACK_USE_COMMANDS"])
