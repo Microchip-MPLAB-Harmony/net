@@ -6,7 +6,8 @@ def loadModule():
 	tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_stack.py")
 	tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE",True)
 	tcpipStackComponent.addDependency("Core_NetConfig_Dependency", "NETCONFIG", None, True, True)
-	tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME")
+	tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME", None, True, True)
+	tcpipStackComponent.addDependency("Core_SysConsole_Dependency", "SYS_CONSOLE")
 	tcpipStackComponent.setDisplayType("TCP/IP Library")
 		
 	tcpipNetConfigComponent = Module.CreateGeneratorComponent("tcpipNetConfig", "NETCONFIG", "/Libraries/TCPIP/CORE/","tcpip/config/tcpip_network_config_common.py","tcpip/config/tcpip_network_config.py")
@@ -22,7 +23,7 @@ def loadModule():
 	tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_cmd.py")
 	tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD",True)	
 	# tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_CORE", None, True, True)
-	tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "SYS_CONSOLE")
+	# tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "SYS_CONSOLE")
 	tcpipCmdComponent.setDisplayType("TCP/IP Library")
 
 	###########  TCP/IP LIBRARY Network Layer Configurations  ###########
@@ -116,7 +117,7 @@ def loadModule():
 	tcpipFtpsComponent.addDependency("Ftps_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
 	tcpipFtpsComponent.setDisplayType("TCP/IP Library")
 	
-	tcpipHttpNetComponent = Module.CreateComponent("tcpipHttpNet", "HTTP NET SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_httpnet.py")
+	tcpipHttpNetComponent = Module.CreateComponent("tcpipHttpNet", "HTTPNET SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_httpnet.py")
 	tcpipHttpNetComponent.addCapability("libtcpipHttpNet","HTTPNET",True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TCP_Dependency", "TCP", None, True, True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
