@@ -48,20 +48,10 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
-#include "peripheral/clk/plib_clk.h"
-#include "peripheral/pio/plib_pio.h"
-#include "peripheral/nvic/plib_nvic.h"
-#include "peripheral/mpu/plib_mpu.h"
-#include "bsp/bsp.h"
-#include "FreeRTOS.h"
-#include "task.h"
-#include "system/int/sys_int.h"
-#include "osal/osal.h"
-#include "system/console/sys_console.h"
-#include "system/console/sys_debug.h"
-#include "system/console/sys_command.h"
-#include "system/time/sys_time.h"
 #include "peripheral/tc/plib_tc0.h"
+#include "system/time/sys_time.h"
+#include "bsp/bsp.h"
+#include "peripheral/usart/plib_usart1.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
 #include "driver/miim/drv_miim.h"
@@ -70,7 +60,18 @@
 #include "system/sys_clk_h2_adapter.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
-#include "peripheral/usart/plib_usart1.h"
+#include "system/int/sys_int.h"
+#include "osal/osal.h"
+#include "peripheral/clk/plib_clk.h"
+#include "peripheral/pio/plib_pio.h"
+#include "peripheral/nvic/plib_nvic.h"
+#include "peripheral/mpu/plib_mpu.h"
+#include "system/console/sys_console.h"
+#include "system/console/src/sys_console_uart_definitions.h"
+#include "system/console/sys_debug.h"
+#include "system/console/sys_command.h"
+#include "FreeRTOS.h"
+#include "task.h"
 #include "app.h"
 
 
@@ -193,12 +194,12 @@ void SYS_Tasks ( void );
 
 typedef struct
 {
+    SYS_MODULE_OBJ  sysTime;
+    SYS_MODULE_OBJ  tcpip;
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
 
-    SYS_MODULE_OBJ  sysTime;
-    SYS_MODULE_OBJ  tcpip;
 
 } SYSTEM_OBJECTS;
 
