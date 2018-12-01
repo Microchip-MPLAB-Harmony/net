@@ -81,8 +81,6 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 
-extern SYS_MODULE_OBJ sysConsoleObjects[];
-
 static SYS_CMD_DEVICE_LIST cmdIODevList = {0, 0, 0};
 
 static char printBuff[SYS_CMD_PRINT_BUFFER_SIZE] SYS_CMD_BUFFER_DMA_READY;
@@ -1287,5 +1285,3 @@ static cmdNode* CmdRemoveTail(cmdDlList* pL)
     }
     return pN;
 }
-
-
