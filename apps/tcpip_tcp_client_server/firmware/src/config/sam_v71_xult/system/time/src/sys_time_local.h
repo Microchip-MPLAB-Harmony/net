@@ -93,34 +93,34 @@
 */
 
 typedef struct _SYS_TIME_TIMER_OBJ{
-  bool inUse;    /* TRUE if in use */
-  bool active;    /* TRUE if soft timer enabled */
-  SYS_TIME_CALLBACK_TYPE type;    /* periodic or not */
-  uint32_t requestedTime;    /* time requested */
-  uint32_t relativeTimePending;    /* time to wait, relative incase of timers in the list */
-  SYS_TIME_CALLBACK callback;    /* set to TRUE at timeout */
-  uintptr_t context; /* context */
-  bool tmrElapsedFlag;   /* Set on every timer expiry. Cleared after user reads the status. */
-  bool tmrElapsed;    /* Set on every timer expiry. Cleared after timer is added back to the list */
-  struct _SYS_TIME_TIMER_OBJ* tmrNext; /* Next timer */
-  SYS_TIME_HANDLE tmrHandle; /* Unique handle for object */
+      bool                          inUse;    /* TRUE if in use */
+      bool                          active;    /* TRUE if soft timer enabled */
+      SYS_TIME_CALLBACK_TYPE        type;    /* periodic or not */
+      uint32_t                      requestedTime;    /* time requested */
+      volatile uint32_t             relativeTimePending;    /* time to wait, relative incase of timers in the list */
+      SYS_TIME_CALLBACK             callback;    /* set to TRUE at timeout */
+      uintptr_t                     context; /* context */
+      volatile bool                 tmrElapsedFlag;   /* Set on every timer expiry. Cleared after user reads the status. */
+      volatile bool                 tmrElapsed;    /* Set on every timer expiry. Cleared after timer is added back to the list */
+      struct _SYS_TIME_TIMER_OBJ*   tmrNext; /* Next timer */
+      SYS_TIME_HANDLE               tmrHandle; /* Unique handle for object */
 } SYS_TIME_TIMER_OBJ;
 
 
 typedef struct{
     SYS_STATUS status;
-    TIME_PLIB_API *timePlib;
-    INT_SOURCE hwTimerIntNum;
-    uint32_t hwTimerFrequency;
-    uint32_t hwTimerPreviousValue;
-    uint32_t hwTimerCurrentValue;
-    uint32_t hwTimerPeriodValue;
-    uint32_t hwTimerCompareValue;
-    uint32_t hwTimerCompareMargin;
-    volatile uint32_t swCounter64Low;           /* Software counter */
-    volatile uint32_t swCounter64High;          /* Software 64-bit counter */
-    uint8_t interruptNestingCount;
-    SYS_TIME_TIMER_OBJ * tmrActive;
+    const SYS_TIME_PLIB_INTERFACE*  timePlib;
+    INT_SOURCE                      hwTimerIntNum;
+    uint32_t                        hwTimerFrequency;
+    volatile uint32_t               hwTimerPreviousValue;
+    volatile uint32_t               hwTimerCurrentValue;
+    uint32_t                        hwTimerPeriodValue;
+    volatile uint32_t               hwTimerCompareValue;
+    uint32_t                        hwTimerCompareMargin;
+    volatile uint32_t               swCounter64Low;           /* Software counter */
+    volatile uint32_t               swCounter64High;          /* Software 64-bit counter */
+    uint8_t                         interruptNestingCount;
+    SYS_TIME_TIMER_OBJ*             tmrActive;
     /* Mutex to protect access to the shared resources */
     OSAL_MUTEX_DECLARE(timerMutex);
 

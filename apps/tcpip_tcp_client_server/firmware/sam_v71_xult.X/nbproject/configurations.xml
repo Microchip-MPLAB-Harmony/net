@@ -4,13 +4,13 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f4" displayName="arm" projectFiles="true">
+        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_v71_xult" projectFiles="true">
-          <logicalFolder name="f2" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/sam_v71_xult/bsp/bsp.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f3" displayName="driver" projectFiles="true">
-            <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
+          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
@@ -20,7 +20,7 @@
               </logicalFolder>
               <itemPath>../src/config/sam_v71_xult/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f1" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
@@ -45,7 +45,7 @@
             <itemPath>../src/config/sam_v71_xult/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
+          <logicalFolder name="f4" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
@@ -99,6 +99,8 @@
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/igmp_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tftpc_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tftpc_private.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tftps_manager.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tftps_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/iperf_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_commands_manager.h</itemPath>
@@ -156,6 +158,7 @@
               <itemPath>../src/config/sam_v71_xult/library/tcpip/smtpc.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/library/tcpip/igmp.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/library/tcpip/tftpc.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult/library/tcpip/tftps.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/library/tcpip/tcpip_reboot.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/library/tcpip/iperf.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/library/tcpip/tcpip_commands.h</itemPath>
@@ -163,119 +166,118 @@
               <itemPath>../src/config/sam_v71_xult/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="net" projectFiles="true">
+          <logicalFolder name="f5" displayName="net" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/net/pres/net_pres.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/net/pres/net_pres_socketapi.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/net/pres/net_pres_socketapiconversion.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="clk" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="mpu" projectFiles="true">
+            <logicalFolder name="f6" displayName="mpu" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/mpu/plib_mpu.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/peripheral/mpu/plib_mpu_local.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="nvic" projectFiles="true">
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="pio" projectFiles="true">
+            <logicalFolder name="f4" displayName="pio" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/pio/plib_pio.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="tc" projectFiles="true">
+            <logicalFolder name="f1" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/tc/plib_tc0.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/peripheral/tc/plib_tc_common.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="usart" projectFiles="true">
+            <logicalFolder name="f2" displayName="usart" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/usart/plib_usart_common.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f2" displayName="console" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/console/sys_console.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/sys_debug.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="int" projectFiles="true">
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/int/sys_int.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/int/sys_int_mapping.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="time" projectFiles="true">
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/time/sys_time_definitions.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_v71_xult/system/system.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult/system/system_common.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/system/sys_clk_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/system/sys_reset_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult/system/system.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult/system/system_common.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult/system/system_module.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/sam_v71_xult/definitions.h</itemPath>
-          <itemPath>../src/config/sam_v71_xult/user.h</itemPath>
-          <itemPath>../src/config/sam_v71_xult/configuration.h</itemPath>
           <itemPath>../src/config/sam_v71_xult/system_config.h</itemPath>
           <itemPath>../src/config/sam_v71_xult/system_definitions.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult/user.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult/configuration.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="osal" projectFiles="true">
+      <logicalFolder name="f3" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_v71_xult/osal/osal.h</itemPath>
         <itemPath>../src/config/sam_v71_xult/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/sam_v71_xult/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="packs" projectFiles="true">
-        <logicalFolder name="f2" displayName="ATSAMV71Q21B_DFP" projectFiles="true">
+      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1" displayName="ATSAME70Q21B_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/acc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/aes.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/afec.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/chipid.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/dacc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/efc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/gmac.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/gpbr.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/hsmci.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/i2sc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/icm.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/isi.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/matrix.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/mcan.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/mlb.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/pio.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/pmc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/pwm.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/qspi.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rstc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rswdt.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rtc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rtt.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/sdramc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/smc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/spi.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/ssc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/supc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/tc.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/trng.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/twihs.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/uart.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/usart.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/usbhs.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/utmi.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/wdt.h</itemPath>
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/xdmac.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/acc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/aes.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/afec.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/chipid.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/dacc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/efc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/gmac.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/gpbr.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/hsmci.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/i2sc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/icm.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/isi.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/matrix.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/mcan.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/pio.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/pmc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/pwm.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/qspi.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rstc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rswdt.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rtc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rtt.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/sdramc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/smc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/spi.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/ssc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/supc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/tc.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/trng.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/twihs.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/uart.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/usart.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/usbhs.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/utmi.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/wdt.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/xdmac.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pio" projectFiles="true">
-            <itemPath>../src/packs/ATSAMV71Q21B_DFP/pio/samv71q21b.h</itemPath>
+            <itemPath>../src/packs/ATSAME70Q21B_DFP/pio/same70q21b.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/packs/ATSAMV71Q21B_DFP/device.h</itemPath>
-          <itemPath>../src/packs/ATSAMV71Q21B_DFP/atsamv71q21b.h</itemPath>
+          <itemPath>../src/packs/ATSAME70Q21B_DFP/device.h</itemPath>
+          <itemPath>../src/packs/ATSAME70Q21B_DFP/atsame70q21b.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
+        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
@@ -309,11 +311,8 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_v71_xult" projectFiles="true">
-          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/sam_v71_xult/bsp/bsp.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f5" displayName="driver" projectFiles="true">
-            <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
@@ -321,7 +320,7 @@
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f1" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
@@ -337,18 +336,19 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="library" projectFiles="true">
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcp.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_commands.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dhcp.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/ipv4.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/hash_fnv.c</itemPath>
@@ -357,64 +357,64 @@
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_manager.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_packet.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="clk" projectFiles="true">
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="mpu" projectFiles="true">
+            <logicalFolder name="f6" displayName="mpu" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/mpu/plib_mpu.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="nvic" projectFiles="true">
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="pio" projectFiles="true">
+            <logicalFolder name="f4" displayName="pio" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/pio/plib_pio.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="tc" projectFiles="true">
+            <logicalFolder name="f1" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="usart" projectFiles="true">
+            <logicalFolder name="f2" displayName="usart" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/peripheral/usart/plib_usart1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
+          <logicalFolder name="f5" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f2" displayName="console" projectFiles="true">
+            <logicalFolder name="f3" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_uart.c</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_debug.c</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="int" projectFiles="true">
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="time" projectFiles="true">
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/time/src/sys_time.c</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_v71_xult/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
+          <itemPath>../src/config/sam_v71_xult/tasks.c</itemPath>
           <itemPath>../src/config/sam_v71_xult/initialization.c</itemPath>
           <itemPath>../src/config/sam_v71_xult/interrupts.c</itemPath>
           <itemPath>../src/config/sam_v71_xult/exceptions.c</itemPath>
           <itemPath>../src/config/sam_v71_xult/startup.c</itemPath>
           <itemPath>../src/config/sam_v71_xult/libc_syscalls.c</itemPath>
-          <itemPath>../src/config/sam_v71_xult/tasks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/app_commands.c</itemPath>
-      <itemPath>../src/main.c</itemPath>
       <itemPath>../src/app.c</itemPath>
+      <itemPath>../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -430,7 +430,7 @@
     <conf name="sam_v71_xult" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>ATSAMV71Q21B</targetDevice>
+        <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>Simulator</platformTool>
@@ -439,7 +439,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.155"/>
+        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.129"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -499,7 +499,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_v71_xult;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/config/sam_v71_xult/library;../src/config/sam_v71_xult/library/tcpip/src;../src/config/sam_v71_xult/library/tcpip/src/common;"/>
+                  value="../src/config/sam_v71_xult/library;../src/config/sam_v71_xult/library/tcpip/src;../src/config/sam_v71_xult/library/tcpip/src/common;../src;../src/config/sam_v71_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
