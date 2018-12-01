@@ -2027,8 +2027,8 @@
           <Name dnOrder="1">user.h</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="253">
           <Type dnOrder="0">HEADER</Type>
