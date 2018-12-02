@@ -5,15 +5,15 @@
     Microchip Technology Inc.
 
   File Name:
-    sys_console_uart_local.h
+    sys_console_uart.h
 
   Summary:
-    Console System Service local declarations and definitions for uart cdc I/O
+    Console System Service local declarations and definitions for UART I/O
     device.
 
   Description:
     This file contains the Console System Service local declarations and
-    definitions for uart I/O device.
+    definitions for UART I/O device.
 *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -53,120 +53,105 @@
 // *****************************************************************************
 
 #include "sys_console_local.h"
+#include "osal/osal.h"
+#include "system/console/src/sys_console_uart_definitions.h"
 
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+    extern "C" {
+#endif
+// DOM-IGNORE-END
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
 
-
-// *****************************************************************************
-/* UART State Machine States
-
-   Summary
-    Defines the various states that can be achieved by the driver operation.
-
-   Description
-    This enumeration defines the various states that can be achieved by the
-    driver operation.
-
-   Remarks:
-    None.
-*/
+typedef enum
+{
+    CONSOLE_UART_READ_IDLE,
+    CONSOLE_UART_READ_BUSY,
+    CONSOLE_UART_READ_DONE,
+    CONSOLE_UART_READ_ERROR
+}CONSOLE_UART_READ_STATUS;
 
 typedef enum
 {
-    /* Application opens and attaches the device here */
-    CONSOLE_UART_STATE_INIT = 0,
+    CONSOLE_UART_WRITE_IDLE,
+    CONSOLE_UART_WRITE_BUSY,
+    CONSOLE_UART_WRITE_DONE,
+    CONSOLE_UART_WRITE_ERROR,
+}CONSOLE_UART_WRITE_STATUS;
 
-    /* Application waits for device configuration*/
-    CONSOLE_UART_STATE_WAIT_FOR_CONFIGURATION,
+typedef enum
+{
+    CONSOLE_UART_READ_STATE_IDLE,
+    CONSOLE_UART_READ_STATE_BUSY,
+}CONSOLE_UART_READ_STATE;
 
-    /* The application checks if a switch was pressed */
-    //CONSOLE_UART_STATE_CHECK_SWITCH_PRESSED,
-    CONSOLE_UART_STATE_READY,
-
-    /* Wait for a character receive */
-    CONSOLE_UART_STATE_SCHEDULE_READ,
-
-    /* A character is received from host */
-    CONSOLE_UART_STATE_WAIT_FOR_READ_COMPLETE,
-
-    /* Wait for the TX to get completed */
-    CONSOLE_UART_STATE_SCHEDULE_WRITE,
-
-    /* Wait for the write to complete */
-    CONSOLE_UART_STATE_WAIT_FOR_WRITE_COMPLETE,
-
-    /* Application Critcal Error state*/
-    CONSOLE_UART_STATE_CRITICAL_ERROR,
-
-    /* Application Operational Error state*/
-    CONSOLE_UART_STATE_OPERATIONAL_ERROR
-} CONSOLE_UART_STATE;
-
+typedef enum
+{
+    CONSOLE_UART_WRITE_STATE_IDLE,
+    CONSOLE_UART_WRITE_STATE_BUSY,
+}CONSOLE_UART_WRITE_STATE;
 
 typedef struct
 {
-    /* Application's current state*/
-    CONSOLE_UART_STATE state;
+    /* Pointer to USART APIs used by the console system service*/
+    const SYS_CONSOLE_UART_PLIB_INTERFACE* uartPLIB;
 
-    /* Read Data Buffer */
-    uint8_t readBuffer[64];
+    /* Current state of UART Read */
+    CONSOLE_UART_READ_STATE rdState;
 
-    /* Break data */
-    uint16_t breakData;
+    /* Current state of UART Write */
+    CONSOLE_UART_WRITE_STATE wrState;
 
-    /* True if a character was read */
-    bool isReadComplete;
+    /* Status of reads */
+    volatile CONSOLE_UART_READ_STATUS readStatus;
 
-    /* True if a character was written*/
-    bool isWriteComplete;
+    /* Status of writes */
+    volatile CONSOLE_UART_WRITE_STATUS writeStatus;
 
-    /* Set when an attempt is made to push to a full write queue */
-    bool overflowFlag;
+    SYS_CONSOLE_STATUS status;
 
-    /* Called when read queue is emptied */
-    void (*rdCallback)(void *handle);
+    /* Interrupt source ID for UART interrupt. */
+    INT_SOURCE interruptSource;
 
-    /* Called when write is completed */
-    void (*wrCallback)(void *handle);
+    /* True if in interrupt context */
+    bool inInterruptContext;
 
-} CONS_UART_DATA;
+    /* Called when read request is complete */
+    SYS_CONSOLE_CALLBACK rdCallback;
 
-struct QPacket
-{
-    union
-    {
-        const void *cbuf;
-        void *buf;
-    } data;
-    size_t sz;
-};
+    /* Called when write request is complete */
+    SYS_CONSOLE_CALLBACK wrCallback;
+
+    Queue readQueue;
+
+    Queue writeQueue;
+
+    /* Mutex to protect access to the transfer objects */
+    OSAL_MUTEX_DECLARE(mutexTransferObjects);
+
+}CONSOLE_UART_DATA;
+
+void Console_UART_Initialize(uint32_t index, const void* initData);
+ssize_t Console_UART_Read(uint32_t index, int fd, void* buf, size_t count);
+ssize_t Console_UART_Write(uint32_t index, int fd, const void* buf, size_t count);
+void Console_UART_Flush(uint32_t index);
+void Console_UART_RegisterCallback(uint32_t index, SYS_CONSOLE_CALLBACK cbFunc, SYS_CONSOLE_EVENT event);
+void Console_UART_Tasks (uint32_t index, SYS_MODULE_OBJ consObj);
+SYS_CONSOLE_STATUS Console_UART_Status (uint32_t index);
 
 
-struct QueueNode
-{
-    uint32_t tailPos;
-    uint32_t nextPos;
-    uint32_t numElem;
-    struct QPacket *qPkts;
-    uint32_t elemArrSz;
-};
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Extern data Definitions
-// *****************************************************************************
-// *****************************************************************************
-
-void Console_UART_RegisterCallback(consoleCallbackFunction consCallback, SYS_CONSOLE_EVENT event);
-
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
+#endif
+// DOM-IGNORE-END
 
 #endif //#ifndef SYS_CONSOLE_UART_H
 
 /*******************************************************************************
  End of File
 */
-

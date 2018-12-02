@@ -40,7 +40,6 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files
@@ -48,7 +47,6 @@
 // *****************************************************************************
 /*  This section lists the other files that are included in this file.
  */
-
 
 #include "FreeRTOS.h"
 #include "queue.h"
@@ -104,27 +102,27 @@
     form a critical section. The severity level defines whether the RTOS should
     perform task locking or completely disable all interrupts.
 
-   NOTE - 
+   NOTE -
     In FreeRTOS only interrupts below configMAX_SYSCALL_INTERRUPT_PRIORITY are
-    disabled.  FreeRTOS will handle nesting of this function is scheduler is 
+    disabled.  FreeRTOS will handle nesting of this function is scheduler is
     running.
  */
 OSAL_CRITSECT_DATA_TYPE OSAL_CRIT_Enter(OSAL_CRIT_TYPE severity)
 {
-    switch (severity)
-    {
-        case OSAL_CRIT_TYPE_LOW:
-            /* LOW priority critical sections just disable the scheduler */
-            vTaskSuspendAll();
-            break;
+  switch (severity)
+  {
+    case OSAL_CRIT_TYPE_LOW:
+      /* LOW priority critical sections just disable the scheduler */
+      vTaskSuspendAll();
+      break;
 
-        case OSAL_CRIT_TYPE_HIGH:
-            /* HIGH priority critical sections disable interrupts */
-            portENTER_CRITICAL();
-            break;
-    }
-    
-    return(0);
+    case OSAL_CRIT_TYPE_HIGH:
+      /* HIGH priority critical sections disable interrupts */
+      portENTER_CRITICAL();
+      break;
+  }
+
+  return(0);
 }
 
 // *****************************************************************************
@@ -171,18 +169,18 @@ OSAL_CRITSECT_DATA_TYPE OSAL_CRIT_Enter(OSAL_CRIT_TYPE severity)
  */
 void OSAL_CRIT_Leave(OSAL_CRIT_TYPE severity, OSAL_CRITSECT_DATA_TYPE status)
 {
-    switch (severity)
-    {
-        case OSAL_CRIT_TYPE_LOW:
-            /* LOW priority resumes scheduler */
-            xTaskResumeAll();
-            break;
+  switch (severity)
+  {
+    case OSAL_CRIT_TYPE_LOW:
+      /* LOW priority resumes scheduler */
+      xTaskResumeAll();
+      break;
 
-        case OSAL_CRIT_TYPE_HIGH:
-            /* HIGH priority renables interrupts */
-            portEXIT_CRITICAL();
-            break;
-    }
+    case OSAL_CRIT_TYPE_HIGH:
+      /* HIGH priority renables interrupts */
+      portEXIT_CRITICAL();
+      break;
+  }
 }
 
 // Semaphore group
@@ -194,8 +192,8 @@ void OSAL_CRIT_Leave(OSAL_CRIT_TYPE severity, OSAL_CRITSECT_DATA_TYPE status)
 
   Description:
     Create an OSAL binary or counting semaphore. If OSAL_SEM_TYPE_BINARY is specified then
-    the maxcount and initialCount values are ignored otherwise these must contain valid
-    values.
+    the initialCount must contain valid value and maxcount value is ignored otherwise this
+    must contain valid value.
 
   Precondition:
     Semaphore must have been declared.
@@ -209,7 +207,11 @@ void OSAL_CRIT_Leave(OSAL_CRIT_TYPE severity, OSAL_CRITSECT_DATA_TYPE status)
 
     maxCount    - Maximum value for a counting semaphore. Ignored for a BINARY semaphore.
 
-    initialCount - Starting count value for the semaphore. Ignored for a BINARY semaphore
+    initialCount - Starting count value for the semaphore.
+                   For a BINARY semaphore if initialCount = 0 then Binary Semaphore is
+                   created in a state such semaphore must call 'OSAL_SEM_Post' before it
+                   can call 'OSAL_SEM_Pend' whereas if the initialCount = 1 then the first
+                   call to 'OSAL_SEM_Pend' would pass.
 
   Returns:
     OSAL_RESULT_TRUE    - Semaphore created
@@ -224,28 +226,53 @@ void OSAL_CRIT_Leave(OSAL_CRIT_TYPE severity, OSAL_CRITSECT_DATA_TYPE status)
  */
 OSAL_RESULT OSAL_SEM_Create(OSAL_SEM_HANDLE_TYPE* semID, OSAL_SEM_TYPE type, uint8_t maxCount, uint8_t initialCount)
 {
-   switch (type) {
-	   case OSAL_SEM_TYPE_BINARY:
-         *(SemaphoreHandle_t*)semID = xSemaphoreCreateBinary();
-		 if(*(SemaphoreHandle_t*)semID != NULL )
-			xSemaphoreGive( *(SemaphoreHandle_t*)semID );
-         break;
+  switch (type)
+  {
+    case OSAL_SEM_TYPE_BINARY:
+      if ( initialCount <= 1)
+      {
+        /* Binary semaphores created using xSemaphoreCreateBinary() are created in
+         * a state such that the semaphore must first be 'given' before it can be
+         * 'taken'. So call to OSAL_SEM_Create() with initialCount = 1 then
+         * Binary semaphore must be created in a state such that the first call to
+         * 'take' the semaphore would pass.
+         */
+        *(SemaphoreHandle_t*)semID = xSemaphoreCreateBinary();
 
-      case OSAL_SEM_TYPE_COUNTING:
-         *(SemaphoreHandle_t*)semID = xSemaphoreCreateCounting((UBaseType_t)maxCount, (UBaseType_t)initialCount);
-         break;
+        if (*(SemaphoreHandle_t*)semID != NULL && initialCount == 1)
+        {
+          if (xSemaphoreGive(*(SemaphoreHandle_t*)semID) == pdTRUE)
+          {
+            return OSAL_RESULT_TRUE;
+          }
+          else
+          {
+            return OSAL_RESULT_FALSE;
+          }
+        }
+      }
+      else // for a Binary Semaphore initialCount must be either "0" or "1"
+      {
+        return OSAL_RESULT_FALSE;
+      }
+    break;
 
-      default:
-         *(SemaphoreHandle_t*)semID = NULL;
-         return OSAL_RESULT_NOT_IMPLEMENTED;
-   }
+    case OSAL_SEM_TYPE_COUNTING:
+      *(SemaphoreHandle_t*)semID = xSemaphoreCreateCounting((UBaseType_t)maxCount, (UBaseType_t)initialCount);
+    break;
 
-   if (*(SemaphoreHandle_t*)semID == NULL)
-   {
-      return OSAL_RESULT_FALSE;
-   }
+    default:
+      *(SemaphoreHandle_t*)semID = NULL;
 
-   return OSAL_RESULT_TRUE;
+    return OSAL_RESULT_NOT_IMPLEMENTED;
+  }
+
+  if (*(SemaphoreHandle_t*)semID == NULL)
+  {
+    return OSAL_RESULT_FALSE;
+  }
+
+  return OSAL_RESULT_TRUE;
 }
 
 // *****************************************************************************
@@ -276,9 +303,10 @@ OSAL_RESULT OSAL_SEM_Create(OSAL_SEM_HANDLE_TYPE* semID, OSAL_SEM_TYPE type, uin
  */
 OSAL_RESULT OSAL_SEM_Delete(OSAL_SEM_HANDLE_TYPE* semID)
 {
-   vSemaphoreDelete(*(SemaphoreHandle_t*)semID);
-   *(SemaphoreHandle_t*)semID = NULL;
-   return OSAL_RESULT_TRUE;
+  vSemaphoreDelete(*(SemaphoreHandle_t*)semID);
+  *(SemaphoreHandle_t*)semID = NULL;
+
+  return OSAL_RESULT_TRUE;
 }
 
 // *****************************************************************************
@@ -326,20 +354,21 @@ OSAL_RESULT OSAL_SEM_Delete(OSAL_SEM_HANDLE_TYPE* semID)
  */
 OSAL_RESULT OSAL_SEM_Pend(OSAL_SEM_HANDLE_TYPE* semID, uint16_t waitMS)
 {
-   TickType_t timeout = 0;
+  TickType_t timeout = 0;
 
-   if(waitMS == OSAL_WAIT_FOREVER)
-   {
-      timeout = portMAX_DELAY;
-   }
-   else
-   {
-      timeout = (TickType_t)(waitMS / portTICK_PERIOD_MS);
-   }
-   if (xSemaphoreTake(*(SemaphoreHandle_t*)semID, timeout) == pdTRUE)
-      return OSAL_RESULT_TRUE;
-   else
-      return OSAL_RESULT_FALSE;
+  if(waitMS == OSAL_WAIT_FOREVER)
+  {
+    timeout = portMAX_DELAY;
+  }
+  else
+  {
+    timeout = (TickType_t)(waitMS / portTICK_PERIOD_MS);
+  }
+
+  if (xSemaphoreTake(*(SemaphoreHandle_t*)semID, timeout) == pdTRUE)
+    return OSAL_RESULT_TRUE;
+  else
+    return OSAL_RESULT_FALSE;
 }
 
 // *****************************************************************************
@@ -372,11 +401,12 @@ OSAL_RESULT OSAL_SEM_Pend(OSAL_SEM_HANDLE_TYPE* semID, uint16_t waitMS)
  */
 OSAL_RESULT OSAL_SEM_Post(OSAL_SEM_HANDLE_TYPE* semID)
 {
-   if (xSemaphoreGive(*(SemaphoreHandle_t*)semID) == pdTRUE)
-   {
-      return OSAL_RESULT_TRUE;
-   }
-   return OSAL_RESULT_FALSE;
+  if (xSemaphoreGive(*(SemaphoreHandle_t*)semID) == pdTRUE)
+  {
+    return OSAL_RESULT_TRUE;
+  }
+
+  return OSAL_RESULT_FALSE;
 }
 
 // *****************************************************************************
@@ -389,7 +419,7 @@ OSAL_RESULT OSAL_SEM_Post(OSAL_SEM_HANDLE_TYPE* semID)
      Post a binary semaphore or increment a counting semaphore. The highest
      priority task currently blocked on the semaphore will be released and
      made ready to run. This form of the post function should be used inside
-    an ISR.
+     an ISR.
 
   Precondition:
      Semaphore must have been created.
@@ -424,14 +454,15 @@ OSAL_RESULT OSAL_SEM_Post(OSAL_SEM_HANDLE_TYPE* semID)
  */
 OSAL_RESULT OSAL_SEM_PostISR(OSAL_SEM_HANDLE_TYPE* semID)
 {
-   BaseType_t _taskWoken = pdFALSE;
-   
-   if (xSemaphoreGiveFromISR(*(SemaphoreHandle_t*)semID, &_taskWoken))
-   {
-      portEND_SWITCHING_ISR(_taskWoken);
-      return OSAL_RESULT_TRUE;
-   }
-   return OSAL_RESULT_FALSE;
+  BaseType_t _taskWoken = pdFALSE;
+
+  if (xSemaphoreGiveFromISR(*(SemaphoreHandle_t*)semID, &_taskWoken))
+  {
+    portEND_SWITCHING_ISR(_taskWoken);
+    return OSAL_RESULT_TRUE;
+  }
+
+  return OSAL_RESULT_FALSE;
 }
 
 // *****************************************************************************
@@ -485,11 +516,13 @@ OSAL_RESULT OSAL_SEM_PostISR(OSAL_SEM_HANDLE_TYPE* semID)
  */
 uint8_t OSAL_SEM_GetCount(OSAL_SEM_HANDLE_TYPE* semID)
 {
-   UBaseType_t SemCount;
-   SemCount = uxQueueMessagesWaiting(*(SemaphoreHandle_t*)semID);
-   if(SemCount > 255)
-      SemCount = 255;
-   return SemCount;
+  UBaseType_t SemCount;
+  SemCount = uxQueueMessagesWaiting(*(SemaphoreHandle_t*)semID);
+
+  if(SemCount > 255)
+    SemCount = 255;
+
+  return SemCount;
 }
 
 // *****************************************************************************
@@ -531,14 +564,15 @@ uint8_t OSAL_SEM_GetCount(OSAL_SEM_HANDLE_TYPE* semID)
  */
 OSAL_RESULT OSAL_MUTEX_Create(OSAL_MUTEX_HANDLE_TYPE* mutexID)
 {
-    /* mutex may already have been created so test before creating it */
-    if (*(SemaphoreHandle_t*)mutexID != NULL)
-    {
-        return OSAL_RESULT_FALSE;
-    }
+  /* mutex may already have been created so test before creating it */
+  if (*(SemaphoreHandle_t*)mutexID != NULL)
+  {
+    return OSAL_RESULT_FALSE;
+  }
 
-    *(SemaphoreHandle_t*)mutexID = xSemaphoreCreateMutex();
-    return OSAL_RESULT_TRUE;
+  *(SemaphoreHandle_t*)mutexID = xSemaphoreCreateMutex();
+
+  return OSAL_RESULT_TRUE;
 }
 
 // *****************************************************************************
@@ -571,13 +605,15 @@ OSAL_RESULT OSAL_MUTEX_Create(OSAL_MUTEX_HANDLE_TYPE* mutexID)
  */
 OSAL_RESULT OSAL_MUTEX_Delete(OSAL_MUTEX_HANDLE_TYPE* mutexID)
 {
-    if(*(SemaphoreHandle_t*)mutexID == NULL)
-    {
-       return OSAL_RESULT_FALSE;
-    }
-    vSemaphoreDelete(*(SemaphoreHandle_t*)mutexID);
-    *(SemaphoreHandle_t*)mutexID = NULL;
-    return OSAL_RESULT_TRUE;
+  if(*(SemaphoreHandle_t*)mutexID == NULL)
+  {
+    return OSAL_RESULT_FALSE;
+  }
+
+  vSemaphoreDelete(*(SemaphoreHandle_t*)mutexID);
+  *(SemaphoreHandle_t*)mutexID = NULL;
+
+  return OSAL_RESULT_TRUE;
 }
 
 // *****************************************************************************
@@ -627,20 +663,21 @@ OSAL_RESULT OSAL_MUTEX_Delete(OSAL_MUTEX_HANDLE_TYPE* mutexID)
  */
 OSAL_RESULT OSAL_MUTEX_Lock(OSAL_MUTEX_HANDLE_TYPE* mutexID, uint16_t waitMS)
 {
-   TickType_t timeout = 0;
-   
-   if(waitMS == OSAL_WAIT_FOREVER)
-   {
-      timeout = portMAX_DELAY;
-   }
-   else
-   {
-      timeout = (TickType_t)(waitMS / portTICK_PERIOD_MS);
-   }
-   if (xSemaphoreTake(*(SemaphoreHandle_t*)mutexID, timeout) == pdTRUE)
-      return OSAL_RESULT_TRUE;
-   else
-      return OSAL_RESULT_FALSE;
+  TickType_t timeout = 0;
+
+  if(waitMS == OSAL_WAIT_FOREVER)
+  {
+    timeout = portMAX_DELAY;
+  }
+  else
+  {
+    timeout = (TickType_t)(waitMS / portTICK_PERIOD_MS);
+  }
+
+  if (xSemaphoreTake(*(SemaphoreHandle_t*)mutexID, timeout) == pdTRUE)
+    return OSAL_RESULT_TRUE;
+  else
+    return OSAL_RESULT_FALSE;
 }
 
 // *****************************************************************************
@@ -684,13 +721,12 @@ OSAL_RESULT OSAL_MUTEX_Lock(OSAL_MUTEX_HANDLE_TYPE* mutexID, uint16_t waitMS)
  */
 OSAL_RESULT OSAL_MUTEX_Unlock(OSAL_MUTEX_HANDLE_TYPE* mutexID)
 {
+  if (xSemaphoreGive(*(SemaphoreHandle_t*)mutexID) == pdTRUE)
+  {
+    return OSAL_RESULT_TRUE;
+  }
 
-   if (xSemaphoreGive(*(SemaphoreHandle_t*)mutexID) == pdTRUE)
-   {
-      return OSAL_RESULT_TRUE;
-   }
-
-   return OSAL_RESULT_FALSE;
+  return OSAL_RESULT_FALSE;
 }
 
 // *****************************************************************************
@@ -728,7 +764,6 @@ __inline__ __attribute__ ((gnu_inline)) __attribute__((always_inline)) inline co
 {
     return "FreeRTOS";
 }
-
 
 // *****************************************************************************
 /* Function: OSAL_RESULT OSAL_Initialize()
@@ -768,12 +803,11 @@ __inline__ __attribute__ ((gnu_inline)) __attribute__((always_inline)) inline co
  */
 OSAL_RESULT OSAL_Initialize()
 {
-    // nothing required
-    return OSAL_RESULT_TRUE;
+  // nothing required
+  return OSAL_RESULT_TRUE;
 }
 
 /*******************************************************************************
  End of File
 */
-
 

@@ -62,24 +62,6 @@
 // *****************************************************************************
 
 
-/*** Macros for GPIO_PA19 pin ***/
-#define GPIO_PA19_Set()               (PIOA_REGS->PIO_SODR = (1<<19))
-#define GPIO_PA19_Clear()             (PIOA_REGS->PIO_CODR = (1<<19))
-#define GPIO_PA19_Toggle()            (PIOA_REGS->PIO_ODSR ^= (1<<19))
-#define GPIO_PA19_Get()               ((PIOA_REGS->PIO_PDSR >> 19) & 0x1)
-#define GPIO_PA19_OutputEnable()      (PIOA_REGS->PIO_OER = (1<<19))
-#define GPIO_PA19_InputEnable()       (PIOA_REGS->PIO_ODR = (1<<19))
-#define GPIO_PA19_PIN                  PIO_PIN_PA19
-
-/*** Macros for GPIO_PA29 pin ***/
-#define GPIO_PA29_Set()               (PIOA_REGS->PIO_SODR = (1<<29))
-#define GPIO_PA29_Clear()             (PIOA_REGS->PIO_CODR = (1<<29))
-#define GPIO_PA29_Toggle()            (PIOA_REGS->PIO_ODSR ^= (1<<29))
-#define GPIO_PA29_Get()               ((PIOA_REGS->PIO_PDSR >> 29) & 0x1)
-#define GPIO_PA29_OutputEnable()      (PIOA_REGS->PIO_OER = (1<<29))
-#define GPIO_PA29_InputEnable()       (PIOA_REGS->PIO_ODR = (1<<29))
-#define GPIO_PA29_PIN                  PIO_PIN_PA29
-
 
 // *****************************************************************************
 /* PIO Port

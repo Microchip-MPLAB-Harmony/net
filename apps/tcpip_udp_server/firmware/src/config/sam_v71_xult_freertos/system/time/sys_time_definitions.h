@@ -49,6 +49,7 @@
 // *****************************************************************************
 // *****************************************************************************
 #include "system/int/sys_int.h"
+#include "configuration.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -67,27 +68,33 @@
 // *****************************************************************************
 /* TIME PLIB API Set needed by the system service */
 
-typedef void(*TIME_CallbackSet)(void * callback, uintptr_t context);
-typedef void(*TIME_PeriodSet)(uint32_t period);
-typedef uint32_t(*TIME_FrequencyGet)(void);
-typedef uint32_t(*TIME_PeriodGet)(void);
-typedef void (*TIME_CompareSet) (uint32_t compare);
-typedef uint32_t(*TIME_CompareGet)(void);
-typedef void(*TIME_Start)(void);
-typedef void(*TIME_Stop)(void);
-typedef uint32_t(*TIME_CounterGet)(void);
+typedef void (*SYS_TIME_PLIB_CALLBACK)(uint32_t , uintptr_t );
+typedef void (*SYS_TIME_PLIB_CALLBACK_REGISTER)(SYS_TIME_PLIB_CALLBACK callback, uintptr_t context);     
+typedef uint32_t (*SYS_TIME_PLIB_FREQUENCY_GET)(void);
+typedef void (*SYS_TIME_PLIB_START)(void);
+typedef void (*SYS_TIME_PLIB_STOP)(void);
+
+#if (SYS_TIME_HW_COUNTER_WIDTH == 16)
+typedef void (*SYS_TIME_PLIB_PERIOD_SET)(uint16_t period);
+typedef void (*SYS_TIME_PLIB_COMPARE_SET) (uint16_t compare);
+typedef uint16_t (*SYS_TIME_PLIB_COUNTER_GET)(void);
+#else
+typedef void (*SYS_TIME_PLIB_PERIOD_SET)(uint32_t period);
+typedef void (*SYS_TIME_PLIB_COMPARE_SET) (uint32_t compare);
+typedef uint32_t (*SYS_TIME_PLIB_COUNTER_GET)(void);
+#endif
 
 typedef struct
 {
-    TIME_CallbackSet timerCallbackSet;
-    TIME_PeriodSet timerPeriodSet;
-    TIME_FrequencyGet timerFrequencyGet;
-    TIME_CompareSet timerCompareSet;
-    TIME_Start timerStart;
-    TIME_Stop timerStop;
-    TIME_CounterGet timerCounterGet;
+    SYS_TIME_PLIB_CALLBACK_REGISTER     timerCallbackSet;
+    SYS_TIME_PLIB_PERIOD_SET            timerPeriodSet;
+    SYS_TIME_PLIB_FREQUENCY_GET         timerFrequencyGet;
+    SYS_TIME_PLIB_COMPARE_SET           timerCompareSet;
+    SYS_TIME_PLIB_START                 timerStart;
+    SYS_TIME_PLIB_STOP                  timerStop;
+    SYS_TIME_PLIB_COUNTER_GET           timerCounterGet;
 
-} TIME_PLIB_API;
+} SYS_TIME_PLIB_INTERFACE;
 
 
 // *****************************************************************************
@@ -97,10 +104,10 @@ struct _SYS_TIME_INIT
 {
     /* Identifies the PLIB API set to be used by the system service to access
      * the peripheral. */
-    TIME_PLIB_API *timePlib;
+    const SYS_TIME_PLIB_INTERFACE*  timePlib;
 
     /* Interrupt source ID for the TIMER interrupt. */
-    INT_SOURCE hwTimerIntNum;
+    INT_SOURCE                      hwTimerIntNum;
 
 };
 
