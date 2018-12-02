@@ -134,7 +134,6 @@ void TC2_CH2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handl
 void TC3_CH0_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC3_CH1_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TC3_CH2_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void MLB_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void AES_Handler                ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TRNG_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void XDMAC_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -228,7 +227,6 @@ const DeviceVectors exception_table=
     .pfnTC3_CH0_Handler            = ( void * ) TC3_CH0_Handler,
     .pfnTC3_CH1_Handler            = ( void * ) TC3_CH1_Handler,
     .pfnTC3_CH2_Handler            = ( void * ) TC3_CH2_Handler,
-    .pfnMLB_Handler                = ( void * ) MLB_Handler,
     .pfnAES_Handler                = ( void * ) AES_Handler,
     .pfnTRNG_Handler               = ( void * ) TRNG_Handler,
     .pfnXDMAC_Handler              = ( void * ) XDMAC_Handler,
@@ -250,6 +248,7 @@ const DeviceVectors exception_table=
 
 
 };
+
 
 /*******************************************************************************
  End of File

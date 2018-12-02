@@ -71,7 +71,6 @@
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-    SYS_CONSOLE_Tasks(sysObj.sysConsole0);
     SYS_CMD_Tasks();
 
 
@@ -83,7 +82,8 @@ void SYS_Tasks ( void )
 
 
     /* Maintain Middleware & Other Libraries */
-    TCPIP_STACK_Task(sysObj.tcpip);
+    
+TCPIP_STACK_Task(sysObj.tcpip);
 
 
 
