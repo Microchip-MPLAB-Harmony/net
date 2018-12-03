@@ -13,30 +13,38 @@
     Reference: RFC 1035
 *******************************************************************************/
 
-/*******************************************************************************
-File Name:  DNS.c
-Copyright © 2012 released Microchip Technology Inc.  All rights
-reserved.
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_DNS_CLIENT
 
 #include "tcpip/src/tcpip_private.h"
@@ -330,7 +338,6 @@ bool TCPIP_DNS_ClientInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         pDnsDcpt->cacheEntryTMO = dnsData->entrySolvedTmo;
         pDnsDcpt->nIPv4Entries= dnsData->nIPv4Entries;
         pDnsDcpt->nIPv6Entries = dnsData->nIPv6Entries;
-        // TODO aa: further improvements!
 #if defined (TCPIP_STACK_USE_IPV4)
         pDnsDcpt->ipAddressType = IP_ADDRESS_TYPE_IPV4;     // dnsData->ipAddressType;
 #else
@@ -1166,8 +1173,6 @@ static TCPIP_DNS_RESULT _DNS_Send_Query(TCPIP_DNS_DCPT* pDnsDcpt, TCPIP_DNS_HASH
         TCPIP_UDP_Bind(dnsSocket, IP_ADDRESS_TYPE_IPV4, 0, (IP_MULTI_ADDRESS*)&pDnsHE->currNet->netIPAddr);
         dnsServerAdd.Val = pDnsHE->currNet->dnsServer[pDnsHE->currServerIx].Val;
         TCPIP_UDP_DestinationIPAddressSet(dnsSocket, pDnsDcpt->ipAddressType, (IP_MULTI_ADDRESS*)&dnsServerAdd);
-        // TODO aa: this call can be probably removed if the TCPIP_UDP_Disconnect
-        // doesnt clear the remPort for a client socket!
         TCPIP_UDP_DestinationPortSet(dnsSocket, TCPIP_DNS_SERVER_PORT);
 
         startPtr = wrPtr;

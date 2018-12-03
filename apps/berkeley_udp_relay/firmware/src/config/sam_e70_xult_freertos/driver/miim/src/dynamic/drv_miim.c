@@ -19,28 +19,31 @@
 *******************************************************************************/
 
 //DOM-IGNORE-BEGIN
-/*******************************************************************************
-Copyright (c) 2013 released Microchip Technology Inc.  All rights reserved.
+/*****************************************************************************
+ Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED AS IS WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
 //DOM-IGNORE-END
 
 
@@ -272,7 +275,7 @@ SYS_MODULE_OBJ DRV_MIIM_Initialize(const SYS_MODULE_INDEX iModule, const SYS_MOD
     }
 
     // create synchronization object
-    if(OSAL_SEM_Create(&pMiimObj->objSem, OSAL_SEM_TYPE_BINARY, 1, 0) != OSAL_RESULT_TRUE)
+    if(OSAL_SEM_Create(&pMiimObj->objSem, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
     {   // failed
         return SYS_MODULE_OBJ_INVALID;
     }
@@ -308,7 +311,6 @@ SYS_MODULE_OBJ DRV_MIIM_Initialize(const SYS_MODULE_INDEX iModule, const SYS_MOD
 
 void DRV_MIIM_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT* const init)
 {
-    // TODO aa: provide implementation
     // Currently NOT implemented
 }
 
@@ -706,7 +708,7 @@ DRV_MIIM_CALLBACK_HANDLE DRV_MIIM_RegisterCallback(DRV_HANDLE handle, DRV_MIIM_O
 
         pClient->cbackHandler = cbFunction;
         miimRes = DRV_MIIM_RES_OK;
-        cbHandle = cbFunction;
+        cbHandle = (DRV_MIIM_CALLBACK_HANDLE)cbFunction;
 
         break;
     }
@@ -738,7 +740,7 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
             break;
         }
 
-        if(pClient->cbackHandler != cbHandle)
+        if(pClient->cbackHandler != (DRV_MIIM_OPERATION_CALLBACK)cbHandle)
         {
             res = DRV_MIIM_RES_CALLBACK_HANDLE_ERR;
             break;
@@ -890,7 +892,6 @@ static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpD
             _DRV_MIIM_MNGMNT_PORT_ENABLE(ethphyId);
             if( _DRV_MIIM_IS_BUSY(ethphyId) )
             {   // some previous operation; wait
-                // TODO aa: add and check tmo and go to DRV_MIIM_TXFER_TMO_START state?
                 break;
             }
 
@@ -948,8 +949,6 @@ static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpD
             {   // there's data available
                 pOpDcpt->opData = _DRV_MIIM_OP_READ_DATA_GET(ethphyId);
                 _DRV_MIIM_CLEAR_DATA_VALID(ethphyId);
-                // TODO aa: a scan counter could be implemented to count how many scan results available
-                // between 2 user reads; For now we have only 2 positions: fresh/stale
                 pOpDcpt->opStat = DRV_MIIM_TXFER_SCAN_VALID;
             }
             break;
@@ -1210,8 +1209,6 @@ static void _DRV_MIIM_PurgeClientOp(DRV_MIIM_CLIENT_DCPT* pClient)
     }
 
 }
-
-// TODO aa: single linked lists implementation: duplication!
 
 void  Helper_SingleListInitialize(SINGLE_LIST* pL)
 {

@@ -9,30 +9,38 @@
     Note, this module is based on system command parser
 *******************************************************************************/
 
-/*******************************************************************************
-File Name:  tcpip_commands.c
-Copyright ©2012 released Microchip Technology Inc.  All rights
-reserved.
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED “AS IS?WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_COMMAND
 
 #include "tcpip/src/tcpip_private.h"
@@ -439,8 +447,6 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 };
 
-// TODO aa: this should be decoupled from the stack initialization
-// so that it can be an independent module!
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
 {
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
@@ -454,7 +460,6 @@ bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
     // create command group
     if (!SYS_CMD_ADDGRP(tcpipCmdTbl, sizeof(tcpipCmdTbl)/sizeof(*tcpipCmdTbl), "tcpip", ": stack commands"))
     {
-        // TODO aa: release the allocated _SYS_CMD_ADDGRP()
         SYS_ERROR(SYS_ERROR_ERROR, "Failed to create TCPIP Commands\r\n");
         return false;
     }
@@ -537,7 +542,6 @@ void TCPIP_Commands_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
         }
 #endif  // defined(_TCPIP_COMMAND_PING6)
         
-        // TODO aa: release the allocated _SYS_CMD_ADDGRP()
     }
 }
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -1744,7 +1748,7 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
 #if defined(TCPIP_STACK_USE_IPV6)
     uint8_t     addrBuf[44];
 #endif
-    TCPIP_DNSS_RESULT res = DNSS_RES_NO_SERVICE;
+    TCPIP_DNSS_RESULT res = TCPIP_DNSS_RES_NO_SERVICE;
 
     if(dnsCommand == DNS_SERVICE_COMD_DEL)
     {
@@ -1826,16 +1830,16 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
 
     switch(res)
     {
-        case DNSS_RES_NO_ENTRY:
+        case TCPIP_DNSS_RES_NO_ENTRY:
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "The Address is not part of the DNS Cache entry \r\n");
             return false;
-        case DNSS_RES_MEMORY_FAIL:
+        case TCPIP_DNSS_RES_MEMORY_FAIL:
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "No memory available \r\n");
             return false;
-        case DNSS_RES_CACHE_FULL:
+        case TCPIP_DNSS_RES_CACHE_FULL:
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "No space to add [%s] entry \r\n",hostName);
             return false;
-        case TCPIP_DNS_RES_OK:
+        case TCPIP_DNSS_RES_OK:
             return true;
         default:
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "Failed to add [%s] entry \r\n",hostName);
@@ -1922,12 +1926,12 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
         while(1)
         {
             res = TCPIP_DNSS_AddressCntGet(index,(uint8_t*)hostName,&ipcount);
-            if(res == DNSS_RES_OK)
+            if(res == TCPIP_DNSS_RES_OK)
             {
                 entryPresent = true;
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s       %d\r\n",hostName,ipcount);
             }
-            else if(res == DNSS_RES_NO_SERVICE)
+            else if(res == TCPIP_DNSS_RES_NO_SERVICE)
             {
                 if(entryPresent == false)
                 {
@@ -1951,13 +1955,13 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     while(1)
     {
         res = TCPIP_DNSS_EntryGet((uint8_t*)hostName,addrType,index,&ipDNS,&ttlTime);
-        if(res == DNSS_RES_OK)
+        if(res == TCPIP_DNSS_RES_OK)
         {
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s\t\t%d.%d.%d.%d\t\t%d\r\n",hostName,ipDNS.v4Add.v[0],ipDNS.v4Add.v[1],
                 ipDNS.v4Add.v[2],ipDNS.v4Add.v[3],ttlTime);
             entryPresent = true;
         }
-        else if((res == DNSS_RES_NO_SERVICE)|| (res == DNSS_RES_NO_ENTRY))
+        else if((res == TCPIP_DNSS_RES_NO_SERVICE)|| (res == TCPIP_DNSS_RES_NO_ENTRY))
         {
             if(entryPresent == false)
             {
@@ -1983,13 +1987,13 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     while(1)
     {
         res = TCPIP_DNSS_EntryGet((uint8_t*)hostName,addrType,index,&ipDNS,&ttlTime);
-        if(res == DNSS_RES_OK)
+        if(res == TCPIP_DNSS_RES_OK)
         {
             TCPIP_Helper_IPv6AddressToString(&ipDNS.v6Add,(char*)addrBuf,sizeof(addrBuf));
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s       %s      %d\r\n",hostName,addrBuf,ttlTime);
             entryPresent = true;
         }
-        else if((res == DNSS_RES_NO_SERVICE)|| (res == DNSS_RES_NO_ENTRY))
+        else if((res == TCPIP_DNSS_RES_NO_SERVICE)|| (res == TCPIP_DNSS_RES_NO_ENTRY))
         {
             if(entryPresent == false)
             {

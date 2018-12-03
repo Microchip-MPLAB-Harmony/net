@@ -9,30 +9,38 @@
     -Reference: RFC 791
 *******************************************************************************/
 
-/*******************************************************************************
-File Name:  ipv4.c
-Copyright © 2012 released Microchip Technology Inc.  All rights
-reserved.
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED ?AS IS? WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_IPV4
 
@@ -194,7 +202,7 @@ static void TCPIP_IPV4_CheckRxPkt(TCPIP_MAC_PACKET* pRxPkt)
         }
     }
     else if(pHeader->Protocol == IP_PROT_TCP)
-    {   // TODO aa: add minimal debug for TCP packets
+    {   
     }
 
 }
@@ -581,7 +589,6 @@ bool TCPIP_IPV4_PacketTransmit(IPV4_PACKET* pPkt)
         }
 #else
         // MAC transmit will fail anyway
-        // TODO aa: the MAC max frame has to be taken into consideration too!
         return false;
 #endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
 
@@ -1493,8 +1500,6 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
     // this is just a new fragment;
     if(pParent->nFrags >= TCPIP_IPV4_FRAGMENT_MAX_NUMBER)
     {   // more fragments than allowed
-        // TODO aa: could be detected from the previous step, if not complete
-        // or at least see if there's overlap first and a segment gets discarded
         TCPIP_Helper_SingleListNextRemove(&ipv4FragmentQueue, (SGL_LIST_NODE*)pPrevParent);
         _IPv4FragmentDbg(pParent, pRxPkt, TCPIP_IPV4_FRAG_DISCARD_EXCEEDED);
         TCPIP_IPV4_RxFragmentDiscard(pParent, TCPIP_MAC_PKT_ACK_FRAGMENT_ERR);
@@ -1703,10 +1708,6 @@ static void TCPIP_IPV4_RxFragmentListPurge(SINGLE_LIST* pL)
 
 
 // TX packet needs fragmentation; each fragment will contain the IPv4 header and a fragment of data
-// TODO aa: this function does NOT support split segments!
-// If the incoming packet spans multiple segments bad things will happen.
-// ICMP and TCP take care of themselves
-// Problem is for UDP and, most important, for user constructed packets!
 static bool TCPIP_IPV4_FragmentTxPkt(IPV4_PACKET* pPkt, uint16_t linkMtu, uint16_t pktPayload)
 {
     int ix;

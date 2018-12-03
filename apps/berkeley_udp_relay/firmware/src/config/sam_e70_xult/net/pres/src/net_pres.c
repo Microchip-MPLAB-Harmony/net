@@ -693,7 +693,6 @@ uint16_t NET_PRES_SocketFlush(NET_PRES_SKT_HANDLE_T handle)
         return 0;
     }
 
-    // TODO aa: is it safe to call the transport layer even if the conenction is encrypted?
     NET_PRES_TransBool fp = pSkt->transObject->fpFlush;
     if (fp == NULL)
     {

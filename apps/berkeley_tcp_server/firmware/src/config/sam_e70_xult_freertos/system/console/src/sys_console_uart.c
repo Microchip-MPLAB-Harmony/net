@@ -55,303 +55,381 @@
 // *****************************************************************************
 // *****************************************************************************
 
-SYS_CONSOLE_DEV_DESC consUsartDevDesc =
+const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc =
 {
     .consoleDevice = SYS_CONSOLE_DEV_USART,
     .intent = DRV_IO_INTENT_READWRITE,
-    .sysConsoleRead = Console_UART_Read,
-    .sysConsoleReadC = Console_UART_ReadC,
-    .sysConsoleWrite = Console_UART_Write,
-    .sysConsoleRegisterCallback = Console_UART_RegisterCallback,
-    .sysConsoleTasks = Console_UART_Tasks,
-    .sysConsoleStatus = Console_UART_Status,
-    .sysConsoleFlush = Console_UART_Flush
+    .init = Console_UART_Initialize,
+    .read = Console_UART_Read,
+    .write = Console_UART_Write,
+    .callbackRegister = Console_UART_RegisterCallback,
+    .task = Console_UART_Tasks,
+    .status = Console_UART_Status,
+    .flush = Console_UART_Flush
 };
 
-static struct QPacket wrQueueElements[SYS_CONSOLE_UART_WR_QUEUE_DEPTH];
-static struct QPacket rdQueueElements[SYS_CONSOLE_UART_RD_QUEUE_DEPTH];
+static CONSOLE_UART_DATA gConsoleUartData[SYS_CONSOLE_UART_MAX_INSTANCES];
 
-static struct QueueNode writeQueue = {0, 0, 0, wrQueueElements, SYS_CONSOLE_UART_WR_QUEUE_DEPTH};
-static struct QueueNode readQueue = {0, 0, 0, rdQueueElements, SYS_CONSOLE_UART_RD_QUEUE_DEPTH};
+#define CONSOLE_UART_GET_INSTANCE(index)    (index >= SYS_CONSOLE_UART_MAX_INSTANCES)? NULL : &gConsoleUartData[index]
 
-static void pushQueue(struct QueueNode *q, struct QPacket pkt)
+static bool Console_UART_ResourceLock(CONSOLE_UART_DATA* pConsoleUartData)
 {
-    q->qPkts[q->nextPos] = pkt;
-    (q->nextPos < (q->elemArrSz - 1)) ? q->nextPos++ : (q->nextPos = 0);
-    q->numElem++;
-}
-
-static void popQueue(struct QueueNode *q)
-{
-    (q->tailPos < (q->elemArrSz - 1)) ? q->tailPos++ : (q->tailPos = 0);
-    q->numElem--;
-}
-
-CONS_UART_DATA consUartData =
-{
-    /* console state */
-    .state = CONSOLE_UART_STATE_INIT,
-
-    /* Intialize the read complete flag */
-    .isReadComplete = true,
-
-    /* Initialize the write complete flag*/
-    .isWriteComplete = true,
-
-    .overflowFlag = false,
-
-    .rdCallback = NULL,
-
-    .wrCallback = NULL
-};
-
-SYS_CONSOLE_STATUS Console_UART_Status(void)
-{
-    SYS_CONSOLE_STATUS status = SYS_CONSOLE_STATUS_NOT_CONFIGURED;
-
-    if (consUartData.state == CONSOLE_UART_STATE_INIT)
-        return status;
-
-    if (consUartData.state == CONSOLE_UART_STATE_CRITICAL_ERROR || consUartData.state == CONSOLE_UART_STATE_OPERATIONAL_ERROR || consUartData.overflowFlag)
+    if(pConsoleUartData->inInterruptContext == false)
     {
-        status = SYS_CONSOLE_STATUS_ERROR;
+        /* Grab a mutex. This is okay because we are not in an interrupt context */
+        if(OSAL_MUTEX_Lock(&(pConsoleUartData->mutexTransferObjects), OSAL_WAIT_FOREVER) == OSAL_RESULT_TRUE)
+        {
+            SYS_INT_SourceDisable(pConsoleUartData->interruptSource);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+    }
+    return true;
+}
+
+static void Console_UART_ResourceUnlock(CONSOLE_UART_DATA* pConsoleUartData)
+{
+    SYS_INT_SourceEnable(pConsoleUartData->interruptSource);
+
+    if(pConsoleUartData->inInterruptContext == false)
+    {
+        /* Release mutex */
+        OSAL_MUTEX_Unlock(&(pConsoleUartData->mutexTransferObjects));
+    }
+}
+
+static bool Console_UART_PushQueue(Queue* queue, QElement element)
+{
+    bool isSuccess = false;
+    uint32_t inIndex = queue->inIndex;
+    QElement* qElement = &queue->pQElementArr[inIndex];
+
+    (inIndex+1) >= (queue->maxQElements)? inIndex = 0 : inIndex++;
+    if (inIndex != queue->outIndex)
+    {
+        qElement->pBuffer = element.pBuffer;
+        qElement->size = element.size;
+        queue->inIndex = inIndex;
+        isSuccess = true;
+    }
+    return isSuccess;
+}
+
+static bool Console_UART_PopQueue(Queue* queue, QElement* qElement)
+{
+    bool isSuccess = false;
+    if (queue->inIndex != queue->outIndex)
+    {
+        *qElement = queue->pQElementArr[queue->outIndex];
+        (queue->outIndex+1) >= (queue->maxQElements)? queue->outIndex = 0 : queue->outIndex++;
+        isSuccess = true;
+    }
+    return isSuccess;
+}
+
+static void Console_UART_ReadSubmit(CONSOLE_UART_DATA* pConsoleUartData, QElement qElement)
+{
+    pConsoleUartData->readStatus = CONSOLE_UART_READ_BUSY;
+    pConsoleUartData->uartPLIB->read(qElement.pBuffer, qElement.size);
+}
+
+ssize_t Console_UART_Read(uint32_t index, int fd, void* buf, size_t count)
+{
+    (void)fd;
+    QElement qElement;
+    CONSOLE_UART_DATA* pConsoleUartData = CONSOLE_UART_GET_INSTANCE(index);
+    if (pConsoleUartData == NULL)
+    {
+        return 0;
+    }
+
+    qElement.pBuffer = buf;
+    qElement.size = count;
+
+    if (Console_UART_ResourceLock(pConsoleUartData) == false)
+    {
+        return 0;
+    }
+
+    if (pConsoleUartData->rdState == CONSOLE_UART_READ_STATE_IDLE)
+    {
+        /* Read is not busy. Submit read request now itself */
+        pConsoleUartData->readQueue.curQElement = qElement;
+        Console_UART_ReadSubmit(pConsoleUartData, pConsoleUartData->readQueue.curQElement);
+        pConsoleUartData->rdState = CONSOLE_UART_READ_STATE_BUSY;
     }
     else
     {
-        status = (writeQueue.numElem || readQueue.numElem) ? SYS_CONSOLE_STATUS_BUSY : SYS_CONSOLE_STATUS_CONFIGURED;
-    }
-    return status;
-}
-
-ssize_t Console_UART_Write(int fd, const void *buf, size_t count)
-{
-    struct QPacket pkt;
-
-    pkt.data.cbuf = buf;
-    pkt.sz = count;
-
-    //Pop the most recent if the queue is full
-    if (writeQueue.numElem >= writeQueue.elemArrSz)
-    {
-        popQueue(&writeQueue);
+        /* Read is busy. See if the request can be queued. */
+        if (Console_UART_PushQueue(&pConsoleUartData->readQueue, qElement) == false)
+        {
+            count = 0;
+        }
     }
 
-    pushQueue(&writeQueue, pkt);
+    Console_UART_ResourceUnlock(pConsoleUartData);
 
     return count;
 }
 
-ssize_t Console_UART_Read(int fd, void *buf, size_t count)
+static void Console_UART_WriteSubmit(CONSOLE_UART_DATA* pConsoleUartData, QElement qElement)
 {
-    struct QPacket pkt;
-    size_t rdBytes = 0;
+    pConsoleUartData->writeStatus = CONSOLE_UART_WRITE_BUSY;
+    pConsoleUartData->uartPLIB->write(qElement.pBuffer, qElement.size);
+}
 
-    pkt.data.buf = buf;
-    pkt.sz = 1;
-
-    while ((readQueue.numElem < readQueue.elemArrSz) && (rdBytes < count))
+ssize_t Console_UART_Write(uint32_t index, int fd, const void* buf, size_t count)
+{
+    (void)fd;
+    QElement qElement;
+    CONSOLE_UART_DATA* pConsoleUartData = CONSOLE_UART_GET_INSTANCE(index);
+    if (pConsoleUartData == NULL)
     {
-        pushQueue(&readQueue, pkt);
-        pkt.data.buf = (char*)pkt.data.buf + 1;
-        rdBytes++;
+        return 0;
     }
 
-    return rdBytes;
+    qElement.pBuffer = (char*)buf;
+    qElement.size = count;
+
+    if (Console_UART_ResourceLock(pConsoleUartData) == false)
+    {
+        return 0;
+    }
+
+    if (pConsoleUartData->wrState == CONSOLE_UART_WRITE_STATE_IDLE)
+    {
+        /* Write is not busy. Submit write request now itself. */
+        pConsoleUartData->writeQueue.curQElement = qElement;
+        Console_UART_WriteSubmit(pConsoleUartData, pConsoleUartData->writeQueue.curQElement);
+        pConsoleUartData->wrState = CONSOLE_UART_WRITE_STATE_BUSY;
+    }
+    else
+    {
+        /* Write is busy. See if the request can be queued. */
+        if (Console_UART_PushQueue(&pConsoleUartData->writeQueue, qElement) == false)
+        {
+            count = 0;
+        }
+    }
+
+    Console_UART_ResourceUnlock(pConsoleUartData);
+
+    return count;
 }
 
-char Console_UART_ReadC(int fd)
+void Console_UART_RegisterCallback(uint32_t index, SYS_CONSOLE_CALLBACK callback, SYS_CONSOLE_EVENT event)
 {
-    char readBuffer;
+    CONSOLE_UART_DATA* pConsoleUartData = CONSOLE_UART_GET_INSTANCE(index);
+    if (pConsoleUartData == NULL)
+    {
+        return;
+    }
 
-    USART1_Read(&readBuffer, 1);
-
-    while (USART1_ReadCountGet() == 0);
-
-    return readBuffer;
-}
-
-void Console_UART_RegisterCallback(consoleCallbackFunction consCallback, SYS_CONSOLE_EVENT event)
-{
     switch (event)
     {
         case SYS_CONSOLE_EVENT_READ_COMPLETE:
-            consUartData.rdCallback = consCallback;
+            pConsoleUartData->rdCallback = callback;
             break;
         case SYS_CONSOLE_EVENT_WRITE_COMPLETE:
-            consUartData.wrCallback = consCallback;
+            pConsoleUartData->wrCallback = callback;
             break;
         default:
             break;
     }
 }
 
-void Console_UART_Flush(void)
+void Console_UART_Flush(uint32_t index)
 {
-    if (consUartData.state != CONSOLE_UART_STATE_INIT)
+    CONSOLE_UART_DATA* pConsoleUartData = CONSOLE_UART_GET_INSTANCE(index);
+    if (pConsoleUartData == NULL)
     {
-        consUartData.state = CONSOLE_UART_STATE_READY;
+        return;
     }
 
-    consUartData.overflowFlag = false;
-
-    consUartData.isWriteComplete = true;
-    writeQueue.nextPos = 0;
-    writeQueue.tailPos = 0;
-    writeQueue.numElem = 0;
-
-    consUartData.isReadComplete = true;
-    readQueue.nextPos = 0;
-    readQueue.tailPos = 0;
-    readQueue.numElem = 0;
-}
-
-void UARTDeviceWriteCallback(uintptr_t context)
-{
-    consUartData.isWriteComplete = true;
-}
-
-void UARTDeviceReadCallback(uintptr_t context)
-{
-    if (USART1_ErrorGet() == 0)
+    if (Console_UART_ResourceLock(pConsoleUartData) == false)
     {
-        consUartData.isReadComplete = true;
+        return;
     }
+
+    /* Reset read and write queues */
+    pConsoleUartData->readQueue.inIndex = pConsoleUartData->readQueue.outIndex;
+    pConsoleUartData->writeQueue.inIndex = pConsoleUartData->writeQueue.outIndex;
+
+    Console_UART_ResourceUnlock(pConsoleUartData);
 }
 
-void Console_UART_Tasks(SYS_MODULE_OBJ object)
+static void Console_UART_ReadTasks(CONSOLE_UART_DATA* pConsoleUartData)
 {
-    /* Update the application state machine based
-     * on the current state */
-    struct QPacket pkt;
-    size_t *sizeRead;
-
-    switch(consUartData.state)
+    switch(pConsoleUartData->rdState)
     {
-        case CONSOLE_UART_STATE_INIT:
-
-            /* Register a callback with device layer to get event notification (for end point 0) */
-            USART1_WriteCallbackRegister(UARTDeviceWriteCallback, 0);
-            USART1_ReadCallbackRegister(UARTDeviceReadCallback, 0);
-
-            /* If the driver was opened, it is ready for operation */
-            consUartData.state = CONSOLE_UART_STATE_READY;
-
+        case CONSOLE_UART_READ_STATE_IDLE:
             break;
-
-        case CONSOLE_UART_STATE_SCHEDULE_READ:
-
-            consUartData.state = CONSOLE_UART_STATE_WAIT_FOR_READ_COMPLETE;
-
-            if (readQueue.numElem)
+        case CONSOLE_UART_READ_STATE_BUSY:
+            if ((pConsoleUartData->readStatus == CONSOLE_UART_READ_DONE) || \
+                    (pConsoleUartData->readStatus == CONSOLE_UART_READ_ERROR))
             {
-                consUartData.isReadComplete = false;
-                pkt = rdQueueElements[readQueue.tailPos];
-
-                USART1_Read (pkt.data.buf, pkt.sz);
-            }
-            break;
-
-        case CONSOLE_UART_STATE_WAIT_FOR_READ_COMPLETE:
-
-            if(consUartData.isReadComplete)
-            {
-                sizeRead = &rdQueueElements[readQueue.tailPos].sz;
-                popQueue(&readQueue);
-                if (readQueue.numElem == 0)
+                /* Give a callback to the client (console/application) */
+                if (pConsoleUartData->rdCallback != NULL)
                 {
-                    if (consUartData.rdCallback != NULL)
-                    {
-                        consUartData.rdCallback(sizeRead);
-                    }
-                    consUartData.state = CONSOLE_UART_STATE_READY;
+                    pConsoleUartData->rdCallback((void*)pConsoleUartData->readQueue.curQElement.pBuffer);
+                }
+                /* Check if more requests are pending in the queue. */
+                if (Console_UART_PopQueue(&pConsoleUartData->readQueue, &pConsoleUartData->readQueue.curQElement) == true)
+                {
+                    Console_UART_ReadSubmit(pConsoleUartData, pConsoleUartData->readQueue.curQElement);
                 }
                 else
                 {
-                    consUartData.state = CONSOLE_UART_STATE_SCHEDULE_READ;
+                    /* Nothing to service. Enter idle state. */
+                    pConsoleUartData->rdState = CONSOLE_UART_READ_STATE_IDLE;
                 }
             }
-            else
-            {
-                if (writeQueue.numElem)
-                {
-                    consUartData.state = CONSOLE_UART_STATE_SCHEDULE_WRITE;
-                }
-            }
-            break;
-
-        case CONSOLE_UART_STATE_READY:
-
-            if (readQueue.numElem)
-            {
-                consUartData.state = CONSOLE_UART_STATE_SCHEDULE_READ;
-            }
-            else if (writeQueue.numElem)
-            {
-                /* If there is data to be written, then try writing it */
-                consUartData.state = CONSOLE_UART_STATE_SCHEDULE_WRITE;
-            }
-            break;
-
-        case CONSOLE_UART_STATE_SCHEDULE_WRITE:
-
-            if (writeQueue.numElem)
-            {
-                /* This means there is data to sent out */
-                pkt = wrQueueElements[writeQueue.tailPos];
-
-                // Use write with callback version for buffer size greater than 1
-                do
-                {
-                    /* This loop will NOT run forever. It will run till
-                     * either there are elements in the write or till USART
-                     * driver buffer queue is full */
-
-                    bool status = USART1_Write(pkt.data.buf, pkt.sz);
-
-                    if(status == true)
-                    {
-                        /* This means this buffer was added successfully to
-                         * the PLIB. Do a callback. */
-                        if (consUartData.wrCallback != NULL)
-                        {
-                            consUartData.wrCallback((void *)wrQueueElements[writeQueue.tailPos].data.cbuf);
-                        }
-
-                        /* Remove this element from the write queue */
-                        popQueue(&writeQueue);
-                        pkt = wrQueueElements[writeQueue.tailPos];
-                    }
-                    else
-                    {
-                        /* Got an invalid handle. This most likely means
-                         * that the write buffer queue is full */
-                    }
-
-                } while(writeQueue.numElem);
-
-                /* If we are here, it either means there is nothing more to
-                 * write of the write buffer queue is full. We cannot do much
-                 * with respect to write at point. We move the state to
-                 * ready */
-
-                consUartData.state = CONSOLE_UART_STATE_READY;
-            }
-            break;
-
-        case CONSOLE_UART_STATE_OPERATIONAL_ERROR:
-
-            /* We arrive at this state if the UART driver reports an error on a read or write operation
-               We will attempt to recover by flushing the local buffers */
-
-            Console_UART_Flush();
-
-            break;
-
-        case CONSOLE_UART_STATE_CRITICAL_ERROR:
             break;
         default:
             break;
     }
+}
+
+static void Console_UART_WriteTasks(CONSOLE_UART_DATA* pConsoleUartData)
+{
+    switch(pConsoleUartData->wrState)
+    {
+        case CONSOLE_UART_WRITE_STATE_IDLE:
+            break;
+        case CONSOLE_UART_WRITE_STATE_BUSY:
+            if(pConsoleUartData->writeStatus == CONSOLE_UART_WRITE_DONE)
+            {
+                /* Give a callback to the client (console/application) */
+                if (pConsoleUartData->wrCallback != NULL)
+                {
+                    pConsoleUartData->wrCallback((void*)pConsoleUartData->writeQueue.curQElement.pBuffer);
+                }
+                /* Check if more requests are pending in the queue. */
+                if (Console_UART_PopQueue(&pConsoleUartData->writeQueue, &pConsoleUartData->writeQueue.curQElement) == true)
+                {
+                    Console_UART_WriteSubmit(pConsoleUartData, pConsoleUartData->writeQueue.curQElement);
+                }
+                else
+                {
+                    /* Nothing to service. Enter idle state. */
+                    pConsoleUartData->wrState = CONSOLE_UART_WRITE_STATE_IDLE;
+                }
+            }
+            break;
+        default:
+            break;
+    }
+}
+
+static void Console_UART_PLIBWriteHandler(uintptr_t context)
+{
+    CONSOLE_UART_DATA* pConsoleUartData = (CONSOLE_UART_DATA*)context;
+
+    pConsoleUartData->inInterruptContext = true;
+
+    pConsoleUartData->writeStatus = CONSOLE_UART_WRITE_DONE;
+
+    Console_UART_WriteTasks(pConsoleUartData);
+
+    pConsoleUartData->inInterruptContext = false;
+}
+
+static void Console_UART_PLIBReadHandler(uintptr_t context)
+{
+    CONSOLE_UART_DATA* pConsoleUartData = (CONSOLE_UART_DATA*)context;
+
+    pConsoleUartData->inInterruptContext = true;
+
+    if (pConsoleUartData->uartPLIB->errorGet() == 0)
+    {
+        pConsoleUartData->readStatus = CONSOLE_UART_READ_DONE;
+    }
+    else
+    {
+        pConsoleUartData->readStatus = CONSOLE_UART_READ_ERROR;
+    }
+
+    Console_UART_ReadTasks(pConsoleUartData);
+
+    pConsoleUartData->inInterruptContext = false;
+}
+
+void Console_UART_Initialize(uint32_t index, const void* initData)
+{
+    CONSOLE_UART_DATA* pConsoleUartData = CONSOLE_UART_GET_INSTANCE(index);
+    const SYS_CONSOLE_UART_INIT_DATA* consoleUsartInitData = (const SYS_CONSOLE_UART_INIT_DATA*)initData;
+
+    if (pConsoleUartData == NULL)
+    {
+        return;
+    }
+
+    if(OSAL_MUTEX_Create(&(pConsoleUartData->mutexTransferObjects)) != OSAL_RESULT_TRUE)
+    {
+        return;
+    }
+
+    /* Assign the USART PLIB instance APIs to use */
+    pConsoleUartData->uartPLIB = consoleUsartInitData->uartPLIB;
+
+    /* Initialize read and write queues */
+    pConsoleUartData->readQueue.maxQElements = consoleUsartInitData->readQueueDepth;
+    pConsoleUartData->writeQueue.maxQElements = consoleUsartInitData->writeQueueDepth;
+    pConsoleUartData->readQueue.pQElementArr = consoleUsartInitData->readQueueElementsArr;
+    pConsoleUartData->writeQueue.pQElementArr = consoleUsartInitData->writeQueueElementsArr;
+    pConsoleUartData->interruptSource = consoleUsartInitData->interruptSource;
+
+    pConsoleUartData->readQueue.inIndex = pConsoleUartData->readQueue.outIndex;
+    pConsoleUartData->writeQueue.inIndex = pConsoleUartData->writeQueue.outIndex;
+
+    /* Register a callback with the underlying USART PLIB instance */
+    pConsoleUartData->uartPLIB->writeCallbackRegister(Console_UART_PLIBWriteHandler, (uintptr_t)pConsoleUartData);
+    pConsoleUartData->uartPLIB->readCallbackRegister(Console_UART_PLIBReadHandler, (uintptr_t)pConsoleUartData);
+
+    /* Initialize state-machine */
+    pConsoleUartData->rdState = CONSOLE_UART_READ_STATE_IDLE;
+    pConsoleUartData->wrState = CONSOLE_UART_WRITE_STATE_IDLE;
+
+    /* Initialize status indicators */
+    pConsoleUartData->readStatus = CONSOLE_UART_READ_IDLE;
+    pConsoleUartData->writeStatus = CONSOLE_UART_WRITE_IDLE;
+
+    /* Initialize callback pointers */
+    pConsoleUartData->rdCallback = NULL;
+    pConsoleUartData->wrCallback = NULL;
+
+    pConsoleUartData->status = SYS_CONSOLE_STATUS_CONFIGURED;
+}
+
+SYS_CONSOLE_STATUS Console_UART_Status(uint32_t index)
+{
+    SYS_CONSOLE_STATUS status = SYS_CONSOLE_STATUS_NOT_CONFIGURED;
+    CONSOLE_UART_DATA* pConsoleUartData = CONSOLE_UART_GET_INSTANCE(index);
+
+    if (pConsoleUartData == NULL)
+    {
+        return SYS_CONSOLE_STATUS_ERROR;
+    }
+
+    if ((pConsoleUartData->wrState == CONSOLE_UART_WRITE_STATE_BUSY) || \
+            (pConsoleUartData->rdState == CONSOLE_UART_READ_STATE_BUSY))
+    {
+        status = SYS_CONSOLE_STATUS_BUSY;
+    }
+    else
+    {
+        status = pConsoleUartData->status;
+    }
+
+    return status;
+}
+
+void Console_UART_Tasks(uint32_t index, SYS_MODULE_OBJ object)
+{
+    /* Do nothing. */
 }
 
 /*******************************************************************************

@@ -96,16 +96,6 @@
 #define STDOUT_FILENO    1
 #define STDERR_FILENO    2
 
-#define CONSOLE_DEVICE_HANDLE_INVALID ((CONSOLE_DEVICE_HANDLE)(-1))
-
-/* This is added here to prevent built errors, just in-case MHC was never run */
-#ifndef SYS_CONSOLE_BUFFER_DMA_READY
-#define SYS_CONSOLE_BUFFER_DMA_READY
-#endif
-
-//#ifdef SYS_CONSOLE_REMOVE_APIS
-#ifndef SYS_CONSOLE_INCLUDE_APIS
-
 #ifndef SYS_CONSOLE_MESSAGE
     #define SYS_CONSOLE_MESSAGE(message)
 #endif
@@ -114,8 +104,30 @@
     #define SYS_CONSOLE_PRINT(fmt, ...)
 #endif
 
-#endif
+typedef void (*SYS_CONSOLE_CALLBACK) (void* pBuffer);
 
+typedef enum
+{
+    SYS_CONSOLE_STATUS_NOT_CONFIGURED,
+
+    SYS_CONSOLE_STATUS_CONFIGURED,
+
+    SYS_CONSOLE_STATUS_BUSY,
+
+    SYS_CONSOLE_STATUS_ERROR
+
+} SYS_CONSOLE_STATUS;
+
+
+typedef enum
+{
+    SYS_CONSOLE_EVENT_WRITE_COMPLETE,
+
+    SYS_CONSOLE_EVENT_READ_COMPLETE,
+
+} SYS_CONSOLE_EVENT;
+
+// DOM-IGNORE-BEGIN
 // *****************************************************************************
 /*  Console device enumeration
 
@@ -142,31 +154,70 @@ typedef enum
 
 } SYS_CONSOLE_DEVICE;
 
+// *****************************************************************************
+/*  Console device descriptor function prototypes
 
+  Summary:
+    Function prototype for the device descriptor expected by the system console.
 
+  Description:
+    Defines the function prototypes for the device descriptor that each device
+    must implement in order to plug in to the system console service.
+
+  Remarks:
+    None.
+*/
+
+typedef void (*SYS_CONSOLE_INIT_FPTR) (uint32_t index, const void* initData);
+
+typedef ssize_t (*SYS_CONSOLE_READ_FPTR) (uint32_t index, int fd, void* buf, size_t count);
+
+typedef ssize_t (*SYS_CONSOLE_WRITE_FPTR) (uint32_t index, int fd, const void* buf, size_t count);
+
+typedef void (*SYS_CONSOLE_CALLBACK_REG_FPTR) (uint32_t index, SYS_CONSOLE_CALLBACK cbFunc, SYS_CONSOLE_EVENT event);
+
+typedef void (*SYS_CONSOLE_TASK_FPTR) (uint32_t index, SYS_MODULE_OBJ object);
+
+typedef SYS_CONSOLE_STATUS (*SYS_CONSOLE_STATUS_FPTR) (uint32_t index);
+
+typedef void (*SYS_CONSOLE_FLUSH_FPTR) (uint32_t index);
+
+// *****************************************************************************
+/*  Console device descriptor
+
+  Summary:
+    The console device must provide the implementation for the APIs described in
+    the console device descriptor structure.
+
+  Description:
+    Each device must implement register its capability to the console system
+    service. The capability APIs must confirm to the interface expected by the
+    console system service.
+
+  Remarks:
+    None.
+*/
 typedef struct
 {
     SYS_CONSOLE_DEVICE consoleDevice;
 
     DRV_IO_INTENT intent;
 
-    char (*sysConsoleReadC) (int fd);
+    SYS_CONSOLE_INIT_FPTR init;
 
-    ssize_t (*sysConsoleRead) (int fd, void *buf, size_t count);
+    SYS_CONSOLE_READ_FPTR read;
 
-    ssize_t (*sysConsoleWrite) (int fd, const void *buf, size_t count);
+    SYS_CONSOLE_WRITE_FPTR write;
 
-    void (*sysConsoleRegisterCallback) (consoleCallbackFunction cbFunc, SYS_CONSOLE_EVENT event);
+    SYS_CONSOLE_CALLBACK_REG_FPTR callbackRegister;
 
-    void (*sysConsoleTasks) (SYS_MODULE_OBJ object);
+    SYS_CONSOLE_TASK_FPTR task;
 
-    SYS_CONSOLE_STATUS (*sysConsoleStatus) (void);
+    SYS_CONSOLE_STATUS_FPTR status;
 
-    void (*sysConsoleFlush) (void);
+    SYS_CONSOLE_FLUSH_FPTR flush;
 
 } SYS_CONSOLE_DEV_DESC;
-
-
 
 // *****************************************************************************
 /* SYS CONSOLE OBJECT INSTANCE structure
@@ -184,11 +235,11 @@ typedef struct
 typedef struct
 {
     /* State of this instance */
-    SYS_STATUS consoleDeviceInstanceStatus;
+    SYS_STATUS status;
 
-    SYS_CONSOLE_DEV_DESC *consoleInstanceDevDesc;
+    const SYS_CONSOLE_DEV_DESC* devDesc;
 
-    CONSOLE_DEVICE_HANDLE consoleDevHandle;
+    CONSOLE_DEVICE_INDEX devIndex;
 
 } SYS_CONSOLE_OBJECT_INSTANCE;
 
@@ -209,13 +260,16 @@ typedef struct
 
 typedef struct
 {
-    /* System module initialization */
-    SYS_MODULE_INIT moduleInit;
+    /* Initialization data for the underlying device */
+    const void* deviceInitData;
 
-    SYS_CONSOLE_DEV_DESC *consDevDesc;
+    const SYS_CONSOLE_DEV_DESC* consDevDesc;
+
+    uint32_t deviceIndex;
 
 } SYS_CONSOLE_INIT;
 
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -225,17 +279,18 @@ typedef struct
 
 // *****************************************************************************
 /* Function:
-    SYS_MODULE_OBJ SYS_CONSOLE_Initialize( const SYS_MODULE_INDEX index,
-                                       const SYS_MODULE_INIT * const init )
+    SYS_MODULE_OBJ SYS_CONSOLE_Initialize(
+        const SYS_MODULE_INDEX index,
+        const SYS_MODULE_INIT* const init
+    )
 
   Summary:
-    Initializes data for the instance of the Console module and opens the
-    specific module instance.
-    <p><b>Implementation:</b> Static/Dynamic</p>
+    Initializes the console instance module and opens or initializes the
+    specific module instance to which it is associated.
 
   Description:
-    This function initializes the Console module, and selects the I/O device to
-    be used. It also initializes any internal data structures.
+    This function initializes the internal data structures used by the console
+    module. It also initializes the associated I/O driver/PLIB.
 
   Precondition:
     None.
@@ -249,157 +304,61 @@ typedef struct
                       overrides have been provided.
 
   Returns:
-    If successful, returns a valid handle to an object.  Otherwise, it
+    If successful, returns a valid handle to the console instance. Otherwise, it
     returns SYS_MODULE_OBJ_INVALID. The returned object must be passed as
-    argument to SYS_CONSOLE_Reinitialize, SYS_CONSOLE_Deinitialize,
-    SYS_CONSOLE_Tasks and SYS_CONSOLE_Status routines.
+    argument to SYS_CONSOLE_Tasks and SYS_CONSOLE_Status routines.
 
   Example:
     <code>
     SYS_MODULE_OBJ  objectHandle;
 
     // Populate the console initialization structure
-    SYS_CONSOLE_INIT consInit =
+    const SYS_CONSOLE_INIT sysConsole0Init =
     {
-        .moduleInit = {0},
-        .consDevDesc = &consUsbCdcDevDesc,
+        .deviceInitData = (void*)&sysConsole0UARTInitData,
+        .consDevDesc = &sysConsoleUARTDevDesc,
+        .deviceIndex = 0,
     };
 
-    objectHandle = SYS_Console_Initialize (SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT*)&consInit);
-    if (SYS_MODULE_OBJ_INVALID == objectHandle)
+    objectHandle = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
+    if (objectHandle == SYS_MODULE_OBJ_INVALID)
     {
         // Handle error
     }
     </code>
 
   Remarks:
-    This routine should only be called once during system initialization
-    unless SYS_Console_Deinitialize is first called to deinitialize the device
-    instance before reinitializing it. If the system was already initialized
-    it safely returns without causing any disturbance.
+    This routine should only be called once during system initialization.
 */
 
-SYS_MODULE_OBJ SYS_CONSOLE_Initialize( const SYS_MODULE_INDEX index,
-                                   const SYS_MODULE_INIT * const init );
-
+SYS_MODULE_OBJ SYS_CONSOLE_Initialize(
+    const SYS_MODULE_INDEX index,
+    const SYS_MODULE_INIT* const init
+);
 
 // *****************************************************************************
 /* Function:
-    void SYS_CONSOLE_Reinitialize( SYS_MODULE_OBJ object,
-                               const SYS_MODULE_INIT * const init )
-
-   Summary:
-    Reinitializes and refreshes the data structure for the instance of the
-    Console module.
-    <p><b>Implementation:</b> Static/Dynamic</p>
-
-   Description:
-    This function reinitializes and refreshes the data structure for the instance
-    of the Console module using the supplied data.
-
-  Precondition:
-    The SYS_CONSOLE_Initialize function should have been called before calling
-    this function.
-
-  Parameters:
-    object          - Identifies the SYS CONSOLE Object returned by the Initialize
-                      interface
-    init            - Pointer to the data structure containing any data
-                      necessary to initialize the hardware
-
-   Returns:
-    - true    - If successful
-    - false    - If unsuccessful
-
-   Example:
-    <code>
-    SYS_MODULE_OBJ  objectHandle;
-
-    // Populate the console initialization structure
-    SYS_CONSOLE_INIT consInit =
-    {
-        .moduleInit = {0},
-        .consDevDesc = &consUsbCdcDevDesc,
-    };
-
-    SYS_CONSOLE_Reinitialize (objectHandle, (SYS_MODULE_INIT*)&consInit);
-    </code>
-
-   Remarks:
-    This operation uses the same initialization data structure as the
-    SYS_CONSOLE_Initialize operation. This function can be called multiple times
-    to reinitialize the module.
-*/
-
-bool SYS_CONSOLE_Reinitialize( SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init );
-
-
-// *****************************************************************************
-/* Function:
-    void SYS_CONSOLE_Deinitialize( SYS_MODULE_OBJ object )
-
-  Summary:
-    Deinitializes the specific module instance of the Console module.
-    <p><b>Implementation:</b> Static/Dynamic</p>
-
-  Description:
-    This function deinitializes the specific module instance disabling its
-    operation (and any hardware for driver modules). Resets all of the internal
-    data structures and fields for the specified instance to the default settings.
-
-  Precondition:
-    The SYS_CONSOLE_Initialize function should have been called before calling
-    this function.
-
-  Parameters:
-    object    - SYS CONSOLE object handle, returned from SYS_CONSOLE_Initialize
-
-   Returns:
-    - true    - If successful
-    - false    - If unsuccessful
-
-  Example:
-    <code>
-    SYS_MODULE_OBJ      object;     //  Returned from SYS_CONSOLE_Initialize
-
-    SYS_CONSOLE_Deinitialize (object);
-
-    </code>
-
-  Remarks:
-    Once the Initialize operation has been called, the Deinitialize
-    operation must be called before the Initialize operation can be called
-    again.
-*/
-
-bool SYS_CONSOLE_Deinitialize( SYS_MODULE_OBJ object );
-
-
-// *****************************************************************************
-/* Function:
-    void SYS_CONSOLE_Tasks( SYS_MODULE_OBJ object )
+    void SYS_CONSOLE_Tasks ( SYS_MODULE_OBJ object )
 
   Summary:
     Maintains the console's state machine.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
-    This function is used to maintain the Console System Service internal state
-    machine and implement its ISR for interrupt-driven implementations.
+    This function runs the console system service's internal state machine.
 
   Precondition:
     The SYS_CONSOLE_Initialize function must have been called for the specified
     CONSOLE driver instance.
 
   Parameters:
-    object    - SYS CONSOLE object handle, returned from SYS_CONSOLE_Initialize
+    object - SYS CONSOLE object handle, returned from SYS_CONSOLE_Initialize
 
   Returns:
     None
 
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from SYS_CONSOLE_Initialize
+    SYS_MODULE_OBJ object;     // Returned from SYS_CONSOLE_Initialize
 
     while (true)
     {
@@ -417,18 +376,15 @@ bool SYS_CONSOLE_Deinitialize( SYS_MODULE_OBJ object );
 
 void SYS_CONSOLE_Tasks ( SYS_MODULE_OBJ object );
 
-
 // *****************************************************************************
 /* Function:
-    SYS_STATUS SYS_CONSOLE_Status( SYS_MODULE_OBJ object )
+    SYS_STATUS SYS_CONSOLE_Status ( SYS_MODULE_OBJ object )
 
   Summary:
     Returns status of the specific instance of the Console module.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
-    This function returns the status of the specific module instance disabling
-    its operation (and any hardware for driver modules).
+    This function returns the status of the specific module instance.
 
   Precondition:
     The SYS_CONSOLE_Initialize function should have been called before calling
@@ -438,29 +394,31 @@ void SYS_CONSOLE_Tasks ( SYS_MODULE_OBJ object );
     object    - SYS CONSOLE object handle, returned from SYS_CONSOLE_Initialize
 
   Returns:
-    * SYS_STATUS_READY          - Indicates that the driver is busy with a
-                                  previous system level operation and cannot start
-                                  another. Any value greater than SYS_STATUS_READY is
-                                  also a normal running state in which the driver
-                                  is ready to accept new operations.
+    * SYS_STATUS_READY          - Indicates that the driver is initialized and is
+                                  ready to accept new requests from the clients.
+
     * SYS_STATUS_BUSY           - Indicates that the driver is busy with a
-                                  previous system level operation and cannot start
-                                  another.
+                                  previous requests from the clients. However,
+                                  depending on the configured queue size for
+                                  transmit and receive, it may be able to queue
+                                  a new request.
+
     * SYS_STATUS_ERROR          - Indicates that the driver is in an error state.
                                   Any value less than SYS_STATUS_ERROR is
                                   also an error state.
-    * SYS_MODULE_DEINITIALIZED  - Indicates that the driver has been deinitialized.
-                                  This value is less than SYS_STATUS_ERROR.
+
+    * SYS_STATUS_UNINITIALIZED  - Indicates that the driver is not initialized.
 
   Example:
     <code>
-    SYS_MODULE_OBJ      object;     // Returned from SYS_CONSOLE_Initialize
+    // Given "object" returned from SYS_CONSOLE_Initialize
+
     SYS_STATUS          consStatus;
 
     consStatus = SYS_CONSOLE_Status (object);
-    if (SYS_STATUS_ERROR >= consStatus)
+    if (consStatus == SYS_STATUS_READY)
     {
-        // Handle error
+        // Console is initialized and is ready to accept client requests.
     }
     </code>
 
@@ -470,20 +428,24 @@ void SYS_CONSOLE_Tasks ( SYS_MODULE_OBJ object );
 
 SYS_STATUS SYS_CONSOLE_Status( SYS_MODULE_OBJ object );
 
-
 // *****************************************************************************
 /* Function:
-    int SYS_CONSOLE_Read( int handle, char *buffer, int len )
+    ssize_t SYS_CONSOLE_Read(
+        const SYS_MODULE_INDEX index,
+        int fd,
+        void* buf,
+        size_t count
+    )
 
   Summary:
     Reads data from the console device.
-    <p><b>Implementation:</b> Static/Dynamic</p>
 
   Description:
     This function reads the data from the console device.
 
   Preconditions:
-    None.
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
 
   Parameters:
     index           - Console instance index
@@ -494,13 +456,15 @@ SYS_STATUS SYS_CONSOLE_Status( SYS_MODULE_OBJ object );
     count           - Number of bytes to read.
 
   Returns:
-    Number of bytes actually read.
+    The requested number of bytes to read is returned back if the request is
+    accepted successfully. In case of error, the returned value is less than the
+    requested number of bytes to read.
 
   Example:
     <code>
     ssize_t nr;
     char myBuffer[MY_BUFFER_SIZE];
-    nr = SYS_CONSOLE_Read( SYS_CONSOLE_INDEX_0, STDIN_FILENO, myBuffer, MY_BUFFER_SIZE );
+    nr = SYS_CONSOLE_Read( SYS_CONSOLE_INDEX_0, 0, myBuffer, MY_BUFFER_SIZE );
     if (nr != MY_BUFFER_SIZE)
     {
         // handle error
@@ -511,22 +475,26 @@ SYS_STATUS SYS_CONSOLE_Status( SYS_MODULE_OBJ object );
     None.
 */
 
-ssize_t SYS_CONSOLE_Read(const SYS_MODULE_INDEX index, int fd, void *buf, size_t count );
-
+ssize_t SYS_CONSOLE_Read( const SYS_MODULE_INDEX index, int fd, void* buf, size_t count );
 
 // *****************************************************************************
 /* Function:
-    ssize_t SYS_CONSOLE_Write(const SYS_MODULE_INDEX index, int fd, const char *buf, size_t count )
+    ssize_t SYS_CONSOLE_Write(
+        const SYS_MODULE_INDEX index,
+        int fd,
+        const void* buf,
+        size_t count
+    )
 
   Summary:
     Writes data to the console device.
-    <p><b>Implementation:</b> Static/Dynamic</p>
 
   Description:
     This function writes data to the console device.
 
   Preconditions:
-    None.
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
 
   Parameters:
     index           - Console instance index
@@ -537,13 +505,15 @@ ssize_t SYS_CONSOLE_Read(const SYS_MODULE_INDEX index, int fd, void *buf, size_t
     count           - Number of bytes to write.
 
   Returns:
-    Number of bytes written or -1 if an error occurred.
+    The requested number of bytes to write is returned back if the request is
+    accepted successfully. In case of error, the returned value is less than the
+    requested number of bytes to write.
 
   Example:
     <code>
     ssize_t nr;
     char myBuffer[] = "message";
-    nr = SYS_CONSOLE_Write( SYS_CONSOLE_INDEX_0, STDOUT_FILENO, myBuffer, strlen(myBuffer) );
+    nr = SYS_CONSOLE_Write( SYS_CONSOLE_INDEX_0, 0, myBuffer, strlen(myBuffer) );
     if (nr != strlen(myBuffer))
     {
         // Handle error
@@ -554,30 +524,35 @@ ssize_t SYS_CONSOLE_Read(const SYS_MODULE_INDEX index, int fd, void *buf, size_t
     None.
 */
 
-ssize_t SYS_CONSOLE_Write(const SYS_MODULE_INDEX index, int fd, const char *buf, size_t count);
-
+ssize_t SYS_CONSOLE_Write( const SYS_MODULE_INDEX index, int fd, const void* buf, size_t count );
 
 // *****************************************************************************
 /* Function:
-    void SYS_CONSOLE_RegisterCallback(const SYS_MODULE_INDEX index,
-                         consoleCallbackFunction cbFunc, SYS_CONSOLE_EVENT event)
+    void SYS_CONSOLE_RegisterCallback(
+        const SYS_MODULE_INDEX index,
+        SYS_CONSOLE_CALLBACK cbFunc,
+        SYS_CONSOLE_EVENT event
+    )
 
   Summary:
     Registers a callback function with the console service that will be
-    executed when the read or write queue is emptied.
-    <p><b>Implementation:</b> Dynamic</p>
+    executed when the read or write request is complete (or in case of an error
+    condition during read/write).
 
   Description:
     This function is used by an application to register a callback function
     with the console service. The callback function is called in response to
-    an event. Separate callback functions are required for each event.
+    a read/write completion (or error) event. Separate callback functions are
+    required for each event. To receive events, the callback must be registered
+    before submitting a read/write request.
 
   Preconditions:
-    None.
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
 
   Parameters:
     index               - Console instance index
-    consCallbackFunc    - The name of the callback function
+    cbFunc              - The name of the callback function
     event               - Enumerated list of events that can trigger a callback
 
   Returns:
@@ -585,8 +560,11 @@ ssize_t SYS_CONSOLE_Write(const SYS_MODULE_INDEX index, int fd, const char *buf,
 
   Example:
     <code>
+    //Registering a "APP_ReadComplete" read callback function
     SYS_CONSOLE_RegisterCallback(SYS_CONSOLE_INDEX_0, APP_ReadComplete, \
                                  SYS_CONSOLE_EVENT_READ_COMPLETE);
+
+    //Registering a "APP_WriteComplete" write callback function
     SYS_CONSOLE_RegisterCallback(SYS_CONSOLE_INDEX_0, APP_WriteComplete, \
                                  SYS_CONSOLE_EVENT_WRITE_COMPLETE);
     </code>
@@ -595,25 +573,27 @@ ssize_t SYS_CONSOLE_Write(const SYS_MODULE_INDEX index, int fd, const char *buf,
     None.
 */
 
-void SYS_CONSOLE_RegisterCallback(const SYS_MODULE_INDEX index,
-                      consoleCallbackFunction cbFunc, SYS_CONSOLE_EVENT event);
-
+void SYS_CONSOLE_RegisterCallback(
+    const SYS_MODULE_INDEX index,
+    SYS_CONSOLE_CALLBACK cbFunc,
+    SYS_CONSOLE_EVENT event
+);
 
 // *****************************************************************************
 /* Function:
     void SYS_CONSOLE_Flush(const SYS_MODULE_INDEX index)
 
   Summary:
-    Flushes the read and write queues and resets an overflow error for the
-    console.
-    <p><b>Implementation:</b> Static/Dynamic</p>
+    Flushes the read and write queues for the given console instance.
 
   Description:
-    This function flushes the read and write queues and resets an overflow
-    error for the console.
+    This function flushes queued read and write requests. The request that is
+    already in progress cannot be flushed. Only the queued pending requests will
+    be flushed.
 
   Preconditions:
-    None.
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
 
   Parameters:
     index               - Console instance index

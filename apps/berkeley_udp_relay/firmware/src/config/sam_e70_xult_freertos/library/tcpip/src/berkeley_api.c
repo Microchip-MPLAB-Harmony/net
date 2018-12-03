@@ -6,30 +6,38 @@
   Description:
 *******************************************************************************/
 
-/*******************************************************************************
-File Name:  berkeley_api.c
-Copyright © 2012 released Microchip Technology Inc.  All rights
-reserved.
+/*****************************************************************************
+ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_BERKELEY
 
 #include "tcpip/src/tcpip_private.h"
@@ -37,7 +45,6 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
 
-// TODO aa: this fixes linker relocation error for errno. <errno.h> should be included...
 extern __attribute__((section(".bss.errno"))) int errno;
 #include <sys/errno.h>
 
@@ -569,10 +576,6 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
 	s - Socket identifier returned from a prior socket() call.
 	backlog - Maximum number of connection requests that can be queued.  Note 
 		that each backlog requires a TCP socket to be allocated.
-        TODO aa: update comments!
-		Also, ensure that BSD_SOCKET_COUNT (also in tcpip_config.h) is greater 
-		than the backlog by at least 1 (more if you have other BSD sockets in 
-		use).
 	
   Returns:
 	Returns 0 on success, else return SOCKET_ERROR.
@@ -1336,7 +1339,6 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
         }
         else
         {
-            //TODO: Look into broadcast for IPv6
             if ((udpSockInfo.remoteIPaddress.v6Add.d[0] != remoteIp6.d[0]) ||
                 (udpSockInfo.remoteIPaddress.v6Add.d[1] != remoteIp6.d[1]) ||
                 (udpSockInfo.remoteIPaddress.v6Add.d[2] != remoteIp6.d[2]) ||
@@ -1710,7 +1712,6 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
   Remarks:
 	The function returns the host name as set on the default network interface.
 
-TODO: Add a gethostbyname/gethostbyaddr/getnameinfo function to be able to list all interfaces names
 
   ***************************************************************************/
 int gethostname(char* name, int namelen)
@@ -2375,8 +2376,6 @@ int getsockopt(SOCKET s,
     }
 }
 
-//TODO: When we do multi-threaded programming, this will have to be moved to
-// thread local storage.
 static IPV4_ADDR sAddr;
 static char * sHostArray[2] = {
     (char *)&sAddr,

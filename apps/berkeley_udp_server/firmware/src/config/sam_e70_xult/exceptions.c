@@ -68,55 +68,52 @@ void NonMaskableInt_Handler(void)
 void HardFault_Handler(void)
 {
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
+   __builtin_software_breakpoint();
 #endif
-    while (1)
-    {
-    }
+   while (1)
+   {
+   }
 }
 
 void DebugMonitor_Handler(void)
 {
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
+   __builtin_software_breakpoint();
 #endif
-    while (1)
-    {
-    }
+   while (1)
+   {
+   }
 }
 
-#if (defined __CM7_REV) || (defined __CM4_REV)
 void MemoryManagement_Handler(void)
 {
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
+   __builtin_software_breakpoint();
 #endif
-    while (1)
-    {
-    }
+   while (1)
+   {
+   }
 }
 
 void BusFault_Handler(void)
 {
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
+   __builtin_software_breakpoint();
 #endif
-    while (1)
-    {
-    }
+   while (1)
+   {
+   }
 }
 
 void UsageFault_Handler(void)
 {
 #if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-    __builtin_software_breakpoint();
+   __builtin_software_breakpoint();
 #endif
-    while (1)
-    {
-    }
+   while (1)
+   {
+   }
 }
-#endif // (defined __CM7_REV) || (defined __CM4_REV)
-
 /*******************************************************************************
  End of File
  */

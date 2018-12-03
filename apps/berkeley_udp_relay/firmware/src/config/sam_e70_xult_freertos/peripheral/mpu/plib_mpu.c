@@ -65,9 +65,9 @@ void MPU_Initialize(void)
     MPU->RASR = MPU_REGION_SIZE(21) | MPU_RASR_AP(MPU_RASR_AP_READWRITE_Val) | MPU_ATTR_NORMAL \
                 | MPU_ATTR_ENABLE  ;
 
-    /* Region 2 Name: DTCM, Base Address: 0x20000000, Size: 4MB  */
-    MPU->RBAR = MPU_REGION(2, 0x20000000);
-    MPU->RASR = MPU_REGION_SIZE(21) | MPU_RASR_AP(MPU_RASR_AP_READWRITE_Val) | MPU_ATTR_NORMAL \
+    /* Region 2 Name: SRAM, Base Address: 0x20400000, Size: 8MB  */
+    MPU->RBAR = MPU_REGION(2, 0x20400000);
+    MPU->RASR = MPU_REGION_SIZE(22) | MPU_RASR_AP(MPU_RASR_AP_READWRITE_Val) | MPU_ATTR_NORMAL_WB_WA \
                 | MPU_ATTR_ENABLE  ;
 
     /* Region 3 Name: EBI_SMC, Base Address: 0x60000000, Size: 256MB  */
@@ -85,14 +85,14 @@ void MPU_Initialize(void)
     MPU->RASR = MPU_REGION_SIZE(27) | MPU_RASR_AP(MPU_RASR_AP_READWRITE_Val) | MPU_ATTR_STRONGLY_ORDERED \
                 | MPU_ATTR_ENABLE  ;
 
-
-
-
-
-    /* Region 10 Name: , Base Address: 0x2045f000, Size: 4KB  */
-    MPU->RBAR = MPU_REGION(10, 0x2045f000);
+    /* Region 6 Name: GMAC Descriptor, Base Address: 0x2045f000, Size: 4KB  */
+    MPU->RBAR = MPU_REGION(6, 0x2045f000);
     MPU->RASR = MPU_REGION_SIZE(11) | MPU_RASR_AP(MPU_RASR_AP_READWRITE_Val) | MPU_ATTR_NORMAL \
                 | MPU_ATTR_ENABLE | MPU_ATTR_EXECUTE_NEVER ;
+
+
+
+
 
 
 
