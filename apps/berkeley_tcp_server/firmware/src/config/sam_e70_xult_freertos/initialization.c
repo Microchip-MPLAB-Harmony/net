@@ -80,26 +80,6 @@ SYSTEM_OBJECTS sysObj;
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
-
-
-/*** ETH PHY Initialization Data ***/
-
-
-
-const DRV_ETHPHY_INIT tcpipPhyInitData =
-{
-    .ethphyId               = TCPIP_INTMAC_MODULE_ID,
-    .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
-    .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,
-    .pPhyObject             = &DRV_ETHPHY_OBJECT_SMSC_LAN8740,
-    .resetFunction          = 0,
-    .pMiimObject            = &DRV_MIIM_OBJECT_BASE_Default,
-    .pMiimInit              = &drvMiimInitData,
-    .miimIndex              = DRV_MIIM_DRIVER_INDEX,
-
-};
-
-
 /* Net Presentation Layer Data Definitions */
 #include "net/pres/net_pres_enc_glue.h"
 
@@ -218,6 +198,7 @@ static const NET_PRES_INIT_DATA netPresInitData =
   
  
 
+
 // <editor-fold defaultstate="collapsed" desc="TCP/IP Stack Initialization Data">
 // *****************************************************************************
 // *****************************************************************************
@@ -279,9 +260,29 @@ const BERKELEY_MODULE_CONFIG tcpipBerkeleyInitData =
 /*** ICMP Server Initialization Data ***/
 const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData = 
 {
+    0
 };
 
 
+
+
+
+/*** ETH PHY Initialization Data ***/
+
+
+
+const DRV_ETHPHY_INIT tcpipPhyInitData =
+{    
+    .ethphyId               = TCPIP_INTMAC_MODULE_ID,
+    .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
+    .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,
+    .pPhyObject             = &DRV_ETHPHY_OBJECT_SMSC_LAN8740,
+    .resetFunction          = 0,
+    .pMiimObject            = &DRV_MIIM_OBJECT_BASE_Default,
+    .pMiimInit              = &drvMiimInitData,
+    .miimIndex              = DRV_MIIM_DRIVER_INDEX,
+
+};
 
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
@@ -334,6 +335,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     .pPhyInit               = &tcpipPhyInitData,
 };
+
 
 
 
@@ -453,50 +455,73 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 // Section: System Initialization
 // *****************************************************************************
 // *****************************************************************************
-// <editor-fold defaultstate="collapsed" desc="SYS_CONSOLE Instance 0 Initialization Data">
-
-SYS_MODULE_OBJ sysConsoleObjects[] = { SYS_MODULE_OBJ_INVALID };
-
-/* Declared in console device implementation (sys_console_uart.c) */
-extern SYS_CONSOLE_DEV_DESC consUsartDevDesc;
-
-SYS_CONSOLE_INIT consUsartInit0 =
-{
-    .moduleInit = {0},
-    .consDevDesc = &consUsartDevDesc,
-};
-
-SYS_DEBUG_INIT debugInit =
-{
-    .moduleInit = {0},
-    .errorLevel = SYS_DEBUG_GLOBAL_ERROR_LEVEL
-};
-
-SYS_CMD_INIT sysCmdInit =
-{
-    .moduleInit = {0},
-    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
-};
-// </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="SYS_TIME Initialization Data">
 
-TIME_PLIB_API sysTimePlibAPI = {
-    .timerCallbackSet = (TIME_CallbackSet)TC0_CH0_TimerCallbackRegister,
-    .timerCounterGet = (TIME_CounterGet)TC0_CH0_TimerCounterGet,
-     .timerPeriodSet = (TIME_PeriodSet)TC0_CH0_TimerPeriodSet,
-    .timerFrequencyGet = (TIME_FrequencyGet)TC0_CH0_TimerFrequencyGet,
-    .timerCompareSet = (TIME_CompareSet)TC0_CH0_TimerCompareSet,
-    .timerStart = (TIME_Start)TC0_CH0_TimerStart,
-    .timerStop = (TIME_Stop)TC0_CH0_TimerStop 
+const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
+    .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)TC0_CH0_TimerCallbackRegister,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)TC0_CH0_TimerCounterGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TC0_CH0_TimerPeriodSet,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TC0_CH0_TimerFrequencyGet,
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)TC0_CH0_TimerCompareSet,
+    .timerStart = (SYS_TIME_PLIB_START)TC0_CH0_TimerStart,
+    .timerStop = (SYS_TIME_PLIB_STOP)TC0_CH0_TimerStop 
 };
 
-SYS_TIME_INIT sysTimeInitData =
+const SYS_TIME_INIT sysTimeInitData =
 {
     .timePlib = &sysTimePlibAPI,
     .hwTimerIntNum = TC0_CH0_IRQn,
 };
 
 // </editor-fold>
+// <editor-fold defaultstate="collapsed" desc="SYS_CONSOLE Instance 0 Initialization Data">
+
+static QElement sysConsole0UARTRdQueueElements[SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0];
+static QElement sysConsole0UARTWrQueueElements[SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0];
+
+/* Declared in console device implementation (sys_console_uart.c) */
+extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
+
+const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
+{
+    .read = (SYS_CONSOLE_UART_PLIB_READ)USART1_Read,
+    .write = (SYS_CONSOLE_UART_PLIB_WRITE)USART1_Write,
+    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)USART1_ReadCallbackRegister,
+    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)USART1_WriteCallbackRegister,
+    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)USART1_ErrorGet,
+};
+
+const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
+{
+    .uartPLIB = &sysConsole0UARTPlibAPI,
+    .readQueueElementsArr = sysConsole0UARTRdQueueElements,
+    .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
+    .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
+    .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
+    .interruptSource = USART1_IRQn,
+};
+
+const SYS_CONSOLE_INIT sysConsole0Init =
+{
+    .deviceInitData = (const void*)&sysConsole0UARTInitData,
+    .consDevDesc = &sysConsoleUARTDevDesc,
+    .deviceIndex = 0,
+};
+
+const SYS_DEBUG_INIT debugInit =
+{
+    .moduleInit = {0},
+    .errorLevel = SYS_DEBUG_GLOBAL_ERROR_LEVEL,
+    .consoleIndex = 0,
+};
+
+const SYS_CMD_INIT sysCmdInit =
+{
+    .moduleInit = {0},
+    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
+};
+// </editor-fold>
+
 
 
 /*******************************************************************************
@@ -514,28 +539,29 @@ void SYS_Initialize ( void* data )
     CLK_Initialize();
 	PIO_Initialize();
 
-    NVIC_Initialize();
-	RSWDT_REGS->RSWDT_MR = RSWDT_MR_WDDIS_Msk;	// Disable RSWDT 
 
-	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
-
-	BSP_Initialize();
  
     TC0_CH0_TimerInitialize(); 
      
     
+	BSP_Initialize();
 	USART1_Initialize();
+
+    NVIC_Initialize();
+	RSWDT_REGS->RSWDT_MR = RSWDT_MR_WDDIS_Msk;	// Disable RSWDT 
+
+	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
 
     /* Initialize the MIIM Driver */
     sysObj.drvMiim = DRV_MIIM_Initialize(DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT  * const)&drvMiimInitData);
 
 
-    sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&consUsartInit0);
+    sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
+    sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
     sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
     SYS_CMD_Initialize((SYS_MODULE_INIT*)&sysCmdInit);
 
-    sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
 
     sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
 

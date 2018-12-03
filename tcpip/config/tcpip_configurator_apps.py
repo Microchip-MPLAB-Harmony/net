@@ -30,6 +30,7 @@ autoConnectTableCRYPTOHttp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http
 # autoConnectTableCRYPTOHttpNet = [["tcpipHttpNet", "HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOHttpNet = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOSnmp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
+autoConnectTableNetPres = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -265,6 +266,9 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "libtcpipBerkeleyApi")
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "BSD_NETPRES_Dependency")
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipBerkeleyApi:BSD_NETPRES_Dependency")
+		if(Database.getComponentByID("netPres") == None):
+			res = Database.activateComponents(["netPres"])	
+			res = Database.connectDependencies(autoConnectTableNetPres)
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)

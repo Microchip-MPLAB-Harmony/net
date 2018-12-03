@@ -4,13 +4,16 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
+      <logicalFolder name="f4" displayName="arm" projectFiles="true">
+        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
+      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
-          <logicalFolder name="f2" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/bsp/bsp.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="driver" projectFiles="true">
-            <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
+          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
@@ -20,7 +23,7 @@
               </logicalFolder>
               <itemPath>../src/config/sam_e70_xult/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f1" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
@@ -99,6 +102,8 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/igmp_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tftpc_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tftpc_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tftps_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tftps_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/iperf_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands_manager.h</itemPath>
@@ -156,6 +161,7 @@
               <itemPath>../src/config/sam_e70_xult/library/tcpip/smtpc.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/library/tcpip/igmp.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/library/tcpip/tftpc.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/library/tcpip/tftps.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_reboot.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/library/tcpip/iperf.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/library/tcpip/tcpip_commands.h</itemPath>
@@ -177,66 +183,66 @@
               <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="clk" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="mpu" projectFiles="true">
+            <logicalFolder name="f6" displayName="mpu" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/mpu/plib_mpu.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/peripheral/mpu/plib_mpu_local.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="nvic" projectFiles="true">
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="pio" projectFiles="true">
+            <logicalFolder name="f4" displayName="pio" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="tc" projectFiles="true">
+            <logicalFolder name="f1" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/tc/plib_tc0.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/peripheral/tc/plib_tc_common.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="usart" projectFiles="true">
+            <logicalFolder name="f2" displayName="usart" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart_common.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f2" displayName="console" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/console/sys_console.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/sys_debug.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="int" projectFiles="true">
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/int/sys_int.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/int/sys_int_mapping.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="time" projectFiles="true">
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/time/sys_time_definitions.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_e70_xult/system/system.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/system/system_common.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_clk_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_reset_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/system.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/system_common.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/system_module.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/sam_e70_xult/definitions.h</itemPath>
-          <itemPath>../src/config/sam_e70_xult/user.h</itemPath>
-          <itemPath>../src/config/sam_e70_xult/configuration.h</itemPath>
           <itemPath>../src/config/sam_e70_xult/system_config.h</itemPath>
           <itemPath>../src/config/sam_e70_xult/system_definitions.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/user.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/configuration.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="osal" projectFiles="true">
+      <logicalFolder name="f3" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_e70_xult/osal/osal.h</itemPath>
         <itemPath>../src/config/sam_e70_xult/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/sam_e70_xult/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="packs" projectFiles="true">
-        <logicalFolder name="f2" displayName="ATSAME70Q21B_DFP" projectFiles="true">
+      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1" displayName="ATSAME70Q21B_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAME70Q21B_DFP/component/acc.h</itemPath>
             <itemPath>../src/packs/ATSAME70Q21B_DFP/component/aes.h</itemPath>
@@ -281,7 +287,7 @@
           <itemPath>../src/packs/ATSAME70Q21B_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAME70Q21B_DFP/atsame70q21b.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
+        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
@@ -314,11 +320,11 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
-          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/bsp/bsp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="driver" projectFiles="true">
-            <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
@@ -326,7 +332,7 @@
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f1" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
@@ -342,19 +348,20 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f7" displayName="library" projectFiles="true">
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/berkeley_api.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dns.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/berkeley_api.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/hash_fnv.c</itemPath>
@@ -363,7 +370,6 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_manager.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_packet.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
             </logicalFolder>
@@ -376,58 +382,59 @@
               <itemPath>../src/config/sam_e70_xult/net/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f1" displayName="clk" projectFiles="true">
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="mpu" projectFiles="true">
+            <logicalFolder name="f6" displayName="mpu" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/mpu/plib_mpu.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="nvic" projectFiles="true">
+            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="pio" projectFiles="true">
+            <logicalFolder name="f4" displayName="pio" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/pio/plib_pio.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="tc" projectFiles="true">
+            <logicalFolder name="f1" displayName="tc" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="usart" projectFiles="true">
+            <logicalFolder name="f2" displayName="usart" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="stdio" projectFiles="true">
+          <logicalFolder name="f7" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f2" displayName="console" projectFiles="true">
+            <logicalFolder name="f3" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_console_uart.c</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_debug.c</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f1" displayName="int" projectFiles="true">
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="time" projectFiles="true">
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/time/src/sys_time.c</itemPath>
               <itemPath>../src/config/sam_e70_xult/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
+          <itemPath>../src/config/sam_e70_xult/tasks.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/initialization.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/interrupts.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/exceptions.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/startup.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/libc_syscalls.c</itemPath>
-          <itemPath>../src/config/sam_e70_xult/tasks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/main.c</itemPath>
       <itemPath>../src/app.c</itemPath>
+      <itemPath>../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
@@ -479,6 +486,30 @@
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
       </makeCustomizationType>
+      <AtmelIceTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="4.000"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0x400000-0x5fffff"/>
+        <property key="programoptions.eraseb4program" value="false"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+      </AtmelIceTool>
       <C32>
         <property key="additional-warnings" value="true"/>
         <property key="addresss-attribute-use" value="false"/>
@@ -488,11 +519,11 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS;../src/config/sam_e70_xult/library;../src/config/sam_e70_xult/library/tcpip/src;../src/config/sam_e70_xult/library/tcpip/src/common;../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;"/>
+                  value="../src/config/sam_e70_xult/library;../src/config/sam_e70_xult/library/tcpip/src;../src/config/sam_e70_xult/library/tcpip/src/common;../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
-        <property key="make-warnings-into-errors" value="false"/>
+        <property key="make-warnings-into-errors" value="true"/>
         <property key="optimization-level" value="-O1"/>
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
@@ -674,6 +705,7 @@
         <property key="codecoverage.enabled" value="Disable"/>
         <property key="codecoverage.enableoutputtofile" value="false"/>
         <property key="codecoverage.outputfile" value=""/>
+        <property key="codecoverage.report" value=""/>
         <property key="oscillator.auxfrequency" value="120"/>
         <property key="oscillator.auxfrequencyunit" value="Mega"/>
         <property key="oscillator.frequency" value="1"/>
