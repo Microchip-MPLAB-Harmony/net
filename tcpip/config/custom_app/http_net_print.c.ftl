@@ -38,7 +38,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "configuration.h"
 #include "tcpip/tcpip.h"
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 /****************************************************************************
 Section:
     Dynamic Variables Function Prototypes
@@ -92,7 +92,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_status(TCPIP_HTTP_NET_CONN_HANDLE
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_status_msg(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_reboot(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_rebootaddr(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_smtps_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_snmp_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_read_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
@@ -172,7 +171,6 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
     {"ddns_status_msg",             TCPIP_HTTP_Print_ddns_status_msg},
     {"reboot",                      TCPIP_HTTP_Print_reboot},
     {"rebootaddr",                  TCPIP_HTTP_Print_rebootaddr},
-    {"smtps_en",                    TCPIP_HTTP_Print_smtps_en},
     {"snmp_en",                     TCPIP_HTTP_Print_snmp_en},
     {"read_comm",                   TCPIP_HTTP_Print_read_comm},
     {"write_comm",                  TCPIP_HTTP_Print_write_comm},
