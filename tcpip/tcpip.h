@@ -688,7 +688,6 @@ typedef struct
 #include "tcpip/tcpip_reboot.h"
 #include "tcpip/iperf.h"
 #include "tcpip/tcpip_commands.h"
-#include "tcpip/ptp.h"
 #include "tcpip/tftps.h"
 
 #endif  // __TCPIP_H__

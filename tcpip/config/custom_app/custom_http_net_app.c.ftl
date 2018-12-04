@@ -44,8 +44,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "crypto/crypto.h"
 #include "net/pres/net_pres_socketapi.h"
-#include "system/random/sys_random.h"
-#include "system/tmr/sys_tmr.h"
+#include "system/sys_random_h2_adapter.h"
+#include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip.h"
 <#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
 #include "tcpip/src/tcpip_types.h"
@@ -56,6 +56,58 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
   Section:
     Definitions
  ****************************************************************************/
+#ifndef APP_SWITCH_1StateGet
+#define APP_SWITCH_1StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_2StateGet
+#define APP_SWITCH_2StateGet() 0
+#endif
+
+#ifndef APP_SWITCH_3StateGet
+#define APP_SWITCH_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateGet
+#define APP_LED_1StateGet() 0
+#endif
+#ifndef APP_LED_2StateGet
+#define APP_LED_2StateGet() 0
+#endif
+#ifndef APP_LED_3StateGet
+#define APP_LED_3StateGet() 0
+#endif
+
+#ifndef APP_LED_1StateSet
+#define APP_LED_1StateSet()
+#endif
+#ifndef APP_LED_2StateSet
+#define APP_LED_2StateSet()
+#endif
+#ifndef APP_LED_3StateSet
+#define APP_LED_3StateSet()
+#endif
+
+#ifndef APP_LED_1StateClear
+#define APP_LED_1StateClear()
+#endif
+#ifndef APP_LED_2StateClear
+#define APP_LED_2StateClear()
+#endif
+#ifndef APP_LED_3StateClear
+#define APP_LED_3StateClear()
+#endif
+
+#ifndef APP_LED_1StateToggle
+#define APP_LED_1StateToggle()
+#endif
+#ifndef APP_LED_2StateToggle
+#define APP_LED_2StateToggle()
+#endif
+#ifndef APP_LED_3StateToggle
+#define APP_LED_3StateToggle()
+#endif
+
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
 
@@ -63,8 +115,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define HTTP_APP_USE_MD5
 
 // Use the e-mail demo web page
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
-#define HTTP_APP_USE_EMAIL
+#if defined(TCPIP_STACK_USE_SMTPC)
+#define HTTP_APP_USE_EMAIL  1
+#else
+#define HTTP_APP_USE_EMAIL  0
 #endif
 
 <#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
@@ -92,7 +146,7 @@ Function Prototypes and Memory Globalizers
         static TCPIP_HTTP_NET_IO_RESULT HTTPPostSNMPCommunity(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
         #endif
     #endif
-    #if defined(HTTP_APP_USE_EMAIL) || defined(TCPIP_STACK_USE_SMTP_CLIENT)
+    #if (HTTP_APP_USE_EMAIL != 0) 
         static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHandle);
     #endif
     #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
@@ -134,7 +188,7 @@ static bool lastSuccess = false;
 // Stick status message variable.  See lastSuccess for details.
 static bool lastFailure = false;
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 // Number of buffers to be used by the app for dynamic variable callbacks
 #define HTTP_APP_DYNVAR_BUFFERS_NO      4
 
@@ -366,7 +420,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTP_APP_ConfigFailure(TCPIP_HTTP_NET_CONN_HANDL
 
 </#if><#-- ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo")) -->
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 // helper to get one of the application's dynamic buffer that are used in the
 // dynamic variables processing
 static HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
@@ -400,7 +454,7 @@ static HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
 void HTTP_APP_Initialize(void)
 {
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
     int ix;
 
     for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix)
@@ -414,7 +468,7 @@ void HTTP_APP_Initialize(void)
     {
         .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
         .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_USE_AUTHENTICATION?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_USE_AUTHENTICATION  == true))>
+<#if ((TCPIP_HTTP_NET_USE_AUTHENTICATION?has_content) && (TCPIP_HTTP_NET_USE_AUTHENTICATION  == true))>
         .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
         .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
 <#else>
@@ -422,7 +476,7 @@ void HTTP_APP_Initialize(void)
         .userAuthenticate = 0,
 </#if>
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
         .dynamicPrint = TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
         .dynamicAck = TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
 <#else>
@@ -431,7 +485,7 @@ void HTTP_APP_Initialize(void)
 </#if>
         .eventReport = TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_SSI_PROCESS  == true)) >
+<#if ((TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (TCPIP_HTTP_NET_SSI_PROCESS  == true)) >
         .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
 <#else>
         .ssiNotify = 0,
@@ -448,7 +502,7 @@ void HTTP_APP_Initialize(void)
     Customized HTTP NET Functions
  ****************************************************************************/
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 // processing the HTTP buffer acknowledgment
 void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void *buffer, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack)
 {
@@ -473,7 +527,7 @@ void TCPIP_HTTP_NET_EventReport(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTT
     }
 }
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_SSI_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (TCPIP_HTTP_NET_SSI_PROCESS  == true))>
 // example of processing an SSI notification
 // return false for standard processing of this SSI command by the HTTP module
 // return true if the processing is done by you and HTTP need take no further action
@@ -548,13 +602,29 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute(TCPIP_HTTP_NET_CONN
         // Seek out each of the four LED strings, and if it exists set the LED states
         ptr = TCPIP_HTTP_NET_ArgGet(httpDataBuff, (const uint8_t *)"led2");
         if(ptr)
-            BSP_LEDStateSet(APP_LED_3, (*ptr == '1'));
-            //LED2_IO = (*ptr == '1');
+        {
+            if(*ptr == '1')
+            {
+                APP_LED_2StateSet();
+            }
+            else
+            {
+                APP_LED_2StateClear();
+            }
+        }
 
         ptr = TCPIP_HTTP_NET_ArgGet(httpDataBuff, (const uint8_t *)"led1");
         if(ptr)
-            BSP_LEDStateSet(APP_LED_2, (*ptr == '1'));
-            //LED1_IO = (*ptr == '1');
+		{
+            if(*ptr == '1')
+            {
+                APP_LED_1StateSet();
+            }
+            else
+            {
+                APP_LED_1StateClear();
+            }
+        }
     }
 
     else if(!memcmp(filename, "cookies.htm", 11))
@@ -576,16 +646,13 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute(TCPIP_HTTP_NET_CONN
         // Toggle the specified LED
         switch(*ptr) {
             case '0':
-                BSP_LEDToggle(APP_LED_1);
-                //LED0_IO ^= 1;
+                APP_LED_1StateToggle();
                 break;
             case '1':
-                BSP_LEDToggle(APP_LED_2);
-                //LED1_IO ^= 1;
+                APP_LED_2StateToggle();
                 break;
             case '2':
-                BSP_LEDToggle(APP_LED_3);
-                //LED2_IO ^= 1;
+                APP_LED_3StateToggle();
                 break;
         }
     }
@@ -686,7 +753,7 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute(TCPIP_HTTP_NET_CON
     #endif
 #endif
 
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#if (HTTP_APP_USE_EMAIL != 0) 
     if(!strcmp((char *)filename, "email/index.htm"))
         return HTTPPostEmail(connHandle);
 #endif
@@ -1222,22 +1289,13 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostSNMPCommunity(TCPIP_HTTP_NET_CONN_HANDLE
     Processes the e-mail form on email/index.htm
 
   Description:
-    This function sends an e-mail message using the SMTP client and
-    optionally encrypts the connection to the SMTP server.  It
-    demonstrates the use of the SMTP client, waiting for asynchronous
-    processes in an HTTP callback, and how to send e-mail attachments using
-    the stack.
-
-    Messages with attachments are sent using multipart/mixed MIME encoding,
-    which has three sections.  The first has no headers, and is only to be
-    displayed by old clients that cannot interpret the MIME format.  (The
-    overwhelming majority of these clients have been obseleted, but the
-    so-called "ignored" section is still used.)  The second has a few
-    headers to indicate that it is the main body of the message in plain-
-    text encoding.  The third section has headers indicating an attached
-    file, along with its name and type.  All sections are separated by a
-    boundary string, which cannot appear anywhere else in the message.
-
+    This function sends an e-mail message using the SMTPC client.
+    If encryption is needed it is done by the SMTPC module communicating with the SMTP server.
+    (the NET_PRES layer has to be configured for encryption support).
+    
+    It demonstrates the use of the SMTPC client, waiting for asynchronous
+    processes in an HTTP callback.
+    
   Precondition:
     None
 
@@ -1249,368 +1307,217 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostSNMPCommunity(TCPIP_HTTP_NET_CONN_HANDLE
     TCPIP_HTTP_NET_IO_RES_WAITING - the function is waiting for the SMTP process to complete
     TCPIP_HTTP_NET_IO_RES_NEED_DATA - data needed by this function has not yet arrived
  ****************************************************************************/
-#if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#if (HTTP_APP_USE_EMAIL != 0) 
+// size of an email parameter
+#define HTTP_APP_EMAIL_PARAM_SIZE           30 
+// maximum size of the mail body
+#define HTTP_APP_EMAIL_BODY_SIZE            200 
+// maximum size of the mail attachment
+#define HTTP_APP_EMAIL_ATTACHMENT_SIZE      200 
+
+// handle of the mail message submitted to SMTPC
+static TCPIP_SMTPC_MESSAGE_HANDLE postMailHandle = 0;
+
+// structure describing the post email operation
+typedef struct
+{
+    char*   ptrParam;       // pointer to the current parameter being retrieved
+    int     paramSize;      // size of the buffer to retrieve the parameter
+    int     attachLen;      // length of the attachment buffer
+    bool    mailParamsDone; // flag that signals that all parameters were retrieved
+    TCPIP_SMTPC_ATTACH_BUFFER attachBuffer; // descriptor for the attachment
+    TCPIP_SMTPC_MESSAGE_RESULT mailRes;     // operation outcome
+
+    // storage area
+    char serverName[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char username[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char password[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char mailTo[HTTP_APP_EMAIL_PARAM_SIZE + 1];
+    char serverPort[10 + 1];
+    char mailBody[HTTP_APP_EMAIL_BODY_SIZE + 1];
+    char mailAttachment[HTTP_APP_EMAIL_ATTACHMENT_SIZE];
+
+}HTTP_POST_EMAIL_DCPT;
+
+static HTTP_POST_EMAIL_DCPT postEmail;
+
+// callback for getting the signal of mail completion
+static void postMailCallback(TCPIP_SMTPC_MESSAGE_HANDLE messageHandle, const TCPIP_SMTPC_MESSAGE_REPORT* pMailReport)
+{
+    postEmail.mailRes = pMailReport->messageRes;
+    if(postEmail.mailRes < 0)
+    {
+        SYS_CONSOLE_PRINT("SMTPC mail FAILED! Callback result: %d\r\n", postEmail.mailRes);
+    }
+    else
+    {
+        SYS_CONSOLE_MESSAGE("SMTPC mail SUCCESS!\r\n");
+    }
+}
+
 static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHandle)
 {
-    static uint8_t *ptrData;
-    static uint8_t *szPort;
-    static TCPIP_SMTP_CLIENT_MESSAGE mySMTPClient;
-    uint16_t len, rem;
-    uint8_t cName[8];
-    uint8_t *httpDataBuff;
-    uint16_t httpBuffSize;
-    char putBuffer[40];
-    char *msgPtr;
 
-    #define SM_EMAIL_CLAIM_MODULE               (0u)
-    #define SM_EMAIL_READ_PARAM_NAME            (1u)
-    #define SM_EMAIL_READ_PARAM_VALUE           (2u)
-    #define SM_EMAIL_PUT_IGNORED                (3u)
-    #define SM_EMAIL_PUT_BODY                   (4u)
-    #define SM_EMAIL_PUT_ATTACHMENT_HEADER      (5u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS   (6u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS   (7u)
-    #define SM_EMAIL_PUT_ATTACHMENT_DATA_POT    (8u)
-    #define SM_EMAIL_PUT_TERMINATOR             (9u)
-    #define SM_EMAIL_FINISHING                  (10u)
+    TCPIP_SMTPC_MAIL_MESSAGE mySMTPMessage;
+    char paramName[HTTP_APP_EMAIL_PARAM_SIZE + 1];
 
-    httpDataBuff = TCPIP_HTTP_NET_ConnectionDataBufferGet(connHandle);
-    httpBuffSize = TCPIP_HTTP_NET_ConnectionDataBufferSizeGet(connHandle);
+    #define SM_EMAIL_INIT                       (0)
+    #define SM_EMAIL_READ_PARAM_NAME            (1)
+    #define SM_EMAIL_READ_PARAM_VALUE           (2)
+    #define SM_EMAIL_SEND_MESSAGE               (3)
+    #define SM_EMAIL_WAIT_RESULT                (4)
+
     switch(TCPIP_HTTP_NET_ConnectionPostSmGet(connHandle))
     {
-        case SM_EMAIL_CLAIM_MODULE:
-            // Try to claim module
-            if(TCPIP_SMTP_UsageBegin())
-            {// Module was claimed, so set up static parameters
-                memset(&mySMTPClient, 0, sizeof(mySMTPClient));
-                mySMTPClient.Subject = "Microchip TCP/IP Stack Status Update";
-                mySMTPClient.From = "\"SMTP Service\" <mchpboard@picsaregood.com>";
-
-                // The following two lines indicate to the receiving client that
-                // this message has an attachment.  The boundary field *must not*
-                // be included anywhere in the content of the message.  In real
-                // applications it is typically a long random string.
-                mySMTPClient.OtherHeaders = "MIME-version: 1.0\r\nContent-type: multipart/mixed; boundary=\"frontier\"\r\n";
-
-                // Move our state machine forward
-                ptrData = httpDataBuff;
-                szPort = NULL;
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
-            }
-            return TCPIP_HTTP_NET_IO_RES_WAITING;
-
-        case SM_EMAIL_READ_PARAM_NAME:
-            // Search for a parameter name in POST data
-            if(TCPIP_HTTP_NET_ConnectionPostNameRead(connHandle, cName, sizeof(cName)) == TCPIP_HTTP_NET_READ_INCOMPLETE)
-                return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
-
-            // Try to match the name value
-            if(!strcmp((char *)cName, (const char *)"server"))
-            {// Read the server name
-                mySMTPClient.Server = (char *)ptrData;
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"port"))
-            {// Read the server port
-                szPort = ptrData;
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"user"))
-            {// Read the user name
-                mySMTPClient.Username = (char *)ptrData;
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"pass"))
-            {// Read the password
-                mySMTPClient.Password = (char *)ptrData;
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"to"))
-            {// Read the To string
-                mySMTPClient.To = (char *)ptrData;
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
-            }
-            else if(!strcmp((char *)cName, (const char *)"msg"))
-            {// Done with headers, move on to the message
-                // Delete paramters that are just null strings (no data from user) or illegal (ex: password without username)
-                if(mySMTPClient.Server )
-                    if(*mySMTPClient.Server == 0x00u)
-                        mySMTPClient.Server = NULL;
-                if(mySMTPClient.Username )
-                    if(*mySMTPClient.Username == 0x00u)
-                        mySMTPClient.Username = NULL;
-                if(mySMTPClient.Password)
-                    if((*mySMTPClient.Password == 0x00u) || (mySMTPClient.Username == NULL))
-                        mySMTPClient.Password = NULL;
-
-                // Decode server port string if it exists
-                if(szPort)
-                    if(*szPort)
-                        mySMTPClient.ServerPort = (uint16_t)atol((char *)szPort);
-
-                // Start sending the message
-                TCPIP_SMTP_MailSend(&mySMTPClient);
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_IGNORED);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-            else
-            {// Don't know what we're receiving
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
+        case SM_EMAIL_INIT:
+            if(postMailHandle != 0)
+            {   // some other operation on going
+                return TCPIP_HTTP_NET_IO_RES_ERROR;
             }
 
-            // No break...continue to try reading the value
 
-        case SM_EMAIL_READ_PARAM_VALUE:
-            // Search for a parameter value in POST data
-            rem = httpBuffSize - (ptrData - httpDataBuff);
-            if(TCPIP_HTTP_NET_ConnectionPostValueRead(connHandle, ptrData, rem) == TCPIP_HTTP_NET_READ_INCOMPLETE)
-                return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
-
-            // Move past the data that was just read
-            ptrData += strlen((char *)ptrData);
-            if(ptrData < httpDataBuff + httpBuffSize - 1)
-                ptrData += 1;
-
-            // Try reading the next parameter
+            memset(&postEmail, 0, sizeof(postEmail));
             TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_NAME);
             return TCPIP_HTTP_NET_IO_RES_WAITING;
 
-        case SM_EMAIL_PUT_IGNORED:
-            // This section puts a message that is ignored by compatible clients.
-            // This text will not display unless the receiving client is obselete
-            // and does not understand the MIME structure.
-            // The "--frontier" indicates the start of a section, then any
-            // needed MIME headers follow, then two CRLF pairs, and then
-            // the actual content (which will be the body text in the next state).
 
-            // Check to see if a failure occured
-            if(!TCPIP_SMTP_IsBusy())
+        case SM_EMAIL_READ_PARAM_NAME:
+            // Search for a parameter name in POST data
+            if(TCPIP_HTTP_NET_ConnectionPostNameRead(connHandle, (uint8_t*)paramName, sizeof(paramName)) == TCPIP_HTTP_NET_READ_INCOMPLETE)
             {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-            // See if we're ready to write data
-            msgPtr = "This is a multi-part message in MIME format.\r\n--frontier\r\nContent-type: text/plain\r\n\r\n";
-            if(TCPIP_SMTP_IsPutReady() < strlen(msgPtr))
-            {
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
+                return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
             }
 
-            // Write the ignored text
-            TCPIP_SMTP_StringPut(msgPtr);
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_BODY);
-
-        case SM_EMAIL_PUT_BODY:
-            // Write as much body text as is available from the TCP buffer
-            // return TCPIP_HTTP_NET_IO_RES_NEED_DATA or TCPIP_HTTP_NET_IO_RES_WAITING
-            // On completion, => PUT_ATTACHMENT_HEADER and continue
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
+            // Try to match the name value
+            if(!strcmp(paramName, (const char *)"server"))
+            {   // Read the server name
+                postEmail.ptrParam = postEmail.serverName;
+                postEmail.paramSize = sizeof(postEmail.serverName) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"user"))
+            {   // Read the user name
+                postEmail.ptrParam = postEmail.username;
+                postEmail.paramSize = sizeof(postEmail.username) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"pass"))
+            {   // Read the password
+                postEmail.ptrParam = postEmail.password;
+                postEmail.paramSize = sizeof(postEmail.password) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"to"))
+            {   // Read the To string
+                postEmail.ptrParam = postEmail.mailTo;
+                postEmail.paramSize = sizeof(postEmail.mailTo) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"port"))
+            {   // Read the server port
+                postEmail.ptrParam = postEmail.serverPort;
+                postEmail.paramSize = sizeof(postEmail.serverPort) - 1;
+            }
+            else if(!strcmp(paramName, (const char *)"msg"))
+            {   // Read the server port
+                postEmail.ptrParam = postEmail.mailBody;
+                postEmail.paramSize = sizeof(postEmail.mailBody) - 1;
+                postEmail.mailParamsDone = true;
+            }
+            else
+            {   // unknown parameter
+                postEmail.ptrParam = 0;
+                postEmail.paramSize = 0;
             }
 
-            // Loop as long as data remains to be read
-            while(TCPIP_HTTP_NET_ConnectionByteCountGet(connHandle))
-            {
-                // See if space is available to write
-                len = TCPIP_SMTP_IsPutReady();
-                if(len == 0u)
-                {
-                    return TCPIP_HTTP_NET_IO_RES_WAITING;
-                }
-
-                // See if data is ready to be read
-                rem = TCPIP_HTTP_NET_ConnectionReadIsReady(connHandle);
-                if(rem == 0u)
-                {
-                    return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
-                }
-
-                // Only write as much as we can handle
-                if(len > rem)
-                {
-                    len = rem;
-                }
-                if(len > httpBuffSize - 2)
-                {
-                    len = httpBuffSize - 2;
-                }
-
-                // Read the data from HTTP POST buffer and send it to SMTP
-                TCPIP_HTTP_NET_ConnectionByteCountDec(connHandle, TCPIP_HTTP_NET_ConnectionRead(connHandle, httpDataBuff, len));
-                httpDataBuff[len] = '\0';
-                TCPIP_HTTP_NET_URLDecode(httpDataBuff);
-                TCPIP_SMTP_StringPut((char *)httpDataBuff);
-                TCPIP_SMTP_Flush();
-            }
-
-            // We're done with the POST data, so continue
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_HEADER);
-
-        case SM_EMAIL_PUT_ATTACHMENT_HEADER:
-            // This section writes the attachment to the message.
-            // This portion generally will not display in the reader, but
-            // will be downloadable to the local machine.  Use caution
-            // when selecting the content-type and file name, as certain
-            // types and extensions are blocked by virus filters.
-
-            // The same structure as the message body is used.
-            // Any attachment must not include high-bit ASCII characters or
-            // binary data.  If binary data is to be sent, the data should
-            // be encoded using Base64 and a MIME header should be added:
-            // Content-transfer-encoding: base64
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // See if we're ready to write data
-            msgPtr = "\r\n--frontier\r\nContent-type: text/csv\r\nContent-Disposition: attachment; filename=\"status.csv\"\r\n\r\n";
-            if(TCPIP_SMTP_IsPutReady() < strlen(msgPtr))
-            {
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // Write the attachment header
-            TCPIP_SMTP_StringPut(msgPtr);
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_BTNS:
-            // The following states output the system status as a CSV file.
-
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // Write the header and button strings
-            sprintf(putBuffer, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", APP_SWITCH_1StateGet() + '0', APP_SWITCH_2StateGet() + '0', APP_SWITCH_3StateGet() + '0');
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < strlen(putBuffer))
-            {
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            TCPIP_SMTP_StringPut(putBuffer);
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_LEDS:
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // Write the header and button strings
-            sprintf(putBuffer, "LEDs:,%c,%c,%c\r\n", BSP_LEDStateGet(APP_LED_1) + '0', BSP_LEDStateGet(APP_LED_2) + '0', BSP_LEDStateGet(APP_LED_3) + '0');
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < strlen(putBuffer))
-            {
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            TCPIP_SMTP_StringPut(putBuffer);
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_ATTACHMENT_DATA_POT);
-
-        case SM_EMAIL_PUT_ATTACHMENT_DATA_POT:
-            // Check to see if a failure occurred
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // Display Random Number
-            len = (uint16_t)SYS_RANDOM_PseudoGet();
-
-            uitoa(len, (uint8_t *)&httpDataBuff[1]);
-
-            // Write the header and button strings
-            sprintf(putBuffer, "Pot:,%s\r\n", (char *)(httpDataBuff + 1));
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < strlen(putBuffer))
-            {
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            TCPIP_SMTP_StringPut(putBuffer);
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_PUT_TERMINATOR);
-
-        case SM_EMAIL_PUT_TERMINATOR:
-            // This section finishes the message
-            // This consists of two dashes, the boundary, and two more dashes
-            // on a single line, followed by a CRLF pair to terminate the message.
-
-            // Check to see if a failure occured
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // Write the ignored text
-            msgPtr = "--frontier--\r\n";
-            // See if we're ready to write data
-            if(TCPIP_SMTP_IsPutReady() < strlen(msgPtr))
-            {
-                return TCPIP_HTTP_NET_IO_RES_WAITING;
-            }
-
-            // Write the ignored text
-            TCPIP_SMTP_StringPut(msgPtr);
-            TCPIP_SMTP_PutIsDone();
-            TCPIP_SMTP_Flush();
-
-            // Move to the next state
-            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_FINISHING);
-
-        case SM_EMAIL_FINISHING:
-            // Wait for status
-            if(!TCPIP_SMTP_IsBusy())
-            {
-                // Release the module and check success
-                // Redirect the user based on the result
-                if(TCPIP_SMTP_UsageEnd() == SMTP_SUCCESS)
-                    lastSuccess = true;
-                else
-                    lastFailure = true;
-
-                // Redirect to the page
-                strcpy((char *)httpDataBuff, "/email/index.htm");
-                TCPIP_HTTP_NET_ConnectionStatusSet(connHandle, TCPIP_HTTP_NET_STAT_REDIRECT);
-                return TCPIP_HTTP_NET_IO_RES_DONE;
-            }
-
+            // read the parameter now
+            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_READ_PARAM_VALUE);
             return TCPIP_HTTP_NET_IO_RES_WAITING;
+
+
+        case SM_EMAIL_READ_PARAM_VALUE:
+            // Search for a parameter value in POST data
+            if(TCPIP_HTTP_NET_ConnectionPostValueRead(connHandle, (uint8_t*)postEmail.ptrParam, postEmail.paramSize) == TCPIP_HTTP_NET_READ_INCOMPLETE)
+                return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
+
+            // end parameter properly
+            postEmail.ptrParam[postEmail.paramSize] = 0;
+
+            // check if we're done with the parameters
+            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, postEmail.mailParamsDone == true ? SM_EMAIL_SEND_MESSAGE : SM_EMAIL_READ_PARAM_NAME);
+            return TCPIP_HTTP_NET_IO_RES_WAITING;
+
+        case SM_EMAIL_SEND_MESSAGE:
+            // prepare the message attachment
+            // output the system status as a CSV file.
+            // Write the header and button strings
+            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", (int)APP_SWITCH_1StateGet() + '0', (int)APP_SWITCH_2StateGet() + '0', (int)APP_SWITCH_3StateGet() + '0');
+            // Write the header and button strings
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", (int)APP_LED_1StateGet() + '0', (int)APP_LED_2StateGet() + '0', (int)APP_LED_3StateGet() + '0');
+            // add a potentiometer read: a random string
+            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%lu\r\n", SYS_RANDOM_PseudoGet());
+
+            // prepare the message itself
+            memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
+            mySMTPMessage.body = (const uint8_t*)postEmail.mailBody;
+            mySMTPMessage.bodySize = strlen(postEmail.mailBody);
+            mySMTPMessage.smtpServer = postEmail.serverName;
+            mySMTPMessage.serverPort = (uint16_t)atol(postEmail.serverPort);
+            mySMTPMessage.username = postEmail.username;
+            mySMTPMessage.password = postEmail.password;
+            mySMTPMessage.to = postEmail.mailTo;
+            mySMTPMessage.from = "\"SMTP Service\" <mchpboard@picsaregood.com>";
+            mySMTPMessage.subject = "Microchip TCP/IP Stack Status Update";
+
+            // set the buffer attachment
+            postEmail.attachBuffer.attachType = TCPIP_SMTPC_ATTACH_TYPE_TEXT;
+            postEmail.attachBuffer.attachEncode = TCPIP_SMTPC_ENCODE_TYPE_7BIT;
+            postEmail.attachBuffer.attachName = "status.csv";
+            postEmail.attachBuffer.attachBuffer = (const uint8_t*)postEmail.mailAttachment;
+            postEmail.attachBuffer.attachSize = postEmail.attachLen;
+            mySMTPMessage.attachBuffers = &postEmail.attachBuffer;
+            mySMTPMessage.nBuffers = 1;
+            // set the notification function
+            mySMTPMessage.messageCallback = postMailCallback;
+            
+            postMailHandle = TCPIP_SMTPC_MailMessage(&mySMTPMessage, &postEmail.mailRes);
+            if(postMailHandle == 0)
+            {   // failed
+                SYS_CONSOLE_PRINT("SMTPC mail: Failed to submit message: %d!\r\n", postEmail.mailRes);
+            }
+            else
+            {
+                postEmail.mailRes = TCPIP_SMTPC_RES_PENDING;
+                SYS_CONSOLE_MESSAGE("SMTPC mail: Submitted the mail message!\r\n");
+            }
+
+            TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_EMAIL_WAIT_RESULT);
+            return TCPIP_HTTP_NET_IO_RES_WAITING;
+
+        case SM_EMAIL_WAIT_RESULT:
+            // Wait for status done
+            if(postEmail.mailRes == TCPIP_SMTPC_RES_PENDING)
+            {   // not done yet
+                return TCPIP_HTTP_NET_IO_RES_WAITING;
+            }
+
+            // done
+            postMailHandle = 0;
+
+            if(postEmail.mailRes == TCPIP_SMTPC_RES_OK)
+            {
+                lastSuccess = true;
+            }
+            else
+            {
+                lastFailure = true;
+            }
+
+            // Redirect to the page
+            strcpy((char *)TCPIP_HTTP_NET_ConnectionDataBufferGet(connHandle), "/email/index.htm");
+            TCPIP_HTTP_NET_ConnectionStatusSet(connHandle, TCPIP_HTTP_NET_STAT_REDIRECT);
+            return TCPIP_HTTP_NET_IO_RES_DONE;
     }
 
     return TCPIP_HTTP_NET_IO_RES_DONE;
 }
-#endif // #if defined(TCPIP_STACK_USE_SMTP_CLIENT)
+#endif // (HTTP_APP_USE_EMAIL != 0) 
 
 /****************************************************************************
   Function:
@@ -2030,7 +1937,7 @@ uint8_t TCPIP_HTTP_NET_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
 }
 #endif
 
-<#if ((tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (tcpipHttpNet.TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 /****************************************************************************
   Section:
     Dynamic Variable Callback Functions
@@ -2158,15 +2065,15 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_led(TCPIP_HTTP_NET_CONN_HANDLE connHan
         switch(nLed)
         {
             case 0:
-                nLed = BSP_LEDStateGet(APP_LED_1);
+                nLed = APP_LED_1StateGet();
                 break;
 
             case 1:
-                nLed = BSP_LEDStateGet(APP_LED_2);
+                nLed = APP_LED_2StateGet();
                 break;
 
             case 2:
-                nLed = BSP_LEDStateGet(APP_LED_3);
+                nLed = APP_LED_3StateGet();
                 break;
 
             default:
@@ -2193,13 +2100,13 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ledSelected(TCPIP_HTTP_NET_CONN_HANDLE
         switch(nLed)
         {
             case 0:
-                nLed = BSP_LEDStateGet(APP_LED_1);
+                nLed = APP_LED_1StateGet();
                 break;
             case 1:
-                nLed = BSP_LEDStateGet(APP_LED_2);
+                nLed = APP_LED_2StateGet();
                 break;
             case 2:
-                nLed = BSP_LEDStateGet(APP_LED_3);
+                nLed = APP_LED_3StateGet();
                 break;
             default:
                 nLed = 0;
@@ -2664,12 +2571,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_rebootaddr(TCPIP_HTTP_NET_CONN_HANDLE 
     }
     strncpy(pDynBuffer->data, rebootAddr, HTTP_APP_DYNVAR_BUFFER_SIZE);
     TCPIP_HTTP_NET_DynamicWriteString(vDcpt, pDynBuffer->data, true);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_smtps_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, "none", false);
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 
