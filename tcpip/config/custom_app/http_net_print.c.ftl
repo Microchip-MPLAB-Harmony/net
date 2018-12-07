@@ -95,22 +95,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_rebootaddr(TCPIP_HTTP_NET_CONN_HANDLE 
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_snmp_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_read_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fwver(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ssid(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_scan(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_bssCount(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_valid(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_name(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_wlan(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_privacy(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_strength(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_prevSSID(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_nextSSID(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_prevWLAN(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_currWLAN(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_nextWLAN(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-</#if><#-- ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo")) -->
 
 /****************************************************************************
   Section:
@@ -174,22 +158,6 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
     {"snmp_en",                     TCPIP_HTTP_Print_snmp_en},
     {"read_comm",                   TCPIP_HTTP_Print_read_comm},
     {"write_comm",                  TCPIP_HTTP_Print_write_comm},
-<#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
-    {"fwver",                       TCPIP_HTTP_Print_fwver},
-    {"ssid",                        TCPIP_HTTP_Print_ssid},
-    {"scan",                        TCPIP_HTTP_Print_scan},
-    {"bssCount",                    TCPIP_HTTP_Print_bssCount},
-    {"valid",                       TCPIP_HTTP_Print_valid},
-    {"name",                        TCPIP_HTTP_Print_name},
-    {"wlan",                        TCPIP_HTTP_Print_wlan},
-    {"privacy",                     TCPIP_HTTP_Print_privacy},
-    {"strength",                    TCPIP_HTTP_Print_strength},
-    {"prevSSID",                    TCPIP_HTTP_Print_prevSSID},
-    {"nextSSID",                    TCPIP_HTTP_Print_nextSSID},
-    {"prevWLAN",                    TCPIP_HTTP_Print_prevWLAN},
-    {"currWLAN",                    TCPIP_HTTP_Print_currWLAN},
-    {"nextWLAN",                    TCPIP_HTTP_Print_nextWLAN},
-</#if><#-- ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo")) -->
 };
 
 // Function that processes the dynamic variables
