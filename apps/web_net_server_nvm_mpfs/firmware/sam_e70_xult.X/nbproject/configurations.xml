@@ -422,9 +422,9 @@
                    displayName="Source Files"
                    projectFiles="true">
       <logicalFolder name="f2" displayName="app" projectFiles="true">
-        <itemPath>../src/config/sam_e70_xult/app/mpfs_img2.c</itemPath>
         <itemPath>../src/config/sam_e70_xult/app/http_net_print.c</itemPath>
         <itemPath>../src/config/sam_e70_xult/app/custom_http_net_app.c</itemPath>
+        <itemPath>../src/config/sam_e70_xult/app/mpfs_img2_net.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
