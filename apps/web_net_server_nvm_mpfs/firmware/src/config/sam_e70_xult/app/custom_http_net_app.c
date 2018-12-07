@@ -140,7 +140,6 @@ Function Prototypes and Memory Globalizers
     #endif
 #endif
 
-
 extern const char *const ddnsServiceHosts[];
 // RAM allocated for DDNS parameters
 #if defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
@@ -171,7 +170,6 @@ typedef struct
 }HTTP_APP_DYNVAR_BUFFER;
 
 static HTTP_APP_DYNVAR_BUFFER httpDynVarBuffers[HTTP_APP_DYNVAR_BUFFERS_NO];
-
 
 // helper to get one of the application's dynamic buffer that are used in the
 // dynamic variables processing
