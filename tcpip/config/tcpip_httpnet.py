@@ -1,7 +1,6 @@
 
 		
 def instantiateComponent(tcpipHttpNetComponent):
-	print("TCPIP HTTP NET Component")
 	configName = Variables.get("__CONFIGURATION_NAME")			
 	# Enable HTTP NET Server
 	tcpipHttpNetSrv = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_STACK_USE_HTTP_NET_SERVER", None)
@@ -391,6 +390,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetCustTemplateSl.setVisible(False)
 	tcpipHttpNetCustTemplateSl.setDescription("Include HTTP NET Custom Template SL")
 	tcpipHttpNetCustTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
+	tcpipHttpNetCustTemplateSl.setDependencies(tcpipHttpNetCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
 
 	# Persistent Connection Idle Time-out
 	tcpipHttpNetConnTimeout = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_CONNECTION_TIMEOUT", None)
@@ -459,17 +459,17 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetCstmAppSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
 	
 	# ifblock TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL
-	# template HTTP_NET_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2.c"
+	# template HTTP_NET_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2_net.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2_net.c"
+	# endif
 	tcpipHttpNetMpfsImg2SourceFile = tcpipHttpNetComponent.createFileSymbol(None, None)
-	tcpipHttpNetMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2.c.ftl")
-	tcpipHttpNetMpfsImg2SourceFile.setOutputName("mpfs_img2.c")
+	tcpipHttpNetMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2_net.c.ftl")
+	tcpipHttpNetMpfsImg2SourceFile.setOutputName("mpfs_img2_net.c")
 	tcpipHttpNetMpfsImg2SourceFile.setDestPath("app/")
 	tcpipHttpNetMpfsImg2SourceFile.setProjectPath("app/")
 	tcpipHttpNetMpfsImg2SourceFile.setType("SOURCE")
 	tcpipHttpNetMpfsImg2SourceFile.setMarkup(True)
-	tcpipHttpNetMpfsImg2SourceFile.setEnabled(False)
+	tcpipHttpNetMpfsImg2SourceFile.setEnabled(True)
 	tcpipHttpNetMpfsImg2SourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL"])	
-	# endif
 	
 	
 # make Http Net Server option visible
@@ -595,3 +595,11 @@ def tcpipHttpNetGenSourceFile(sourceFile, event):
 
 def destroyComponent(component):
 	Database.setSymbolValue("tcpipHttpNet", "TCPIP_STACK_USE_HTTP_NET_SERVER", False, 2)
+
+def tcpipHttpNetCustomSlSet(symbol, event):
+	symbol.clearValue()
+	if (event["value"] == True):
+		symbol.setValue(True,2)
+	else:
+		symbol.setValue(False,2)
+		
