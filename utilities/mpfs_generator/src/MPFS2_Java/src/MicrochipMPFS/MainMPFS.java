@@ -255,8 +255,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Nov,13 2018"+"<br>";
-        String version = "Version MPFS 3.00";
+        aboutStr = "<html>"+"Date Dec,10 2018"+"<br>";
+        String version = "Version MPFS 3.01";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
