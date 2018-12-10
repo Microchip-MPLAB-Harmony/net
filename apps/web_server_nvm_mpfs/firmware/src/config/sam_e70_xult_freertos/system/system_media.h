@@ -10,9 +10,9 @@ System Service Media Interface Declarations and Types
   Summary:
     System Media declarations and types.
 
-  Description:    
+  Description:
     This file contains function and type declarations required to interact
-    with the MPLAB Harmony Media Drivers and File System.                         
+    with the MPLAB Harmony Media Drivers and File System.
   *************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -47,7 +47,16 @@ System Service Media Interface Declarations and Types
 #ifdef __cplusplus  // Provide C++ Compatibility
     extern "C" {
 #endif
-// DOM-IGNORE-END  
+// DOM-IGNORE-END
+
+/* Read Region Geometry Table Index Numbers */
+#define SYS_MEDIA_GEOMETRY_TABLE_READ_ENTRY   (0)
+
+/* Write Region Geometry Table Index Numbers */
+#define SYS_MEDIA_GEOMETRY_TABLE_WRITE_ENTRY  (1)
+
+/* Erase Region Geometry Table Index Numbers */
+#define SYS_MEDIA_GEOMETRY_TABLE_ERASE_ENTRY  (2)
 
 // *****************************************************************************
 /* SYS Media Block Command Handle
@@ -132,10 +141,10 @@ typedef enum
 {
     /* Media supports Byte Write */
     SYS_MEDIA_SUPPORTS_BYTE_WRITES = 0x01,
-    
+
     /* Media supports only Read operation */
     SYS_MEDIA_SUPPORTS_READ_ONLY = 0x02,
-    
+
     /* Media supports OTP (One Time Programming) */
     SYS_MEDIA_SUPPORTS_ONE_TIME_PROGRAMING = 0x04,
 
@@ -144,7 +153,7 @@ typedef enum
 
     /* Write is blocking */
     SYS_MEDIA_WRITE_IS_BLOCKING = 0x10,
-  
+
 } SYS_MEDIA_PROPERTY;
 
 // *****************************************************************************
@@ -217,10 +226,10 @@ typedef struct
 {
     /* Size of a each block in Bytes */
     uint32_t blockSize;
-    
+
     /* Number of Blocks of identical size within the Region */
     uint32_t numBlocks;
-    
+
 } SYS_MEDIA_REGION_GEOMETRY;
 
 // *****************************************************************************
@@ -239,24 +248,24 @@ typedef struct
     regions is the total memory size of the device.
 */
 
-typedef struct 
+typedef struct
 {
     /* Properties of a Media. For a device, if multiple properties  are
        applicable, they can be ORed */
     SYS_MEDIA_PROPERTY mediaProperty;
-    
+
     /* Number of Read Regions */
     uint32_t numReadRegions;
-    
+
     /* Number of Write Regions */
     uint32_t numWriteRegions;
-    
+
     /* Number of Erase Regions */
     uint32_t numEraseRegions;
-    
+
     /* Pointer to the table containing the geometry information */
     SYS_MEDIA_REGION_GEOMETRY *geometryTable;
-    
+
 } SYS_MEDIA_GEOMETRY;
 
 // *****************************************************************************
@@ -271,7 +280,7 @@ typedef struct
     handling function whose function signature (parameter and return value
     types) match the types specified by this function pointer in order to
     receive event calls back from the driver.
-    
+
   Parameters:
     event           - Identifies the type of event
     commandHandle   - Handle returned from the media operation requests
@@ -298,4 +307,3 @@ typedef void (* SYS_MEDIA_EVENT_HANDLER)
 //DOM-IGNORE-END
 
 #endif
-

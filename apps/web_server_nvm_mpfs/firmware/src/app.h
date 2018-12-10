@@ -48,7 +48,7 @@ extern "C" {
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-#define APP_SWITCH_1StateGet()      SWITCH1_PA11_Get()
+#define APP_SWITCH_1StateGet()      SWITCH_Get()
 
 
 

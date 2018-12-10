@@ -30,7 +30,8 @@ autoConnectTableCRYPTOHttp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http
 # autoConnectTableCRYPTOHttpNet = [["tcpipHttpNet", "HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOHttpNet = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOSnmp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-autoConnectTableNetPres = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
+autoConnectTableNetPresBSD = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
+autoConnectTableNetPresSMTPC = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipSmtpc:Smtpc_NetPres_Dependency"]]
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -268,7 +269,7 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipBerkeleyApi:BSD_NETPRES_Dependency")
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])	
-			res = Database.connectDependencies(autoConnectTableNetPres)
+			res = Database.connectDependencies(autoConnectTableNetPresBSD)
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -447,6 +448,9 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "libtcpipSmtpc")
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "Smtpc_NetPres_Dependency")
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSmtpc:Smtpc_NetPres_Dependency")
+		if(Database.getComponentByID("netPres") == None):
+			res = Database.activateComponents(["netPres"])	
+			res = Database.connectDependencies(autoConnectTableNetPresSMTPC)
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
