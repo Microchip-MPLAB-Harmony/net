@@ -148,6 +148,7 @@ bool TCPIP_ICMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
     {   // first time we're run
         bool iniRes;
 
+        (void)icmpMemH;
         icmpMemH = stackCtrl->memH;
         while(true)
         {

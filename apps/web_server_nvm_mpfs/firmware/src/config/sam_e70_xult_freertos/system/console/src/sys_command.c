@@ -81,8 +81,6 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 
-extern SYS_MODULE_OBJ sysConsoleObjects[];
-
 static SYS_CMD_DEVICE_LIST cmdIODevList = {0, 0, 0};
 
 static char printBuff[SYS_CMD_PRINT_BUFFER_SIZE] SYS_CMD_BUFFER_DMA_READY;
@@ -650,7 +648,7 @@ void SYS_CMD_PRINT(const char* format, ...)
     char tmpBuf[SYS_CMD_PRINT_BUFFER_SIZE];
     size_t len = 0;
     size_t padding = 0;
-    va_list args;
+    va_list args = (va_list){0};
     va_start( args, format );
 
     len = vsnprintf(tmpBuf, SYS_CMD_PRINT_BUFFER_SIZE, format, args);
@@ -852,7 +850,7 @@ static void SendCommandPrint(const void* cmdIoParam, const char* format, ...)
     char tmpBuf[SYS_CMD_PRINT_BUFFER_SIZE];
     size_t len = 0;
     size_t padding = 0;
-    va_list args;
+    va_list args = (va_list){0};
     va_start( args, format );
 
     len = vsnprintf(tmpBuf, SYS_CMD_PRINT_BUFFER_SIZE, format, args);
@@ -1287,5 +1285,3 @@ static cmdNode* CmdRemoveTail(cmdDlList* pL)
     }
     return pN;
 }
-
-
