@@ -82,7 +82,7 @@ public class AboutBox extends javax.swing.JDialog {
         getContentPane().add(lblToolName, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 5, 270, 20));
 
         lblVersion.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 12)); // NOI18N
-        lblVersion.setText("Version 3.00");
+        lblVersion.setText("Version 3.01");
         getContentPane().add(lblVersion, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 25, 220, 10));
 
         lblCopyRight.setText("Copyright © 2013 Microchip Technology, Inc.");
