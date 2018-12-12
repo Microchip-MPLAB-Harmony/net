@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-09-19T14:04:45Z */
+/* file generated from device description version 2018-11-06T08:17:04Z */
 #ifndef _SAME70_WDT_COMPONENT_H_
 #define _SAME70_WDT_COMPONENT_H_
 

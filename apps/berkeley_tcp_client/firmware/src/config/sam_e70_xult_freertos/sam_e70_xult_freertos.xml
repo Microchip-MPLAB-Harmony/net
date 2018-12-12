@@ -5546,61 +5546,66 @@
             </Boolean>
           </Attributes>
         </Menu>
-        <File dnOrder="6" id="SYS_COMMAND_SOURCE">
+        <Integer dnOrder="6" id="SYS_COMMAND_RTOS_STACK_SIZE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="1024"/>
+          </Values>
+        </Integer>
+        <File dnOrder="7" id="SYS_COMMAND_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="7" id="SYS_COMMAND_SYS_RTOS_TASK">
+        <File dnOrder="8" id="SYS_COMMAND_SYS_RTOS_TASK">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <String dnOrder="8" id="SYS_CONSOLE_DEVICE">
+        <String dnOrder="9" id="SYS_CONSOLE_DEVICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sys_console" priority="2" value="USART1"/>
             </Dynamic>
           </Values>
         </String>
-        <String dnOrder="9" id="SYS_CONSOLE_DEVICE_SET">
+        <String dnOrder="10" id="SYS_CONSOLE_DEVICE_SET">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sys_console" priority="2" value="UART"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="10" id="SYS_DEBUG_ENABLE">
+        <Boolean dnOrder="11" id="SYS_DEBUG_ENABLE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Combo dnOrder="11" id="SYS_DEBUG_LEVEL">
+        <Combo dnOrder="12" id="SYS_DEBUG_LEVEL">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <Integer dnOrder="12" id="SYS_DEBUG_PRINT_BUFFER_SIZE">
+        <Integer dnOrder="13" id="SYS_DEBUG_PRINT_BUFFER_SIZE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Integer>
-        <File dnOrder="13" id="SYS_DEBUG_SOURCE">
+        <File dnOrder="14" id="SYS_DEBUG_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Boolean dnOrder="14" id="SYS_DEBUG_USE_CONSOLE">
+        <Boolean dnOrder="15" id="SYS_DEBUG_USE_CONSOLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -6029,8 +6034,8 @@
             </UniqueComponent>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvSamv71Gmac:libdrvSamv71Gmac" targetComponentID="DRIVER LAYER"/>
-            <Attachment dnOrder="1" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="0" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="1" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvSamv71Gmac:libdrvSamv71Gmac" targetComponentID="DRIVER LAYER"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
@@ -6128,8 +6133,8 @@
         </GroupComponent>
       </Children>
       <Attachments dnOrder="1">
-        <Attachment dnOrder="0" id="tcpipBerkeleyApi:BSD_NETPRES_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="libNetPres" targetComponentID="netPres_0"/>
-        <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console"/>
+        <Attachment dnOrder="0" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console"/>
+        <Attachment dnOrder="1" id="tcpipBerkeleyApi:BSD_NETPRES_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="libNetPres" targetComponentID="netPres_0"/>
       </Attachments>
     </GroupComponent>
     <UniqueComponent dnOrder="11" id="usart1">
@@ -6162,7 +6167,14 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
+    <ComponentGraph dnOrder="0" id="APPLICATION LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipBerkeleyApi" x="600" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipDhcp" x="320" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipDns" x="460" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_apps_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
     <ComponentGraph dnOrder="1" id="NETWORK LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
@@ -6171,14 +6183,7 @@
         <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="2" id="BASIC CONFIGURATION">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
@@ -6186,23 +6191,15 @@
         <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="3" id="DRIVER LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="BSP_SAM_E70_Xplained_Ultra" x="480" y="20"/>
-        <ElementPosition dnOrder="1" id="FreeRTOS" x="721" y="20"/>
-        <ElementPosition dnOrder="2" id="HarmonyCore" x="30" y="60"/>
-        <ElementPosition dnOrder="3" id="TCP/IP STACK" x="418" y="304"/>
-        <ElementPosition dnOrder="4" id="cmsis" x="340" y="20"/>
-        <ElementPosition dnOrder="5" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="6" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="7" id="netPres" x="102" y="221"/>
-        <ElementPosition dnOrder="8" id="sys_console" x="241" y="366"/>
-        <ElementPosition dnOrder="9" id="sys_time" x="399" y="75"/>
-        <ElementPosition dnOrder="10" id="tc0" x="223" y="120"/>
-        <ElementPosition dnOrder="11" id="usart1" x="67" y="387"/>
+        <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="380" y="20"/>
+        <ElementPosition dnOrder="1" id="drvMiim" x="500" y="20"/>
+        <ElementPosition dnOrder="2" id="drvSamv71Gmac" x="280" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="5" id="TCP/IP STACK">
+    <ComponentGraph dnOrder="4" id="TCP/IP STACK">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
         <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
@@ -6211,21 +6208,29 @@
         <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="6" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="5" id="TRANSPORT LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipBerkeleyApi" x="600" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipDhcp" x="320" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipDns" x="460" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_apps_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="DRIVER LAYER">
+    <ComponentGraph dnOrder="6" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="380" y="20"/>
-        <ElementPosition dnOrder="1" id="drvMiim" x="500" y="20"/>
-        <ElementPosition dnOrder="2" id="drvSamv71Gmac" x="280" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="BSP_SAM_E70_Xplained_Ultra" x="480" y="20"/>
+        <ElementPosition dnOrder="1" id="FreeRTOS" x="721" y="20"/>
+        <ElementPosition dnOrder="2" id="HarmonyCore" x="30" y="60"/>
+        <ElementPosition dnOrder="3" id="TCP/IP STACK" x="418" y="304"/>
+        <ElementPosition dnOrder="4" id="cmsis" x="340" y="20"/>
+        <ElementPosition dnOrder="5" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="6" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="7" id="netPres" x="237" y="223"/>
+        <ElementPosition dnOrder="8" id="sys_console" x="241" y="366"/>
+        <ElementPosition dnOrder="9" id="sys_time" x="399" y="75"/>
+        <ElementPosition dnOrder="10" id="tc0" x="223" y="120"/>
+        <ElementPosition dnOrder="11" id="usart1" x="67" y="387"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="7"/>
   </UserData>
 </Configuration>

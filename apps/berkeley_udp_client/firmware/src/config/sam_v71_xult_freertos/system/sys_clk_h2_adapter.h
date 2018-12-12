@@ -207,4 +207,4 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_CLK_FrequencyGet (
 #endif
 // DOM-IGNORE-END
 
-#endif //SYS_TIME_H
+#endif //SYS_CLK_ADPATER_H

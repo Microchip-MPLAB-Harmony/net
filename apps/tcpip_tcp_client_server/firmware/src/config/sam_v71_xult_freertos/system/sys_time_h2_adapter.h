@@ -48,7 +48,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // DOM-IGNORE-END
 
-#ifndef SYS_TIME_ADPATER_H    // Guards against multiple inclusion
+#ifndef SYS_TIME_ADAPTER_H    // Guards against multiple inclusion
 #define SYS_TIME_ADAPTER_H
 
 
@@ -495,4 +495,4 @@ static __inline__ void  __attribute__((always_inline)) SYS_TMR_CallbackStop ( SY
 #endif
 // DOM-IGNORE-END
 
-#endif //SYS_TIME_H
+#endif //SYS_TIME_ADAPTER_H

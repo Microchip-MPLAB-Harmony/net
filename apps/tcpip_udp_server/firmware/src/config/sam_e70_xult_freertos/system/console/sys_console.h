@@ -104,7 +104,68 @@
     #define SYS_CONSOLE_PRINT(fmt, ...)
 #endif
 
+// *****************************************************************************
+/* System Console Event
+
+  Summary:
+    Identifies the system console event for which the callback is being registered.
+
+  Description:
+    This enum is used to identify if the callback being registered is to be called
+    on a read or on a write complete event.
+*/
+typedef enum
+{
+    // System console write complete event
+    SYS_CONSOLE_EVENT_WRITE_COMPLETE,
+
+    // System console read complete event
+    SYS_CONSOLE_EVENT_READ_COMPLETE,
+
+} SYS_CONSOLE_EVENT;
+
+// *****************************************************************************
+/* Function:
+    void ( * SYS_CONSOLE_CALLBACK ) ( void* pBuffer )
+
+   Summary:
+    Pointer to a console system service callback function.
+
+   Description:
+    This data type defines a pointer to a console service callback function, thus
+    defining the function signature.
+
+   Precondition:
+    The console service must have been initialized using the SYS_CONSOLE_Initialize
+    function before attempting to register a SYS Console callback function.
+
+   Parameters:
+    pBuffer    - Pointer to the processed read/write buffer.
+                 It can be used identify the buffer that is processed by the console
+                 system service and free the buffer memory if it was allocated 
+                 dynamically.
+
+   Returns:
+    None.
+
+  Example:
+    <code>
+    void MyCallback ( void* pBuffer )
+    {
+        if (pBuffer != NULL)
+        {
+            //Free the memory pointed by pBuffer if it was allocated dynamically.
+        }
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+
 typedef void (*SYS_CONSOLE_CALLBACK) (void* pBuffer);
+
+// DOM-IGNORE-BEGIN
 
 typedef enum
 {
@@ -118,16 +179,6 @@ typedef enum
 
 } SYS_CONSOLE_STATUS;
 
-
-typedef enum
-{
-    SYS_CONSOLE_EVENT_WRITE_COMPLETE,
-
-    SYS_CONSOLE_EVENT_READ_COMPLETE,
-
-} SYS_CONSOLE_EVENT;
-
-// DOM-IGNORE-BEGIN
 // *****************************************************************************
 /*  Console device enumeration
 
