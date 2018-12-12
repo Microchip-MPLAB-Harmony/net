@@ -3,12 +3,12 @@ def instantiateComponent(wolfsslComponent):
 	wolfssl.setLabel("Use wolfSSL?")
 	wolfssl.setDescription("Enables wolfSSL")
 
-	wolfssl.setVisible(True)
-	wolfssl.setDefaultValue(False)
+	wolfssl.setVisible(False)
+	wolfssl.setDefaultValue(True)
 	
 	wolfsslIsWolfsslEnabled = wolfsslComponent.createBooleanSymbol("wolfsslIsWolfsslEnabled",None)
 	wolfsslIsWolfsslEnabled.setVisible(False)
-	Database.setSymbolValue("lib_wolfssl","wolfsslIsWolfsslEnabled", False, 1)
+	Database.setSymbolValue("lib_wolfssl","wolfsslIsWolfsslEnabled", True, 1)
 	
 	maskFamily = wolfsslComponent.createStringSymbol("maskFamily", None)
 	maskFamily.setVisible(False)
@@ -22,12 +22,12 @@ def instantiateComponent(wolfsslComponent):
  	wolfsslMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
 	wolfsslMenu.setVisible(False)
 	
-	wolfsslMULTITHREAD = wolfsslComponent.createBooleanSymbol("wolfsslMULTITHREAD", wolfsslMenu)
+	wolfsslMULTITHREAD = wolfsslComponent.createBooleanSymbol("wolfsslMULTITHREAD", None)
 	wolfsslMULTITHREAD.setLabel("Multi-threaded support")
 	wolfsslMULTITHREAD.setDescription("Enables multi-threaded support")
 	wolfsslMULTITHREAD.setDefaultValue(False)
 
-	wolfsslFASTMATH = wolfsslComponent.createBooleanSymbol("wolfsslFASTMATH", wolfsslMenu)
+	wolfsslFASTMATH = wolfsslComponent.createBooleanSymbol("wolfsslFASTMATH", None)
 	wolfsslFASTMATH.setLabel("Use Fast Math")
 	wolfsslFASTMATH.setDescription("Enables Fast Math")
 	wolfsslFASTMATH.setDefaultValue(True)
@@ -35,7 +35,7 @@ def instantiateComponent(wolfsslComponent):
 	wolfsslProtocolMenu = wolfsslComponent.createMenuSymbol("wolfssl_protocol_menu", None)
 	wolfsslProtocolMenu.setLabel("Protocol and Key Exchange")
  	wolfsslProtocolMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
-	wolfsslProtocolMenu.setVisible(False)
+	wolfsslProtocolMenu.setVisible(True)
 
 	wolfsslTLS = wolfsslComponent.createBooleanSymbol("wolfsslTLS", wolfsslProtocolMenu)
 	wolfsslTLS.setLabel("TLS")
@@ -105,7 +105,7 @@ def instantiateComponent(wolfsslComponent):
 	wolfsslCiphersMenu = wolfsslComponent.createMenuSymbol("wolfssl_ciphers_menu", None)
 	wolfsslCiphersMenu.setLabel("Ciphers")
  	wolfsslCiphersMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
-	wolfsslCiphersMenu.setVisible(False)
+	wolfsslCiphersMenu.setVisible(True)
 
 	wolfsslDES3 = wolfsslComponent.createBooleanSymbol("wolfsslDES3", wolfsslCiphersMenu)
 	wolfsslDES3.setLabel("DES3")
@@ -185,7 +185,7 @@ def instantiateComponent(wolfsslComponent):
 	wolfsslHashesMenu = wolfsslComponent.createMenuSymbol("wolfssl_hashes_menu", None)
 	wolfsslHashesMenu.setLabel("Hashes")
  	wolfsslHashesMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
-	wolfsslHashesMenu.setVisible(False)
+	wolfsslHashesMenu.setVisible(True)
 
 	wolfsslRNG = wolfsslComponent.createBooleanSymbol("wolfsslRNG", wolfsslHashesMenu)
 	wolfsslRNG.setLabel("RNG")
@@ -235,7 +235,7 @@ def instantiateComponent(wolfsslComponent):
 	wolfsslMemoryMenu = wolfsslComponent.createMenuSymbol("wolfssl_memory_menu", None)
 	wolfsslMemoryMenu.setLabel("Memory Optimization")
  	wolfsslMemoryMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
-	wolfsslMemoryMenu.setVisible(False)
+	wolfsslMemoryMenu.setVisible(True)
 	
 	wolfsslCache = wolfsslComponent.createBooleanSymbol("wolfsslCache", wolfsslMemoryMenu)
 	wolfsslCache.setLabel("Use Session Cache?")
@@ -250,7 +250,7 @@ def instantiateComponent(wolfsslComponent):
 	wolfsslCsoMenu = wolfsslComponent.createMenuSymbol("wolfssl_cso_menu", None)
 	wolfsslCsoMenu.setLabel("Code Size Optimizations")
  	wolfsslCsoMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
-	wolfsslCsoMenu.setVisible(False)
+	wolfsslCsoMenu.setVisible(True)
 
 	wolfsslErrStr = wolfsslComponent.createBooleanSymbol("wolfsslErrStr", wolfsslCsoMenu)
 	wolfsslErrStr.setLabel("Use Error Strings?")
@@ -285,7 +285,7 @@ def instantiateComponent(wolfsslComponent):
 	wolfsslMqttMenu = wolfsslComponent.createMenuSymbol("wolfssl_mqtt_menu", None)
 	wolfsslMqttMenu.setLabel("wolfMQTT")
  	wolfsslMqttMenu.setDependencies(onWolfsslChangedDoLabel, ["wolfssl"])
-	wolfsslMqttMenu.setVisible(False)
+	wolfsslMqttMenu.setVisible(True)
 
 	wolfsslMQTT = wolfsslComponent.createBooleanSymbol("wolfsslMQTT", wolfsslMqttMenu)
 	wolfsslMQTT.setLabel("Use wolfMQTT?")
@@ -321,7 +321,7 @@ def instantiateComponent(wolfsslComponent):
 	
 	#add include directory 
 	wolfsslSrcPath = wolfsslComponent.createSettingSymbol("wolfsslSrcPath", None)
-	wolfsslSrcPath.setValue("../src/config/" + Variables.get("__CONFIGURATION_NAME") + "/wolfssl")
+	wolfsslSrcPath.setValue("../src/third_party/wolfssl")
 	wolfsslSrcPath.setCategory("C32")
 	wolfsslSrcPath.setKey("extra-include-directories")
 	wolfsslSrcPath.setAppend(True, ";")
@@ -399,19 +399,19 @@ def instantiateComponent(wolfsslComponent):
 	if wolfssl.getValue() == True:
 	# add all common files as enabled 
 		for filename in fileList_common:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/src/", "wolfssl/src/", True, onWolfsslChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/src/", "../../third_party/wolfssl/src/", True, onWolfsslChangedAdd)
 		for filename in fileList_common_wolfcrypt:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/wolfcrypt/src/", "wolfssl/wolfcrypt/src/", True, onWolfsslChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/wolfcrypt/src/", "../../third_party/wolfssl/wolfcrypt/src/", True, onWolfsslChangedAdd)
 		for filename in fileList_wolfssl_headers:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/wolfssl/", "wolfssl/wolfssl/", True, onWolfsslChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/wolfssl/", "../../third_party/wolfssl/wolfssl/", True, onWolfsslChangedAdd)
 		for filename in fileList_wolfcrypt_headers:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/wolfssl/wolfcrypt/", "wolfssl/wolfssl/wolfcrypt/", True, onWolfsslChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/wolfssl/wolfcrypt/", "../../third_party/wolfssl/wolfssl/wolfcrypt/", True, onWolfsslChangedAdd)
 		for filename in fileList_openssl:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/wolfssl/openssl/", "wolfssl/wolfssl/openssl/", True, onRSAKeyGenChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/wolfssl/openssl/", "../../third_party/wolfssl/wolfssl/openssl/", True, onRSAKeyGenChangedAdd)
 		for filename in fileList_ctaocrypt_src:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/ctaocrypt/src/", "wolfssl/ctaocrypt/src/", True, onWolfsslChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/ctaocrypt/src/", "../../third_party/wolfssl/ctaocrypt/src/", True, onWolfsslChangedAdd)
 		for filename in fileList_cyassl_ctaocrypt:
-			addFileName(filename, wolfsslComponent, "../third_party/tcpip/wolfssl/cyassl/ctaocrypt/", "wolfssl/cyassl/ctaocrypt/", True, onWolfsslChangedAdd)
+			addFileName(filename, wolfsslComponent, "../wolfssl/cyassl/ctaocrypt/", "../../third_party/wolfssl/cyassl/ctaocrypt/", True, onWolfsslChangedAdd)
 	
 def destroyComponent(wolfsslComponent):
 	args = {"wolfsslEnabled":False}
@@ -461,9 +461,11 @@ def onRSAKeyGenChangedSub(filesymbol, isRSAKeyGen):
 		filesymbol.setEnabled(True)
 
 # all files go into or under src/
+# The relative root path for srcPath is the dir containing the app's module.xml
+# The relative root path for destPath is firmware/src/config/$ConfigName/
 def addFileName(fileName, component, srcPath, destPath, enabled, callback):
 	filename = component.createFileSymbol(None, None)
-	filename.setProjectPath("config/" + Variables.get("__CONFIGURATION_NAME") + "/wolfssl")
+	filename.setProjectPath("wolfSSL")
 	filename.setSourcePath(srcPath + fileName)
 	filename.setOutputName(fileName)
 
