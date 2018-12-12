@@ -66,24 +66,52 @@ def instantiateComponent(netPresComponent, index):
     # depends on !NET_PRES_GENERATE_ENC_STUBS_IDX${INSTANCE}
     # default y
 	
-# config NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INSTANCE}
-    # bool "Add system console logging for wolf ssl?"
-	# depends on NET_PRES_USE_WOLF_SSL_IDX${INSTANCE}
-	# depends on WOLFSSL_DEBUG_SUPPORT
-	# depends on USE_SYS_CONSOLE
-	# default n
+	# netPresUseWolfSSL = netPresComponent.createBooleanSymbol("NET_PRES_USE_WOLF_SSL_IDX" + str(index),netPresInstnEncryptEnable)
+	# netPresUseWolfSSL.setLabel("Use wolfSSL as Encryption Provider?")
+	# netPresUseWolfSSL.setVisible((Database.getSymbolValue("lib_wolfssl", "wolfssl") == True) and (netPresInstnEncryptEnable.getValue() == True))
+	# # netPresUseWolfSSL.setVisible(True)
+	# netPresUseWolfSSL.setDefaultValue((Database.getSymbolValue("lib_wolfssl", "wolfssl") == True) and (netPresInstnEncryptEnable.getValue() == True))
+	# netPresUseWolfSSL.setDependencies(netPresInstnUseWolfSSLMenu, [netPresInstnEncryptEnable.getID(),"lib_wolfssl.wolfssl"])	
+
+	netPresEncryptionProvider = netPresComponent.createKeyValueSetSymbol("NET_PRES_ENC_PROVIDE_IDX"+str(index),netPresInstnEncryptEnable)
+	netPresEncryptionProvider.setVisible(False)
+	netPresEncryptionProvider.setLabel("Encryption Provider")
+	netPresEncryptionProvider.addKey("WolfSSL", "0", "Enable WolfSSL")
+	netPresEncryptionProvider.addKey("Generate Stub", "1", "Generate Encryption Stub")
+	netPresEncryptionProvider.setDisplayMode("Key")
+	netPresEncryptionProvider.setOutputMode("Key")
+	netPresEncryptionProvider.setDefaultValue(1)
+	netPresEncryptionProvider.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
 	
-# config NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS_IDX${INSTANCE}
-	# int "Number of log message buffers"
-    # depends on NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX${INSTANCE}
-	# default 80
+	netPresUseWolfSSL = netPresComponent.createBooleanSymbol("NET_PRES_USE_WOLF_SSL_IDX" + str(index),netPresInstnEncryptEnable)
+	netPresUseWolfSSL.setLabel("Use wolfSSL as Encryption Provider?")
+	netPresUseWolfSSL.setVisible(False)
+	netPresUseWolfSSL.setDefaultValue((netPresEncryptionProvider.getSelectedKey() == "WolfSSL"))
+	netPresUseWolfSSL.setDependencies(netPresInstnEncProviderMenu, [netPresEncryptionProvider.getID()])		
 	
 	# Generate Encryption Provider Stub Code?
 	netPresInstnGenEncryptStub = netPresComponent.createBooleanSymbol("NET_PRES_GENERATE_ENC_STUBS_IDX" + str(index),netPresInstnEncryptEnable)
 	netPresInstnGenEncryptStub.setLabel("Generate Encryption Provider Stub Code?")
 	netPresInstnGenEncryptStub.setVisible(False)
-	netPresInstnGenEncryptStub.setDefaultValue(False)
-	netPresInstnGenEncryptStub.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
+	netPresInstnGenEncryptStub.setDefaultValue((netPresEncryptionProvider.getSelectedKey() == "Generate Stub"))
+	
+	netPresEnableWolfSSL = netPresComponent.createBooleanSymbol("NET_PRES_ENABLE_WOLF_SSL_IDX",netPresInstnEncryptEnable)
+	netPresEnableWolfSSL.setLabel("Enable Wolfssl")
+	netPresEnableWolfSSL.setVisible(False)
+	netPresEnableWolfSSL.setDefaultValue(False)
+	netPresEnableWolfSSL.setDependencies(netPresWolfSSLEnable, [netPresUseWolfSSL.getID()])	
+
+	netPresUseWolfSSLDebug = netPresComponent.createBooleanSymbol("NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX" + str(index),netPresEncryptionProvider)
+	netPresUseWolfSSLDebug.setLabel("Add system console logging for wolf ssl?")
+	netPresUseWolfSSLDebug.setVisible(False)
+	netPresUseWolfSSLDebug.setDefaultValue(False)
+	netPresUseWolfSSLDebug.setDependencies(netPresWolfSSLDebugEnable, [netPresUseWolfSSL.getID(), "lib_wolfssl.wolfsslDebug"])	
+
+	netPresWolfSSLLogBuffNum = netPresComponent.createIntegerSymbol("NET_PRES_USE_WOLF_SSL_DEBUG_LOG_BUFFERS_IDX" + str(index),netPresUseWolfSSLDebug)
+	netPresWolfSSLLogBuffNum.setVisible(False)
+	netPresWolfSSLLogBuffNum.setLabel("Number of log message buffers")
+	netPresWolfSSLLogBuffNum.setDefaultValue(80)
+	netPresWolfSSLLogBuffNum.setDependencies(netPresInstnEncryptMenuVisible, [netPresUseWolfSSLDebug.getID()])	
 	
 	# Support Stream Encryption?
 	netPresInstnStreamEncrypt = netPresComponent.createBooleanSymbol("NET_PRES_SUPPORT_STREAM_ENC_IDX" + str(index),netPresInstnEncryptEnable)
@@ -112,15 +140,62 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnClientEncrypt.setVisible(False)
 	netPresInstnClientEncrypt.setDefaultValue(True)
 	netPresInstnClientEncrypt.setDependencies(netPresInstnEncryptMenuVisible, [netPresInstnEncryptEnable.getID()])
-    
-	
-					
 	
 def netPresInstnEncryptMenuVisible(symbol, event):
 	if (event["value"] == True):
 		symbol.setVisible(True)
 	else:
-		symbol.setVisible(False)	
+		symbol.setVisible(False)
+		
+def netPresInstnEncProviderMenu(symbol, event):
+	netPresIndex = int(symbol.getID().strip("NET_PRES_USE_WOLF_SSL_IDX"))	
+	data = symbol.getComponent()	
+	if (event["value"] == 0):
+		res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), True, 2)
+		res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), False, 2)
+		
+	else:
+		res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), False, 2)
+		res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), True, 2)
+
+def netPresWolfSSLEnable (symbol, event):
+	if (event["value"] == True):
+		res = Database.activateComponents(["lib_wolfssl"])
+		Database.setSymbolValue("lib_wolfssl","wolfssl", True, 2)
+	else:
+		Database.setSymbolValue("lib_wolfssl","wolfssl", False, 2)
+		res = Database.deactivateComponents(["lib_wolfssl"])
+	
+def netPresWolfSSLDebugEnable(symbol, event):
+	netPresIndex = int(symbol.getID().strip("NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX"))	
+	data = symbol.getComponent()
+	netPresWolfSSLEnabled = data.getSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex))
+	wolfSSLDebugEnabled = Database.getSymbolValue("lib_wolfssl", "wolfsslDebug")
+	
+	if (netPresWolfSSLEnabled == True) and (wolfSSLDebugEnabled == True):
+		symbol.setVisible(True)
+	else:
+		symbol.setVisible(False)
+
+def netPresInstnUseWolfSSLMenu(symbol, event):
+
+	netPresIndex = int(symbol.getID().strip("NET_PRES_USE_WOLF_SSL_IDX"))	
+	data = symbol.getComponent()
+	netPresEncryptionEnabled = data.getSymbolValue("NET_PRES_SUPPORT_ENCRYPTION"+str(netPresIndex))
+	wolfSSLEnabled = Database.getSymbolValue("lib_wolfssl", "wolfssl")
+	
+	print "wolfssl enabled"
+	print (wolfSSLEnabled)
+	
+	print "net pres encryption"
+	print (netPresEncryptionEnabled)
+	
+	if (netPresEncryptionEnabled == True) and (wolfSSLEnabled == True):
+		symbol.setValue(True, 2)
+		symbol.setVisible(True)
+	else:
+		symbol.setValue(False, 2)
+		symbol.setVisible(False)
 		
 def netPresInstnStreamEnable(symbol, event):	
 	netPresTCPEnabled = Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP")
