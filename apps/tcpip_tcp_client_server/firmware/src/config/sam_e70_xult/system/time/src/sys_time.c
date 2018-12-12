@@ -759,22 +759,22 @@ void SYS_TIME_CounterSet ( uint32_t count )
 
 uint32_t  SYS_TIME_CountToUS ( uint32_t count )
 {
-    return ((float)count/gSystemCounterObj.hwTimerFrequency)*1000000.0;
+    return (uint32_t)(((float)count/gSystemCounterObj.hwTimerFrequency)*1000000.0);
 }
 
 uint32_t  SYS_TIME_CountToMS ( uint32_t count )
 {
-    return ((float)count/gSystemCounterObj.hwTimerFrequency)*1000.0;
+    return (uint32_t)(((float)count/gSystemCounterObj.hwTimerFrequency)*1000.0);
 }
 
 uint32_t SYS_TIME_USToCount ( uint32_t us )
 {
-    return (us * ((float)gSystemCounterObj.hwTimerFrequency/1000000));
+    return (uint32_t)(us * ((float)gSystemCounterObj.hwTimerFrequency/1000000));
 }
 
 uint32_t SYS_TIME_MSToCount ( uint32_t ms )
 {
-    return (ms * ((float)gSystemCounterObj.hwTimerFrequency/1000));
+    return (uint32_t)(ms * ((float)gSystemCounterObj.hwTimerFrequency/1000));
 }
 
 

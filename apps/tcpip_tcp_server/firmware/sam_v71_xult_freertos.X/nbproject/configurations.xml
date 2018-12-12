@@ -201,7 +201,6 @@
           <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_debug.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
@@ -231,7 +230,7 @@
       </logicalFolder>
       <logicalFolder name="f5" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
-          <logicalFolder name="f1" displayName="Include" projectFiles="true">
+          <logicalFolder name="f1" displayName="include" projectFiles="true">
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/croutine.h</itemPath>
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/event_groups.h</itemPath>
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/FreeRTOS.h</itemPath>
@@ -266,50 +265,51 @@
         <itemPath>../src/config/sam_v71_xult_freertos/osal/osal_freertos.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
-        <logicalFolder name="f1" displayName="ATSAME70Q21B_DFP" projectFiles="true">
+        <logicalFolder name="f1" displayName="ATSAMV71Q21B_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/acc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/aes.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/afec.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/chipid.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/dacc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/efc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/gmac.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/gpbr.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/hsmci.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/i2sc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/icm.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/isi.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/matrix.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/mcan.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/pio.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/pmc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/pwm.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/qspi.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rstc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rswdt.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rtc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/rtt.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/sdramc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/smc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/spi.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/ssc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/supc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/tc.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/trng.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/twihs.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/uart.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/usart.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/usbhs.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/utmi.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/wdt.h</itemPath>
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/component/xdmac.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/acc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/aes.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/afec.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/chipid.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/dacc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/efc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/gmac.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/gpbr.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/hsmci.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/i2sc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/icm.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/isi.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/matrix.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/mcan.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/mlb.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/pio.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/pmc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/pwm.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/qspi.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rstc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rswdt.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rtc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/rtt.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/sdramc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/smc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/spi.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/ssc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/supc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/tc.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/trng.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/twihs.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/uart.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/usart.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/usbhs.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/utmi.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/wdt.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/xdmac.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pio" projectFiles="true">
-            <itemPath>../src/packs/ATSAME70Q21B_DFP/pio/same70q21b.h</itemPath>
+            <itemPath>../src/packs/ATSAMV71Q21B_DFP/pio/samv71q21b.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/packs/ATSAME70Q21B_DFP/device.h</itemPath>
-          <itemPath>../src/packs/ATSAME70Q21B_DFP/atsame70q21b.h</itemPath>
+          <itemPath>../src/packs/ATSAMV71Q21B_DFP/device.h</itemPath>
+          <itemPath>../src/packs/ATSAMV71Q21B_DFP/atsamv71q21b.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
@@ -426,7 +426,6 @@
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_debug.c</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
@@ -491,16 +490,16 @@
     <conf name="sam_v71_xult_freertos" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>ATSAME70Q21B</targetDevice>
+        <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>Simulator</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.129"/>
+        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.174"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -560,7 +559,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_v71_xult_freertos/library;../src/config/sam_v71_xult_freertos/library/tcpip/src;../src/config/sam_v71_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_v71_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include"/>
+                  value="../src/config/sam_v71_xult_freertos/library;../src/config/sam_v71_xult_freertos/library/tcpip/src;../src/config/sam_v71_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_v71_xult_freertos;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include;../src/packs/ATSAMV71Q21B_DFP"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -681,6 +680,31 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2.000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="400000-5fffff"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+      </EdbgTool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
@@ -871,6 +895,8 @@
                   value="report"/>
         <property key="warningmessagebreakoptions.W0034_CORE_UNALIGNED_MEMORY_ACCESS"
                   value="report"/>
+        <property key="warningmessagebreakoptions.W0035_CORE_UNIMPLEMENTED_RAMACCESS_NOTRAP"
+                  value="report"/>
         <property key="warningmessagebreakoptions.W0040_FPU_DIFF_CP10_CP11"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0041_FPU_ACCESS_DENIED"
@@ -919,6 +945,10 @@
         <property key="warningmessagebreakoptions.W0116_SIM_STACK_OVERFLOW"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0117_SIM_STACK_UNDERFLOW"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0118_SIM_INVALID_FIELD_VALUE"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W0119_SIM_SAMPLING_RATE_VIOLATION"
                   value="report"/>
         <property key="warningmessagebreakoptions.W0201_ADC_NO_STIMULUS_FILE"
                   value="report"/>
@@ -1027,6 +1057,8 @@
         <property key="warningmessagebreakoptions.W10103_UNSUPPORTED_RECEIVER_FILTER"
                   value="report"/>
         <property key="warningmessagebreakoptions.W10301_NO_PORT_PINS_FOUND"
+                  value="report"/>
+        <property key="warningmessagebreakoptions.W10500_UNSUPPORTED_SOURCE"
                   value="report"/>
         <property key="warningmessagebreakoptions.W1201_DATAFLASH_MEM_OUTSIDE_RANGE"
                   value="report"/>

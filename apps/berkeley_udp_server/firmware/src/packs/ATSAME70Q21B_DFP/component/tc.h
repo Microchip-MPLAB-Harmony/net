@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-09-19T14:04:45Z */
+/* file generated from device description version 2018-11-06T08:17:04Z */
 #ifndef _SAME70_TC_COMPONENT_H_
 #define _SAME70_TC_COMPONENT_H_
 
@@ -527,10 +527,16 @@
 #define TC_BMR_IDXPHB_Pos                     _U_(17)                                              /**< (TC_BMR) Index Pin is PHB Pin Position */
 #define TC_BMR_IDXPHB_Msk                     (_U_(0x1) << TC_BMR_IDXPHB_Pos)                      /**< (TC_BMR) Index Pin is PHB Pin Mask */
 #define TC_BMR_IDXPHB(value)                  (TC_BMR_IDXPHB_Msk & ((value) << TC_BMR_IDXPHB_Pos))
+#define TC_BMR_AUTOC_Pos                      _U_(18)                                              /**< (TC_BMR) AutoCorrection of missing pulses Position */
+#define TC_BMR_AUTOC_Msk                      (_U_(0x1) << TC_BMR_AUTOC_Pos)                       /**< (TC_BMR) AutoCorrection of missing pulses Mask */
+#define TC_BMR_AUTOC(value)                   (TC_BMR_AUTOC_Msk & ((value) << TC_BMR_AUTOC_Pos))  
 #define TC_BMR_MAXFILT_Pos                    _U_(20)                                              /**< (TC_BMR) Maximum Filter Position */
 #define TC_BMR_MAXFILT_Msk                    (_U_(0x3F) << TC_BMR_MAXFILT_Pos)                    /**< (TC_BMR) Maximum Filter Mask */
 #define TC_BMR_MAXFILT(value)                 (TC_BMR_MAXFILT_Msk & ((value) << TC_BMR_MAXFILT_Pos))
-#define TC_BMR_Msk                            _U_(0x03F3FF3F)                                      /**< (TC_BMR) Register Mask  */
+#define TC_BMR_MAXCMP_Pos                     _U_(26)                                              /**< (TC_BMR) Maximum Consecutive Missing Pulses Position */
+#define TC_BMR_MAXCMP_Msk                     (_U_(0xF) << TC_BMR_MAXCMP_Pos)                      /**< (TC_BMR) Maximum Consecutive Missing Pulses Mask */
+#define TC_BMR_MAXCMP(value)                  (TC_BMR_MAXCMP_Msk & ((value) << TC_BMR_MAXCMP_Pos))
+#define TC_BMR_Msk                            _U_(0x3FF7FF3F)                                      /**< (TC_BMR) Register Mask  */
 
 
 /* -------- TC_QIER : (TC Offset: 0xC8) ( /W 32) QDEC Interrupt Enable Register -------- */
@@ -543,7 +549,10 @@
 #define TC_QIER_QERR_Pos                      _U_(2)                                               /**< (TC_QIER) Quadrature Error Position */
 #define TC_QIER_QERR_Msk                      (_U_(0x1) << TC_QIER_QERR_Pos)                       /**< (TC_QIER) Quadrature Error Mask */
 #define TC_QIER_QERR(value)                   (TC_QIER_QERR_Msk & ((value) << TC_QIER_QERR_Pos))  
-#define TC_QIER_Msk                           _U_(0x00000007)                                      /**< (TC_QIER) Register Mask  */
+#define TC_QIER_MPE_Pos                       _U_(3)                                               /**< (TC_QIER) Consecutive Missing Pulse Error Position */
+#define TC_QIER_MPE_Msk                       (_U_(0x1) << TC_QIER_MPE_Pos)                        /**< (TC_QIER) Consecutive Missing Pulse Error Mask */
+#define TC_QIER_MPE(value)                    (TC_QIER_MPE_Msk & ((value) << TC_QIER_MPE_Pos))    
+#define TC_QIER_Msk                           _U_(0x0000000F)                                      /**< (TC_QIER) Register Mask  */
 
 
 /* -------- TC_QIDR : (TC Offset: 0xCC) ( /W 32) QDEC Interrupt Disable Register -------- */
@@ -556,7 +565,10 @@
 #define TC_QIDR_QERR_Pos                      _U_(2)                                               /**< (TC_QIDR) Quadrature Error Position */
 #define TC_QIDR_QERR_Msk                      (_U_(0x1) << TC_QIDR_QERR_Pos)                       /**< (TC_QIDR) Quadrature Error Mask */
 #define TC_QIDR_QERR(value)                   (TC_QIDR_QERR_Msk & ((value) << TC_QIDR_QERR_Pos))  
-#define TC_QIDR_Msk                           _U_(0x00000007)                                      /**< (TC_QIDR) Register Mask  */
+#define TC_QIDR_MPE_Pos                       _U_(3)                                               /**< (TC_QIDR) Consecutive Missing Pulse Error Position */
+#define TC_QIDR_MPE_Msk                       (_U_(0x1) << TC_QIDR_MPE_Pos)                        /**< (TC_QIDR) Consecutive Missing Pulse Error Mask */
+#define TC_QIDR_MPE(value)                    (TC_QIDR_MPE_Msk & ((value) << TC_QIDR_MPE_Pos))    
+#define TC_QIDR_Msk                           _U_(0x0000000F)                                      /**< (TC_QIDR) Register Mask  */
 
 
 /* -------- TC_QIMR : (TC Offset: 0xD0) ( R/ 32) QDEC Interrupt Mask Register -------- */
@@ -569,7 +581,10 @@
 #define TC_QIMR_QERR_Pos                      _U_(2)                                               /**< (TC_QIMR) Quadrature Error Position */
 #define TC_QIMR_QERR_Msk                      (_U_(0x1) << TC_QIMR_QERR_Pos)                       /**< (TC_QIMR) Quadrature Error Mask */
 #define TC_QIMR_QERR(value)                   (TC_QIMR_QERR_Msk & ((value) << TC_QIMR_QERR_Pos))  
-#define TC_QIMR_Msk                           _U_(0x00000007)                                      /**< (TC_QIMR) Register Mask  */
+#define TC_QIMR_MPE_Pos                       _U_(3)                                               /**< (TC_QIMR) Consecutive Missing Pulse Error Position */
+#define TC_QIMR_MPE_Msk                       (_U_(0x1) << TC_QIMR_MPE_Pos)                        /**< (TC_QIMR) Consecutive Missing Pulse Error Mask */
+#define TC_QIMR_MPE(value)                    (TC_QIMR_MPE_Msk & ((value) << TC_QIMR_MPE_Pos))    
+#define TC_QIMR_Msk                           _U_(0x0000000F)                                      /**< (TC_QIMR) Register Mask  */
 
 
 /* -------- TC_QISR : (TC Offset: 0xD4) ( R/ 32) QDEC Interrupt Status Register -------- */
@@ -582,10 +597,13 @@
 #define TC_QISR_QERR_Pos                      _U_(2)                                               /**< (TC_QISR) Quadrature Error Position */
 #define TC_QISR_QERR_Msk                      (_U_(0x1) << TC_QISR_QERR_Pos)                       /**< (TC_QISR) Quadrature Error Mask */
 #define TC_QISR_QERR(value)                   (TC_QISR_QERR_Msk & ((value) << TC_QISR_QERR_Pos))  
+#define TC_QISR_MPE_Pos                       _U_(3)                                               /**< (TC_QISR) Consecutive Missing Pulse Error Position */
+#define TC_QISR_MPE_Msk                       (_U_(0x1) << TC_QISR_MPE_Pos)                        /**< (TC_QISR) Consecutive Missing Pulse Error Mask */
+#define TC_QISR_MPE(value)                    (TC_QISR_MPE_Msk & ((value) << TC_QISR_MPE_Pos))    
 #define TC_QISR_DIR_Pos                       _U_(8)                                               /**< (TC_QISR) Direction Position */
 #define TC_QISR_DIR_Msk                       (_U_(0x1) << TC_QISR_DIR_Pos)                        /**< (TC_QISR) Direction Mask */
 #define TC_QISR_DIR(value)                    (TC_QISR_DIR_Msk & ((value) << TC_QISR_DIR_Pos))    
-#define TC_QISR_Msk                           _U_(0x00000107)                                      /**< (TC_QISR) Register Mask  */
+#define TC_QISR_Msk                           _U_(0x0000010F)                                      /**< (TC_QISR) Register Mask  */
 
 
 /* -------- TC_FMR : (TC Offset: 0xD8) (R/W 32) Fault Mode Register -------- */

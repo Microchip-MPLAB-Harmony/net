@@ -94,4 +94,4 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_RANDOM_PseudoGet( 
 #endif
 // DOM-IGNORE-END
 
-#endif //SYS_TIME_H
+#endif //SYS_RANDOM_ADPATER_H
