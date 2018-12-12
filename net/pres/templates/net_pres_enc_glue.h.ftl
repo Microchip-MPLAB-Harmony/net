@@ -46,6 +46,7 @@ extern "C" {
 #endif
 <#macro netPresEncGlueHeader
     INST_NUMBER>
+	
 	<#assign netPresSuppEnc = "NET_PRES_SUPPORT_ENCRYPTION${INST_NUMBER}">
     <#if .vars[netPresSuppEnc]?has_content>
         <#if .vars["NET_PRES_SUPPORT_STREAM_ENC_IDX${INST_NUMBER}"]>
