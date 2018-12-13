@@ -489,10 +489,10 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inffast.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/random_same70.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/aes_same70.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha_same70.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha256_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/random_same70.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -537,7 +537,10 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv6.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/telnet.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
@@ -647,7 +650,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.10</languageToolchainVersion>
+        <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

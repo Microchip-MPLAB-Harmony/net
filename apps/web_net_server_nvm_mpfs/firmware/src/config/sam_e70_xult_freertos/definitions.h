@@ -48,9 +48,17 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "crypto/crypto.h"
+#include "driver/memory/drv_memory.h"
+#include "peripheral/efc/plib_efc.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "system/time/sys_time.h"
 #include "bsp/bsp.h"
+#include "driver/memory/drv_memory_efc.h"
+#include "net/pres/net_pres.h"
+#include "net/pres/net_pres_encryptionproviderapi.h"
+#include "net/pres/net_pres_transportapi.h"
+#include "net/pres/net_pres_socketapi.h"
 #include "peripheral/usart/plib_usart1.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
@@ -66,6 +74,9 @@
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
+#include "system/fs/sys_fs.h"
+#include "system/fs/sys_fs_media_manager.h"
+#include "system/fs/mpfs/mpfs.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
 #include "system/console/sys_command.h"
@@ -194,6 +205,9 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
+    SYS_MODULE_OBJ  drvMemory0;
+    SYS_MODULE_OBJ  netPres;
+
     SYS_MODULE_OBJ  tcpip;
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysConsole0;

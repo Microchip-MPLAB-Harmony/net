@@ -3,7 +3,7 @@
     <type>com.microchip.mplab.nbide.embedded.makeproject</type>
     <configuration>
         <data xmlns="http://www.netbeans.org/ns/make-project/1">
-            <name>tcpip_tcp_server_freertos</name>
+            <name>web_net_server_nvm_mpfs</name>
             <creation-uuid>e54023e9-3948-44ef-bf6f-29d8b223e555</creation-uuid>
             <make-project-type>0</make-project-type>
             <c-extensions>c</c-extensions>
@@ -11,81 +11,6 @@
             <header-extensions>h</header-extensions>
             <asminc-extensions/>
             <sourceEncoding>ISO-8859-1</sourceEncoding>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
-            <formatting>
-                <project-formatting-style>false</project-formatting-style>
-            </formatting>
             <formatting>
                 <project-formatting-style>false</project-formatting-style>
             </formatting>
