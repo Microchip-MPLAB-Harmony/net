@@ -56,6 +56,7 @@
 */
 #include <stddef.h>
 #include <stdbool.h>
+#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -80,7 +81,9 @@ typedef enum
     TC_TIMER_NONE = 0U,
     TC_TIMER_COMPARE_MATCH = TC_SR_CPAS_Msk,
     TC_TIMER_PERIOD_MATCH = TC_SR_CPCS_Msk,
-    TC_TIMER_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPCS_Msk
+    TC_TIMER_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPCS_Msk,
+    /* Force the compiler to reserve 32-bit memory for enum */
+    TC_TIMER_STATUS_INVALID = 0xFFFFFFFF
 }TC_TIMER_STATUS;
 
 typedef enum
@@ -89,7 +92,9 @@ typedef enum
     TC_COMPARE_A = TC_SR_CPAS_Msk,
     TC_COMPARE_B = TC_SR_CPBS_Msk,
     TC_COMPARE_C = TC_SR_CPCS_Msk,
-    TC_COMPARE_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPBS_Msk | TC_SR_CPCS_Msk
+    TC_COMPARE_STATUS_MSK = TC_SR_CPAS_Msk | TC_SR_CPBS_Msk | TC_SR_CPCS_Msk, 
+    /* Force the compiler to reserve 32-bit memory for enum */
+    TC_COMPARE_STATUS_INVALID = 0xFFFFFFFF
 }TC_COMPARE_STATUS;
 
 typedef enum
@@ -99,7 +104,9 @@ typedef enum
     TC_CAPTURE_LOAD_OVERRUN = TC_SR_LOVRS_Msk,
     TC_CAPTURE_A_LOAD = TC_SR_LDRAS_Msk,
     TC_CAPTURE_B_LOAD = TC_SR_LDRBS_Msk,
-    TC_CAPTURE_STATUS_MSK = TC_SR_COVFS_Msk | TC_SR_LOVRS_Msk | TC_SR_LDRAS_Msk | TC_SR_LDRBS_Msk
+    TC_CAPTURE_STATUS_MSK = TC_SR_COVFS_Msk | TC_SR_LOVRS_Msk | TC_SR_LDRAS_Msk | TC_SR_LDRBS_Msk,
+    /* Force the compiler to reserve 32-bit memory for enum */
+    TC_CAPTURE_STATUS_INVALID = 0xFFFFFFFF
 }TC_CAPTURE_STATUS;
 
 typedef enum
@@ -108,7 +115,9 @@ typedef enum
     TC_QUADRATURE_INDEX = TC_QISR_IDX_Msk,
     TC_QUADRATURE_DIR_CHANGE = TC_QISR_DIRCHG_Msk,
     TC_QUADRATURE_ERROR = TC_QISR_QERR_Msk,
-    TC_QUADRATURE_STATUS_MSK = TC_QISR_IDX_Msk | TC_QISR_DIRCHG_Msk | TC_QISR_QERR_Msk
+    TC_QUADRATURE_STATUS_MSK = TC_QISR_IDX_Msk | TC_QISR_DIRCHG_Msk | TC_QISR_QERR_Msk,
+    /* Force the compiler to reserve 32-bit memory for enum */
+    TC_QUADRATURE_STATUS_INVALID = 0xFFFFFFFF
 }TC_QUADRATURE_STATUS;
 
 // *****************************************************************************

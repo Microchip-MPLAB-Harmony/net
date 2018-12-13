@@ -57,6 +57,20 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 extern "C" {
 #endif
 
+// *****************************************************************************
+/*
+  Enumeration:
+    NET_PRES_SKT_T
+
+  Summary:
+    NET_PRES socket type
+
+  Description:
+    Enumeration describing all the possible NET_PRES socket types
+
+  Remarks:
+    None
+*/    
 typedef enum {
 
     NET_PRES_SKT_CLIENT = 0x0001,
@@ -100,20 +114,79 @@ typedef enum {
 	                                          NET_PRES_SKT_SERVER)
 } NET_PRES_SKT_T;
 
+// *****************************************************************************
+/*
+  Enumeration:
+    NET_PRES_SKT_ADDR_T
+
+  Summary:
+    NET_PRES address type
+
+  Description:
+    Enumeration describing all the possible NET_PRES address types
+
+  Remarks:
+    None
+*/    
 typedef enum {
     NET_PRES_SKT_ADDR_UNKNOWN,
 } NET_PRES_SKT_ADDR_T;
 
+
+
+// *****************************************************************************
+/*
+  Enumeration:
+    NET_PRES_SKT_OPTION_TYPE
+
+  Summary:
+    NET_PRES option type
+
+  Description:
+    Enumeration describing all the possible NET_PRES option types
+
+  Remarks:
+    None
+*/    
 typedef enum {
     NET_PRES_SKT_OPT_UNKNOWN,
 } NET_PRES_SKT_OPTION_TYPE;
 
+
+// *****************************************************************************
+/*
+  Enumeration:
+    NET_PRES_ADDRESS
+
+  Summary:
+    NET_PRES address
+
+  Description:
+    Enumeration describing the NET_PRES address
+
+  Remarks:
+    None
+*/    
 typedef struct {
     uint8_t addr[16];
 } NET_PRES_ADDRESS;
 
 
 
+// *****************************************************************************
+/*
+  Enumeration:
+    NET_PRES_SKT_ERROR_T
+
+  Summary:
+    NET_PRES error type
+
+  Description:
+    Enumeration describing all the possible NET_PRES error types
+
+  Remarks:
+    None
+*/    
 typedef enum {
     NET_PRES_SKT_OK = 0,
     NET_PRES_SKT_OP_NOT_SUPPORTED = -1,  // Most likely the function is not 

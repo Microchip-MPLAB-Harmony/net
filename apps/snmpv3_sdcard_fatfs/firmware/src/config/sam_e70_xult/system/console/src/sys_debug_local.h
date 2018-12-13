@@ -53,6 +53,13 @@
 #include "driver/driver.h"
 #include "system/console/sys_debug.h"
 
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -110,10 +117,14 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
+#endif
+//DOM-IGNORE-END
 
 #endif //#ifndef SYS_DEBUG_LOCAL_H
 
 /*******************************************************************************
  End of File
 */
-

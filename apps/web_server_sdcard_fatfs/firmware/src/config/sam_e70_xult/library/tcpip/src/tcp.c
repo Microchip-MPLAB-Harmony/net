@@ -1367,7 +1367,7 @@ static bool _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
     bool critLock = false;
     bool freePkt = true;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler = 0;
-    const void* sigParam;
+    const void* sigParam = 0;
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
     while(pSkt != 0)
@@ -6265,7 +6265,7 @@ bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSi
 
     if(pSkt != 0)
     {  
-        if(pSkt->sigHandler == hSig)
+        if(pSkt->sigHandler == (TCPIP_TCP_SIGNAL_FUNCTION)hSig)
         {
             pSkt->sigHandler = 0;
             pSkt->sigMask = 0;

@@ -214,15 +214,15 @@ void APP_Tasks( void );
 
 
 /* This section is highly customizable based on application's specific needs. */
-#define APP_SWITCH_1StateGet()      SWITCH1_PA11_Get()
-#define APP_SWITCH_2StateGet()      SWITCH1_PA11_Get()
-#define APP_SWITCH_3StateGet()      SWITCH1_PA11_Get()
+#define APP_SWITCH_1StateGet()      SWITCH_Get()
+#define APP_SWITCH_2StateGet()      SWITCH_Get()
+#define APP_SWITCH_3StateGet()      SWITCH_Get()
 
 
-#define APP_LED_1StateSet()         LED1_PC8_Set()
-#define APP_LED_1StateGet()         LED1_PC8_Get()
-#define APP_LED_1StateClear()       LED1_PC8_Clear()
-#define APP_LED_1StateToggle()      LED1_PC8_Toggle()
+#define APP_LED_1StateSet()         LED1_Set()
+#define APP_LED_1StateGet()         LED1_Get()
+#define APP_LED_1StateClear()       LED1_Clear()
+#define APP_LED_1StateToggle()      LED1_Toggle()
 #endif /* _APP_H */
 
 //DOM-IGNORE-BEGIN

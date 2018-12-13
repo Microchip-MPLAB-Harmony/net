@@ -56,7 +56,32 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     extern "C" {
 
 #endif
-// DOM-IGNORE-END  
+// DOM-IGNORE-END
+
+// *****************************************************************************
+/* 
+  Enumeration:
+	TCPIP_DNSS_RESOLVE_TYPE
+
+  Summary:
+    DNS query record type.
+
+  Description:
+    This enumeration lists the RecordType argument for TCPIP_DNSS_Resolve.
+	The stack supports DNSS_TYPE_A and DNSS_TYPE_AAAA.
+	
+  Remarks:
+    None.
+*/
+typedef enum
+{
+
+    TCPIP_DNSS_TYPE_A      = 1,        // Indicates an A (standard address) record.
+    TCPIP_DNSS_TYPE_MX     = 15,       // Indicates an MX (mail exchanger) record.
+    TCPIP_DNSS_TYPE_AAAA   = 28u,      // Indicates a quad-A (IPv6 address) address record.
+    TCPIP_DNSS_TYPE_ANY    = 0xff,
+}TCPIP_DNSS_RESOLVE_TYPE;
+
 // *****************************************************************************
 /* Enumeration:
     TCPIP_DNSS_RESULT
@@ -73,6 +98,34 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef enum
 {
     // success codes
+    TCPIP_DNSS_RES_OK                 = 0,    // operation succeeded
+
+    // failure codes
+    TCPIP_DNSS_RES_NO_SERVICE         = -1,   // DNS service not implemented or uninitialized
+    TCPIP_DNSS_RES_CACHE_FULL         = -2,   // the cache is full and no entry could be added
+    TCPIP_DNSS_RES_NO_ENTRY           = -3,   // DNSS no such name
+    TCPIP_DNSS_RES_NO_IPADDRESS       = -4,   // No such IP address        
+    TCPIP_DNSS_RES_MEMORY_FAIL        = -5,   // out of memory failure   
+    TCPIP_DNSS_RES_DUPLICATE_ENTRY    = -6,   // duplicate entry was found
+}TCPIP_DNSS_RESULT;
+
+// *****************************************************************************
+/* Enumeration:
+    TCPIP_DNSS_RESULT_OBSOLETE
+
+  Summary:
+    DNS result codes
+
+  Description:
+    DNS Server operations results.
+
+  Remarks:
+    This type is obsolete and it will be removed.
+ Please use the TCPIP_DNSS_RESULT.
+*/
+typedef enum
+{
+    // success codes
     DNSS_RES_OK                 = 0,    // operation succeeded
 
     // failure codes
@@ -82,7 +135,8 @@ typedef enum
     DNSS_RES_NO_IPADDRESS       = -4,   // No such IP address        
     DNSS_RES_MEMORY_FAIL        = -5,   // out of memory failure   
     DNSS_RES_DUPLICATE_ENTRY    = -6,   // duplicate entry was found
-}TCPIP_DNSS_RESULT;
+}TCPIP_DNSS_RESULT_OBSOLETE;
+
 
 // *****************************************************************************
 /* 
@@ -139,9 +193,9 @@ typedef struct
     pAdd - v4 or v6 address
 
   Returns:
-    - DNSS_RES_OK - If entry remove is successful
-    - DNSS_RES_NO_ENTRY - No such entry is present
-    - DNSS_RES_MEMORY_FAIL - No Memory is present for IPv4 or IPv6 address type
+    - TCPIP_DNSS_RES_OK - If entry remove is successful
+    - TCPIP_DNSS_RES_NO_ENTRY - No such entry is present
+    - TCPIP_DNSS_RES_MEMORY_FAIL - No Memory is present for IPv4 or IPv6 address type
 */
 TCPIP_DNSS_RESULT TCPIP_DNSS_CacheEntryRemove(const char* name, IP_ADDRESS_TYPE type, IP_MULTI_ADDRESS* pAdd);
 
@@ -246,10 +300,10 @@ bool TCPIP_DNSS_Disable(TCPIP_NET_HANDLE hNet);
     entryTimeout   - Time-out value for the entry
 	
   Returns:
-    - DNSS_RES_OK - If entry remove is successful
-    - DNSS_RES_NO_ENTRY - If Hostname is NULL value and Invalid IP type
-    - DNSS_RES_MEMORY_FAIL - No Memory is present for IPv4 or IPv6 address type
-    - DNSS_RES_CACHE_FULL - If there is no space for the new entry
+    - TCPIP_DNSS_RES_OK - If entry remove is successful
+    - TCPIP_DNSS_RES_NO_ENTRY - If Hostname is NULL value and Invalid IP type
+    - TCPIP_DNSS_RES_MEMORY_FAIL - No Memory is present for IPv4 or IPv6 address type
+    - TCPIP_DNSS_RES_CACHE_FULL - If there is no space for the new entry
 
   Remarks:
      When the DNS server entryTimeout value is 0,it specifies that the entry 

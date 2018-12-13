@@ -1,6 +1,6 @@
 /*******************************************************************************
   Operating System Abstraction Layer for FreeRTOS
-  
+
   Company:
     Microchip Technology Inc.
 
@@ -48,7 +48,7 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files 
+// Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
 #include <stdint.h>
@@ -57,7 +57,7 @@ extern "C" {
 #include "queue.h"
 #include "semphr.h"
 #include "task.h"
-  
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -90,21 +90,21 @@ typedef BaseType_t                     OSAL_CRITSECT_DATA_TYPE;
 
 typedef enum OSAL_SEM_TYPE
 {
-    OSAL_SEM_TYPE_BINARY,
-    OSAL_SEM_TYPE_COUNTING
+  OSAL_SEM_TYPE_BINARY,
+  OSAL_SEM_TYPE_COUNTING
 } OSAL_SEM_TYPE;
 
 typedef enum OSAL_CRIT_TYPE
 {
-    OSAL_CRIT_TYPE_LOW,
-    OSAL_CRIT_TYPE_HIGH
+  OSAL_CRIT_TYPE_LOW,
+  OSAL_CRIT_TYPE_HIGH
 } OSAL_CRIT_TYPE;
 
 typedef enum OSAL_RESULT
 {
-    OSAL_RESULT_NOT_IMPLEMENTED = -1,
-    OSAL_RESULT_FALSE = 0,
-    OSAL_RESULT_TRUE = 1
+  OSAL_RESULT_NOT_IMPLEMENTED = -1,
+  OSAL_RESULT_FALSE = 0,
+  OSAL_RESULT_TRUE = 1
 } OSAL_RESULT;
 
 // *****************************************************************************

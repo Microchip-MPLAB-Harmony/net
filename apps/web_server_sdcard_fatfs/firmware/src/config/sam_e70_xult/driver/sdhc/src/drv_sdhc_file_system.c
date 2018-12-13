@@ -48,7 +48,8 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "driver/sdhc/src/drv_sdhc_local.h"
+#include "driver/sdhc/drv_sdhc.h"
+#include "system/fs/sys_fs_media_manager.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -62,13 +63,16 @@ const SYS_FS_MEDIA_FUNCTIONS sdhcMediaFunctions =
 {
     .mediaStatusGet     = DRV_SDHC_IsAttached,
     .mediaGeometryGet   = DRV_SDHC_GeometryGet,
-    .sectorRead         = DRV_SDHC_Read,
-    .sectorWrite        = DRV_SDHC_Write,
+    .sectorRead         = DRV_SDHC_AsyncRead,
+    .sectorWrite        = DRV_SDHC_AsyncWrite,
     .eventHandlerset    = DRV_SDHC_EventHandlerSet,
-    .commandStatusGet   = (void *)DRV_SDHC_CommandStatus,
+    .commandStatusGet   = (void *)DRV_SDHC_CommandStatusGet,
+    .Read               = DRV_SDHC_AsyncRead,
+    .erase              = NULL,
+    .addressGet         = NULL,
     .open               = DRV_SDHC_Open,
     .close              = DRV_SDHC_Close,
-    .tasks              = DRV_SDHC_Tasks
+    .tasks              = DRV_SDHC_Tasks,
 };
 
 // *****************************************************************************

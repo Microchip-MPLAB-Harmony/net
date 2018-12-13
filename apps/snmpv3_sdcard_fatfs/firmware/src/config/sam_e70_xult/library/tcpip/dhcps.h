@@ -118,14 +118,13 @@ typedef struct
 // *****************************************************************************
 /*
   Structure:
-    TCPIP_DHCPS_MODULE_CONFIG
+    TCPIP_DHCPS_LEASE_ENTRY
 
   Summary:
-    DHCP Server module runtime and initialization configuration data.
+    DHCP Server module lease data.
 
   Description:
-    DHCP server configuration and initialization data. Configuration
-	is part of tcpip_stack_init.c.
+    DHCP server lease data
 */
 typedef struct
 {
