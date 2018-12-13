@@ -73,7 +73,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_STACK_VERSION_MAJOR         7
 #define TCPIP_STACK_VERSION_MINOR         31
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "7.31"    // for v2.06
+#define TCPIP_STACK_VERSION_STR           "7.31 - H3"
 
 
 // *****************************************************************************
@@ -322,7 +322,7 @@ typedef enum
     TCPIP_MODULE_TCP,
     TCPIP_MODULE_IGMP,      /* IGMP host module */
 
-    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 35 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 36 /*DOM-IGNORE-END*/
     TCPIP_MODULE_DHCP_CLIENT  /*DOM-IGNORE-BEGIN*/ = TCPIP_MODULE_LAYER3 /*DOM-IGNORE-END*/,
     TCPIP_MODULE_DHCP_SERVER,
     TCPIP_MODULE_ANNOUNCE,
@@ -331,7 +331,9 @@ typedef enum
     TCPIP_MODULE_ZCLL,              /* Zero Config Link Local */
     TCPIP_MODULE_MDNS,              /* Bonjour/mDNS */
     TCPIP_MODULE_NBNS,
-    TCPIP_MODULE_SMTP_CLIENT,
+    TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
+
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 21 - 30 /*DOM-IGNORE-END*/
     TCPIP_MODULE_SNTP,
     TCPIP_MODULE_FTP_SERVER,
     TCPIP_MODULE_HTTP_SERVER,
@@ -342,13 +344,14 @@ typedef enum
     TCPIP_MODULE_DYNDNS_CLIENT,
     TCPIP_MODULE_BERKELEY,
     TCPIP_MODULE_REBOOT_SERVER,
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 31 - 36 /*DOM-IGNORE-END*/
     TCPIP_MODULE_COMMAND,
     TCPIP_MODULE_IPERF,
     TCPIP_MODULE_TFTP_CLIENT,       /* TFTP client module */
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
-    TCPIP_MODULE_PTP,               /* PTP module */
 	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
+
     /* add other modules here */
     //
     /*  */
@@ -646,6 +649,7 @@ typedef struct
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
 
+#include "tcpip/ndp.h"
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
 #include "tcpip/icmpv6.h"
@@ -656,6 +660,7 @@ typedef struct
 #include "tcpip/dhcp.h"
 #include "tcpip/dns.h"
 #include "tcpip/icmp.h"
+#include "tcpip/http_net.h"
 #include "tcpip/lldp.h"
 #include "tcpip/tcpip_commands.h"
 

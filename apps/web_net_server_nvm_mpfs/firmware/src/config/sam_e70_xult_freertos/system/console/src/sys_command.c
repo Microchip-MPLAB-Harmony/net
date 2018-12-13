@@ -648,7 +648,7 @@ void SYS_CMD_PRINT(const char* format, ...)
     char tmpBuf[SYS_CMD_PRINT_BUFFER_SIZE];
     size_t len = 0;
     size_t padding = 0;
-    va_list args;
+    va_list args = (va_list){0};
     va_start( args, format );
 
     len = vsnprintf(tmpBuf, SYS_CMD_PRINT_BUFFER_SIZE, format, args);
@@ -850,7 +850,7 @@ static void SendCommandPrint(const void* cmdIoParam, const char* format, ...)
     char tmpBuf[SYS_CMD_PRINT_BUFFER_SIZE];
     size_t len = 0;
     size_t padding = 0;
-    va_list args;
+    va_list args = (va_list){0};
     va_start( args, format );
 
     len = vsnprintf(tmpBuf, SYS_CMD_PRINT_BUFFER_SIZE, format, args);

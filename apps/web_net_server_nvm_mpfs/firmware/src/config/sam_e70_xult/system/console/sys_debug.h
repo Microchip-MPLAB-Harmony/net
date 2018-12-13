@@ -101,25 +101,6 @@ typedef enum
 */
 extern SYS_ERROR_LEVEL gblErrLvl;
 
-// DOM-IGNORE-END
-
-
-// *****************************************************************************
-/* SYS Debug Module Index Number
-
-  Summary:
-    Debug System Service index.
-
-  Description:
-    This constant defines a symbolic name for the debug system service index.
-
-  Remarks:
-    There can only be a single debug system service instance in the system.
-*/
-
-#define SYS_DEBUG_INDEX_0           0
-
-
 // *****************************************************************************
 /* SYS Debug Initialize structure
 
@@ -146,6 +127,23 @@ typedef struct
     SYS_MODULE_INDEX                consoleIndex;
 
 } SYS_DEBUG_INIT;
+
+// DOM-IGNORE-END
+
+// *****************************************************************************
+/* SYS Debug Module Index Number
+
+  Summary:
+    Debug System Service index.
+
+  Description:
+    This constant defines a symbolic name for the debug system service index.
+
+  Remarks:
+    There can only be a single debug system service instance in the system.
+*/
+
+#define SYS_DEBUG_INDEX_0           0
 
 
 // *****************************************************************************
@@ -241,7 +239,9 @@ SYS_MODULE_OBJ SYS_DEBUG_Initialize(
     </code>
 
   Remarks:
-    This function is normally not called directly by an application.
+    This function is normally not called directly by an application. 
+    The task routine may not be called if the debug service does not require 
+    maintaining an internal state machine.
 */
 
 void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
@@ -272,7 +272,6 @@ void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
                                   to accept new operations.
     * SYS_STATUS_BUSY           - Indicates that the module is busy with a
                                   previous system level operation.
-
     * SYS_STATUS_ERROR          - Indicates that the module is in an error
                                   state.  Any value less than SYS_STATUS_ERROR
                                   is also an error state.
@@ -330,7 +329,7 @@ SYS_STATUS SYS_DEBUG_Status ( SYS_MODULE_OBJ object );
     // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
     // In sys_debug.h file: #define SYS_MESSAGE(message) SYS_DEBUG_Message(message)
 
-    SYS_MESSAGE("My Message\n\r");
+    SYS_MESSAGE("My Message\r\n");
     </code>
 
   Remarks:
@@ -497,14 +496,14 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     // In sys_debug.h file: #define SYS_DEBUG_MESSAGE(level,message)  _SYS_DEBUG_MESSAGE(level,message)
 
     // In source code
-    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "My debug warning message\n\r");
+    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "My debug warning message\r\n");
     </code>
 
   Remarks:
     Do not call this macro directly.  Call the SYS_DEBUG_MESSAGE macro instead.
 
     The default SYS_DEBUG_MESSAGE macro definition removes the message and
-    function call from the source code.  To access and utilize the message,
+    function call from the source code. To access and utilize the message,
     define the SYS_DEBUG_USE_CONSOLE macro or override the definition of the
     SYS_DEBUG_MESSAGE macro.
 */
@@ -653,7 +652,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     SYS_DEBUG_MESSAGE(SYS_ERROR_LEVEL level, const char* message )
 
   Summary:
-    Prints a debug message if the system error level is defined defined at
+    Prints a debug message if the system error level is defined at
     or lower than the level specified.
 
   Description:
@@ -662,8 +661,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     then the system debug service must be initialized and running.
 
   Precondition:
-    SYSTEM_CURRENT_ERROR_LEVEL must be defined as SYS_ERROR_DEBUG. If mapped to
-    the SYS_DEBUG_Message function, then the system debug service must be
+    If mapped to the SYS_DEBUG_Message function, then the system debug service must be
     initialized and running.
 
   Parameters:
@@ -679,7 +677,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     // In sys_debug.h file: #define SYS_DEBUG_MESSAGE(level, message) _SYS_DEBUG_MESSAGE(level, message)
 
     SYS_DEBUG_ErrorLevelSet(SYS_ERROR_DEBUG);
-    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "System Debug Message \n\r");
+    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "System Debug Message \r\n");
 
     </code>
 
@@ -768,7 +766,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Description:
     This macro formats and prints an error message if the system error level
-    is defined at or lower than the level specified.o
+    is defined at or lower than the level specified.
 
   Precondition:
     If mapped to the SYS_DEBUG_Print function, then the system debug service must
@@ -801,8 +799,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     </code>
 
   Remarks:
-    The format string and arguments follow the printf convention. This function
-    is called by the macros SYS_PRINT and SYS_DEBUG_PRINT.
+    The format string and arguments follow the printf convention.
 
     By default, this macro is defined as nothing, effectively removing all code
     generated by calls to it.  To process SYS_DEBUG_PRINT calls, this macro must be

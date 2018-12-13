@@ -649,6 +649,7 @@ typedef struct
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
 
+#include "tcpip/ndp.h"
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
 #include "tcpip/icmpv6.h"
