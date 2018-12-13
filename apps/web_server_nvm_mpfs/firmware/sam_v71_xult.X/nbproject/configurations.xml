@@ -621,7 +621,6 @@
       </logicalFolder>
       <itemPath>../src/http_print.c</itemPath>
       <itemPath>../src/custom_http_app.c</itemPath>
-      <itemPath>../src/mpfs_img2.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
@@ -648,7 +647,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.162"/>
+        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.174"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
