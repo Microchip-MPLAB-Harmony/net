@@ -53,7 +53,7 @@
 #include "driver/sdhc/src/drv_sdhc_host.h"
 
 /*NOTE:-Buffers need to be 32-byte address and size aligned
-        for cache management operations. 
+        for cache management operations.
 */
 
 uint8_t __attribute__((aligned(32))) gSDHOSTScrReg[32] = {0};

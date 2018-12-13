@@ -11,8 +11,8 @@
     SD Host Controller Driver System Host Definitions
 
   Description:
-    The SD Host Controller driver provides a simple interface to manage the SD 
-    Host Controller peripheral.  This file defines the interface definitions 
+    The SD Host Controller driver provides a simple interface to manage the SD
+    Host Controller peripheral.  This file defines the interface definitions
     and prototypes for the SD Host Controller driver.
 *******************************************************************************/
 
@@ -45,9 +45,9 @@
 #define _DRV_SDHC_HOST_H
 
 #include <stdint.h>
-#include "driver/sdhc/src/drv_sdhc_host_local.h"
 #include <stdbool.h>
 #include <string.h>
+#include "driver/sdhc/src/drv_sdhc_host_local.h"
 
 /* SD Host Controller Spec version. */
 #define SDHOST_HOST_SPEC_VER_1              0
@@ -60,9 +60,9 @@
 
 typedef enum
 {
-    SDHOST_RESET_ALL = 0x01, 
+    SDHOST_RESET_ALL = 0x01,
     SDHOST_RESET_CMD = 0x02,
-    SDHOST_RESET_DAT = 0x04    
+    SDHOST_RESET_DAT = 0x04
 } SDHOST_RESET_TYPE;
 
 typedef enum
@@ -97,7 +97,7 @@ typedef enum SDHOST_CMD_RESP_TYPE
     SDHOST_CMD_RESP_R5,     /*!< */
     SDHOST_CMD_RESP_R6,     /*!< Published RCA response  */
     SDHOST_CMD_RESP_R7      /*!< Card interface condition  */
-      
+
 } SDHOST_CMD_RESP_TYPE;
 
 
@@ -334,7 +334,7 @@ void sdhostReadResponse
 
 void sdhostSendCommand
 (
-    uint8_t opCode, 
+    uint8_t opCode,
     uint8_t respType,
     uint8_t dataPresent,
     uint32_t argument
@@ -379,4 +379,3 @@ void sdhostParseCsd
     SDHOST_CARD_CTXT *cardCtxt
 );
 #endif
-

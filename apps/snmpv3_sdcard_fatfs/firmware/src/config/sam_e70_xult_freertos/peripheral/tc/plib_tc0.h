@@ -55,8 +55,8 @@
 /*  This section lists the other files that are included in this file.
 */
 
+
 #include "plib_tc_common.h"
-#include "device.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -89,6 +89,7 @@ extern "C" {
  
 
 
+
 void TC0_CH0_TimerInitialize (void);
 
 void TC0_CH0_TimerStart (void);
@@ -110,7 +111,9 @@ void TC0_CH0_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context
 
 
  
+
  
+
 
 #endif //PLIB_TC0_H
 

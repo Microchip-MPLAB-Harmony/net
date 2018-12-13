@@ -70,6 +70,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 */
 typedef struct
 {
+    void*   reserved;
 }TCPIP_IPERF_MODULE_CONFIG;
 
 

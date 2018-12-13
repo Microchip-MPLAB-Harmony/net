@@ -74,5 +74,5 @@ void CLK_Initialize( void )
 
     /* Enable Peripheral Clock */
     PMC_REGS->PMC_PCER0=0x875c00;
-    PMC_REGS->PMC_PCER1=0x6000080;
+    PMC_REGS->PMC_PCER1=0x4000080;
 }

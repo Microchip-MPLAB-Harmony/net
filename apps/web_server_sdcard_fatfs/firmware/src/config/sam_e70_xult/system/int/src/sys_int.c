@@ -5,13 +5,14 @@
     Microchip Technology Inc.
 
   File Name
-    sys_int.c
+    sys_int_nvic.c
 
   Summary
-    Interrupt system service library implementation.
+    NVIC implementation of interrupt system service library.
 
   Description
-    This file implements the interface to the interrupt system service library.
+    This file implements the interface to the interrupt system service library
+    not provided in CMSIS.
 
   Remarks:
     None.
@@ -92,8 +93,8 @@ void SYS_INT_Restore( bool state )
     }
     else
     {
-		__disable_irq();
-		__DMB();
+        __disable_irq();
+        __DMB();
     }
 
     return;

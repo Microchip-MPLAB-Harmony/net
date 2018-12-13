@@ -275,7 +275,7 @@ SYS_MODULE_OBJ DRV_MIIM_Initialize(const SYS_MODULE_INDEX iModule, const SYS_MOD
     }
 
     // create synchronization object
-    if(OSAL_SEM_Create(&pMiimObj->objSem, OSAL_SEM_TYPE_BINARY, 1, 0) != OSAL_RESULT_TRUE)
+    if(OSAL_SEM_Create(&pMiimObj->objSem, OSAL_SEM_TYPE_BINARY, 1, 1) != OSAL_RESULT_TRUE)
     {   // failed
         return SYS_MODULE_OBJ_INVALID;
     }
@@ -708,7 +708,7 @@ DRV_MIIM_CALLBACK_HANDLE DRV_MIIM_RegisterCallback(DRV_HANDLE handle, DRV_MIIM_O
 
         pClient->cbackHandler = cbFunction;
         miimRes = DRV_MIIM_RES_OK;
-        cbHandle = cbFunction;
+        cbHandle = (DRV_MIIM_CALLBACK_HANDLE)cbFunction;
 
         break;
     }
@@ -740,7 +740,7 @@ DRV_MIIM_RESULT DRV_MIIM_DeregisterCallback(DRV_HANDLE handle, DRV_MIIM_CALLBACK
             break;
         }
 
-        if(pClient->cbackHandler != cbHandle)
+        if(pClient->cbackHandler != (DRV_MIIM_OPERATION_CALLBACK)cbHandle)
         {
             res = DRV_MIIM_RES_CALLBACK_HANDLE_ERR;
             break;

@@ -67,6 +67,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Placeholder for Zero Configuration Link Layer module configuration.
 typedef struct
 {
+    void* reserved;
 }ZCLL_MODULE_CONFIG;
 
 // ZCLL API

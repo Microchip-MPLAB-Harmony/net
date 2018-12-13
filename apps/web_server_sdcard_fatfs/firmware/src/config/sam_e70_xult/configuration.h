@@ -56,6 +56,7 @@
 */
 
 #include "user.h"
+#include "toolchain_specifics.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -72,7 +73,6 @@ extern "C" {
 // *****************************************************************************
 #define DCACHE_CLEAN_BY_ADDR(data, size)       SCB_CleanDCache_by_Addr((uint32_t *)data, size)
 #define DCACHE_INVALIDATE_BY_ADDR(data, size)  SCB_InvalidateDCache_by_Addr((uint32_t *)data, size)
-
 #define DATA_CACHE_ENABLED                     true
 
 // *****************************************************************************
@@ -80,25 +80,14 @@ extern "C" {
 // Section: System Service Configuration
 // *****************************************************************************
 // *****************************************************************************
-/* Console System Service Configuration Options */
-#define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
-#define SYS_CONSOLE_INSTANCES_NUMBER       1
-#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH    10
-#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH    64
-#define SYS_CONSOLE_BUFFER_DMA_READY
-
-#define SYS_DEBUG_ENABLE
-#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
-#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
-#define SYS_DEBUG_BUFFER_DMA_READY
-#define SYS_DEBUG_USE_CONSOLE              
-
-#define SYS_CMD_ENABLE
-#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
-#define SYS_CMD_BUFFER_DMA_READY
-#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
-#define SYS_CMD_REMAP_SYS_DEBUG_MESSAGE
+/* TIME System Service Configuration Options */
+#define SYS_TIME_INDEX_0                     0
+#define SYS_TIME_MAX_TIMERS                  5
+#define SYS_TIME_HW_COUNTER_WIDTH            16
+#define SYS_TIME_HW_COUNTER_PERIOD           0xFFFF
+#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
+#define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
+#define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
 
 
 /* File System Service Configuration */
@@ -119,14 +108,29 @@ extern "C" {
 
 
 
-/* TIME System Service Configuration Options */
-#define SYS_TIME_INDEX_0                     0
-#define SYS_TIME_MAX_TIMERS                  10
-#define SYS_TIME_HW_COUNTER_WIDTH            16
-#define SYS_TIME_HW_COUNTER_PERIOD           0xFFFF
-#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
-#define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
-#define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
+/* Console System Service Configuration Options */
+#define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
+#define SYS_CONSOLE_INSTANCES_NUMBER       1
+#define SYS_CONSOLE_UART_MAX_INSTANCES     1
+
+/* RX queue size has one additional element for the empty spot needed in circular queue */
+#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0    11
+
+/* TX queue size has one additional element for the empty spot needed in circular queue */
+#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0    65
+#define SYS_CONSOLE_BUFFER_DMA_READY
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+#define SYS_DEBUG_USE_CONSOLE
+
+#define SYS_CMD_ENABLE
+#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
+#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_BUFFER_DMA_READY
+#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 
 
 
@@ -135,6 +139,18 @@ extern "C" {
 // Section: Driver Configuration
 // *****************************************************************************
 // *****************************************************************************
+
+
+/*** SDHC Driver Configuration ***/
+#define DRV_SDHC_CLIENTS_NUMBER 1
+#define DRV_SDHC_BUFFER_QUEUE_SIZE 1
+#define DRV_SDHC_CARD_DETECT_ENABLE  false
+#define	DRV_SDHC_WRITE_PROTECT_ENABLE  false
+
+
+
+/* SDHC Driver Global Configuration Options */
+#define DRV_SDHC_INSTANCES_NUMBER 1
 
 /*** MIIM Driver Configuration ***/
 #define DRV_MIIM_ETH_MODULE_ID              GMAC_BASE_ADDRESS
@@ -149,18 +165,6 @@ extern "C" {
 
 
 
-/* SDHC Driver Global Configuration Options */
-#define DRV_SDHC_INSTANCES_NUMBER 1
-
-
-/*** SDHC Driver Configuration ***/
-#define DRV_SDHC_CLIENTS_NUMBER 1
-#define DRV_SDHC_BUFFER_OBJ_NUMBER 1
-#define DRV_SDHC_CARD_DETECT_ENABLE  false
-#define	DRV_SDHC_WRITE_PROTECT_ENABLE  false
-
-
-
 
 
 // *****************************************************************************
@@ -170,20 +174,68 @@ extern "C" {
 // *****************************************************************************
 
 
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS     			\
-                                                    DRV_ETHPHY_CFG_RMII | \
-                                                    0                                                    
+/*** DNS Client Configuration ***/
+#define TCPIP_STACK_USE_DNS
+#define TCPIP_DNS_CLIENT_SERVER_TMO					60
+#define TCPIP_DNS_CLIENT_TASK_PROCESS_RATE			200
+#define TCPIP_DNS_CLIENT_CACHE_ENTRIES				5
+#define TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO			0
+#define TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS		5
+#define TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS		1
+#define TCPIP_DNS_CLIENT_ADDRESS_TYPE			    IP_ADDRESS_TYPE_IPV4
+#define TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL		1200
+#define TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO	10
+#define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO			5
+#define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN			32
+#define TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES		4
+#define TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES			true
+#define TCPIP_DNS_CLIENT_USER_NOTIFICATION   false
 
-#define TCPIP_INTMAC_PHY_LINK_INIT_DELAY  			500
-#define TCPIP_INTMAC_PHY_ADDRESS		    			0
-#define DRV_ETHPHY_INSTANCES_NUMBER					1
-#define DRV_ETHPHY_CLIENTS_NUMBER					1
-#define DRV_ETHPHY_INDEX		        			1
-#define DRV_ETHPHY_PERIPHERAL_ID					1
-#define DRV_ETHPHY_NEG_INIT_TMO		    			1
-#define DRV_ETHPHY_NEG_DONE_TMO		    			2000
-#define DRV_ETHPHY_RESET_CLR_TMO					500
-#define DRV_ETHPHY_USE_DRV_MIIM                     true
+
+
+/*** TCPIP SYS FS Wrapper ***/
+#define SYS_FS_MAX_PATH						80
+#define LOCAL_WEBSITE_PATH_FS				"/mnt/mchpSite1"
+#define LOCAL_WEBSITE_PATH					"/mnt/mchpSite1/"
+#define SYS_FS_DRIVE						"SDCARD"
+#define SYS_FS_SD_VOL						"/dev/mmcblka1"
+#define SYS_FS_FATFS_STRING					"FATFS"
+#define SYS_FS_MPFS_STRING					"MPFS2"
+
+
+
+/*** ICMPv4 Server Configuration ***/
+#define TCPIP_STACK_USE_ICMP_SERVER
+#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
+
+
+
+/*** NBNS Configuration ***/
+#define TCPIP_STACK_USE_NBNS
+#define TCPIP_NBNS_TASK_TICK_RATE   110
+
+
+
+/*** TCP Configuration ***/
+#define TCPIP_TCP_MAX_SEG_SIZE_TX		        	1460
+#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE			512
+#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE			512
+#define TCPIP_TCP_DYNAMIC_OPTIONS             			true
+#define TCPIP_TCP_START_TIMEOUT_VAL		        	1000
+#define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
+#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
+#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		200
+#define TCPIP_TCP_MAX_RETRIES		            		5
+#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
+#define TCPIP_TCP_MAX_SYN_RETRIES		        	3
+#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL			40
+#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL			200
+#define TCPIP_TCP_MAX_SOCKETS		                10
+#define TCPIP_TCP_TASK_TICK_RATE		        	5
+#define TCPIP_TCP_MSL_TIMEOUT		        	    0
+#define TCPIP_TCP_QUIET_TIME		        	    0
+#define TCPIP_TCP_COMMANDS   false
 
 
 /*** TCPIP MAC Configuration ***/
@@ -257,35 +309,15 @@ extern "C" {
 
 
 
-/*** Crypto Library Configuration ***/
-#define WC_NO_HARDEN
-#define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
-#define HAVE_MCAPI
-#define MICROCHIP_SAME70
-#define NO_CERTS
-#define NO_PWDBASED
-#define NO_OLD_TLS
-#define NO_AES
-#define NO_ASN
-#define NO_RSA
-#define NO_HMAC
-#define NO_DES3
-#define NO_RNG
-#define NO_RNG_TEST
 
-/* MPLAB Harmony Net Presentation Layer Definitions*/
-#define NET_PRES_NUM_INSTANCE 1
-#define NET_PRES_NUM_SOCKETS 10
-
-
-
-
-/*** announce Configuration ***/
-#define TCPIP_STACK_USE_ANNOUNCE
-#define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512
-#define TCPIP_ANNOUNCE_TASK_RATE    333
-#define TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST             			false
+/*** DHCP Configuration ***/
+#define TCPIP_STACK_USE_DHCP_CLIENT
+#define TCPIP_DHCP_TIMEOUT                          2
+#define TCPIP_DHCP_TASK_TICK_RATE                   5
+#define TCPIP_DHCP_HOST_NAME_SIZE                   20
+#define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
+#define TCPIP_DHCP_SERVER_LISTEN_PORT               67
+#define TCPIP_DHCP_CLIENT_ENABLED                   true
 
 
 
@@ -305,6 +337,21 @@ extern "C" {
 
 
 
+#define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY 	1
+#define TCPIP_IPV6_NDP_RTR_SOLICITATION_INTERVAL 	4
+#define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATIONS 		3
+#define TCPIP_IPV6_NDP_MAX_MULTICAST_SOLICIT 		3
+#define TCPIP_IPV6_NDP_MAX_UNICAST_SOLICIT 			3
+#define TCPIP_IPV6_NDP_MAX_ANYCAST_DELAY_TIME 		1
+#define TCPIP_IPV6_NDP_MAX_NEIGHBOR_ADVERTISEMENT 	3
+#define TCPIP_IPV6_NDP_REACHABLE_TIME 				30
+#define TCPIP_IPV6_NDP_RETRANS_TIMER 				1
+#define TCPIP_IPV6_NDP_DELAY_FIRST_PROBE_TIME 		5
+#define TCPIP_IPV6_NDP_VALID_LIFETIME_TWO_HOURS 	(60 * 60 * 2)
+#define TCPIP_IPV6_MTU_INCREASE_TIMEOUT 			600
+#define TCPIP_IPV6_NDP_TASK_TIMER_RATE 				32
+
+
 /*** tcpip_cmd Configuration ***/
 #define TCPIP_STACK_COMMAND_ENABLE
 #define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUESTS         4
@@ -316,61 +363,25 @@ extern "C" {
 
 
 
-/*** DHCP Configuration ***/
-#define TCPIP_STACK_USE_DHCP_CLIENT
-#define TCPIP_DHCP_TIMEOUT                          2
-#define TCPIP_DHCP_TASK_TICK_RATE                   5
-#define TCPIP_DHCP_HOST_NAME_SIZE                   20
-#define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
-#define TCPIP_DHCP_SERVER_LISTEN_PORT               67
-#define TCPIP_DHCP_CLIENT_ENABLED                   true
+/* Network Configuration Index 0 */
+#define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"GMAC"
+#define TCPIP_IF_GMAC
 
+#define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				"MCHPBOARD_C"
+#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"00:04:25:1C:A0:02"
 
-
-
-/*** DNS Client Configuration ***/
-#define TCPIP_STACK_USE_DNS
-#define TCPIP_DNS_CLIENT_SERVER_TMO					60
-#define TCPIP_DNS_CLIENT_TASK_PROCESS_RATE			200
-#define TCPIP_DNS_CLIENT_CACHE_ENTRIES				5
-#define TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO			0
-#define TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS		5
-#define TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS		1
-#define TCPIP_DNS_CLIENT_ADDRESS_TYPE			    IP_ADDRESS_TYPE_IPV4
-#define TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL		1200
-#define TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO	10
-#define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO			5
-#define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN			32
-#define TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES		4
-#define TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES			true
-#define TCPIP_DNS_CLIENT_USER_NOTIFICATION   false
-
-
-
-/*** HTTP Configuration ***/
-#define TCPIP_STACK_USE_HTTP_SERVER
-#define TCPIP_HTTP_MAX_HEADER_LEN		    		15
-#define TCPIP_HTTP_CACHE_LEN		        		"600"
-#define TCPIP_HTTP_TIMEOUT		            		45
-#define TCPIP_HTTP_MAX_CONNECTIONS		    		4
-#define TCPIP_HTTP_DEFAULT_FILE		        		"index.htm"
-#define TCPIP_HTTPS_DEFAULT_FILE	        		"index.htm"
-#define TCPIP_HTTP_DEFAULT_LEN		        		10
-#define TCPIP_HTTP_MAX_DATA_LEN		        		100
-#define TCPIP_HTTP_MIN_CALLBACK_FREE				16
-#define TCPIP_HTTP_SKT_TX_BUFF_SIZE		    		0
-#define TCPIP_HTTP_SKT_RX_BUFF_SIZE		    		0
-#define TCPIP_HTTP_CONFIG_FLAGS		        		1
-#define TCPIP_HTTP_USE_POST
-#define TCPIP_HTTP_USE_COOKIES
-#define TCPIP_HTTP_USE_BASE64_DECODE
-#define TCPIP_HTTP_USE_AUTHENTICATION
-#define TCPIP_HTTP_TASK_RATE					33
-#define TCPIP_HTTP_MALLOC_FUNC                     0
-#define TCPIP_HTTP_FREE_FUNC                        0
-
-
-/*** IPv4 Configuration ***/
+#define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			"192.168.100.11"
+#define TCPIP_NETWORK_DEFAULT_IP_MASK_IDX0			"255.255.255.0"
+#define TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0			"192.168.100.1"
+#define TCPIP_NETWORK_DEFAULT_DNS_IDX0				"192.168.100.1"
+#define TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX0			"0.0.0.0"
+#define TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX0			"full"
+#define TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX0			\
+													TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON |\
+													TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON |\
+													TCPIP_NETWORK_CONFIG_IP_STATIC
+													
+#define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
 
 
 
@@ -396,52 +407,36 @@ extern "C" {
 #define TCPIP_STACK_USE_ICMPV6_SERVER
 
 
-/*** ICMPv4 Server Configuration ***/
-#define TCPIP_STACK_USE_ICMP_SERVER
-#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
+/*** HTTP Configuration ***/
+#define TCPIP_STACK_USE_HTTP_SERVER
+#define TCPIP_HTTP_MAX_HEADER_LEN		    		15
+#define TCPIP_HTTP_CACHE_LEN		        		"600"
+#define TCPIP_HTTP_TIMEOUT		            		45
+#define TCPIP_HTTP_MAX_CONNECTIONS		    		4
+#define TCPIP_HTTP_DEFAULT_FILE		        		"index.htm"
+#define TCPIP_HTTPS_DEFAULT_FILE	        		"index.htm"
+#define TCPIP_HTTP_DEFAULT_LEN		        		10
+#define TCPIP_HTTP_MAX_DATA_LEN		        		100
+#define TCPIP_HTTP_MIN_CALLBACK_FREE				16
+#define TCPIP_HTTP_SKT_TX_BUFF_SIZE		    		0
+#define TCPIP_HTTP_SKT_RX_BUFF_SIZE		    		0
+#define TCPIP_HTTP_CONFIG_FLAGS		        		1
+#define TCPIP_HTTP_USE_POST
+#define TCPIP_HTTP_USE_COOKIES
+#define TCPIP_HTTP_USE_BASE64_DECODE
+#define TCPIP_HTTP_USE_AUTHENTICATION
+#define TCPIP_HTTP_TASK_RATE					33
+#define TCPIP_HTTP_MALLOC_FUNC                     0
+#define TCPIP_HTTP_FREE_FUNC                        0
+
+/* MPLAB Harmony Net Presentation Layer Definitions*/
+#define NET_PRES_NUM_INSTANCE 1
+#define NET_PRES_NUM_SOCKETS 10
 
 
 
-/*** NBNS Configuration ***/
-#define TCPIP_STACK_USE_NBNS
-#define TCPIP_NBNS_TASK_TICK_RATE   110
 
-
-
-#define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY 	1
-#define TCPIP_IPV6_NDP_RTR_SOLICITATION_INTERVAL 	4
-#define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATIONS 		3
-#define TCPIP_IPV6_NDP_MAX_MULTICAST_SOLICIT 		3
-#define TCPIP_IPV6_NDP_MAX_UNICAST_SOLICIT 			3
-#define TCPIP_IPV6_NDP_MAX_ANYCAST_DELAY_TIME 		1
-#define TCPIP_IPV6_NDP_MAX_NEIGHBOR_ADVERTISEMENT 	3
-#define TCPIP_IPV6_NDP_REACHABLE_TIME 				30
-#define TCPIP_IPV6_NDP_RETRANS_TIMER 				1
-#define TCPIP_IPV6_NDP_DELAY_FIRST_PROBE_TIME 		5
-#define TCPIP_IPV6_NDP_VALID_LIFETIME_TWO_HOURS 	(60 * 60 * 2)
-#define TCPIP_IPV6_MTU_INCREASE_TIMEOUT 			600
-#define TCPIP_IPV6_NDP_TASK_TIMER_RATE 				32
-
-
-/* Network Configuration Index 0 */
-#define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"GMAC"
-#define TCPIP_IF_GMAC
-
-#define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				"MCHPBOARD_C"
-#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"00:04:25:1C:A0:02"
-
-#define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			"192.168.100.11"
-#define TCPIP_NETWORK_DEFAULT_IP_MASK_IDX0			"255.255.255.0"
-#define TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0			"192.168.100.1"
-#define TCPIP_NETWORK_DEFAULT_DNS_IDX0				"192.168.100.1"
-#define TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX0			"0.0.0.0"
-#define TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX0			"full"
-#define TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX0			\
-													TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON |\
-													TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON |\
-													TCPIP_NETWORK_CONFIG_IP_STATIC
-													
-#define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
+/*** IPv4 Configuration ***/
 
 
 
@@ -465,28 +460,10 @@ extern "C" {
 
 
 
-/*** SNTP Configuration ***/
-#define TCPIP_STACK_USE_SNTP_CLIENT
-#define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
-#define TCPIP_NTP_VERSION             			    	4
-#define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
-#define TCPIP_NTP_EPOCH		                		2147483216ul
-#define TCPIP_NTP_REPLY_TIMEOUT		        		6
-#define TCPIP_NTP_MAX_STRATUM		        		15
-#define TCPIP_NTP_TIME_STAMP_TMO				660
-#define TCPIP_NTP_SERVER		        		"pool.ntp.org"
-#define TCPIP_NTP_SERVER_MAX_LENGTH				30
-#define TCPIP_NTP_QUERY_INTERVAL				600
-#define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
-#define TCPIP_NTP_TASK_TICK_RATE				1100
-#define TCPIP_NTP_RX_QUEUE_LIMIT				2
-
-
-
 /*** TCPIP Heap Configuration ***/
 
 #define TCPIP_STACK_USE_INTERNAL_HEAP
-#define TCPIP_STACK_DRAM_SIZE                       60000
+#define TCPIP_STACK_DRAM_SIZE                       60960
 #define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
 
 #define TCPIP_STACK_MALLOC_FUNC                     malloc
@@ -541,37 +518,29 @@ extern "C" {
 
 
 
-/*** TCPIP SYS FS Wrapper ***/
-#define SYS_FS_MAX_PATH						80
-#define LOCAL_WEBSITE_PATH_FS				"/mnt/mchpSite1"
-#define LOCAL_WEBSITE_PATH					"/mnt/mchpSite1/"
-#define SYS_FS_DRIVE						"SDCARD"
-#define SYS_FS_SD_VOL						"/dev/mmcblka1"
-#define SYS_FS_FATFS_STRING					"FATFS"
-#define SYS_FS_MPFS_STRING					"MPFS2"
+/*** SNTP Configuration ***/
+#define TCPIP_STACK_USE_SNTP_CLIENT
+#define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
+#define TCPIP_NTP_VERSION             			    	4
+#define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
+#define TCPIP_NTP_EPOCH		                		2147483216ul
+#define TCPIP_NTP_REPLY_TIMEOUT		        		6
+#define TCPIP_NTP_MAX_STRATUM		        		15
+#define TCPIP_NTP_TIME_STAMP_TMO				660
+#define TCPIP_NTP_SERVER		        		"pool.ntp.org"
+#define TCPIP_NTP_SERVER_MAX_LENGTH				30
+#define TCPIP_NTP_QUERY_INTERVAL				600
+#define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
+#define TCPIP_NTP_TASK_TICK_RATE				1100
+#define TCPIP_NTP_RX_QUEUE_LIMIT				2
 
 
 
-/*** TCP Configuration ***/
-#define TCPIP_TCP_MAX_SEG_SIZE_TX		        	1460
-#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE			512
-#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE			512
-#define TCPIP_TCP_DYNAMIC_OPTIONS             			true
-#define TCPIP_TCP_START_TIMEOUT_VAL		        	1000
-#define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
-#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
-#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
-#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		200
-#define TCPIP_TCP_MAX_RETRIES		            		5
-#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
-#define TCPIP_TCP_MAX_SYN_RETRIES		        	3
-#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL			40
-#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL			200
-#define TCPIP_TCP_MAX_SOCKETS		                10
-#define TCPIP_TCP_TASK_TICK_RATE		        	5
-#define TCPIP_TCP_MSL_TIMEOUT		        	    0
-#define TCPIP_TCP_QUIET_TIME		        	    0
-#define TCPIP_TCP_COMMANDS   false
+/*** announce Configuration ***/
+#define TCPIP_STACK_USE_ANNOUNCE
+#define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512
+#define TCPIP_ANNOUNCE_TASK_RATE    333
+#define TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST             			false
 
 
 
@@ -585,6 +554,43 @@ extern "C" {
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
 
+
+
+
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS     			\
+                                                    DRV_ETHPHY_CFG_RMII | \
+                                                    0                                                    
+
+#define TCPIP_INTMAC_PHY_LINK_INIT_DELAY  			500
+#define TCPIP_INTMAC_PHY_ADDRESS		    			0
+#define DRV_ETHPHY_INSTANCES_NUMBER					1
+#define DRV_ETHPHY_CLIENTS_NUMBER					1
+#define DRV_ETHPHY_INDEX		        			1
+#define DRV_ETHPHY_PERIPHERAL_ID					1
+#define DRV_ETHPHY_NEG_INIT_TMO		    			1
+#define DRV_ETHPHY_NEG_DONE_TMO		    			2000
+#define DRV_ETHPHY_RESET_CLR_TMO					500
+#define DRV_ETHPHY_USE_DRV_MIIM                     true
+
+
+
+
+/*** Crypto Library Configuration ***/
+#define WC_NO_HARDEN
+#define NO_DSA
+#define MICROCHIP_MPLAB_HARMONY
+#define HAVE_MCAPI
+#define MICROCHIP_SAME70
+#define NO_CERTS
+#define NO_PWDBASED
+#define NO_OLD_TLS
+#define NO_AES
+#define NO_ASN
+#define NO_RSA
+#define NO_HMAC
+#define NO_DES3
+#define NO_RNG
+#define NO_RNG_TEST
 
 
 

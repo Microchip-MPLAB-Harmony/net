@@ -74,11 +74,10 @@ void SYS_Tasks ( void )
     DRV_SDHC_Tasks(sysObj.drvSDHC);
 
 
-SYS_CONSOLE_Tasks(sysObj.sysConsole0);
-    SYS_CMD_Tasks();
-
 
 SYS_FS_Tasks();
+
+SYS_CMD_Tasks();
 
 
 

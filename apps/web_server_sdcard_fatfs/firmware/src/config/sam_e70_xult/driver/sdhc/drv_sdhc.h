@@ -11,8 +11,8 @@
     SD Host Controller Driver Interface File
 
   Description:
-    The SD Host Controller driver provides a simple interface to manage the SD 
-    Host Controller peripheral.  This file defines the interface definitions 
+    The SD Host Controller driver provides a simple interface to manage the SD
+    Host Controller peripheral.  This file defines the interface definitions
     and prototypes for the SD Host Controller driver.
 *******************************************************************************/
 
@@ -44,20 +44,26 @@
 #ifndef _DRV_SDHC_H
 #define _DRV_SDHC_H
 
-
 // *****************************************************************************
 // *****************************************************************************
-// Section: Data Types
+// Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
 
 #include <stdint.h>
 #include <stdbool.h>
-#include "configuration.h"
+#include <stddef.h>
 #include "system/system.h"
 #include "driver/driver_common.h"
 #include "system/int/sys_int.h"
 #include "system/system_media.h"
+#include "system/time/sys_time.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Data Types
+// *****************************************************************************
+
 
 // *****************************************************************************
 /*
@@ -810,7 +816,7 @@ void DRV_SDHC_Close
 
 // *****************************************************************************
 /* Function:
-    void DRV_SDHC_Read
+    void DRV_SDHC_AsyncRead
     (
         const DRV_HANDLE handle,
         DRV_SDHC_COMMAND_HANDLE * commandHandle,
@@ -878,7 +884,7 @@ void DRV_SDHC_Close
     // mySDHCHandle is the handle returned
     // by the DRV_SDHC_Open function.
 
-    DRV_SDHC_Read(mySDHCHandle, &commandHandle, &myBuffer, blockStart, nBlock);
+    DRV_SDHC_AsyncRead(mySDHCHandle, &commandHandle, &myBuffer, blockStart, nBlock);
 
     if(DRV_SDHC_COMMAND_HANDLE_INVALID == commandHandle)
     {
@@ -895,7 +901,7 @@ void DRV_SDHC_Close
     None.
 */
 
-void DRV_SDHC_Read
+void DRV_SDHC_AsyncRead
 (
     DRV_HANDLE handle,
     DRV_SDHC_COMMAND_HANDLE *commandHandle,
@@ -906,7 +912,7 @@ void DRV_SDHC_Read
 
 // *****************************************************************************
 /* Function:
-    void DRV_SDHC_Write
+    void DRV_SDHC_AyncWrite
     (
         const DRV_HANDLE handle,
         DRV_SDHC_COMMAND_HANDLE * commandHandle,
@@ -980,7 +986,7 @@ void DRV_SDHC_Read
 
     DRV_SDHC_EventHandlerSet(mySDHCHandle, APP_SDHCEventHandler, (uintptr_t)&myAppObj);
 
-    DRV_SDHC_Write(mySDHCHandle, &commandHandle, &myBuffer, blockStart, nBlock);
+    DRV_SDHC_AyncWrite(mySDHCHandle, &commandHandle, &myBuffer, blockStart, nBlock);
 
     if(DRV_SDHC_COMMAND_HANDLE_INVALID == commandHandle)
     {
@@ -1018,7 +1024,7 @@ void DRV_SDHC_Read
     None.
 */
 
-void DRV_SDHC_Write
+void DRV_SDHC_AsyncWrite
 (
     DRV_HANDLE handle,
     DRV_SDHC_COMMAND_HANDLE *commandHandle,
@@ -1029,7 +1035,7 @@ void DRV_SDHC_Write
 
 // *****************************************************************************
 /* Function:
-    DRV_SDHC_COMMAND_STATUS DRV_SDHC_CommandStatus
+    DRV_SDHC_COMMAND_STATUS DRV_SDHC_CommandStatusGet
     (
         const DRV_HANDLE handle,
         const DRV_SDHC_COMMAND_HANDLE commandHandle
@@ -1067,7 +1073,7 @@ void DRV_SDHC_Write
     DRV_SDHC_COMMAND_HANDLE      commandHandle;
     DRV_SDHC_COMMAND_STATUS      status;
 
-    status = DRV_SDHC_CommandStatus(handle, commandHandle);
+    status = DRV_SDHC_CommandStatusget(handle, commandHandle);
     if(status == DRV_SDHC_COMMAND_COMPLETED)
     {
         // Operation Done
@@ -1079,7 +1085,7 @@ void DRV_SDHC_Write
     the current status.
 */
 
-DRV_SDHC_COMMAND_STATUS DRV_SDHC_CommandStatus
+DRV_SDHC_COMMAND_STATUS DRV_SDHC_CommandStatusGet
 (
     const DRV_HANDLE handle,
     const DRV_SDHC_COMMAND_HANDLE commandHandle
@@ -1203,7 +1209,7 @@ SYS_MEDIA_GEOMETRY * DRV_SDHC_GeometryGet
 
     DRV_SDHC_EventHandlerSet(drvSDHCHandle, APP_SDHCEventHandler, (uintptr_t)&myAppObj);
 
-    DRV_SDHC_Read(drvSDHCHandle, &commandHandle, &myBuffer, blockStart, nBlock);
+    DRV_SDHC_AsyncRead(drvSDHCHandle, &commandHandle, &myBuffer, blockStart, nBlock);
 
     if(DRV_SDHC_COMMAND_HANDLE_INVALID == commandHandle)
     {

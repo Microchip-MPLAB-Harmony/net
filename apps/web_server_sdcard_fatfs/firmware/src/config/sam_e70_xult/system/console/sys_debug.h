@@ -52,11 +52,6 @@
     extern "C" {
 #endif
 
-// This should be defined in configuration.h.  It is added here as a build safe-guard.
-#ifndef SYS_DEBUG_BUFFER_DMA_READY
-    #define SYS_DEBUG_BUFFER_DMA_READY
-#endif
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: SYS DEBUG Data Types
@@ -106,25 +101,6 @@ typedef enum
 */
 extern SYS_ERROR_LEVEL gblErrLvl;
 
-// DOM-IGNORE-END
-
-
-// *****************************************************************************
-/* SYS Debug Module Index Number
-
-  Summary:
-    Debug System Service index.
-
-  Description:
-    This constant defines a symbolic name for the debug system service index.
-
-  Remarks:
-    There can only be a single debug system service instance in the system.
-*/
-
-#define SYS_DEBUG_INDEX_0           0
-
-
 // *****************************************************************************
 /* SYS Debug Initialize structure
 
@@ -152,6 +128,23 @@ typedef struct
 
 } SYS_DEBUG_INIT;
 
+// DOM-IGNORE-END
+
+// *****************************************************************************
+/* SYS Debug Module Index Number
+
+  Summary:
+    Debug System Service index.
+
+  Description:
+    This constant defines a symbolic name for the debug system service index.
+
+  Remarks:
+    There can only be a single debug system service instance in the system.
+*/
+
+#define SYS_DEBUG_INDEX_0           0
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -161,8 +154,10 @@ typedef struct
 
 // *****************************************************************************
 /* Function:
-    SYS_MODULE_OBJ SYS_DEBUG_Initialize( const SYS_MODULE_INDEX index,
-                                         const SYS_MODULE_INIT * const init )
+    SYS_MODULE_OBJ SYS_DEBUG_Initialize(
+        const SYS_MODULE_INDEX index,
+        const SYS_MODULE_INIT* const init
+    )
 
   Summary:
     Initializes the global error level and specific module instance.
@@ -175,15 +170,15 @@ typedef struct
     None.
 
   Parameters:
-    index           - Index for the instance to be initialized
+    index           - Index for the instance to be initialized.
     init            - Pointer to a data structure containing any data necessary
                       to initialize the debug service. This pointer may be null
                       if no data is required because static overrides have
                       been provided.
 
   Returns:
-    If successful, returns a valid handle to an object.  Otherwise, it
-    returns SYS_MODULE_OBJ_INVALID.
+    If successful, returns SYS_MODULE_OBJ_STATIC.  Otherwise, it returns
+    SYS_MODULE_OBJ_INVALID.
 
   Example:
     <code>
@@ -191,110 +186,25 @@ typedef struct
     SYS_DEBUG_INIT debugInit =
     {
         .moduleInit = {0},
-        .errorLevel = SYS_ERROR_DEBUG,
+        .errorLevel = SYS_DEBUG_GLOBAL_ERROR_LEVEL,
+        .consoleIndex = 0,
     };
 
-    objectHandle = SYS_Debug_Initialize (SYS_DEBUG_CONSOLE, (SYS_MODULE_INIT*)&debugInit);
-    if (SYS_MODULE_OBJ_INVALID == objectHandle)
+    objectHandle = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+    if (objectHandle == SYS_MODULE_OBJ_INVALID)
     {
         // Handle error
     }
     </code>
 
   Remarks:
-    This routine should only be called once during system initialization. If the
-    system was already initialized it safely returns without causing any disturbance.
+    This routine should only be called once during system initialization.
 */
 
-SYS_MODULE_OBJ SYS_DEBUG_Initialize( const SYS_MODULE_INDEX index,
-                                   const SYS_MODULE_INIT * const init );
-
-
-// *****************************************************************************
-/* Function:
-    void SYS_DEBUG_Reinitialize( SYS_MODULE_OBJ object,
-                               const SYS_MODULE_INIT * const init )
-
-   Summary:
-    Reinitializes and refreshes the data structure for the instance of the
-    Debug module.
-
-   Description:
-    This function reinitializes and refreshes the data structure for the instance
-    of the Debug module using the supplied data.
-
-  Precondition:
-    The SYS_DEBUG_Initialize function should have been called before calling
-    this function.
-
-  Parameters:
-    object          - Identifies the SYS DEBUG Object returned by the Initialize
-                      interface
-    init            - Pointer to the data structure containing any data
-                      necessary to initialize the hardware
-
-   Returns:
-    None
-
-   Example:
-    <code>
-    SYS_MODULE_OBJ  objectHandle;
-
-    // Populate the console initialization structure
-    SYS_DEBUG_INIT dbgInit =
-    {
-        .moduleInit = {0},
-        .errorLevel = SYS_ERROR_DEBUG,
-    };
-
-    SYS_DEBUG_Reinitialize (objectHandle, (SYS_MODULE_INIT*)&dbgInit);
-    </code>
-
-   Remarks:
-    This operation uses the same initialization data structure as the
-    SYS_DEBUG_Initialize operation. This function can be called multiple times
-    to reinitialize the module.
-*/
-
-void SYS_DEBUG_Reinitialize( SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init );
-
-
-// *****************************************************************************
-/* Function:
-    void SYS_DEBUG_Deinitialize( SYS_MODULE_OBJ object )
-
-  Summary:
-    Deinitializes the specific module instance of the Debug module.
-
-  Description:
-    This function deinitializes the specific module instance disabling its
-    operation (and any hardware for driver modules). Resets all of the internal
-    data structures and fields for the specified instance to the default settings.
-
-  Precondition:
-    The SYS_DEBUG_Initialize function should have been called before calling
-    this function.
-
-  Parameters:
-    object    - SYS DEBUG object handle, returned from SYS_DEBUG_Initialize
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    SYS_MODULE_OBJ      object;     //  Returned from SYS_DEBUG_Initialize
-    SYS_DEBUG_Deinitialize (object);
-    </code>
-
-  Remarks:
-    Once the Initialize operation has been called, the Deinitialize
-    operation must be called before the Initialize operation can be called
-    again.
-*/
-
-void SYS_DEBUG_Deinitialize( SYS_MODULE_OBJ object );
-
+SYS_MODULE_OBJ SYS_DEBUG_Initialize(
+    const SYS_MODULE_INDEX index,
+    const SYS_MODULE_INIT* const init
+);
 
 // *****************************************************************************
 /* Function:
@@ -305,11 +215,10 @@ void SYS_DEBUG_Deinitialize( SYS_MODULE_OBJ object );
 
   Description:
     This function is used to maintain the debug module's internal state
-    machine and implement its ISR for interrupt-driven implementations.
+    machine.
 
   Precondition:
-    The SYS_DEBUG_Initialize function must have been called for the specified
-    CONSOLE driver instance.
+    The SYS_DEBUG_Initialize function must have been called.
 
   Parameters:
     object    - SYS DEBUG object handle, returned from SYS_DEBUG_Initialize
@@ -330,17 +239,16 @@ void SYS_DEBUG_Deinitialize( SYS_MODULE_OBJ object );
     </code>
 
   Remarks:
-    This function is normally not called directly by an application.  It is
-    called by the system's Tasks routine (SYS_Tasks) or by the appropriate raw
-    ISR.
+    This function is normally not called directly by an application. 
+    The task routine may not be called if the debug service does not require 
+    maintaining an internal state machine.
 */
 
 void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
 
-
 // *****************************************************************************
 /* Function:
-    SYS_STATUS SYS_DEBUG_Status( SYS_MODULE_OBJ object )
+    SYS_STATUS SYS_DEBUG_Status ( SYS_MODULE_OBJ object )
 
   Summary:
     Returns status of the specific instance of the debug service module.
@@ -350,7 +258,7 @@ void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
     instance.
 
   Precondition:
-    The SYS_CONSOLE_Initialize function should have been called before calling
+    The SYS_DEBUG_Initialize function should have been called before calling
     this function.
 
   Parameters:
@@ -363,13 +271,12 @@ void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
                                   running state in which the module is ready
                                   to accept new operations.
     * SYS_STATUS_BUSY           - Indicates that the module is busy with a
-                                  previous system level operation and cannot
-                                  start another.
+                                  previous system level operation.
     * SYS_STATUS_ERROR          - Indicates that the module is in an error
                                   state.  Any value less than SYS_STATUS_ERROR
                                   is also an error state.
     * SYS_STATUS_UNINITIALIZED  - Indicates that the module has not been
-                                  initialized or has been deinitialized.
+                                  initialized.
 
   Example:
     <code>
@@ -377,9 +284,9 @@ void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
     SYS_STATUS          debugStatus;
 
     debugStatus = SYS_DEBUG_Status (object);
-    if (SYS_STATUS_ERROR >= debugStatus)
+    if (debugStatus == SYS_STATUS_READY)
     {
-        // Handle error
+        // Debug service is initialized and ready to accept requests.
     }
     </code>
 
@@ -387,7 +294,7 @@ void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
     None.
 */
 
-SYS_STATUS SYS_DEBUG_Status( SYS_MODULE_OBJ object );
+SYS_STATUS SYS_DEBUG_Status ( SYS_MODULE_OBJ object );
 
 
 // *****************************************************************************
@@ -398,34 +305,31 @@ SYS_STATUS SYS_DEBUG_Status( SYS_MODULE_OBJ object );
 
 // *****************************************************************************
 /* Function:
-    SYS_DEBUG_Message( const char* message );
+    void SYS_DEBUG_Message(const char *message)
 
   Summary:
     Prints a message to the console regardless of the system error level.
 
   Description:
     This function prints a message to the console regardless of the system
-    error level.  It can be used as an implementation of the SYS_MESSAGE and
+    error level. It can be used as an implementation of the SYS_MESSAGE and
     SYS_DEBUG_MESSAGE macros.
 
   Precondition:
-    SYS_DEBUG_Initialize must have returned a valid object handle and the
-    SYS_DEBUG_Tasks function must be called by the system to complete the
-    message request.
+    SYS_DEBUG_Initialize must have returned a valid object handle.
 
   Parameters:
-    message         - Pointer to a message string to be displayed.
+    message - Pointer to a message string to be displayed.
 
   Returns:
     None.
 
   Example:
     <code>
-    // In configuration.h:
-    #define SYS_MESSAGE(message)  SYS_DEBUG_Message(message)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_MESSAGE(message) SYS_DEBUG_Message(message)
 
-    // In source (.c) files:
-    SYS_MESSAGE("My Message\n\r");
+    SYS_MESSAGE("My Message\r\n");
     </code>
 
   Remarks:
@@ -443,7 +347,7 @@ void SYS_DEBUG_Message(const char *message);
 
 // *****************************************************************************
 /* Function:
-    SYS_DEBUG_Print( const char* format, ... )
+    void SYS_DEBUG_Print(const char *format, ...)
 
   Summary:
     Formats and prints a message with a variable number of arguments to the
@@ -451,13 +355,11 @@ void SYS_DEBUG_Message(const char *message);
 
   Description:
     This function formats and prints a message with a variable number of
-    arguments to the console regardless of the system error level.  It can be
+    arguments to the console regardless of the system error level. It can be
     used to implement the SYS_PRINT and SYS_DEBUG_PRINT macros.
 
   Precondition:
-    SYS_DEBUG_Initialize must have returned a valid object handle and the
-    SYS_DEBUG_Tasks function must be called by the system to complete the
-    message request.
+    SYS_DEBUG_Initialize must have returned a valid object handle.
 
   Parameters:
     format          - Pointer to a buffer containing the format string for
@@ -470,8 +372,8 @@ void SYS_DEBUG_Message(const char *message);
 
   Example:
     <code>
-    // In configuration.h
-    #define SYS_PRINT(format, ...)  SYS_DEBUG_Print(format, ##__VA_ARG__)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_PRINT(fmt, ...) SYS_DEBUG_Print(fmt, ##__VA_ARGS__)
 
     // In source code
     int result;
@@ -486,7 +388,7 @@ void SYS_DEBUG_Message(const char *message);
   Remarks:
     The format string and arguments follow the printf convention.
 
-    Do not call this function directly.  Call the SYS_PRINT or SYS_DEBUG_PRINT
+    Do not call this function directly. Call the SYS_PRINT or SYS_DEBUG_PRINT
     macros instead.
 
     The default SYS_PRINT and SYS_DEBUG_PRINT macro definitions remove the
@@ -497,10 +399,9 @@ void SYS_DEBUG_Message(const char *message);
 
 void SYS_DEBUG_Print( const char *format, ... );
 
-
 // *****************************************************************************
 /* Function:
-    void SYS_DEBUG_ErrorLevelSet(SYS_ERROR_LEVEL level);
+    void SYS_DEBUG_ErrorLevelSet(SYS_ERROR_LEVEL level)
 
   Summary:
     Sets the global system error reporting level.
@@ -512,7 +413,7 @@ void SYS_DEBUG_Print( const char *format, ... );
     SYS_DEBUG_Initialize must have returned a valid object handle.
 
   Parameters:
-    level           - The desired system error level.
+    level - The desired system error level.
 
   Returns:
     None.
@@ -528,10 +429,9 @@ void SYS_DEBUG_Print( const char *format, ... );
 
 void SYS_DEBUG_ErrorLevelSet(SYS_ERROR_LEVEL level);
 
-
 // *****************************************************************************
 /* Function:
-   SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
+   SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void)
 
   Summary:
     Returns the global system Error reporting level.
@@ -592,18 +492,18 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Example:
     <code>
-    // In configuration.h
-    #define SYS_DEBUG_MESSAGE(level,message)  _SYS_DEBUG_MESSAGE(level,message)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_DEBUG_MESSAGE(level,message)  _SYS_DEBUG_MESSAGE(level,message)
 
-    // In library source (.c) code.
-    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "My debug warning message\n\r");
+    // In source code
+    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "My debug warning message\r\n");
     </code>
 
   Remarks:
     Do not call this macro directly.  Call the SYS_DEBUG_MESSAGE macro instead.
 
     The default SYS_DEBUG_MESSAGE macro definition removes the message and
-    function call from the source code.  To access and utilize the message,
+    function call from the source code. To access and utilize the message,
     define the SYS_DEBUG_USE_CONSOLE macro or override the definition of the
     SYS_DEBUG_MESSAGE macro.
 */
@@ -640,8 +540,8 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Example:
     <code>
-    // In configuration.h
-    #define SYS_DEBUG_PRINT(level, format, ...)  _SYS_DEBUG_PRINT(level, format, ##__VA_ARG__)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_DEBUG_PRINT(level, fmt, ...) _SYS_DEBUG_PRINT(level, fmt, ##__VA_ARGS__)
 
     // In source code
     int result;
@@ -712,7 +612,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     system error level.  It can be mapped to any desired implementation.
 
   Precondition:
-    If mapped to the _SYS_MESSAGE function, then the system debug service must
+    If mapped to the SYS_DEBUG_Message function, then the system debug service must
     be initialized and running.
 
   Parameters:
@@ -724,11 +624,11 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Example:
     <code>
-    // In configuration.h:
-    #define SYS_MESSAGE(message)  _SYS_MESSAGE(message)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_MESSAGE(message) SYS_DEBUG_Message(message)
 
-    // In source (.c) files:
-    SYS_MESSAGE("My Message\n\r");
+    // In source code
+    SYS_MESSAGE("My Message\r\n");
     </code>
 
   Remarks:
@@ -749,18 +649,20 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 // *****************************************************************************
 /* Function:
-    SYS_DEBUG_MESSAGE( const char* message )
+    SYS_DEBUG_MESSAGE(SYS_ERROR_LEVEL level, const char* message )
 
   Summary:
-    Prints a debug message if the system error level is defined defined at
+    Prints a debug message if the system error level is defined at
     or lower than the level specified.
 
   Description:
     This function prints a debug message if the system error level is defined at
-    or lower than the level specified.
+    or lower than the level specified. If mapped to the SYS_DEBUG_Message function,
+    then the system debug service must be initialized and running.
 
   Precondition:
-    SYSTEM_CURRENT_ERROR_LEVEL must be defined as SYS_ERROR_DEBUG.
+    If mapped to the SYS_DEBUG_Message function, then the system debug service must be
+    initialized and running.
 
   Parameters:
     level           - The current error level threshold for displaying the message.
@@ -771,9 +673,12 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Example:
     <code>
-    #define SYS_DEBUG_MESSAGE   _SYS_DEBUG_MESSAGE
-    SYS_ERROR_LevelSet(SYS_ERROR_DEBUG);
-    SYS_DEBUG_MESSAGE("System Debug Message \n\r");
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_DEBUG_MESSAGE(level, message) _SYS_DEBUG_MESSAGE(level, message)
+
+    SYS_DEBUG_ErrorLevelSet(SYS_ERROR_DEBUG);
+    SYS_DEBUG_MESSAGE(SYS_ERROR_WARNING, "System Debug Message \r\n");
+
     </code>
 
   Remarks:
@@ -794,7 +699,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 // *****************************************************************************
 /* Function:
-    SYS_PRINT(const char* format, ...);
+    SYS_PRINT(const char* format, ...)
 
   Summary:
     Formats and prints an error message with a variable number of arguments
@@ -802,10 +707,11 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Description:
     This function formats and prints an error message with a variable number of
-    if the system error level is defined at or lower than the level specified.
+    arguments regardless of the system error level.
 
   Precondition:
-    SYSTEM_CURRENT_ERROR_LEVEL must be defined.
+    If mapped to the SYS_DEBUG_Print function, then the system debug service must
+    be initialized and running.
 
   Parameters:
     format          - Pointer to a buffer containing the format string for
@@ -818,8 +724,8 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Example:
     <code>
-    // In configuration.h
-    #define SYS_PRINT(format, ...)  _SYS_DEBUG_PRINT(format, ##__VA_ARG__)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h file: #define SYS_PRINT(fmt, ...) SYS_DEBUG_Print(fmt, ##__VA_ARGS__)
 
     // In source code
     int result;
@@ -833,8 +739,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     </code>
 
   Remarks:
-    The format string and arguments follow the printf convention. This function
-    is called by the macros SYS_PRINT and SYS_ERROR_PRINT
+    The format string and arguments follow the printf convention.
 
     By default, this macro is defined as nothing, effectively removing all code
     generated by calls to it.  To process SYS_PRINT calls, this macro must be
@@ -861,10 +766,11 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Description:
     This macro formats and prints an error message if the system error level
-    is defined at or lower than the level specified.o
+    is defined at or lower than the level specified.
 
   Precondition:
-    SYS_DEBUG_Initialize must have returned a valid object handle.
+    If mapped to the SYS_DEBUG_Print function, then the system debug service must
+    be initialized and running.
 
   Parameters:
     level           - The current error level threshold for displaying the message.
@@ -878,8 +784,8 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
   Example:
     <code>
-    // In configuration.h
-    #define SYS_DEBUG_PRINT(level, format, ...)  _SYS_DEBUG_PRINT(level, format, ##__VA_ARG__)
+    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
+    // In sys_debug.h: #define SYS_DEBUG_PRINT(level, fmt, ...) _SYS_DEBUG_PRINT(level, fmt, ##__VA_ARGS__)
 
     // In source code
     int result;
@@ -893,11 +799,10 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     </code>
 
   Remarks:
-    The format string and arguments follow the printf convention. This function
-    is called by the macros SYS_PRINT and SYS_DEBUG_PRINT.
+    The format string and arguments follow the printf convention.
 
     By default, this macro is defined as nothing, effectively removing all code
-    generated by calls to it.  To process SYS_MESSAGE calls, this macro must be
+    generated by calls to it.  To process SYS_DEBUG_PRINT calls, this macro must be
     defined in a way that maps calls to it to the desired implementation (see
     example, above).
 

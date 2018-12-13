@@ -148,6 +148,7 @@ typedef struct _tag_TCPIP_ICMP_ECHO_REQUEST
 */
 typedef struct
 {
+    void*   reserved;
 } TCPIP_ICMP_MODULE_CONFIG;
 
 // *****************************************************************************

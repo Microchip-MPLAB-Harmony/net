@@ -48,16 +48,10 @@
 // Section: File includes
 // *****************************************************************************
 // *****************************************************************************
-
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-
+#include "configuration.h"
 #include "driver/sdhc/drv_sdhc.h"
 #include "driver/sdhc/src/drv_sdhc_host.h"
-#include "driver/sdhc/src/drv_sdhc_variant_mapping.h"
 #include "osal/osal.h"
-#include "system/time/sys_time.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -73,10 +67,10 @@
     SDHC driver Buffer Handle Macros
 
   Description:
-    Buffer handle related utility macros. SDHC driver buffer handle is a 
+    Buffer handle related utility macros. SDHC driver buffer handle is a
     combination of buffer token and the buffer object index. The buffertoken
     is a 16 bit number that is incremented for every new write or erase request
-    and is used along with the buffer object index to generate a new buffer 
+    and is used along with the buffer object index to generate a new buffer
     handle for every request.
 
   Remarks:
@@ -94,7 +88,7 @@
 #define DRV_SDHC_COMMAND_STATUS_SUCCESS         0x00
 #define DRV_SDHC_COMMAND_STATUS_ERROR           0x01
 #define DRV_SDHC_COMMAND_STATUS_TIMEOUT_ERROR   0x02
-#define DRV_SDHC_COMMAND_STATUS_CRC_ERROR       0x03 
+#define DRV_SDHC_COMMAND_STATUS_CRC_ERROR       0x03
 
 #define DRV_SDHC_COMMAND_TIMEOUT_ERROR          0x01
 #define DRV_SDHC_COMMAND_CRC_ERROR              0x02
@@ -103,41 +97,13 @@
 #define DRV_SDHC_XFER_ERROR                     0x10
 
 // *****************************************************************************
-/* SDHC Read/Write/Erase Region Index Numbers
-
-  Summary:
-    SDHC Geometry Table Index definitions.
-
-  Description:
-    These constants provide SDHC Geometry Table index definitions.
-
-  Remarks:
-    None
-*/
-#define GEOMETRY_TABLE_READ_ENTRY   (0)
-#define GEOMETRY_TABLE_WRITE_ENTRY  (1)
-#define GEOMETRY_TABLE_ERASE_ENTRY  (2)
-
-// *****************************************************************************
 // *****************************************************************************
 // Section: SD Host Controller constants
 // *****************************************************************************
 // *****************************************************************************
 /* Constants used by SD card driver */
 
-// *****************************************************************************
-/* SD Host Controller connection states
-
-  Summary:
-    Lists SD card physical connection states
-
-  Description:
-    This enumeration lists different SD card physical connection states.
-
-  Remarks:
-    None.
-*/
-
+/* SD Host Controller connection states. */
 typedef enum
 {
     /* SD Host Controller is attached from the system */
@@ -148,21 +114,7 @@ typedef enum
 
 }DRV_SDHC_ATTACH;
 
-
-
-// *****************************************************************************
-/* SD Host Controller type
-
-  Summary:
-    Lists different types of SD cards.
-
-  Description:
-    This enumeration lists different types of SD cards.
-
-  Remarks:
-    None.
-*/
-
+/* SD Host Controller type. */
 typedef enum
 {
     /* Normal SD Host Controller */
@@ -170,23 +122,9 @@ typedef enum
 
     /* SDHC type Card */
     DRV_SDHC_MODE_HC
-
 }DRV_SDHC_TYPE;
 
-
-// *****************************************************************************
-/* SD Host Controller initialization stages
-
-  Summary:
-    Lists various stages while initializing the SD card.
-
-  Description:
-    This enumeration lists various stages while initializing the SD card.
-
-  Remarks:
-    None.
-*/
-
+/* SD Host Controller initialization stages. */
 typedef enum
 {
     DRV_SDHC_INIT_RESET_CARD = 0,
@@ -238,20 +176,20 @@ typedef enum
     DRV_SDHC_CMD_LINE_STATE_CHECK = 0,
     DRV_SDHC_CMD_FRAME_AND_SEND_CMD,
     DRV_SDHC_CMD_CHECK_TRANSFER_COMPLETE,
-    DRV_SDHC_CMD_EXEC_IS_COMPLETE 
+    DRV_SDHC_CMD_EXEC_IS_COMPLETE
 } DRV_SDHC_COMMAND_STATES;
 
 typedef enum
 {
     /* Set the clock divider value. */
     DRV_SDHC_CLOCK_SET_DIVIDER = 0,
-    
+
     /* Wait for the internal clock stable bit to be set. */
     DRV_SDHC_CLOCK_PRE_ENABLE_DELAY,
-    
+
     /* Enable the clock. */
     DRV_SDHC_CLOCK_ENABLE,
-    
+
     /* Delay post clock enable. */
     DRV_SDHC_CLOCK_POST_ENABLE_DELAY,
 
@@ -260,20 +198,7 @@ typedef enum
 
 } DRV_SDHC_CLOCK_STATES;
 
-// *****************************************************************************
-/* SD Host Controller Driver Client Object
-
-  Summary:
-    Defines the object required for the maintenance of the software clients
-
-  Description:
-    This defines the object required for the maintenance of the software
-    clients instance. This object exists once per client instance.
-
-  Remarks:
-    None
-*/
-
+/* SD Host Controller Driver Client Object. */
 typedef struct _DRV_SDHC_CLIENT_OBJ_STRUCT
 {
     /* Hardware instance index associated with the client */
@@ -292,7 +217,6 @@ typedef struct _DRV_SDHC_CLIENT_OBJ_STRUCT
     uintptr_t context;
 
 } DRV_SDHC_CLIENT_OBJ;
-
 
 typedef struct DRV_SDHC_BUFFER_OBJ
 {
@@ -331,21 +255,7 @@ typedef struct DRV_SDHC_BUFFER_OBJ
 
 } DRV_SDHC_BUFFER_OBJ;
 
-
-// *****************************************************************************
-/* SD Host Controller Driver Hardware Instance Object
-
-  Summary:
-    Defines the object required for the maintenance of the hardware instance
-
-  Description:
-    This defines the object required for the maintenance of the hardware
-    instance. This object exists once per hardware instance of the peripheral.
-
-  Remarks:
-    None
-*/
-
+/* SD Host Controller Driver Hardware Instance Object. */
 typedef struct _DRV_SDHC_OBJ_STRUCT
 {
     /* Index of the driver */
@@ -373,7 +283,7 @@ typedef struct _DRV_SDHC_OBJ_STRUCT
 
     /* Sent command status. */
     uint8_t commandStatus;
-    
+
     /* Variable used to track the number of trials of a particular operation.
      * */
     uint16_t trials;
@@ -399,7 +309,7 @@ typedef struct _DRV_SDHC_OBJ_STRUCT
     /* Different stages in media initialization */
     DRV_SDHC_INIT_STATES initState;
     DRV_SDHC_INIT_STATES nextInitState;
-    
+
     /* Different states in sending a command */
     DRV_SDHC_COMMAND_STATES cmdState;
 
@@ -417,7 +327,7 @@ typedef struct _DRV_SDHC_OBJ_STRUCT
 
     /* Mutex */
     OSAL_MUTEX_DECLARE(mutex);
-    
+
 } DRV_SDHC_OBJ;
 
 #endif //#ifndef _DRV_SDHC_LOCAL_H
@@ -425,4 +335,3 @@ typedef struct _DRV_SDHC_OBJ_STRUCT
 /*******************************************************************************
  End of File
 */
-
