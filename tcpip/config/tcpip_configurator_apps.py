@@ -183,6 +183,13 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
 	tcpipAutoConfigTFTP_CLIENT.setDescription("Enable TFTP_CLIENT")
 	tcpipAutoConfigTFTP_CLIENT.setDependencies(tcpipAutoConfigTFTPCLIENTEnable, ["TCPIP_AUTOCONFIG_ENABLE_TFTP_CLIENT"])
 
+	# Enable TFTP_SERVER
+	tcpipAutoConfigTFTP_SERVER = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_TFTP_SERVER", None)
+	tcpipAutoConfigTFTP_SERVER.setLabel("TFTP SERVER")
+	tcpipAutoConfigTFTP_SERVER.setVisible(True)
+	tcpipAutoConfigTFTP_SERVER.setDescription("Enable TFTP_SERVER")
+	tcpipAutoConfigTFTP_SERVER.setDependencies(tcpipAutoConfigTFTPSERVEREnable, ["TCPIP_AUTOCONFIG_ENABLE_TFTP_SERVER"])
+	
 	# Enable ZEROCONF
 	tcpipAutoConfigZEROCONF = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ZEROCONF", None)
 	tcpipAutoConfigZEROCONF.setLabel("ZEROCONF")
@@ -529,6 +536,21 @@ def tcpipAutoConfigTFTPCLIENTEnable(symbol, event):
 	else:
 		res = Database.deactivateComponents(["tcpipTftpc"])
 	
+def tcpipAutoConfigTFTPSERVEREnable(symbol, event):
+	tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+	enableTcpipAutoConfigApps(True)
+	if (event["value"] == True):
+		res = Database.activateComponents(["tcpipTftps"],"APPLICATION LAYER", False)	
+		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTftps", "libtcpipTftps")
+		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
+			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)	
+		if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
+			Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
+			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+	else:
+		res = Database.deactivateComponents(["tcpipTftps"])
+		
 def tcpipAutoConfigZEROCONFEnable(symbol, event):
 	tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
 	enableTcpipAutoConfigApps(True)
