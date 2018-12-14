@@ -1,0 +1,148 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_ICMP_EchoRequest Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02583.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00708.html" target="topic">ICMP Module</a> &gt; <a href="01453.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02583.html" target="topic">TCPIP_ICMP_EchoRequest Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02589.html" target="topic">Previous</a> | <a href="01453.html" target="topic">Up</a> | <a href="02584.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequest@TCPIP_ICMP_ECHO_REQUEST*@TCPIP_ICMP_REQUEST_HANDLE* Topic Title: TCPIP_ICMP_EchoRequest Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_ICMP_EchoRequest Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function allows a stack client to <a href="01131.html" target="topic">send</a> an ICMP query message to a remote host. The supplied sequence number and identifier will be used in the query message. The request will also contain user supplied data. The request is scheduled and the user will be notified of the outcome of the query using the callback function that's specified in the call.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00711.html" target="topic">ICMP_ECHO_RESULT</a> <strong><span style="color: #000000">TCPIP_ICMP_EchoRequest</span></strong>(
+    <a href="02578.html" target="topic">TCPIP_ICMP_ECHO_REQUEST</a>* <strong><span style="color: #000000">pEchoRequest</span></strong>, 
+    <a href="02588.html" target="topic">TCPIP_ICMP_REQUEST_HANDLE</a>* <strong><span style="color: #000000">pHandle</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TCP/IP Stack must be initialized and up and running.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">ICMP_ECHO_OK - Indicates the query request was successfully sent</li>
+<li class="Element600"><a href="00711.html" target="topic">ICMP_ECHO_RESULT</a> - The query request was unsuccessfully sent, which results in an error code (interface not ready for transmission, allocation error, etc.)</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The data buffer that's passed as part of the callback routine is no longer available after the callback routine returns control.&nbsp;</p>
+<p class="Element10">
+This routine is more generic than <a href="02585.html" target="topic">TCPIP_ICMP_EchoRequestSend</a> and is preferred.&nbsp;</p>
+<p class="Element10">
+The user has to enforce the fact that the &quot;identifier&quot; field has to be unique per (destination address, source address) pair.&nbsp;</p>
+<p class="Element10">
+Currently there could be only one ping/echo request active at a time. If another echo request is active, a ICMP_ECHO_BUSY code will be returned.&nbsp;</p>
+<p class="Element10">
+Once the callback notification occurs, the echo request is completed and the icmpHandle is invalidated.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">  uint8_t  myDataBuffer[200];     <i><span style="color: #008000">// buffer for the ping data</span></i>
+  <strong><span style="color: #000080">void</span></strong> EchoCallback(<a href="02578.html" target="topic">TCPIP_ICMP_ECHO_REQUEST</a>* pReqData, <a href="02588.html" target="topic">TCPIP_ICMP_REQUEST_HANDLE</a> icmpHandle, <a href="02579.html" target="topic">TCPIP_ICMP_ECHO_REQUEST_RESULT</a> result);    <i><span style="color: #008000">// callback function to be called</span></i>
+
+  <a href="02578.html" target="topic">TCPIP_ICMP_ECHO_REQUEST</a> myEchoRequest;
+  myEchoRequest.netH  = 0;
+  myEchoRequest.targetAddr  = 0xc0a00101;
+  myEchoRequest.sequenceNumber = 1;
+  myEchoRequest.identifier     = 0x1234;
+  myEchoRequest.pData          = myDataBuffer;
+  myEchoRequest.dataSize       = <strong><span style="color: #000080">sizeof</span></strong>(myDataBuffer);
+  myEchoRequest.callback       = EchoCallback;
+
+
+  <strong><span style="color: #000080">if</span></strong>(TCPIP_ICMP_EchoRequest(&amp;myEchoRequest, 0) == ICMP_ECHO_OK )
+  {
+      <i><span style="color: #008000">// successfully sent the ICMP request</span></i>
+      <i><span style="color: #008000">//</span></i>
+      <i><span style="color: #008000">// EchoCallback() will be called and data can be examined</span></i>
+  }
+  <strong><span style="color: #000080">else</span></strong>
+  {
+      <i><span style="color: #008000">// process the error</span></i>
+  }</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00708.html" target="topic">ICMP Module</a> &gt; <a href="01453.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02583.html" target="topic">TCPIP_ICMP_EchoRequest Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02589.html" target="topic">Previous</a> | <a href="01453.html" target="topic">Up</a> | <a href="02584.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequest@TCPIP_ICMP_ECHO_REQUEST*@TCPIP_ICMP_REQUEST_HANDLE* Topic Title: TCPIP_ICMP_EchoRequest Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

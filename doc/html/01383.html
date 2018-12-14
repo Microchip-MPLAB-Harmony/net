@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Abstraction Model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01383.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00328.html" target="topic">DNS Module</a> &gt; <a href="01392.html" target="topic">Using the Library</a> &gt; <a href="01383.html" target="topic">Abstraction Model</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01392.html" target="topic">Previous</a> | <a href="01392.html" target="topic">Up</a> | <a href="01391.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DNS Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Abstraction Model</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+DNS is part of the Application Layer. Following is a description of how the DNS Client works and how it should be used.
+<ol class="Element631">
+<li value="1" class="Element601">By default, the DNS client is enabled and included in the TCP/IP stackbuild.</li>
+<li value="2" class="Element601">The DNS Client module will use a UDP <a href="01231.html" target="topic">socket</a> on port number 53 to contact the DNS server.</li>
+<li value="3" class="Element601">The DNS client can be enabled/disabled dynamically at run time.</li>
+<li value="4" class="Element601">When the TCP/IP commands module is built in the stack, commands for manipulation of the DNS module are available:
+<ol class="Element632">
+<li value="1" class="Element602">The DNS module can be enabled using the command &quot;dns eth0 on&quot;.</li>
+<li value="2" class="Element602">The DNS client module can be disabled from the command prompt using &quot;dns eth0 off&quot;.</li>
+<li value="3" class="Element602">In the above examples the first Ethernet interface is used. Any valid network interface can be used.</li>
+</ol></li>
+<li value="2" class="Element601">Applications or demonstrations such as berkeley_tcp_client, berkeley_udp_client, tcpip_tcp_client, and tcpip_udp_client, use the <a href="02131.html" target="topic">TCPIP_DNS_Resolve</a> function with Host name and Record type as arguments to resolve the domain host name. The DNS module supports the Record type of &quot;A&quot; for IPv4 addresses and &quot;AAAA&quot; for IPv6.</li>
+<li value="3" class="Element601">The resolved domain name and the mapped IPv4 or IPv6 address will be stored in a table with the expiration time, which is calculated from the DNS server response.</li>
+<li value="4" class="Element601">The server supplied IPv4 and IPv6 addresses will be cached internally (see the DNS_CLIENT_CACHE_PER_IPV4_ADDRESS and DNS_CLIENT_CACHE_PER_IPV6_ADDRESS parameters).</li>
+<li value="5" class="Element601">The <a href="02128.html" target="topic">TCPIP_DNS_IsResolved</a> function will return DNS_RES_OK if the domain name resolve is successful.</li>
+<li value="6" class="Element601">The TCPIP_DNS_GetNumberOfIPAddresses function can be used to obtain the number of the IPv4 or IPv6 addresses present in the DNS Resolver tables.</li>
+<li value="7" class="Element601">The DNS Resolver table (cache) stores the dcorresponding name, the IP address and the expiration time returned by the server.</li>
+<li value="8" class="Element601">The functions, TCPIP_DNS_GetIPv4Address and TCPIP_DNS_GetIPv6Address, can be used to obtain the IPv4 or Ipv6 addresses for a resolved name entry.</li>
+</ol>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><p class="Element10" style="text-align: center;">
+<img src="dnsClientFlowChart.png" border="0" alt="" title="">&nbsp;</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00328.html" target="topic">DNS Module</a> &gt; <a href="01392.html" target="topic">Using the Library</a> &gt; <a href="01383.html" target="topic">Abstraction Model</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01392.html" target="topic">Previous</a> | <a href="01392.html" target="topic">Up</a> | <a href="01391.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DNS Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

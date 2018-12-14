@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>NET_PRES_TransportObject Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01119.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00974.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="00988.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01119.html" target="topic">NET_PRES_TransportObject Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01117.html" target="topic">Previous</a> | <a href="00988.html" target="topic">Up</a> | <a href="01120.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransportObject Topic Title: NET_PRES_TransportObject Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+NET_PRES_TransportObject Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MPLAB Harmony Networking Presentation Transport Information Structure&nbsp;</p>
+<p class="Element10">
+This data type defines the data required by the transport layer to effectively work with the Networking Presentation Layer. The data is there to allow the Networking Presentation Layer to configure the provider to effectively use the transport layer.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_NET_PRES_TransportObject</span></strong> {
+  <a href="01115.html" target="topic">NET_PRES_TransOpen</a> <strong><span style="color: #000000">fpOpen</span></strong>;
+  <a href="01109.html" target="topic">NET_PRES_TransBind</a> <strong><span style="color: #000000">fpLocalBind</span></strong>;
+  <a href="01109.html" target="topic">NET_PRES_TransBind</a> <strong><span style="color: #000000">fpRemoteBind</span></strong>;
+  <a href="01116.html" target="topic">NET_PRES_TransOption</a> <strong><span style="color: #000000">fpOptionGet</span></strong>;
+  <a href="01116.html" target="topic">NET_PRES_TransOption</a> <strong><span style="color: #000000">fpOptionSet</span></strong>;
+  <a href="01110.html" target="topic">NET_PRES_TransBool</a> <strong><span style="color: #000000">fpIsConnected</span></strong>;
+  <a href="01110.html" target="topic">NET_PRES_TransBool</a> <strong><span style="color: #000000">fpWasReset</span></strong>;
+  <a href="01110.html" target="topic">NET_PRES_TransBool</a> <strong><span style="color: #000000">fpDisconnect</span></strong>;
+  <a href="01110.html" target="topic">NET_PRES_TransBool</a> <strong><span style="color: #000000">fpConnect</span></strong>;
+  <a href="01111.html" target="topic">NET_PRES_TransClose</a> <strong><span style="color: #000000">fpClose</span></strong>;
+  <a href="01123.html" target="topic">NET_PRES_TransSocketInfoGet</a> <strong><span style="color: #000000">fpSocketInfoGet</span></strong>;
+  <a href="01110.html" target="topic">NET_PRES_TransBool</a> <strong><span style="color: #000000">fpFlush</span></strong>;
+  <a href="01117.html" target="topic">NET_PRES_TransPeek</a> <strong><span style="color: #000000">fpPeek</span></strong>;
+  <a href="01112.html" target="topic">NET_PRES_TransDiscard</a> <strong><span style="color: #000000">fpDiscard</span></strong>;
+  <a href="01113.html" target="topic">NET_PRES_TransHandlerRegister</a> <strong><span style="color: #000000">fpHandlerRegister</span></strong>;
+  <a href="01122.html" target="topic">NET_PRES_TransSignalHandlerDeregister</a> <strong><span style="color: #000000">fpHandlerDeregister</span></strong>;
+  <a href="01120.html" target="topic">NET_PRES_TransRead</a> <strong><span style="color: #000000">fpRead</span></strong>;
+  <a href="01124.html" target="topic">NET_PRES_TransWrite</a> <strong><span style="color: #000000">fpWrite</span></strong>;
+  <a href="01121.html" target="topic">NET_PRES_TransReady</a> <strong><span style="color: #000000">fpReadyToRead</span></strong>;
+  <a href="01121.html" target="topic">NET_PRES_TransReady</a> <strong><span style="color: #000000">fpReadyToWrite</span></strong>;
+  <a href="01114.html" target="topic">NET_PRES_TransIsPortDefaultSecured</a> <strong><span style="color: #000000">fpIsPortDefaultSecure</span></strong>;
+} NET_PRES_TransportObject;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransOpen fpOpen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to the transport's open call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBind fpLocalBind;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to the transport's bind call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBind fpRemoteBind;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to the transport's remote bind call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransOption fpOptionGet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's option get call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransOption fpOptionSet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's option set call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBool fpIsConnected;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's is connected call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBool fpWasReset;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's was reset call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBool fpDisconnect;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's disconnect call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBool fpConnect;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's <a href="00262.html" target="topic">connect</a> call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransClose fpClose;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's close call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransSocketInfoGet fpSocketInfoGet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's get <a href="01231.html" target="topic">socket</a> info call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransBool fpFlush;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's flush call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransPeek fpPeek;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's peek call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransDiscard fpDiscard;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's discard call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransHandlerRegister fpHandlerRegister;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's register handler call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransSignalHandlerDeregister fpHandlerDeregister;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function call to the the transport's deregister handler call&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransRead fpRead;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to call when doing a read from a transport layer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransWrite fpWrite;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to call when doing a write to a transport layer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransReady fpReadyToRead;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to call when checking to see if there is data available to be read from a transport layer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransReady fpReadyToWrite;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to call when checking to see if there is space available to be write to a transport layer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_TransIsPortDefaultSecured fpIsPortDefaultSecure;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to call when checking to see if a port is secure by default&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00974.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="00988.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01119.html" target="topic">NET_PRES_TransportObject Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01117.html" target="topic">Previous</a> | <a href="00988.html" target="topic">Up</a> | <a href="01120.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransportObject Topic Title: NET_PRES_TransportObject Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

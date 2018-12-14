@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>_tag_MAC_DATA_SEGMENT Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00111.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02763.html" target="topic">TCPIP_MAC_DATA_SEGMENT Structure</a> &gt; <a href="00111.html" target="topic">_tag_MAC_DATA_SEGMENT Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02763.html" target="topic">Previous</a> | <a href="02763.html" target="topic">Up</a> | <a href="02765.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: _tag_MAC_DATA_SEGMENT Topic Title: _tag_MAC_DATA_SEGMENT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+_tag_MAC_DATA_SEGMENT Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCPIP MAC Data Segment&nbsp;</p>
+<p class="Element10">
+Structure of a segment buffer transferred with the MAC. A MAC TX or RX packet can consist of multiple data segments. On TX the MAC has to be able to transmit packets that span multiple data segments. On RX of a network frame the MAC may have to use multiple segments to construct a packet. (For performance reasons, a contiguous MAC packet, with just one segment, if possible, is preferred).</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_tag_MAC_DATA_SEGMENT</span></strong> {
+  <strong><span style="color: #000080">struct</span></strong> _tag_MAC_DATA_SEGMENT* <strong><span style="color: #000000">next</span></strong>;
+  uint8_t* <strong><span style="color: #000000">segLoad</span></strong>;
+  uint16_t <strong><span style="color: #000000">segLen</span></strong>;
+  uint16_t <strong><span style="color: #000000">segSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">segFlags</span></strong>;
+  uint16_t <strong><span style="color: #000000">segLoadOffset</span></strong>;
+  uint8_t <strong><span style="color: #000000">segClientData</span></strong>[4];
+  uint8_t <strong><span style="color: #000000">segClientLoad</span></strong>[0];
+};</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+struct _tag_MAC_DATA_SEGMENT* next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Multi-segment support, next segment in the chain.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t* segLoad;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Pointer to segment data payload. It specifies the address of the 1st byte to be transmitted.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t segLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Segment payload size; Number of bytes from this segment that has to be transmitted.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t segSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Segment allocated total usable size. This does not include the segLoadOffset (see below).&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t segFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+<a href="02946.html" target="topic">TCPIP_MAC_SEGMENT_FLAGS</a> segment flags: TCPIP_MAC_SEG_FLAG_STATIC, TCPIP_MAC_SEG_FLAG_RX, TCPIP_MAC_SEG_FLAG_RX, TCPIP_MAC_SEG_FLAG_RX_STICKY&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t segLoadOffset;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Note 1: This offset is used as a performance improvement. It allows for the MAC frame to start on an unaligned address but enforces the alignment of the network layer data and improves the IP checksum calculation. The value of this offset is MAC dependent. A typical value for an Ethernet MAC should be 2 bytes (size of the MAC frame is 14 bytes). Note 2: Normally only the 1st segment of a packet needs this extra room at the beginning of the segment buffer. Note 3: The MAC may make use of this space at the beginning of the segment buffer. This is a space reserved for the MAC purposes. Note 4: It is up to the MAC to check that the value of this offset is enforced. PIC32 MAC specific notes: Note 1. The MAC will reject the packet if the load offset is not at least 2 bytes.
+<ol class="Element631">
+<li value="2" class="Element601">The PIC32 MAC uses these 2 bytes to calculate the offset between the segLoad and the <a href="02824.html" target="topic">TCPIP_MAC_PACKET</a> packet it belongs to. That means that the <a href="02824.html" target="topic">TCPIP_MAC_PACKET</a>* and the segLoad cannot be more than 64 KB apart!</li>
+</ol>&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t segClientData[4];&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Additional client segment data. Ignored by the MAC driver.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t segClientLoad[0];&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Additional client segment payload; Ignored by the MAC driver.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+See notes for the segLoadOffset member. On 32-bit machines, the segment payload is allocated so that it is always 32-bit aligned and its size is 32-bits multiple. The segLoadOffset adds to the payload address and insures that the network layer data is 32-bit aligned.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02763.html" target="topic">TCPIP_MAC_DATA_SEGMENT Structure</a> &gt; <a href="00111.html" target="topic">_tag_MAC_DATA_SEGMENT Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02763.html" target="topic">Previous</a> | <a href="02763.html" target="topic">Up</a> | <a href="02765.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: _tag_MAC_DATA_SEGMENT Topic Title: _tag_MAC_DATA_SEGMENT Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

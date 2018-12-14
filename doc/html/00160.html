@@ -1,0 +1,190 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Configuring the Browser</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00160.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00160.html" target="topic">Configuring the Browser</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00164.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="00168.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Configuring the Browser Topic Title: Configuring the Browser)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Configuring the Browser</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+To configure the MIB browser:&nbsp;</p>
+<p class="Element10">
+1. Select the 'Advanced' tab in the browser. </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image008.png" border="0" alt="" title=""></p><p class="Element10">
+The following configuration window appears: </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image010.png" border="0" alt="" title=""></p><p class="Element10">
+2. If V2c services are required, select SNMP version V2c, and configure the Read and Write community to the browser.
+<ul class="Element631">
+<li class="Element601">The V2c agent will respond only to the queries from SNMP MIB browsers using the same community. That is, the V2c agent and the browser should be members of the same community.</li>
+<li class="Element601">If the community fields are left blank, the manager sends the SNMP request with the community name as &quot;public&quot;</li>
+<li class="Element601">The V2c agent is configured by default with three Read communities (&quot;public&quot;, &quot;read&quot;, &quot; &quot;) and three Write communities (&quot;private&quot;,&quot;write&quot;,&quot;public&quot;)</li>
+<li class="Element601">The default maximum community length is 8 characters</li>
+<li class="Element601">As the default communities also contain the &quot;public&quot; community name, the agent will respond to all of the browsers requesting the &quot;public&quot; community</li>
+<li class="Element601">At run time, the community names can be dynamically configured using the HTTP interface for SNMP community name configuration</li>
+</ul>If the V2c agent receives an SNMP request with an unknown community name, the agent will generate an Authentication trap.&nbsp;</p>
+<p class="Element10">
+The V2c agent's multiple community support feature enables the user application to provide limited access to the requesting browser based on the community name used by the browser to access the MIB database variables of the agent.&nbsp;</p>
+<p class="Element10">
+3. If SNMPv3 services are required, select the SNMP Version as 'V3' in the 'Advanced' tab of the SNMP MIB Browser. The following configuration window appears: </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image012.png" border="0" alt="" title=""></p><p class="Element10">
+4. If SNMPv3 services are required, the SNMPv3 browser is required to be configured with the user name, authentication and privacy password, message authentication hash type, privacy protocol type. The SNMP server will respond only if one of the user credentials and user security parameters in the following table is configured at the manager. This table is stored in the global structure with the SNMPv3 server stack. The SNMPv3 server would only respond if the request credentials of the MIB browser matches to that of the stored user database of the SNMP server. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="38%">
+<div class="Element66">
+&nbsp;</div></td><td class="Element65" valign="top" width="22%">
+<div class="Element66">
+USER 1&nbsp;</div></td><td class="Element65" valign="top" width="22%">
+<div class="Element66">
+USER 2&nbsp;</div></td><td class="Element65" valign="top" width="18%">
+<div class="Element66">
+USER 3&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="38%">
+<div class="Element68">
+USM User&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+microchip&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+SnmpAdmin&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+root&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Security Level&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+auth, priv&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+auth, no priv&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+no auth, no priv&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Auth Algorithm&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+MD5&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+SHA1&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Auth Password&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+auth12345&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+ChandlerUS&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Privacy Algorithm&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+AES&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="38%">
+<div class="Element68">
+Privacy Password&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+priv12345&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+5. The Microchip SNMPv3 stack does support only one Context Engine ID with the server. Leave the &quot;Context Name&quot; option in the &quot;Advanced&quot; tab empty. It is ignored on the server.&nbsp;</p>
+<p class="Element10">
+6. According to the user and the auth and privacy protocols configured with the SNMP browser, the UDP authenticated and encrypted message would be exchanged between server and the client.
+<ul class="Element631">
+<li class="Element601">If the USER 1 values, as shown in the table, are configured in the MIB browser, the data exchange between the client and server is encrypted and authenticated. The PDU can be captured in the Ethernet packet sniffer like WireShark and examined. As the data is encrypted and authenticated, the data integrity and the privacy is achieved.</li>
+<li class="Element601">If the USER 2 values, as shown in the table, are configured in the MIB browser, the data exchange between the client and server is authenticated. The data integrity will be checked once the data is received at either end. The message authentication mechanism protects from the possible data sniffing and modification threat, and also guarantees that the data is received from the authenticated and guaranteed source.</li>
+<li class="Element601">If the USER3 values, as shown in the table, are configured in the MIB browser, the data exchange between the client and server is neither authenticated nor encrypted.</li>
+</ul>Considering the three USER configurations, if the SNMP server is to be accessed over WAN in the Internet cloud, the data should be encrypted and authenticated to have the highest level of data privacy and integrity.&nbsp;</p>
+<p class="Element10">
+7. Configure the IPv4 or IPv6 address of the SNMP agent to the 'Address field'. </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image014.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image016.png" border="0" alt="" title="">&nbsp;</p><p class="Element10">
+8. Select the variable to be accessed from the agent MIB database from the SNMP MIBs pane. The OID of the selected variable can be seen in the OID tab in the following figure. </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image018.png" border="0" alt="" title=""></p><p class="Element10">
+9. Select the SNMP Get operation from the operations tab. </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image020.png" border="0" alt="" title=""></p><p class="Element10">
+10. The SNMPv3 server demonstration MIB is included with RFC1213 SNMPv2 MIB variables, private MIB variables, and the SNMP-FRAMEWORK-MIB variables. If the SNMPv2C request with a validated community name is generated from the MIB Browser, only a limited set of variables is accessed. The access to the MIB variables is restricted to the type of SNMP version request received. If the SNMPv3 request with correct credentials is generated from the MIB Browser, the complete MIB access is provided.&nbsp;</p>
+<p class="Element10">
+11. The user will need to decide which part of the MIB should be required to be restricted depending upon the SNMP version type. The MIB design is the one of the important steps in deciding the MIB tree structure and the variable to be placed accordingly.&nbsp;</p>
+<p class="Element10">
+12. The SNMP server demonstration MIB is added with a static variable OID named &quot;snmpv3PvtObject&quot; with a OID value as 43.6.1.4.1.17095.6.1. This variable is placed in the private branch of the MIB by creating an independent branch. All of the other variables in the private branch are accessible by a SNMPv2c request. The access to this static variable is restricted by the SNMP version type. Only the SNMPv3 request with correct credentials can access this variable.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00160.html" target="topic">Configuring the Browser</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00164.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="00168.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Configuring the Browser Topic Title: Configuring the Browser)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

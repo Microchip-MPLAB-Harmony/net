@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_UDP_DestinationIPAddressSet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03783.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03783.html" target="topic">TCPIP_UDP_DestinationIPAddressSet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03778.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03784.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_DestinationIPAddressSet@UDP_SOCKET@IP_ADDRESS_TYPE@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_DestinationIPAddressSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_UDP_DestinationIPAddressSet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">It sets the IP destination address This allows changing the IP destination address dynamically.</li>
+</ul></p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_UDP_DestinationIPAddressSet</span></strong>(
+    <a href="03865.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>, 
+    IP_ADDRESS_TYPE <strong><span style="color: #000000">addType</span></strong>, 
+    IP_MULTI_ADDRESS* <strong><span style="color: #000000">remoteAddress</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+UDP initialized UDP <a href="01231.html" target="topic">socket</a> should have been opened with <a href="03804.html" target="topic">TCPIP_UDP_ServerOpen</a>()/<a href="03780.html" target="topic">TCPIP_UDP_ClientOpen</a>()(). hUDP - valid <a href="01231.html" target="topic">socket</a> remoteAddress - valid address pointer</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the UDP <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Type of address: IPv4/IPv6&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+remoteAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to an address to use&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">true - Indicates success</li>
+<li class="Element601">false - Indicates failure:
+<ul class="Element632">
+<li class="Element602">invalid <a href="01231.html" target="topic">socket</a></li>
+<li class="Element602">invalid <a href="01231.html" target="topic">socket</a> address type</li>
+<li class="Element602"><a href="01231.html" target="topic">socket</a> is of broadcast type</li>
+</ul></li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The call will fail if the <a href="01231.html" target="topic">socket</a> was previously set to broadcast using the <a href="03799.html" target="topic">TCPIP_UDP_OptionsSet</a> call. <a href="03799.html" target="topic">TCPIP_UDP_OptionsSet</a> takes precedence.&nbsp;</p>
+<p class="Element10">
+The call will fail if remoteAddress is 0. The destination IP address will not be changed.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03783.html" target="topic">TCPIP_UDP_DestinationIPAddressSet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03778.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03784.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_DestinationIPAddressSet@UDP_SOCKET@IP_ADDRESS_TYPE@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_DestinationIPAddressSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

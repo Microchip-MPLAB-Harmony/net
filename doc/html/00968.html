@@ -1,0 +1,101 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Building MPFS2 Images</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00968.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00973.html" target="topic">MPFS2 Utility</a> &gt; <a href="00968.html" target="topic">Building MPFS2 Images</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00969.html" target="topic">Previous</a> | <a href="00973.html" target="topic">Up</a> | <a href="00972.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 Building MPFS2 Images Topic Title: Building MPFS2 Images)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Building MPFS2 Images</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MPFS2 Utility has four steps, which are denoted on the left hand side of the dialog.&nbsp;</p>
+<p class="Element10">
+To build an MPFS image, select <strong>Start With: Webpage Directory</strong> in Step 1 and choose the directory in which the web pages are stored.&nbsp;</p>
+<p class="Element10">
+Users need to provide the web page directory path from the &lt;install-dir&gt;/net/apps/ demonstration project.&nbsp;</p>
+<p class="Element10">
+The Source Directory path is stored in <span class="Element146">MPFS2SettingDetails.xml</span> for future access. </p><p class="Element10" style="text-align: center;">
+<img src="TCPIP OVERVIEW MPFS2 Step 1.png" border="0" alt="" title=""></p><p class="Element10">
+Step 2 selects the output format. If storing the web pages in external EEPROM or serial Flash, choose the <strong>BIN Image</strong> output format. If internal program memory will be used, select <strong>PIC32</strong> <strong>Image</strong> for use with 32-bit devices. To store the web pages on a device formatted with the FAT file system select <strong>MDD</strong>. Refer to <a href="00967.html" target="topic">Advanced MPFS2 Settings</a> for more information.&nbsp;</p>
+<p class="Element10">
+The configurable parameters of Output file format and Advance Settings are stored in <span class="Element146">MPFS2SettingDetails.xml</span>. </p><p class="Element10" style="text-align: center;">
+<img src="TCPIP OVERVIEW MPFS2 Step 2.png" border="0" alt="" title=""></p><p class="Element10">
+Step 3 asks for the TCP/IP MPLAB X IDE project directory. The MPFS utility will write the image file to the project directory, and will also update the <span class="Element146">http_print.h</span> file there if needed. Select the correct directory so that the right files are modified.&nbsp;</p>
+<p class="Element10">
+By default, the project directory path is one path behind the source directory. Both the Project Directory and Image Name are configurable parameters, which are stored in <span class="Element146">MPFS2SettingDetails.xml</span>. </p><p class="Element10" style="text-align: center;">
+<img src="TCPIP OVERVIEW MPFS2 Step 3.png" border="0" alt="" title=""></p><p class="Element10">
+Step 4 controls the upload settings. When external EEPROM or serial Flash is used for storage, the option to upload the newly created image to the board is available. Check the box next to <strong>Upload Image</strong> <strong>To</strong> to enable this feature. The target host name (or IP address), upload protocol, and upload path may need to be changed to the one chosen when the board was first configured. You may also need to modify the user name and password used to access the secured functionality in your application, like web page upload. Use the <strong>Settings</strong> button to edit these values (see <a href="00971.html" target="topic">MPFS2 Upload Settings</a> for more information).&nbsp;</p>
+<p class="Element10">
+If internal program memory is being used, the image will be compiled in with the project and so direct uploads are not available. Make sure to include the output source file indicated in Step 3 as part of the project. </p><p class="Element10" style="text-align: center;">
+<img src="generate_upload.png" border="0" alt="" title=""></p><p class="Element10">
+Once all the correct settings have been chosen, click the <strong>Generate</strong> button to create the image. If uploads are enabled, this will also attempt to upload the file to the device.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00973.html" target="topic">MPFS2 Utility</a> &gt; <a href="00968.html" target="topic">Building MPFS2 Images</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00969.html" target="topic">Previous</a> | <a href="00973.html" target="topic">Up</a> | <a href="00972.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 Building MPFS2 Images Topic Title: Building MPFS2 Images)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

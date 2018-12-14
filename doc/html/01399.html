@@ -1,0 +1,103 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01399.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00327.html" target="topic">DNS Server Module</a> &gt; <a href="01399.html" target="topic">Introduction</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00327.html" target="topic">Previous</a> | <a href="00327.html" target="topic">Up</a> | <a href="01402.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DNSS Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Introduction</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+A step-by-step analysis of the DNS Server is as follows:
+<ol class="Element631">
+<li value="1" class="Element601">DNS server can be enabled or disabled at run time.</li>
+<li value="2" class="Element601">If the TCP/IP commands module is built in, it contains a &quot;dnss&quot; command that could be used for interfacing with the DNSS module.</li>
+<li value="3" class="Element601">A client sends some query to the DNS Server of the TCP/IP stack for a name resolution.</li>
+<li value="4" class="Element601">The DNS Server of the TCP/IP Stack first checks the configuration value of replyBoardAddr.
+<ol class="Element632">
+<li value="1" class="Element602">This Boolean flag is passed to the DNSS module at initialization time.</li>
+</ol></li>
+<li value="5" class="Element601">If replyBoardAddr is true, the DNS server will reply to the client query with its own board address.</li>
+<li value="6" class="Element601"> </li>
+<li value="7" class="Element601">If replyBoardAddr is false, the DNSS will check its cache for an entry for that name.
+<ol class="Element632">
+<li value="1" class="Element602">If a valid entry is found, the reply is sent to the client requesting the info.</li>
+<li value="2" class="Element602">Otherwise no reply is provided.</li>
+</ol></li>
+<li value="8" class="Element601">To update the DNSS cache, new entries can be added either using the DNSS API or directly from the console, using the &quot;dnss&quot; command.</li>
+<li value="9" class="Element601">The dnsserv command is used to add, delete and display the DNS server details</li>
+<li value="10" class="Element601">Authoritative Name servers and Addition Name servers are not processed.</li>
+<li value="11" class="Element601">The client may store the answer to the DNS query in it's own cache for future use.</li>
+</ol>&nbsp;</p>
+<p class="Element10">
+<img src="DNSS Figure 1.png" border="0" alt="" title="">&nbsp;</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00327.html" target="topic">DNS Server Module</a> &gt; <a href="01399.html" target="topic">Introduction</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00327.html" target="topic">Previous</a> | <a href="00327.html" target="topic">Up</a> | <a href="01402.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DNSS Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

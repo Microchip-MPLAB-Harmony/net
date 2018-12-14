@@ -1,0 +1,173 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_SNMPV3_EngineUserDataBaseGet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03319.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01597.html" target="topic">Library Interface</a> &gt; b) SNMPv3 Module Functions &gt; <a href="03319.html" target="topic">TCPIP_SNMPV3_EngineUserDataBaseGet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03316.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="03320.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_EngineUserDataBaseGet@TCPIP_SNMPV3_USERDATABASECONFIG_TYPE@uint8_t@uint8_t@void * Topic Title: TCPIP_SNMPV3_EngineUserDataBaseGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_SNMPV3_EngineUserDataBaseGet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function is used to get SNMPv3 Engine data base details using <a href="03333.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE</a> enumeration.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_SNMPV3_EngineUserDataBaseGet</span></strong>(
+    <a href="03333.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE</a> <strong><span style="color: #000000">userDataBaseType</span></strong>, 
+    uint8_t <strong><span style="color: #000000">len</span></strong>, 
+    uint8_t <strong><span style="color: #000000">userIndex</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">val</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCPIP_SNMP_Initialize is already called.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+userDataBaseType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+SNMPv3 data base configuration type&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes need to be read from data base&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+userIndex&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+SNMPv3 user index&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+val&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+void pointer to a any data type. Length parameter value is changed according to data type.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">  <strong><span style="color: #000080">bool</span></strong> <a href="03313.html" target="topic">TCPIP_SNMP_VarbindGet</a>(<a href="01159.html" target="topic">SNMP_ID</a> var, <a href="01160.html" target="topic">SNMP_INDEX</a> index, uint8_t* ref, <a href="01172.html" target="topic">SNMP_VAL</a>* val)
+  {
+      <strong><span style="color: #000080">switch</span></strong>(var)
+      {
+          <strong><span style="color: #000080">case</span></strong> USER_SECURITY_NAME:
+              <strong><span style="color: #000080">if</span></strong>(index &lt; <a href="03349.html" target="topic">TCPIP_SNMPV3_USM_MAX_USER</a>)
+              {
+                  <strong><span style="color: #000080">if</span></strong>(TCPIP_SNMPV3_EngineUserDataBaseGet(SNMPV3_USERNAME_CONFIG_TYPE,myRef,index,&amp;val-&gt;byte) == <strong><span style="color: #000080">false</span></strong>)
+                  {
+                      *ref = <a href="01150.html" target="topic">SNMP_END_OF_VAR</a>;
+                  }
+                  <strong><span style="color: #000080">else</span></strong>
+                  {
+                      myRef++;
+                      *ref = myRef;
+                  }
+                  <strong><span style="color: #000080">return</span></strong> <strong><span style="color: #000080">true</span></strong>;
+              }
+              <strong><span style="color: #000080">break</span></strong>;
+      }
+  }
+  </pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01597.html" target="topic">Library Interface</a> &gt; b) SNMPv3 Module Functions &gt; <a href="03319.html" target="topic">TCPIP_SNMPV3_EngineUserDataBaseGet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03316.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="03320.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_EngineUserDataBaseGet@TCPIP_SNMPV3_USERDATABASECONFIG_TYPE@uint8_t@uint8_t@void * Topic Title: TCPIP_SNMPV3_EngineUserDataBaseGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

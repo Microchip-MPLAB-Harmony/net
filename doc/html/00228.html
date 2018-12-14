@@ -1,0 +1,127 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Running the Demonstration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00228.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01253.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00205.html" target="topic">Demonstrations</a> &gt; <a href="00225.html" target="topic">tcpip_tcp_client_server</a> &gt; <a href="00228.html" target="topic">Running the Demonstration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00227.html" target="topic">Previous</a> | <a href="00225.html" target="topic">Up</a> | <a href="00229.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP TCP Client Server pic32_ethernet_starter_kit_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Running the Demonstration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<strong>For SAM E70/V71 Xplained Ultra Evaluation Kit</strong></p>
+<ol class="Element630">
+<li value="1" class="Element600">Configure the Development Board as given <a href="00227.html" target="topic">here</a>.</li>
+<li value="2" class="Element600">Make the demonstration setup as shown <a href="00317.html" target="topic">here</a>.</li>
+<li value="3" class="Element600">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element600">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
+<li value="5" class="Element600">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element600">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element600">Restart the demonstration by pressing the 'RESET' button on the board.</li>
+<li value="8" class="Element600">See that the initialization prints on the serial port terminal.</li>
+<li value="9" class="Element600">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+</ol><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="dhcp_5.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+To test TCP Client, input the following command from the serial port: openurl &lt;url&gt; - The &lt;url&gt; argument must be a fully formed URL; for instance, <a href="http://www.microchip.com" target="_blank"><img src="indicator_external_link.gif" border="0" alt="" title="">http://www.microchip.com/</a>&nbsp;</p>
+<p class="Element10">
+After the command is input, the demonstration will make a DNS query. Then it will open a connection to the requested URL and perform a simple HTTP <span class="Element146">GET</span> command.&nbsp;</p>
+<p class="Element10">
+The response received from the server will be printed on the terminal application through the serial port.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="http_put_6.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+To test the Server part of the demonstration, the TCP Client application is required to run on the computer (SocketTest, Packet Sender etc). In this demonstration, we use the program, SocketTest (http://sockettest.sourceforge.net/). This demonstration has been tested with SocketTest v3.0.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+1. Open the SocketTest software and set the configuration as shown in the following figure.&nbsp;</p>
+<p class="Element10">
+<img src="enter_ip_7.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+2. Press the Connect button on the SocketTest software after setting the configuration. The serial terminal indicates that the connection has been established.&nbsp;</p>
+<p class="Element10">
+3. Type any message in the message box of the SocketTest program, and press the Send button. The Server running on the development board will echo back the message to the SocketTest program.&nbsp;</p>
+<p class="Element10">
+<img src="client_test_8.png" border="0" alt="" title="">&nbsp;</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01253.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00205.html" target="topic">Demonstrations</a> &gt; <a href="00225.html" target="topic">tcpip_tcp_client_server</a> &gt; <a href="00228.html" target="topic">Running the Demonstration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00227.html" target="topic">Previous</a> | <a href="00225.html" target="topic">Up</a> | <a href="00229.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP TCP Client Server pic32_ethernet_starter_kit_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

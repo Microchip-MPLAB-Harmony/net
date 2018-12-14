@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01554.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00978.html" target="topic">NDP Module</a> &gt; <a href="01554.html" target="topic">Introduction</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00978.html" target="topic">Previous</a> | <a href="00978.html" target="topic">Up</a> | <a href="01558.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP NDP Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Introduction</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The NDP (Neighbor Discovery Protocol) for IP version 6 is used by IPv6 nodes on the same link to discover each other's presence. RFC - 4861.&nbsp;</p>
+<p class="Element10">
+NDP module is responsible for:
+<ul class="Element631">
+<li class="Element601">Address Auto configuration of nodes</li>
+<li class="Element601">Discovery of other nodes in the link (It can be a Router Discovery or Neighbor Discovery)</li>
+<li class="Element601">Determining the link-layer<span style="color: #FFFFFF">_</span>address of other nodes</li>
+<li class="Element601">Duplicate address detection (DAD)</li>
+<li class="Element601">Finding available routers and Domain Name System (DNS) servers</li>
+<li class="Element601">Address Prefix discovery</li>
+<li class="Element601">Parameter Discovery (Such as Link MTU or Hop limit)</li>
+</ul></p><div class="Element15">
+Comparing with IPv4:</div>
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">NDP is a substitute of ARP (Address Resolution protocol ). This new mechanism uses a mix of ICMPv6 and multicast addresses to discover the IPv6 node on same link.</li>
+<li class="Element601">NDP includes Neighbor Unreachability Detection (NUD) , thus improving the robustness of packet delivery.</li>
+<li class="Element601">Unlike IPv4 broadcast addresses, IPv6 address resolution multicasts are spread over 4 billion (2^32) multicast addresses, greatly reducing address resolution-related interrupts on nodes other than the target. Moreover, non-IPv6 machines should not be interrupted at all.</li>
+<li class="Element601">Neighbor Discovery defines five different ICMPv6 packet types.</li>
+</ul></p><div class="Element15">
+Five Different ICMPv6 Packet Types:</div>
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601"><strong>Router Solicitation</strong> - Hosts inquire with Router Solicitation message to locate routers on the attached link</li>
+<li class="Element601"><strong>Router Advertisement</strong> - Router advertise their presence periodically to all the nodes or in response to the Router Solicitation message</li>
+<li class="Element601"><strong>Neighbor Solicitation</strong> - Neighbor solicitations are used by nodes to determine the Link Layer address of a neighbor, or to verify that a neighbor is still reachable via a cached Link Layer address</li>
+<li class="Element601"><strong>Neighbor Advertisement</strong> - Neighbor advertisements are used by nodes to respond to a Neighbor Solicitation message</li>
+<li class="Element601"><strong>Redirect</strong> - Routers may inform hosts of a better first hop router for a destination</li>
+</ul></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00978.html" target="topic">NDP Module</a> &gt; <a href="01554.html" target="topic">Introduction</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00978.html" target="topic">Previous</a> | <a href="00978.html" target="topic">Up</a> | <a href="01558.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP NDP Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

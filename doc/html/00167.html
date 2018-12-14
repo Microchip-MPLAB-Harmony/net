@@ -1,0 +1,111 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Set Operation</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00167.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00168.html" target="topic">SNMP Operations</a> &gt; <a href="00167.html" target="topic">Set Operation</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00162.html" target="topic">Previous</a> | <a href="00168.html" target="topic">Up</a> | <a href="00169.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Set Operation Topic Title: Set Operation)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Set Operation</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Set command updates the variable information of the MIB database in the agent. The Set command can be performed only on those variables which are declared as 'READWRITE' in the MIB scripts, and only if the community name matches any one of the 'write' community names configured with the agent.
+<ol class="Element631">
+<li value="1" class="Element601">Select the ledD5 variable from the MIB tree.</li>
+<li value="2" class="Element601">Configure the SNMP version to '1' or '2.' Configure the Write Community to 'public', 'write', or 'private'.</li>
+<li value="3" class="Element601">If version is configured to '3', configure the appropriate V3 credentials.</li>
+<li value="4" class="Element601">Select 'Set' from the Operations menu and the SNMP SET window will pop up. Enter the value for the browser in the OID field as per the defined syntax of the <span class="Element146">mchip.mib</span> and <span class="Element146">snmp.mib</span> scripts.</li>
+</ol></p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image030.png" border="0" alt="" title=""> A success message will appear.&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image032.png" border="0" alt="" title="">&nbsp;</p><p class="Element10">
+A 'Get' operation for the same variable should now return the new 'Set' value for this variable. LED5 on the demonstration board should now be ON. Repeat the procedure to set LED5 to OFF. LED6 can also be set ON or OFF.</p><div class="Element15">
+Table View</div>
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Like other operations , table view is used for sequence variables</li>
+<li class="Element601">Create row, delete row is not supported</li>
+<li class="Element601">Refresh button is used to get the updated tabular values</li>
+</ul></p><div class="Element15">
+IPv4TrapTable</div>
+<p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image034.png" border="0" alt="" title=""></p><div class="Element15">
+IPv6TrapTable</div>
+<p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image036.png" border="0" alt="" title=""></p><div class="Element15">
+Walk</div>
+<p class="Element10">
+With IPv4 Address </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image038.png" border="0" alt="" title=""></p><p class="Element10">
+With IPv6 Address </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image040.png" border="0" alt="" title=""></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00168.html" target="topic">SNMP Operations</a> &gt; <a href="00167.html" target="topic">Set Operation</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00162.html" target="topic">Previous</a> | <a href="00168.html" target="topic">Up</a> | <a href="00169.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Set Operation Topic Title: Set Operation)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

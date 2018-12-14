@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_TFTPC_OPERATION_RESULT Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03713.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03842.html" target="topic">TFTP Client Module</a> &gt; <a href="01652.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="03713.html" target="topic">TCPIP_TFTPC_OPERATION_RESULT Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03705.html" target="topic">Previous</a> | <a href="01652.html" target="topic">Up</a> | <a href="01648.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPC_OPERATION_RESULT Topic Title: TCPIP_TFTPC_OPERATION_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_TFTPC_OPERATION_RESULT Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_TFTPC_OPERATION_RESULT&nbsp;</p>
+<p class="Element10">
+This enumeration defines the standard error codes for TFTP PUT and GET command operation.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TFTPC_ERROR_NONE</span></strong> = 0,
+  <strong><span style="color: #000000">TFTPC_ERROR_FILE_NOT_FOUND</span></strong> = -1,
+  <strong><span style="color: #000000">TFTPC_ERROR_BUSY</span></strong> = -2,
+  <strong><span style="color: #000000">TFTPC_ERROR_DISK_FULL</span></strong> = -3,
+  <strong><span style="color: #000000">TFTPC_ERROR_INVALID_OPERATION</span></strong> = -4,
+  <strong><span style="color: #000000">TFTPC_ERROR_UNKNOWN_TID</span></strong> = -5,
+  <strong><span style="color: #000000">TFTPC_ERROR_FILE_EXISTS</span></strong> = -6,
+  <strong><span style="color: #000000">TFTPC_ERROR_NO_SUCH_USE</span></strong> = -7,
+  <strong><span style="color: #000000">TFTPC_ERROR_DNS_RESOLVE_ERR</span></strong> = -8,
+  <strong><span style="color: #000000">TFTPC_ERROR_INVALID_INTERFACE</span></strong> = -9,
+  <strong><span style="color: #000000">TFTPC_ERROR_INVALID_FILE_LENGTH</span></strong> = -10,
+  <strong><span style="color: #000000">TFTPC_ERROR_INVALID_SERVER_ADDR</span></strong> = -11
+} TCPIP_TFTPC_OPERATION_RESULT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_FILE_NOT_FOUND = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client file not found&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_BUSY = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client is busy when one file put or get transfer is going on.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_DISK_FULL = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client buffer full&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_INVALID_OPERATION = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client invalid command operation&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_UNKNOWN_TID = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP ID error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_FILE_EXISTS = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client file already exists&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_NO_SUCH_USE = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client not in use&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_DNS_RESOLVE_ERR = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client DNS resolve error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_INVALID_INTERFACE = -9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client interface error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_INVALID_FILE_LENGTH = -10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TFTP client file length is more than the expected size, which should be the size of SYS_FS_MAX_PATH&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TFTPC_ERROR_INVALID_SERVER_ADDR = -11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Invalid Server Address&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03842.html" target="topic">TFTP Client Module</a> &gt; <a href="01652.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="03713.html" target="topic">TCPIP_TFTPC_OPERATION_RESULT Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03705.html" target="topic">Previous</a> | <a href="01652.html" target="topic">Up</a> | <a href="01648.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPC_OPERATION_RESULT Topic Title: TCPIP_TFTPC_OPERATION_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

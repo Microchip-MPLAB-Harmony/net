@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_STACK_HEAP_FLAGS Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03443.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03443.html" target="topic">TCPIP_STACK_HEAP_FLAGS Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03436.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03451.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_FLAGS Topic Title: TCPIP_STACK_HEAP_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_STACK_HEAP_FLAGS Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Type: TCPIP_STACK_HEAP_FLAGS&nbsp;</p>
+<p class="Element10">
+Defines the flags supported by a TCP/IP heap creation function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_FLAG_NONE</span></strong> = 0x00,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED</span></strong> = 0x01,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC</span></strong> = 0x02,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN</span></strong> = 0x04,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_FLAG_POOL_STRICT</span></strong> = 0x08,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE</span></strong> = 0x10
+} TCPIP_STACK_HEAP_FLAGS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED = 0x01&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the heap needs to provide non cached buffers default is enabled&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC = 0x02&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP type specific flag: when an external heap functions are used this flags suppresses the multi-threaded synchronization directives and assumes that the protection is done by the external heap manager default is disabled&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN = 0x04&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP type specific flag: when an external heap functions are used this flags suppresses the internal implementation of buffer alignment required by the TCP/IP stack. Therefore the external allocation functions need to provide aligned buffers (usually on the cache line on cached platforms). The allocation function will return failure if the flag is turned on and the returned buffer is not properly aligned. default is disabled&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_FLAG_POOL_STRICT = 0x08&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL type specific flag: If the strict flag is enabled, the allocation will be tried strictly from the pool entry that matches the requested size. Otherwise, all the pool entries that have blocks larger than the requested size will be tried.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_FLAG_NO_WARN_MESSAGE = 0x10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+when debugging is enabled, do not issue a warning when a memory allocation operation fails default is disabled&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+New flags could be added in the future.&nbsp;</p>
+<p class="Element10">
+16 bit only flags supported!</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03443.html" target="topic">TCPIP_STACK_HEAP_FLAGS Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03436.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03451.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_FLAGS Topic Title: TCPIP_STACK_HEAP_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

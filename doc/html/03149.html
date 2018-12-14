@@ -1,0 +1,232 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_SMTPC_MAIL_MESSAGE Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03149.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01140.html" target="topic">SMTPC Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03149.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03139.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="03172.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MAIL_MESSAGE Topic Title: TCPIP_SMTPC_MAIL_MESSAGE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_SMTPC_MAIL_MESSAGE Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Structure: TCPIP_SMTPC_MAIL_MESSAGE&nbsp;</p>
+<p class="Element10">
+This data structure describes a mail message</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">from</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">to</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">sender</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">cc</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">bcc</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">date</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">subject</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">body</span></strong>;
+  size_t <strong><span style="color: #000000">bodySize</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nBuffers</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <a href="03115.html" target="topic">TCPIP_SMTPC_ATTACH_BUFFER</a>* <strong><span style="color: #000000">attachBuffers</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nFiles</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <a href="03121.html" target="topic">TCPIP_SMTPC_ATTACH_FILE</a>* <strong><span style="color: #000000">attachFiles</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">username</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">password</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">smtpServer</span></strong>;
+  uint16_t <strong><span style="color: #000000">serverPort</span></strong>;
+  <a href="03139.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS</a> <strong><span style="color: #000000">messageFlags</span></strong>;
+  <a href="03172.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK</a> <strong><span style="color: #000000">messageCallback</span></strong>;
+  <a href="03253.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_CALLBACK</a> <strong><span style="color: #000000">replyCallback</span></strong>;
+} TCPIP_SMTPC_MAIL_MESSAGE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* from;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mandatory Mail Fields<br>recipient return address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* to;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* sender;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Optional Mail Fields<br>if sent on behalf of someone else&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* cc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+carbon copy destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* bcc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+blind carbon copy destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* date;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+date for the mail message Should be formatted like: &quot;Wed, 20 July 2016 14:55:06 -0600&quot; if NULL, then the <a href="03132.html" target="topic">TCPIP_SMTPC_CLIENT_MESSAGE_DATE</a> will be used&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* subject;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Regular Mail Fields<br>mail subject line&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const uint8_t* body;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+mail body; main body of the mail&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int nBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Attachments<br>number of attached buffers&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const TCPIP_SMTPC_ATTACH_BUFFER* attachBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+array of buffer attachments&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int nFiles;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of attached files&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const TCPIP_SMTPC_ATTACH_FILE* attachFiles;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+array of file attachments&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* username;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Authentication<br>username to be presented when the mail server requires authentication&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* password;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+associated password to be presented when the mail server requires authentication&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* smtpServer;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Server<br>address or name of a server to <a href="01131.html" target="topic">send</a> the mail to (smtp.gmail.com, 74.125.23.109, etc.)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t serverPort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+port on which the SMTP server listens on Standard SMTP ports are 25 or 587 For servers supporting TLS (gmail, yahoo, etc.), the recommended port is 587&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAGS messageFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Additional message flags&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MESSAGE_CALLBACK messageCallback;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Notifications<br>message completion notification could be NULL if not needed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_SERVER_REPLY_CALLBACK replyCallback;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+server reply notification could be NULL if not needed&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+SMTPC does NOT make private copies of the strings, buffers, etc. presented in a TCPIP_SMTPC_MAIL_MESSAGE data structure. All fields that are pointers to strings, buffers, files names, etc. MUST be persistent until the mail complete notification is received.&nbsp;</p>
+<p class="Element10">
+The TCPIP_SMTPC_MAIL_MESSAGE data structure itself does not need to be persistent.&nbsp;</p>
+<p class="Element10">
+The mail body is not a char* but uint8_t* to allow sending binary data as well as part of the mail body. This requires though that the bodySize member is present.&nbsp;</p>
+<p class="Element10">
+If some file could not be opened when the mail is sent a warning will be issued and the file will be ignored.&nbsp;</p>
+<p class="Element10">
+Currently the fields: &quot;sender&quot;, &quot;cc&quot; and &quot;bcc&quot; are not used. They will be eventually added.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01140.html" target="topic">SMTPC Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03149.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03139.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="03172.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MAIL_MESSAGE Topic Title: TCPIP_SMTPC_MAIL_MESSAGE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

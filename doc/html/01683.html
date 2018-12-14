@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Core Functionality</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01683.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03901.html" target="topic">Zeroconf Module</a> &gt; <a href="01695.html" target="topic">Using the Library</a> &gt; <a href="01683.html" target="topic">Core Functionality</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01689.html" target="topic">Previous</a> | <a href="01695.html" target="topic">Up</a> | <a href="01685.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ZEROCONF Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Core Functionality</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This section provides information on core functionality.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01685.html" target="topic">Enabling</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Zeroconf can be enabled in the MPLAB Harmony Configurator, or by setting the following two defines in <span class="Element146">system_config.h</span> file:</p>
+<ul class="Element630">
+<li class="Element600"><a href="03583.html" target="topic">TCPIP_STACK_USE_ZEROCONF_LINK_LOCAL</a></li>
+<li class="Element600"><a href="03584.html" target="topic">TCPIP_STACK_USE_ZEROCONF_MDNS_SD</a> </li>
+</ul><p class="Element207">
+&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01690.html" target="topic">Link Local (Zeroconf)</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The first component of Zeroconf is the ability to self-assign an IP address to each member of a network. Normally, a DHCP server would handle such situations. However, in cases where no DHCP server exists, Zeroconf enabled devices negotiate unique IP addresses amongst themselves.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01692.html" target="topic">mDNS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The second component of Zeroconf is the ability to self-assign human-readable hostnames for themselves. Multicast DNS provides a local network the ability to have the features of a DNS server. Users can use easily remembered hostnames to accesses the devices on the network. In the event that devices elect to use the same hostname, as in the IP address resolution, each of the devices will auto-negotiate new names for themselves (usually by appending a number to the end of the name).&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01694.html" target="topic">Service Discovery</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The last component of Zeroconf is service discovery. All Zeroconf devices can broadcast what services they provide. For instance, a printer can broadcast that it has printing services available. A thermostat can broadcast that it has an HVAC control service. Other interested parties on the network who are looking for certain services can then see a list of devices that have the capability of providing the service, and<span style="color: #FFFFFF">_</span><a href="00262.html" target="topic">connect</a><span style="color: #FFFFFF">_</span>directly to it. This further eliminates the need to know whether something exists on a network (and what its IP or hostname is). As an end-user, all you would... <a href="01694.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01696.html" target="topic">Zeroconf Enabled Environments</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+All Apple products have Zeroconf enabled by default. On Windows, you'll need to download the Safari web browser, and during the install, enable support for Bonjour. Note that in the Safari browser, you can browse and see a list of all Bonjour enabled devices, and click through to them automatically.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03901.html" target="topic">Zeroconf Module</a> &gt; <a href="01695.html" target="topic">Using the Library</a> &gt; <a href="01683.html" target="topic">Core Functionality</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01689.html" target="topic">Previous</a> | <a href="01695.html" target="topic">Up</a> | <a href="01685.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ZEROCONF Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

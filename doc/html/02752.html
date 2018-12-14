@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02752.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00844.html" target="topic">IPv6 Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02752.html" target="topic">TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02717.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="02745.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_UniqueLocalUnicastAddressAdd@TCPIP_NET_HANDLE@uint16_t@IPV6_ULA_FLAGS@IP_MULTI_ADDRESS* Topic Title: TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function starts the process of adding an ULA address to the specified interface. The segments of the generated address are as follows:</p>
+<ul class="Element630">
+<li class="Element600">FC00::/7 - ULA prefix</li>
+<li class="Element600">L - 1 bit set to 1, locally assigned</li>
+<li class="Element600">Global ID - 40 bit random generated identifier</li>
+<li class="Element600">subnet ID - 16 bit subnet identifier</li>
+<li class="Element600">Interface ID - 64 bit interface identifier generated as a EUI64 from the specified interface MAC</li>
+</ul><p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The randomness of the &quot;Global ID&quot; prefix of the generated IPv6 address is obtained by using an NTP server. The supplied NTP server will be contacted to obtain an NTP time stamp. This time stamp together with the EUI64 identifier obtained from the interface MAC are passed through a 160 bits hash algorithm (SHA1) and the least significant 40 bits are used as the GlobalID of the interface.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00942.html" target="topic">IPV6_ULA_RESULT</a> <strong><span style="color: #000000">TCPIP_IPV6_UniqueLocalUnicastAddressAdd</span></strong>(
+    <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    uint16_t <strong><span style="color: #000000">subnetID</span></strong>, 
+    <a href="00938.html" target="topic">IPV6_ULA_FLAGS</a> <strong><span style="color: #000000">genFlags</span></strong>, 
+    IP_MULTI_ADDRESS* <strong><span style="color: #000000">ntpAddress</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The IPv6 stack is initialized and the interface is up and configured.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The interface to add the address to.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+subnetID&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The subnet ID to be used.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+genFlags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Address generation flags:</p>
+<ul class="Element630">
+<li class="Element600">IPV6_ULA_FLAG_NTPV4 - if set, the ntpAddress is an IPv4 address and the NTP server will be contacted over an IPv4 connection. Otherwise, a default IPv6 connection will be attempted</li>
+<li class="Element600">IPV6_ULA_FLAG_GENERATE_ONLY - if set, the address will not be added to the list of the addresses for the specified interface</li>
+<li class="Element600">IPV6_ULA_FLAG_SKIP_DAD - if set, the DAD processing will be skipped</li>
+</ul><p class="Element307">
+&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ntpAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The NTP server address - it is an IPv4/IPv6 address as selected by the IPV6_ULA_FLAG_NTPV4 flag (the IP address could be obtained with an DNS call into the stack)&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">IPV6_ULA_RES_BUSY - address generation module is busy</li>
+<li class="Element600">IPV6_ULA_RES_IF_ERR - IPv6 interface is not up</li>
+<li class="Element600">IPV6_ULA_RES_OK - if the call succeeded and the generation process was started</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Only one address generation at a time is supported for now. Before attempting a new address generation the previous operation has to be completed, otherwise the call will fail.&nbsp;</p>
+<p class="Element10">
+This function requires that the NTP client is enabled in the stack. If not, the call will fail.&nbsp;</p>
+<p class="Element10">
+The caller will be notified by the outcome of the operation by the stack using the standard IPv6 notification handler (registered by <a href="02719.html" target="topic">TCPIP_IPV6_HandlerRegister</a> call).</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00844.html" target="topic">IPv6 Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02752.html" target="topic">TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02717.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="02745.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_UniqueLocalUnicastAddressAdd@TCPIP_NET_HANDLE@uint16_t@IPV6_ULA_FLAGS@IP_MULTI_ADDRESS* Topic Title: TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

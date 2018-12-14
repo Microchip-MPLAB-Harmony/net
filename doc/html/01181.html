@@ -1,0 +1,246 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>snmpv3.h</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01181.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01595.html" target="topic">Files</a> &gt; <a href="01181.html" target="topic">snmpv3.h</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01144.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="01149.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: snmpv3.h Topic Title: snmpv3.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+snmpv3.h</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="436F6D70616E79"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+snmpv3.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Simple Network Management Protocol (SNMP) v3 API Header File&nbsp;</p>
+<p class="Element10">
+SNMPv3 provides a secure access to the devices using a combination of authentication and encryption of packets over the network. Comparing with SNMPv1/v2, SNMPv3 ensures that packets can be collected securely from SNMP devices. Microchip SNMPv3 Agent authentication is implemented with MD5 and SHA1 protocols and encryption is implemented with AES protocol. These credentials and other user information are stored in the global array. The user of the SNMPv3 stack can decide on the number of user names in the Userâ€™s data base to be stored with the Server. According to the SNMPv3 recommendation, SNMPv3 server should not be configured with the authentication and privacy passwords. Instead could be configured with the respective localized keys of the password. Microchip SNMPv3 agent is provided with the password information in the database for the â€œGetting Startedâ€ and for understanding purpose only. It is recommended that the SNMPv3 stack should be modified to restrict access to the password OIDs declared in the user data base.</p></div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01183.html" target="topic">SNMPV3_HMAC_HASH_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Different type of authentication for SNMPv3.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01187.html" target="topic">SNMPV3_PRIV_PROT_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Different type of encryption and decryption for SNMPv3.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01236.html" target="topic">STD_BASED_SNMP_MESSAGE_PROCESSING_MODEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Different SNMP Message processing model&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01241.html" target="topic">STD_BASED_SNMP_SECURITY_MODEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Different Security services for SNMPv3 messages.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01246.html" target="topic">STD_BASED_SNMPV3_SECURITY_LEVEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Different Security Level for SNMPv3 messages.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03333.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Different Configuration parameters of SNMPv3 operation&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03319.html" target="topic">TCPIP_SNMPV3_EngineUserDataBaseGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get SNMPv3 engine data base details.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03320.html" target="topic">TCPIP_SNMPV3_EngineUserDataBaseSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set SNMPv3 engine data base details.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03321.html" target="topic">TCPIP_SNMPv3_Notify</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Creates and Sends SNMPv3 TRAP PDU.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03329.html" target="topic">TCPIP_SNMPv3_TrapConfigDataGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the SNMPv3 Trap configuration details using the user name index.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03266.html" target="topic">TCPIP_SNMP_COMMUNITY_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SNMP community configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03277.html" target="topic">TCPIP_SNMP_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SNMP module configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03324.html" target="topic">TCPIP_SNMPV3_TARGET_ENTRY_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SNMP module trap target address configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03350.html" target="topic">TCPIP_SNMPV3_USM_USER_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SNMPv3 USM configuration.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01595.html" target="topic">Files</a> &gt; <a href="01181.html" target="topic">snmpv3.h</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01144.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="01149.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: snmpv3.h Topic Title: snmpv3.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

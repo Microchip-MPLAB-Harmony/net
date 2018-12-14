@@ -1,0 +1,187 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>UDP_SOCKET_OPTION Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03881.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03881.html" target="topic">UDP_SOCKET_OPTION Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03870.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="00777.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_SOCKET_OPTION Topic Title: UDP_SOCKET_OPTION Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+UDP_SOCKET_OPTION Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: UDP_SOCKET_OPTION&nbsp;</p>
+<p class="Element10">
+List of options to be set for a UDP <a href="01231.html" target="topic">socket</a></p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">UDP_OPTION_STRICT_PORT</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_STRICT_NET</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_STRICT_ADDRESS</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_BROADCAST</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_BUFFER_POOL</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_TX_BUFF</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_TX_QUEUE_LIMIT</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_RX_QUEUE_LIMIT</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_RX_AUTO_ADVANCE</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_TX_TTL</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_MULTICAST</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_TOS</span></strong>,
+  <strong><span style="color: #000000">UDP_OPTION_DF</span></strong>
+} UDP_SOCKET_OPTION;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_STRICT_PORT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+When connection is done the <a href="01231.html" target="topic">socket</a> stores the remote host local port. If option is enabled the remote host local port is always checked to match the initial one. If disabled the remote host local port is not checked. Disabled by default on a <a href="01231.html" target="topic">socket</a> server. Enabled by default on a client <a href="01231.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_STRICT_NET&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+When connection is done the <a href="01231.html" target="topic">socket</a> stores the network interface the connection occurred on. If option is enabled the <a href="01231.html" target="topic">socket</a> accepts data only from the interface that matches the initial connection. If disabled the <a href="01231.html" target="topic">socket</a> receives data from any remote host regardless of the interface on which the packet arrived. Disabled by default on a <a href="01231.html" target="topic">socket</a> server. Enabled by default on a client <a href="01231.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_STRICT_ADDRESS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+When connection is done the <a href="01231.html" target="topic">socket</a> stores the address of the remote host. If option is enabled the <a href="01231.html" target="topic">socket</a> accepts data only from the host with address that matches the initial connection. If disabled the <a href="01231.html" target="topic">socket</a> receives data from any remote host regardless of the address of that host. Disabled by default on a <a href="01231.html" target="topic">socket</a> server. Enabled by default on a client <a href="01231.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_BROADCAST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Enables the Broadcast transmission by the <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_BUFFER_POOL&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Enables the <a href="01231.html" target="topic">socket</a> to use the private UDP buffers pool. The size of the TX buffer has to be less than the size of the buffers in the pool.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_TX_BUFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Request different TX buffer size. Has to call <a href="03798.html" target="topic">TCPIP_UDP_OptionsGet</a> to see the exact space allocated.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_TX_QUEUE_LIMIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the maximum number of packets that can be queued/allocated by an UDP <a href="01231.html" target="topic">socket</a> at a certain time. For sockets that need to transmit a lot of data (Iperf client, for example), especially on slow connections this limit prevents running out of memory because the MAC transfer cannot keep up with the UDP packet allocation rate imposed by the application. Adjust depending on the size of the UDP TX buffer, the connection speed and the amount of memory available to the stack.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_RX_QUEUE_LIMIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the maximum number of RX packets that can be queued by an UDP <a href="01231.html" target="topic">socket</a> at a certain time. Setting this value to 0 will disable the <a href="01231.html" target="topic">socket</a> receive functionality&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_RX_AUTO_ADVANCE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the RX auto advance option for a <a href="01231.html" target="topic">socket</a>. The option is off by default If set, the option will automatically advance the <a href="01231.html" target="topic">socket</a> to the next awaiting RX packet when a call to <a href="03776.html" target="topic">TCPIP_UDP_ArrayGet</a> is made and no more data is available from the current packet. Setting this option forces the <a href="01231.html" target="topic">socket</a> user to correctly monitor the number of bytes available and issue a <a href="03785.html" target="topic">TCPIP_UDP_Discard</a> only when there's bytes left in the current packet. However sequential calls to <a href="03776.html" target="topic">TCPIP_UDP_ArrayGet</a> can be made without the need to insert calls to <a href="03785.html" target="topic">TCPIP_UDP_Discard</a><br>If cleared (default case) the <a href="01231.html" target="topic">socket</a> user can safely issue a <a href="03785.html" target="topic">TCPIP_UDP_Discard</a> even after calling <a href="03776.html" target="topic">TCPIP_UDP_ArrayGet</a> to read all the bytes from the current RX packet Note that <a href="03789.html" target="topic">TCPIP_UDP_GetIsReady</a> will always advance the current RX packet when no more data is available in the current packet. Even when the option is cleared a call to <a href="03785.html" target="topic">TCPIP_UDP_Discard</a> is still not needed if all bytes are retrieved with <a href="03776.html" target="topic">TCPIP_UDP_ArrayGet</a> and then <a href="03789.html" target="topic">TCPIP_UDP_GetIsReady</a> is called.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_TX_TTL&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Specifies the Time To Live for packets sent by the <a href="01231.html" target="topic">socket</a>. If 0, the <a href="01231.html" target="topic">socket</a> will use the default global IPv4 TTL setting. This option allows the user to specify a different TTL value. Could be used to adjust the TTL value for multicast traffic (the default TTL for multicast traffic is 1).&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_MULTICAST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the multicast options for a <a href="01231.html" target="topic">socket</a> by using <a href="03861.html" target="topic">UDP_OPTION_MULTICAST_DATA</a> value&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_TOS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the Type of Service (TOS) for IPv4 packets sent by the <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_OPTION_DF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the Don't Fragment (DF) option for IPv4 packets sent by the <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03881.html" target="topic">UDP_SOCKET_OPTION Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03870.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="00777.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_SOCKET_OPTION Topic Title: UDP_SOCKET_OPTION Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

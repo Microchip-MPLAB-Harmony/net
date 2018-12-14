@@ -1,0 +1,214 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_HTTP_NET_MODULE_CONFIG Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02475.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02475.html" target="topic">TCPIP_HTTP_NET_MODULE_CONFIG Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02465.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02493.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_MODULE_CONFIG Topic Title: TCPIP_HTTP_NET_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_HTTP_NET_MODULE_CONFIG Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+HTTP module dynamic configuration data</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint16_t <strong><span style="color: #000000">nConnections</span></strong>;
+  uint16_t <strong><span style="color: #000000">dataLen</span></strong>;
+  uint16_t <strong><span style="color: #000000">sktTxBuffSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">sktRxBuffSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">listenPort</span></strong>;
+  uint16_t <strong><span style="color: #000000">nDescriptors</span></strong>;
+  uint16_t <strong><span style="color: #000000">nChunks</span></strong>;
+  uint16_t <strong><span style="color: #000000">maxRecurseLevel</span></strong>;
+  uint16_t <strong><span style="color: #000000">configFlags</span></strong>;
+  uint16_t <strong><span style="color: #000000">nFileBuffers</span></strong>;
+  uint16_t <strong><span style="color: #000000">fileBufferSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">chunkPoolRetries</span></strong>;
+  uint16_t <strong><span style="color: #000000">fileBufferRetries</span></strong>;
+  uint16_t <strong><span style="color: #000000">dynVarRetries</span></strong>;
+  uint16_t <strong><span style="color: #000000">connTimeout</span></strong>;
+  <strong><span style="color: #000080">void</span></strong>* (* <strong><span style="color: #000000">http_malloc_fnc</span></strong>)(size_t bytes);
+  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">http_free_fnc</span></strong>)(<strong><span style="color: #000080">void</span></strong>* ptr);
+} TCPIP_HTTP_NET_MODULE_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nConnections;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of simultaneous HTTP connections allowed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t dataLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of the data buffer for reading cookie and GET/POST arguments (bytes)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t sktTxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of TX buffer for the associated <a href="01231.html" target="topic">socket</a>; leave 0 for default&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t sktRxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of RX buffer for the associated <a href="01231.html" target="topic">socket</a>; leave 0 for default&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t listenPort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+HTTP listening port: 80, 443, etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nDescriptors;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+how many buffers descriptors for dynamic variable processing to create they are independent of the HTTP connection number all the HTTP connections use from the dynamic descriptors pool&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nChunks;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+maximum number of chunks that are created It depends on the <a href="02474.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a> and on the number of connections Maximum number should be <a href="02471.html" target="topic">TCPIP_HTTP_NET_MAX_CONNECTIONS</a> * <a href="02474.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a> All the chunks are in a pool and are used by all connections&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t maxRecurseLevel;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The maximum depth of recursive calls for serving a web page:</p>
+<ul class="Element630">
+<li class="Element600">files without dynvars: 1</li>
+<li class="Element600">file including another file: + 1</li>
+<li class="Element600">file including a dynamic variable: + 1</li>
+</ul><p class="Element267">
+etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t configFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a <a href="02493.html" target="topic">TCPIP_HTTP_NET_MODULE_FLAGS</a> value.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nFileBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of file buffers to be created; These buffers are used to store data while file processing is done They are organized in a pool Each file being processed needs a file buffer and tries to get it from the pool If a buffer is not available, the HTTP conenction will wait for one to become available. Once the file is done the file buffer is released and could be used by a different file The number depends on the number of files that are processed in parallel To avoid deadlock the number should be &gt;= than the number of maximum files that can be open simultaneously: i.e. for file1 -&gt;include file2 -&gt; include file3 you'll need &gt;= 3 file process buffers&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t fileBufferSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of each of these file buffers should correspond to <a href="02458.html" target="topic">TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE</a>&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t chunkPoolRetries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+how many retries to get chunk from the pool before giving up&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t fileBufferRetries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+how many retries to get a fileBuffer before giving up&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t dynVarRetries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+how many retries to have for a dynamic variable dynamicPrint function before calling it done&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t connTimeout;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+persistent connection timeout, seconds If non 0 and a persistent connection is idle for more than this timeout, the server will close it. Maximum supported value is 32767 seconds HTTP specific allocation functions These functions are used for:</p>
+<ul class="Element630">
+<li class="Element600">the dynamic variable descriptor allocation</li>
+<li class="Element600">SSI commands</li>
+<li class="Element600">file upload buffer allocation</li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+void* (* http_malloc_fnc)(size_t bytes);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+malloc style allocation function for HTTP module&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+void (* http_free_fnc)(void* ptr);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+free style allocation function&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02475.html" target="topic">TCPIP_HTTP_NET_MODULE_CONFIG Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02465.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02493.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_MODULE_CONFIG Topic Title: TCPIP_HTTP_NET_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

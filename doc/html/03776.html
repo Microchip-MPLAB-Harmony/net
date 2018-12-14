@@ -1,0 +1,143 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_UDP_ArrayGet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03776.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03776.html" target="topic">TCPIP_UDP_ArrayGet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03789.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03788.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_ArrayGet@UDP_SOCKET@uint8_t *@uint16_t Topic Title: TCPIP_UDP_ArrayGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_UDP_ArrayGet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function reads an array of bytes from the UDP <a href="01231.html" target="topic">socket</a>, while adjusting the current read pointer and decrementing the remaining bytes available. <a href="03789.html" target="topic">TCPIP_UDP_GetIsReady</a> should be used before calling this function to get the number of the available bytes in the <a href="01231.html" target="topic">socket</a>.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_UDP_ArrayGet</span></strong>(
+    <a href="03865.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>, 
+    uint8_t * <strong><span style="color: #000000">cData</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wDataLen</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+UDP <a href="01231.html" target="topic">socket</a> should have been opened with <a href="03804.html" target="topic">TCPIP_UDP_ServerOpen</a>/<a href="03780.html" target="topic">TCPIP_UDP_ClientOpen</a>. hUDP - valid <a href="01231.html" target="topic">socket</a></p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+UDP <a href="01231.html" target="topic">socket</a> handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+cData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The buffer to receive the bytes being read. If NULL, the bytes are simply discarded&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+wDataLen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be read from the <a href="01231.html" target="topic">socket</a>.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The number of bytes successfully read from the UDP buffer. If this value is less than wDataLen, then the buffer was emptied and no more data is available.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+For discarding a number of bytes in the RX buffer the <a href="03803.html" target="topic">TCPIP_UDP_RxOffsetSet</a>() can also be used.&nbsp;</p>
+<p class="Element10">
+The UDP <a href="01231.html" target="topic">socket</a> queues incoming RX packets in an internal queue. This call will try to retrieve the bytes from the current processing packet but it won't advance the processed packet. <a href="03789.html" target="topic">TCPIP_UDP_GetIsReady</a> should be called to advance the processed RX packet.&nbsp;</p>
+<p class="Element10">
+<a href="03785.html" target="topic">TCPIP_UDP_Discard</a> should be called when done processing the current RX packet.&nbsp;</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03776.html" target="topic">TCPIP_UDP_ArrayGet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03789.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03788.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_ArrayGet@UDP_SOCKET@uint8_t *@uint16_t Topic Title: TCPIP_UDP_ArrayGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

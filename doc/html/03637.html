@@ -1,0 +1,177 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_TCP_SIGNAL_TYPE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03637.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03637.html" target="topic">TCPIP_TCP_SIGNAL_TYPE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03636.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03659.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SIGNAL_TYPE Topic Title: TCPIP_TCP_SIGNAL_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_TCP_SIGNAL_TYPE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_TCP_SIGNAL_TYPE&nbsp;</p>
+<p class="Element10">
+Description of the signals/events that a TCP <a href="01231.html" target="topic">socket</a> can generate.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_TX_DONE</span></strong> = 0x0001,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_TX_DATA_DONE</span></strong> = 0x0002,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_TX_SPACE</span></strong> = 0x0004,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_TX_RST</span></strong> = 0x0008,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_ESTABLISHED</span></strong> = 0x0100,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_RX_DATA</span></strong> = 0x0200,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_RX_FIN</span></strong> = 0x0400,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_RX_RST</span></strong> = 0x0800,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_KEEP_ALIVE_TMO</span></strong> = 0x1000,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_IF_DOWN</span></strong> = 0x2000,
+  <strong><span style="color: #000000">TCPIP_TCP_SIGNAL_IF_CHANGE</span></strong> = 0x4000
+} TCPIP_TCP_SIGNAL_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_TX_DONE = 0x0001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+A TCP packet was successfully transmitted on the interface. This may indicate or not that new data can be sent with this <a href="01231.html" target="topic">socket</a>. Note 1: The TCP buffer space is controlled by the TCP state machine; The fact that a packet was transmitted, doesn't necessarily mean that new data can be written into the <a href="01231.html" target="topic">socket</a> buffer: 2: The packet may be an ACK only packet, retry packet, etc., and does not free any writing space in the <a href="01231.html" target="topic">socket</a> buffer 3: A new <a href="01231.html" target="topic">socket</a> writing space may not be available because the other party has not acknowledged the data it was sent so far. Therefore, the information carried by this signal has limited usage. 4: This notification is the result of an user action (explicit call to <a href="03611.html" target="topic">TCPIP_TCP_Flush</a>) or as a result of the internal TCP state machine&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_TX_DATA_DONE = 0x0002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+A TCP data packet carrying valid payload was successfully transmitted on the interface. This may indicate or not that new data can be sent with this <a href="01231.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_TX_SPACE = 0x0004&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+New TX space is available in the <a href="01231.html" target="topic">socket</a> TX buffer. This event signals that the remote party has acknowledged some data and, as a result, TX buffer space is available.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_TX_RST = 0x0008&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Reset sent to the remote host and connection is reset&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_ESTABLISHED = 0x0100&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Socket established a connection (client or server <a href="01231.html" target="topic">socket</a>)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_RX_DATA = 0x0200&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+A data packet was successfully received and there is data available for this <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_RX_FIN = 0x0400&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Remote host finished it's data and sent a FIN;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_RX_RST = 0x0800&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Remote host reset the connection;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_KEEP_ALIVE_TMO = 0x1000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Keep alive has timed out; Connection to the remote host has been aborted;&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_IF_DOWN = 0x2000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+associated interface is going down; sockets connected on this interface will be disconnected, but still alive&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_TCP_SIGNAL_IF_CHANGE = 0x4000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+associated interface has changed address sockets connected on this interface will be disconnected, but still alive&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+These signals are used in the <a href="01231.html" target="topic">socket</a> event handling notification functions. It is possible that multiple flags are set as part of the same notification.&nbsp;</p>
+<p class="Element10">
+The signals are 16 bits wide.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03637.html" target="topic">TCPIP_TCP_SIGNAL_TYPE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03636.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03659.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SIGNAL_TYPE Topic Title: TCPIP_TCP_SIGNAL_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

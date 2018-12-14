@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_IGMP_SubscribeGet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02657.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01473.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02657.html" target="topic">TCPIP_IGMP_SubscribeGet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02656.html" target="topic">Previous</a> | <a href="01473.html" target="topic">Up</a> | <a href="02658.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_SubscribeGet@UDP_SOCKET@TCPIP_NET_HANDLE@IPV4_ADDR@TCPIP_IGMP_FILTER_TYPE*@IPV4_ADDR*@size_t* Topic Title: TCPIP_IGMP_SubscribeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_IGMP_SubscribeGet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function returns the subscription of a UDP <a href="01231.html" target="topic">socket</a> to a multicast group.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02637.html" target="topic">TCPIP_IGMP_RESULT</a> <strong><span style="color: #000000">TCPIP_IGMP_SubscribeGet</span></strong>(
+    <a href="03865.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000"><a href="01231.html" target="topic">socket</a></span></strong>, 
+    <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
+    IPV4_ADDR <strong><span style="color: #000000">mcastAddress</span></strong>, 
+    <a href="02609.html" target="topic">TCPIP_IGMP_FILTER_TYPE</a>* <strong><span style="color: #000000">filterMode</span></strong>, 
+    IPV4_ADDR* <strong><span style="color: #000000">sourceList</span></strong>, 
+    size_t* <strong><span style="color: #000000">listSize</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The IGMP module must be initialized.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+<a href="01231.html" target="topic">socket</a>&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the UDP multicast <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Interface handle. if hNet == 0, then the default interface will be used!&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+mcastAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the multicast group address&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+filterMode&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+address to store the filter type associated with this (Group, interface)tuple&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+sourceList&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to an array of destination sources that will be updated with the <a href="01231.html" target="topic">socket</a> source subscriptions<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+listSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to the number of sources that could be written in the sourceList array. Could point to 0 if nothing is to be written to sourceList but only the number of sources is to be retrieved.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+On output&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+listSize will contain the number of sources that exist for this <a href="01231.html" target="topic">socket</a> If sourceList != 0 it will contain the sources existent for this <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCPIP_IGMP_OK if operation succeeded An error code otherwise.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The function supports both SSM and ASM functionality.&nbsp;</p>
+<p class="Element10">
+listSize == 0 or (*listSize != 0 and sourceList == 0) is invalid!</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01473.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02657.html" target="topic">TCPIP_IGMP_SubscribeGet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02656.html" target="topic">Previous</a> | <a href="01473.html" target="topic">Up</a> | <a href="02658.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_SubscribeGet@UDP_SOCKET@TCPIP_NET_HANDLE@IPV4_ADDR@TCPIP_IGMP_FILTER_TYPE*@IPV4_ADDR*@size_t* Topic Title: TCPIP_IGMP_SubscribeGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

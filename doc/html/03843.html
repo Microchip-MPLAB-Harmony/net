@@ -1,0 +1,285 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>tftpc.h</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03843.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03842.html" target="topic">TFTP Client Module</a> &gt; <a href="01648.html" target="topic">Files</a> &gt; <a href="03843.html" target="topic">tftpc.h</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01648.html" target="topic">Previous</a> | <a href="01648.html" target="topic">Up</a> | <a href="03844.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tftpc.h Topic Title: tftpc.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+tftpc.h</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="436F6D70616E79"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+tftpc.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TFTP Client Module API Header File&nbsp;</p>
+<p class="Element10">
+The TFTP Client module implements the Trivial File Transfer Protocol (TFTP). By default, the module opens a client <a href="01231.html" target="topic">socket</a> for the default interface configuration. From the command prompt, the TFTP client module mode will be selected. At present only two modes are supported: Read and Write.</p>
+<ul class="Element630">
+<li class="Element600">For Read mode - File will be fetched from the Server using the GET command.</li>
+<li class="Element600">For Write mode - Server will be able to fetch the file from the client using the PUT command.</li>
+</ul><p class="Element10">
+The TFTP module needs the file system for GET and PUT command operation. When one mode is in operation, access to the other mode or another server is not allowed.</p></div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_enum.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03685.html" target="topic">_TFTP_CMD_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+File command mode used for TFTP PUT and GET commands.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03685.html" target="topic">TCPIP_TFTP_CMD_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+File command mode used for TFTP PUT and GET commands.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03690.html" target="topic">TCPIP_TFTPC_EVENT_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TFTP client Event Type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03713.html" target="topic">TCPIP_TFTPC_OPERATION_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard error codes for TFTP PUT and GET command operation.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03704.html" target="topic">TCPIP_TFTPC_GetEventNotification</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Get the details of the TFTP client file mode communication event details.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03706.html" target="topic">TCPIP_TFTPC_HandlerDeRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deregisters a previously registered TFTP Client handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03707.html" target="topic">TCPIP_TFTPC_HandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Registers a TFTPC Handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03726.html" target="topic">TCPIP_TFTPC_SetCommand</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TFTP client command operation configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03727.html" target="topic">TCPIP_TFTPC_SetServerAddress</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set the Server IP address for TFTP Client .&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03728.html" target="topic">TCPIP_TFTPC_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00010.html" target="topic">__TFTPC_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro __TFTPC_H.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03710.html" target="topic">TCPIP_TFTPC_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Placeholder for TFTP Client module configuration.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="5479706573"></a><div class="Element14">
+Types</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03689.html" target="topic">TCPIP_TFTPC_EVENT_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TFTPC event handler prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03705.html" target="topic">TCPIP_TFTPC_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TFTPC handle.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03842.html" target="topic">TFTP Client Module</a> &gt; <a href="01648.html" target="topic">Files</a> &gt; <a href="03843.html" target="topic">tftpc.h</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01648.html" target="topic">Previous</a> | <a href="01648.html" target="topic">Up</a> | <a href="03844.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tftpc.h Topic Title: tftpc.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

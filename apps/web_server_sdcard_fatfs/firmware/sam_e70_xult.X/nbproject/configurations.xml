@@ -655,7 +655,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.131"/>
+        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.133"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>

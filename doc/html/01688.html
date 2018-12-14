@@ -1,0 +1,204 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Library Interface</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01688.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03901.html" target="topic">Zeroconf Module</a> &gt; <a href="01688.html" target="topic">Library Interface</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01681.html" target="topic">Previous</a> | <a href="03901.html" target="topic">Up</a> | <a href="02978.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ZEROCONF Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Library Interface</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This section describes the Application Programming Interface (API) functions of the Zeroconf module.&nbsp;</p>
+<p class="Element10">
+Refer to each section for a detailed description.</p></div>
+</div>
+<a name="6129204D756C74696361737420444E532046756E6374696F6E73"></a><div class="Element14">
+a) Multicast DNS Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02978.html" target="topic">TCPIP_MDNS_ServiceDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DNS Service Discovery function for end-user to deregister a service advertisement, which was previously registered with the <a href="02979.html" target="topic">TCPIP_MDNS_ServiceRegister</a> function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02979.html" target="topic">TCPIP_MDNS_ServiceRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DNS Service Discovery function for end-users to register a service advertisement. The service is associated with all interfaces.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02980.html" target="topic">TCPIP_MDNS_ServiceUpdate</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DNS-Service Discovery function for end-user to update the service advertisement, which was previously registered with <a href="02979.html" target="topic">TCPIP_MDNS_ServiceRegister</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02981.html" target="topic">TCPIP_MDNS_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6229204C696E6B204C6F63616C2046756E6374696F6E73"></a><div class="Element14">
+b) Link Local Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03832.html" target="topic">TCPIP_ZCLL_Disable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Disables Zero Configuration on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03833.html" target="topic">TCPIP_ZCLL_Enable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enables Zero Configuration on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03834.html" target="topic">TCPIP_ZCLL_IsEnabled</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns whether or not an interface is enabled for zero configuration&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03835.html" target="topic">TCPIP_ZCLL_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+c) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03897.html" target="topic">ZCLL_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Placeholder for Zero Configuration Link Layer module configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00959.html" target="topic">MDNSD_ERR_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+void DisplayHostName(uint8_t *HostName);&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03901.html" target="topic">Zeroconf Module</a> &gt; <a href="01688.html" target="topic">Library Interface</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01681.html" target="topic">Previous</a> | <a href="03901.html" target="topic">Up</a> | <a href="02978.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ZEROCONF Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

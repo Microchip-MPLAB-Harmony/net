@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>SSI Processing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01443.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01444.html" target="topic">Using the Library</a> &gt; <a href="01437.html" target="topic">HTTP Net Features</a> &gt; <a href="01443.html" target="topic">SSI Processing</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01434.html" target="topic">Previous</a> | <a href="01437.html" target="topic">Up</a> | <a href="01442.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET SSI Processing Topic Title: SSI Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+SSI Processing</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+At run-time, the HTTP Net server processes a subset of the Server Side Includes (SSI) commands. SSI is a portable way to add small amounts of dynamic content on web pages in a standard way that is supported by most HTTP servers. Currently the <span class="Element146">#include</span>, <span class="Element146">#set</span> and <span class="Element146">#echo</span> commands are supported. Other commands will be eventually added. This allows a better compatibility with other existing HTTP servers and is targeted at the removal of proprietary extensions.&nbsp;</p>
+<p class="Element10">
+Whenever executing an SSI command within a web page, the HTTP Net server will notify the application by using the registered SSI callback: <span class="Element146">ssiNotify</span>. This callback contains a <a href="02560.html" target="topic">TCPIP_HTTP_SSI_NOTIFY_DCPT</a> pointer to a structure describing the SSI context needed for processing:</p>
+<ul class="Element630">
+<li class="Element600">File name the SSI command belongs to</li>
+<li class="Element600">The SSI command line</li>
+<li class="Element600">Number of SSI attributes and their values, etc.</li>
+</ul><p class="Element10">
+The application can do any modifications it chooses to and returns a value instructing the HTTP Net server if the processing of the command is necessary or not.</p><div class="Element15">
+SSI include Command</div>
+<p class="Element10">
+The SSI Include command allows the dynamic inclusion of a file. The supported syntax is:&nbsp;</p>
+<p class="Element10">
+<span class="Element146">&lt;!--#include virtual=&quot;file_name&quot; --&gt;</span> or <span class="Element146">&lt;!--#include file=&quot;file_name&quot; --&gt;</span>.&nbsp;</p>
+<p class="Element10">
+Currently the arguments for both “virtual” and “file” commands are passed unaltered to the SYS_FS, so they behave identically. However it is recommended that the original SSI significance for these keywords should be maintained:</p>
+<ul class="Element630">
+<li class="Element600">Use “virtual” for specifying a URL relative to the document being server</li>
+<li class="Element600">Use “file” for a file path, relative to the current directory (it cannot be an absolute path)</li>
+</ul><p class="Element10">
+The <span class="Element146">~inc:file_name~</span> keyword is maintained for backward compatibility. However the SSI include command should be preferred.</p><div class="Element15">
+SSI set Command</div>
+<p class="Element10">
+The SSI <span class="Element146">set</span> command allows to dynamically set a SSI variable value. The supported syntax is:&nbsp;</p>
+<p class="Element10">
+<span class="Element146">&lt;!--#set var=&quot;v_name&quot; value=&quot;v_value&quot; --&gt;</span>.&nbsp;</p>
+<p class="Element10">
+String or integer variables are supported. Variable reference is also supported: <span class="Element146">&lt;!--#set var=&quot;n_name&quot; value=&quot;$otherVar&quot; --&gt;</span>. This command will create or update the variable <span class="Element146">n_name</span> to have the value of the variable <span class="Element146">otherVar</span>, if it exists.&nbsp;</p>
+<p class="Element10">
+A new SSI variable will be created if a variable having the name <span class="Element146">v_name</span> does not exist. If the variable <span class="Element146">v_name</span> already exists, it will have its value updated as the result of this command.&nbsp;</p>
+<p class="Element10">
+An existing variable can be deleted using the empty value set command:&nbsp;</p>
+<p class="Element10">
+<span class="Element146">&lt;!--#set var=&quot;v_name&quot; value=&quot;&quot; --&gt;</span>.</p><div class="Element15">
+SSI echo Command</div>
+<p class="Element10">
+The SSI <span class="Element146">echo</span> command allows the dynamic print of a SSI variable. The supported syntax is:&nbsp;</p>
+<p class="Element10">
+<span class="Element146">&lt;!--#echo var=&quot;v_name&quot; --&gt;</span>.&nbsp;</p>
+<p class="Element10">
+If the application <span class="Element146">ssiNotify</span> exists, the HTTP Net server will call it and the application may choose to change the current value dynamically. If <span class="Element146">ssiNotify</span> returns false, the HTTP Net server will display the current value of the variable <span class="Element146">v_name</span> as part of the current page.&nbsp;</p>
+<p class="Element10">
+The SSI API can be used to evaluate or change the current value of the SSI variables:</p>
+<ul class="Element630">
+<li class="Element600"><a href="02517.html" target="topic">TCPIP_HTTP_NET_SSIVariableGet</a></li>
+<li class="Element600"><a href="02519.html" target="topic">TCPIP_HTTP_NET_SSIVariableSet</a></li>
+<li class="Element600"><a href="02516.html" target="topic">TCPIP_HTTP_NET_SSIVariableDelete</a></li>
+</ul><p class="Element10">
+The maximum number of SSI variables is under the control of the application by using the configuration parameter: <a href="02514.html" target="topic">TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER</a>.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01444.html" target="topic">Using the Library</a> &gt; <a href="01437.html" target="topic">HTTP Net Features</a> &gt; <a href="01443.html" target="topic">SSI Processing</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01434.html" target="topic">Previous</a> | <a href="01437.html" target="topic">Up</a> | <a href="01442.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET SSI Processing Topic Title: SSI Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

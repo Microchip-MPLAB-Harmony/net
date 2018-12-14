@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>SNMP Traps</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01606.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01601.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01606.html" target="topic">SNMP Traps</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01604.html" target="topic">Previous</a> | <a href="01601.html" target="topic">Up</a> | <a href="01602.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server SNMP Traps Topic Title: SNMP Traps)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+SNMP Traps</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MPLAB Harmony TCP/IP Stack supports Trap version1 and Trap version2 formatted traps. Traps are notifications from the agent to the manager that are used when a predefined event occurs at the agent.&nbsp;</p>
+<p class="Element10">
+From <span class="Element146">mchip.mib</span>, the ipv4TrapTable and ipv6TrapTable are the two tabular sections, which are used to configure HOST IPv4 and IPv6 address and this will help the HOST trap receiver to receive the traps.&nbsp;</p>
+<p class="Element10">
+Several preprocessor macros in the <span class="Element146"><a href="01149.html" target="topic">snmp_config.h</a></span> variant header file can be used to enable or disable traps in the agent. Commenting and uncommenting these macros in the file will have different results. The SNMP_TRAP_DISABLED macro will disable traps entirely if it is not commented: </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> SNMP_TRAP_DISABLED</pre></div></div>
+<p class="Element10">
+The user must configure the expected trap format at the SNMP Manager. SNMPv2 entities acting as an agent should be able to generate and transmit SNMP V2 trap PDUs when the manager is configured to receive and process SNMP V2 trap PDUs. To configure the trap format, comment or uncomment the SNMP_STACK_USE_V2_TRAP macro in the <span class="Element146"><a href="01149.html" target="topic">snmp_config.h</a></span> header file: </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">#define</span></strong> SNMP_STACK_USE_V2_TRAP</pre></div></div>
+<p class="Element10">
+If the macro has been commented out, the SNMP agent will <a href="01131.html" target="topic">send</a> V1 formatted trap PDUs; otherwise, it will <a href="01131.html" target="topic">send</a> V2 formatted trap PDUs. By default, the SNMP agent is configured to <a href="01131.html" target="topic">send</a> V2 formatted traps. Note that the SNMP V2c agent should only <a href="01131.html" target="topic">send</a> V2 formatted traps.&nbsp;</p>
+<p class="Element10">
+To enable traps in SNMPv3, the <span class="Element146">#define SNMP_V1_V2_TRAP_WITH_SNMPv3</span> macro must be uncommented.&nbsp;</p>
+<p class="Element10">
+The following table illustrates how to enable/disable traps for different versions of SNMP. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="10%">
+<div class="Element66">
+Type&nbsp;</div></td><td class="Element65" valign="top" width="12%">
+<div class="Element66">
+SNMPv1&nbsp;</div></td><td class="Element65" valign="top" width="29%">
+<div class="Element66">
+SNMPv2c&nbsp;</div></td><td class="Element65" valign="top" width="50%">
+<div class="Element66">
+SNMPv3&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="10%">
+<div class="Element68">
+TRAPv2 (enabled by default)&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+Comment out the <span class="Element146">#define SNMP_TRAP_DISABLED</span> macro&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+Comment out the <span class="Element146">#define SNMP_TRAP_DISABLED</span> macro&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+Comment out the <span class="Element146">#define SNMP_TRAP_DISABLED</span> macro<br>Uncomment the <span class="Element146">#define SNMP_V1_V2_TRAP_WITH_SNMPV3</span> macro&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="10%">
+<div class="Element68">
+TRAPv2 (disabled by default)&nbsp;</div></td><td class="Element67" valign="top" width="12%">
+<div class="Element68">
+Not supported&nbsp;</div></td><td class="Element67" valign="top" width="29%">
+<div class="Element68">
+Comment out the <span class="Element146">#define SNMP_TRAP_DISABLED</span> macro<br>Uncomment the <span class="Element146">#define SNMP_STACK_USE_V2_TRAP</span> macro&nbsp;</div></td><td class="Element67" valign="top" width="50%">
+<div class="Element68">
+Comment out the <span class="Element146">#define SNMP_TRAP_DISABLED</span> macro<br>Uncomment the <span class="Element146">#define SNMP_V1_V2_TRAP_WITH_SNMPV3</span> macro<br>Uncomment the <span class="Element146">#define SNMP_STACK_USE_V2_TRAP</span> macro&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Demonstrations</div>
+<p class="Element10">
+Two trap demonstrations APIs are included with the TCP/IP Stack. The task functions for these demonstrations are called in the main application function:
+<ul class="Element631">
+<li class="Element601">SNMPTrapDemo - This API demonstrates V1 or V2 trap formats (depending of the status of the SNMP_STACK_USE_V2_TRAP macro). The trap PDU will only have one demonstration variable binding on the varbind list.</li>
+<li class="Element601">SNMPV2TrapDemo - This API provides V2 format notifications with multiple (4) variable bindings. The user should modify or use this routine as a reference for sending V2 trap format notifications with multiple bindings on the varbind list.</li>
+</ul></p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+The user should only enable one SNMP demonstration API at a time. By default, the SNMPV2TrapDemo API is enabled and SNMPTrapDemo is commented out (disabled).&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+V1/V2 Formatted Traps with a Single Variable Binding</div>
+<p class="Element10">
+In the <a href="01149.html" target="topic">snmp_config.h</a> header file:
+<ul class="Element631">
+<li class="Element601">Uncomment <span class="Element146">#define SNMP_TRAP_DISABLED</span></li>
+<li class="Element601">Comment <span class="Element146">//#define SNMP_STACK_USE_V2_TRAP</span></li>
+</ul>For the Trap demonstration, two events are defined within the V2c agent:
+<ul class="Element631">
+<li class="Element601">If the Analog Potentiometer value is greater than 14, the agent will <a href="01131.html" target="topic">send</a> a Trap every 5 seconds to the configured 'IPv4TrapReceiverIP address'.</li>
+<li class="Element601">If Button 3 on the demonstration board is pressed, an organization-specific PUSH_BUTTON trap will be sent.</li>
+</ul>The current implementation of the V2c agent also generates a standard &quot;Authentication Failure Trap&quot;:
+<ul class="Element631">
+<li class="Element601">If a request is received to modify (Set) a private MIB variable, or</li>
+<li class="Element601">If the value of the variable is requested (Get) by a browser with the wrong community name</li>
+</ul></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01601.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01606.html" target="topic">SNMP Traps</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01604.html" target="topic">Previous</a> | <a href="01601.html" target="topic">Up</a> | <a href="01602.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server SNMP Traps Topic Title: SNMP Traps)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

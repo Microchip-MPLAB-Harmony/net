@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Core Functionality</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01524.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01538.html" target="topic">Using the Library</a> &gt; <a href="01529.html" target="topic">How the Library Works</a> &gt; <a href="01524.html" target="topic">Core Functionality</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01529.html" target="topic">Previous</a> | <a href="01529.html" target="topic">Up</a> | <a href="01523.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Core Functionality</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The following diagram provides an overview for the operation and use of the Manager module in a typical MPLAB Harmony framework (bare-metal, non-OS environment). </p><p class="Element10" style="text-align: center;">
+<img src="TCPIP MANAGER Flow.png" border="0" alt="" title=""></p><p class="Element10">
+The TCP/IP stack is initialized as a part of the system initialization by a call to <a href="03505.html" target="topic">TCPIP_STACK_Initialize</a>. By configuring the stack, the application can pass run-time initialization data to the stack to select both the network parameters of the interfaces (network addresses, masks, physical addresses, NetBIOS names, DHCP operation, etc.) and the parameters for the modules contained in the stack (TCP, UDP, ARP, IPv4, IPv6, etc.).&nbsp;</p>
+<p class="Element10">
+Once the stack is initialized the application can use the stack manager calls to inquire about the stack current settings (current addresses obtained by DHCP or IPv6 advertisements messages, etc.), to check the physical link status or to set new parameters to the stack.&nbsp;</p>
+<p class="Element10">
+It should be noted that different interfaces can be stopped and restarted dynamically (<a href="03531.html" target="topic">TCPIP_STACK_NetDown</a>, <a href="03546.html" target="topic">TCPIP_STACK_NetUp</a>) without the stack being killed. When a particular interface is brought up only the network parameters for that interface need to be supplied (no parameters for the TCP/IP stack modules are needed).&nbsp;</p>
+<p class="Element10">
+The entire stack can be stopped and restarted (<a href="03418.html" target="topic">TCPIP_STACK_Deinitialize</a>, <a href="03505.html" target="topic">TCPIP_STACK_Initialize</a>). Reinitializing the stack allows the stack initialization with a complete new set of network and/or module parameters.&nbsp;</p>
+<p class="Element10">
+The stack processing is done in the <a href="03551.html" target="topic">TCPIP_STACK_Task</a> function. As explained in the previous paragraph, processing time is required by the stack, meaning that periodic calls have to be made by the system/framework to the <a href="03551.html" target="topic">TCPIP_STACK_Task</a> function. When execution reaches this function the stack maintains and advances its internal state machine. The most important part of this is the processing of the events that are reported by the underlying MAC drivers (through the use of the virtual MAC driver, which provides an interrupt signaling/event notification mechanism). As a response to the MAC events, the stack manager will retrieve packets from the internal MAC receive queues and dispatch them for processing. It will also call into MAC processing functions if required and provide processing for the stack modules that are the recipients of the dispatched network packets. The stack manager will also notify the application of the network events if the application dynamically registered an event notification handler with the stack.&nbsp;</p>
+<p class="Element10">
+It should be noted that the stack manager also requires a periodic tick signal for which it uses the MPLAB Harmony system timer services (see <span class="Element145">Timer System Service Library</span>).&nbsp;</p>
+<p class="Element10">
+If the application no longer uses the TCP/IP stack, it is important that it calls the <a href="03418.html" target="topic">TCPIP_STACK_Deinitialize</a> function. This function closes any open network connections (sockets, etc.), closes the underlying MAC and PHY drivers and all of the modules in the stack, and frees all of the resources that were internally allocated by the stack as part of the initialization and run-time processing.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01538.html" target="topic">Using the Library</a> &gt; <a href="01529.html" target="topic">How the Library Works</a> &gt; <a href="01524.html" target="topic">Core Functionality</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01529.html" target="topic">Previous</a> | <a href="01529.html" target="topic">Up</a> | <a href="01523.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

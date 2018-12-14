@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03333.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01597.html" target="topic">Library Interface</a> &gt; d) SNMPv3 Data Types and Constants &gt; <a href="03333.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01246.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="03266.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Topic Title: TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_SNMPV3_USERDATABASECONFIG_TYPE&nbsp;</p>
+<p class="Element10">
+These configuration types are used by the SNMP user while doing configuration SNMPv3 parameters. It includes SNMpv3 user name , authentication and encryption configuration parameters.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">SNMPV3_USERNAME_CONFIG_TYPE</span></strong> = 0,
+  <strong><span style="color: #000000">SNMPV3_AUTHPASSWD_CONFIG_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_PRIVPASSWD_CONFIG_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_AUTHPASSWDLOCALIZEDKEY_CONFIG_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_PRIVPASSWWDLOCALIZEDKEY_CONFIG_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_HASHTYPE_CONFIG_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_PRIVTYPE_CONFIG_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_TARGET_SECURITY_NAME_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_TARGET_SECURITY_LEVEL_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_TARGET_SECURITY_MODEL_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_TARGET_MP_MODEL_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_ENGINE_ID_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_ENGINE_BOOT_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_ENGINE_TIME_TYPE</span></strong>,
+  <strong><span style="color: #000000">SNMPV3_ENGINE_MAX_MSG_TYPE</span></strong>
+} TCPIP_SNMPV3_USERDATABASECONFIG_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_USERNAME_CONFIG_TYPE = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Snmpv3 user name configuration&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_AUTHPASSWD_CONFIG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Authentication configuration type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_PRIVPASSWD_CONFIG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Encryption and Decryption password configuration&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_AUTHPASSWDLOCALIZEDKEY_CONFIG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Authorization localized key configuration type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_PRIVPASSWWDLOCALIZEDKEY_CONFIG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Encryption and Decryption password localized key configuration type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_HASHTYPE_CONFIG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 hash algorithm type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_PRIVTYPE_CONFIG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 privacy configuration type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_TARGET_SECURITY_NAME_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 target address user name . This is for Trap communication&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_TARGET_SECURITY_LEVEL_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 target security type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_TARGET_SECURITY_MODEL_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 target security model type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_TARGET_MP_MODEL_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 target security message processing model type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_ENGINE_ID_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Identifier that uniquely and unambiguously identifies the local SNMPv3 engine&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_ENGINE_BOOT_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of times the local SNMPv3 engine has rebooted or reinitialized since the engine ID was last changed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_ENGINE_TIME_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of seconds since the local SNMPv3 engine was last rebooted or reinitialized&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+SNMPV3_ENGINE_MAX_MSG_TYPE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+SNMPv3 Engine Maximum message size the sender can accommodate&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01597.html" target="topic">Library Interface</a> &gt; d) SNMPv3 Data Types and Constants &gt; <a href="03333.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01246.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="03266.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Topic Title: TCPIP_SNMPV3_USERDATABASECONFIG_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

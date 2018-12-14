@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_TCP_ArrayPut Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03592.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; b) Transmit Data Transfer Functions &gt; <a href="03592.html" target="topic">TCPIP_TCP_ArrayPut Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03631.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03673.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayPut@TCP_SOCKET@uint8_t*@uint16_t Topic Title: TCPIP_TCP_ArrayPut Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_TCP_ArrayPut Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Writes an array from a buffer to a TCP <a href="01231.html" target="topic">socket</a>.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_TCP_ArrayPut</span></strong>(
+    <a href="01277.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">hTCP</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">Data</span></strong>, 
+    uint16_t <strong><span style="color: #000000">Len</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCP is initialized.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hTCP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The <a href="01231.html" target="topic">socket</a> to which data is to be written.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+data&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to the array to be written.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes to be written.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The number of bytes written to the <a href="01231.html" target="topic">socket</a>. If less than len, the buffer became full or the <a href="01231.html" target="topic">socket</a> is not connected.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This operation can cause a TCP packet to be transmitted over the network (i.e., a <a href="03611.html" target="topic">TCPIP_TCP_Flush</a> operation to be performed) when there is data in the TCP TX buffer that can be sent and any of the following occurs:
+<ul class="Element631">
+<li class="Element601">There is no more space available in the TCP buffer.</li>
+<li class="Element601">The TCP_OPTION_THRES_FLUSH_ON is set and the TX buffer is at least half full</li>
+<li class="Element601">The amount of data that can be sent is bigger than the remote host MSS or than half of the maximum advertised window size.</li>
+<li class="Element601">The Nagle algorithm is disabled and there is no unacknowledged data. </li>
+</ul>&nbsp;</p>
+<p class="Element10">
+If none of these occur and the <a href="01231.html" target="topic">socket</a> user does not add data to the TX <a href="01231.html" target="topic">socket</a> buffer, the TCP state machine will automatically flush the buffer when the TCP_AUTO_TRANSMIT_TIMEOUT_VAL time-out elapsed.&nbsp;</p>
+<p class="Element10">
+The default TCP_AUTO_TRANSMIT_TIMEOUT_VAL is 40 ms.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; b) Transmit Data Transfer Functions &gt; <a href="03592.html" target="topic">TCPIP_TCP_ArrayPut Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03631.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03673.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayPut@TCP_SOCKET@uint8_t*@uint16_t Topic Title: TCPIP_TCP_ArrayPut Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

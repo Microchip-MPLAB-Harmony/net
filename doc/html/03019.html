@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03019.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03019.html" target="topic">TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02894.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02754.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MODULE_MAC_PIC32INT_CONFIG Topic Title: TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MAC Initialization Data&nbsp;</p>
+<p class="Element10">
+This structure defines the MAC initialization data for the PIC32 MAC/Ethernet controller.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  uint16_t <strong><span style="color: #000000">nTxDescriptors</span></strong>;
+  uint16_t <strong><span style="color: #000000">rxBuffSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">nRxDescriptors</span></strong>;
+  uint16_t <strong><span style="color: #000000">nRxDedicatedBuffers</span></strong>;
+  uint16_t <strong><span style="color: #000000">nRxInitBuffers</span></strong>;
+  uint16_t <strong><span style="color: #000000">rxLowThreshold</span></strong>;
+  uint16_t <strong><span style="color: #000000">rxLowFill</span></strong>;
+  uint16_t <strong><span style="color: #000000">linkInitDelay</span></strong>;
+  TCPIP_ETH_OPEN_FLAGS <strong><span style="color: #000000">ethFlags</span></strong>;
+  uintptr_t <strong><span style="color: #000000">ethModuleId</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00444.html" target="topic">DRV_ETHPHY_OBJECT_BASE_TYPE</a>* <strong><span style="color: #000000">pPhyBase</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00396.html" target="topic">DRV_ETHPHY_INIT</a>* <strong><span style="color: #000000">pPhyInit</span></strong>;
+} TCPIP_MODULE_MAC_PIC32INT_CONFIG;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nTxDescriptors;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of TX descriptors&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t rxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+size of the corresponding RX buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nRxDescriptors;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of RX descriptors Has to be high enough to accommodate both dedicated and non-dedicated RX buffers&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nRxDedicatedBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of MAC dedicated RX buffers These buffers/packets are owned by the MAC and are not returned to the packet pool They are allocated at MAC initialization time using pktAllocF and freed at MAC deinitialize time using pktFreeF Could be 0, if only not dedicated buffers are needed. For best performance usually it's best to have some dedicated buffers so as to minimize the run time allocations&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t nRxInitBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of MAC non dedicated RX buffers allocated at the MAC initialization pktAllocF Note that these buffers are allocated in addition of the nRxDedicatedBuffers Freed at run time using pktFreeF&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t rxLowThreshold;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Minimum threshold for the buffer replenish process Whenever the number of RX scheduled buffers is &lt;= than this threshold the MAC driver will allocate new non-dedicated buffers that will be freed at run time using pktFreeF Setting this value to 0 disables the buffer replenishing process&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t rxLowFill;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of RX buffers to allocate when below threshold condition is detected If 0, the MAC driver will allocate (scheduled buffers - rxThres) If !0, the MAC driver will allocate exactly rxLowFill buffers&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t linkInitDelay;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Delay to wait after the lomk is coming up (milliseconds) for insuring that the PHY is ready to transmit data.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_ETH_OPEN_FLAGS ethFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+flags to use for the ETH connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uintptr_t ethModuleId;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Ethernet module ID for this driver instance: a plib ETH Id value&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pPhyBase;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Non-volatile pointer to the PHY basic object associated with this MAC&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const struct DRV_ETHPHY_INIT* pPhyInit;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Non-volatile pointer to the PHY initialization data&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Each supported MAC has its own specific init/configuration data</li>
+</ul></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03019.html" target="topic">TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02894.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02754.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MODULE_MAC_PIC32INT_CONFIG Topic Title: TCPIP_MODULE_MAC_PIC32INT_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

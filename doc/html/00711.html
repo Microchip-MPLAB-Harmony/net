@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>ICMP_ECHO_RESULT Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00711.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00708.html" target="topic">ICMP Module</a> &gt; <a href="01453.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00711.html" target="topic">ICMP_ECHO_RESULT Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00719.html" target="topic">Previous</a> | <a href="01453.html" target="topic">Up</a> | <a href="02586.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ICMP_ECHO_RESULT Topic Title: ICMP_ECHO_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+ICMP_ECHO_RESULT Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+result of an ICMP Echo Request call</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ICMP_ECHO_OK</span></strong> = 0,
+  <strong><span style="color: #000000">ICMP_ECHO_ALLOC_ERROR</span></strong> = -1,
+  <strong><span style="color: #000000">ICMP_ECHO_ROUTE_ERROR</span></strong> = -2,
+  <strong><span style="color: #000000">ICMP_ECHO_TRANSMIT_ERROR</span></strong> = -3,
+  <strong><span style="color: #000000">ICMP_ECHO_PARAMETER_ERROR</span></strong> = -4,
+  <strong><span style="color: #000000">ICMP_ECHO_BUSY</span></strong> = -5,
+  <strong><span style="color: #000000">ICMP_ECHO_BAD_HANDLE</span></strong> = -6
+} ICMP_ECHO_RESULT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_OK = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+operation successful error codes, &lt; 0&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_ALLOC_ERROR = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+could not allocate memory&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_ROUTE_ERROR = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+could not find a route to destination&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_TRANSMIT_ERROR = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+could not transmit (dead interface, etc.)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_PARAMETER_ERROR = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+null pointer, etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_BUSY = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+module currently busy&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMP_ECHO_BAD_HANDLE = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+invalid handle, no such request exist&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00708.html" target="topic">ICMP Module</a> &gt; <a href="01453.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00711.html" target="topic">ICMP_ECHO_RESULT Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00719.html" target="topic">Previous</a> | <a href="01453.html" target="topic">Up</a> | <a href="02586.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ICMP_ECHO_RESULT Topic Title: ICMP_ECHO_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

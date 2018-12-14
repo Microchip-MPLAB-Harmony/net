@@ -1,0 +1,140 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DRV_ETHPHY_Initialize Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00406.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00406.html" target="topic">DRV_ETHPHY_Initialize Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00340.html" target="topic">Previous</a> | <a href="00340.html" target="topic">Up</a> | <a href="00390.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * const Topic Title: DRV_ETHPHY_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DRV_ETHPHY_Initialize Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function initializes the Ethernet PHY driver, making it ready for clients to open and use it.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">SYS_MODULE_OBJ <strong><span style="color: #000000">DRV_ETHPHY_Initialize</span></strong>(
+    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX <strong><span style="color: #000000">index</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000000">init</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">a valid handle to a driver object, if successful.</li>
+<li class="Element601">SYS_MODULE_OBJ_INVALID if initialization failed.</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">This function must be called before any other Ethernet PHY routine is called.</li>
+<li class="Element601">This function should only be called once during system initialization unless <a href="00390.html" target="topic">DRV_ETHPHY_Deinitialize</a> is called to deinitialize the driver instance. </li>
+<li class="Element601">The returned object must be passed as argument to <a href="00493.html" target="topic">DRV_ETHPHY_Reinitialize</a>, <a href="00390.html" target="topic">DRV_ETHPHY_Deinitialize</a>, <a href="00515.html" target="topic">DRV_ETHPHY_Tasks</a> and <a href="00514.html" target="topic">DRV_ETHPHY_Status</a> routines.</li>
+</ul></p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="00396.html" target="topic">DRV_ETHPHY_INIT</a>    init;
+SYS_MODULE_OBJ  objectHandle;
+
+<i><span style="color: #008000">// Populate the Ethernet PHY initialization structure</span></i>
+init.phyId  = ETHPHY_ID_0;
+
+<i><span style="color: #008000">// Populate the Ethernet PHY initialization structure</span></i>
+init.phyId  = ETHPHY_ID_2;
+init.pPhyObject  = &amp;<a href="00487.html" target="topic">DRV_ETHPHY_OBJECT_SMSC_LAN8720</a>;
+
+<i><span style="color: #008000">// Do something</span></i>
+
+objectHandle = DRV_ETHPHY_Initialize(<a href="00393.html" target="topic">DRV_ETHPHY_INDEX_0</a>, (SYS_MODULE_INIT*)&amp;init);
+<strong><span style="color: #000080">if</span></strong> (SYS_MODULE_OBJ_INVALID == objectHandle)
+{
+    <i><span style="color: #008000">// Handle error</span></i>
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00406.html" target="topic">DRV_ETHPHY_Initialize Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00340.html" target="topic">Previous</a> | <a href="00340.html" target="topic">Up</a> | <a href="00390.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Initialize@SYS_MODULE_INDEX@SYS_MODULE_INIT * const Topic Title: DRV_ETHPHY_Initialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

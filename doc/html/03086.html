@@ -1,0 +1,179 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_SMTP_CLIENT_MESSAGE Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03086.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01134.html" target="topic">SMTP Module</a> &gt; <a href="01576.html" target="topic">Library Interface</a> &gt; <a href="01572.html" target="topic">b) Data Types and Functions</a> &gt; <a href="03086.html" target="topic">TCPIP_SMTP_CLIENT_MESSAGE Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01572.html" target="topic">Previous</a> | <a href="01572.html" target="topic">Up</a> | <a href="03099.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTP_CLIENT_MESSAGE Topic Title: TCPIP_SMTP_CLIENT_MESSAGE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_SMTP_CLIENT_MESSAGE Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This structure of pointers configures the SMTP Client to <a href="01131.html" target="topic">send</a> an e-mail message.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">Server</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">Username</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">Password</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">To</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">CC</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">BCC</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">From</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">Subject</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">OtherHeaders</span></strong>;
+  <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">Body</span></strong>;
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">UseSSL</span></strong>;
+  uint16_t <strong><span style="color: #000000">ServerPort</span></strong>;
+} TCPIP_SMTP_CLIENT_MESSAGE;</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Server&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the SMTP server to relay the message through&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Username&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the user name to use when logging into the SMTP server, if any is required&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Password&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the password to supply when logging in, if any is required&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+To&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the destination address for this message. May be a comma-separated list of address, and/or formatted.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+CC&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The CC addresses for this message, if any. May be a comma-separated list of address, and/or formatted.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+BCC&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The BCC addresses for this message, if any. May be a comma-separated list of address, and/or formatted.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+From&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The From address for this message. May be formatted.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Subject&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The Subject header for this message.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+OtherHeaders&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Any additional headers for this message. Each additional header, including the last one, must be terminated with a CRLF pair.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Body&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+When sending a message from memory, the location of the body of this message in memory. Leave as NULL to build a message on-the-fly.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+UseSSL&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+This flag causes the SMTP client to make a secure connection to the server.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ServerPort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+(uint16_t value) Indicates the port on which to <a href="00262.html" target="topic">connect</a> to the remote SMTP server.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+When formatting an e-mail address, the SMTP standard format for associating a printable name may be used. This format places the printable name in quotation marks, with the address following in pointed brackets, such as &quot;John Smith&quot; .</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01134.html" target="topic">SMTP Module</a> &gt; <a href="01576.html" target="topic">Library Interface</a> &gt; <a href="01572.html" target="topic">b) Data Types and Functions</a> &gt; <a href="03086.html" target="topic">TCPIP_SMTP_CLIENT_MESSAGE Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01572.html" target="topic">Previous</a> | <a href="01572.html" target="topic">Up</a> | <a href="03099.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTP_CLIENT_MESSAGE Topic Title: TCPIP_SMTP_CLIENT_MESSAGE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

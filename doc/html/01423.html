@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Form Processing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01423.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01425.html" target="topic">HTTP Features</a> &gt; <a href="01423.html" target="topic">Form Processing</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01421.html" target="topic">Previous</a> | <a href="01425.html" target="topic">Up</a> | <a href="01415.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Form Processing Topic Title: Form Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Form Processing</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+The GET Method</div>
+<p class="Element10">
+The GET method appends the data to the end of the URI. This data follows the question mark (?) in the browser's address bar. (ex: http://mchpboard/form.htm?led1=0&amp;led2=1&amp;led3=0) Data sent via GET is automatically decoded and stored in the current connection data buffer. Since it is to be stored in memory, this data is limited to the size of the connection data buffer which by default is 100 bytes (configurable by HTTP_MAX_DATA_LEN build time symbol or by the run time data passed at the HTTP module initialization).&nbsp;</p>
+<p class="Element10">
+It is generally easier to process data received in this manner.&nbsp;</p>
+<p class="Element10">
+The callback function <a href="02340.html" target="topic">TCPIP_HTTP_GetExecute</a> is implemented by the application developer to process this data and perform any necessary actions. The function <a href="02275.html" target="topic">TCPIP_HTTP_ArgGet</a> provides an easy method to retrieve submitted values for processing.&nbsp;</p>
+<p class="Element10">
+See the custom _http_app.c for an example of <a href="02340.html" target="topic">TCPIP_HTTP_GetExecute</a> implementation.</p><div class="Element15">
+The POST Method</div>
+<p class="Element10">
+The POST method transmits data after all the request headers have been sent. This data is not visible in the browser's address bar, and can only be seen with a packet capture tool. It does however use the same URL encoding method.&nbsp;</p>
+<p class="Element10">
+The HTTP server does not perform any preparsing of this data. All POST data is left in the TCP buffer, so the custom application will need to access the TCP buffer directly to retrieve and decode it. The functions <a href="02551.html" target="topic">TCPIP_HTTP_PostNameRead</a> and <a href="02553.html" target="topic">TCPIP_HTTP_PostValueRead</a> have been provided to assist with these requirements. However, these functions can only be used when at least entire variables are expected to fit in the TCP buffer at once. Most POST processing functions will be implemented as state machines to use these functions. There is a status variable per each connection that stores the current state accessible with <a href="02292.html" target="topic">TCPIP_HTTP_CurrentConnectionPostSmGet</a> and <a href="02293.html" target="topic">TCPIP_HTTP_CurrentConnectionPostSmSet</a> functions. This state machine variable is reset to zero with each new request. Functions should generally implement a state to read a variable name, and another to read an expected value. Additional states may be helpful depending on the application.&nbsp;</p>
+<p class="Element10">
+The following example form accepts an e-mail address, a subject, and a message body. Since this data will likely total over the size of the internal connection data buffer, it should be submitted via POST. </p><div class="Element13"><div class="Element12"><pre class="Element12">&lt;form method=&quot;post&quot; action=&quot;/email.htm&quot;&gt;
+To: &lt;input type=&quot;text&quot; name=&quot;to&quot; maxlength=&quot;50&quot; /&gt;&lt;br /&gt;
+Subject: &lt;input type=&quot;text&quot; name=&quot;subject&quot; maxlength=&quot;50&quot; /&gt;&lt;br /&gt;
+Message:&lt;br /&gt;
+&lt;textarea name=&quot;msg&quot; rows=&quot;6&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;
+&lt;input type=&quot;submit&quot; value=&quot;Send Message&quot; /&gt;&lt;/div&gt;
+&lt;/form&gt;</pre></div></div>
+<p class="Element10">
+Suppose a user enters the following data into this form:&nbsp;</p>
+<p class="Element10">
+To: joe@picsaregood.com&nbsp;</p>
+<p class="Element10">
+Subject: Sent by a PIC&nbsp;</p>
+<p class="Element10">
+Message: I sent this message using my development board!&nbsp;</p>
+<p class="Element10">
+The <a href="02550.html" target="topic">TCPIP_HTTP_PostExecute</a> function will be called with the following data still in the TCP buffer:&nbsp;</p>
+<p class="Element10">
+to=joe%40picsaregood.com&amp;subject=Sent+by+a+PIC&amp;msg=I+sent+this+message+using+my+development+board%21&nbsp;</p>
+<p class="Element10">
+To use the e-mail module, the application needs to read in the address and the subject, store those in RAM, and then <a href="01131.html" target="topic">send</a> the message. However, since the message is not guaranteed to fit in RAM all at once, it must be read as space is available and passed to the e-mail module. A state machine, coupled with the <a href="02551.html" target="topic">TCPIP_HTTP_PostNameRead</a> and&nbsp;</p>
+<p class="Element10">
+<a href="02553.html" target="topic">TCPIP_HTTP_PostValueRead</a> functions can simplify this greatly.&nbsp;</p>
+<p class="Element10">
+See the <a href="02550.html" target="topic">TCPIP_HTTP_PostExecute</a> and HTTPPostEmail functions in the supplied custom_http_app.c for a complete implementation of this example.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01425.html" target="topic">HTTP Features</a> &gt; <a href="01423.html" target="topic">Form Processing</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01421.html" target="topic">Previous</a> | <a href="01425.html" target="topic">Up</a> | <a href="01415.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Form Processing Topic Title: Form Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

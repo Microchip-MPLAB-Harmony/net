@@ -1,0 +1,181 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>IPV6_NEXT_HEADER_TYPE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00895.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00844.html" target="topic">IPv6 Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00895.html" target="topic">IPV6_NEXT_HEADER_TYPE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00871.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="00909.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_NEXT_HEADER_TYPE Topic Title: IPV6_NEXT_HEADER_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+IPV6_NEXT_HEADER_TYPE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: IPV6_NEXT_HEADER_TYPE&nbsp;</p>
+<p class="Element10">
+Identifies the type of the next header immediately follows IPv6 header.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">IPV6_PROT_HOP_BY_HOP_OPTIONS_HEADER</span></strong> = (0u),
+  <strong><span style="color: #000000">IPV6_PROT_ICMP</span></strong> = (1u),
+  <strong><span style="color: #000000">IPV6_PROT_TCP</span></strong> = (6u),
+  <strong><span style="color: #000000">IPV6_PROT_UDP</span></strong> = (17u),
+  <strong><span style="color: #000000">IPV6_PROT_IPV6</span></strong> = (41u),
+  <strong><span style="color: #000000">IPV6_PROT_ROUTING_HEADER</span></strong> = (43u),
+  <strong><span style="color: #000000">IPV6_PROT_FRAGMENTATION_HEADER</span></strong> = (44u),
+  <strong><span style="color: #000000">IPV6_PROT_ENCAPSULATING_SECURITY_PAYLOAD_HEADER</span></strong> = (50u),
+  <strong><span style="color: #000000">IPV6_PROT_AUTHENTICATION_HEADER</span></strong> = (51u),
+  <strong><span style="color: #000000">IPV6_PROT_ICMPV6</span></strong> = (58u),
+  <strong><span style="color: #000000">IPV6_PROT_NONE</span></strong> = (59u),
+  <strong><span style="color: #000000">IPV6_PROT_DESTINATION_OPTIONS_HEADER</span></strong> = (60u)
+} IPV6_NEXT_HEADER_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_HOP_BY_HOP_OPTIONS_HEADER = (0u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Hop-by-Hop Opt. Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ICMP = (1u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ICMPv4 Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_TCP = (6u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TCP protocol Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_UDP = (17u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+UDP protocol Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_IPV6 = (41u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Protocol&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ROUTING_HEADER = (43u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Routing Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_FRAGMENTATION_HEADER = (44u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Fragmentation Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ENCAPSULATING_SECURITY_PAYLOAD_HEADER = (50u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Encapsulating Security Payload Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_AUTHENTICATION_HEADER = (51u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Authentication Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ICMPV6 = (58u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ICMPv6 Protocol&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_NONE = (59u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No next header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_DESTINATION_OPTIONS_HEADER = (60u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Destination Options Header&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00844.html" target="topic">IPv6 Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00895.html" target="topic">IPV6_NEXT_HEADER_TYPE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00871.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="00909.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_NEXT_HEADER_TYPE Topic Title: IPV6_NEXT_HEADER_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

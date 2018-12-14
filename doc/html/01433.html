@@ -1,0 +1,113 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Dynamic Variables Processing</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01433.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01444.html" target="topic">Using the Library</a> &gt; <a href="01437.html" target="topic">HTTP Net Features</a> &gt; <a href="01433.html" target="topic">Dynamic Variables Processing</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01437.html" target="topic">Previous</a> | <a href="01437.html" target="topic">Up</a> | <a href="01438.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET Dynamic Variables Processing Topic Title: Dynamic Variables Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Dynamic Variables Processing</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Parsing of the dynamic variables is done at run-time. The web pages could be changed at run-time, without the need for rebuilding the HTTP Net server. This allows the TCP/IP Stack to run as a library and only the application code to be changed accordingly. The application is required to register a “dynamicPrint” with the HTTP Net server. This function will be called at run-time to process the dynamic variables.&nbsp;</p>
+<p class="Element10">
+The supported syntax is <span class="Element146">~var_name(param1, param2, …)~</span>. When parsing a string like this within a web page, the HTTP Net server will invoke the “dynamicPrint” function using a <a href="02322.html" target="topic">TCPIP_HTTP_DYN_VAR_DCPT</a> data structure that specifies the dynamic variable name, its number and type of parameters as well as each parameter value.&nbsp;</p>
+<p class="Element10">
+For example, the variable <span class="Element146">~myVariable(2,6)~</span> will generate the “dynamicPrint” call with the following parameters:</p>
+<ul class="Element630">
+<li class="Element600"><span class="Element146">varDcpt.dynName = &quot;myVariable&quot;;</span></li>
+<li class="Element600"><span class="Element146">varDcpt.nArgs = 2;</span></li>
+<li class="Element600"><span class="Element146">varDcpt.dynArgs-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32;</span></li>
+<li class="Element600"><span class="Element146">varDcpt.dynArgs-&gt;argInt32 = 2;</span></li>
+<li class="Element600"><span class="Element146">(varDcpt.dynArgs + 1)-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32;</span></li>
+<li class="Element600"><span class="Element146">(varDcpt.dynArgs + 1)-&gt;argInt32 = 6;</span></li>
+</ul><p class="Element10">
+String and int32_t variable types are currently supported.&nbsp;</p>
+<p class="Element10">
+The application needs to return a <a href="02317.html" target="topic">TCPIP_HTTP_DYN_PRINT_RES</a> result specifying if it’s done with processing or it needs to be called again.&nbsp;</p>
+<p class="Element10">
+Applications no longer have direct access to the underlying transport <a href="01231.html" target="topic">socket</a> for a HTTP connection. All of the data write operations need to go through the required API function: <a href="02406.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a>. This function actually just attaches the data to be written to the connection, using data descriptors. The actual output occurs only when all data is gathered and the data size is known.&nbsp;</p>
+<p class="Element10">
+Buffers used in a <a href="02406.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a> need to be persistent until the moment when the output is generated. RAM buffers are supported by using a “dynamicAck” (<a href="02404.html" target="topic">TCPIP_HTTP_NET_DynAcknowledge</a>) type function. Once the output operation is completed the HTTP Net module will call back into the application indicating that the corresponding buffer is no longer used and can be freed/reused.&nbsp;</p>
+<p class="Element10">
+In situations where the dynamic variable print function needs to perform additional write operations, or simply needs to be called again, it must a special result code: TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN/TCPIP_HTTP_DYN_PRINT_RES_AGAIN. Typically this is used when outputting large amounts of data that cannot fit into one single buffer write operation or when the data is not available all at once.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+The parsing of the files for dynamic content is done at run time. Therefore when generating the image, files that contain dynamic content should not be compressed!&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01444.html" target="topic">Using the Library</a> &gt; <a href="01437.html" target="topic">HTTP Net Features</a> &gt; <a href="01433.html" target="topic">Dynamic Variables Processing</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01437.html" target="topic">Previous</a> | <a href="01437.html" target="topic">Up</a> | <a href="01438.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET Dynamic Variables Processing Topic Title: Dynamic Variables Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

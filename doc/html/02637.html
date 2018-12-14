@@ -1,0 +1,199 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_IGMP_RESULT Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02637.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01473.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02637.html" target="topic">TCPIP_IGMP_RESULT Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02628.html" target="topic">Previous</a> | <a href="01473.html" target="topic">Up</a> | <a href="01470.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_RESULT Topic Title: TCPIP_IGMP_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_IGMP_RESULT Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_IGMP_RESULT&nbsp;</p>
+<p class="Element10">
+These results are returned by the IGMP API functions.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_IGMP_OK</span></strong> = 0,
+  <strong><span style="color: #000000">TCPIP_IGMP_IF_ERROR</span></strong> = -1,
+  <strong><span style="color: #000000">TCPIP_IGMP_ARG_ERROR</span></strong> = -2,
+  <strong><span style="color: #000000">TCPIP_IGMP_MCAST_ADDRESS_ERROR</span></strong> = -3,
+  <strong><span style="color: #000000">TCPIP_IGMP_SOURCE_INVALID</span></strong> = -4,
+  <strong><span style="color: #000000">TCPIP_IGMP_FILTER_ERROR</span></strong> = -5,
+  <strong><span style="color: #000000">TCPIP_IGMP_SSM_FILTER_ERROR</span></strong> = -6,
+  <strong><span style="color: #000000">TCPIP_IGMP_GROUP_INVALID</span></strong> = -7,
+  <strong><span style="color: #000000">TCPIP_IGMP_SOCKET_INVALID</span></strong> = -8,
+  <strong><span style="color: #000000">TCPIP_IGMP_MCAST_CACHE_FULL</span></strong> = -9,
+  <strong><span style="color: #000000">TCPIP_IGMP_SOURCE_CACHE_FULL</span></strong> = -10,
+  <strong><span style="color: #000000">TCPIP_IGMP_SOCKET_RECORD_FULL</span></strong> = -11,
+  <strong><span style="color: #000000">TCPIP_IGMP_REPORT_POOL_EMPTY</span></strong> = -12,
+  <strong><span style="color: #000000">TCPIP_IGMP_PACKET_ALLOC_ERROR</span></strong> = -13,
+  <strong><span style="color: #000000">TCPIP_IGMP_PACKET_TRANSMIT_ERROR</span></strong> = -14
+} TCPIP_IGMP_RESULT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_OK = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+operation successful&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_IF_ERROR = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+no such interface, or multicast not enabled on this interface or already all multicast interfaces are in use&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_ARG_ERROR = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+bad call argument&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_MCAST_ADDRESS_ERROR = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+invalid multicast address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_SOURCE_INVALID = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+invalid/not supported source address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_FILTER_ERROR = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+unsupported filter&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_SSM_FILTER_ERROR = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+invalid filter in SSM mode&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_GROUP_INVALID = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+no such multicast source is registered&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_SOCKET_INVALID = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+no such <a href="01231.html" target="topic">socket</a> registered for the multicast source&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_MCAST_CACHE_FULL = -9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+all multicast addresses are already used no new group could be added&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_SOURCE_CACHE_FULL = -10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+all source addresses are already used for this multicast address (group) some sources could be added but not all!&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_SOCKET_RECORD_FULL = -11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+all <a href="01231.html" target="topic">socket</a> records already used for source address in the multicast address (group)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_REPORT_POOL_EMPTY = -12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+all reports are busy, a new one could not be sent&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_PACKET_ALLOC_ERROR = -13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+an IGMP packet could not be allocated&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_PACKET_TRANSMIT_ERROR = -14&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+an IGMP packet could not be transmitted&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Negative codes represent errors.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01473.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02637.html" target="topic">TCPIP_IGMP_RESULT Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02628.html" target="topic">Previous</a> | <a href="01473.html" target="topic">Up</a> | <a href="01470.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_RESULT Topic Title: TCPIP_IGMP_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

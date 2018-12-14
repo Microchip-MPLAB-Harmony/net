@@ -1,0 +1,201 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>_tag_TCPIP_MAC_PACKET Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00137.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02824.html" target="topic">TCPIP_MAC_PACKET Type</a> &gt; <a href="00137.html" target="topic">_tag_TCPIP_MAC_PACKET Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02824.html" target="topic">Previous</a> | <a href="02824.html" target="topic">Up</a> | <a href="02982.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: _tag_TCPIP_MAC_PACKET Topic Title: _tag_TCPIP_MAC_PACKET Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+_tag_TCPIP_MAC_PACKET Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MAC Packet&nbsp;</p>
+<p class="Element10">
+Structure of a packet transferred with the MAC. This is the structure used for both TX and RX. See the description of each individual field.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_tag_TCPIP_MAC_PACKET</span></strong> {
+  <strong><span style="color: #000080">struct</span></strong> _tag_TCPIP_MAC_PACKET* <strong><span style="color: #000000">next</span></strong>;
+  <strong><span style="color: #000080">struct</span></strong> _tag_TCPIP_MAC_PACKET* <strong><span style="color: #000000">pkt_next</span></strong>;
+  <a href="02825.html" target="topic">TCPIP_MAC_PACKET_ACK_FUNC</a> <strong><span style="color: #000000">ackFunc</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">ackParam</span></strong>;
+  <a href="02763.html" target="topic">TCPIP_MAC_DATA_SEGMENT</a>* <strong><span style="color: #000000">pDSeg</span></strong>;
+  uint8_t* <strong><span style="color: #000000">pMacLayer</span></strong>;
+  uint8_t* <strong><span style="color: #000000">pNetLayer</span></strong>;
+  uint8_t* <strong><span style="color: #000000">pTransportLayer</span></strong>;
+  uint16_t <strong><span style="color: #000000">totTransportLen</span></strong>;
+  uint16_t <strong><span style="color: #000000">pktFlags</span></strong>;
+  uint32_t <strong><span style="color: #000000">tStamp</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">pktIf</span></strong>;
+  int16_t <strong><span style="color: #000000">ackRes</span></strong>;
+  uint16_t <strong><span style="color: #000000">pktClientData</span></strong>;
+  uint32_t <strong><span style="color: #000000">pktClientLoad</span></strong>[0];
+};</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+struct _tag_TCPIP_MAC_PACKET* next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Multi-packet/queuing support. This field is used for chaining/queuing packets.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+struct _tag_TCPIP_MAC_PACKET* pkt_next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Multi-packet/queuing support. This field is used for chaining packet fragments, etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PACKET_ACK_FUNC ackFunc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packet acknowledgment function. On TX: A stack module owns the packet. Once the MAC is done transmitting the packet (success or failure) it has to set an appropriate acknowledge result in the ackRes field ( a <a href="02870.html" target="topic">TCPIP_MAC_PKT_ACK_RES</a>) adjust some packet flags (see TCPIP_MAC_PKT_FLAG_QUEUED) and call the packet acknowledge function (ackFunc). This call informs the packet owner that the MAC is done with using that packet. It is up to the implementation what action the ackFunc takes: reuse, free, discard the packet or if some of the above steps are included in the ackFunc itself. On RX: The packet is under the MAC control and it's passed to the stack when it contains valid data. Once the recipient of the packet (IP, ICMP, UDP, TCP, etc.) is done with the packet processing it has to set an appropriate acknowledge result in the ackRes field ( a <a href="02870.html" target="topic">TCPIP_MAC_PKT_ACK_RES</a>) adjust some packet flags (see TCPIP_MAC_PKT_FLAG_QUEUED) and call the packet acknowledge function (ackFunc). This call informs the packet owner (the MAC) that the processing of the packet is completed. It is up to the implementation what action the ackFunc takes: reuse, free, discard the packet or if some of the above steps are included in the ackFunc itself.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const void* ackParam;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Associated acknowledgment parameter to be used when ackFunc is called. For TX packets: this is a client supplied parameter and is not used by the MAC driver. For RX: If the MAC owns the RX packet then the MAC driver can use this field for further dispatching in the MAC driver owned acknowledgment function.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_DATA_SEGMENT* pDSeg;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Data (root) segment associated to this packet. It is up to the design if the root data segment associated with a packet is contiguous in memory with the packet itself. It can be 0 if the packet has no associated data.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t* pMacLayer;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Pointer to the MAC frame. On TX: the sending higher layer protocol updates this field. On RX: the MAC driver updates this field before handing over the packet. (MCHP TCP/IP stack note: The packet allocation function update this field automatically).&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t* pNetLayer;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Pointer to the network layer data. On TX: the sending higher layer protocol updates this field. The MAC driver shouldn't need this field. On RX: the MAC driver updates this field before handing over the packet. (MCHP TCP/IP stack note: The packet allocation function updates this field automatically. But not for IPv6!).&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t* pTransportLayer;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Pointer to the transport layer. On TX: the sending higher layer protocol updates this field. The MAC driver shouldn't need this field. On RX: the MAC driver updates this field before handing over the packet. (MCHP TCP/IP stack note: The packet allocation function updates this field automatically. But not for IPv6!).&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t totTransportLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Total length of the transport layer. The MAC driver shouldn't need this field.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t pktFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+<a href="02826.html" target="topic">TCPIP_MAC_PACKET_FLAGS</a> associated packet flags. On TX: the MAC driver has to set: TCPIP_MAC_PKT_FLAG_QUEUED - if the driver needs to queue the packet<br>On RX: the MAC driver updates this field before handing over the packet. Flags that the MAC driver has to set/clear: TCPIP_MAC_PKT_FLAG_RX and TCPIP_MAC_PKT_FLAG_UNICAST, TCPIP_MAC_PKT_FLAG_BCAST and TCPIP_MAC_PKT_FLAG_MCAST TCPIP_MAC_PKT_FLAG_QUEUED TCPIP_MAC_PKT_FLAG_SPLIT&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t tStamp;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Time stamp value. Statistics, info. On TX: the sending higher layer protocol updates this field. The MAC driver shouldn't need this field On RX: the MAC driver updates this field before handing over the packet.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const void* pktIf;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The packet interface. On TX: the sending higher layer protocol updates this field. The MAC driver doesn't use this field. On RX: the receiving higher level protocol updates this value. The MAC driver doesn't use this field.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int16_t ackRes;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+A <a href="02870.html" target="topic">TCPIP_MAC_PKT_ACK_RES</a> code associated with the packet. On TX: The MAC driver sets this field when calling the packet ackFunc. On RX: The higher level protocol which is the recipient of the packet sets this field when calling the packet ackFunc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t pktClientData;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Client/padding data; ignored by the MAC driver. It can be used by the packet client.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t pktClientLoad[0];&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Additional client packet payload, variable packet data. Ignored by the MAC driver.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Specific TCP/IP stack implementations might offer packet support functions to assist in driver development. (For the MCHP TCP/IP stack see tcpip_packet.h)&nbsp;</p>
+<p class="Element10">
+Since the packets may be dynamically allocated, an acknowledge function can result in data deallocation (blocking). Therefore, the acknowledgment function should NOT be called from within an interrupt context.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02824.html" target="topic">TCPIP_MAC_PACKET Type</a> &gt; <a href="00137.html" target="topic">_tag_TCPIP_MAC_PACKET Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02824.html" target="topic">Previous</a> | <a href="02824.html" target="topic">Up</a> | <a href="02982.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: _tag_TCPIP_MAC_PACKET Topic Title: _tag_TCPIP_MAC_PACKET Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

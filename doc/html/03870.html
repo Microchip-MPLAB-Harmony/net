@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>UDP_SOCKET_INFO Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03870.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03870.html" target="topic">UDP_SOCKET_INFO Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03866.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03881.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_SOCKET_INFO Topic Title: UDP_SOCKET_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+UDP_SOCKET_INFO Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Structure: <a href="03881.html" target="topic">UDP_SOCKET_OPTION</a>&nbsp;</p>
+<p class="Element10">
+Structure containing the information about a UDP <a href="01231.html" target="topic">socket</a></p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  IP_ADDRESS_TYPE <strong><span style="color: #000000">addressType</span></strong>;
+  IP_MULTI_ADDRESS <strong><span style="color: #000000">remoteIPaddress</span></strong>;
+  IP_MULTI_ADDRESS <strong><span style="color: #000000">localIPaddress</span></strong>;
+  IP_MULTI_ADDRESS <strong><span style="color: #000000">sourceIPaddress</span></strong>;
+  IP_MULTI_ADDRESS <strong><span style="color: #000000">destIPaddress</span></strong>;
+  <a href="03864.html" target="topic">UDP_PORT</a> <strong><span style="color: #000000">remotePort</span></strong>;
+  <a href="03864.html" target="topic">UDP_PORT</a> <strong><span style="color: #000000">localPort</span></strong>;
+  <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>;
+  uint16_t <strong><span style="color: #000000">rxQueueSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">txSize</span></strong>;
+} UDP_SOCKET_INFO;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_ADDRESS_TYPE addressType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+address type of the <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_MULTI_ADDRESS remoteIPaddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+current <a href="01231.html" target="topic">socket</a> destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_MULTI_ADDRESS localIPaddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+current <a href="01231.html" target="topic">socket</a> source address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_MULTI_ADDRESS sourceIPaddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+source address of the last packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IP_MULTI_ADDRESS destIPaddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+destination address of the last packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_PORT remotePort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Port number associated with remote node&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_PORT localPort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+local port number&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_NET_HANDLE hNet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+associated interface&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t rxQueueSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+packets waiting in the rx queue&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t txSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+tx buffer size&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03870.html" target="topic">UDP_SOCKET_INFO Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03866.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03881.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_SOCKET_INFO Topic Title: UDP_SOCKET_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

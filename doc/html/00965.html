@@ -1,0 +1,184 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Microchip MIB Compiler</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00965.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00965.html" target="topic">Microchip MIB Compiler</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01679.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="00964.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MIB2BIB Microchip MIB Compiler Topic Title: Microchip MIB Compiler)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Microchip MIB Compiler</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Microchip’s SNMP Agent uses a custom script to describe the MIB. This script is designed to simplify the MIB definition and its integration with the main application. The actual MIB used by the SNMP Agent is a binary image created by the Microchip Management Information Base (MIB) to Binary Information Base (BIB) compiler named mib2bib.</p><div class="Element15">
+Microchip MIB Script Commands</div>
+<p class="Element10">
+A Microchip MIB file is an ASCII text file consisting of multiple command lines. Each command line consists of a single command, starting with the dollar sign character ($), and one or more command parameters delimited with commas and enclosed in parentheses. Lines that do not start with a dollar sign are interpreted as comments and are not processed by the compiler. Commands must be written in a single line; they cannot span multiple lines.&nbsp;</p>
+<p class="Element10">
+The MIB script language includes a total of five commands, each having a specific syntax. Only one command, DeclareVar, is mandatory; the others are optional depending on the application and the types of information to be defined. In practice, at least one other command will be used in defining an MIB. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+
+<ol class="Element631">
+<li value="1" class="Element601">Both the <span class="Element146">ASN.1</span> MIB file and the Microchip MIB script use the same <span class="Element146">.mib</span> file extension; however, the files have distinctly different purposes. The <span class="Element146">ASN.1</span> MIB file is used by the MIB browser (NMS) to properly display context for your application.</li>
+<li value="2" class="Element601">The Microchip MIB script is compiled using mib2bib to create a BIB file. The BIB file is later converted using MPFS2 to store the MIB data for your application in internal Flash or EEPROM.</li>
+</ol>&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+MIB Compiler</div>
+<p class="Element10">
+The mib2bib compiler converts the Microchip MIB script into a binary format compatible with the Microchip SNMP Agent. It accepts a Microchip MIB script in ASCII format and generates two output files: the binary information file, <span class="Element146">snmp.bib</span>, and the C header file, <span class="Element146">mib.h</span>. The binary file can be included in a Microchip File System (MPFS2) image.&nbsp;</p>
+<p class="Element10">
+The complete command line syntax for mib2bib is:&nbsp;</p>
+<p class="Element10">
+<span class="Element146"># java –jar mib2bib.jar [/?] [/h] [/q] &lt;MIBFile&gt; [/b=&lt;OutputBIBDir&gt;] [/I=&lt;OutputIncDir]</span>&nbsp;</p>
+<p class="Element10">
+where:
+<ul class="Element631">
+<li class="Element601"><span class="Element146">/?</span> - Displays command line help</li>
+<li class="Element601"><span class="Element146">/h</span> - Displays detail help for all script commands</li>
+<li class="Element601"><span class="Element146">/q</span> - Overwrites existing <span class="Element146">snmp.bib</span> and <span class="Element146">mib.h</span> files</li>
+<li class="Element601"><span class="Element146">&lt;MIBFile&gt; </span>- is the input MIB script file</li>
+<li class="Element601"><span class="Element146">&lt;OutputBIBDir&gt;</span> - is the output BIB directory where snmp.bib should be copied. If a directory is not specified, the current directory will be used.</li>
+<li class="Element601"><span class="Element146">&lt;OutputIncDir&gt;</span> - is the output Inc directory where mib.h should be copied. If a directory is not specified, the current directory will be used.</li>
+</ul>For example, the command, <span class="Element146">Java –jar mib2bib.jar MySNMP.mib</span>, compiles the script, <span class="Element146">MySNMP.mib</span>, and generates the <span class="Element146">snmp.bib</span> and<span class="Element146"> mib.h</span> output files in the same directory.&nbsp;</p>
+<p class="Element10">
+Conversely, the command, <span class="Element146">mib2bib /q MySNMP.mib /b=WebPages</span>, compiles the <span class="Element146">MySNMP.mib</span> script file and overwrites the existing output files. It also specifies that the <span class="Element146">snmp.mib</span> file is located in the subdirectory, <span class="Element146">WebPages</span>. Because it is not specified, <span class="Element146">mib.h</span> is assumed to be in the current directory.&nbsp;</p>
+<p class="Element10">
+If compilation is successful, mib2bib displays the statistics on the binary file, including the number of OIDs and the Agent ID, and the output file size.&nbsp;</p>
+<p class="Element10">
+The MIB compiler is a simple rule script compiler. While it can detect and report many types of parsing errors, it has these known limitations:
+<ul class="Element631">
+<li class="Element601">All command lines must be written in single line</li>
+<li class="Element601">All command parameters must immediately end with either a comma or a right parenthesis. For example, <span class="Element146">$DeclareVar(myOID, ASCII_STRING …)</span>, will fail because the ASCII_STRING keyword is not immediately followed by a comma.</li>
+<li class="Element601">All numerical data must be written in decimal</li>
+</ul><strong>Example: Typical Output Display for a mib2bib Compilation</strong> </p><div class="Element13"><div class="Element12"><pre class="Element12">C:\microchip\harmony\net\utilities\mib2bib&gt;java -jar mib2bib.jar snmp.mib
+mib2bib  v3.0.0   &lt;Wednesday, Nov 14, 2018&gt;
+Copyright (c) 2018 Microchip Technology Inc.
+
+Input MIB File :C:\microchip\harmony\net\utilities\mib2bib\snmp.mib
+
+Output BIB File:C:\microchip\harmony\net\utilities\mib2bib\snmp.bib
+
+Output Inc File:C:\microchip\harmony\net\utilities\mib2bib\mib.h
+
+
+
+BIB File Statistics:
+    Total Static OIDs         : 9
+    Total Static data bytes   : 74
+    Total Dynamic OIDs        : 30
+    (mib.h   entries)
+    Total Read-Only OIDs      : 10
+    Total Read-Write OIDs     : 20
+-------------------------------------------
+    Total OIDs                : 39
+
+    Total Sequence OIDs       : 19
+    Total AgentIDs            : 1
+===========================================
+    Total MIB bytes           : 512
+    (snmp.bib   size)
+</pre></div></div>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+For additional details about the Microchip MIB script, please refer to the Microchip application note <i>AN870 - &quot;</i><a href="http://www.ww1.microchip.com/downloads/en/AppNotes/00870b.pdf" target="_blank"><img src="indicator_external_link.gif" border="0" alt="" title="">SNMP V2c Agent for Microchip TCP/IP Stack</a>&quot; (DS00870).&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="00964.html" target="topic">mib2bib.jar Run-time Error Codes</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic lists the run-time error codes for <span class="Element146">mib2bib.jar</span>.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00965.html" target="topic">Microchip MIB Compiler</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01679.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="00964.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MIB2BIB Microchip MIB Compiler Topic Title: Microchip MIB Compiler)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

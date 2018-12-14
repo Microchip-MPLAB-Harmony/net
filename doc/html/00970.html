@@ -1,0 +1,180 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>MPFS2 Command Line Options</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00970.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00973.html" target="topic">MPFS2 Utility</a> &gt; <a href="00970.html" target="topic">MPFS2 Command Line Options</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00967.html" target="topic">Previous</a> | <a href="00973.html" target="topic">Up</a> | <a href="00971.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 MPFS2 Command Line Options Topic Title: MPFS2 Command Line Options)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+MPFS2 Command Line Options</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+To facilitate batch files and automation, the MPFS2 Utility also supports execution from the command line. The syntax is as follows:&nbsp;</p>
+<p class="Element10">
+<span class="Element146">MPFS2.jar [options] &lt;SourceDir&gt; &lt;ProjectDir&gt; &lt;OutputFile&gt;</span>&nbsp;</p>
+<p class="Element10">
+The SourceDir, ProjectDir, and OutputFile options are required and should be enclosed in quotation marks. The OutputFile option will be relative to ProjectDir, and cannot be a full path name. The various option switches are described in the following table. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="13%">
+<div class="Element66">
+Switch&nbsp;</div></td><td class="Element65" valign="top" width="7%">
+<div class="Element66">
+Short&nbsp;</div></td><td class="Element65" valign="top" width="80%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="13%">
+<div class="Element68">
+/BIN&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+/b&nbsp;</div></td><td class="Element67" valign="top" width="80%">
+<div class="Element68">
+Output a BIN image (Default)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="13%">
+<div class="Element68">
+/PIC32&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+/c&nbsp;</div></td><td class="Element67" valign="top" width="80%">
+<div class="Element68">
+Output a XC32 image&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="13%">
+<div class="Element68">
+/ASM16&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+/s&nbsp;</div></td><td class="Element67" valign="top" width="80%">
+<div class="Element68">
+Output an ASM16 image&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="13%">
+<div class="Element68">
+/mpfs2&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+/2&nbsp;</div></td><td class="Element67" valign="top" width="80%">
+<div class="Element68">
+Use the MPFS2 format (Default)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="13%">
+<div class="Element68">
+/html &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+/h &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="80%">
+<div class="Element68">
+File types to be parsed for dynamic variables (Default: &quot;<span class="Element146">*.htm</span>, <span class="Element146">*.html</span>, <span class="Element146">*.cgi</span>, <span class="Element146">*.xml</span>&quot;)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="13%">
+<div class="Element68">
+/xgzip &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+/z &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="80%">
+<div class="Element68">
+File types to be excluded from GZIP compression (Default: &quot;<span class="Element146">*.bib</span>, <span class="Element146">*.inc</span>, <span class="Element146">*.bin</span>&quot;)&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+SourceDir, ProjectDir, and OutputFile are required and should be enclosed in quotes.&nbsp;</p>
+<p class="Element10">
+OutputFile is placed relative to ProjectDir and cannot be a full path name.&nbsp;</p>
+<p class="Element10">
+For Harmony TCP/IP stack (/v) should be used with PIC32 output image format.&nbsp;</p>
+<p class="Element10">
+<strong>PIC32 Output Option Example:</strong> &nbsp;</p><p class="Element10" style="text-align: center;">
+<img src="mpfs_generator_output.png" border="0" alt="" title="">&nbsp;</p><p class="Element10">
+<strong>Successful MPFS2 Image Generation Example:</strong> </p><p class="Element10" style="text-align: center;">
+<img src="successful_mpfs2_gen.png" border="0" alt="" title=""></p><p class="Element10">
+<strong>MPFS2 Utility Output Log Details</strong> </p><div class="Element13"><div class="Element12"><pre class="Element12">C:\microchip\harmony\web_pages :
+    auth.htm: 1374 bytes, 3 vars
+    cookies.htm: 2086 bytes, 5 vars
+    DynRcrd.bin: 802 bytes
+    dynvars.htm: 1989 bytes, 8 vars
+    FileRcrd.bin: 154 bytes
+    footer.inc: 161 bytes
+    forms.htm: 1979 bytes, 7 vars
+    harmony.gif: 1605 bytes (gzipped by 26%)
+    header.inc: 1193 bytes
+    index.htm: 3846 bytes, 7 vars
+    leds.cgi: 17 bytes, 1 vars
+    mchp.css: 925 bytes (gzipped by 71%)
+    mchp.gif: 1250 bytes (gzipped by 2%)
+    mchp.js: 1451 bytes (gzipped by 62%)
+    snmp.bib: 512 bytes
+    status.xml: 183 bytes, 7 vars
+    upload.htm: 930 bytes, 4 vars
+C:\microchip\harmony\web_pages\snmp :
+    snmp/snmpconfig.htm: 1343 bytes, 9 vars
+C:\microchip\harmony\web_pages\protect :
+    protect/config.htm: 1888 bytes, 12 vars
+    protect/index.htm: 985 bytes, 3 vars
+    protect/reboot.cgi: 8 bytes, 1 vars
+    protect/reboot.htm: 1779 bytes, 4 vars
+C:\microchip\harmony\web_pages\email :
+    email/index.htm: 1877 bytes, 6 vars
+C:\microchip\harmony\web_pages\dyndns :
+    dyndns/index.htm: 1461 bytes, 12 vars
+GENERATED MPFS2 IMAGE: 30688 bytes
+</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00973.html" target="topic">MPFS2 Utility</a> &gt; <a href="00970.html" target="topic">MPFS2 Command Line Options</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00967.html" target="topic">Previous</a> | <a href="00973.html" target="topic">Up</a> | <a href="00971.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 MPFS2 Command Line Options Topic Title: MPFS2 Command Line Options)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

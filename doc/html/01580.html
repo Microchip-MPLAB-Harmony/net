@@ -1,0 +1,92 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>SMTP Client Short Message Example</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01580.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01134.html" target="topic">SMTP Module</a> &gt; <a href="01581.html" target="topic">Using the Library</a> &gt; <a href="01578.html" target="topic">SMTP Client Examples</a> &gt; <a href="01580.html" target="topic">SMTP Client Short Message Example</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01578.html" target="topic">Previous</a> | <a href="01578.html" target="topic">Up</a> | <a href="01579.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP SMTP Client Short Message Example Topic Title: SMTP Client Short Message Example)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+SMTP Client Short Message Example</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The SMTP client API is simplified when messages can be buffered entirely in RAM. This example sends a brief e-mail message indicating the current status of the board's buttons.&nbsp;</p>
+<p class="Element10">
+The following diagram provides an overview of the process:&nbsp;</p>
+<p class="Element10">
+<img src="smtp_diagram.png" border="0" alt="" title="">
+<ol class="Element631">
+<li value="1" class="Element601">First, call <a href="03112.html" target="topic">TCPIP_SMTP_UsageBegin</a> to verify that the SMTP client is available and to begin a new message. If FALSE is returned, the SMTP client is busy and the application must return to the main loop to allow StackTask to execute again.</li>
+<li value="2" class="Element601">Next, set the local relay server to use as TCPIP_SMTP_CLIENT_MESSAGE.Server. If the local relay server requires a user name and password, set TCPIP_SMTP_CLIENT_MESSAGE.Username and TCPIP_SMTP_CLIENT_MESSAGE.Password to the appropriate credentials. If server parameters are not set, the stack will attempt to deliver the message directly to its destination host. This will likely fail due to SPAM prevention measures put in place by most ISPs and network administrators.</li>
+<li value="3" class="Element601">Continue on to set the header strings as necessary for the message. This includes the subject line, from address, and any recipients you need to add. Finally, set TCPIP_SMTP_CLIENT_MESSAGE.Body to the message to be sent.</li>
+<li value="4" class="Element601">At this point the message is ready to <a href="01131.html" target="topic">send</a>. Call <a href="03105.html" target="topic">TCPIP_SMTP_MailSend</a> to instruct the SMTP client to begin transmission.</li>
+<li value="5" class="Element601">The application must now call <a href="03103.html" target="topic">TCPIP_SMTP_IsBusy</a> until it returns FALSE. Each time TRUE is returned, return to the main loop and wait for the system tasks to be executed again. This allows the SMTP server to continue its work in a cooperative multitasking manner. Once FALSE is returned, call <a href="03113.html" target="topic">TCPIP_SMTP_UsageEnd</a> to release the SMTP client. Check the return value of this function to determine if the message was successfully sent.</li>
+</ol>&nbsp;</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01134.html" target="topic">SMTP Module</a> &gt; <a href="01581.html" target="topic">Using the Library</a> &gt; <a href="01578.html" target="topic">SMTP Client Examples</a> &gt; <a href="01580.html" target="topic">SMTP Client Short Message Example</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01578.html" target="topic">Previous</a> | <a href="01578.html" target="topic">Up</a> | <a href="01579.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP SMTP Client Short Message Example Topic Title: SMTP Client Short Message Example)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
