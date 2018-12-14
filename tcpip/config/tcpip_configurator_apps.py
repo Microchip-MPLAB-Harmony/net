@@ -30,8 +30,8 @@ autoConnectTableCRYPTOHttp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http
 # autoConnectTableCRYPTOHttpNet = [["tcpipHttpNet", "HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOHttpNet = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOSnmp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-autoConnectTableNetPresBSD = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
-autoConnectTableNetPresSMTPC = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipSmtpc:Smtpc_NetPres_Dependency"]]
+# autoConnectTableNetPresBSD = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
+# autoConnectTableNetPresSMTPC = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipSmtpc:Smtpc_NetPres_Dependency"]]
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -229,7 +229,7 @@ def enableTcpipAutoConfigApps(enable):
 			tcpipAutoConfigBasicGroup = Database.createGroup("TCP/IP STACK", "BASIC CONFIGURATION")
 			
 		if(Database.getComponentByID("tcpip_transport_config") == None):
-			res = tcpipAutoConfigTransportGroup.addComponent("tcpip_transport_config")#niyas check whether addComponent is needed
+			res = tcpipAutoConfigTransportGroup.addComponent("tcpip_transport_config")
 			res = Database.activateComponents(["tcpip_transport_config"], "TRANSPORT LAYER", False)	
 		
 		if(Database.getComponentByID("tcpip_network_config") == None):
@@ -276,7 +276,7 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipBerkeleyApi:BSD_NETPRES_Dependency")
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])	
-			res = Database.connectDependencies(autoConnectTableNetPresBSD)
+			# res = Database.connectDependencies(autoConnectTableNetPresBSD)
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -376,11 +376,15 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_NetPres_Dependency")
 		
 		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)	
+			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
 			
+		if(Database.getComponentByID("netPres") == None):
+			res = Database.activateComponents(["netPres"])	
 		# res = Database.activateComponents(["lib_crypto"], Database.getRootGroup().getID(), True)	
-		res = Database.activateComponents(["lib_crypto"])
+		if(Database.getComponentByID("lib_crypto") == None):
+			res = Database.activateComponents(["lib_crypto"])
 		res = Database.connectDependencies(autoConnectTableCRYPTOHttpNet)
+		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
 	else:
@@ -394,7 +398,7 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
 		res = Database.activateComponents(["tcpipHttp"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "libtcpipHttp")
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "Http_Crypto_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttp:Http_Crypto_Dependency") #Niyas : This node visibility not working
+		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttp:Http_Crypto_Dependency")
 		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
 			
@@ -457,7 +461,7 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSmtpc:Smtpc_NetPres_Dependency")
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])	
-			res = Database.connectDependencies(autoConnectTableNetPresSMTPC)
+			# res = Database.connectDependencies(autoConnectTableNetPresSMTPC)
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -472,7 +476,7 @@ def tcpipAutoConfigSNMPEnable(symbol, event):
 		res = Database.activateComponents(["tcpipSnmp"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "libtcpipSnmp")
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_Crypto_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSnmp:Snmp_Crypto_Dependency") #Niyas : This node visibility not working
+		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSnmp:Snmp_Crypto_Dependency")
 		res = Database.activateComponents(["lib_crypto"])
 		res = Database.connectDependencies(autoConnectTableCRYPTOSnmp)
 		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_TcpipFs_Dependency")
@@ -515,6 +519,9 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "Telnet_NetPres_Dependency")
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipTelnet:Telnet_NetPres_Dependency")
 		
+		if(Database.getComponentByID("netPres") == None):
+			res = Database.activateComponents(["netPres"])
+			
 		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD") != True):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD", True, 2)
 	else:

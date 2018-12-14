@@ -44,7 +44,7 @@ def loadModule():
 	tcpipIPv4Component = Module.CreateSharedComponent("tcpipIPv4", "IPv4", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv4.py")
 	tcpipIPv4Component.addCapability("libTcpipIPv4","IPv4",True)
 	tcpipIPv4Component.addCapability("libTcpipIPv4IP","IP",True)
-	#niyas tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_CORE", None, True, True)	
+	#tcpipIPv4Component.addDependency("Ipv4_Stack_Dependency", "TCPIP_CORE", None, True, True)	
 	tcpipIPv4Component.addDependency("Ipv4_Arp_Dependency", "ARP", None, True, True)	
 	tcpipIPv4Component.setDisplayType("TCP/IP Library")
 	
