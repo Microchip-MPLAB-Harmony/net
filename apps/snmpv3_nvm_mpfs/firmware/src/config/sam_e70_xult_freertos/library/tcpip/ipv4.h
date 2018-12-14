@@ -71,8 +71,21 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // *****************************************************************************
 
+// *****************************************************************************
+/* IPv4 configuration
+
+  Summary:
+    Initialization parameters supported by IPv4
+
+  Description:
+    Currently the IPv4 modules does not support any initialization parameters.
+
+  Remarks:
+    None.
+ */
 typedef struct
 {
+    void*   reserved;
 }TCPIP_IPV4_MODULE_CONFIG;
 
 // *****************************************************************************
@@ -97,13 +110,13 @@ typedef enum
 
 
 // *****************************************************************************
-/* IPv4 packet header definition
+/* IPv4 packet fragment definition
 
   Summary:
-    Structure of an IPv4 header.
+    Structure of an IPv4 fragment info.
 
   Description:
-    This is the structure of an IPv4 packet header.
+    This is the structure of an IPv4 fragment info in the IPv4 header.
 
   Remarks:
     None.
@@ -121,6 +134,18 @@ typedef union
     };
 }IPV4_FRAGMENT_INFO;
 
+// *****************************************************************************
+/* IPv4 packet option definition
+
+  Summary:
+    Structure of an IPv4 option.
+
+  Description:
+    This is the structure of an IPv4 option field in the IPv4 header.
+
+  Remarks:
+    None.
+ */
 typedef struct
 {
     struct
@@ -133,6 +158,18 @@ typedef struct
     uint16_t        optData[0];         // option specific variable data
 }IPV4_OPTION_FIELD;
 
+// *****************************************************************************
+/* IPv4 type of service definition
+
+  Summary:
+    Structure of an IPv4 type of service field.
+
+  Description:
+    This is the structure of an IPv4 type of service header field.
+
+  Remarks:
+    None.
+ */
 typedef union
 {
     uint8_t     val;
@@ -146,6 +183,18 @@ typedef union
     };
 }IPV4_TYPE_OF_SERVICE;
 
+// *****************************************************************************
+/* IPv4 packet header definition
+
+  Summary:
+    Structure of an IPv4 header.
+
+  Description:
+    This is the structure of an IPv4 packet header.
+
+  Remarks:
+    None.
+ */
 typedef struct
 {
     struct
@@ -470,6 +519,7 @@ TCPIP_NET_HANDLE   TCPIP_IPV4_SelectSourceInterface(TCPIP_NET_HANDLE netH,
   Remarks:
     This function is primarily meant for RX packets.
  */
+static __inline__ const IPV4_ADDR* TCPIP_IPV4_PacketGetDestAddress(TCPIP_MAC_PACKET* pPkt);
 
 static __inline__ const IPV4_ADDR* __attribute__((always_inline)) TCPIP_IPV4_PacketGetDestAddress(TCPIP_MAC_PACKET* pPkt)
 {
@@ -505,6 +555,7 @@ static __inline__ const IPV4_ADDR* __attribute__((always_inline)) TCPIP_IPV4_Pac
   Remarks:
     This function is primarily meant for RX packets.
  */
+static __inline__ const IPV4_ADDR* TCPIP_IPV4_PacketGetSourceAddress(TCPIP_MAC_PACKET* pPkt);
 
 static __inline__ const IPV4_ADDR* __attribute__((always_inline)) TCPIP_IPV4_PacketGetSourceAddress(TCPIP_MAC_PACKET* pPkt)
 {

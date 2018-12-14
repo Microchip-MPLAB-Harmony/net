@@ -1748,7 +1748,7 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
 #if defined(TCPIP_STACK_USE_IPV6)
     uint8_t     addrBuf[44];
 #endif
-    TCPIP_DNSS_RESULT res = DNSS_RES_NO_SERVICE;
+    TCPIP_DNSS_RESULT res = TCPIP_DNSS_RES_NO_SERVICE;
 
     if(dnsCommand == DNS_SERVICE_COMD_DEL)
     {
@@ -1830,16 +1830,16 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
 
     switch(res)
     {
-        case DNSS_RES_NO_ENTRY:
+        case TCPIP_DNSS_RES_NO_ENTRY:
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "The Address is not part of the DNS Cache entry \r\n");
             return false;
-        case DNSS_RES_MEMORY_FAIL:
+        case TCPIP_DNSS_RES_MEMORY_FAIL:
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "No memory available \r\n");
             return false;
-        case DNSS_RES_CACHE_FULL:
+        case TCPIP_DNSS_RES_CACHE_FULL:
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "No space to add [%s] entry \r\n",hostName);
             return false;
-        case TCPIP_DNS_RES_OK:
+        case TCPIP_DNSS_RES_OK:
             return true;
         default:
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "Failed to add [%s] entry \r\n",hostName);
@@ -1926,12 +1926,12 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
         while(1)
         {
             res = TCPIP_DNSS_AddressCntGet(index,(uint8_t*)hostName,&ipcount);
-            if(res == DNSS_RES_OK)
+            if(res == TCPIP_DNSS_RES_OK)
             {
                 entryPresent = true;
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s       %d\r\n",hostName,ipcount);
             }
-            else if(res == DNSS_RES_NO_SERVICE)
+            else if(res == TCPIP_DNSS_RES_NO_SERVICE)
             {
                 if(entryPresent == false)
                 {
@@ -1955,13 +1955,13 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     while(1)
     {
         res = TCPIP_DNSS_EntryGet((uint8_t*)hostName,addrType,index,&ipDNS,&ttlTime);
-        if(res == DNSS_RES_OK)
+        if(res == TCPIP_DNSS_RES_OK)
         {
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s\t\t%d.%d.%d.%d\t\t%d\r\n",hostName,ipDNS.v4Add.v[0],ipDNS.v4Add.v[1],
                 ipDNS.v4Add.v[2],ipDNS.v4Add.v[3],ttlTime);
             entryPresent = true;
         }
-        else if((res == DNSS_RES_NO_SERVICE)|| (res == DNSS_RES_NO_ENTRY))
+        else if((res == TCPIP_DNSS_RES_NO_SERVICE)|| (res == TCPIP_DNSS_RES_NO_ENTRY))
         {
             if(entryPresent == false)
             {
@@ -1987,13 +1987,13 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     while(1)
     {
         res = TCPIP_DNSS_EntryGet((uint8_t*)hostName,addrType,index,&ipDNS,&ttlTime);
-        if(res == DNSS_RES_OK)
+        if(res == TCPIP_DNSS_RES_OK)
         {
             TCPIP_Helper_IPv6AddressToString(&ipDNS.v6Add,(char*)addrBuf,sizeof(addrBuf));
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s       %s      %d\r\n",hostName,addrBuf,ttlTime);
             entryPresent = true;
         }
-        else if((res == DNSS_RES_NO_SERVICE)|| (res == DNSS_RES_NO_ENTRY))
+        else if((res == TCPIP_DNSS_RES_NO_SERVICE)|| (res == TCPIP_DNSS_RES_NO_ENTRY))
         {
             if(entryPresent == false)
             {

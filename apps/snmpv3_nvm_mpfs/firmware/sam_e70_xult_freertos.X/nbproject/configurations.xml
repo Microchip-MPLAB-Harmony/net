@@ -699,12 +699,12 @@
       <logicalFolder name="f2" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_e70_xult_freertos/osal/osal_freertos.c</itemPath>
       </logicalFolder>
-      <itemPath>../src/mpfs_img2.c</itemPath>
       <itemPath>../src/custom_snmp_app.c</itemPath>
       <itemPath>../src/http_print.c</itemPath>
       <itemPath>../src/custom_http_app.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/mpfs_img2.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"

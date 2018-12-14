@@ -102,7 +102,7 @@ static OSAL_SEM_HANDLE_TYPE userSem;
 static __inline__ OSAL_RESULT  __attribute__((always_inline))   _UserGblLockCreate(void)
 {
     // create the shared Data Lock
-    return OSAL_SEM_Create(&userSem, OSAL_SEM_TYPE_BINARY, 1, 0);
+    return OSAL_SEM_Create(&userSem, OSAL_SEM_TYPE_BINARY, 1, 1);
 }    
 
 static __inline__ void  __attribute__((always_inline))          _UserGblLockDelete(void)
@@ -3111,7 +3111,7 @@ bool TCPIP_UDP_OptionsSet(UDP_SOCKET hUDP, UDP_SOCKET_OPTION option, void* optPa
                 return true;
 
             case UDP_OPTION_BROADCAST:
-                if((pSkt->flags.bcastForceType = (UDP_SOCKET_BCAST_TYPE)(optParam)) != UDP_BCAST_NONE)
+                if((pSkt->flags.bcastForceType = (int)optParam) != UDP_BCAST_NONE)
                 {   // set limited broadcast address (for now)
                     pSkt->destAddress.Val = 0xffffffff;
                     pSkt->flags.destSet = 1;
@@ -3486,7 +3486,7 @@ bool TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE hSi
 
     if(pSkt != 0)
     {  
-        if(pSkt->sigHandler == hSig)
+        if(pSkt->sigHandler == (TCPIP_UDP_SIGNAL_FUNCTION)hSig)
         {
             pSkt->sigHandler = 0;
             pSkt->sigMask = 0;

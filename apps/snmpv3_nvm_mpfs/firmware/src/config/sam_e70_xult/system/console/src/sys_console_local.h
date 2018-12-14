@@ -53,11 +53,14 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
-#include <sys/types.h> /* ssize_t */
 
-#include "configuration.h"
-#include "system/system.h"
-#include "driver/driver.h"
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
@@ -65,62 +68,16 @@
 // *****************************************************************************
 // *****************************************************************************
 
-typedef uintptr_t CONSOLE_DEVICE_HANDLE;
+typedef uintptr_t CONSOLE_DEVICE_INDEX;
 
-typedef void (*consoleCallbackFunction) (void *handle);
-
-typedef enum
-{
-    SYS_CONSOLE_STATUS_NOT_CONFIGURED,
-
-    SYS_CONSOLE_STATUS_CONFIGURED,
-
-    SYS_CONSOLE_STATUS_BUSY,
-
-    SYS_CONSOLE_STATUS_ERROR
-
-} SYS_CONSOLE_STATUS;
-
-
-typedef enum
-{
-    SYS_CONSOLE_EVENT_WRITE_COMPLETE,
-
-    SYS_CONSOLE_EVENT_READ_COMPLETE,
-
-} SYS_CONSOLE_EVENT;
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Extern data Definitions
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Prototypes
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: UART Prototypes
-// *****************************************************************************
-// *****************************************************************************
-CONSOLE_DEVICE_HANDLE Console_UART_Open(const SYS_MODULE_INDEX index, DRV_IO_INTENT intent);
-void Console_UART_Close(CONSOLE_DEVICE_HANDLE consDevHandle);
-ssize_t Console_UART_Write(int fd, const void *buf, size_t count);
-ssize_t Console_UART_Read(int fd, void *buf, size_t count);
-char Console_UART_ReadC(int fd);
-void Console_UART_Tasks (SYS_MODULE_OBJ consObj);
-SYS_CONSOLE_STATUS Console_UART_Status (void);
-void Console_UART_RegisterCallback(consoleCallbackFunction cbFunc, SYS_CONSOLE_EVENT event);
-void Console_UART_Flush(void);
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
+}
+#endif
+//DOM-IGNORE-END
 
 #endif //#ifndef SYS_CONSOLE_LOCAL_H
 
 /*******************************************************************************
  End of File
 */
-

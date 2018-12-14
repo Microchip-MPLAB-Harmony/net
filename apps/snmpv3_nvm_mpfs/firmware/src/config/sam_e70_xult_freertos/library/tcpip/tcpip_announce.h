@@ -133,8 +133,7 @@ typedef struct __attribute__((packed))
 typedef struct __attribute__((packed))
 {
     uint8_t     type;       // TCPIP_ANNOUNCE_FIELD_MAC_NAME
-    char        macName[0]; // MAC interface name, ASCII;
-    char        separator[2];   // CRLF terminator
+    char        macName[2]; // variable size MAC interface name, ASCII + CRLF separator;
 }TCPIP_ANNOUNCE_MAC_NAME_DCPT;
 
 
@@ -150,8 +149,7 @@ typedef struct __attribute__((packed))
 typedef struct __attribute__((packed))
 {
     uint8_t     type;       // TCPIP_ANNOUNCE_FIELD_HOST_NAME
-    char        hostName[0];// interface host name, ASCII
-    char        separator[2];   // CRLF terminator
+    char        hostName[2];// variable size interface host name, ASCII + CRLF separator
 }TCPIP_ANNOUNCE_HOST_NAME_DCPT;
 
 
@@ -296,6 +294,7 @@ typedef void    (*TCPIP_ANNOUNCE_MESSAGE_CALLBACK)(TCPIP_NET_HANDLE hNet, UDP_SO
 */
 typedef struct
 {
+    void* reserved;
 }TCPIP_ANNOUNCE_MODULE_CONFIG;
 
 // *****************************************************************************

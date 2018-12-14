@@ -4784,7 +4784,7 @@ int f_printf (
 	...					/* Optional arguments... */
 )
 {
-	va_list arp;
+	va_list arp = (va_list){0};
 	uint8_t f = 0, r = 0;
 	uint32_t nw = 0, i = 0, j = 0, w = 0;
 	uint32_t v = 0;

@@ -13,6 +13,7 @@
             <itemPath>../src/config/sam_e70_xult/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+            <itemPath>../src/config/sam_e70_xult/crypto/src/same70-hash.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/crypto.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/aes.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/arc4.h</itemPath>
@@ -84,7 +85,6 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zutil.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/same70-hash.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -494,9 +494,10 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inffast.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/random_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/aes_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/sha_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/sha256_same70.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/aes.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha256.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/random.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -636,12 +637,12 @@
           <itemPath>../src/config/sam_e70_xult/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/mpfs_img2.c</itemPath>
       <itemPath>../src/custom_snmp_app.c</itemPath>
       <itemPath>../src/http_print.c</itemPath>
       <itemPath>../src/custom_http_app.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
+      <itemPath>../src/mpfs_img2.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
