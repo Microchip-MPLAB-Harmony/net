@@ -1,0 +1,167 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Dynamic Variables</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01421.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01425.html" target="topic">HTTP Features</a> &gt; <a href="01421.html" target="topic">Dynamic Variables</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01425.html" target="topic">Previous</a> | <a href="01425.html" target="topic">Up</a> | <a href="01423.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Dynamic Variables Topic Title: Dynamic Variables)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Dynamic Variables</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Basic Use</div>
+<p class="Element10">
+To create a dynamic variable, simply enclose the name of the variable inside a pair of tilde (~) characters within the web pages' HTML source code. (ex: ~myVariable~) When you run the MPFS2 Utility to generate the web pages, it will automatically index these variables in <span class="Element146">http_print.h</span>. This index will instruct your application to invoke the function TCPIP_HTTP_Print_myVariable when this string is encountered.&nbsp;</p>
+<p class="Element10">
+Here is an example of using a dynamic variable to insert the build date of your application into the web pages: </p><div class="Element13"><div class="Element12"><pre class="Element12">&lt;div <strong><span style="color: #000080">class</span></strong>=&quot;examplebox code&quot;&gt;~builddate~&lt;/div&gt;
+The associated callback will print the value into the web page:
+<strong><span style="color: #000080">void</span></strong> TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)
+{
+    TCP_SOCKET sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
+    TCPIP_TCP_StringPut(sktHTTP, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>*)__DATE__&quot; &quot;__TIME__);
+}</pre></div></div>
+<div class="Element15">
+Passing Parameters</div>
+<p class="Element10">
+You can also pass parameters to dynamic variables by placing numeric values inside of parenthesis after the variable name.&nbsp;</p>
+<p class="Element10">
+For example, ~led(2)~ will print the value of the second LED. The numeric values are passed as 16 bit values to your callback function. You can pass as many parameters as you wish to these functions, and if your C code has constants defined, those will be parsed as well. (ex: ~pair(3,TRUE)~).&nbsp;</p>
+<p class="Element10">
+The following code inserts the value of the push buttons into the web page, all using the same callback function: </p><div class="Element13"><div class="Element12"><pre class="Element12">&lt;div <strong><span style="color: #000080">class</span></strong>=&quot;examplebox code&quot;&gt;btn(3)~ btn(2)~ btn(1)~ btn(0)~&lt;/div&gt;
+This associated callback will print the value of the requested button to the web page:
+<strong><span style="color: #000080">void</span></strong> TCPIP_HTTP_Print_btn(HTTP_CONN_HANDLE connHandle, uint16_t num)
+{
+    <i><span style="color: #008000">// Determine which button</span></i>
+    <strong><span style="color: #000080">switch</span></strong>(num)
+    {
+        <strong><span style="color: #000080">case</span></strong> 0:
+            num = BUTTON0_IO;
+            <strong><span style="color: #000080">break</span></strong>;
+        <strong><span style="color: #000080">case</span></strong> 1:
+            num = BUTTON1_IO;
+            <strong><span style="color: #000080">break</span></strong>;
+        <strong><span style="color: #000080">case</span></strong> 2:
+            num = BUTTON2_IO;
+            <strong><span style="color: #000080">break</span></strong>;
+        <strong><span style="color: #000080">default</span></strong>:
+            num = 0;
+    }
+
+    <i><span style="color: #008000">// Print the output</span></i>
+    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (num ? &quot;up&quot; : &quot;down&quot;));
+}</pre></div></div>
+<div class="Element15">
+Longer Outputs</div>
+<p class="Element10">
+The HTTP protocol operates in a fixed memory buffer for transmission, so not all data can be sent at once. Care must be taken inside of your callback function to avoid overrunning this buffer.&nbsp;</p>
+<p class="Element10">
+The callback functions must check how much space is available, write up to that many bytes, and then return. The callback will be invoked again when more space is free. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+For increased throughput performance, it is recommended that the callback should always try to write as much data as possible in each call.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+To manage the output state, callbacks should make use of the callbackPos variable that is maintained by the Web server for each individual connection. This 32-bit value can be manipulated with the <a href="02281.html" target="topic">TCPIP_HTTP_CurrentConnectionCallbackPosGet</a> and <a href="02282.html" target="topic">TCPIP_HTTP_CurrentConnectionCallbackPosSet</a> functions.&nbsp;</p>
+<p class="Element10">
+The callbackPos is set to zero when a callback is first invoked. If a callback is only writing part of its output, it should set this field to a non-zero value to indicate that it should be called again when more space is available. This value will be available to the callback during the next call, which allows the function to resume output where it left off. A common use is to store the number of bytes written, or remaining to be written, in this field. Once the callback is finished writing its output, it must set callbackPos back to zero to indicate completion.&nbsp;</p>
+<p class="Element10">
+The following code outputs the value of the build date of the application into the web pages: </p><div class="Element13"><div class="Element12"><pre class="Element12">&lt;div <strong><span style="color: #000080">class</span></strong>=&quot;examplebox code&quot;&gt;~builddate~&lt;/div&gt;
+
+<strong><span style="color: #000080">void</span></strong> TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)
+{
+    TCP_SOCKET sktHTTP;
+    sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
+
+    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x01);
+    <strong><span style="color: #000080">if</span></strong>(TCPIP_TCP_PutIsReady(sktHTTP) &lt; strlen((<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>*)__DATE__&quot; &quot;__TIME__))
+        <strong><span style="color: #000080">return</span></strong>;
+
+    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x00);
+    TCPIP_TCP_StringPut(sktHTTP, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>*)__DATE__&quot; &quot;__TIME__);
+}</pre></div></div>
+<p class="Element10">
+The initial call to <a href="03631.html" target="topic">TCPIP_TCP_PutIsReady</a> determines how many bytes can be written to the buffer right now. When there is not enough buffer space for performing the output operation the function sets the current value of the callbackPos and returns. Once the output operation is performed the callbackPos is cleared to '0'.</p><div class="Element15">
+Including Files</div>
+<p class="Element10">
+Often it is useful to include the entire contents of another file in your output. Most web pages have at least some portion that does not change, such as the header, menu of links, and footer. These sections can be abstracted out into separate files which makes them easier to manage and conserves storage space.&nbsp;</p>
+<p class="Element10">
+To include the entire contents of another file, use a dynamic variable that starts with &quot;inc:&quot;, such as ~inc:header.inc~.&nbsp;</p>
+<p class="Element10">
+This sequence will cause the file header.inc to be read from the file system and inserted at this location.&nbsp;</p>
+<p class="Element10">
+The following example indicates how to include a standard menu bar section into every page: </p><div class="Element13"><div class="Element12"><pre class="Element12">&lt;div id=&quot;menu&quot;&gt;~inc:menu.inc~&lt;/div&gt;</pre></div></div>
+<p class="Element10">
+At this time, dynamic variables are not recursive, so any variables located inside files included in this manner are not parsed.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01425.html" target="topic">HTTP Features</a> &gt; <a href="01421.html" target="topic">Dynamic Variables</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01425.html" target="topic">Previous</a> | <a href="01425.html" target="topic">Up</a> | <a href="01423.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Dynamic Variables Topic Title: Dynamic Variables)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

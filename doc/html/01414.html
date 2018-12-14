@@ -1,0 +1,99 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Abstraction Model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01414.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01414.html" target="topic">Abstraction Model</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01445.html" target="topic">Previous</a> | <a href="01445.html" target="topic">Up</a> | <a href="01428.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Abstraction Model</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10" style="text-align: center;">
+<span style="color: #000000"><strong>HTTP Software Abstraction Block Diagram</strong></span></p><p class="Element10">
+Three main components are necessary to understand how the HTTP web server works: the web pages, the MPFS2 Utility, and the source files <span class="Element146">custom_http_app.c</span> and <span class="Element146">http_print.h</span>. An overview of the entire process is shown in the following diagram. </p><p class="Element10" style="text-align: center;">
+<img src="TCPIP HTTP http_abstraction.png" border="0" alt="" title=""></p><div class="Element15">
+Web Pages</div>
+<p class="Element10">
+This includes all the HTML and associated images, CSS style sheets, and JavaScript files necessary to display the website. A sample application including all these components is located in the <span class="Element146">web_pages</span> folder.</p><div class="Element15">
+MPFS2 Utility</div>
+<p class="Element10">
+This program, supplied by Microchip, packages the web pages into a format that can be efficiently stored in either external non-volatile storage, or internal Flash program memory. This program also indexes dynamic variables found in the web pages and updates <span class="Element146">http_print.h</span> with these indices. The MPFS2 Utility generates a SYS_FS compatible file image that can be directly uploaded on the development board or stored in the Flash program memory as a source file image to be included in the project.&nbsp;</p>
+<p class="Element10">
+When dynamic variables are added or removed from your application, the MPFS2 Utility will update<span class="Element146"> http_print.h</span>. When this happens, the project must be recompiled in the MPLAB X IDE to ensure that all the new variable indices get added into the application.</p><div class="Element15">
+custom_http_app.c</div>
+<p class="Element10">
+This file implements the Web application. It describes the output for dynamic variables (via <a href="02554.html" target="topic">TCPIP_HTTP_Print_varname</a> callbacks), parses data submitted through forms (in <a href="02340.html" target="topic">TCPIP_HTTP_GetExecute</a> and TCPIP_HTTP_PostExecutePost) and validates authorization credentials (in <a href="02337.html" target="topic">TCPIP_HTTP_FileAuthenticate</a> and <a href="02572.html" target="topic">TCPIP_HTTP_UserAuthenticate</a>).&nbsp;</p>
+<p class="Element10">
+The functionality of these callback functions is described within the demonstration application's web pages, and is also documented within the <span class="Element146">custom_http_app.c</span> example that is distributed with the stack.</p><div class="Element15">
+http_print.h</div>
+<p class="Element10">
+This file is generated automatically by the MPFS2 Utility. It indexes all of the dynamic variables and provides the &quot;glue&quot; between the variables located in the Web pages and their associated <a href="02554.html" target="topic">TCPIP_HTTP_Print_varname</a> callback functions defined in <span class="Element146">custom_http_app.c</span>. This file does not require modification by the programmer.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01414.html" target="topic">Abstraction Model</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01445.html" target="topic">Previous</a> | <a href="01445.html" target="topic">Up</a> | <a href="01428.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,141 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01462.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00721.html" target="topic">ICMPv6 Module</a> &gt; <a href="01462.html" target="topic">Introduction</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00721.html" target="topic">Previous</a> | <a href="00721.html" target="topic">Up</a> | <a href="01465.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMPv6 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Introduction</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10" style="text-align: justify;">
+This document specifies a set of APIs of Internet Control Message Protocol (ICMP) messages for use with version 6 of the Internet Protocol (IPv6).&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">The Internet Protocol, version 6 (IPv6) is a new version of IP, uses the Internet Control Message Protocol (ICMP) as defined for IPv4</span>&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">[RFC-792], with a number of changes. It is called ICMPv6, and has an IPv6 Next Header value of 58.</span>&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">ICMPv6 messages are used by IPv6 nodes to report<i> error messages</i> and <i>information messages</i>. ICMPv6 is also used for Ipv6 node diagnostic (i.e., IPv6 ping).</span>&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">The ICMPv6 protocol also provides a framework for the following:</span>&nbsp;</p><div class="Element15">
+Neighbor Discovery</div>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">Neighbor Discovery is a series of five ICMPv6 messages that manage node-to-node communication on a link. Neighbor Discovery replaces Address Resolution Protocol (ARP), ICMP (IPv4) Router Discovery, and the ICMP (IPv4) Redirect message.</span></p><div class="Element15">
+Multicast Listener Discovery (MLD)</div>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">Multicast Listener Discovery is a series of three ICMP messages that manage subnet multicast membership. Multicast Listener Discovery replaces version 2 of the Internet Group Management Protocol (IGMP) for IPv4.</span></p><div class="Element15">
+Path MTU Discovery</div>
+<p class="Element10" style="text-align: justify;">
+<span style="color: #000000">The maximum transmission unit (MTU) for a path is the minimum link MTU of all links on a path between a source and a destination. IPv6 packets that are smaller than the path MTU do not require fragmentation by the host and are successfully forwarded by all routers on the path. To discover the path MTU, the sending host uses the receipt of <strong>ICMPv6 Packet Too Big messages</strong>.</span></p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="18%">
+<div class="Element66">
+ICMPv6 Common Messages&nbsp;</div></td><td class="Element65" valign="top" width="82%">
+<div class="Element66">
+Functions&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="18%">
+<div class="Element68">
+Echo Request&nbsp;</div></td><td class="Element67" valign="top" width="82%">
+<div class="Element68">
+Sent to check IPv6 connectivity to a particular host.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="18%">
+<div class="Element68">
+Echo Reply&nbsp;</div></td><td class="Element67" valign="top" width="82%">
+<div class="Element68">
+Sent in response to an ICMPv6 Echo Request.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="18%">
+<div class="Element68">
+Destination Unreachable&nbsp;</div></td><td class="Element67" valign="top" width="82%">
+<div class="Element68">
+Sent by a router or the destination host to inform the sending host that the packet or payload cannot be delivered.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="18%">
+<div class="Element68">
+Packet to big&nbsp;</div></td><td class="Element67" valign="top" width="82%">
+<div class="Element68">
+Sent by a router to inform a sending host that a packet is too large to forward.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="18%">
+<div class="Element68">
+Time exceeded&nbsp;</div></td><td class="Element67" valign="top" width="82%">
+<div class="Element68">
+Sent by a router to inform a sending host that the Hop Limit of an IPv6 packet has expired.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="18%">
+<div class="Element68">
+Parameter Problem&nbsp;</div></td><td class="Element67" valign="top" width="82%">
+<div class="Element68">
+Sent by a router to inform a sending host that an error was encountered in processing the IPv6 header or an IPv6 extension header.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10" style="text-align: justify;">
+&nbsp;</p>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00721.html" target="topic">ICMPv6 Module</a> &gt; <a href="01462.html" target="topic">Introduction</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00721.html" target="topic">Previous</a> | <a href="00721.html" target="topic">Up</a> | <a href="01465.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMPv6 Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,154 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>NET_PRES_SocketOpen Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01089.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00974.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="00988.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01089.html" target="topic">NET_PRES_SocketOpen Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01088.html" target="topic">Previous</a> | <a href="00988.html" target="topic">Up</a> | <a href="01090.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOpen@NET_PRES_INDEX@NET_PRES_SKT_T@NET_PRES_SKT_ADDR_T@NET_PRES_SKT_PORT_T@NET_PRES_ADDRESS *@NET_PRES_SKT_ERROR_T* Topic Title: NET_PRES_SocketOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+NET_PRES_SocketOpen Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Provides a unified method for opening all presentation sockets types. Sockets are created at the presentation layer module initialization, and can be claimed with this function and freed using <a href="01076.html" target="topic">NET_PRES_SocketClose</a>. The presentation layer will call the corresponding open function in the transport layer, and if encryption is specified the presentation layer will also handle encryption negotiation.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01051.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">NET_PRES_SocketOpen</span></strong>(
+    <a href="01023.html" target="topic">NET_PRES_INDEX</a> <strong><span style="color: #000000">index</span></strong>, 
+    <a href="01055.html" target="topic">NET_PRES_SKT_T</a> <strong><span style="color: #000000">socketType</span></strong>, 
+    <a href="01041.html" target="topic">NET_PRES_SKT_ADDR_T</a> <strong><span style="color: #000000">addrType</span></strong>, 
+    <a href="01054.html" target="topic">NET_PRES_SKT_PORT_T</a> <strong><span style="color: #000000">port</span></strong>, 
+    <a href="00994.html" target="topic">NET_PRES_ADDRESS</a> * <strong><span style="color: #000000">addr</span></strong>, 
+    <a href="01043.html" target="topic">NET_PRES_SKT_ERROR_T</a>* <strong><span style="color: #000000">error</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MPLAB Harmony Networking Presentation Layer is initialized.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+index&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Index of the presentation layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+socketType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The type of <a href="01231.html" target="topic">socket</a> to open.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The type of address being used. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The port to <a href="00955.html" target="topic">listen</a> or to <a href="01131.html" target="topic">send</a> to. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+addr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Address to use. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+error&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The extended error code of the function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601"><a href="01037.html" target="topic">NET_PRES_INVALID_SOCKET</a> - No sockets of the specified type were available to be opened</li>
+<li class="Element601"><a href="01051.html" target="topic">NET_PRES_SKT_HANDLE_T</a> handle - Returned when <a href="01037.html" target="topic">NET_PRES_INVALID_SOCKET</a> is returned. Save this handle and use it when calling all other presentation <a href="01231.html" target="topic">socket</a> APIs.</li>
+</ul></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00974.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="00988.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01089.html" target="topic">NET_PRES_SocketOpen Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01088.html" target="topic">Previous</a> | <a href="00988.html" target="topic">Up</a> | <a href="01090.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOpen@NET_PRES_INDEX@NET_PRES_SKT_T@NET_PRES_SKT_ADDR_T@NET_PRES_SKT_PORT_T@NET_PRES_ADDRESS *@NET_PRES_SKT_ERROR_T* Topic Title: NET_PRES_SocketOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

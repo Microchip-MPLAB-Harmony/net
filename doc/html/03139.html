@@ -1,0 +1,175 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_SMTPC_MAIL_FLAGS Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03139.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01140.html" target="topic">SMTPC Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03139.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03133.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="03149.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MAIL_FLAGS Topic Title: TCPIP_SMTPC_MAIL_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_SMTPC_MAIL_FLAGS Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_SMTPC_MAIL_FLAGS&nbsp;</p>
+<p class="Element10">
+Enumeration describing the possible mail message flags supported by the SMTPC client.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_USE_IPV6</span></strong> = 0x0001,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_BODY_TYPE_BINARY</span></strong> = 0x0002,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_BODY_ENCODE_ASCII</span></strong> = 0x0004,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_CONNECT_TLS</span></strong> = 0x0010,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_SKIP_TLS</span></strong> = 0x0020,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_FORCE_TLS</span></strong> = 0x0040,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_AUTH_PLAIN</span></strong> = 0x0100,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_FORCE_AUTH</span></strong> = 0x0200,
+  <strong><span style="color: #000000">TCPIP_SMTPC_MAIL_FLAG_GREET_HELO</span></strong> = 0x0400
+} TCPIP_SMTPC_MAIL_FLAGS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_USE_IPV6 = 0x0001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+use IPv6 connection to the server, rather than default IPv4&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_BODY_TYPE_BINARY = 0x0002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+mail body is binary rather then standard plain text&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_BODY_ENCODE_ASCII = 0x0004&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+<a href="01131.html" target="topic">send</a> mail body as plain ASCII encoding rather than default BASE64&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_CONNECT_TLS = 0x0010&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+<a href="00262.html" target="topic">connect</a> with TLS from the very beginning This flag is useful if the server accepts encrypted connections on port 465, for example Note that port 465 is not really a SMTP port, although supported by many servers!&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_SKIP_TLS = 0x0020&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+skip TLS even if the server supports it most servers won't accept mail if TLS is skipped though&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_FORCE_TLS = 0x0040&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+start TLS even if the server does not indicate support for it&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_AUTH_PLAIN = 0x0100&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+favor PLAIN authentication, if supported by default the LOGIN authentication is selected&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_FORCE_AUTH = 0x0200&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+force authentication even if server doesn't specifically request one by default the authentication is skipped&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAG_GREET_HELO = 0x0400&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+use old 'HELO' greeting insted of extended 'EHLO' which is default&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Multiple flags can be set&nbsp;</p>
+<p class="Element10">
+Only 16 bit flags supported&nbsp;</p>
+<p class="Element10">
+If no flags are set, then the default settings are used for the mail message.&nbsp;</p>
+<p class="Element10">
+Normally the mail body is plain text. Using these flags, a binary mail body can be sent.&nbsp;</p>
+<p class="Element10">
+Normally the mail body is plain text so a standard ASCII encoding is used. Using these flags, a BASE64 encoding for the mail body can be selected. Note that if the mail body is selected to be binary then the BASE64 encoding is automatically selected.&nbsp;</p>
+<p class="Element10">
+BASE64 encoding has the advantage that the mail body lines are not limited in length and any sequence of characters can be present in the email body without the need of the SMTPC to search and replace the SMTP forbidden characters.&nbsp;</p>
+<p class="Element10">
+Normally the connection to the server occurs on a standard SMTP port: 25 or (preferred) 587 as a plain/non-encrypted connection. Once the server replies with TLS support, the encryption is started. Using the flags you can force the connection to be TLS from the very beginning. Or you can avoid engaging in TLS even if the server supports it. Or try to start TLS even if the server didn't advertise support for it.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01140.html" target="topic">SMTPC Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03139.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03133.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="03149.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MAIL_FLAGS Topic Title: TCPIP_SMTPC_MAIL_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

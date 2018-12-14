@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_MAC_MODULE_CTRL Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02806.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02806.html" target="topic">TCPIP_MAC_MODULE_CTRL Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02794.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02825.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_MODULE_CTRL Topic Title: TCPIP_MAC_MODULE_CTRL Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_MAC_MODULE_CTRL Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MAC Initialization Data&nbsp;</p>
+<p class="Element10">
+This is the data structure that the MAC user (TCP/IP stack) passes on to the MAC driver at the MAC initialization time. It contains all the data needed for the MAC to initialize itself and to start processing packets.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nIfs</span></strong>;
+  <a href="02794.html" target="topic">TCPIP_MAC_HEAP_MallocF</a> <strong><span style="color: #000000">mallocF</span></strong>;
+  <a href="02789.html" target="topic">TCPIP_MAC_HEAP_CallocF</a> <strong><span style="color: #000000">callocF</span></strong>;
+  <a href="02791.html" target="topic">TCPIP_MAC_HEAP_FreeF</a> <strong><span style="color: #000000">freeF</span></strong>;
+  <a href="02793.html" target="topic">TCPIP_MAC_HEAP_HANDLE</a> <strong><span style="color: #000000">memH</span></strong>;
+  <a href="02890.html" target="topic">TCPIP_MAC_PKT_AllocF</a> <strong><span style="color: #000000">pktAllocF</span></strong>;
+  <a href="02892.html" target="topic">TCPIP_MAC_PKT_FreeF</a> <strong><span style="color: #000000">pktFreeF</span></strong>;
+  <a href="02889.html" target="topic">TCPIP_MAC_PKT_AckF</a> <strong><span style="color: #000000">pktAckF</span></strong>;
+  <a href="02965.html" target="topic">TCPIP_MAC_SynchReqF</a> <strong><span style="color: #000000">synchF</span></strong>;
+  <a href="02785.html" target="topic">TCPIP_MAC_EventF</a> <strong><span style="color: #000000">eventF</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">eventParam</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">moduleId</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">netIx</span></strong>;
+  <a href="02754.html" target="topic">TCPIP_MAC_ACTION</a> <strong><span style="color: #000000">macAction</span></strong>;
+  <a href="02894.html" target="topic">TCPIP_MAC_POWER_MODE</a> <strong><span style="color: #000000">powerMode</span></strong>;
+  TCPIP_MAC_ADDR <strong><span style="color: #000000">ifPhyAddress</span></strong>;
+} TCPIP_MAC_MODULE_CTRL;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int nIfs;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of the interfaces supported in this session&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_HEAP_MallocF mallocF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+malloc type allocation function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_HEAP_CallocF callocF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+calloc type allocation function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_HEAP_FreeF freeF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+free type allocation free function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_HEAP_HANDLE memH;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+handle to be used in the stack allocation service calls&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PKT_AllocF pktAllocF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+packet allocation function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PKT_FreeF pktFreeF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+packet free function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PKT_AckF pktAckF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+packet allocation function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_SynchReqF synchF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Synchronization object request function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EventF eventF;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Event notification function. used by the MAC for event reporting.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const void* eventParam;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Parameter to be used when the event function is called.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned int moduleId;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Module identifier. Allows multiple channels/ports, etc. MAC support.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int netIx;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+index of the current interface&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_ACTION macAction;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+current action for the MAC/stack&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_POWER_MODE powerMode;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The power mode for this interface to go to. Valid only if stackAction == init/reinit. Ignored for deinitialize operation.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_ADDR ifPhyAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Physical address of the interface. MAC sets this field as part of the initialization function. The stack will use this data as the interface address.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Most of the data that's passed in this structure is permanent data. It is maintained by the stack for one full session i.e., across Initialize() -&gt; DeInitialize() calls.&nbsp;</p>
+<p class="Element10">
+Some fields are module specific though (like the memory allocation handle, allocation functions, etc.) that could be different from one module to the other.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02806.html" target="topic">TCPIP_MAC_MODULE_CTRL Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02794.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02825.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_MODULE_CTRL Topic Title: TCPIP_MAC_MODULE_CTRL Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,138 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DRV_GMAC_EventMaskSet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00531.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00625.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00356.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00531.html" target="topic">DRV_GMAC_EventMaskSet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00530.html" target="topic">Previous</a> | <a href="00356.html" target="topic">Up</a> | <a href="00532.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_EventMaskSet@DRV_HANDLE@TCPIP_MAC_EVENT@bool Topic Title: DRV_GMAC_EventMaskSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DRV_GMAC_EventMaskSet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This is a function that enables or disables the events to be reported to the Ethernet MAC client (TCP/IP stack).&nbsp;</p>
+<p class="Element10">
+All events that are to be enabled will be added to the notification process. All events that are to be disabled will be removed from the notification process. The stack has to catch the events that are notified and process them. After that the stack should call <a href="00530.html" target="topic">DRV_GMAC_EventAcknowledge</a>() so that the events can be re-enable&nbsp;</p>
+<p class="Element10">
+The stack should process at least the following transfer events:
+<ul class="Element631">
+<li class="Element601">TCPIP_MAC_EV_RX_PKTPEND</li>
+<li class="Element601">TCPIP_MAC_EV_RX_DONE</li>
+<li class="Element601">TCPIP_MAC_EV_TX_DONE</li>
+</ul></p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DRV_GMAC_EventMaskSet</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="02765.html" target="topic">TCPIP_MAC_EVENT</a> <strong><span style="color: #000000">macEvents</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">enable</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="00534.html" target="topic">DRV_GMAC_Initialize</a>() should have been called. <a href="00536.html" target="topic">DRV_GMAC_Open</a>() should have been called to obtain a valid handle.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+always true, operation succeeded.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">The event notification system enables the user of the TCP/IP stack to call into the stack for processing only when there are relevant events rather than being forced to periodically call from within a loop.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">If the notification events are nil, the interrupt processing will be disabled. Otherwise, the event notification will be enabled and the interrupts relating to the requested events will be enabled.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Note that once an event has been caught by the stack ISR (and reported if a notification handler is in place) it will be disabled until the <a href="00530.html" target="topic">DRV_GMAC_EventAcknowledge</a>() is called.</li>
+</ul></p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">    DRV_GMAC_EventMaskSet( hMac, TCPIP_MAC_EV_RX_OVFLOW | TCPIP_MAC_EV_RX_BUFNA, <strong><span style="color: #000080">true</span></strong> );</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00625.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00356.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00531.html" target="topic">DRV_GMAC_EventMaskSet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00530.html" target="topic">Previous</a> | <a href="00356.html" target="topic">Up</a> | <a href="00532.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_EventMaskSet@DRV_HANDLE@TCPIP_MAC_EVENT@bool Topic Title: DRV_GMAC_EventMaskSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

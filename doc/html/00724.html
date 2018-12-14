@@ -1,0 +1,153 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>ICMPV6_ERR_DU_CODE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00724.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00721.html" target="topic">ICMPv6 Module</a> &gt; <a href="01463.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00724.html" target="topic">ICMPV6_ERR_DU_CODE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02594.html" target="topic">Previous</a> | <a href="01463.html" target="topic">Up</a> | <a href="00732.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ICMPV6_ERR_DU_CODE Topic Title: ICMPV6_ERR_DU_CODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+ICMPV6_ERR_DU_CODE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: ICMPV6_ERR_DU_CODE&nbsp;</p>
+<p class="Element10">
+Defines different type of ICMPv6 Destination Unreachable error code.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_NO_ROUTE</span></strong> = 0u,
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_PROHIBITED</span></strong> = 1u,
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_OUTSIDE_SCOPE</span></strong> = 2u,
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_ADDR_UNREACHABLE</span></strong> = 3u,
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_PORT_UNREACHABLE</span></strong> = 4u,
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_SRC_FAILED_INGRESS_POLICY</span></strong> = 5u,
+  <strong><span style="color: #000000">ICMPV6_ERR_DU_REJECT_ROUTE</span></strong> = 6u
+} ICMPV6_ERR_DU_CODE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_NO_ROUTE = 0u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No route to destination&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_PROHIBITED = 1u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Communication with destination administratively prohibited&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_OUTSIDE_SCOPE = 2u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Beyond scope of source address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_ADDR_UNREACHABLE = 3u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Address unreachable&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_PORT_UNREACHABLE = 4u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Port unreachable&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_SRC_FAILED_INGRESS_POLICY = 5u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Source address failed ingress/egress policy&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ICMPV6_ERR_DU_REJECT_ROUTE = 6u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Reject route to destination&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+A Destination Unreachable message should be generated by a router, or by the IPv6 layer in the originating node, in response to a packet that cannot be delivered to its destination address for reasons other than congestion. An ICMPv6 message MUST NOT be generated if a packet is dropped due to congestion.&nbsp;</p>
+<p class="Element10">
+More details on RFC - 4446.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00721.html" target="topic">ICMPv6 Module</a> &gt; <a href="01463.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00724.html" target="topic">ICMPV6_ERR_DU_CODE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02594.html" target="topic">Previous</a> | <a href="01463.html" target="topic">Up</a> | <a href="00732.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ICMPV6_ERR_DU_CODE Topic Title: ICMPV6_ERR_DU_CODE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

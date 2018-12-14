@@ -1,0 +1,150 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>UDP_MULTICAST_FLAGS Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03853.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03853.html" target="topic">UDP_MULTICAST_FLAGS Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03807.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03861.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_MULTICAST_FLAGS Topic Title: UDP_MULTICAST_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+UDP_MULTICAST_FLAGS Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: UDP_SOCKET_MULTICAST_FLAGS&nbsp;</p>
+<p class="Element10">
+List of options to be set for a multicast <a href="01231.html" target="topic">socket</a></p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT</span></strong> = 0x0001,
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_IGNORE_SOURCE_ADD</span></strong> = 0x0002,
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_IGNORE_SOURCE_PORT</span></strong> = 0x0004,
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_IGNORE_UNICAST</span></strong> = 0x0008,
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_LOOP</span></strong> = 0x0010,
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK</span></strong> = 0x0020,
+  <strong><span style="color: #000000">UDP_MCAST_FLAG_DEFAULT</span></strong> = (UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT | UDP_MCAST_FLAG_IGNORE_UNICAST)
+} UDP_MULTICAST_FLAGS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_MCAST_FLAG_LOOSE_NET_SOURCE_PORT = 0x0001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Union of the !UDP_OPTION_STRICT_NET, !UDP_OPTION_STRICT_ADDRESS and !UDP_OPTION_STRICT_PORT This is the default behavior for a multicast <a href="01231.html" target="topic">socket</a>. The same bahvior can be obtained by setting individual options. It is the default behavior of a newly created server <a href="01231.html" target="topic">socket</a> but not for a client <a href="01231.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_MCAST_FLAG_IGNORE_SOURCE_ADD = 0x0002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Ignore the source address of a packet and reply to the currently set (multicast) destination address. Normally a <a href="01231.html" target="topic">socket</a> would reply to the sender of the packet. But probably this is not what you want for multicast. This option allows the <a href="01231.html" target="topic">socket</a> to reply to the multicast group instead, no matter from what source it received the multicast traffic. This option is disabled by default when a <a href="01231.html" target="topic">socket</a> is created and should be enforced when needed.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_MCAST_FLAG_IGNORE_SOURCE_PORT = 0x0004&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Ignore the source port of a packet and reply to the currently set destination port. Normally a <a href="01231.html" target="topic">socket</a> would reply to the sender of the packet using the source port of the sender. This option allows the <a href="01231.html" target="topic">socket</a> to reply using the current destination/remote port no matter the source port of the received multicast traffic - which would be the expected behavior from a multicast <a href="01231.html" target="topic">socket</a>. This option is disabled by default when a <a href="01231.html" target="topic">socket</a> is created and should be enforced when needed.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_MCAST_FLAG_IGNORE_UNICAST = 0x0008&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Ignore a packet if its destination is not multicast&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_MCAST_FLAG_LOOP = 0x0010&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+When set, the multicast packets sent by the UDP <a href="01231.html" target="topic">socket</a> will be routed on the internal multicast interface as well. Default is cleared. Applies only to sockets sending multicast traffic&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK = 0x0020&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Disables/enables the checking of the source of multicast traffic that reaches a <a href="01231.html" target="topic">socket</a>. The IGMPv3 mandates that the multicast traffic should be passed to a <a href="01231.html" target="topic">socket</a> only if that socked subscribed for multicast from that source. However, for high rate data streams that may place an overhead and consume additional CPU power for doing this check for each and every incoming packet. This option allows the user to bypass this run time check. By default the source check is enabled - recommended setting! Applies only to sockets receiving multicast traffic&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+These options are meant for sockets carrying multicast traffic.&nbsp;</p>
+<p class="Element10">
+Multiple flags can be set.&nbsp;</p>
+<p class="Element10">
+16 bits only supported.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03850.html" target="topic">UDP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="03853.html" target="topic">UDP_MULTICAST_FLAGS Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03807.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03861.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: UDP_MULTICAST_FLAGS Topic Title: UDP_MULTICAST_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

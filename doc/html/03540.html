@@ -1,0 +1,160 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_STACK_NetMACRegisterStatisticsGet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03540.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; d) Network Up/Down/Linked Functions &gt; <a href="03540.html" target="topic">TCPIP_STACK_NetMACRegisterStatisticsGet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03537.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03513.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetMACRegisterStatisticsGet@TCPIP_NET_HANDLE@TCPIP_MAC_STATISTICS_REG_ENTRY*@int@int* Topic Title: TCPIP_STACK_NetMACRegisterStatisticsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_STACK_NetMACRegisterStatisticsGet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function returns the hardware statistics register data of the MAC that is attached to the specified network interface.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_STACK_NetMACRegisterStatisticsGet</span></strong>(
+    <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    <a href="02952.html" target="topic">TCPIP_MAC_STATISTICS_REG_ENTRY</a>* <strong><span style="color: #000000">pRegEntries</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nEntries</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong>* <strong><span style="color: #000000">pHwEntries</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TCP/IP stack should have been initialized by <a href="03505.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03549.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY. The network interface should be up and running.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle of the interface to use&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pRegStatistics&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to a pRegEntries that will receive the current hardware statistics registers values. Can be 0, if only the number of supported hardware registers is requested&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+nEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+provides the number of <a href="02952.html" target="topic">TCPIP_MAC_STATISTICS_REG_ENTRY</a> structures present in pRegEntries Can be 0, if only the number of supported hardware registers is requested The register entries structures will be filled by the driver, up to the supported hardware registers.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pHwEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to an address to store the number of the statistics registers that the hardware supports It is updated by the driver. Can be 0 if not needed&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+
+<ul class="Element630">
+<li class="Element600">true - if the call succeeded</li>
+<li class="Element600">false - if the call failed (the corresponding MAC does not implement hardware statistics counters).</li>
+</ul></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+If the netH refers to an alias interface, the MAC register statistics of the primary interface are returned.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"> TCPIP_MAC_REG_STATISTICS regStatistics;
+ <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> netH = <a href="03533.html" target="topic">TCPIP_STACK_NetHandleGet</a>(&quot;PIC32INT&quot;);
+ <strong><span style="color: #000080">if</span></strong>(TCPIP_STACK_NetMACRegisterStatisticsGet(netH, &amp;regStatistics))
+ {
+      <i><span style="color: #008000">// display the hardware statistics registers for the internal PIC32 MAC attached to this interface</span></i>
+ }</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; d) Network Up/Down/Linked Functions &gt; <a href="03540.html" target="topic">TCPIP_STACK_NetMACRegisterStatisticsGet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03537.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03513.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetMACRegisterStatisticsGet@TCPIP_NET_HANDLE@TCPIP_MAC_STATISTICS_REG_ENTRY*@int@int* Topic Title: TCPIP_STACK_NetMACRegisterStatisticsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

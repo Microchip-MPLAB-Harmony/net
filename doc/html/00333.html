@@ -1,0 +1,196 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Abstraction Model</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00333.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00345.html" target="topic">Using the Library</a> &gt; <a href="00333.html" target="topic">Abstraction Model</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00345.html" target="topic">Previous</a> | <a href="00345.html" target="topic">Up</a> | <a href="00341.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Abstraction Model</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+To understand how this library works you must first understand how an external Ethernet PHY interfaces with the Ethernet Controller. As shown in Figure 1, the PHY has two interfaces:
+<ul class="Element631">
+<li class="Element601">The management interface for configuration/control of the PHY, known as the Media Independent Interface Management (MIIM) or Serial Management Interface (SMI)</li>
+<li class="Element601">The transmit and receive data interface, which could be the Media Independent Interface (MIIM) or the Reduced Media Independent Interface (RMII).</li>
+</ul>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<strong>Figure 1: Typical External PHY Interface</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="SMSC LAN8720 Block Diagram.png" border="0" alt="" title=""></p><p class="Element10">
+The block diagram also shows an interrupt signal (nINT) going to an external interrupt pin on the host device and signals going to on-board LEDs to show link state and link activity.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The SMI or MIIM interface controls the PHY. This control interface is standardized for all PHYs by Clause 22 of the 802.3 standard. It provides up to 32 16-bit registers on the PHY. The following table provides a summary of all 32 registers. Consult the data sheet for the PHY device for the specific bit fields in each register. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table6">
+<tr>
+<td class="Element75" valign="top" width="22%">
+<div class="Element76">
+Register Address&nbsp;</div></td><td class="Element65" valign="top" width="33%">
+<div class="Element66">
+Register Name&nbsp;</div></td><td class="Element65" valign="top" width="44%">
+<div class="Element66">
+Register Type&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+0&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Control&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Basic&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+1&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Status&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Basic&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+2, 3&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+PHY Identifier&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+4&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Auto-Negotiation Advertisement&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+5&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Auto-Negotiation Link Partner Base Page Ability&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+6&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Auto-Negotiation Expansion&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+7&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Auto-Negotiation Next Page Transmit&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+8&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Auto-Negotiation Link Partner Received Next Page&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+9&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+MASTER-SLAVE Control Register&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+10&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+MASTER-SLAVE Status Register&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+11-14&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Reserved&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+15&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Extended Status&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Reserved&nbsp;</div></td></tr><tr>
+<td class="Element77" valign="top" width="22%">
+<div class="Element78">
+16-31&nbsp;</div></td><td class="Element67" valign="top" width="33%">
+<div class="Element68">
+Vendor Specific&nbsp;</div></td><td class="Element67" valign="top" width="44%">
+<div class="Element68">
+Extended&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00345.html" target="topic">Using the Library</a> &gt; <a href="00333.html" target="topic">Abstraction Model</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00345.html" target="topic">Previous</a> | <a href="00345.html" target="topic">Up</a> | <a href="00341.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DRV_MIIM_Status Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00611.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00966.html" target="topic">MIIM Driver Library</a> &gt; <a href="00369.html" target="topic">Library Interface</a> &gt; <a href="00367.html" target="topic">a) Functions</a> &gt; <a href="00611.html" target="topic">DRV_MIIM_Status Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00604.html" target="topic">Previous</a> | <a href="00367.html" target="topic">Up</a> | <a href="00612.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Status@SYS_MODULE_OBJ Topic Title: DRV_MIIM_Status Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DRV_MIIM_Status Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function provides the current status of the MIIM driver module.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100">SYS_STATUS <strong><span style="color: #000000">DRV_MIIM_Status</span></strong>(
+    SYS_MODULE_OBJ <strong><span style="color: #000000">object</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The <a href="00564.html" target="topic">DRV_MIIM_Initialize</a> function must have been called before calling this function.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+object&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Driver object handle, returned from <a href="00564.html" target="topic">DRV_MIIM_Initialize</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">SYS_STATUS_READY - Indicates that any previous module operation for the specified module has completed</li>
+<li class="Element601">SYS_STATUS_BUSY - Indicates that a previous module operation for the specified module has not yet completed</li>
+<li class="Element601">SYS_STATUS_ERROR - Indicates that the specified module is in an error state</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Any value greater than SYS_STATUS_READY is also a normal running state in which the driver is ready to accept new operations.</li>
+<li class="Element601">SYS_STATUS_BUSY - Indicates that the driver is busy with a previous system level operation and cannot start another</li>
+<li class="Element601">SYS_STATUS_ERROR - Indicates that the driver is in an error state</li>
+<li class="Element601">Any value less than SYS_STATUS_ERROR is also an error state.</li>
+<li class="Element601">SYS_MODULE_DEINITIALIZED - Indicates that the driver has been deinitialized</li>
+<li class="Element601">If the status operation returns SYS_STATUS_BUSY, the a previous system level operation has not yet completed. Once the status operation returns SYS_STATUS_READY, any previous operations have completed.</li>
+<li class="Element601">The value of SYS_STATUS_ERROR is negative (-1). Any value less than that is also an error state.</li>
+<li class="Element601">This function will NEVER block waiting for hardware.</li>
+<li class="Element601">If the Status operation returns an error value, the error may be cleared by calling the reinitialize operation. If that fails, the deinitialize operation will need to be called, followed by the initialize operation to return to normal operations.</li>
+</ul></p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">SYS_MODULE_OBJ      object;     <i><span style="color: #008000">// Returned from DRV_MIIM_Initialize</span></i>
+SYS_STATUS          status;
+
+status = DRV_MIIM_Status(object);
+<strong><span style="color: #000080">if</span></strong> (SYS_STATUS_ERROR &gt;= status)
+{
+    <i><span style="color: #008000">// Handle error</span></i>
+}</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00966.html" target="topic">MIIM Driver Library</a> &gt; <a href="00369.html" target="topic">Library Interface</a> &gt; <a href="00367.html" target="topic">a) Functions</a> &gt; <a href="00611.html" target="topic">DRV_MIIM_Status Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00604.html" target="topic">Previous</a> | <a href="00367.html" target="topic">Up</a> | <a href="00612.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Status@SYS_MODULE_OBJ Topic Title: DRV_MIIM_Status Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,171 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DDNS_POINTERS Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00267.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00614.html" target="topic">Dynamic DNS Module</a> &gt; <a href="01343.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00267.html" target="topic">DDNS_POINTERS Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00316.html" target="topic">Previous</a> | <a href="01343.html" target="topic">Up</a> | <a href="02169.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DDNS_POINTERS Topic Title: DDNS_POINTERS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DDNS_POINTERS Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This structure of pointers configures the Dynamic DNS Client. Initially, all pointers will be null and the client will be disabled. <span class="Element146">Set <a href="00316.html" target="topic">DDNSClient</a>.[field name].szRAM</span> to use a string stored in RAM, or <span class="Element146"><a href="00316.html" target="topic">DDNSClient</a>.[field name].szROM</span> to use a string stored in const. Where, <span class="Element146">[field name]</span>, is one of the following parameters.&nbsp;</p>
+<p class="Element10">
+If a const string is specified, <span class="Element146">DDNSClient.ROMPointers.[field name]</span> must also be set to 1 to indicate that this field should be retrieved from const instead of RAM.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">union</span></strong> {
+    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
+    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
+  } CheckIPServer;
+  uint16_t <strong><span style="color: #000000">CheckIPPort</span></strong>;
+  <strong><span style="color: #000080">union</span></strong> {
+    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
+    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
+  } UpdateServer;
+  uint16_t <strong><span style="color: #000000">UpdatePort</span></strong>;
+  <strong><span style="color: #000080">union</span></strong> {
+    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
+    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
+  } Username;
+  <strong><span style="color: #000080">union</span></strong> {
+    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
+    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
+  } Password;
+  <strong><span style="color: #000080">union</span></strong> {
+    uint8_t * <strong><span style="color: #000000">szRAM</span></strong>;
+    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">szROM</span></strong>;
+  } Host;
+  <strong><span style="color: #000080">struct</span></strong> {
+    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">CheckIPServer</span></strong> : 1;
+    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">UpdateServer</span></strong> : 1;
+    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">Username</span></strong> : 1;
+    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">Password</span></strong> : 1;
+    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">Host</span></strong> : 1;
+  } ROMPointers;
+} DDNS_POINTERS;</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+CheckIPServer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The server used to determine the external IP address&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+CheckIPPort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Port on the above server to <a href="00262.html" target="topic">connect</a> to&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+UpdateServer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The server where updates should be posted&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+UpdatePort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Port on the above server to <a href="00262.html" target="topic">connect</a> to&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Username&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The user name for the dynamic DNS server&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Password&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The password to supply when making updates&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+Host&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The host name you wish to update&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ROMPointers&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Indicates which parameters to read from const instead of RAM.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00614.html" target="topic">Dynamic DNS Module</a> &gt; <a href="01343.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00267.html" target="topic">DDNS_POINTERS Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00316.html" target="topic">Previous</a> | <a href="01343.html" target="topic">Up</a> | <a href="02169.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DDNS_POINTERS Topic Title: DDNS_POINTERS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

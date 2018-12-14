@@ -1,0 +1,164 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_MAC_PacketRx Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02862.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; e) Data Transfer Functions &gt; <a href="02862.html" target="topic">TCPIP_MAC_PacketRx Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02945.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02863.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PacketRx@DRV_HANDLE@TCPIP_MAC_RES*@TCPIP_MAC_PACKET_RX_STAT** Topic Title: TCPIP_MAC_PacketRx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_MAC_PacketRx Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This is the MAC receive function.&nbsp;</p>
+<p class="Element10">
+Once a pending packet is available in the MAC driver internal RX queues this function will dequeue the packet and hand it over to the MAC driver's client - i.e., the stack - for further processing.&nbsp;</p>
+<p class="Element10">
+The flags for a RX packet have to be updated by the MAC driver: TCPIP_MAC_PKT_FLAG_RX has to be set. If the MAC supports it, it should set:
+<ul class="Element631">
+<li class="Element601">TCPIP_MAC_PKT_FLAG_UNICAST has to be set if that packet is a unicast packet</li>
+<li class="Element601">TCPIP_MAC_PKT_FLAG_BCAST has to be set if that packet is a broadcast packet</li>
+<li class="Element601">TCPIP_MAC_PKT_FLAG_MCAST has to be set if that packet is a multicast packet</li>
+<li class="Element601">TCPIP_MAC_PKT_FLAG_QUEUED has to be set</li>
+<li class="Element601">TCPIP_MAC_PKT_FLAG_SPLIT has to be set if the packet has multiple data segments</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+Additional information about the packet is available by providing the pRes and ppPktStat fields.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02824.html" target="topic">TCPIP_MAC_PACKET</a>* <strong><span style="color: #000000">TCPIP_MAC_PacketRx</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="02907.html" target="topic">TCPIP_MAC_RES</a>* <strong><span style="color: #000000">pRes</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <a href="02837.html" target="topic">TCPIP_MAC_PACKET_RX_STAT</a>** <strong><span style="color: #000000">ppPktStat</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="02800.html" target="topic">TCPIP_MAC_Initialize</a> should have been called. <a href="02823.html" target="topic">TCPIP_MAC_Open</a> should have been called to obtain a valid handle.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle identifying the MAC driver client&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pRes&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+optional pointer to an address that will receive an additional result associated with the operation. Can be 0 if not needed.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ppPktStat&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+optional pointer to an address that will receive the received packet status. Note that this pointer cannot be used once the packet acknowledgment function was called. Can be 0 if not needed.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Valid pointer to an available RX packet</li>
+<li class="Element601">0 if no packet pending/available</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MAC driver should dequeue and return to the caller just one single packet, and not multiple chained packets!&nbsp;</p>
+<p class="Element10">
+Once the higher level layers in the stack are done with processing the RX packet, they have to call the corresponding packet acknowledgment function that tells the owner of that packet that it can resume control of that packet.&nbsp;</p>
+<p class="Element10">
+Once the stack modules are done processing the RX packets and the acknowledge function is called it is up to the driver design to reuse the RX packets, or simply return them to the pool they were allocated from (assuming that some sort of allocation is implemented). This document makes no requirement about how the MAC RX packets are obtained, using dynamic or static allocation techniques. This is up to the design of the MAC.&nbsp;</p>
+<p class="Element10">
+The MAC driver can use the <a href="02899.html" target="topic">TCPIP_MAC_Process</a>() for obtaining new RX packets if needed.&nbsp;</p>
+<p class="Element10">
+Not all the MACs have hardware support for the received packet status. If the MAC driver cannot supply the <a href="02837.html" target="topic">TCPIP_MAC_PACKET_RX_STAT</a> info, it should set the ppPktStat to 0.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; e) Data Transfer Functions &gt; <a href="02862.html" target="topic">TCPIP_MAC_PacketRx Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02945.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02863.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PacketRx@DRV_HANDLE@TCPIP_MAC_RES*@TCPIP_MAC_PACKET_RX_STAT** Topic Title: TCPIP_MAC_PacketRx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

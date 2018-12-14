@@ -1,0 +1,156 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_DHCP_INFO Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01840.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00319.html" target="topic">DHCP Client Module</a> &gt; <a href="01355.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01840.html" target="topic">TCPIP_DHCP_INFO Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01837.html" target="topic">Previous</a> | <a href="01355.html" target="topic">Up</a> | <a href="01855.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCP_INFO Topic Title: TCPIP_DHCP_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_DHCP_INFO Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Structure: TCPIP_DHCP_INFO&nbsp;</p>
+<p class="Element10">
+This data structure is used for reporting current info and status of the DHCP module. Used in getting info about the DHCP module.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <a href="01863.html" target="topic">TCPIP_DHCP_STATUS</a> <strong><span style="color: #000000">status</span></strong>;
+  uint32_t <strong><span style="color: #000000">dhcpTime</span></strong>;
+  uint32_t <strong><span style="color: #000000">leaseStartTime</span></strong>;
+  uint32_t <strong><span style="color: #000000">leaseDuration</span></strong>;
+  uint32_t <strong><span style="color: #000000">renewTime</span></strong>;
+  uint32_t <strong><span style="color: #000000">rebindTime</span></strong>;
+  IPV4_ADDR <strong><span style="color: #000000">dhcpAddress</span></strong>;
+  IPV4_ADDR <strong><span style="color: #000000">serverAddress</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">bootFileName</span></strong>;
+} TCPIP_DHCP_INFO;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_DHCP_STATUS status;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+current status&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t dhcpTime;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+current DHCP time, seconds the following fields are significant only if a lease has been obtained and is currently valid i.e. status &gt;= TCPIP_DHCP_BOUND&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t leaseStartTime;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+time when lease was requested&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t leaseDuration;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+lease duration as returned by the server, seconds&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t renewTime;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the time for moving to renew state, seconds&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t rebindTime;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the time for moving to rebind state, seconds&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV4_ADDR dhcpAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv4 address obtained by DHCP&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV4_ADDR serverAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv4 address of the server that granted the lease&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* bootFileName;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+pointer to the bootfile name that was returned by the server This will be 0 if <a href="01877.html" target="topic">TCPIP_DHCP_STORE_BOOT_FILE_NAME</a> option is not enabled!&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00319.html" target="topic">DHCP Client Module</a> &gt; <a href="01355.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01840.html" target="topic">TCPIP_DHCP_INFO Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01837.html" target="topic">Previous</a> | <a href="01355.html" target="topic">Up</a> | <a href="01855.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCP_INFO Topic Title: TCPIP_DHCP_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

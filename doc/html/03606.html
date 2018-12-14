@@ -1,0 +1,161 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_TCP_FifoSizeAdjust Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03606.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03606.html" target="topic">TCPIP_TCP_FifoSizeAdjust Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03604.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03605.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_FifoSizeAdjust@TCP_SOCKET@uint16_t@uint16_t@TCP_ADJUST_FLAGS Topic Title: TCPIP_TCP_FifoSizeAdjust Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_TCP_FifoSizeAdjust Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function can be used to simultaneously adjust the sizes of the RX and TX FIFOs.&nbsp;</p>
+<p class="Element10">
+Adjusting the size of the TX/RX FIFO on the fly can allow for optimal transmission speed for one-sided application protocols. For example, HTTP typically begins by receiving large amounts of data from the client, then switches to serving large amounts of data back. Adjusting the FIFO at these points can increase performance in systems that have limited resources. Once the FIFOs are adjusted, a window update is sent.&nbsp;</p>
+<p class="Element10">
+Although the TX and RX <a href="01231.html" target="topic">socket</a> buffers are completely independent, for the purpose of this function they can be considered together if neither TCP_ADJUST_TX_ONLY nor TCP_ADJUST_RX_ONLY flags are set.&nbsp;</p>
+<p class="Element10">
+In these conditions the <a href="01255.html" target="topic">TCP_ADJUST_FLAGS</a> control the distribution of the available space between the TX and RX FIFOs. If neither or both of TCP_ADJUST_GIVE_REST_TO_TX and TCP_ADJUST_GIVE_REST_TO_RX are set, the function distributes the remaining space (if any) equally. If the new requested FIFOs space is greater that the old existing FIFOs space the TCP_ADJUST_GIVE_REST_TO_TX and TCP_ADJUST_GIVE_REST_TO_RX are ignored.&nbsp;</p>
+<p class="Element10">
+TCP_ADJUST_PRESERVE_RX and TCP_ADJUST_PRESERVE_TX request the preserving of the existing data. Existing data can be preserved as long as the old data in the buffer does not exceed the capacity of the new buffer.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_TCP_FifoSizeAdjust</span></strong>(
+    <a href="01277.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">hTCP</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wMinRXSize</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wMinTXSize</span></strong>, 
+    <a href="01255.html" target="topic">TCP_ADJUST_FLAGS</a> <strong><span style="color: #000000">vFlags</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCP is initialized.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hTCP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The <a href="01231.html" target="topic">socket</a> to be adjusted&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+wMinRXSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Minimum number of bytes for the RX FIFO&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+wMinTXSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Minimum number of bytes for the TX FIFO&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+vFlags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+If TCP_ADJUST_TX_ONLY or TCP_ADJUST_RX_ONLY are not set, the TX and RX buffers are evaluated together and any&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+combination of the following flags is valid&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+TCP_ADJUST_GIVE_REST_TO_RX, TCP_ADJUST_GIVE_REST_TO_TX TCP_ADJUST_PRESERVE_RX, TCP_ADJUST_PRESERVE_TX<br>If TCP_ADJUST_TX_ONLY or TCP_ADJUST_RX_ONLY is set TX and RX buffers are treated individually and TCP_ADJUST_GIVE_REST_TO_TX, TCP_ADJUST_GIVE_REST_TO_RX values are irrelevant.<br>TCP_ADJUST_TX_ONLY and TCP_ADJUST_RX_ONLY both set is invalid.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The function will automatically maintain minimal values for both TX and RX buffers.&nbsp;</p>
+<p class="Element10">
+To avoid having a <a href="01231.html" target="topic">socket</a> with no associated buffers, the function first allocates the new buffers and, if succeeded, it frees the old ones.&nbsp;</p>
+<p class="Element10">
+The TX and RX FIFOs (buffers) associated with a <a href="01231.html" target="topic">socket</a> are completely separate and independent. However, when TCP_ADJUST_TX_ONLY or TCP_ADJUST_RX_ONLY are not set, for the purpose of this function, the TX and RX FIFOs are considered to be contiguous so that the total FIFO space is divided between the TX and RX FIFOs. This provides backward compatibility with previous versions of this function.&nbsp;</p>
+<p class="Element10">
+The new flags TCP_ADJUST_TX_ONLY and TCP_ADJUST_RX_ONLY allow changing the size of TX and RX buffers independently. This is the preferred option.&nbsp;</p>
+<p class="Element10">
+TX or RX associated buffer sizes can be changed too using the <a href="01231.html" target="topic">socket</a> options. See <a href="03628.html" target="topic">TCPIP_TCP_OptionsSet</a>.&nbsp;</p>
+<p class="Element10">
+The size of the buffers should NOT be decreased when the <a href="01231.html" target="topic">socket</a> has pending data to be sent to the remote party or to be received by the <a href="01231.html" target="topic">socket</a> user. Doing this may disrupt the communication, make the TCP algorithm fail or have an unpredicted behavior!</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03606.html" target="topic">TCPIP_TCP_FifoSizeAdjust Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03604.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03605.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_FifoSizeAdjust@TCP_SOCKET@uint16_t@uint16_t@TCP_ADJUST_FLAGS Topic Title: TCPIP_TCP_FifoSizeAdjust Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

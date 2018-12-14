@@ -1,0 +1,165 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_HTTP_NET_SSINotification Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02515.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02515.html" target="topic">TCPIP_HTTP_NET_SSINotification Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02373.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02516.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_SSINotification@TCPIP_HTTP_NET_CONN_HANDLE@TCPIP_HTTP_SSI_NOTIFY_DCPT*@struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* Topic Title: TCPIP_HTTP_NET_SSINotification Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_HTTP_NET_SSINotification Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Functions in this style are implemented by the application developer. This function is used by the HTTP server to report that an SSI command line was encountered while processing a file. The user has a chance to inspect the line and to provide custom action by using the SSI API functions.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_HTTP_NET_SSINotification</span></strong>(
+    <a href="02363.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>, 
+    <a href="02560.html" target="topic">TCPIP_HTTP_SSI_NOTIFY_DCPT</a>* <strong><span style="color: #000000">pSSINotifyDcpt</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="02545.html" target="topic">_tag_TCPIP_HTTP_NET_USER_CALLBACK</a>* <strong><span style="color: #000000">pCBack</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+SSI processing should be enabled.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+HTTP connection handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pSSINotifyDcpt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to a SSI notification descriptor containing:&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+fileName&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the name of the file the SSI command belongs to&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ssiCommand&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the SSI command parsed from the command line&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+nAttribs&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+number of attribute descriptors in the command&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pAttrDcpt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to an array of descriptors parsed from this SSI command&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pCBack&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+user <a href="02545.html" target="topic">TCPIP_HTTP_NET_USER_CALLBACK</a> pointer&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+true - if the SSI processing is complete and no further action needs to be taken by the HTTP server false - the HTTP should process the SSI command</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The ssiLine parameter is valid only in the context of this call. Any data that is needed for further processing should be copied to user storage.&nbsp;</p>
+<p class="Element10">
+This function could use the SSI API functions to alter/examine the value of SSI variables that are part of the ssiLine.&nbsp;</p>
+<p class="Element10">
+This function may NOT write to the network transport buffer. Possiblity to write to the transport channel could be eventually added, based on the dynamic variable model <a href="02406.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a>.&nbsp;</p>
+<p class="Element10">
+The default return value should be false: the user function examines/adjusts value of SSI variables and instructs the HTTP module continue normally. However, the user has the option of supressing the output (SSI &quot;echo&quot;) or override the value of a variable (SSI &quot;set&quot;), etc.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02515.html" target="topic">TCPIP_HTTP_NET_SSINotification Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02373.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02516.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_SSINotification@TCPIP_HTTP_NET_CONN_HANDLE@TCPIP_HTTP_SSI_NOTIFY_DCPT*@struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* Topic Title: TCPIP_HTTP_NET_SSINotification Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,95 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCP/IP Discoverer Utility</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01254.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01254.html" target="topic">TCP/IP Discoverer Utility</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00971.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="00649.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP/IP Discoverer Utility Topic Title: TCP/IP Discoverer Utility)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCP/IP Discoverer Utility</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TCP/IP Discoverer personal computer project (formerly known as the Embedded Ethernet Device Discoverer) will aid in embedded product device discovery (with the <a href="00184.html" target="topic">TCP/IP Announce</a> protocol) and will demonstrate how to write personal computer applications to communicate to embedded devices.&nbsp;</p>
+<p class="Element10">
+Clicking <strong>Discover Devices</strong> (see the following figure), causes the application to transmit a broadcast UDP packet containing the message, &quot;Discovery: Who is out there?&quot; on the local network to port 30303. If any embedded devices with the Announce protocol enabled are connected to the network, they will respond with a UDP packet containing their MAC-Address, MAC-Type (interface type), Hostname (NBNS), IP Addresses (IPv4/IPv6), and Multicast Listeners (IPv6).&nbsp;</p>
+<p class="Element10">
+&quot;Network Direct Broadcast&quot; check box is used to select the type of the broadcast to be used by the tcpip discoverer tool to <a href="01131.html" target="topic">send</a> the broadcast packet. When selected, the network directed broadcast will be used. When not selected, the &quot;network limited broadcast&quot; will be used. The default is network limited broadcast.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><p class="Element10" style="text-align: center;">
+<img src="tcpip_discover.png" border="0" alt="" title="">&nbsp;</p><p class="Element10">
+Each part of this UDP packet is displayed as a set of hierarchical data (JTree Class). &quot;Devices&quot; is represented as a root node and each MAC-Address of the UDP packet is represented as the child node and other payload information of the UDP data are child nodes to the MAC-Address node. The &quot;Truncated&quot; string is added as a child node to the MAC-Address node, if the Announce UDP packet payload does not have sufficient space to contain the interface details.&nbsp;</p>
+<p class="Element10">
+More than one IPv4 address and Hostname could be displayed for a physical network interface that supports virtual interfaces.&nbsp;</p>
+<p class="Element10">
+If TCPIP_STACK_USE_HTTP_SERVER is enabled, double clicking MAC-Address node, http://ipv4address client, will communicate with the Web Server module of the device.&nbsp;</p>
+<p class="Element10">
+The Java source code for this application is also included. This source code should provide a rough idea of how to write a personal computer-based application to communicate with your embedded devices.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01254.html" target="topic">TCP/IP Discoverer Utility</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00971.html" target="topic">Previous</a> | <a href="01679.html" target="topic">Up</a> | <a href="00649.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP/IP Discoverer Utility Topic Title: TCP/IP Discoverer Utility)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

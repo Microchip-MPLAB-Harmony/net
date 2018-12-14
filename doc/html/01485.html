@@ -1,0 +1,119 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Core Functionality</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01485.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01493.html" target="topic">Using the Library</a> &gt; <a href="01485.html" target="topic">Core Functionality</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01492.html" target="topic">Previous</a> | <a href="01493.html" target="topic">Up</a> | <a href="01489.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv4 Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Core Functionality</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10" style="text-align: center;">
+<strong>IP Connection Flow</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="TCPIP IPV4 ip_flow.png" border="0" alt="" title=""></p><p class="Element10">
+To transmit an IP packet over the network, the application has to prepare an <a href="00828.html" target="topic">IPV4_PACKET</a> data structure and properly format it so that the recipients of this packet (the IP and the MAC layers) can process the packet.&nbsp;</p>
+<p class="Element10">
+The TCP/IP Stack modules allocate the <a href="00828.html" target="topic">IPV4_PACKET</a> data structures dynamically using the TCP/IP Stack private heap using packet allocation functions. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+Currently, the packet and heap allocation functions are not exposed as public APIs as they are meant for stack’s private usage. This may change in the future.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="00828.html" target="topic">IPV4_PACKET</a> packet can be allocated statically by the application.&nbsp;</p>
+<p class="Element10">
+When the <a href="00828.html" target="topic">IPV4_PACKET</a> is constructed an important thing to remember is to fill in the appropriate packet acknowledge function. Once the MAC layer/driver is done with processing the packet (successfully or not) it will call the <a href="00828.html" target="topic">IPV4_PACKET</a> acknowledge function, indicating that the packet is now available (and could be freed or reused).&nbsp;</p>
+<p class="Element10">
+The next step is to fill in the packet source and destination addresses, as well as the outgoing interface (please keep in mind that the TCP/IP stack supports multiple network interfaces).&nbsp;</p>
+<p class="Element10">
+This could be done with a call to <a href="02705.html" target="topic">TCPIP_IPV4_SelectSourceInterface</a> or the application can select all these addresses manually.&nbsp;</p>
+<p class="Element10">
+All that’s left before handing the packet is to call <a href="02698.html" target="topic">TCPIP_IPV4_PacketFormatTx</a>. This call fills in the supplied packet with the IP header structure and updates the IP checksum. Please note that this function expects a properly formatted packet, with the source and destination addresses filled in.&nbsp;</p>
+<p class="Element10">
+After this, the application can call <a href="02704.html" target="topic">TCPIP_IPV4_PacketTransmit</a>. This function does some basic packet checks and expects that the packet has a valid network interface selected otherwise the call will fail.&nbsp;</p>
+<p class="Element10">
+After further formatting (with the MAC required headers), the IP layer<span style="color: #FFFFFF">_</span>will try to <a href="01131.html" target="topic">send</a> the packet over the network. If the destination hardware address is known (the ARP resolve call succeeds) the packet is handed over to the MAC. Otherwise, the IP will insert the packet into a queue, waiting for the ARP resolution. When ARP signals that the request is done (either success or timeout) the IP layer<span style="color: #FFFFFF">_</span>intercepts the signal and removes the packet from the wait queue: either hands it over to the MAC for transmission or it discards it if the ARP resolution failed.&nbsp;</p>
+<p class="Element10">
+The MAC layer/driver in its turn can transmit it immediately, queue the packet for transmission or discard it (if, for example the network link is down). Regardless, once the packet is processed, the packet acknowledge function is called with an updated acknowledge result. This informs the owner of the packet about the result of the operation and also that the packet is no longer in traffic. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+Transmission of chained packets is not supported. Each packet has to be transmitted individually.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01493.html" target="topic">Using the Library</a> &gt; <a href="01485.html" target="topic">Core Functionality</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01492.html" target="topic">Previous</a> | <a href="01493.html" target="topic">Up</a> | <a href="01489.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv4 Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

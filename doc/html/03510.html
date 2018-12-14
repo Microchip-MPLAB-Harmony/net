@@ -1,0 +1,149 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_STACK_MACObjectGet Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '03510.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03510.html" target="topic">TCPIP_STACK_MACObjectGet Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03505.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03504.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_MACObjectGet@TCPIP_NET_HANDLE Topic Title: TCPIP_STACK_MACObjectGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_STACK_MACObjectGet Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function returns the MAC driver object that's associated with the interface handle.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">const</span></strong> TCPIP_MAC_OBJECT* <strong><span style="color: #000000">TCPIP_STACK_MACObjectGet</span></strong>(
+    <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TCP/IP stack should have been initialized by <a href="03505.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03549.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Interface handle to get the name of.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+It returns a valid MAC driver object pointer if success. Returns 0 if no such interface or there is no MAC object.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MAC driver object is the one that's passed at the stack/interface initialization.&nbsp;</p>
+<p class="Element10">
+The MAC driver is not a true multi-client driver. Under normal circumstances the MAC driver has only one client, the TCP/IP stack. To have the <a href="02823.html" target="topic">TCPIP_MAC_Open</a>() succeed after the MAC driver has been initialized by the TCP/IP stack, the configuration symbol DRV_ETHMAC_CLIENTS_NUMBER has to be &gt; 1! But the returned handle is the same one as the TCP/IP stack uses.&nbsp;</p>
+<p class="Element10">
+Access to the MAC driver in this way is allowed mainly for debugging, diagnostic and statistics purposes. It is possible though to transmit packets this way. But it's not possible to be signalled about incoming RX packets while the stack is running because only the TCP/IP dispatcher will be notified by the RX events.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"> <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> netH = <a href="03533.html" target="topic">TCPIP_STACK_NetHandleGet</a>(&quot;eth0&quot;);
+ <strong><span style="color: #000080">const</span></strong> TCPIP_MAC_OBJECT* pEthMacObject = TCPIP_STACK_MACObjectGet(netH);
+ <strong><span style="color: #000080">if</span></strong>(pEthMacObject != 0)
+ {    <i><span style="color: #008000">// valid MAC object pointer</span></i>
+      DRV_HANDLE hMac = (*pEthMacObject-&gt;<a href="02823.html" target="topic">TCPIP_MAC_Open</a>)(pEthMacObject-&gt;macId, DRV_IO_INTENT_READWRITE);
+      <strong><span style="color: #000080">if</span></strong>(hMac != DRV_HANDLE_INVALID)
+      {   <i><span style="color: #008000">// can use the MAC handle to access a MAC function</span></i>
+          <a href="02939.html" target="topic">TCPIP_MAC_RX_STATISTICS</a> rxStatistics;
+          <a href="02967.html" target="topic">TCPIP_MAC_TX_STATISTICS</a> txStatistics;
+          <a href="02907.html" target="topic">TCPIP_MAC_RES</a> macRes = (*pEthMacObject-&gt;<a href="02955.html" target="topic">TCPIP_MAC_StatisticsGet</a>)(hMac, &amp;rxStatistics, &amp;txStatistics);
+      }
+ }</pre></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03510.html" target="topic">TCPIP_STACK_MACObjectGet Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03505.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03504.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_MACObjectGet@TCPIP_NET_HANDLE Topic Title: TCPIP_STACK_MACObjectGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

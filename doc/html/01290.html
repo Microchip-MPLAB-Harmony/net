@@ -1,0 +1,174 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCP_SOCKET_OPTION Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01290.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01290.html" target="topic">TCP_SOCKET_OPTION Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01278.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="00775.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_SOCKET_OPTION Topic Title: TCP_SOCKET_OPTION Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCP_SOCKET_OPTION Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCP_SOCKET_OPTION&nbsp;</p>
+<p class="Element10">
+This enumeration defines TCP <a href="01231.html" target="topic">socket</a> run-time options.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCP_OPTION_LINGER</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_KEEP_ALIVE</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_RX_BUFF</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_TX_BUFF</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_RX_TMO</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_TX_TMO</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_NODELAY</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_EXCLUSIVE_ADDRESS</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_THRES_FLUSH</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_DELAY_SEND_ALL_ACK</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_TX_TTL</span></strong>,
+  <strong><span style="color: #000000">TCP_OPTION_TOS</span></strong>
+} TCP_SOCKET_OPTION;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_LINGER&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The LINGER option controls the action taken when unsent data is queued on a <a href="01231.html" target="topic">socket</a> and the <a href="01231.html" target="topic">socket</a> is closed. The <a href="00952.html" target="topic">linger</a> option can be turned on/off and the timeout can be specified.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_KEEP_ALIVE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Enable the use of keep-alive packets on TCP connections. The option can be turned on/off and the timeout can be specified.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_RX_BUFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Request different RX buffer size. Has to call <a href="03627.html" target="topic">TCPIP_TCP_OptionsGet</a> to see the exact space allocated.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_TX_BUFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Request different TX buffer size. Has to call <a href="03627.html" target="topic">TCPIP_TCP_OptionsGet</a> to see the exact space allocated.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_RX_TMO&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Specifies the RX timeout. If no data arrives in the specified timeout the <a href="01231.html" target="topic">socket</a> is closed.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_TX_TMO&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Specifies the TX timeout. If no data can be sent in the specified timeout the <a href="01231.html" target="topic">socket</a> is closed.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_NODELAY&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Enables the NO DELAY/Nagle algorithm functionality. The default setting is disabled.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_EXCLUSIVE_ADDRESS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Enables a <a href="01231.html" target="topic">socket</a> to be bound for exclusive access. The default setting is disabled - option not supported yet.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_THRES_FLUSH&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the type of half buffer TX flush for the <a href="01231.html" target="topic">socket</a>. The default setting is TCP_OPTION_THRES_FLUSH_AUTO&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_DELAY_SEND_ALL_ACK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Enables/disables the delay of sending the pending data when no unacknowledged data. When this option is disabled, the <a href="01231.html" target="topic">socket</a> will immediately <a href="01131.html" target="topic">send</a> any pending data chunk whenever all the previous data is acknowledged by the remote party (there is no unacknowledged data). This holds true for the 1st transmission too, or after a pause of some length. If the option is enabled, the <a href="01231.html" target="topic">socket</a> will delay sending the data, waiting for more data to accumulate. This could be useful when the application makes multiple calls with small data chunks. The default setting is disabled.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_TX_TTL&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Specifies the Time To Live for packets sent by the <a href="01231.html" target="topic">socket</a>. If 0, the <a href="01231.html" target="topic">socket</a> will use the default global IPv4 TTL setting. This option allows the user to specify a different TTL value.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCP_OPTION_TOS&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Sets the Type of Service (TOS) for IPv4 packets sent by the <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01290.html" target="topic">TCP_SOCKET_OPTION Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01278.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="00775.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_SOCKET_OPTION Topic Title: TCP_SOCKET_OPTION Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

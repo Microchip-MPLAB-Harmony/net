@@ -1,0 +1,107 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Cookies</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01419.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01425.html" target="topic">HTTP Features</a> &gt; <a href="01419.html" target="topic">Cookies</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01415.html" target="topic">Previous</a> | <a href="01425.html" target="topic">Up</a> | <a href="01417.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Cookies Topic Title: Cookies)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Cookies</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Cookies were added to the protocol description to solve this problem. This feature allows a web server to store small bits of text in a user's browser. These values will be returned to the server with every request, allowing the server to associate session variables with a request. Cookies are typically used for more advanced authentication systems.&nbsp;</p>
+<p class="Element10">
+Best practice is generally to store the bulk of the data on the server, and store only a unique identifier with the browser. This cuts down on data overhead and ensures that the user cannot modify the values stored with the session. However, logic must be implemented in the server to expire old sessions and allocate memory for new ones. If sensitive data is being stored, it is also important that the identifier be random enough so as to prevent stealing or spoofing another user's cookies.</p><div class="Element15">
+Retrieving Cookies</div>
+<p class="Element10">
+In the HTTP server, cookies are retrieved automatically. They are stored in the connection internal data buffer just as any other GET form argument or URL parameter would be. The proper place to parse these values is therefore in the <a href="02340.html" target="topic">TCPIP_HTTP_GetExecute</a> callback using the <a href="02275.html" target="topic">TCPIP_HTTP_ArgGet</a>.&nbsp;</p>
+<p class="Element10">
+This model consumes some of the limited space available for URL parameters. Ensure that cookies do not consume more space than is available (as defined by HTTP_MAX_DATA_LEN) and that they will fit after any data that may be submitted via a GET form. If enough space is not available, the cookies will be truncated.</p><div class="Element15">
+Setting Cookies</div>
+<p class="Element10">
+Cookies can be set in <a href="02340.html" target="topic">TCPIP_HTTP_GetExecute</a> or <a href="02550.html" target="topic">TCPIP_HTTP_PostExecute</a>. To set a cookie, store the name/value pairs in the connection internal buffer data as a series of null-terminated strings. Then, call <a href="02288.html" target="topic">TCPIP_HTTP_CurrentConnectionHasArgsSet</a> with a parameter equal to the number of name/value pairs to be set. For example, the following code sets a cookie indicating a user's preference for a type of cookie: </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> TCPIP_HTTP_GetExecute(<strong><span style="color: #000080">void</span></strong>)
+{
+...
+<i><span style="color: #008000">// Set a cookie</span></i>
+uint8_t* connData = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
+uint16_t httpBuffSize  = TCPIP_HTTP_CurrentConnectionDataBufferSizeGet(connHandle);
+<strong><span style="color: #000080">if</span></strong>(strlen(“flavor”) + strlen(“oatmeal raisin) + 2 &lt;= httpBuffSize)
+{
+  strcpy((<strong><span style="color: #000080">char</span></strong>*)connData, &quot;flavor&quot;);
+  strcpy((<strong><span style="color: #000080">char</span></strong>*)connData + strlen(&quot;flavor&quot;) + 1, &quot;oatmeal raisin&quot;);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">  TCPIP_HTTP_CurrentConnectionHasArgsSet(connHandle, 1);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">}
+
+...
+}</pre></div></div>
+<p class="Element10">
+After this, all future requests from this browser will include the parameter &quot;flavor&quot; in the connection data along with the associated value of &quot;oatmeal raisin&quot;.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00660.html" target="topic">HTTP Module</a> &gt; <a href="01445.html" target="topic">Using the Library</a> &gt; <a href="01425.html" target="topic">HTTP Features</a> &gt; <a href="01419.html" target="topic">Cookies</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01415.html" target="topic">Previous</a> | <a href="01425.html" target="topic">Up</a> | <a href="01417.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Cookies Topic Title: Cookies)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

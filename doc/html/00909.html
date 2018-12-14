@@ -1,0 +1,241 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>IPV6_PACKET Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00909.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00844.html" target="topic">IPv6 Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00909.html" target="topic">IPV6_PACKET Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00895.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="00910.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_PACKET Topic Title: IPV6_PACKET Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+IPV6_PACKET Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Structure: IPV6_PACKET&nbsp;</p>
+<p class="Element10">
+IPv6 packets are queued for future transmission.queuedPacketTimeout is used to time-out IPv6 queued packets.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_IPV6_PACKET</span></strong> {
+  <strong><span style="color: #000080">struct</span></strong> _IPV6_PACKET * <strong><span style="color: #000000">next</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">short</span></strong> <strong><span style="color: #000000">payloadLen</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">short</span></strong> <strong><span style="color: #000000">headerLen</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">short</span></strong> <strong><span style="color: #000000">upperLayerHeaderLen</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">short</span></strong> <strong><span style="color: #000000">upperLayerChecksumOffset</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">upperLayerHeaderType</span></strong>;
+  <strong><span style="color: #000080">union</span></strong> {
+    <strong><span style="color: #000080">struct</span></strong> {
+      <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">reserved</span></strong> : 3;
+      <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">useUnspecAddr</span></strong> : 1;
+      <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">sourceSpecified</span></strong> : 1;
+      <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">queued</span></strong> : 1;
+      <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">addressType</span></strong> : 2;
+    }
+    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">char</span></strong> <strong><span style="color: #000000">val</span></strong>;
+  } flags;
+  TCPIP_MAC_ADDR <strong><span style="color: #000000">remoteMACAddr</span></strong>;
+  <a href="00910.html" target="topic">IPV6_PACKET_ACK_FNC</a> <strong><span style="color: #000000">ackFnc</span></strong>;
+  <a href="02825.html" target="topic">TCPIP_MAC_PACKET_ACK_FUNC</a> <strong><span style="color: #000000">macAckFnc</span></strong>;
+  <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">ackParam</span></strong>;
+  <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">clientData</span></strong>;
+  <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">neighbor</span></strong>;
+  <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">short</span></strong> <strong><span style="color: #000000">offsetInSegment</span></strong>;
+  uint32_t <strong><span style="color: #000000">queuedPacketTimeout</span></strong>;
+  <a href="00871.html" target="topic">IPV6_DATA_SEGMENT_HEADER</a> <strong><span style="color: #000000">payload</span></strong>;
+  <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netIfH</span></strong>;
+  <a href="00879.html" target="topic">IPV6_HEADER</a> <strong><span style="color: #000000">ipv6Header</span></strong>;
+} IPV6_PACKET;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+struct _IPV6_PACKET * next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Next packet in a queue&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned short payloadLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Amount of data in payload buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned short headerLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Total header length (IP header + IPv6 Extension headers)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned short upperLayerHeaderLen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Total length of the upper layer header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned short upperLayerChecksumOffset;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Offset of the upper layer checksum&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned char upperLayerHeaderType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Type definition for the upper-layer header type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned char useUnspecAddr : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+This packet should use the unspecified address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned char sourceSpecified : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The upper layer or application layer specified a source address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned char queued : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packet has been queued&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned char addressType : 2;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IP_ADDRESS_TYPE_IPV6 or IP_ADDRESS_TYPE_IPV4&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_ADDR remoteMACAddr;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The packet's remote MAC address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PACKET_ACK_FNC ackFnc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+function to be called when IPv6 done with the packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PACKET_ACK_FUNC macAckFnc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+function to be called when MAC done with a TX packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+void* ackParam;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+parameter to be used&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+void* clientData;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+optional packet client data&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+void * neighbor;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The neighbor that the message was received from&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+unsigned short offsetInSegment;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Offset used for storing fragment transmission information&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t queuedPacketTimeout;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Time out for IPv6 packets which are queued&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_DATA_SEGMENT_HEADER payload;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 data segment payload&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_NET_HANDLE netIfH;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+packet network interface&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_HEADER ipv6Header;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 header definition&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+For IPv6 queuing the time out has to be 0! The queue is processed separately by the NDP.<a href="00910.html" target="topic">IPV6_PACKET_ACK_FNC</a> is called after the successful removal and inclusion of the packet.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00844.html" target="topic">IPv6 Module</a> &gt; <a href="01501.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00909.html" target="topic">IPV6_PACKET Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00895.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="00910.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_PACKET Topic Title: IPV6_PACKET Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

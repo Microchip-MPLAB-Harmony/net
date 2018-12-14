@@ -1,0 +1,235 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Configuring the Library</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01622.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01622.html" target="topic">Configuring the Library</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01623.html" target="topic">Previous</a> | <a href="01250.html" target="topic">Up</a> | <a href="03593.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TCP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Configuring the Library</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The configuration of the TCP/IP Stack Library TCP module is based on the file <span class="Element146"><a href="01262.html" target="topic">tcp_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
+<p class="Element10">
+This header file contains the configuration selection for the TCP/IP Stack Library TCP module. Based on the selections made, the TCP/IP Stack Library TCP module may support the selected features. These configuration settings will apply to all TCP sockets of the TCP/IP Stack Library.&nbsp;</p>
+<p class="Element10">
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01253.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03593.html" target="topic">TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout before automatically transmitting unflushed data, ms. Default value is 40 ms.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03597.html" target="topic">TCPIP_TCP_CLOSE_WAIT_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for the CLOSE_WAIT state, ms If the remote <a href="01231.html" target="topic">socket</a> closes the connection the TCP/IP stack will automatically close the <a href="01231.html" target="topic">socket</a> after this timeout. If the value is set to 0 then the <a href="01231.html" target="topic">socket</a> will wait forever for the application to close the <a href="01231.html" target="topic">socket</a> (default behavior). Default should be 0&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03600.html" target="topic">TCPIP_TCP_DELAYED_ACK_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for delayed-acknowledgment algorithm, ms&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03603.html" target="topic">TCPIP_TCP_DYNAMIC_OPTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable the TCP sockets dynamic options set/get functionality If enabled, the functions: <a href="03628.html" target="topic">TCPIP_TCP_OptionsSet</a>, <a href="03627.html" target="topic">TCPIP_TCP_OptionsGet</a> and <a href="03606.html" target="topic">TCPIP_TCP_FifoSizeAdjust</a> exist and are compiled in If disabled, these functions do not exist and cannot be used/called Note that this setting can affect modules that use TCP sockets&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03609.html" target="topic">TCPIP_TCP_FIN_WAIT_2_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for FIN WAIT 2 state, ms&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03616.html" target="topic">TCPIP_TCP_KEEP_ALIVE_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for keep-alive messages when no traffic is sent, ms&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03617.html" target="topic">TCPIP_TCP_MAX_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum number of retransmission attempts&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03618.html" target="topic">TCPIP_TCP_MAX_SEG_SIZE_TX</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP Maximum Segment Size for TX. The TX maximum segment size is actually governed by the remote node's MSS option advertised during connection establishment. However, if the remote node specifies an unmanageably large MSS (ex: &gt; Ethernet MTU), this define sets a hard limit so that TX buffers are not overflowed. If the remote node does not advertise a MSS option, all TX segments are fixed at 536 bytes maximum. This symbol sets an upper bound on the TCP MSS on the transmit side which can ignore/override the remote node advertising.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03619.html" target="topic">TCPIP_TCP_MAX_SOCKETS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The maximum number of sockets to create in the stack. When defining TCPIP_TCP_MAX_SOCKETS take into account the number of interfaces the stack is supporting.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03620.html" target="topic">TCPIP_TCP_MAX_SYN_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Smaller than all other retries to reduce SYN flood DoS duration&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03621.html" target="topic">TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum number of keep-alive messages that can be sent without receiving a response before automatically closing the connection&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03651.html" target="topic">TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default <a href="01231.html" target="topic">socket</a> RX buffer size Note that this setting affects all TCP sockets that are created and, together with <a href="03619.html" target="topic">TCPIP_TCP_MAX_SOCKETS</a>, has a great impact on the heap size that's used by the stack (see <a href="03422.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting). When large RX bufferrs are needed, probably a dynamic, per <a href="01231.html" target="topic">socket</a> approach, is a better choice (see <a href="03628.html" target="topic">TCPIP_TCP_OptionsSet</a> function). The performance of a <a href="01231.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Note that some modules (like HTTP) use their own settings to... <a href="03651.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03652.html" target="topic">TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default <a href="01231.html" target="topic">socket</a> TX buffer size Note that this setting affects all TCP sockets that are created and, together with <a href="03619.html" target="topic">TCPIP_TCP_MAX_SOCKETS</a>, has a great impact on the heap size that's used by the stack (see <a href="03422.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting). When large TX bufferrs are needed, probably a dynamic, per <a href="01231.html" target="topic">socket</a> approach, is a better choice (see <a href="03628.html" target="topic">TCPIP_TCP_OptionsSet</a> function). The performance of a <a href="01231.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Note that some modules (like HTTP) use their own settings to... <a href="03652.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03658.html" target="topic">TCPIP_TCP_START_TIMEOUT_VAL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout to retransmit unacked data, ms&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03675.html" target="topic">TCPIP_TCP_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The TCP task processing rate: number of milliseconds to generate an TCP tick. This is the tick that advances the TCP state machine. The default value is 5 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03552.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03677.html" target="topic">TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout before automatically transmitting a window update due to a <a href="03612.html" target="topic">TCPIP_TCP_Get</a>() or <a href="03590.html" target="topic">TCPIP_TCP_ArrayGet</a>() function call, ms.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03598.html" target="topic">TCPIP_TCP_COMMANDS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCPIP TCP info commands Enables/Disables the TCP command feature. This setting will add a TCP &quot;info&quot; command to the TCP/IP command menu allowing a run time inspection of the TCP sockets Set the value to 1 to enable, 0 to disable the feature.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03626.html" target="topic">TCPIP_TCP_MSL_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum Segment Length (MSL) timeout, seconds This value sets the time a <a href="01231.html" target="topic">socket</a> will be in the TIME_WAIT/2MSL state after the <a href="01231.html" target="topic">socket</a> performed an active close. RFC recommended value is 120 sec. Other common values are: 30/60 sec Note that if this symbol is defined to 0, then the TIME_WAIT/2MSL state is skipped! This could lead to duplicate sequence numbers problems if sockets are frequently/rapidly closed and reopened and normally should be avoided.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03632.html" target="topic">TCPIP_TCP_QUIET_TIME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This value specifies the TCP quiet time: TCP will not <a href="01131.html" target="topic">send</a> any data for TCPIP_TCP_QUIET_TIME seconds after rebooting! Usualy this value should match the MSL value. Note that if this symbol is defined to 0, then the TCP quiet time state is skipped! During the quiet time there will be no TCP traffic initiated by TCP. So, clients won't be able to <a href="00262.html" target="topic">connect</a> to remote hosts and servers won't reply to client requests.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01622.html" target="topic">Configuring the Library</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01623.html" target="topic">Previous</a> | <a href="01250.html" target="topic">Up</a> | <a href="03593.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TCP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

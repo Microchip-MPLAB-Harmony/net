@@ -1,0 +1,117 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>How the Library Works</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01529.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01538.html" target="topic">Using the Library</a> &gt; <a href="01529.html" target="topic">How the Library Works</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01532.html" target="topic">Previous</a> | <a href="01538.html" target="topic">Up</a> | <a href="01524.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+How the Library Works</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Manager module of the TCP/IP stack is the central module in the stack. It is this module that allows the client to configure and initialize the stack and also to get current status and parameters of the network interfaces that the stack supports.&nbsp;</p>
+<p class="Element10">
+The stack manager controls the communication to the underlying virtual MAC driver that implements the interface to a specific network channel. The various network interfaces that the TCP/IP stack supports are brought up or torn down by the stack manager in response to the stack client commands.&nbsp;</p>
+<p class="Element10">
+The manager is also responsible for providing the TCP/IP client with notifications of the events that occur in the stack at the network interface level. A dynamic registration mechanism is provided for this.&nbsp;</p>
+<p class="Element10">
+Another important functionality of the stack manager is the dispatch of the incoming network packets. The manager is notified by the underlying interface drivers of the traffic related event (transmit, receive, errors, etc.) As a response to those events the manager gets the pending receive packets from the virtual MAC driver and, based on their type, dispatches them to the appropriate higher level protocol for further processing (IPv4, ARP, IPv6).&nbsp;</p>
+<p class="Element10">
+As part of the event notification provided by the MAC driver the TCP/IP stack manager calls back into the MAC driver when this one needs processing time and can maintain statistics counters, link status, etc.&nbsp;</p>
+<p class="Element10">
+The MPLAB Harmony framework on the system running the TCP/IP stack interfaces to the stack manager mainly by using three functions, <a href="03505.html" target="topic">TCPIP_STACK_Initialize</a> and <a href="03418.html" target="topic">TCPIP_STACK_Deinitialize</a> for TCP/IP stack initialization, and <a href="03551.html" target="topic">TCPIP_STACK_Task</a> for periodic processing and the advance of the stack state machine.&nbsp;</p>
+<p class="Element10">
+The stack is capable of running either under an Operating System (RTOS) or in a bare-metal environment. When running in a bare-metal environment a &quot;cooperative multi-tasking&quot; approach is needed by the TCP/IP stack, meaning that control has to reach the <a href="03551.html" target="topic">TCPIP_STACK_Task</a> function. That is the system will need to make periodic calls to this function which allows the TCP/IP stack to dequeue incoming packets and the corresponding state machines in the stack to advance. The application has to be aware that it cannot monopolize the processor for long periods of time, and needs to relinquish control so that the system loops perform their tasks.&nbsp;</p>
+<p class="Element10">
+In an RTOS environment it is preferred to have the stack manager run in its own thread. This thread will be blocked waiting for network interface events and when such an event occurs it will wake up and process the data. This is a more efficient way of using the CPU resources.&nbsp;</p>
+<p class="Element10">
+Refer to<strong> MPLAB Harmony Framework Reference</strong> for information on configuring the MPLAB Harmony framework to run in a RTOS or bare-metal environment.</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01524.html" target="topic">Core Functionality</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic describes the core functionality of the TCP/IP Stack Library Manager module.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01538.html" target="topic">Using the Library</a> &gt; <a href="01529.html" target="topic">How the Library Works</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01532.html" target="topic">Previous</a> | <a href="01538.html" target="topic">Up</a> | <a href="01524.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MANAGER How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

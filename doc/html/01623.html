@@ -1,0 +1,93 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Core Functionality</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01623.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01633.html" target="topic">Using the Library</a> &gt; <a href="01626.html" target="topic">How the Library Works</a> &gt; <a href="01623.html" target="topic">Core Functionality</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01626.html" target="topic">Previous</a> | <a href="01626.html" target="topic">Up</a> | <a href="01622.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TCP Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Core Functionality</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The following diagram provides an overview for the use of the TCP module. </p><p class="Element10" style="text-align: center;">
+<strong>TCP Connection Flow</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="TCP Connection Flow.png" border="0" alt="" title=""></p><p class="Element10">
+Server sockets are opened using <a href="03634.html" target="topic">TCPIP_TCP_ServerOpen</a>. This function will open a listening <a href="01231.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>waiting for client connections on the specified TCP port number. A client <a href="01231.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>is opened using <a href="03595.html" target="topic">TCPIP_TCP_ClientOpen</a>. This function will open a <a href="01231.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>that connects to a remote host. The remote host is specified using an IP address and a TCP port number.&nbsp;</p>
+<p class="Element10">
+Once connected, applications can read and write data. On each entry, the application must verify that the <a href="01231.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>is still connected. For most applications a call to <a href="03614.html" target="topic">TCPIP_TCP_IsConnected</a> will be sufficient, but <a href="03676.html" target="topic">TCPIP_TCP_WasReset</a> may also be used for listening sockets that may turn over quickly.&nbsp;</p>
+<p class="Element10">
+To write data, call <a href="03631.html" target="topic">TCPIP_TCP_PutIsReady</a> to check how much space is available. Then, call the <a href="03592.html" target="topic">TCPIP_TCP_ArrayPut</a> function to write data as space is available. Once complete, call <a href="03611.html" target="topic">TCPIP_TCP_Flush</a> to transmit data immediately. Alternately, return to the main system/stack loop. Data will be transmitted by the internal TCP state machine as the buffer becomes full or a programmable delay time has passed.&nbsp;</p>
+<p class="Element10">
+To read data, call <a href="03613.html" target="topic">TCPIP_TCP_GetIsReady</a> to determine how many bytes are ready to be retrieved. Then use the <a href="03590.html" target="topic">TCPIP_TCP_ArrayGet</a> function to read data from the<span style="color: #FFFFFF">_</span><a href="01231.html" target="topic">socket</a>, and/or the <a href="03610.html" target="topic">TCPIP_TCP_Find</a> family of functions to locate data in the buffer. When no more data remains, return to the main system/stack loop to wait for more data to arrive.&nbsp;</p>
+<p class="Element10">
+If the application needs to close the connection, call <a href="03602.html" target="topic">TCPIP_TCP_Disconnect</a>, and then return to the main system/stack loop and wait for the remote node to acknowledge the disconnection. Client sockets will be closed and associated resources freed, while listening sockets will wait for a new connection. For more information, refer to the examples provided with the MPLAB Harmony distribution examples, or read the associated RFC.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01633.html" target="topic">Using the Library</a> &gt; <a href="01626.html" target="topic">How the Library Works</a> &gt; <a href="01623.html" target="topic">Core Functionality</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01626.html" target="topic">Previous</a> | <a href="01626.html" target="topic">Up</a> | <a href="01622.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TCP Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

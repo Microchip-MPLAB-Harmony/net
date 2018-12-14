@@ -1,0 +1,90 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Getting Started</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00164.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00164.html" target="topic">Getting Started</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00166.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="00160.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Getting Started Topic Title: Getting Started)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Getting Started</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Once your browser installation has been completed, perform the following steps:
+<ol class="Element631">
+<li value="1" class="Element601">Copy the <span class="Element146">mchip.mib</span> file to the MIB file directory of your browser (e.g., <span class="Element146">C:\Program Files\ireasoning\mibbrowser\mibs</span>).</li>
+<li value="2" class="Element601">Open the MIB Browser and select <i><u>File&gt;Load MIBs</u></i>, and select the <span class="Element146">mchip.mib</span>, <span class="Element146">RFC1213.mib</span>, and <span class="Element146">SNMP-FRAMEWORK-MIB.mib</span> (If SNMPv3 server is enabled) files. The Microchip MIB directory will be displayed in the SNMP MIB pane.</li>
+</ol></p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image002.png" border="0" alt="" title=""></p><p class="Element10">
+The minimum set of RFC 1213 MIB2 variables that are required to identify the Microchip node as an SNMP node to the network are implemented. These variables can be accessed by any SNMP browser with a &quot;public&quot; type community name. Refer to the Microchip application note, <a href="http://www.microchip.com/stellent/idcplg?IdcService=SS_GET_PAGE&amp;nodeId=1824&amp;appnote=en012108" target="_blank"><img src="indicator_external_link.gif" border="0" alt="" title="">AN870 &quot;SNMP V2c Agent for Microchip TCP/IP Stack&quot; (DS00000870)</a> for more details on the MIB scripts, community names, and demonstration SNMP MIB variable tree structure. The following figure shows the variables implemented in the Microchip SNMP Agent. </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image004.png" border="0" alt="" title=""></p><p class="Element10">
+The ASN.1 format <span class="Element146">mchip.mib</span> file is defined with a private variable tree structure for the MIB variables. Also the <span class="Element146">mchip.mib</span> file is added with a number of OIDs, which can be accessed only with a SNMPv3 request. The browser can access every variable in the MIB database provided the community name matches. The access to the MIB variables is restricted to the type of the request. The RFC1213 MIB variables can be accessed with a SNMPv2c/v3 request. However, the <span class="Element146">SNMP-FRAMEWORK-MIB.mib</span> variables can only be accessed with a SNMPv3 request if the credentials are matched and the message is authenticated. To modify these MIB variables, the corresponding changes must be made to both MIB scripts (<span class="Element146">snmp.mib</span> and <span class="Element146">mchip.mib</span>). The following figure shows the Microchip private MIB variable tree structure in the browser. </p><p class="Element10" style="text-align: center;">
+<img src="APPS SNMP image006.png" border="0" alt="" title=""></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00164.html" target="topic">Getting Started</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00166.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="00160.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING Getting Started Topic Title: Getting Started)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

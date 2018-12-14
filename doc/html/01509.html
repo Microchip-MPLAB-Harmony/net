@@ -1,0 +1,106 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Core Functionality</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01509.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01520.html" target="topic">Using the Library</a> &gt; <a href="01515.html" target="topic">How the Library Works</a> &gt; <a href="01509.html" target="topic">Core Functionality</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01515.html" target="topic">Previous</a> | <a href="01515.html" target="topic">Up</a> | <a href="01508.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Core Functionality</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10" style="text-align: center;">
+<strong>MAC Connection Flow Diagram</strong>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="TCPIP MAC mac_flow.png" border="0" alt="" title=""></p><p class="Element10">
+The MAC driver is used internally by the TCP/IP Stack Manager and its API is not normally exposed outside the stack. There is little need to interface directly with the MAC from the application level. The TCP/IP Stack provides all the data interface functions to the application by exposing the<span style="color: #FFFFFF">_</span><a href="01231.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>API (TCP and UDP) and also low level IPv4 and IPv6 API. However, the functionality of the MAC driver is important for having a thorough understanding of how the TCP/IP Stack works or for integrating the MPLAB Harmony MAC driver into a third-party TCP/IP Stack.&nbsp;</p>
+<p class="Element10">
+The MAC driver needs to be initialized by a call to <a href="02800.html" target="topic">TCPIP_MAC_Initialize</a>() with both stack and module specific initialization data. The stack initialization data contains absolutely necessary data for the MAC driver to operate (memory allocation functions, packet allocation functions, event notification functions, etc.) Note that the module initialization data could be different from one MAC module to another and, if missing, normally the MAC driver should use some default values specified in the <span class="Element146"><a href="02761.html" target="topic">tcpip_mac_config.h</a></span> file.&nbsp;</p>
+<p class="Element10">
+Once the initialization process succeeds, a MAC client handle is obtained by using <a href="02823.html" target="topic">TCPIP_MAC_Open</a>.&nbsp;</p>
+<p class="Element10">
+Other parameters can be set, like the active events and receive filters by calling <a href="02786.html" target="topic">TCPIP_MAC_EventMaskSet</a>, <a href="02945.html" target="topic">TCPIP_MAC_RxFilterHashTableEntrySet</a>, etc.&nbsp;</p>
+<p class="Element10">
+By default the MAC driver operates in interrupts and the events are reported to the TCP/IP stack by using the event notification function that’s passed in at the MAC driver initialization. However, by using the <a href="02787.html" target="topic">TCPIP_MAC_EventPendingGet</a> function, it is possible to use the MAC driver in a polling manner.&nbsp;</p>
+<p class="Element10">
+To <a href="01131.html" target="topic">send</a> a packet, a MAC driver client has to obtain a <a href="02824.html" target="topic">TCPIP_MAC_PACKET</a> data structure, either statically or dynamically. Note that the Harmony TCP/IP Stack uses dynamic packet allocation and has a packet allocation module that the Stack Manager calls for this purpose. The packet has to be properly formatted with all the required fields before being passed to the MAC driver for transmission. The MAC driver will perform a minimum sanity check and will try to transmit the packet over the network. Once the corresponding interrupt signals to the driver that the packet was (successfully/non-successfully) transmitted the MAC driver will call the packet acknowledge function. This will indicate to the owner of the packet (the module that created/allocated the packet) that the packet is no longer in use and it can be reused, discarded, etc.&nbsp;</p>
+<p class="Element10">
+The receive process is configured as part of the MAC driver initialization procedure. Usually the MAC driver needs some buffers for storing the received network traffic. How exactly this is done is driver specific and not part of this specification. The Harmony Ethernet MAC driver, for example, allocates multiple receive buffers at initialization and uses those for the whole duration of the driver life. Other implementations may choose to free the receive buffers once they are processed and allocate new ones, as needed.&nbsp;</p>
+<p class="Element10">
+The receive process is initiated by the hardware indicating through an interrupt that a packet is pending. This will trigger a notification event to the MAC client (the TCP/IP stack) and the actual packet receive function can be called. Alternatively the MAC client can call the <a href="02787.html" target="topic">TCPIP_MAC_EventPendingGet</a> function which can be used in a polling manner.&nbsp;</p>
+<p class="Element10">
+To actually receive the packet the TCP/IP stack should call the <a href="02862.html" target="topic">TCPIP_MAC_PacketRx</a> function. This function, besides returning a pointer to the newly received packet will provide additional info about the packet status. Also, some MAC drivers have the possibility to mark the packet being received as being unicast, multicast or broadcast.&nbsp;</p>
+<p class="Element10">
+Once a packet is obtained, the stack has to dispatch it accordingly, based on the info contained within the packet (ARP, IPv4, IPv6, etc.). Note that in the Harmony TCP/IP stack it’s the Stack Manager that performs the receiving and dispatching function of the packets. The recipient of the packet will be called to process the incoming packet and may forward the packet for further processing (TCP, UDP, ICMP). Note that during all this processing time this packet can no longer be used by the MAC driver for storing newly receive data. Therefore once the final recipient of the received packet has processed the data it has to call the packet acknowledge function, so that the packet can be returned to its owner, the MAC driver in this case. If the MAC driver reuses the packet (as the Harmony Ethernet MAC driver does) or simply discards it is driver implementation specific.&nbsp;</p>
+<p class="Element10">
+Once the data transfer of packets over the network is no longer needed the <a href="02760.html" target="topic">TCPIP_MAC_Close</a> function can be called and also <a href="02764.html" target="topic">TCPIP_MAC_Deinitialize</a>. This is part of the normal procedure that the Harmony stack uses for shutting down and restarting a network interface dynamically.&nbsp;</p>
+<p class="Element10">
+For detailed information about the MAC layer<span style="color: #FFFFFF">_</span>requirements and functionality, please consult the IEEE 802.3 specifications.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01520.html" target="topic">Using the Library</a> &gt; <a href="01515.html" target="topic">How the Library Works</a> &gt; <a href="01509.html" target="topic">Core Functionality</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01515.html" target="topic">Previous</a> | <a href="01515.html" target="topic">Up</a> | <a href="01508.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

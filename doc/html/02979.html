@@ -1,0 +1,189 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_MDNS_ServiceRegister Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02979.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03901.html" target="topic">Zeroconf Module</a> &gt; <a href="01688.html" target="topic">Library Interface</a> &gt; a) Multicast DNS Functions &gt; <a href="02979.html" target="topic">TCPIP_MDNS_ServiceRegister Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02978.html" target="topic">Previous</a> | <a href="01688.html" target="topic">Up</a> | <a href="02980.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MDNS_ServiceRegister@TCPIP_NET_HANDLE@char *@char *@uint16_t@uint8_t *@uint8_t@void *call_backchar *name, MDNSD_ERR_CODE err, void *context@void * Topic Title: TCPIP_MDNS_ServiceRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_MDNS_ServiceRegister Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function is used by end-user application to announce its service on local network. All peer machines that are compliant with Multicast DNS and DNS Service Discovery protocol can detect the announcement and lists out an entry in the Service Browser list. The end-user selects an entry to <a href="00262.html" target="topic">connect</a> to this service. So ultimately this is an aid to end-user to discover any service of interest on a local network.&nbsp;</p>
+<p class="Element10">
+This is the first function that needs to be invoked by end-user application. Presently Multicast-DNS and Service discovery stack supports only single service advertisement. Once the application wants to terminate the service it has to invoke <a href="02978.html" target="topic">TCPIP_MDNS_ServiceDeregister</a> function to free the DNS SD stack for some other application.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00959.html" target="topic">MDNSD_ERR_CODE</a> <strong><span style="color: #000000">TCPIP_MDNS_ServiceRegister</span></strong>(
+    <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">srv_name</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">srv_type</span></strong>, 
+    uint16_t <strong><span style="color: #000000">port</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> uint8_t * <strong><span style="color: #000000">txt_record</span></strong>, 
+    uint8_t <strong><span style="color: #000000">auto_rename</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong> (*call_back)(<strong><span style="color: #000080">char</span></strong> *name, <a href="00959.html" target="topic">MDNSD_ERR_CODE</a> err, <strong><span style="color: #000080">void</span></strong> *context), 
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">context</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle of the network to be registered&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srv_name&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Service Name, which is being advertised&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srv_type&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+For a HTTP-Service its &quot;_http._tcp.local&quot;&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+_http&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+is application protocol proceeded with an underscore&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+_tcp&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+is lower-layer protocol on which service runs&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+local&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+is to represent service is on local-network<br>For a iTunes Music Sharing &quot;_daap._tcp.local&quot; For a Printing Service &quot;_ipp._tcp.local&quot; Refer to http://www.dns-sd.org/ServiceTypes.html for more service types.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Port number on which service is running<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+txt_len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+For additional information about service like default page (e.g., &quot;index.htm&quot;) for HTTP-service. Length of such additional information&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+txt_record&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+String of additional information (e.g., &quot;index.htm&quot;) for HTTP service.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+auto_rename&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+A flag to indicate DNS-SD stack, whether to rename the service automatically or not. If this is set to '0' Callback parameter will be used to indicate the conflict error and user has to select different name and re-register with this function. If this is set to '1' service-name will be automatically renamed with numerical suffix.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+callback&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Callback function, which is user-application defined. This callback gets invoked on completion of service advertisement. If an service name-conflict error is detected and auto_rename is set to '0' callback gets invoked with MDNSD_ERR_CONFLICT as error-code.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+context&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Opaque context (pointer to opaque data), which needs to be used in callback function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="00959.html" target="topic">MDNSD_ERR_CODE</a> - Returns Error-code to indicate whether or not registration is successful:</p>
+<ul class="Element630">
+<li class="Element600">MDNSD_SUCCESS - returns on success of call</li>
+<li class="Element600">MDNSD_ERR_BUSY - When already some other service is being advertised using this DNS SD stack</li>
+<li class="Element600">MDNSD_ERR_INVAL - Invalid parameter</li>
+</ul></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03901.html" target="topic">Zeroconf Module</a> &gt; <a href="01688.html" target="topic">Library Interface</a> &gt; a) Multicast DNS Functions &gt; <a href="02979.html" target="topic">TCPIP_MDNS_ServiceRegister Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02978.html" target="topic">Previous</a> | <a href="01688.html" target="topic">Up</a> | <a href="02980.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MDNS_ServiceRegister@TCPIP_NET_HANDLE@char *@char *@uint16_t@uint8_t *@uint8_t@void *call_backchar *name, MDNSD_ERR_CODE err, void *context@void * Topic Title: TCPIP_MDNS_ServiceRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

@@ -1,0 +1,145 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_ARP_OPERATION_TYPE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01775.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00251.html" target="topic">ARP Module</a> &gt; <a href="01322.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01775.html" target="topic">TCPIP_ARP_OPERATION_TYPE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01760.html" target="topic">Previous</a> | <a href="01322.html" target="topic">Up</a> | <a href="01785.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_OPERATION_TYPE Topic Title: TCPIP_ARP_OPERATION_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_ARP_OPERATION_TYPE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_ARP_OPERATION_TYPE&nbsp;</p>
+<p class="Element10">
+Operation to be performed by an ARP probe.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">ARP_OPERATION_REQ</span></strong> = 1,
+  <strong><span style="color: #000000">ARP_OPERATION_RESP</span></strong> = 2,
+  <strong><span style="color: #000000">ARP_OPERATION_MASK</span></strong> = 0x000f,
+  <strong><span style="color: #000000">ARP_OPERATION_CONFIGURE</span></strong> = 0x1000,
+  <strong><span style="color: #000000">ARP_OPERATION_GRATUITOUS</span></strong> = 0x2000,
+  <strong><span style="color: #000000">ARP_OPERATION_PROBE_ONLY</span></strong> = 0x4000
+} TCPIP_ARP_OPERATION_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ARP_OPERATION_REQ = 1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ARP request&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ARP_OPERATION_RESP = 2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ARP response&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ARP_OPERATION_MASK = 0x000f&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+extract ARP operation&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ARP_OPERATION_CONFIGURE = 0x1000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+stack configuration ARP packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ARP_OPERATION_GRATUITOUS = 0x2000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+stack gratuitous ARP packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+ARP_OPERATION_PROBE_ONLY = 0x4000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+an ARP probe is sent only once, the target address is not stored&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Used for low level functionality, <a href="01783.html" target="topic">TCPIP_ARP_Probe</a>.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00251.html" target="topic">ARP Module</a> &gt; <a href="01322.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01775.html" target="topic">TCPIP_ARP_OPERATION_TYPE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01760.html" target="topic">Previous</a> | <a href="01322.html" target="topic">Up</a> | <a href="01785.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_OPERATION_TYPE Topic Title: TCPIP_ARP_OPERATION_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

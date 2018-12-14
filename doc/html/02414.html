@@ -1,0 +1,359 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_HTTP_NET_EVENT_TYPE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02414.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02414.html" target="topic">TCPIP_HTTP_NET_EVENT_TYPE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02363.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02465.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_EVENT_TYPE Topic Title: TCPIP_HTTP_NET_EVENT_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_HTTP_NET_EVENT_TYPE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Enumeration: TCPIP_HTTP_NET_EVENT_TYPE&nbsp;</p>
+<p class="Element10">
+This enumeration defines the types of the HTTP reported events when processing dynamic variables, files, etc.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_NONE</span></strong> = 0,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_OPEN</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_CLOSE_DONE</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_OPEN</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_CLOSE</span></strong>,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR</span></strong> = -1,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR</span></strong> = -2,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR</span></strong> = -3,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR</span></strong> = -4,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_READ_ERROR</span></strong> = -5,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_PARSE_ERROR</span></strong> = -6,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_DEPTH_ERROR</span></strong> = -7,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_DYNVAR_PARSE_ERROR</span></strong> = -8,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FS_WRITE_ERROR</span></strong> = -9,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR</span></strong> = -10,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR</span></strong> = -11,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR</span></strong> = -12,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_DYNVAR_ALLOC_ERROR</span></strong> = -13,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_UPLOAD_ALLOC_ERROR</span></strong> = -14,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_PARSE_ERROR</span></strong> = -15,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR</span></strong> = -16,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR</span></strong> = -17,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR</span></strong> = -18,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED</span></strong> = 0x8001,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED</span></strong> = 0x8002,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED</span></strong> = 0x8003,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED</span></strong> = 0x8004,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN</span></strong> = 0x8005,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH</span></strong> = 0x8006,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED</span></strong> = 0x8007,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN</span></strong> = 0x8008,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_VAR_VOID</span></strong> = 0x8009,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED</span></strong> = 0x800a,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED</span></strong> = 0x800b,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY</span></strong> = 0x8020,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY</span></strong> = 0x8021,
+  <strong><span style="color: #000000">TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED</span></strong> = 0x8030
+} TCPIP_HTTP_NET_EVENT_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_NONE = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+no event&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Notification that a FS upload operation was completed successfully&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_OPEN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+An attempt to open the connection was made, data received.</p>
+<ul class="Element630">
+<li class="Element600">Subject to parsing and other validation, it may result into a valid connection</li>
+</ul><p class="Element267">
+&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_CLOSE_DONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The non-persistent connection was done and closed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_CLOSE_TIMEOUT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The connection was closed due to a client timeout&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_CLOSE_POST_ERROR&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The connection was closed due to a POST processing error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_CLOSE_REMOTE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+The connection was closed by the client&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_OPEN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a HTTP file was successfully opened&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_CLOSE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a HTTP file was closed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+errors an error occurred when opening a HTTP file&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_NAME_ERROR = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a file name was not specified&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_NAME_SIZE_ERROR = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a file name was longer than the HTTP storage space&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+file size error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_READ_ERROR = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+file read error&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_PARSE_ERROR = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+file parse error: line too long&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_DEPTH_ERROR = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the depth allowed for a recursive call was exceeded&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_DYNVAR_PARSE_ERROR = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+an error occurred when parsing: dynamic variable name terminator could not be found, for example&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FS_WRITE_ERROR = -9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a write error was reported while performing an FS upload&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FS_MOUNT_ERROR = -10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a write error was reported while mounting after an FS upload&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_CHUNK_POOL_ERROR = -11&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the number of retries for getting a chunk from the pool has been exceeded&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_ERROR = -12&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the number of retries for getting a file buffer has been exceeded&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_DYNVAR_ALLOC_ERROR = -13&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+out of memory when trying to allocate space for a dynamic variable descriptor Note that dynamic allocation is used for the dynamic variable descriptor&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_UPLOAD_ALLOC_ERROR = -14&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+out of memory when trying to allocate space for a file upload Note that dynamic allocation is used for the file upload buffer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_PARSE_ERROR = -15&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+an error occurred when parsing an SSI command: SSI terminator could not be found, for example&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR = -16&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+an unknown/unsupported SSI command&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR = -17&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+a SSI attribute error : command w/o attribute, etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR = -18&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+out of memory when trying to allocate space for a SSI command descriptor Note that dynamic allocation is used for the SSI commands&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED = 0x8001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: a dynamic variable argument name too long, truncated&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED = 0x8002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: too many arguments for a dynamic variable, truncated&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_DYNVAR_RETRIES_EXCEEDED = 0x8003&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: too many retries for a dynamic variable, stopped&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_TRUNCATED = 0x8004&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: too many attributes for a SSI command, truncated&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_UNKNOWN = 0x8005&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: unrecognized/unsupported SSI command attribute&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_NUMBER_MISMATCH = 0x8006&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: wrong number of SSI command attributes&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_VAR_NUMBER_EXCEEDED = 0x8007&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: number of SSI set variables exceeded&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN = 0x8008&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: SSI variable does not exist&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_VAR_VOID = 0x8009&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: SSI variable is void: not echoed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_HASH_CREATE_FAILED = 0x800a&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: SSI variable hash could not be created, allocation failed Ther ewill be no run time SSI variable support&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_SSI_VAR_DELETED = 0x800b&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+event: SSI variable deleted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_CHUNK_POOL_EMPTY = 0x8020&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: allocation from the HTTP chunk pool failed (the allocation will be retried)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_FILE_BUFFER_POOL_EMPTY = 0x8021&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: allocation from the HTTP file buffers pool failed (the allocation will be retried)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED = 0x8030&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+warning: the HTTP peek buffer is too small and cannot contain all the data available in the transport <a href="01231.html" target="topic">socket</a> buffer and a HTTP search operation may fail This will happen only for transport sockets that do not support peek operation with an offset parameter&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Multiple warnings can be set simultaneously.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02414.html" target="topic">TCPIP_HTTP_NET_EVENT_TYPE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02363.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02465.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_EVENT_TYPE Topic Title: TCPIP_HTTP_NET_EVENT_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

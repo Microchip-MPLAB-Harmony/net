@@ -1,0 +1,151 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>IPV6_RX_FRAGMENT_BUFFER Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00911.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01491.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00911.html" target="topic">IPV6_RX_FRAGMENT_BUFFER Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00004.html" target="topic">Previous</a> | <a href="01491.html" target="topic">Up</a> | <a href="01487.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_RX_FRAGMENT_BUFFER Topic Title: IPV6_RX_FRAGMENT_BUFFER Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+IPV6_RX_FRAGMENT_BUFFER Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Structure: IPV6_RX_FRAGMENT_BUFFER&nbsp;</p>
+<p class="Element10">
+Each fragment is composed of unfragmentable Part and fragmentable part. Allocate memory for the fragmented packet w.r.t to TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE. The RFC specifies that the fragments must be reassembled in one minute or less.secondsRemaining is the times remaining for reassemble.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_IPV6_RX_FRAGMENT_BUFFER</span></strong> {
+  <strong><span style="color: #000080">struct</span></strong> _IPV6_RX_FRAGMENT_BUFFER * <strong><span style="color: #000000">next</span></strong>;
+  uint8_t * <strong><span style="color: #000000">ptrPacket</span></strong>;
+  uint32_t <strong><span style="color: #000000">identification</span></strong>;
+  uint16_t <strong><span style="color: #000000">bytesInPacket</span></strong>;
+  uint16_t <strong><span style="color: #000000">packetSize</span></strong>;
+  uint16_t <strong><span style="color: #000000">firstFragmentLength</span></strong>;
+  uint8_t <strong><span style="color: #000000">secondsRemaining</span></strong>;
+} IPV6_RX_FRAGMENT_BUFFER;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+struct _IPV6_RX_FRAGMENT_BUFFER * next;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Next fragmented packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t * ptrPacket;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packet information&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t identification;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Fragment id&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t bytesInPacket;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of bytes written to packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t packetSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packet size (packet is complete when this matches bytesInPacket)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t firstFragmentLength;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Length of the first fragment&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t secondsRemaining;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Number of seconds remaining during which the fragment can be reassembled&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01491.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00911.html" target="topic">IPV6_RX_FRAGMENT_BUFFER Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00004.html" target="topic">Previous</a> | <a href="01491.html" target="topic">Up</a> | <a href="01487.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_RX_FRAGMENT_BUFFER Topic Title: IPV6_RX_FRAGMENT_BUFFER Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

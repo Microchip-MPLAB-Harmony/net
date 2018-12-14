@@ -1,0 +1,102 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>How the Library Works</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01489.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01493.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">How the Library Works</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01485.html" target="topic">Previous</a> | <a href="01493.html" target="topic">Up</a> | <a href="01484.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv4 How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+How the Library Works</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+On the transmit side, the IP layer<span style="color: #FFFFFF">_</span>is responsible for routing and forwarding the IP datagrams to the required destination host. To do that, the IP layer<span style="color: #FFFFFF">_</span>has internal functionality that allows the selection of the proper network interface and destination hardware address of a packet.&nbsp;</p>
+<p class="Element10">
+Based on the destination of a packet/datagram, the IP layer<span style="color: #FFFFFF">_</span>will <a href="01131.html" target="topic">send</a> the packet to either a host on the network or to a gateway if either is available. To accomplish this, the IP module works closely with the ARP layer<span style="color: #FFFFFF">_</span>from which it requests the destination hardware addresses for outgoing packets. If the destination address of a packet is not known, the IP module will request an ARP probe and will wait for the ARP module reply. Whenever ARP signals that the solicited address is available, the IP module will <a href="01131.html" target="topic">send</a> the packet over the network. If a time-out is reported (no such host could be found on that particular network), the packet is silently discarded.&nbsp;</p>
+<p class="Element10">
+On the receive side, the IP module processes all the incoming IPv4 packets and performs a basic sanity check of the packet checksum and other attributes. If the packet check fails, the packet is simply discarded. Otherwise, it is dispatched for further processing to the appropriate module (UDP, TCP, ICMP, etc.).&nbsp;</p>
+<p class="Element10">
+The IP layer<span style="color: #FFFFFF">_</span>operation within the TCP/IP stack is transparent to the applications using the preferred<span style="color: #FFFFFF">_</span><a href="01231.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>API (MCHP UDP, TCP or BSD). This means that normally an application does not need to interface directly to the IP<span style="color: #FFFFFF">_</span>layer. However, the IP module exposes an API that can be used by the application for sending IP datagrams directly, bypassing the normal higher layer<span style="color: #FFFFFF">_</span>protocols (UDP, TCP). </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+</p>
+<ol class="Element630">
+<li value="1" class="Element600">Currently, it is not possible for an application to intercept the incoming IP datagrams and interfere with the default IP processing. However, this may change in the future and support can be added for the receive side.</li>
+<li value="2" class="Element600">For a detailed description of the IP layer<span style="color: #FFFFFF">_</span>functionality, please consult RFC 791, RFC 1122, RFC 2474, etc.</li>
+<li value="3" class="Element600">This implementation supports packet fragmentation both on transmit and receive side.</li>
+</ol><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01493.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">How the Library Works</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01485.html" target="topic">Previous</a> | <a href="01493.html" target="topic">Up</a> | <a href="01484.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv4 How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

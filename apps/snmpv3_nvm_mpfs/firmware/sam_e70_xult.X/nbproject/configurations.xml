@@ -667,7 +667,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.131"/>
+        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.133"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -1388,29 +1388,6 @@
                   value=""/>
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
       </Simulator>
-      <seggerjlink>
-        <property key="AutoSelectMemRanges" value="auto"/>
-        <property key="jtagcommunication.autoselectspeed" value="false"/>
-        <property key="jtagcommunication.method" value="swd"/>
-        <property key="jtagcommunication.speed" value="4000"/>
-        <property key="memories.bootflash" value="true"/>
-        <property key="memories.configurationmemory" value="true"/>
-        <property key="memories.eeprom" value="true"/>
-        <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram" value="true"/>
-        <property key="memories.instruction.ram.end"
-                  value="${memories.instruction.ram.end.value}"/>
-        <property key="memories.instruction.ram.start"
-                  value="${memories.instruction.ram.start.value}"/>
-        <property key="memories.programmemory" value="true"/>
-        <property key="memories.programmemory.end" value="0x5fffff"/>
-        <property key="memories.programmemory.start" value="0x400000"/>
-        <property key="programoptions.preservebootflash" value="false"/>
-        <property key="programoptions.preserveprogramrange" value="false"/>
-        <property key="programoptions.preserveprogramrange.end" value="0x5fffff"/>
-        <property key="programoptions.preserveprogramrange.start" value="0x400000"/>
-        <property key="programoptions.resetafterprogram" value="true"/>
-      </seggerjlink>
     </conf>
   </confs>
 </configurationDescriptor>

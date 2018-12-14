@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Discovering the Board</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01307.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01312.html" target="topic">Using the Library</a> &gt; <a href="01307.html" target="topic">Discovering the Board</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01303.html" target="topic">Previous</a> | <a href="01312.html" target="topic">Up</a> | <a href="01305.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Discovering the Board Topic Title: Discovering the Board)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Discovering the Board</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Announce module provides an easy way to determine useful parameters for your TCP/IP node’s interfaces. This module works in conjunction with the TCP/IP Discoverer personal computer utility to display an interface’s MAC and IPv4/IPv6 addresses, IPv6 multicast listeners, NBNS host name, and MAC type. During stack operation several events may cause an Announce packet to be broadcast on a particular interface. These include:</p>
+<ul class="Element630">
+<li class="Element600">Reception of an Announce packet request on that interface</li>
+<li class="Element600">A DHCP event on that interface (i.e., the interface has configured a new IPv4 address using DHCP)</li>
+<li class="Element600">The addition or removal of an IPv6 Unicast Address from an interface (after Duplicate Address Detection)</li>
+<li class="Element600">The addition or removal of an IPv6 Multicast Listener from an interface</li>
+<li class="Element600">A user call to the ANNOUNCE_Notify function specifying the interface on which to <a href="01131.html" target="topic">send</a> the announce message</li>
+</ul><p class="Element10">
+Each Announce packet is a UDP packet broadcast from the corresponding interface’s IP address. The payload is a series of fields beginning with an 8-bit field ID, followed by field information, followed by a field terminator (0x0D 0x0A). The current field IDs and information formats are:</p>
+<ul class="Element630">
+<li class="Element600">0x01 – This field ID indicates that not all of the interface’s address information could be transmitted in one packet. There is no field information for this ID.
+<ul class="Element631">
+<li class="Element601">0x01 0x0A 0x0D</li>
+</ul></li>
+<li class="Element600">0x02 – MAC address (6 bytes).
+<ul class="Element631">
+<li class="Element601">0x02 0x00 0x04 0xA3 0x12 0x0f 0x94 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x03 – MAC type. The field information for this ID is a variable length string describing the MAC type of this interface – &quot;ENCJ60&quot;, &quot;ENCJ600&quot;, &quot;97J60&quot;, &quot;PIC32INT&quot;, &quot;PIC32CINT&quot;, etc.
+<ul class="Element631">
+<li class="Element601">0x03 ‘P’ ‘I’ ‘C’ ‘3’ ‘2’ ‘I’ ‘N’ ‘T’ 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x04 – Host name. The NBNS host name of the interface, with trailing spaces.
+<ul class="Element631">
+<li class="Element601">0x04 ‘M’ ‘C’ ‘H’ ‘P’ ‘B’ ‘O’ ‘A’ ‘R’ ‘D’ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x05 – The interface’s IPv4 address (4 bytes, big-endian).
+<ul class="Element631">
+<li class="Element601">0x05 0x0A 0x00 0x01 0x03 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x06 – One of the interface's IPv6 unicast addresses (16 bytes, big-endian). Note that the interface may have more than one of these. The interface also has a corresponding solicited-node multicast address listener for every unicast address that is given. The interface may have static IP address.
+<ul class="Element631">
+<li class="Element601">0x06 0xFE 0x80 0x00 0x00 0x00 0x00 0x00 0x00 0x02 0x04 0xA3 0xFF 0xFE 0x12 0x0F 0x94 0x0D 0x0A</li>
+<li class="Element601">0x06 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x02 0x04 0xA3 0xFF 0xAA 0xAA 0xAA 0xAA 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x07 – One of the interface’s IPv6 multicast address listeners (16 bytes, big-endian). The solicited-node multicast address listeners will not be included.
+<ul class="Element631">
+<li class="Element601">0x07 0xFF 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x08 – One of the interface's IPv6 default router address (16 bytes, big-endian).
+<ul class="Element631">
+<li class="Element601">0x08 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</li>
+</ul></li>
+<li class="Element600">0x09 – One of the interface's IPv6 default gateway address (16 bytes, big-endian).
+<ul class="Element631">
+<li class="Element601">0x08 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</li>
+</ul></li>
+</ul></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01312.html" target="topic">Using the Library</a> &gt; <a href="01307.html" target="topic">Discovering the Board</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01303.html" target="topic">Previous</a> | <a href="01312.html" target="topic">Up</a> | <a href="01305.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Discovering the Board Topic Title: Discovering the Board)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

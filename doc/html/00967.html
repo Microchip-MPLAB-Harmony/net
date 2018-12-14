@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Advanced MPFS2 Settings</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00967.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00973.html" target="topic">MPFS2 Utility</a> &gt; <a href="00967.html" target="topic">Advanced MPFS2 Settings</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00972.html" target="topic">Previous</a> | <a href="00973.html" target="topic">Up</a> | <a href="00970.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 Advanced MPFS2 Settings Topic Title: Advanced MPFS2 Settings)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Advanced MPFS2 Settings</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Advanced Settings dialog found in Step 2 provides greater control over how files are processed. </p><p class="Element10" style="text-align: center;">
+<img src="TCPIP OVERVIEW MPFS2 advanced settings.png" border="0" alt="" title=""></p><p class="Element10">
+The <strong>Dynamic Files</strong> list indicates which file types to parse for dynamic variables. By default, all files with the extensions<span class="Element146"> .htm</span>, <span class="Element146">.html</span>, <span class="Element146">.cgi</span>, or <span class="Element146">.xml</span> are parsed. If an application has dynamic variables in other file types, these types must be added to the list. This field must be a comma-separated list of extensions and file names.&nbsp;</p>
+<p class="Element10">
+Default Dynamic Files are <span class="Element146">*.htm</span>, <span class="Element146">*.html</span>, <span class="Element146">*.cgi</span>, and <span class="Element146">*.xml</span>.&nbsp;</p>
+<p class="Element10">
+The <strong>Do Not Compress</strong> field indicates which file types should never be compressed. Compressing files with GZIP saves both storage space and transmission time. However, this is only suitable for static content such as CSS or JavaScript. Any files with dynamic variables will automatically be excluded. In addition, any file that the device may need to process internally should be excluded. Files included via <span class="Element146">~inc:filename~</span> should not be compressed, nor should any BIB file used for the SNMP module (if present). Additional file types can be added to this list if a custom application will be accessing the MPFS.&nbsp;</p>
+<p class="Element10">
+Default Do Not Compress Files are <span class="Element146">*.inc</span>, <span class="Element146">snmp.bib</span>, and <span class="Element146">*.bin</span>.&nbsp;</p>
+<p class="Element10">
+The GZIP compressor will attempt to shrink all files. In some cases, especially with images, little or no compression is achieved. When this occurs the file is stored &quot;as is&quot; in the MPFS image.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01679.html" target="topic">TCP/IP Utilities</a> &gt; <a href="00973.html" target="topic">MPFS2 Utility</a> &gt; <a href="00967.html" target="topic">Advanced MPFS2 Settings</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00972.html" target="topic">Previous</a> | <a href="00973.html" target="topic">Up</a> | <a href="00970.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS2 Advanced MPFS2 Settings Topic Title: Advanced MPFS2 Settings)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

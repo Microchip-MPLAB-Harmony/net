@@ -1,0 +1,126 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_IGMP_GROUP_INFO Structure</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02613.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01473.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02613.html" target="topic">TCPIP_IGMP_GROUP_INFO Structure</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="02609.html" target="topic">Previous</a> | <a href="01473.html" target="topic">Up</a> | <a href="02620.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_GROUP_INFO Topic Title: TCPIP_IGMP_GROUP_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_IGMP_GROUP_INFO Structure</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Structure: TCPIP_IGMP_GROUP_INFO&nbsp;</p>
+<p class="Element10">
+This structure provides IGMP information for a specific group</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">listSize</span></strong>;
+  IPV4_ADDR* <strong><span style="color: #000000">sourceList</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">presentSources</span></strong>;
+  <a href="02609.html" target="topic">TCPIP_IGMP_FILTER_TYPE</a> <strong><span style="color: #000000">filterType</span></strong>;
+} TCPIP_IGMP_GROUP_INFO;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int listSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+in: number of elements in the sourceList array Could be 0 if the actual sources not needed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV4_ADDR* sourceList;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+array of IPv4 addresses out: array that will store the sources associated to this (group, interface) pair. Could be NULL if the actual sources not needed Up to listSize sources will be copied Note that there may be more sources present if presentSources &gt; listSize&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int presentSources;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+out: number of sources that are present for this group&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IGMP_FILTER_TYPE filterType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+out: current interface filter&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01473.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02613.html" target="topic">TCPIP_IGMP_GROUP_INFO Structure</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="02609.html" target="topic">Previous</a> | <a href="01473.html" target="topic">Up</a> | <a href="02620.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_GROUP_INFO Topic Title: TCPIP_IGMP_GROUP_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

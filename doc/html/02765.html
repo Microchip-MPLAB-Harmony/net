@@ -1,0 +1,221 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_MAC_EVENT Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02765.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02765.html" target="topic">TCPIP_MAC_EVENT Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00111.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02785.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_EVENT Topic Title: TCPIP_MAC_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_MAC_EVENT Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCP/IP MAC Event&nbsp;</p>
+<p class="Element10">
+TCP/IP MAC Events Codes.&nbsp;</p>
+<p class="Element10">
+This enumeration defines all the possible events that can be reported by the MAC to the stack.&nbsp;</p>
+<p class="Element10">
+Depending on the type of the hardware Ethernet/Wi-Fi interface, etc., not all events are possible.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_MAC_EV_NONE</span></strong> = 0x0000,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_PKTPEND</span></strong> = 0x0001,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_OVFLOW</span></strong> = 0x0002,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_BUFNA</span></strong> = 0x0004,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_ACT</span></strong> = 0x0008,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_DONE</span></strong> = 0x0010,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_FWMARK</span></strong> = 0x0020,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_EWMARK</span></strong> = 0x0040,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_BUSERR</span></strong> = 0x0080,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_TX_DONE</span></strong> = 0x0100,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_TX_ABORT</span></strong> = 0x0200,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_TX_BUSERR</span></strong> = 0x0400,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_CONN_ESTABLISHED</span></strong> = 0x0800,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_CONN_LOST</span></strong> = 0x1000,
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RX_ALL</span></strong> = (TCPIP_MAC_EV_RX_PKTPEND|TCPIP_MAC_EV_RX_OVFLOW| TCPIP_MAC_EV_RX_BUFNA|TCPIP_MAC_EV_RX_ACT| TCPIP_MAC_EV_RX_DONE|TCPIP_MAC_EV_RX_FWMARK| TCPIP_MAC_EV_RX_EWMARK|TCPIP_MAC_EV_RX_BUSERR),
+  <strong><span style="color: #000000">TCPIP_MAC_EV_TX_ALL</span></strong> = (TCPIP_MAC_EV_TX_DONE|TCPIP_MAC_EV_TX_ABORT|TCPIP_MAC_EV_TX_BUSERR),
+  <strong><span style="color: #000000">TCPIP_MAC_EV_RXTX_ERRORS</span></strong> = (TCPIP_MAC_EV_RX_OVFLOW|TCPIP_MAC_EV_RX_BUFNA| TCPIP_MAC_EV_RX_BUSERR|TCPIP_MAC_EV_TX_ABORT| TCPIP_MAC_EV_TX_BUSERR),
+  <strong><span style="color: #000000">TCPIP_MAC_EV_CONN_ALL</span></strong> = (TCPIP_MAC_EV_CONN_ESTABLISHED|TCPIP_MAC_EV_CONN_LOST)
+} TCPIP_MAC_EVENT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_NONE = 0x0000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+no event&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_PKTPEND = 0x0001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: A receive packet is pending&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_OVFLOW = 0x0002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: RX FIFO overflow (system level latency, no descriptors, etc.)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_BUFNA = 0x0004&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: no RX descriptor available to receive a new packet&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_ACT = 0x0008&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: There's RX data available&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_DONE = 0x0010&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: A packet was successfully received&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_FWMARK = 0x0020&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: the number of received packets is greater than or equal to than the RX Full Watermark&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_EWMARK = 0x0040&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: the number of received packets is less than or equal to than the RX Empty Watermark&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_BUSERR = 0x0080&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+RX triggered events: a bus error encountered during an RX transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_TX_DONE = 0x0100&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TX triggered events: A packet was transmitted and its status is available&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_TX_ABORT = 0x0200&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TX triggered events: a TX packet was aborted by the MAC (jumbo/system underrun/excessive defer/late collision/excessive collisions)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_TX_BUSERR = 0x0400&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TX triggered events: a bus error encountered during a TX transfer&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_CONN_ESTABLISHED = 0x0800&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Connection triggered events: Connection established&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_CONN_LOST = 0x1000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Connection triggered events: Connection lost&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RX_ALL = (TCPIP_MAC_EV_RX_PKTPEND|TCPIP_MAC_EV_RX_OVFLOW| TCPIP_MAC_EV_RX_BUFNA|TCPIP_MAC_EV_RX_ACT| TCPIP_MAC_EV_RX_DONE|TCPIP_MAC_EV_RX_FWMARK| TCPIP_MAC_EV_RX_EWMARK|TCPIP_MAC_EV_RX_BUSERR)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Useful Masks: all RX related events&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_TX_ALL = (TCPIP_MAC_EV_TX_DONE|TCPIP_MAC_EV_TX_ABORT|TCPIP_MAC_EV_TX_BUSERR)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Useful Masks: all TX related events&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_RXTX_ERRORS = (TCPIP_MAC_EV_RX_OVFLOW|TCPIP_MAC_EV_RX_BUFNA| TCPIP_MAC_EV_RX_BUSERR|TCPIP_MAC_EV_TX_ABORT| TCPIP_MAC_EV_TX_BUSERR)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+abnormal traffic/system events: Action should be taken accordingly by the stack (or the stack user)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_EV_CONN_ALL = (TCPIP_MAC_EV_CONN_ESTABLISHED|TCPIP_MAC_EV_CONN_LOST)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mask of all Connection related events&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02765.html" target="topic">TCPIP_MAC_EVENT Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00111.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02785.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_EVENT Topic Title: TCPIP_MAC_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

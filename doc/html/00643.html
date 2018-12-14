@@ -1,0 +1,176 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Glossary</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00643.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00649.html" target="topic">Support</a> &gt; <a href="00643.html" target="topic">Glossary</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00639.html" target="topic">Previous</a> | <a href="00649.html" target="topic">Up</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Glossary Topic Title: Glossary)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Glossary</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<div class="Element15">
+Glossary of MPLAB Harmony Terms</div>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="3%">
+<div class="Element66">
+Term&nbsp;</div></td><td class="Element65" valign="top" width="97%">
+<div class="Element66">
+Definition&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Application&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+One or more application modules define the overall behavior of a MPLAB Harmony system. Applications are either demonstrations or examples provided with the installation or are implemented by you, using MPLAB Harmony libraries to accomplish a desired task.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Client&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A client module is any module that uses the services (calls the interface functions) of another module.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Configuration&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A MPLAB Harmony configuration consists of static definitions (C language <span class="Element146">#define</span> statements), executable source code, and other definitions in a set of files that are necessary to create a working MPLAB Harmony system. (See the <span class="Element145">System Configurations</span> section for additional information.)&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Configuration Options&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+Configuration options are the specific set of <span class="Element146">#define</span> statements that are required by any specific MPLAB Harmony library to specify certain parameters (such as buffer sizes, minimum and maximum values, etc.) build that library. Configuration options are defined in the <span class="Element146">system_config.h</span> system-wide configuration header.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Driver&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A &quot;driver&quot; (or device driver) is a MPLAB Harmony software module designed to control and provide access to a specific peripheral, either built into or external to the microcontroller.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Driver Index&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+Dynamic MPLAB Harmony drivers (and other dynamic modules) can manage the more than one instance of the peripheral (and other resources) that they control. The &quot;driver index&quot; is a static index number (0, 1, 2,...) that identifies which instance of the driver is to be used.<br><img src="Note Icon.png" border="0" alt="" title=""><strong> Note:</strong> The driver index is not necessarily identical to the peripheral index. The association between these two is made when the driver is initialized.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Driver Instance&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+An instance of a driver (or other module) consists of a complete set of the memory (and other resources) controlled by the driver's code. Selection of which set of resources to control is made using a driver index.<br><img src="Note Icon.png" border="0" alt="" title=""><strong> Note:</strong> Even though there may be multiple instances of the resources managed by a dynamic driver, there is only ever one instance of the actual object code. However, static drivers always maintain a 1:1 relationship between resource and code instances.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Framework&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+The MPLAB Harmony framework consists of a set of libraries (and the rules and conventions used to create those libraries) that can be used to create MPLAB Harmony systems.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Handle&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A handle is a value that allows one software module to &quot;hold&quot; onto a specific instance of some object owned by another software module (analogous to the way a valet holds the handle of a suitcase), creating a link between the two software modules. A handle is an &quot;opaque&quot; value, meaning that the &quot;client&quot; module (the module that receives and holds the handle) must not attempt to interpret the contents or meaning of the handle value. The value of the handle is only meaningful to the &quot;server&quot; module (the module that provides the handle). Internal to the server module, the handle may represent a memory address or it may represent a zero-based index or any other value, as required by the &quot;server&quot; module to identify the &quot;object&quot; to which the client is linked by the handle.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Initialization Overrides&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+Initialization overrides are configuration options that can be defined to statically override (at build time) parameters that are normally passed into the &quot;Initialize&quot; function of a driver or other MPLAB Harmony module. This mechanism allows you to statically initialize a module, instead of dynamically initializing the module.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Interface&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+The interface to a module is the set of functions, data types, and other definitions that must be used to interact with that module.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Middleware&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+The term &quot;middleware&quot; is used to describe any software that fits between the application and the device drivers within a MPLAB Harmony system. This term is used to describe libraries that use drivers to access a peripheral, and then implement communication protocols (such as TCP/IP, USB protocols, and graphics image processing), as well as other more complex processing, which is required to use certain peripherals, but is not actually part of controlling the peripheral itself.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Module&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A MPLAB Harmony software module is a closely related group of functions controlling a related set of resources (memory and registers) that can be initialized and maintained by the system. Most MPLAB Harmony modules provide an interface for client interaction. However, &quot;headless&quot; modules with no interface are possible.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Peripheral Index&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A peripheral index is a static label (usually an C language &quot;enum&quot; value) that is used to identify a specific instance of a peripheral.<br><img src="Note Icon.png" border="0" alt="" title=""><strong> Note:</strong> Unlike a driver index, which always starts at '0', a peripheral index may be internally represented as any number, letter, or even a base address and the user should not rely on the value itself, but only the label.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+Peripheral Instance&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+An instance of a peripheral is a complete set of the registers (and internal physical resources) necessary to provide the core functionality of a given type of peripheral (either built into or external to the microcontroller).<br><img src="Note Icon.png" border="0" alt="" title=""><strong> Note:</strong> A specific peripheral instance is identified using a peripheral index.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+System&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A MPLAB Harmony system is a complete set of libraries, applications, and configuration items loaded and executing on a specific hardware platform (microcontroller, board, and external peripherals) or the source items necessary to build such a system.<br><img src="Note Icon.png" border="0" alt="" title=""><strong> Note:</strong> Since a system can multiple configurations, one MPLAB Harmony project may support multiple systems through multiple supported configurations. See the demonstration applications included in the installation for examples.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="3%">
+<div class="Element68">
+System Service&nbsp;</div></td><td class="Element67" valign="top" width="97%">
+<div class="Element68">
+A system service is a MPLAB Harmony module that provides access to and control of common system resources (memory and registers) with which other modules (drivers, middleware, libraries and application) may interact.<br><img src="Note Icon.png" border="0" alt="" title=""><strong> Note:</strong> System services, much like drivers, manage sharing of resources so as to avoid conflicts between modules that would otherwise occur if each module attempted to manage the share resource itself. But, unlike drivers, system services do not normally need to be &quot;opened&quot; to use them.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00649.html" target="topic">Support</a> &gt; <a href="00643.html" target="topic">Glossary</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00639.html" target="topic">Previous</a> | <a href="00649.html" target="topic">Up</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Glossary Topic Title: Glossary)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

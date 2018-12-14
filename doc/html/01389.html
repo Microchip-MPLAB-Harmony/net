@@ -1,0 +1,91 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>Introduction</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01389.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00328.html" target="topic">DNS Module</a> &gt; <a href="01389.html" target="topic">Introduction</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00328.html" target="topic">Previous</a> | <a href="00328.html" target="topic">Up</a> | <a href="01392.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DNS Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+Introduction</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Domain Name Service associates host names (i.e., www.microchip.com) with IP addresses (i.e., 10.0.54.2). The DNS Client module provides DNS resolution capabilities to the stack. As illustrated in the figure, a typical resolution process is as follows:
+<ul class="Element631">
+<li class="Element601">The DNS Client, also known as the DNS Resolver, will try to resolve the IP address from its local resources, which includes the Name to Address mappings in the local DNS cache. DNS clients are capable of caching the previous DNS query results and this module supports a maximum number of cached entries configured with the DNS_CLIENT_CACHE_ENTRIES parameter. Each cache entry is capable of storing the maximum number of IPv4 and IPv6 address, which is configured using the DNS_CLIENT_CACHE_PER_IPV4_ADDRESS and DNS_CLIENT_CACHE_PER_IPV6_ADDRESS parameters. The DNS resolver will use these available local resources and if it cannot find the IP Address corresponding to the requested DNS Record type, it will then query a DNS server for the IP Address.</li>
+<li class="Element601">The DNS server will directly answer the query if it is the authoritative server for the particular domain (ex.: www.microchip.com); otherwise, it will check its local cache of the previous queries. If it cannot find the IP Address, it will then query the DNS servers on the Internet.</li>
+<li class="Element601">Next, the DNS Server will query one of the root servers requesting a list of Authoritative servers for the .COM domain. The Root server will respond with the list of servers addresses hosting the .COM domain.</li>
+<li class="Element601">The Authoritative DNS server will then respond with the IP Address or a list of IP Address (if more than one server hosts the website www.microchip.com) for www.microchip.com.</li>
+<li class="Element601">The address that the DNS server returns back to the DNS client is then passed to the DNS application, which initially requested the IP Address information.</li>
+<li class="Element601">DNS resolver clients are both internal stack modules (SNTP, for example), as well as applications using the TCP/IP stack.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+<img src="DNS Figure 1.png" border="0" alt="" title=""></p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00328.html" target="topic">DNS Module</a> &gt; <a href="01389.html" target="topic">Introduction</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00328.html" target="topic">Previous</a> | <a href="00328.html" target="topic">Up</a> | <a href="01392.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DNS Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

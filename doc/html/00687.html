@@ -1,0 +1,417 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>http_net_config.h</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00687.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01435.html" target="topic">Files</a> &gt; <a href="00687.html" target="topic">http_net_config.h</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00686.html" target="topic">Previous</a> | <a href="01435.html" target="topic">Up</a> | <a href="00708.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: http_net_config.h Topic Title: http_net_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+http_net_config.h</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="436F6D70616E79"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+http_net_config.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+HyperText Transfer Protocol (HTTP) Net Configuration file&nbsp;</p>
+<p class="Element10">
+This file contains the HTTP Net module configuration options&nbsp;</p>
+<p class="Element10">
+This file is not part of the project, it is a configuration template file only.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00022.html" target="topic">_HTTP_NET_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro _HTTP_NET_CONFIG_H_.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02359.html" target="topic">TCPIP_HTTP_NET_CACHE_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Max lifetime (sec) of static responses as string&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02360.html" target="topic">TCPIP_HTTP_NET_CHUNK_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+retry limit for allocating a chunk from the pool If more retries are not successful the operation will be aborted&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02361.html" target="topic">TCPIP_HTTP_NET_CHUNKS_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+number of chunks that are created It depends on the <a href="02474.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a> and on the number of connections Maximum number should be <a href="02471.html" target="topic">TCPIP_HTTP_NET_MAX_CONNECTIONS</a> * <a href="02474.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a> i.e. TCPIP_HTTP_NET_MODULE_CONFIG::nConnections * TCPIP_HTTP_NET_MODULE_CONFIG::nChunks All the chunks are in a pool and are used by all connections&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02362.html" target="topic">TCPIP_HTTP_NET_CONFIG_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the HTTP module configuration flags Use 0 for default See <a href="00682.html" target="topic">HTTP_MODULE_FLAGS</a> definition for possible values&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02364.html" target="topic">TCPIP_HTTP_NET_CONNECTION_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Persistent connection idle timeout, in seconds If a persistent connection is idle for more that this timeout the server will close it. Usually the client closes the connection. Using this timeout value the server can close the its side of the connection to avoid all connections to remain indefinitely open if the client misbehaves. Use 0 to never timeout. The timeout value has to be &lt;= 32767 seconds.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02402.html" target="topic">TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the buffer used for sending the cookies to the client. Should be able to accommodate the longest cookie response. Otherwise the cookies will be truncated.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02403.html" target="topic">TCPIP_HTTP_NET_DEFAULT_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Indicate what HTTP file to serve when no specific one is requested&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02409.html" target="topic">TCPIP_HTTP_NET_DYNVAR_ARG_MAX_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of arguments for a dynamic variable&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02410.html" target="topic">TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+how many buffers descriptors for dynamic variable processing they are independent of the HTTP connection number all the HTTP connections use from the dynamic descriptors pool&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02411.html" target="topic">TCPIP_HTTP_NET_DYNVAR_MAX_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum size for a complete dynamic variable: name + args must be &lt;= <a href="02458.html" target="topic">TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE</a>! If it is much larger than needed then inefficiency occurs when reading data from the file and then discarding it because a much larger than needed data buffer was read&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02412.html" target="topic">TCPIP_HTTP_NET_DYNVAR_PROCESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This symbol enables the processing of dynamic variables Make it evaluate to false (0) if dynamic variables are not needed All the following symbols referring to dynamic variables are relevant only when TCPIP_HTTP_NET_DYNVAR_PROCESS != 0&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02413.html" target="topic">TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+retry limit for a dynamic variable processing ths puts a limit on the number of times a dynamic variable &quot;dynamicPrint&quot; function can return TCPIP_HTTP_DYN_PRINT_RES_AGAIN/TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN and avoids having the HTTP code locked up forever. If more retries are attempted the processing will be considered done and dynamicPrint function will not be called again&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02457.html" target="topic">TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Retry limit for allocating a file buffer from the pool. If more retries are not successful the operation will be aborted.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02458.html" target="topic">TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the buffer used for processing HTML, dynamic variable and binary files. For dynamic variable files it should be able to accommodate the longest HTML line size, including CRLF!&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02459.html" target="topic">TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of file buffers to be created; These buffers are used to store data while file processing is done They are organized in a pool Each file being processed needs a file buffer and tries to get it from the pool If a buffer is not available, the HTTP conenction will wait for one to become available. Once the file is done the file buffer is released and could be used by a different file The number depends on the number of files that are processed in parallel To avoid deadlock the number should be &gt;= than the number of... <a href="02459.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02460.html" target="topic">TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Configure MPFS over HTTP updating Comment this line to disable updating via HTTP&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02461.html" target="topic">TCPIP_HTTP_NET_FILE_UPLOAD_NAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro TCPIP_HTTP_NET_FILE_UPLOAD_NAME.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02462.html" target="topic">TCPIP_HTTP_NET_FILENAME_MAX_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum size of a HTTP file name with the path removed from the file name one extra char added for the string terminator&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02463.html" target="topic">TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the peek buffer to perform searches into. If the underlying transport layer supports offset peak operation with a offset, the value could be smaller (80 characters, for example); otherwise, a one time peek is required and the buffer should be larger - recommended to be close to the size of the <a href="01231.html" target="topic">socket</a> RX buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02464.html" target="topic">TCPIP_HTTP_NET_FREE_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+HTTP corresponding deallocation function, free style This is the function the HTTP will call for freeing the allocated memory Use standard C library 'free' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02470.html" target="topic">TCPIP_HTTP_NET_MALLOC_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+HTTP allocation function, malloc style This is the function the HTTP will call to allocate memory needed for: dynamic variables, SSI or file uploads. Use standard C library 'malloc' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02471.html" target="topic">TCPIP_HTTP_NET_MAX_CONNECTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum numbers of simultaneous supported HTTP connections.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02472.html" target="topic">TCPIP_HTTP_NET_MAX_DATA_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the maximum data length for reading cookie and GET/POST arguments (bytes)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02473.html" target="topic">TCPIP_HTTP_NET_MAX_HEADER_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The length of longest header string that can be parsed&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02474.html" target="topic">TCPIP_HTTP_NET_MAX_RECURSE_LEVEL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The maximum depth of recursive calls for serving a web page:</p>
+<ul class="Element630">
+<li class="Element600">no dynvars files: 1</li>
+<li class="Element600">file including a file: 2</li>
+<li class="Element600">if the include file includes another file: +1</li>
+<li class="Element600">if a dyn variable: +1</li>
+</ul><p class="Element207">
+Default value is 3;&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02504.html" target="topic">TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of the buffer used for sending the response messages to the client. Should be able to accommodate the longest server response: Default setting should be 300 bytes&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02505.html" target="topic">TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the size of the RX buffer for the HTTP <a href="01231.html" target="topic">socket</a> Use 0 for default TCP <a href="01231.html" target="topic">socket</a> value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a <a href="01231.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02506.html" target="topic">TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the size of the TX buffer for the HTTP <a href="01231.html" target="topic">socket</a> Use 0 for default TCP <a href="01231.html" target="topic">socket</a> value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a <a href="01231.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02507.html" target="topic">TCPIP_HTTP_NET_SSI_ATTRIBUTES_MAX_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of attributes for a SSI command most SSI commands take just one attribute/value pair per line but multiple attribute/value pairs on the same line are allowed where it makes sense&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02508.html" target="topic">TCPIP_HTTP_NET_SSI_CMD_MAX_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum size for a SSI command line: command + attribute/value pairs must be &lt;= <a href="02458.html" target="topic">TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE</a>! If it is much larger than needed then inefficiency occurs when reading data from the file and then discarding it because a much larger than needed data buffer was read&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02509.html" target="topic">TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+message to echo when echoing a not found variable&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02510.html" target="topic">TCPIP_HTTP_NET_SSI_PROCESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This symbol enables the processing of SSI commands Make it evaluate to false (0) if SSI commands are not needed All the following symbols referring to SSI commands are relevant only when TCPIP_HTTP_NET_SSI_PROCESS != 0&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02511.html" target="topic">TCPIP_HTTP_NET_SSI_STATIC_ATTTRIB_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+number of static attributes associated to a SSI command if the command has more attributes than this number the excess will be allocated dynamically&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02512.html" target="topic">TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum length of a SSI variable name any excess characters will be truncated Note that this can result in multiple variables being represented as one SSI variable&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02513.html" target="topic">TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum size of a SSI string variable value any excess characters will be truncated Note that the variable value requires SSI storage that's allocated dynamically Also, this value determines the size of an automatic (stack) buffer when the variable is echoed. If this value is large, make sure you have enough stack space.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02514.html" target="topic">TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of SSI variables that can be created at run time These variables are stored in an internal hash. For max. efficiency this number should be a prime.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02539.html" target="topic">TCPIP_HTTP_NET_TASK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The HTTP task rate, ms The default value is 33 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03552.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02540.html" target="topic">TCPIP_HTTP_NET_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Max time (sec) to await for more HTTP client data in an active connection state before timing out and disconnecting the <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02542.html" target="topic">TCPIP_HTTP_NET_USE_AUTHENTICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable basic authentication support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02543.html" target="topic">TCPIP_HTTP_NET_USE_COOKIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable cookie support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02544.html" target="topic">TCPIP_HTTP_NET_USE_POST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define which HTTP modules to use If not using a specific module, comment it to save resources Enable POST support&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01435.html" target="topic">Files</a> &gt; <a href="00687.html" target="topic">http_net_config.h</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00686.html" target="topic">Previous</a> | <a href="01435.html" target="topic">Up</a> | <a href="00708.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: http_net_config.h Topic Title: http_net_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

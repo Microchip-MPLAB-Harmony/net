@@ -1,0 +1,142 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>IPV4_TYPE_OF_SERVICE Union</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00837.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01491.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00837.html" target="topic">IPV4_TYPE_OF_SERVICE Union</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00822.html" target="topic">Previous</a> | <a href="01491.html" target="topic">Up</a> | <a href="02685.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV4_TYPE_OF_SERVICE Topic Title: IPV4_TYPE_OF_SERVICE Union)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+IPV4_TYPE_OF_SERVICE Union</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+IPv4 type of service definition&nbsp;</p>
+<p class="Element10">
+This is the structure of an IPv4 type of service header field.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">union</span></strong> {
+  uint8_t <strong><span style="color: #000000">val</span></strong>;
+  <strong><span style="color: #000080">struct</span></strong> {
+    uint8_t <strong><span style="color: #000000">reserved</span></strong> : 2;
+    uint8_t <strong><span style="color: #000000">reliability</span></strong> : 1;
+    uint8_t <strong><span style="color: #000000">throughput</span></strong> : 1;
+    uint8_t <strong><span style="color: #000000">delay</span></strong> : 1;
+    uint8_t <strong><span style="color: #000000">precedence</span></strong> : 3;
+  }
+} IPV4_TYPE_OF_SERVICE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t reserved : 2;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+not used&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t reliability : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+reliability settings: normal/high&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t throughput : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+throughput settings: normal/high&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t delay : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+delay settings: normal/low&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t precedence : 3;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+precedence; one of TCPIP_IPV4_PRECEDENCE_ values&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00796.html" target="topic">IPv4 Module</a> &gt; <a href="01491.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00837.html" target="topic">IPV4_TYPE_OF_SERVICE Union</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00822.html" target="topic">Previous</a> | <a href="01491.html" target="topic">Up</a> | <a href="02685.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV4_TYPE_OF_SERVICE Topic Title: IPV4_TYPE_OF_SERVICE Union)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

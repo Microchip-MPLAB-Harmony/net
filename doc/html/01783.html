@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_ARP_Probe Function</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01783.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00251.html" target="topic">ARP Module</a> &gt; <a href="01322.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01783.html" target="topic">TCPIP_ARP_Probe Function</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01763.html" target="topic">Previous</a> | <a href="01322.html" target="topic">Up</a> | <a href="01784.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_Probe@TCPIP_NET_HANDLE@IPV4_ADDR*@IPV4_ADDR*@TCPIP_ARP_OPERATION_TYPE Topic Title: TCPIP_ARP_Probe Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_ARP_Probe Function</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function transmits and ARP probe to determine the hardware address of a given IP address. The packet will use the type of operation and the source address specified as parameters.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01785.html" target="topic">TCPIP_ARP_RESULT</a> <strong><span style="color: #000000">TCPIP_ARP_Probe</span></strong>(
+    <a href="03055.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
+    IPV4_ADDR* <strong><span style="color: #000000">IPAddr</span></strong>, 
+    IPV4_ADDR* <strong><span style="color: #000000">srcAddr</span></strong>, 
+    <a href="01775.html" target="topic">TCPIP_ARP_OPERATION_TYPE</a> <strong><span style="color: #000000">opType</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The ARP module should have been initialized.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+interface to use&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+IPAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The IP address to be resolved. The address must be specified in network byte order (big endian).&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+srcAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The source address to be used in the ARP packet&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+opType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Operation code to be set in the outgoing ARP packet&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">ARP_RES_ENTRY_SOLVED - if the required entry is already solved</li>
+<li class="Element601">ARP_RES_ENTRY_QUEUED - if the required entry was already queued</li>
+<li class="Element601">ARP_RES_ENTRY_NEW - if the operation succeeded and a new entry was added (and queued for resolving)</li>
+<li class="Element601">ARP_RES_CACHE_FULL - if new entry could not be inserted, the cache was full</li>
+<li class="Element601">ARP_RES_BAD_ADDRESS - bad address specified</li>
+<li class="Element601">ARP_RES_NO_INTERFACE - no such interface</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+This function is a more advanced version of <a href="01784.html" target="topic">TCPIP_ARP_Resolve</a>. It allows the caller to specify the operation type and the source address of the outgoing ARP packet. It also supports the ARP flags defined in <a href="01775.html" target="topic">TCPIP_ARP_OPERATION_TYPE</a>.&nbsp;</p>
+<p class="Element10">
+No check is done for IPAddr to be valid.&nbsp;</p>
+<p class="Element10">
+To retrieve the ARP query result, call the <a href="01763.html" target="topic">TCPIP_ARP_IsResolved</a> function.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00251.html" target="topic">ARP Module</a> &gt; <a href="01322.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01783.html" target="topic">TCPIP_ARP_Probe Function</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01763.html" target="topic">Previous</a> | <a href="01322.html" target="topic">Up</a> | <a href="01784.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_Probe@TCPIP_NET_HANDLE@IPV4_ADDR*@IPV4_ADDR*@TCPIP_ARP_OPERATION_TYPE Topic Title: TCPIP_ARP_Probe Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

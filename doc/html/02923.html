@@ -1,0 +1,207 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>TCPIP_MAC_RX_FILTER_TYPE Enumeration</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '02923.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02923.html" target="topic">TCPIP_MAC_RX_FILTER_TYPE Enumeration</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="03009.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02801.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_RX_FILTER_TYPE Topic Title: TCPIP_MAC_RX_FILTER_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+TCPIP_MAC_RX_FILTER_TYPE Enumeration</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+MAC RX Filter Types&nbsp;</p>
+<p class="Element10">
+This enumeration defines the RX filtering capabilities for the TCP/IP MAC driver.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_UCAST_OTHER_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_RUNT_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT</span></strong>,
+  <strong><span style="color: #000000">TCPIP_MAC_RX_FILTER_TYPE_DEFAULT</span></strong>
+} TCPIP_MAC_RX_FILTER_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Broadcast packets are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Multicast packets are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Unicast packets to a this host are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_UCAST_OTHER_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Unicast packets to a different host are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Runt packets (&lt; 64 bytes) are rejected&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_RUNT_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Runt packets (&lt; 64 bytes) are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packets with CRC errors are rejected&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packets with CRC errors are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_MCAST_HASH_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Multicast HASH matching packets are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_UCAST_HASH_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Unicast HASH matching packets are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_MAXFRAME_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Maximum frame size packets(1536 bytes) are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_ALL_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+All packets are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_FRAMEERROR_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packets with Frame error are accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_JUMBOFRAME_ACCEPT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Packets with JUMBO Frame (up to 10240 bytes) is accepted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_RX_FILTER_TYPE_DEFAULT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Default RX filter: will accept most valid packets&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Ethernet/Wi-Fi controllers have an RX filter module that takes part in the packet acceptance decision.&nbsp;</p>
+<p class="Element10">
+Multiple values can be OR-ed together.&nbsp;</p>
+<p class="Element10">
+There usually is a priority in the RX filter processing for a MAC module. In order for a packet to be accepted, it has to be specifically accepted by a filter. Once a filter accepts or rejects a packet, further filters are not tried. If a packet isn't rejected/accepted after all filters are tried, it will be rejected by default!&nbsp;</p>
+<p class="Element10">
+Not all MACs support all the RX filter types.&nbsp;</p>
+<p class="Element10">
+Current implementation does not suport more than 16 filters.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02923.html" target="topic">TCPIP_MAC_RX_FILTER_TYPE Enumeration</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="03009.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02801.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_RX_FILTER_TYPE Topic Title: TCPIP_MAC_RX_FILTER_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

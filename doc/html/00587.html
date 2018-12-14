@@ -1,0 +1,128 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>DRV_MIIM_OPERATION_CALLBACK Type</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '00587.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00966.html" target="topic">MIIM Driver Library</a> &gt; <a href="00369.html" target="topic">Library Interface</a> &gt; <a href="00365.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00587.html" target="topic">DRV_MIIM_OPERATION_CALLBACK Type</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="00552.html" target="topic">Previous</a> | <a href="00365.html" target="topic">Up</a> | <a href="00588.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_OPERATION_CALLBACK Topic Title: DRV_MIIM_OPERATION_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+DRV_MIIM_OPERATION_CALLBACK Type</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Type: MIIM Driver Operation Complete Callback&nbsp;</p>
+<p class="Element10">
+The format of an operation callback notification function registered with the MIIM driver.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">DRV_MIIM_OPERATION_CALLBACK</span></strong>)(DRV_HANDLE cliHandle, <a href="00591.html" target="topic">DRV_MIIM_OPERATION_HANDLE</a> opHandle, DRV_MIIM_RESULT opResult, uint16_t opData);</pre></div></div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+cliHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the client handle. This is the handle that identifies the client (obtained with <a href="00586.html" target="topic">DRV_MIIM_Open</a>) that initiated the operation.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+opHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the operation handle. This is the handle that identifies the operation (obtained with <a href="00594.html" target="topic">DRV_MIIM_Read</a>, <a href="00613.html" target="topic">DRV_MIIM_Write</a>, etc.)<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+opResult&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+operation result DRV_MIIM_RES_OK if operation completed successfully, otherwise an error code<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+opData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+operation specific data, only if the result is DRV_MIIM_RES_OK For read/scan operation this is the MIIM read data. For write operation this is that data that was written with MIIM.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00966.html" target="topic">MIIM Driver Library</a> &gt; <a href="00369.html" target="topic">Library Interface</a> &gt; <a href="00365.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00587.html" target="topic">DRV_MIIM_OPERATION_CALLBACK Type</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="00552.html" target="topic">Previous</a> | <a href="00365.html" target="topic">Up</a> | <a href="00588.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_OPERATION_CALLBACK Topic Title: DRV_MIIM_OPERATION_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>

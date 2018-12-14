@@ -1,0 +1,120 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
+<html>
+<head>
+<title>How the Library Works</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta name="generator" content="Doc-O-Matic" />
+    <meta http-equiv="Content-Style-Type" content="text/css" />
+    <link rel="STYLESHEET" href="default.css" type="text/css" />
+
+<script type="text/javascript" src="scripts.js"></script>
+</head>
+<body class="Element700" onload="onBodyLoadEx('frames.html', 'topic', '01515.html');" onmousedown="onBodyMouseDown();">
+
+<!-- Begin Popups -->
+
+<!-- End Popups -->
+
+<!-- Begin Page Header -->
+<div class="Element710" id="areafixed">
+<div class="Element94">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01520.html" target="topic">Using the Library</a> &gt; <a href="01515.html" target="topic">How the Library Works</a></div>
+<div class="Element92">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element1">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element2">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element90">
+<a href="01519.html" target="topic">Previous</a> | <a href="01520.html" target="topic">Up</a> | <a href="01509.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element96">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table><div class="Element5">
+How the Library Works</div>
+</div>
+</div>
+
+<!-- End Page Header -->
+
+<!-- Begin Client Area -->
+<div class="Element720" id="areascroll">
+<div class="Element721">
+
+<!-- Begin Page Content -->
+<a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The MAC layer<span style="color: #FFFFFF">_</span>(together with the Logical Link Control – LLC) is intended to have the functionality described in the OSI model for the Data Link Layer.&nbsp;</p>
+<p class="Element10">
+There are two important functions to be performed in the MAC layer<span style="color: #FFFFFF">_</span>as part of the Data Link Layer:&nbsp;</p>
+<p class="Element10">
+<strong>Data Encapsulation (Transmit and Receive)</strong>
+<ul class="Element631">
+<li class="Element601">Framing (frame boundary detection, frame synchronization)</li>
+<li class="Element601">Addressing (control of the source and destination addresses)</li>
+<li class="Element601">Error detection (detection of transmission errors occurring in the physical medium)</li>
+</ul><strong>Media Access Management</strong>
+<ul class="Element631">
+<li class="Element601">Medium allocation (collision avoidance)</li>
+<li class="Element601">Contention resolution (collision handling)</li>
+</ul>Beside this, the receive packet filtering is another important functionality that is usually integrated in the MAC<span style="color: #FFFFFF">_</span>layer.&nbsp;</p>
+<p class="Element10">
+The functionality previously presented is handled by the hardware itself as an intrinsic part of the data exchange that’s performed with the PHY.&nbsp;</p>
+<p class="Element10">
+From the software point of view the MAC driver exposes an API that’s focused on efficient data transfer routines. Control of the driver and access to the transferred data is given by using regular driver client access functions.&nbsp;</p>
+<p class="Element10">
+Please note that the MAC model described here corresponds to a virtual MAC driver that the TCP/IP stack uses. All the implementations of the physical MAC drivers (Ethernet, Wi-Fi, etc.) must adhere and implement this API required by the virtual MAC API. This is how the TCP/IP stack achieves virtualization of the operation over multiple network interfaces. The TCP/IP stack makes no assumption about the specifics of an actual implementation and expects all MACs to behave identically</p></div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01509.html" target="topic">Core Functionality</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic describes the core functionality of the TCP/IP Stack MAC Library.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+</div>
+<!-- End Page Content -->
+
+<!-- Begin Page Footer -->
+<div class="Element95">
+<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01520.html" target="topic">Using the Library</a> &gt; <a href="01515.html" target="topic">How the Library Works</a></div>
+<div class="Element93">
+<table width="100%" cellspacing="0" cellpadding="0">
+<tr><td width="25%">
+<div class="Element3">
+MPLAB Harmony TCP/IP Help</div>
+</td><td width="25%">
+<div class="Element4">
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+</td><td width="25%">
+<div class="Element91">
+<a href="01519.html" target="topic">Previous</a> | <a href="01520.html" target="topic">Up</a> | <a href="01509.html" target="topic">Next</a></div>
+</td><td width="25%">
+<div class="Element97">
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+</td></tr></table></div>
+
+<!-- End Page Footer -->
+</div>
+</div>
+
+<!-- End Client Area -->
+</body></html>
