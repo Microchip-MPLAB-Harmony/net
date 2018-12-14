@@ -192,6 +192,7 @@ extern DDNS_POINTERS DDNSClient;
 
 typedef struct
 {
+    void* reserved;
 } DDNS_MODULE_CONFIG;
 
 //****************************************************************************

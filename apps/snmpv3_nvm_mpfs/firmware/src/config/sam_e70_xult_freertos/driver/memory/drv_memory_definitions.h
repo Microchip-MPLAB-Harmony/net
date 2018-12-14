@@ -48,7 +48,9 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#include <stdint.h>
 #include <stdbool.h>
+#include <string.h>
 #include "driver/driver_common.h"
 #include "system/system.h"
 #include "system/system_common.h"
@@ -122,17 +124,35 @@ typedef struct
     uint32_t blockStartAddress;
 } MEMORY_DEVICE_GEOMETRY;
 
+/* Function pointer typedef to open the attached media */
+typedef DRV_HANDLE (*DRV_MEMORY_DEVICE_OPEN)( const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT ioIntent );
+
+/* Function pointer typedef to close the attached media */
+typedef void (*DRV_MEMORY_DEVICE_CLOSE)( const DRV_HANDLE handle );
+
+/* Function pointer typedef to erase a sector from attached media */
+typedef bool (*DRV_MEMORY_DEVICE_SECTOR_ERASE)( const DRV_HANDLE handle, uint32_t address);
+
+/* Function pointer typedef to get the status of the attached media */
+typedef SYS_STATUS (*DRV_MEMORY_DEVICE_STATUS)( const SYS_MODULE_INDEX drvIndex );
+
+/* Function pointer typedef to read from the attached media */
+typedef bool (*DRV_MEMORY_DEVICE_READ)( const DRV_HANDLE handle, void *rx_data, uint32_t rx_data_length, uint32_t address );
+
+/* Function pointer typedef to write a page to the attached media */
+typedef bool (*DRV_MEMORY_DEVICE_PAGE_WRITE)( const DRV_HANDLE handle, void *tx_data, uint32_t address );
+
 /* Function pointer typedef to get the Geometry details from attached media */
-typedef bool (*GEOMETRY_GET)( const DRV_HANDLE handle, MEMORY_DEVICE_GEOMETRY *geometry );
+typedef bool (*DRV_MEMORY_DEVICE_GEOMETRY_GET)( const DRV_HANDLE handle, MEMORY_DEVICE_GEOMETRY *geometry );
 
 /* Function pointer typedef to get the transfer Status from attached media */
-typedef uint32_t (*TRANSFER_STATUS_GET)( const DRV_HANDLE handle );
+typedef uint32_t (*DRV_MEMORY_DEVICE_TRANSFER_STATUS_GET)( const DRV_HANDLE handle );
 
 /* Function pointer typedef for event handler to be sent to attached media */
 typedef void (*DRV_MEMORY_EVENT_HANDLER)( MEMORY_DEVICE_TRANSFER_STATUS status, uintptr_t context );
 
 /* Function pointer typedef to set the event handler with attached media */
-typedef void (*EVENT_HANDLER_SET) ( const DRV_HANDLE handle, DRV_MEMORY_EVENT_HANDLER eventHandler, uintptr_t context );
+typedef void (*DRV_MEMORY_DEVICE_EVENT_HANDLER_SET) ( const DRV_HANDLE handle, DRV_MEMORY_EVENT_HANDLER eventHandler, uintptr_t context );
 
 /* 
  Summary:
@@ -149,24 +169,24 @@ typedef void (*EVENT_HANDLER_SET) ( const DRV_HANDLE handle, DRV_MEMORY_EVENT_HA
 */
 typedef struct
 {
-    DRV_HANDLE (*Open)( const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT ioIntent );
+    DRV_MEMORY_DEVICE_OPEN Open;
 
-    void (*Close)( const DRV_HANDLE handle );
+    DRV_MEMORY_DEVICE_CLOSE Close;
 
-    bool (*SectorErase)( const DRV_HANDLE handle, uint32_t address);
+    DRV_MEMORY_DEVICE_SECTOR_ERASE SectorErase;
 
-    SYS_STATUS (*Status)( const SYS_MODULE_INDEX drvIndex );
+    DRV_MEMORY_DEVICE_STATUS Status;
 
-    bool (*Read)( const DRV_HANDLE handle, void *rx_data, uint32_t rx_data_length, uint32_t address );
+    DRV_MEMORY_DEVICE_READ Read;
 
-    bool (*PageWrite)( const DRV_HANDLE handle, void *tx_data, uint32_t address );
+    DRV_MEMORY_DEVICE_PAGE_WRITE PageWrite;
     
-    EVENT_HANDLER_SET EventHandlerSet;
+    DRV_MEMORY_DEVICE_EVENT_HANDLER_SET EventHandlerSet;
 
-    GEOMETRY_GET GeometryGet;
+    DRV_MEMORY_DEVICE_GEOMETRY_GET GeometryGet;
 
-    TRANSFER_STATUS_GET TransferStatusGet;
-} MEMORY_DEVICE_API;
+    DRV_MEMORY_DEVICE_TRANSFER_STATUS_GET TransferStatusGet;
+} DRV_MEMORY_DEVICE_INTERFACE;
 
 /*
   Summary:
@@ -186,7 +206,7 @@ typedef struct
     SYS_MODULE_INDEX memDevIndex;
 
     /* Flash Device functions */
-    const MEMORY_DEVICE_API *memoryDevice;
+    const DRV_MEMORY_DEVICE_INTERFACE *memoryDevice;
 
     /* Flag to indicate if attached memory device configured to interrupt mode */
     bool isMemDevInterruptEnabled;

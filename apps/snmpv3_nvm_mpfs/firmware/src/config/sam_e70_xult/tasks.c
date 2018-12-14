@@ -71,19 +71,18 @@
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-    SYS_CONSOLE_Tasks(sysObj.sysConsole0);
-    SYS_CMD_Tasks();
-
-
+    
 SYS_FS_Tasks();
+
+SYS_CMD_Tasks();
 
 
 
     /* Maintain Device Drivers */
-    DRV_MIIM_Tasks(sysObj.drvMiim);
+    DRV_MEMORY_Tasks(sysObj.drvMemory0);
 
+DRV_MIIM_Tasks(sysObj.drvMiim);
 
-DRV_MEMORY_Tasks(sysObj.drvMemory0);
 
 
 

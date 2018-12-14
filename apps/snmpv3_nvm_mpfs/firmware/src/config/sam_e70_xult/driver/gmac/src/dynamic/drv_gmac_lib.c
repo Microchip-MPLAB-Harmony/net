@@ -73,6 +73,7 @@ typedef struct
 } DRV_PIC32CGMAC_HW_DCPT_ARRAY ; 
 
 
+// place the descriptors in an uncached memory region
 __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000))) __attribute__((keep))DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
 
 static void _EthMacReset(void)

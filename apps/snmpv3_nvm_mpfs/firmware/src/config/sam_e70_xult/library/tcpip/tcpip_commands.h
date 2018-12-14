@@ -69,6 +69,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // TCPIP command configuration/initialization
 typedef struct
 {
+    void*   reserved;
 }TCPIP_COMMAND_MODULE_CONFIG;
 
 

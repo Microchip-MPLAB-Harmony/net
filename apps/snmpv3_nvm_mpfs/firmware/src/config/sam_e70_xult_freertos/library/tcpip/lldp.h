@@ -62,6 +62,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // LLDP Module Configuration
 typedef struct
 {
+    void*   reserved;
 } TCPIP_LLDP_MODULE_CONFIG;
 
 void TCPIP_LLDP_RxEnable(void);

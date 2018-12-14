@@ -2,7 +2,7 @@
   Helper Functions for Microchip tcpip
 
   Summary:
-    ARCFOUR Cryptography Library
+    TCP/IP Stack Library Helpers
     
   Description:
     Common Microchip helper functions

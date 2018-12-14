@@ -50,7 +50,6 @@
 // *****************************************************************************
 
 #include "drv_memory_definitions.h"
-#include "driver/memory/src/drv_memory_variant_mapping.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -280,21 +279,21 @@ typedef SYS_MEDIA_EVENT_HANDLER   DRV_MEMORY_TRANSFER_HANDLER;
 
     SYS_MODULE_OBJ  objectHandle;
 
-    uint8_t gDrvMemory0EraseBuffer[DRV_MEMORY_ERASE_BUFFER_SIZE_IDX0] __attribute__((aligned(32)));
+    static uint8_t gDrvMemory0EraseBuffer[DRV_MEMORY_ERASE_BUFFER_SIZE_IDX0] __attribute__((aligned(32)));
 
-    DRV_MEMORY_CLIENT_OBJECT gDrvMemory0ClientObject[DRV_MEMORY_CLIENTS_NUMBER_IDX0] = { 0 };
+    static DRV_MEMORY_CLIENT_OBJECT gDrvMemory0ClientObject[DRV_MEMORY_CLIENTS_NUMBER_IDX0] = { 0 };
 
-    DRV_MEMORY_BUFFER_OBJECT gDrvMemory0BufferObject[DRV_MEMORY_BUFFER_QUEUE_SIZE_IDX0] = { 0 };
+    static DRV_MEMORY_BUFFER_OBJECT gDrvMemory0BufferObject[DRV_MEMORY_BUFFER_QUEUE_SIZE_IDX0] = { 0 };
 
-    const MEMORY_DEVICE_API drvMemory0DeviceAPI = {
+    const DRV_MEMORY_DEVICE_INTERFACE drvMemory0DeviceAPI = {
         .Open               = DRV_SST26_Open,
         .Close              = DRV_SST26_Close,
         .Status             = DRV_SST26_Status,
         .SectorErase        = DRV_SST26_SectorErase,
         .Read               = DRV_SST26_Read,
         .PageWrite          = DRV_SST26_PageWrite,
-        .GeometryGet        = (GEOMETRY_GET)DRV_SST26_GeometryGet,
-        .TransferStatusGet  = (TRANSFER_STATUS_GET)DRV_SST26_TransferStatusGet
+        .GeometryGet        = (DRV_MEMORY_DEVICE_GEOMETRY_GET)DRV_SST26_GeometryGet,
+        .TransferStatusGet  = (DRV_MEMORY_DEVICE_TRANSFER_STATUS_GET)DRV_SST26_TransferStatusGet
     };
 
     const DRV_MEMORY_INIT drvMemory0InitData =
@@ -1767,6 +1766,218 @@ uintptr_t DRV_MEMORY_AddressGet
     const DRV_HANDLE handle
 );
 
+// *****************************************************************************
+/* Function:
+    void DRV_MEMORY_Erase
+    (
+        const DRV_HANDLE handle,
+        SYS_MEDIA_BLOCK_COMMAND_HANDLE* commandHandle,
+        void* sourceBuffer,
+        uint32_t blockStart,
+        uint32_t nBlock
+    )
+
+  Summary:
+    This routine provides interface to the file system to perform a media
+    erase operation in synchronous mode of the Memory driver.
+
+  Description:
+    This function is internally used by the file system.
+
+  Preconditions:
+    The DRV_MEMORY_Open must have been called to obtain a valid opened device handle.
+
+  Parameters:
+    handle        - A valid open-instance handle, returned from the driver's
+                    open function
+
+    commandHandle - Pointer to an argument that will contain the return buffer
+                    handle
+
+    blockStart    - Start block address of SD Card where the writes should begin.
+
+    nBlock        - Total number of blocks to be written.
+
+  Returns:
+    The buffer handle is returned in the commandHandle argument. It will be
+    DRV_MEMORY_COMMAND_HANDLE_INVALID if the request was not successful.
+
+  Example:
+    None.
+
+  Remarks:
+    This function is internally used by the file system.
+*/
+
+void DRV_MEMORY_Erase
+(
+    const DRV_HANDLE handle,
+    SYS_MEDIA_BLOCK_COMMAND_HANDLE *commandHandle,
+    uint32_t blockStart,
+    uint32_t nBlock
+);
+
+// *****************************************************************************
+/* Function:
+    void DRV_MEMORY_EraseWrite
+    (
+        const DRV_HANDLE handle,
+        SYS_MEDIA_BLOCK_COMMAND_HANDLE* commandHandle,
+        void* sourceBuffer,
+        uint32_t blockStart,
+        uint32_t nBlock
+    )
+
+  Summary:
+    This routine provides interface to the file system to perform a media
+    erase-write operation in synchronous mode of the Memory driver.
+
+  Description:
+    This function is internally used by the file system.
+
+  Preconditions:
+    The DRV_MEMORY_Open must have been called to obtain a valid opened device handle.
+
+  Parameters:
+    handle        - A valid open-instance handle, returned from the driver's
+                    open function
+
+    commandHandle - Pointer to an argument that will contain the return buffer
+                    handle
+
+    sourceBuffer  - The source buffer containing data to be programmed to the SD Card.
+
+    blockStart    - Start block address of SD Card where the writes should begin.
+
+    nBlock        - Total number of blocks to be written.
+
+  Returns:
+    The buffer handle is returned in the commandHandle argument. It will be
+    DRV_MEMORY_COMMAND_HANDLE_INVALID if the request was not successful.
+
+  Example:
+    None.
+
+  Remarks:
+    This function is internally used by the file system.
+*/
+
+void DRV_MEMORY_EraseWrite
+(
+    const DRV_HANDLE handle,
+    SYS_MEDIA_BLOCK_COMMAND_HANDLE *commandHandle,
+    void *sourceBuffer,
+    uint32_t blockStart,
+    uint32_t nBlock
+);
+
+// *****************************************************************************
+/* Function:
+    void DRV_MEMORY_Write
+    (
+        const DRV_HANDLE handle,
+        SYS_MEDIA_BLOCK_COMMAND_HANDLE* commandHandle,
+        void* sourceBuffer,
+        uint32_t blockStart,
+        uint32_t nBlock
+    )
+
+  Summary:
+    This routine provides interface to the file system to perform a media
+    write operation in synchronous mode of the Memory driver.
+
+  Description:
+    This function is internally used by the file system.
+
+  Preconditions:
+    The DRV_MEMORY_Open must have been called to obtain a valid opened device handle.
+
+  Parameters:
+    handle        - A valid open-instance handle, returned from the driver's
+                    open function
+
+    commandHandle - Pointer to an argument that will contain the return buffer
+                    handle
+
+    sourceBuffer  - The source buffer containing data to be programmed to the SD Card.
+
+    blockStart    - Start block address of SD Card where the writes should begin.
+
+    nBlock        - Total number of blocks to be written.
+
+  Returns:
+    The buffer handle is returned in the commandHandle argument. It will be
+    DRV_MEMORY_COMMAND_HANDLE_INVALID if the request was not successful.
+
+  Example:
+    None.
+
+  Remarks:
+    This function is internally used by the file system.
+*/
+
+void DRV_MEMORY_Write
+(
+    const DRV_HANDLE handle,
+    SYS_MEDIA_BLOCK_COMMAND_HANDLE *commandHandle,
+    void *sourceBuffer,
+    uint32_t blockStart,
+    uint32_t nBlock
+);
+
+// *****************************************************************************
+/* Function:
+    void DRV_MEMORY_Read
+    (
+        const DRV_HANDLE handle,
+        SYS_MEDIA_BLOCK_COMMAND_HANDLE* commandHandle,
+        void* sourceBuffer,
+        uint32_t blockStart,
+        uint32_t nBlock
+    )
+
+  Summary:
+    This routine provides interface to the file system to perform a media
+    read operation in synchronous mode of the Memory driver.
+
+  Description:
+    This function is internally used by the file system.
+
+  Preconditions:
+    The DRV_MEMORY_Open must have been called to obtain a valid opened device handle.
+
+  Parameters:
+    handle        - A valid open-instance handle, returned from the driver's
+                    open function
+
+    commandHandle - Pointer to an argument that will contain the return buffer
+                    handle
+
+    sourceBuffer  - The source buffer containing data to be programmed to the SD Card.
+
+    blockStart    - Start block address of SD Card where the writes should begin.
+
+    nBlock        - Total number of blocks to be written.
+
+  Returns:
+    The buffer handle is returned in the commandHandle argument. It will be
+    DRV_MEMORY_COMMAND_HANDLE_INVALID if the request was not successful.
+
+  Example:
+    None.
+
+  Remarks:
+    This function is internally used by the file system.
+*/
+void DRV_MEMORY_Read
+(
+    const DRV_HANDLE handle,
+    SYS_MEDIA_BLOCK_COMMAND_HANDLE *commandHandle,
+    void *targetBuffer,
+    uint32_t blockStart,
+    uint32_t nBlock
+);
+
 #ifdef __cplusplus
 }
 #endif
@@ -1777,4 +1988,3 @@ uintptr_t DRV_MEMORY_AddressGet
 /*******************************************************************************
  End of File
 */
-

@@ -48,51 +48,10 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stdint.h>
-#include <stdbool.h>
-#include <stddef.h>
-#include <string.h>
 #include "configuration.h"
 #include "driver/memory/drv_memory.h"
 
 #include "osal/osal.h"
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Version Numbers
-// *****************************************************************************
-// *****************************************************************************
-/* Version of the driver */
-
-// *****************************************************************************
-/* MEMORY Driver Version Macros
-
-  Summary:
-    MEMORY driver version
-
-  Description:
-    These constants provide MEMORY driver version information. The driver
-    version is
-    DRV_MEMORY_VERSION_MAJOR.DRV_MEMORY_VERSION_MINOR.DRV_MEMORY_VERSION_PATCH.
-    It is represented in DRV_MEMORY_VERSION as
-    MAJOR *10000 + MINOR * 100 + PATCH, so as to allow comparisons.
-    It is also represented in string format in DRV_MEMORY_VERSION_STR.
-    DRV_MEMORY_TYPE provides the type of the release when the release is alpha
-    or beta. The interfaces DRV_MEMORY_VersionGet() and
-    DRV_MEMORY_VersionStrGet() provide interfaces to the access the version
-    and the version string.
-
-  Remarks:
-    Modify the return value of DRV_MEMORY_VersionStrGet and the
-    DRV_MEMORY_VERSION_MAJOR, DRV_MEMORY_VERSION_MINOR,
-    DRV_MEMORY_VERSION_PATCH and DRV_MEMORY_VERSION_TYPE
-*/
-
-#define _DRV_MEMORY_VERSION_MAJOR         0
-#define _DRV_MEMORY_VERSION_MINOR         2
-#define _DRV_MEMORY_VERSION_PATCH         0
-#define _DRV_MEMORY_VERSION_TYPE          "Alpha"
-#define _DRV_MEMORY_VERSION_STR           "0.2.0 Alpha"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -115,43 +74,13 @@
   Remarks:
     None
 */
-
-
 #define DRV_MEMORY_INDEX_MASK                           (0x000000FF)
 #define DRV_MEMORY_INSTANCE_INDEX_MASK                  (0x0000FF00)
 #define DRV_MEMORY_TOKEN_MASK                           (0xFFFF0000)
 #define DRV_MEMORY_TOKEN_MAX                            (DRV_MEMORY_TOKEN_MASK >> 16)
 #define DRV_MEMORY_MAKE_HANDLE(token, instance, index)  ((token) << 16 | (instance << 8) | (index))
 
-// *****************************************************************************
-/* MEMORY Read/Write/Erase Region Index Numbers
-
-  Summary:
-    MEMORY Geometry Table Index definitions.
-
-  Description:
-    These constants provide MEMORY Geometry Table index definitions.
-
-  Remarks:
-    None
-*/
-#define DRV_MEMORY_GEOMETRY_TABLE_READ_ENTRY   (0)
-#define DRV_MEMORY_GEOMETRY_TABLE_WRITE_ENTRY  (1)
-#define DRV_MEMORY_GEOMETRY_TABLE_ERASE_ENTRY  (2)
-
-// *****************************************************************************
-/* MEMORY Driver operations.
-
-  Summary:
-    Enumeration listing the MEMORY driver operations.
-
-  Description:
-    This enumeration defines the possible MEMORY driver operations.
-
-  Remarks:
-    None
-*/
-
+/* MEMORY Driver operations. */
 typedef enum
 {
     /* Request is read operation. */
@@ -168,19 +97,7 @@ typedef enum
 
 } DRV_MEMORY_OPERATION_TYPE;
 
-// *****************************************************************************
-/* MEMORY Driver write states.
-
-  Summary:
-    Enumeration listing the MEMORY driver's write states.
-
-  Description:
-    This enumeration defines the possible MEMORY driver's write states.
-
-  Remarks:
-    None
-*/
-
+/* MEMORY Driver write states. */
 typedef enum
 {
     /* Read init state */
@@ -194,19 +111,7 @@ typedef enum
 
 } DRV_MEMORY_READ_STATE;
 
-// *****************************************************************************
-/* MEMORY Driver write states.
-
-  Summary:
-    Enumeration listing the MEMORY driver's write states.
-
-  Description:
-    This enumeration defines the possible MEMORY driver's write states.
-
-  Remarks:
-    None
-*/
-
+/* MEMORY Driver write states. */
 typedef enum
 {
     /* Write init state */
@@ -220,18 +125,7 @@ typedef enum
 
 } DRV_MEMORY_WRITE_STATE;
 
-// *****************************************************************************
-/* MEMORY Driver erase states.
-
-  Summary:
-    Enumeration listing the MEMORY driver's erase states.
-
-  Description:
-    This enumeration defines the possible MEMORY driver's erase states.
-
-  Remarks:
-    None
-*/
+/* MEMORY Driver erase states. */
 typedef enum
 {
     /* Erase init state */
@@ -245,19 +139,7 @@ typedef enum
 
 } DRV_MEMORY_ERASE_STATE;
 
-// *****************************************************************************
-/* MEMORY Driver erasewrite states.
-
-  Summary:
-    Enumeration listing the MEMORY driver's erasewrite states.
-
-  Description:
-    This enumeration defines the possible MEMORY driver's erasewrite states.
-
-  Remarks:
-    None
-*/
-
+/* MEMORY Driver erasewrite states. */
 typedef enum
 {
     /* Erase write init state. */
@@ -276,7 +158,7 @@ typedef enum
 
 typedef enum
 {
-    /* Process the operations queued at the SST driver. */
+    /* Process the operations queued. */
     DRV_MEMORY_PROCESS_QUEUE,
 
     /* Perform the required transfer */
@@ -319,7 +201,6 @@ typedef struct DRV_MEMORY_CLIENT_OBJ_STRUCT
  * MEMORY Driver Buffer Object that services
  * a driver request.
  ******************************************/
-
 typedef struct _DRV_MEMORY_BUFFER_OBJECT
 {
     /* Buffer Object array index */
@@ -433,7 +314,7 @@ typedef struct
     volatile bool isTransferDone;
 
     /* Attached Memory Device functions */
-    const MEMORY_DEVICE_API *memoryDevice;
+    const DRV_MEMORY_DEVICE_INTERFACE *memoryDevice;
 
     /* Pointer to Buffer Objects array */
     DRV_MEMORY_BUFFER_OBJECT *buffObjArr;
@@ -473,8 +354,6 @@ typedef struct
 
     /* Mutex to protect the client object pool */
     OSAL_MUTEX_DECLARE(clientMutex);
-
-
 } DRV_MEMORY_OBJECT;
 
 typedef MEMORY_DEVICE_TRANSFER_STATUS (*DRV_MEMORY_TransferOperation)(
@@ -489,4 +368,3 @@ typedef MEMORY_DEVICE_TRANSFER_STATUS (*DRV_MEMORY_TransferOperation)(
 /*******************************************************************************
  End of File
 */
-

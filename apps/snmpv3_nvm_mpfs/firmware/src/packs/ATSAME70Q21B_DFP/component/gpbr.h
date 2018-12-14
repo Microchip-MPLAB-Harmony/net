@@ -1,50 +1,50 @@
 /**
- * \brief Header file for SAME/SAME70 GPBR
+ * \brief Component description for GPBR
  *
- * Copyright (c) 2017-2018 Microchip Technology Inc.
+ * © 2018 Microchip Technology Inc. and its subsidiaries.
  *
- * SPDX-License-Identifier: Apache-2.0
+ * Subject to your compliance with these terms, you may use Microchip software and any derivatives
+ * exclusively with Microchip products. It is your responsibility to comply with third party license
+ * terms applicable to your use of third party software (including open source software) that may
+ * accompany Microchip software.
  *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
+ * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER EXPRESS, IMPLIED OR STATUTORY,
+ * APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND
+ * FITNESS FOR A PARTICULAR PURPOSE.
  *
- *   http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
+ * IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, INCIDENTAL OR CONSEQUENTIAL
+ * LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF
+ * MICROCHIP HAS BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE FULLEST EXTENT
+ * ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN ANY WAY RELATED TO THIS SOFTWARE WILL NOT
+ * EXCEED THE AMOUNT OF FEES, IF ANY, THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  *
  */
 
-/* file generated from device description version 2018-09-19T14:04:45Z */
-#ifndef SAME_SAME70_GPBR_MODULE_H
-#define SAME_SAME70_GPBR_MODULE_H
+/* file generated from device description version 2018-11-06T08:17:04Z */
+#ifndef _SAME70_GPBR_COMPONENT_H_
+#define _SAME70_GPBR_COMPONENT_H_
 
-/** \addtogroup SAME_SAME70 General Purpose Backup Registers
- *  @{
- */
-/* ========================================================================== */
-/**  SOFTWARE API DEFINITION FOR SAME70_GPBR                                  */
-/* ========================================================================== */
+/* ************************************************************************** */
+/*   SOFTWARE API DEFINITION FOR GPBR                                         */
+/* ************************************************************************** */
 
 /* -------- SYS_GPBR : (GPBR Offset: 0x00) (R/W 32) General Purpose Backup Register 0 -------- */
-#define SYS_GPBR_GPBR_VALUE_Pos               (0U)                                           /**< (SYS_GPBR) Value of GPBR x Position */
-#define SYS_GPBR_GPBR_VALUE_Msk               (0xFFFFFFFFU << SYS_GPBR_GPBR_VALUE_Pos)       /**< (SYS_GPBR) Value of GPBR x Mask */
+#define SYS_GPBR_GPBR_VALUE_Pos               _U_(0)                                               /**< (SYS_GPBR) Value of GPBR x Position */
+#define SYS_GPBR_GPBR_VALUE_Msk               (_U_(0xFFFFFFFF) << SYS_GPBR_GPBR_VALUE_Pos)         /**< (SYS_GPBR) Value of GPBR x Mask */
 #define SYS_GPBR_GPBR_VALUE(value)            (SYS_GPBR_GPBR_VALUE_Msk & ((value) << SYS_GPBR_GPBR_VALUE_Pos))
-#define SYS_GPBR_Msk                          (0xFFFFFFFFUL)                                 /**< (SYS_GPBR) Register Mask  */
+#define SYS_GPBR_Msk                          _U_(0xFFFFFFFF)                                      /**< (SYS_GPBR) Register Mask  */
+
 
 /** \brief GPBR register offsets definitions */
-#define SYS_GPBR_OFFSET                (0x00)         /**< (SYS_GPBR) General Purpose Backup Register 0 Offset */
+#define SYS_GPBR_REG_OFST              (0x00)              /**< (SYS_GPBR) General Purpose Backup Register 0 Offset */
 
+#if !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__))
 /** \brief GPBR register API structure */
 typedef struct
 {
-  __IO  uint32_t                       SYS_GPBR[8];     /**< Offset: 0x00 (R/W  32) General Purpose Backup Register 0 */
+  __IO  uint32_t                       SYS_GPBR[8];        /**< Offset: 0x00 (R/W  32) General Purpose Backup Register 0 */
 } gpbr_registers_t;
-/** @}  end of General Purpose Backup Registers */
 
-#endif /* SAME_SAME70_GPBR_MODULE_H */
 
+#endif /* !(defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
+#endif /* _SAME70_GPBR_COMPONENT_H_ */

@@ -49,7 +49,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stdio.h>
+#include "drv_memory_definitions.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
