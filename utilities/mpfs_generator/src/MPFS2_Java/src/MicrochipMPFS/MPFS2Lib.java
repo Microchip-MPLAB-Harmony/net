@@ -775,6 +775,7 @@ public class MPFS2Lib //: MPFS2Writer
                 "and any derivatives exclusively with Microchip products. It is your \r\n" +
                 "responsibility to comply with third party license terms applicable to your\r\n" +
                 "use of third party software (including open source software) that may\r\n" +
+                "accompany Microchip software.\r\n" +
                 "\r\n" +
                 "THIS SOFTWARE IS SUPPLIED BY MICROCHIP \"AS IS\". NO WARRANTIES, WHETHER\r\n" +
                 "EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED\r\n" +

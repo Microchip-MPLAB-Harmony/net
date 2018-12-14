@@ -1,21 +1,20 @@
  /*******************************************************************
- * FileName: mib.h
- * This file was automatically generated on Mon Aug 11 2014 11:34:06
- * by mib2bib utility.
- * This file contains 'C' defines for dynamic OIDs and AgentID only.
- * Do not modify this file manually.
- * Include this file in your application source file that handles SNMP callbacks and TRAP.
- * 
+* FileName: mib.h
+* This file was automatically generated on Fri Dec 14 2018 05:58:28 
+* by mib2bib utility.
+* This file contains 'C' defines for dynamic OIDs and AgentID only.
+* Do not modify this file manually.
+* Include this file in your application source file that handles SNMP callbacks and TRAP.
+
 *******************************************************************/
-
 /*****************************************************************************
- Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.
 
-Microchip Technology Inc. and its subsidiaries.
+ Microchip Technology Inc. and its subsidiaries.
 
-Subject to your compliance with these terms, you may use Microchip software 
-and any derivatives exclusively with Microchip products. It is your 
-responsibility to comply with third party license terms applicable to your 
+Subject to your compliance with these terms, you may use Microchip software
+and any derivatives exclusively with Microchip products. It is your
+responsibility to comply with third party license terms applicable to your
 use of third party software (including open source software) that may 
 accompany Microchip software.
 
