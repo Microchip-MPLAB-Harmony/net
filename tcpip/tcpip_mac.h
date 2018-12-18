@@ -1841,7 +1841,7 @@ typedef struct
 typedef struct
 {
     /* name of the hardware register */
-    char        registerName[8];           
+    char        registerName[32];           
 
     /*  value of the hardware register */
     uint32_t    registerValue;

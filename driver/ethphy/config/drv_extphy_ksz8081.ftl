@@ -6,7 +6,7 @@
     Microchip Technology Inc.
 
   File Name:
-    drv_extphy_ksz8061.h.ftl
+    drv_extphy_ksz8081.h.ftl
 
   Summary:
     TCPIP MAC Freemarker Template File
@@ -18,7 +18,7 @@
 
 <#--
 /*******************************************************************************
-Copyright (c) 2014 released Microchip Technology Inc.  All rights reserved.
+Copyright (c) 2019 released Microchip Technology Inc.  All rights reserved.
 
 Microchip licenses to you the right to use, modify, copy and distribute
 Software only when embedded on a Microchip microcontroller or digital signal
@@ -42,17 +42,16 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 -->
 
 
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS               \
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS               0 \
 <#if TCPIP_INTMAC_PHY_CONFIG_RMII>
-                                                    DRV_ETHPHY_CFG_RMII | \
+                                                    | DRV_ETHPHY_CFG_RMII \
 </#if>
 <#if TCPIP_INTMAC_PHY_CONFIG_ALTERNATE>
-                                                    DRV_ETHPHY_CFG_ALTERNATE | \
+                                                    | DRV_ETHPHY_CFG_ALTERNATE \
 </#if>
 <#if TCPIP_INTMAC_PHY_CONFIG_AUTO>
-                                                    DRV_ETHPHY_CFG_AUTO | \
+                                                    | DRV_ETHPHY_CFG_AUTO
 </#if>
-                                                    0
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
 #define TCPIP_INTMAC_PHY_ADDRESS                    ${TCPIP_INTMAC_PHY_ADDRESS}

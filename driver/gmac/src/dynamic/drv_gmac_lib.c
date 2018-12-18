@@ -423,6 +423,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 	
 	txqueue_node = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue);
 	
+	// TODO Niyas: I think this is really dangerous!
+    // The DRV_PIC32CGMAC_PKT_DCPT has to match the TCPIP_MAC_PACKET->DataSeg type!
+    // Why not use that type is this is what'needed?
+    // Any change in one of these headers will break everything!
 	pPkt_temp = pPkt = (DRV_PIC32CGMAC_PKT_DCPT*)((TCPIP_MAC_PACKET *)txqueue_node->data)->pDSeg;
 	
 	txqueue_node->startIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead;

@@ -604,8 +604,14 @@ def instantiateComponent(drvSamv71GmacComponent):
 
 	# file TCPIP_MAC_LIB_C "$HARMONY_VERSION_PATH/framework/driver/gmac/src/dynamic/drv_gmac_lib.c" to     "$PROJECT_SOURCE_FILES/framework/driver/gmac/drv_gmac_lib.c"
 	# Add drv_gmac_lib.c file
+	
+	processor = Variables.get("__PROCESSOR")
+	sysIntCFileStem = "drv_gmac_lib"
+	if "SAMA5" in processor:
+	    sysIntCFileStem = sysIntCFileStem + "_samA5D2"
+
 	drvGmacLibSourceFile = drvSamv71GmacComponent.createFileSymbol(None, None)
-	drvGmacLibSourceFile.setSourcePath("driver/gmac/src/dynamic/drv_gmac_lib.c")
+	drvGmacLibSourceFile.setSourcePath("driver/gmac/src/dynamic/" + sysIntCFileStem + ".c")
 	drvGmacLibSourceFile.setOutputName("drv_gmac_lib.c")
 	drvGmacLibSourceFile.setOverwrite(True)
 	drvGmacLibSourceFile.setDestPath("driver/gmac/src/dynamic/")

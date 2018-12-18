@@ -873,7 +873,7 @@ static void _DRV_GMAC_LinkStateGetLink(DRV_GMAC_DRIVER * pMACDrv)
 	}
 
 	// link up
-	if(pMACDrv->sGmacData._macFlags._linkPrev == linkCurrUp)
+	if( (bool) pMACDrv->sGmacData._macFlags._linkPrev == linkCurrUp )
 	{   // PHY state not changed
 		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
 	}
@@ -1167,7 +1167,8 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 // acknowledge the ETHC packets
 static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx)  
 {
-	
+    // TODO Niyas: the descriptors should be acknowledged always, even if TCOMP is not set!
+        // otherwise lock up is possible. The DRV_PIC32CGMAC_LibTxAckPacket takes care if the descriptor is not done yet.
 #if !defined(PIC32C_GMAC_ISR_TX)	
 	//polling TXCOMP in STATUS register	
 	if((GMAC_REGS->GMAC_TSR) & GMAC_TSR_TXCOMP_Msk )
@@ -1212,6 +1213,7 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	}
 	
 	//packet in queue for transmission
+	// TODO Niyas: this locks up forever when running out of descriptors!!!!
 	while( (pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0)
 	{
 		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv, queueIdx);
