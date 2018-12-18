@@ -222,6 +222,10 @@ def loadModule():
 	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)	
 	
+	drvExtPhyKsz8081Component = Module.CreateComponent("drvExtPhyKsz8081", "KSZ8081", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8081.py")
+	drvExtPhyKsz8081Component.addCapability("libdrvExtPhyKsz8081","PHY",True)	
+	drvExtPhyKsz8081Component.addDependency("KSZ8081_MIIM_Dependency", "MIIM", None, True, True)	
+	
 	drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
 	drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)	
 	drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)		

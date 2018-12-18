@@ -828,7 +828,7 @@ bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle, NET_PR
         pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
-    return (*fp)(handle, hSig);    
+    return (*fp)(handle, (NET_PRES_SIGNAL_FUNCTION) hSig);
 
 }
 

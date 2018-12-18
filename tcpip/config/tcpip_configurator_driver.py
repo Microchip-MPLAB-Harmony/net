@@ -65,6 +65,13 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
 	tcpipAutoConfigKSZ8061.setDescription("Enable KSZ8061")	
 	tcpipAutoConfigKSZ8061.setDependencies(tcpipAutoConfigKSZ8061Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8061"])	
 
+	# Enable KSZ8081
+	tcpipAutoConfigKSZ8081 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8081", None)
+	tcpipAutoConfigKSZ8081.setLabel("KSZ8081")
+	tcpipAutoConfigKSZ8081.setVisible(True)
+	tcpipAutoConfigKSZ8081.setDescription("Enable KSZ8081")	
+	tcpipAutoConfigKSZ8081.setDependencies(tcpipAutoConfigKSZ8061Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8081"])	
+
 	# Enable LAN8740
 	tcpipAutoConfigLAN8740 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8740", None)
 	tcpipAutoConfigLAN8740.setLabel("LAN8740")
@@ -160,6 +167,16 @@ def tcpipAutoConfigKSZ8061Enable(symbol, event):
 			Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)		
 	else:
 		res = Database.deactivateComponents(["drvExtPhyKsz8061"])
+	
+	
+def tcpipAutoConfigKSZ8081Enable(symbol, event):
+	enableTcpipAutoConfigDrv(True)
+	if (event["value"] == True):
+		res = Database.activateComponents(["drvExtPhyKsz8081"],"DRIVER LAYER")	
+		if(Database.getSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver") != True):
+			Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)		
+	else:
+		res = Database.deactivateComponents(["drvExtPhyKsz8081"])
 	
 	
 def tcpipAutoConfigLAN8740Enable(symbol, event):

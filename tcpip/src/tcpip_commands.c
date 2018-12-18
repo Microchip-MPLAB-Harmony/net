@@ -2560,7 +2560,7 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     TCPIP_NET_HANDLE        netH;
     TCPIP_MAC_RX_STATISTICS rxStatistics;
     TCPIP_MAC_TX_STATISTICS txStatistics;
-    TCPIP_MAC_STATISTICS_REG_ENTRY  regEntries[8];
+    TCPIP_MAC_STATISTICS_REG_ENTRY  regEntries[50];
     TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntry;
     int                     jx, hwEntries;
     char                    entryName[sizeof(pRegEntry->registerName) + 1];
@@ -3204,11 +3204,13 @@ static void TCPIPCmdPingTask(void)
             echoRequest.dataSize = icmpPingSize;
             echoRequest.callback = CommandPingHandler;
 
-            int ix;
-            uint8_t* pBuff = icmpPingBuff;
-            for(ix = 0; ix < icmpPingSize; ix++)
             {
-                *pBuff++ = SYS_RANDOM_PseudoGet();
+                int ix;
+                uint8_t* pBuff = icmpPingBuff;
+                for(ix = 0; ix < icmpPingSize; ix++)
+                {
+                    *pBuff++ = SYS_RANDOM_PseudoGet();
+                }
             }
 
             echoRes = TCPIP_ICMP_EchoRequest (&echoRequest, &icmpReqHandle);
