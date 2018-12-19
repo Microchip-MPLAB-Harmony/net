@@ -80,6 +80,8 @@ TCPIP_MAC_RES           DRV_GMAC_Process(DRV_HANDLE hMac);
 TCPIP_MAC_RES           DRV_GMAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics);
 TCPIP_MAC_RES           DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMacParams);
 TCPIP_MAC_RES           DRV_GMAC_RegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+TCPIP_MAC_RES           DRV_GMAC_RxDescriptorsGet(DRV_HANDLE hMac, TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntries, int nEntries, int* pHwEntries);
+
 size_t                  DRV_GMAC_ConfigGet(DRV_HANDLE hMac, void* configBuff, size_t buffSize, size_t* pConfigSize);
 
 
@@ -161,7 +163,7 @@ extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
 /*static*/ const TCPIP_MAC_OBJECT DRV_GMAC_Object =  
 {
     TCPIP_MODULE_MAC_PIC32C,
-    "PIC32CINT",   
+    "GMAC",   
 	DRV_GMAC_Initialize,
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
     DRV_GMAC_Deinitialize,
@@ -205,51 +207,51 @@ static DRV_GMAC_DRIVER _pic32c_emb_mac_dcpt[1] =
 //GMAC statistics register access 
 static const DRV_PIC32CGMAC_HW_REG_DCPT macPIC32CHwRegDcpt[] =
 {
-	{"TxOTLO",    _DRV_GMAC_GetTxOctetLow},
-	{"TxOTHI",    _DRV_GMAC_GetTxOctetHigh},
-	{"TxFTCNT",   _DRV_GMAC_GetTxFrameCount},
-	{"TxBCFT",    _DRV_GMAC_GetTxBCastFrameCount},
-	{"TxMFT",     _DRV_GMAC_GetTxMCastFrameCount},
-	{"TxPFT",     _DRV_GMAC_GetTxPauseFrameCount},
-	{"TxBFT64",   _DRV_GMAC_GetTx64ByteFrameCount},
-	{"TBFT127",   _DRV_GMAC_GetTx127ByteFrameCount},
-	{"TBFT255",   _DRV_GMAC_GetTx255ByteFrameCount},
-	{"TBFT511",   _DRV_GMAC_GetTx511ByteFrameCount},
-	{"TBFT1023",  _DRV_GMAC_GetTx1023ByteFrameCount},
-	{"TBFT1518",  _DRV_GMAC_GetTx1518ByteFrameCount},
-	{"GTBF1518",  _DRV_GMAC_GetTxGT1518ByteFrameCount},
-	{"TxTUR",     _DRV_GMAC_GetTxUnderRunFrameCount},
-	{"TxSCF",     _DRV_GMAC_GetTxSingleCollFrameCount},
-	{"TxMCF",     _DRV_GMAC_GetTxMultiCollFrameCount},	
-	{"TxECCNT",   _DRV_GMAC_GetTxExcessCollFrameCount},
-	{"TxLCCNT",   _DRV_GMAC_GetTxLateCollFrameCount},
-	{"TxDTF",     _DRV_GMAC_GetTxDeferFrameCount},	
-	{"TxCSE",     _DRV_GMAC_GetTxCSErrorFrameCount},		
-	{"RxORLO",    _DRV_GMAC_GetRxOctetLow},
-	{"RxORHI",    _DRV_GMAC_GetRxOctetHigh},
-	{"RxFRCNT",    _DRV_GMAC_GetRxFrameCount},
-	{"RxBCFR",    _DRV_GMAC_GetRxBCastFrameCount},
-	{"RxMFR",     _DRV_GMAC_GetRxMCastFrameCount},
-	{"RxPFR",     _DRV_GMAC_GetRxPauseFrameCount},
-	{"RxBFR64",   _DRV_GMAC_GetRx64ByteFrameCount},
-	{"TBFR127",   _DRV_GMAC_GetRx127ByteFrameCount},
-	{"TBFR255",   _DRV_GMAC_GetRx255ByteFrameCount},
-	{"TBFR511",   _DRV_GMAC_GetRx511ByteFrameCount},
-	{"TBFR1023",  _DRV_GMAC_GetRx1023ByteFrameCount},
-	{"TBFR1518",  _DRV_GMAC_GetRx1518ByteFrameCount},
-	{"TXMBFR",    _DRV_GMAC_GetRxGT1518ByteFrameCount},
-	{"RxUFR",     _DRV_GMAC_GetRxUnderSizeFrameCount},
-	{"RxOFR",     _DRV_GMAC_GetRxOverSizeFrameCount},
-	{"RxJR",      _DRV_GMAC_GetRxJabberFrameCount},
-	{"RxFCSE",    _DRV_GMAC_GetRxFCSErrorFrameCount},
-	{"RxLFFE",    _DRV_GMAC_GetRxLFErrorFrameCount},
-	{"RxRSE",     _DRV_GMAC_GetRxSymErrorFrameCount},
-	{"RxAE",      _DRV_GMAC_GetRxAlignErrorFrameCount},
-	{"RxRRE",     _DRV_GMAC_GetRxResErrorFrameCount},		
-	{"RxROE",     _DRV_GMAC_GetRxOverRunFrameCount},
-	{"RxIHCE",    _DRV_GMAC_GetRxIPHdrCSErrorFrameCount},	
-	{"RxTCE",     _DRV_GMAC_GetRxTCPCSErrorFrameCount},	
-	{"RxUCE",     _DRV_GMAC_GetRxUDPCSErrorFrameCount},
+	{"Tx Byte Count-lower 32bits(TxOTLO)",    _DRV_GMAC_GetTxOctetLow},
+	{"Tx Byte Count-upper 16bits(TxOTHI)",    _DRV_GMAC_GetTxOctetHigh},
+	{"Tx Frames w/o error(TxFTCNT)",   _DRV_GMAC_GetTxFrameCount},
+	{"Tx Broadcast Frames(TxBCFT)",    _DRV_GMAC_GetTxBCastFrameCount},
+	{"Tx Multicast Frames(TxMFT)",     _DRV_GMAC_GetTxMCastFrameCount},
+	{"Tx Pause Frames(TxPFT)",     _DRV_GMAC_GetTxPauseFrameCount},
+	{"Tx 64-byte Frames(TxBFT64)",   _DRV_GMAC_GetTx64ByteFrameCount},
+	{"Tx 65-127 byte Frames(TBFT127)",   _DRV_GMAC_GetTx127ByteFrameCount},
+	{"Tx 128-255 byte Frames(TBFT255)",   _DRV_GMAC_GetTx255ByteFrameCount},
+	{"Tx 256-511 byte Frames(TBFT511)",   _DRV_GMAC_GetTx511ByteFrameCount},
+	{"Tx 512-1023 byte Frames(TBFT1023)",  _DRV_GMAC_GetTx1023ByteFrameCount},
+	{"Tx 1024-1518 byte Frames(TBFT1518)",  _DRV_GMAC_GetTx1518ByteFrameCount},
+	{"Tx Frames >= 1518 byte(GTBF1518)",  _DRV_GMAC_GetTxGT1518ByteFrameCount},
+	{"Tx Underrun Frames not TXed(TxTUR)",     _DRV_GMAC_GetTxUnderRunFrameCount},
+	{"Tx Single Collision Frames(TxSCF)",     _DRV_GMAC_GetTxSingleCollFrameCount},
+	{"Tx 2-15 Collision Frames(TxMCF)",     _DRV_GMAC_GetTxMultiCollFrameCount},	
+	{"Tx 16 Collision Frames(TxECCNT)",   _DRV_GMAC_GetTxExcessCollFrameCount},
+	{"Tx late Collision Frames(TxLCCNT)",   _DRV_GMAC_GetTxLateCollFrameCount},
+	{"Tx Deferred Frames(TxDTF)",     _DRV_GMAC_GetTxDeferFrameCount},	
+	{"Tx Carrier Sense error Frames(TxCSE)",     _DRV_GMAC_GetTxCSErrorFrameCount},		
+	{"Rx Byte Count-lower 32bits(RxORLO)",    _DRV_GMAC_GetRxOctetLow},
+	{"Rx Byte Count-upper 16bits(RxORHI)",    _DRV_GMAC_GetRxOctetHigh},
+	{"Rx Frames w/o error(RxFRCNT)",    _DRV_GMAC_GetRxFrameCount},
+	{"Rx Broadcast Frames(RxBCFR)",    _DRV_GMAC_GetRxBCastFrameCount},
+	{"Rx Multicast Frames (RxMFR)",     _DRV_GMAC_GetRxMCastFrameCount},
+	{"Rx Pause Frames(RxPFR)",     _DRV_GMAC_GetRxPauseFrameCount},
+	{"Rx 64-byte Frames(RxBFR64)",   _DRV_GMAC_GetRx64ByteFrameCount},
+	{"Rx 65-127 byte Frames(TBFR127)",   _DRV_GMAC_GetRx127ByteFrameCount},
+	{"Rx 128-255 byte Frames(TBFR255)",   _DRV_GMAC_GetRx255ByteFrameCount},
+	{"Rx 256-511 byte Frames(TBFR511)",   _DRV_GMAC_GetRx511ByteFrameCount},
+	{"Rx 512-1023 byte Frames(TBFR1023)",  _DRV_GMAC_GetRx1023ByteFrameCount},
+	{"Rx 1024-1518 byte Frames(TBFR1518)",  _DRV_GMAC_GetRx1518ByteFrameCount},
+	{"Rx Frames >= 1519 bytes(TMXBFR)",    _DRV_GMAC_GetRxGT1518ByteFrameCount},
+	{"Rx Frames < 64 bytes(RxUFR)",     _DRV_GMAC_GetRxUnderSizeFrameCount},
+	{"Rx Frames > 1518 bytes(RxOFR)",     _DRV_GMAC_GetRxOverSizeFrameCount},
+	{"Rx error Frames > 1518 bytes(RxJR)",      _DRV_GMAC_GetRxJabberFrameCount},
+	{"Rx CRC error Frames(RxFCSE)",    _DRV_GMAC_GetRxFCSErrorFrameCount},
+	{"Rx Length field error Frames(RxLFFE)",    _DRV_GMAC_GetRxLFErrorFrameCount},
+	{"Rx symbol error Frames(RxRSE)",     _DRV_GMAC_GetRxSymErrorFrameCount},
+	{"Rx alignment error Frames(RxAE)",      _DRV_GMAC_GetRxAlignErrorFrameCount},
+	{"Rx Resource Error (RxRRE)",     _DRV_GMAC_GetRxResErrorFrameCount},		
+	{"Rx overrun error Frames(RxROE)",     _DRV_GMAC_GetRxOverRunFrameCount},
+	{"Rx IPHdr Chksum error Frames(RxIHCE)",    _DRV_GMAC_GetRxIPHdrCSErrorFrameCount},	
+	{"Rx TCP Chksum error Frames(RxTCE)",     _DRV_GMAC_GetRxTCPCSErrorFrameCount},	
+	{"Rx UDP Chksum error Frames(RxUCE)",     _DRV_GMAC_GetRxUDPCSErrorFrameCount},
 };
 
 
@@ -481,6 +483,13 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 	// remaining initialization is done by DRV_ETHMAC_PIC32MACTasks	 	
 	pMACDrv->sGmacData._macFlags._init = 1;	
 	pMACDrv->sGmacData.sysStat = SYS_STATUS_BUSY;
+    
+    //initialize unimplemented Receive status to -1
+    pMACDrv->sGmacData._rxStat.nRxErrorPackets = -1;
+    pMACDrv->sGmacData._rxStat.nRxFragmentErrors = -1;
+    pMACDrv->sGmacData._rxStat.nRxPendBuffers = -1;
+    pMACDrv->sGmacData._rxStat.nRxSchedBuffers = -1;
+    
 	return (SYS_MODULE_OBJ)pMACDrv;
 	
 }
