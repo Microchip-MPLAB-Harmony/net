@@ -2274,8 +2274,7 @@ static void _DRV_ETHPHY_NegResultPhase_ANAD(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
         }
     }
     else
-    {
-        lpAD.w     = _ANAD_BASE10T_MASK;  // lowest priority resolution
+    {   // even if negotiation is not enabled, the link partner advertising shows the configuration
         linkStat |= DRV_ETHPHY_LINK_ST_LP_NEG_UNABLE;
         if(phyExp.PDF)
         {
