@@ -613,7 +613,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
 	TCPIP_MAC_PACKET* pRxTempPkt;
 	DRV_PIC32CGMAC_RESULT     res;
 	
-    static uint32_t bna_flag = 0;
+    uint32_t bna_flag = 0;
     
 	uint16_t startIndex = 0;	
 	uint16_t endIndex = 0;
