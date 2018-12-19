@@ -1785,6 +1785,8 @@ typedef struct
 
     /*  number of RX fragmentation errors */
     int                 nRxFragmentErrors;
+    
+    int                 nRxBuffNotAvailable; //niyas
 
 }TCPIP_MAC_RX_STATISTICS;
 
@@ -1841,7 +1843,7 @@ typedef struct
 typedef struct
 {
     /* name of the hardware register */
-    char        registerName[32];           
+    char        registerName[36];           
 
     /*  value of the hardware register */
     uint32_t    registerValue;
