@@ -1430,30 +1430,30 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackSysFsWrapperHeaderFile.setType("HEADER")
 	tcpipStackSysFsWrapperHeaderFile.setOverwrite(True)
 
-	# file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
+	# file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
 	tcpipStackNetPresHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackNetPresHeaderFile.setSourcePath("net/pres/net_pres.h")
+	tcpipStackNetPresHeaderFile.setSourcePath("net_pres/pres/net_pres.h")
 	tcpipStackNetPresHeaderFile.setOutputName("net_pres.h")
-	tcpipStackNetPresHeaderFile.setDestPath("/net/pres/")
-	tcpipStackNetPresHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	tcpipStackNetPresHeaderFile.setDestPath("/net_pres/pres/")
+	tcpipStackNetPresHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	tcpipStackNetPresHeaderFile.setType("HEADER")
 	tcpipStackNetPresHeaderFile.setOverwrite(True)
 
-	#file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapi.h"
+	#file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_socketapi.h"
 	tcpipStackNetPresSktApiHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackNetPresSktApiHeaderFile.setSourcePath("net/pres/net_pres_socketapi.h")
+	tcpipStackNetPresSktApiHeaderFile.setSourcePath("net_pres/pres/net_pres_socketapi.h")
 	tcpipStackNetPresSktApiHeaderFile.setOutputName("net_pres_socketapi.h")
-	tcpipStackNetPresSktApiHeaderFile.setDestPath("/net/pres/")
-	tcpipStackNetPresSktApiHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	tcpipStackNetPresSktApiHeaderFile.setDestPath("/net_pres/pres/")
+	tcpipStackNetPresSktApiHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	tcpipStackNetPresSktApiHeaderFile.setType("HEADER")
 	tcpipStackNetPresSktApiHeaderFile.setOverwrite(True)
 	
-	#file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapiconversion.h"	
+	#file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_socketapiconversion.h"	
 	tcpipStackNetPresSktApiConvHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackNetPresSktApiConvHeaderFile.setSourcePath("net/pres/net_pres_socketapiconversion.h")
+	tcpipStackNetPresSktApiConvHeaderFile.setSourcePath("net_pres/pres/net_pres_socketapiconversion.h")
 	tcpipStackNetPresSktApiConvHeaderFile.setOutputName("net_pres_socketapiconversion.h")
-	tcpipStackNetPresSktApiConvHeaderFile.setDestPath("/net/pres/")
-	tcpipStackNetPresSktApiConvHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	tcpipStackNetPresSktApiConvHeaderFile.setDestPath("/net_pres/pres/")
+	tcpipStackNetPresSktApiConvHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	tcpipStackNetPresSktApiConvHeaderFile.setType("HEADER")
 	tcpipStackNetPresSktApiConvHeaderFile.setOverwrite(True)	
 	

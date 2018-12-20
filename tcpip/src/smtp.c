@@ -45,7 +45,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_SMTP_CLIENT
 
 #include "tcpip/src/tcpip_private.h"
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_USE_SMTP_CLIENT)
 

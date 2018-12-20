@@ -36,8 +36,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 #include "net_pres_enc_glue.h"
-#include "net/pres/net_pres_transportapi.h"
-#include "net/pres/net_pres_certstore.h"
+#include "net_pres/pres/net_pres_transportapi.h"
+#include "net_pres/pres/net_pres_certstore.h"
 
 <#if (lib_wolfssl.wolfssl)?has_content>
 #include "config.h"

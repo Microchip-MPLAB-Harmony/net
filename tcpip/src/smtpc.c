@@ -50,7 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "ctype.h"
 
 #include "tcpip/src/tcpip_private.h"
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #include "tcpip/src/common/sys_fs_wrapper.h"
 

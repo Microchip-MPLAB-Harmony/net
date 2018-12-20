@@ -58,7 +58,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define __HTTP_NET_H_
 
 #include "system/fs/sys_fs.h"
-#include "net/pres/net_pres.h"
+#include "net_pres/pres/net_pres.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility

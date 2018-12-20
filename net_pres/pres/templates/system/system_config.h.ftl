@@ -1,4 +1,4 @@
-<#--include "/framework/net/pres/tls/templates/system_config.h.ftl"-->
+<#--include "/framework/net_pres/pres/tls/templates/system_config.h.ftl"-->
 <#if NET_PRES_USE>
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE ${__INSTANCE_COUNT}

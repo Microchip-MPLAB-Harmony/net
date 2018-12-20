@@ -34,7 +34,7 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-#include "net/pres/net_pres_certstore.h"
+#include "net_pres/pres/net_pres_certstore.h"
 <#if NET_PRES_BLOB_CERT_REPO>
     <#if NET_PRES_BLOB_CLIENT_SUPPORT>
 #define USE_CERT_BUFFERS_2048

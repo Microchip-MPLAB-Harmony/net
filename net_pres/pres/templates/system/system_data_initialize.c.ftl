@@ -1,4 +1,4 @@
-<#--include "/net/pres/tls/templates/system_init.c.data.ftl"-->
+<#--include "/net_pres/pres/tls/templates/system_init.c.data.ftl"-->
 <#if NET_PRES_USE>
     <#macro NET_PRES_HRM_TRANS_DATA
         CONN
@@ -50,7 +50,7 @@
     <#macro NET_PRES_TRANS_DATA
         INST_NUMBER>
 /* Net Presentation Layer Data Definitions */
-#include "net/pres/net_pres_enc_glue.h"
+#include "net_pres/pres/net_pres_enc_glue.h"
         <#assign useStream= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_STREAM_IDX${INST_NUMBER}"?eval>
         <#assign useDataGram= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_DATAGRAM_IDX${INST_NUMBER}"?eval> 
         <#assign useServer= "netPres_${INST_NUMBER}.NET_PRES_SUPPORT_SERVER_IDX${INST_NUMBER}"?eval> 
