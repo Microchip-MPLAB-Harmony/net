@@ -1785,8 +1785,9 @@ typedef struct
 
     /*  number of RX fragmentation errors */
     int                 nRxFragmentErrors;
-    
-    int                 nRxBuffNotAvailable; //niyas
+	
+    /*  number of occurences of 'RX Buffer Not Available' state in GMAC driver */
+    int                 nRxBuffNotAvailable;
 
 }TCPIP_MAC_RX_STATISTICS;
 
