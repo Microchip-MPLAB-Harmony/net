@@ -189,66 +189,66 @@ def instantiateComponent(netPresCommonComponent):
 	netPresCertStoreStubServer.setDefaultValue(True)	
 	netPresCertStoreStubServer.setDependencies(netPresMenuVisible, ["NET_PRES_CERT_STORE_STUBS"])			
 
-	# file NET_PRES1_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres.h"
+	# file NET_PRES1_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
 	netPresHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresHeaderFile.setSourcePath("net/pres/net_pres.h")
+	netPresHeaderFile.setSourcePath("net_pres/pres/net_pres.h")
 	netPresHeaderFile.setOutputName("net_pres.h")
-	netPresHeaderFile.setDestPath("net/pres/")
-	netPresHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresHeaderFile.setDestPath("net_pres/pres/")
+	netPresHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresHeaderFile.setType("HEADER")
 	netPresHeaderFile.setOverwrite(True)
 	
-	# file NET_PRES2_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_certstore.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_certstore.h"
+	# file NET_PRES2_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_certstore.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_certstore.h"
 	netPresCertStoreHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresCertStoreHeaderFile.setSourcePath("net/pres/net_pres_certstore.h")
+	netPresCertStoreHeaderFile.setSourcePath("net_pres/pres/net_pres_certstore.h")
 	netPresCertStoreHeaderFile.setOutputName("net_pres_certstore.h")
-	netPresCertStoreHeaderFile.setDestPath("net/pres/")
-	netPresCertStoreHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresCertStoreHeaderFile.setDestPath("net_pres/pres/")
+	netPresCertStoreHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresCertStoreHeaderFile.setType("HEADER")
 	netPresCertStoreHeaderFile.setOverwrite(True)	
 	
-	# file NET_PRES3_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_encryptionproviderapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_encryptionproviderapi.h"
+	# file NET_PRES3_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_encryptionproviderapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_encryptionproviderapi.h"
 	netPresEncryptApiHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresEncryptApiHeaderFile.setSourcePath("net/pres/net_pres_encryptionproviderapi.h")
+	netPresEncryptApiHeaderFile.setSourcePath("net_pres/pres/net_pres_encryptionproviderapi.h")
 	netPresEncryptApiHeaderFile.setOutputName("net_pres_encryptionproviderapi.h")
-	netPresEncryptApiHeaderFile.setDestPath("net/pres/")
-	netPresEncryptApiHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresEncryptApiHeaderFile.setDestPath("net_pres/pres/")
+	netPresEncryptApiHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresEncryptApiHeaderFile.setType("HEADER")
 	netPresEncryptApiHeaderFile.setOverwrite(True)		
 	
-	# file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapi.h"
+	# file NET_PRES4_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_socketapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_socketapi.h"
 	netPresSocketApiHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresSocketApiHeaderFile.setSourcePath("net/pres/net_pres_socketapi.h")
+	netPresSocketApiHeaderFile.setSourcePath("net_pres/pres/net_pres_socketapi.h")
 	netPresSocketApiHeaderFile.setOutputName("net_pres_socketapi.h")
-	netPresSocketApiHeaderFile.setDestPath("net/pres/")
-	netPresSocketApiHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresSocketApiHeaderFile.setDestPath("net_pres/pres/")
+	netPresSocketApiHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresSocketApiHeaderFile.setType("HEADER")
 	netPresSocketApiHeaderFile.setOverwrite(True)		
 	
-	# file NET_PRES5_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_transportapi.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_transportapi.h"
+	# file NET_PRES5_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_transportapi.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_transportapi.h"
 	netPresTransApiHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresTransApiHeaderFile.setSourcePath("net/pres/net_pres_transportapi.h")
+	netPresTransApiHeaderFile.setSourcePath("net_pres/pres/net_pres_transportapi.h")
 	netPresTransApiHeaderFile.setOutputName("net_pres_transportapi.h")
-	netPresTransApiHeaderFile.setDestPath("net/pres/")
-	netPresTransApiHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresTransApiHeaderFile.setDestPath("net_pres/pres/")
+	netPresTransApiHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresTransApiHeaderFile.setType("HEADER")
 	netPresTransApiHeaderFile.setOverwrite(True)		
 	
-	# file NET_PRES_LOCAL_H "$HARMONY_VERSION_PATH/framework/net/pres/src/net_pres_local.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/src/net_pres_local.h"
+	# file NET_PRES_LOCAL_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/src/net_pres_local.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/src/net_pres_local.h"
 	netPresLocalHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresLocalHeaderFile.setSourcePath("net/pres/src/net_pres_local.h")
+	netPresLocalHeaderFile.setSourcePath("net_pres/pres/src/net_pres_local.h")
 	netPresLocalHeaderFile.setOutputName("net_pres_local.h")
-	netPresLocalHeaderFile.setDestPath("net/pres/src/")
-	netPresLocalHeaderFile.setProjectPath("config/" + configName + "/net/pres/src/")
+	netPresLocalHeaderFile.setDestPath("net_pres/pres/src/")
+	netPresLocalHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/src/")
 	netPresLocalHeaderFile.setType("HEADER")
 	netPresLocalHeaderFile.setOverwrite(True)		
 		
-	# file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net/pres/net_pres_socketapiconversion.h"
+	# file NET_PRES_SOCKETAPICONVERSION_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres_socketapiconversion.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres_socketapiconversion.h"
 	netPresSktApiConvHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresSktApiConvHeaderFile.setSourcePath("net/pres/net_pres_socketapiconversion.h")
+	netPresSktApiConvHeaderFile.setSourcePath("net_pres/pres/net_pres_socketapiconversion.h")
 	netPresSktApiConvHeaderFile.setOutputName("net_pres_socketapiconversion.h")
-	netPresSktApiConvHeaderFile.setDestPath("net/pres/")
-	netPresSktApiConvHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresSktApiConvHeaderFile.setDestPath("net_pres/pres/")
+	netPresSktApiConvHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresSktApiConvHeaderFile.setType("HEADER")
 	netPresSktApiConvHeaderFile.setOverwrite(True)	
 
@@ -256,30 +256,30 @@ def instantiateComponent(netPresCommonComponent):
 	netPresSysInitDataSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysInitDataSourceFtl.setType("STRING")
 	netPresSysInitDataSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_LIBRARY_INITIALIZATION_DATA")
-	netPresSysInitDataSourceFtl.setSourcePath("net/pres/templates/system/system_data_initialize.c.ftl")
+	netPresSysInitDataSourceFtl.setSourcePath("net_pres/pres/templates/system/system_data_initialize.c.ftl")
 	netPresSysInitDataSourceFtl.setMarkup(True)
 	
 	# add "<#include \"/framework/net/templates/system_init.c.call.ftl\">"  to list SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE
 	netPresSysInitCallSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysInitCallSourceFtl.setType("STRING")
 	netPresSysInitCallSourceFtl.setOutputName("core.LIST_SYSTEM_INIT_C_INITIALIZE_MIDDLEWARE")
-	netPresSysInitCallSourceFtl.setSourcePath("net/pres/templates/system/system_initialize.c.ftl")
+	netPresSysInitCallSourceFtl.setSourcePath("net_pres/pres/templates/system/system_initialize.c.ftl")
 	netPresSysInitCallSourceFtl.setMarkup(True)
 
 	netPresSystemDefFile = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSystemDefFile.setType("STRING")
 	netPresSystemDefFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_INCLUDES")
-	netPresSystemDefFile.setSourcePath("net/pres/templates/system/system_definitions.h.ftl")
+	netPresSystemDefFile.setSourcePath("net_pres/pres/templates/system/system_definitions.h.ftl")
 	netPresSystemDefFile.setMarkup(True)
 	
 	netPresSystemDefObjFile = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSystemDefObjFile.setType("STRING")
 	netPresSystemDefObjFile.setOutputName("core.LIST_SYSTEM_DEFINITIONS_H_OBJECTS")
-	netPresSystemDefObjFile.setSourcePath("net/pres/templates/system/system_definitions_object.h.ftl")
+	netPresSystemDefObjFile.setSourcePath("net_pres/pres/templates/system/system_definitions_object.h.ftl")
 	netPresSystemDefObjFile.setMarkup(True)
 	
 	netPresSystemConfigFtl = netPresCommonComponent.createFileSymbol(None, None)
-	netPresSystemConfigFtl.setSourcePath("net/pres/templates/system/system_config.h.ftl")
+	netPresSystemConfigFtl.setSourcePath("net_pres/pres/templates/system/system_config.h.ftl")
 	netPresSystemConfigFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	netPresSystemConfigFtl.setMarkup(True)
 	netPresSystemConfigFtl.setType("STRING")
@@ -288,54 +288,54 @@ def instantiateComponent(netPresCommonComponent):
 	netPresSysTaskSourceFtl = netPresCommonComponent.createFileSymbol(None, None)
 	netPresSysTaskSourceFtl.setType("STRING")
 	netPresSysTaskSourceFtl.setOutputName("core.LIST_SYSTEM_TASKS_C_CALL_LIB_TASKS")
-	netPresSysTaskSourceFtl.setSourcePath("net/pres/templates/system/system_tasks.c.ftl")
+	netPresSysTaskSourceFtl.setSourcePath("net_pres/pres/templates/system/system_tasks.c.ftl")
 	netPresSysTaskSourceFtl.setMarkup(True)
 
 	netPresSystemRtosTasksFile = netPresCommonComponent.createFileSymbol("NET_PRES_SYS_RTOS_TASK", None)
 	netPresSystemRtosTasksFile.setType("STRING")
 	netPresSystemRtosTasksFile.setOutputName("core.LIST_SYSTEM_RTOS_TASKS_C_DEFINITIONS")
-	netPresSystemRtosTasksFile.setSourcePath("net/pres/templates/system/system_rtos_tasks.c.ftl")
+	netPresSystemRtosTasksFile.setSourcePath("net_pres/pres/templates/system/system_rtos_tasks.c.ftl")
 	netPresSystemRtosTasksFile.setMarkup(True)
 	netPresSystemRtosTasksFile.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
 	netPresSystemRtosTasksFile.setDependencies(genRtosTask, ["HarmonyCore.SELECT_RTOS"])
 	
-	# file NET_PRES_C "$HARMONY_VERSION_PATH/framework/net/pres/src/net_pres.c" to "$PROJECT_SOURCE_FILES/framework/net/pres/src/net_pres.c"
+	# file NET_PRES_C "$HARMONY_VERSION_PATH/framework/net_pres/pres/src/net_pres.c" to "$PROJECT_SOURCE_FILES/framework/net_pres/pres/src/net_pres.c"
 	netPresSourceFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresSourceFile.setSourcePath("net/pres/src/net_pres.c")
+	netPresSourceFile.setSourcePath("net_pres/pres/src/net_pres.c")
 	netPresSourceFile.setOutputName("net_pres.c")
 	netPresSourceFile.setOverwrite(True)
-	netPresSourceFile.setDestPath("net/pres/src/")
-	netPresSourceFile.setProjectPath("config/" + configName + "/net/pres/src/")
+	netPresSourceFile.setDestPath("net_pres/pres/src/")
+	netPresSourceFile.setProjectPath("config/" + configName + "/net_pres/pres/src/")
 	netPresSourceFile.setType("SOURCE")
 	netPresSourceFile.setEnabled(True)
 		
-	# template NET_PRES_ENC_GLUE_H_TEMPLATE "$HARMONY_VERSION_PATH/framework/net/pres/templates/net_pres_enc_glue.h.ftl" to "$PROJECT_HEADER_FILES/app/system_config/$CONFIGURATION/framework/net/pres/net_pres_enc_glue.h"
+	# template NET_PRES_ENC_GLUE_H_TEMPLATE "$HARMONY_VERSION_PATH/framework/net_pres/pres/templates/net_pres_enc_glue.h.ftl" to "$PROJECT_HEADER_FILES/app/system_config/$CONFIGURATION/framework/net_pres/pres/net_pres_enc_glue.h"
 	netPresEncGlueHeaderFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresEncGlueHeaderFile.setSourcePath("net/pres/templates/net_pres_enc_glue.h.ftl")
+	netPresEncGlueHeaderFile.setSourcePath("net_pres/pres/templates/net_pres_enc_glue.h.ftl")
 	netPresEncGlueHeaderFile.setOutputName("net_pres_enc_glue.h")
 	netPresEncGlueHeaderFile.setMarkup(True)
-	netPresEncGlueHeaderFile.setDestPath("net/pres/")
-	netPresEncGlueHeaderFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresEncGlueHeaderFile.setDestPath("net_pres/pres/")
+	netPresEncGlueHeaderFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresEncGlueHeaderFile.setType("HEADER")
 	netPresEncGlueHeaderFile.setOverwrite(True)
 	
-	# template NET_PRES_ENC_GLUE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net/pres/templates/net_pres_enc_glue.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net/pres/net_pres_enc_glue.c"	
+	# template NET_PRES_ENC_GLUE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net_pres/pres/templates/net_pres_enc_glue.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net_pres/pres/net_pres_enc_glue.c"	
 	netPresEncGlueSourceFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresEncGlueSourceFile.setSourcePath("net/pres/templates/net_pres_enc_glue.c.ftl")
+	netPresEncGlueSourceFile.setSourcePath("net_pres/pres/templates/net_pres_enc_glue.c.ftl")
 	netPresEncGlueSourceFile.setOutputName("net_pres_enc_glue.c")
-	netPresEncGlueSourceFile.setDestPath("net/pres/")
-	netPresEncGlueSourceFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresEncGlueSourceFile.setDestPath("net_pres/pres/")
+	netPresEncGlueSourceFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresEncGlueSourceFile.setType("SOURCE")
 	netPresEncGlueSourceFile.setMarkup(True)	
 
 	# ifblock NET_PRES_BLOB_CERT_REPO || NET_PRES_CERT_STORE_STUBS
-	# template NET_PRES_ENC_CERT_STORE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net/pres/templates/net_pres_cert_store.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net/pres/net_pres_cert_store.c"
+	# template NET_PRES_ENC_CERT_STORE_C_TEMPLATE "$HARMONY_VERSION_PATH/framework/net_pres/pres/templates/net_pres_cert_store.c.ftl" to "$PROJECT_SOURCE_FILES/app/system_config/$CONFIGURATION/framework/net_pres/pres/net_pres_cert_store.c"
 	# endif 
 	netPresCertStoreSourceFile = netPresCommonComponent.createFileSymbol(None, None)
-	netPresCertStoreSourceFile.setSourcePath("net/pres/templates/net_pres_cert_store.c.ftl")
+	netPresCertStoreSourceFile.setSourcePath("net_pres/pres/templates/net_pres_cert_store.c.ftl")
 	netPresCertStoreSourceFile.setOutputName("net_pres_cert_store.c")
-	netPresCertStoreSourceFile.setDestPath("net/pres/")
-	netPresCertStoreSourceFile.setProjectPath("config/" + configName + "/net/pres/")
+	netPresCertStoreSourceFile.setDestPath("net_pres/pres/")
+	netPresCertStoreSourceFile.setProjectPath("config/" + configName + "/net_pres/pres/")
 	netPresCertStoreSourceFile.setType("SOURCE")
 	netPresCertStoreSourceFile.setMarkup(True)
 	netPresCertStoreSourceFile.setEnabled(False)

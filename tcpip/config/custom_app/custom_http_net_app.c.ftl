@@ -40,7 +40,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 #include "crypto/crypto.h"
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip.h"

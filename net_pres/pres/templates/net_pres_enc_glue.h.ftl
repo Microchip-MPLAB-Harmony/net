@@ -39,8 +39,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define _NET_TLS_WOLFSSL_GLUE_H_
 
 #include "configuration.h"
-#include "net/pres/net_pres.h"
-#include "net/pres/net_pres_encryptionproviderapi.h"
+#include "net_pres/pres/net_pres.h"
+#include "net_pres/pres/net_pres_encryptionproviderapi.h"
 #ifdef __CPLUSPLUS
 extern "C" {
 #endif

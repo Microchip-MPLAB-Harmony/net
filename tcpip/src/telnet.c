@@ -40,7 +40,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 #include "system/console/sys_command.h"
 
 

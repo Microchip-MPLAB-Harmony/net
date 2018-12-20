@@ -63,7 +63,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/common/sys_fs_wrapper.h"
 
 #include "http_net_private.h"
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #define SYS_FS_ATTR_ZIP_COMPRESSED  ((uint16_t)0x0001)
 //#define TCPIP_HTTP_NET_FILE_ERR_DEBUG
