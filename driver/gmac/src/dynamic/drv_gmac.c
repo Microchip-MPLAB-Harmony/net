@@ -1174,15 +1174,12 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 // acknowledge the ETHC packets
 static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx)  
 {
-    // TODO Niyas: the descriptors should be acknowledged always, even if TCOMP is not set!
-        // otherwise lock up is possible. The DRV_PIC32CGMAC_LibTxAckPacket takes care if the descriptor is not done yet.
+
 #if !defined(PIC32C_GMAC_ISR_TX)	
-	//polling TXCOMP in STATUS register	
-	if((GMAC_REGS->GMAC_TSR) & GMAC_TSR_TXCOMP_Msk )
-	{		
-		GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
-		DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
-	}
+	//Clear the TXCOMP transmit status, if set
+	GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
+	DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
+
 #else
 	// Tx complete flag set in GMAC ISR?
 	if(tx_interrupt==true)
