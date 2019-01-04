@@ -412,7 +412,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 	DRV_PIC32CGMAC_RESULT     res;
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   txqueue_node;	
 	DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc;
-	DRV_PIC32CGMAC_PKT_DCPT *pPkt,*pPkt_temp;	
+    TCPIP_MAC_DATA_SEGMENT *pPkt,*pPkt_temp;	
 	uint16_t wTxIndex =0, wNewTxHead =0;
 	uint16_t nRemByte =0, nLoopCnt =0;
 	uint16_t txBufferSize = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize;
@@ -422,20 +422,16 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 	res=DRV_PIC32CGMAC_RES_NO_PACKET;
 	
 	txqueue_node = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue);
-	
-	// TODO Niyas: I think this is really dangerous!
-    // The DRV_PIC32CGMAC_PKT_DCPT has to match the TCPIP_MAC_PACKET->DataSeg type!
-    // Why not use that type is this is what'needed?
-    // Any change in one of these headers will break everything!
-	pPkt_temp = pPkt = (DRV_PIC32CGMAC_PKT_DCPT*)((TCPIP_MAC_PACKET *)txqueue_node->data)->pDSeg;
-	
+
+	pPkt_temp = pPkt = ((TCPIP_MAC_PACKET *)txqueue_node->data)->pDSeg;
+    
 	txqueue_node->startIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead;
 	
 
 	//calculate the number of descriptors, even for multi packet frame
 	while(pPkt_temp != 0)
 	{
-		nTotalDesc_count  += _Calculate_Descriptor_Count(pPkt_temp->nBytes,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize);
+		nTotalDesc_count  += _Calculate_Descriptor_Count(pPkt_temp->segLen,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize);
 		pPkt_temp = pPkt_temp->next;
 	}
 	
@@ -456,14 +452,14 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 		while (pPkt)
 		{
 			//number of descriptor for each packets
-			nLoopCnt = _Calculate_Descriptor_Count(pPkt->nBytes,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize);
-			nRemByte = pPkt->nBytes;
+			nLoopCnt = _Calculate_Descriptor_Count(pPkt->segLen,pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].txBufferSize);
+			nRemByte = pPkt->segLen;
 			
 			//until all the descriptors for this packet is updated
 			while(nLoopCnt != 0)
 			{
 				pTxDesc[wTxIndex].tx_desc_status.val &= (GMAC_TX_WRAP_BIT |GMAC_TX_USED_BIT); //clear all Tx Status except Wrap Bit and Used Bit
-				pTxDesc[wTxIndex].tx_desc_buffaddr = (uint32_t)(&((uint8_t *)pPkt->pBuff)[pPkt->nBytes - nRemByte]);	//set the buffer address
+				pTxDesc[wTxIndex].tx_desc_buffaddr = (uint32_t)(&((uint8_t *)pPkt->segLoad)[pPkt->segLen - nRemByte]);	//set the buffer address
 				if(nRemByte > txBufferSize)
 				{
 					pTxDesc[wTxIndex].tx_desc_status.val |= txBufferSize & GMAC_LENGTH_FRAME; //Set Length for each frame
@@ -609,7 +605,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
 {	
 	DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc;
 	uint16_t nRxDescIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nRxDescIndex;
-	DRV_PIC32CGMAC_PKT_DCPT *pPkt;
+    TCPIP_MAC_DATA_SEGMENT *pPkt;
 	TCPIP_MAC_PACKET* pRxTempPkt;
 	DRV_PIC32CGMAC_RESULT     res;
 	
@@ -759,8 +755,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
 		//calculate the size of frame
 		frameSize = (pRxDesc[endIndex].rx_desc_status.val & GMAC_LENGTH_FRAME); 
 		
-		pPkt = (DRV_PIC32CGMAC_PKT_DCPT *)(*pRxPkt)->pDSeg; //backup of data Segment for later use
-		
+		pPkt = (*pRxPkt)->pDSeg; //backup of data Segment for later use
 		while(nRx_buffer--) //process all the packet buffers
 		{
 			(*pRxPkt)->pDSeg->segLen = (frameSize >= pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize) ?
