@@ -1217,10 +1217,13 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	}
 	
 	//packet in queue for transmission
-	// TODO Niyas: this locks up forever when running out of descriptors!!!!
 	while( (pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0)
 	{
 		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv, queueIdx);
+        
+        //exit loop to avoid deadlock when no Tx descriptors are available
+        if(ethRes == DRV_PIC32CGMAC_RES_NO_DESCRIPTORS)
+            break; 
 	}
 		
 	if((ethRes == DRV_PIC32CGMAC_RES_OK)||(ethRes == DRV_PIC32CGMAC_RES_NO_PACKET))
