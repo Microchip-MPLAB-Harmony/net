@@ -656,6 +656,7 @@ static void _IGMPCleanup(void)
 #endif  // (TCPIP_IGMP_USER_NOTIFICATION != 0)
 
     OSAL_MUTEX_Delete(&igmpListsMutex);
+    OSAL_MUTEX_Delete(&igmpDcptMutex);
 }
 
 void TCPIP_IGMP_Deinitialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl)
@@ -691,7 +692,6 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
     TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode;
     TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pQNode;
     int groupIx, ix;
-    bool    igmpMuxCreated;
 
     if(stackCtrl->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
@@ -723,9 +723,13 @@ bool TCPIP_IGMP_Initialize(const TCPIP_STACK_MODULE_CTRL *const stackCtrl, const
         }
 
         // create synchronization object
-        igmpMuxCreated = OSAL_MUTEX_Create(&igmpListsMutex) == OSAL_RESULT_TRUE;
-        if(!igmpMuxCreated)
+        if(OSAL_MUTEX_Create(&igmpListsMutex) != OSAL_RESULT_TRUE)
         {
+            return false;
+        }
+        if(OSAL_MUTEX_Create(&igmpDcptMutex) != OSAL_RESULT_TRUE)
+        {
+            OSAL_MUTEX_Delete(&igmpListsMutex);
             return false;
         }
 
