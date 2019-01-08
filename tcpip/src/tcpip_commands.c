@@ -2084,7 +2084,7 @@ static int _Command_MACAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    char *ch;
+    char *ch="\0";
     int  opCode = 0;
     IP_ADDRESS_TYPE ipType=0;
     bool res = false;
@@ -2135,7 +2135,8 @@ static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     }
 
     ch = argv[3];
-    if(strlen(ch) == 0)
+    
+    if((ch == NULL) || (strlen(ch) == 0))
     {
         ipType = IP_ADDRESS_TYPE_ANY;
     }
