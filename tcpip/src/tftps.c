@@ -630,10 +630,10 @@ static TFTPS_CB  *_TFTPS_GetClientCB(uint8_t client_cnt)
         byteCnt = TCPIP_UDP_PutIsReady(pClientCB->cSkt);
         if( byteCnt < (pClientCB->options.blksize+TCPIP_TFTP_HEADER_MINSIZE))
         {
-             if(!TCPIP_UDP_OptionsSet(pClientCB->cSkt, UDP_OPTION_TX_BUFF, (void*)(unsigned int)(pClientCB->options.blksize+TCPIP_TFTP_HEADER_MINSIZE)))
-             {
-                 return 0;
-             }           
+            if(!TCPIP_UDP_OptionsSet(pClientCB->cSkt, UDP_OPTION_TX_BUFF, (void*)(unsigned int)(pClientCB->options.blksize+TCPIP_TFTP_HEADER_MINSIZE)))
+            {
+                return 0;
+            }           
         }
          //Get the write pointer:
         pClientCB->trans_buf = TCPIP_UDP_TxPointerGet(pClientCB->cSkt);
@@ -1125,6 +1125,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
     {
         tftp_con->block_number = 0;
         tftp_con->status = TFTPS_TRANSFERRING_FILE;
+        tftp_con->smState = SM_TFTPS_SEND_DATA;
     }            
     tftp_con->type = TFTPS_READ_TYPE;
     
@@ -1282,13 +1283,17 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint3
             return (TFTPS_RES_CONN_ERR);
     }
 
-    if(res != TFTPS_RES_OK)
+    if(tftp_con->status != TFTPS_PROCESS_INPROGRESS)
     {
-        // discard the server socket received packet
-        TCPIP_UDP_Discard(pTftpDcpt->uSkt);
-        // close client socket ?
-        _TFTPS_ReleaseDataSocket(tftp_con);
+        if(res != TFTPS_RES_OK)
+        {
+            // discard the server socket received packet
+            TCPIP_UDP_Discard(pTftpDcpt->uSkt);
+            // close client socket ?
+            _TFTPS_ReleaseDataSocket(tftp_con);
+        }
     }
+    
     return (res);
 }  /* TFTPS_Process_Request_PACKET */
 
