@@ -42,7 +42,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include <alloca.h>
 
 #include "tcpip/src/tcpip_private.h"
 
@@ -3199,7 +3198,13 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
 {
     uint16_t    peekOffs, peekReqLen, peekSize, avlblBytes;
     char*   queryStr;
-    char* srchBuff = alloca(httpPeekBufferSize + 1);
+
+    char* srchBuff = (char*)(*http_malloc_fnc)(httpPeekBufferSize + 1);
+    if(srchBuff == 0)
+    {
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR, (void*)(uint32_t)httpPeekBufferSize);
+        return 0xffff;
+    }
 
     const char* findStr = (const char*)str;
 
@@ -3212,6 +3217,7 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
         _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_PEEK_BUFFER_SIZE_EXCEEDED, srchBuff);
     }
 
+    uint16_t retCode = 0xffff;
     // sanity check
     if(findLen < httpPeekBufferSize)
     {   // make sure enough room to find such string
@@ -3226,13 +3232,15 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
                 queryStr = strstr(srchBuff, findStr);
                 if(queryStr != 0)
                 {
-                    return peekOffs + queryStr - srchBuff;
+                    retCode = peekOffs + queryStr - srchBuff;
                 }
             }
         }
     }
 
-    return 0xffff;
+
+    (*http_free_fnc)(srchBuff);
+    return retCode;
 }
 
 static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen)
@@ -5123,9 +5131,8 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIEcho(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_H
     char*                       pEcho;
     const void*                 evInfo = 0;
     TCPIP_HTTP_NET_EVENT_TYPE   evType = TCPIP_HTTP_NET_EVENT_NONE;
-    // construct the echo response here
-    
-    
+
+    // construct the echo response here    
 #if defined(TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE)
     echoLen = (strlen(TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE) > sizeof(pHE->varStr)) ? strlen(TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE) : sizeof(pHE->varStr);
     echoLen += strlen(pAttr->value);    // we append the variable name to the message
@@ -5133,8 +5140,12 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIEcho(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_H
     echoLen = sizeof(pHE->varStr);
 #endif // defined(TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE)
 
-    char* echoBuffer = alloca(TCPIP_HTTP_CHUNK_HEADER_LEN + echoLen + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1);
-
+    char* echoBuffer = (char*)(*http_malloc_fnc)(TCPIP_HTTP_CHUNK_HEADER_LEN + echoLen + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1);
+    if(echoBuffer == 0)
+    {
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR, (void*)(uint32_t)(TCPIP_HTTP_CHUNK_HEADER_LEN + echoLen + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1));
+        return TCPIP_HTTP_CHUNK_RES_SSI_ALLOC_ERR; 
+    }
 
     // process one attribute pair at a time
     while(true)
@@ -5193,6 +5204,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIEcho(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_H
         socketBytes = NET_PRES_SocketWriteIsReady(pHttpCon->socket, outBytes, 0);
         if(socketBytes < outBytes)
         {
+            (*http_free_fnc)(echoBuffer);
             return TCPIP_HTTP_CHUNK_RES_WAIT;
         }
 
@@ -5206,6 +5218,8 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIEcho(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_H
     {
         _HTTP_Report_ConnectionEvent(pHttpCon, evType, evInfo);
     }
+
+    (*http_free_fnc)(echoBuffer);
 
     pChDcpt->ssiChDcpt.nCurrAttrib++;
     return TCPIP_HTTP_CHUNK_RES_DONE;
