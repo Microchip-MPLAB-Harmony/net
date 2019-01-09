@@ -8,7 +8,7 @@
     This source file contains the functions and storage of the 
     TFTP Server routines
     
-    TFTP protocol RFC support - 1350,TFTP option code RFC - 2347, 2348, 2349.
+    TFTP protocol RFC support - 1350, TFTP option code RFC - 2347, 2348, 2349.
 *******************************************************************************/
 
 // DOM-IGNORE-BEGIN
@@ -37,24 +37,31 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
 // DOM-IGNORE-END
-#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_TFTP_SERVER
 
-#include "tcpip/src/tcpip_private.h"
-#include "tftps_private.h"
-#include "tcpip/src/common/sys_fs_wrapper.h"
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Included Files 
 // *****************************************************************************
 // *****************************************************************************
+
+
+#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_TFTP_SERVER
+
+#include "tcpip/src/tcpip_private.h"
+
+#if defined(TCPIP_STACK_USE_TFTP_SERVER)
+
+#include "tftps_private.h"
+#include "tcpip/src/common/sys_fs_wrapper.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Static Data
+// *****************************************************************************
+// *****************************************************************************
+
 #define mMIN(a, b)  ((a<b)?a:b)
 
 static TFTPS_CB            gTftpClientCB[TCPIP_TFTPS_CLIENT_NUMBER];
@@ -1959,3 +1966,6 @@ static void _TFTPSNotifyUserClients(TFTPS_CB* pTftpCB, TCPIP_TFTPS_EVENT_TYPE ev
     TCPIP_Notification_Unlock(&pTftpsDcpt->tftpsRegisteredUsers);
 #endif  // (TCPIP_DNS_CLIENT_USER_NOTIFICATION != 0)
 }
+
+#endif  // defined(TCPIP_STACK_USE_TFTP_SERVER)
+

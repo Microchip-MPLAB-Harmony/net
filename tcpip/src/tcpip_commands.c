@@ -2084,96 +2084,111 @@ static int _Command_MACAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    char *ch="\0";
-    int  opCode = 0;
-    IP_ADDRESS_TYPE ipType=0;
-    bool res = false;
+    // tftps <interface> <start/stop> <add-type>
+    // tftps status
+
+    int  opCode = 0;        // 0- none; 1 - start; 2 - stop
+    bool opRes;
+    IP_ADDRESS_TYPE ipType = IP_ADDRESS_TYPE_ANY;
     TCPIP_NET_HANDLE netH;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool printUsage = true;
 
-    if (argc < 2)
+    while(argc >= 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps <interface> <start/stop> <interface-type>\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps status\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "tftps status command returns number clients running\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "interface type: 1 for IPv4 and 2 for IPv6 and none for ANY \r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: tftps PIC32INT start 1\r\n");
-        return false;
-    }
-    if((strcmp(argv[1],"status") == 0) && (argc == 2))
-    {
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "status: Number of clients running: %d \r\n",TCPIP_TFTPS_ClientsNumber());
-        return true;
-    }
-
-    netH = TCPIP_STACK_NetHandleGet(argv[1]);
-
-    if (netH == 0)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
-        return false;
-    }
-
-    if (memcmp(argv[2], "start",5) == 0)
-    {
-        if(TCPIP_TFTPS_IsEnabled())
+        if((strcmp(argv[1], "status") == 0))
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "This TFTP server already running\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "TFTPS - Number of clients running: %d \r\n", TCPIP_TFTPS_ClientsNumber());
             return true;
         }
 
-        opCode = 1;
-    }
-    else if (memcmp(argv[2], "stop", 4) == 0)
-    {
-        if(TCPIP_TFTPS_IsEnabled() == 0)
+        if(argc < 3)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "This TFTP server already stopped\r\n");
-            return true;
+            break;
         }
-        opCode = 2;
-    }
 
-    ch = argv[3];
-    
-    if((ch == NULL) || (strlen(ch) == 0))
-    {
-        ipType = IP_ADDRESS_TYPE_ANY;
-    }
-    else
-    {        
-        ipType = (IP_ADDRESS_TYPE)atoi(ch);
-        if(ipType != IP_ADDRESS_TYPE_IPV4 && ipType != IP_ADDRESS_TYPE_IPV6)
+        netH = TCPIP_STACK_NetHandleGet(argv[1]);
+        if (netH == 0)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid IP address type \r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - Unknown interface\r\n");
             return false;
         }
+
+        if (strcmp(argv[2], "start") == 0)
+        {
+            if(TCPIP_TFTPS_IsEnabled())
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - already running\r\n");
+                return true;
+            }
+
+            opCode = 1;
+        }
+        else if (strcmp(argv[2], "stop") == 0)
+        {
+            if(TCPIP_TFTPS_IsEnabled() == 0)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - already stopped\r\n");
+                return true;
+            }
+            opCode = 2;
+        }
+        else
+        {
+            break;
+        }
+
+        if(argc > 3)
+        {
+            int type = atoi(argv[3]);
+            if(type == 4)
+            {
+                ipType = IP_ADDRESS_TYPE_IPV4;
+            }
+            else if(type == 6)
+            {
+                ipType = IP_ADDRESS_TYPE_IPV6;
+            }
+            else if(type == 0)
+            {
+                ipType = IP_ADDRESS_TYPE_ANY;
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - Invalid address type\r\n");
+                return false;
+            }
+        }
+
+        printUsage = false;
+        break;
     }
 
-    switch(opCode)
-    {
-        case 1:
-            res = TCPIP_TFTPS_Enable(netH,ipType);
-            break;
 
-        case 2:
-            res = TCPIP_TFTPS_Disable(netH);
-            break;      
-        default:
-            res = false;
-            break;
-    }
-    
-    if (res == true)
+    if (printUsage)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation successful!\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps <interface> <start/stop> <add-type>\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps status\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "add-type: 4 for IPv4, 6 for IPv6, 0/none for ANY \r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: tftps eth0 start 4\r\n");
     }
-    else
+
+    if(opCode != 0)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation failed!\r\n");
+        if(opCode == 1)
+        {
+            opRes = TCPIP_TFTPS_Enable(netH, ipType);
+        }
+        else
+        {
+            opRes = TCPIP_TFTPS_Disable(netH);
+        }
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "TFTPS - operation %s!\r\n", opRes ? "succesful" : "failed");
     }
 
     return true;
+
 }
 #endif  
 
