@@ -46,8 +46,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
 
 extern __attribute__((section(".bss.errno"))) int errno;
+#ifdef __ICCARM__
+#include "toolchain_specifics.h"                                // extended E codes not provided in IAR errno.h
+#else
 #include <sys/errno.h>
-
+#endif
 
 static bool HandlePossibleTCPDisconnection(SOCKET s);
 
@@ -1133,8 +1136,6 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
         return 0; //success
     }
 
-    errno = EINVAL;
-    return SOCKET_ERROR;
 }
 
 /*****************************************************************************
@@ -1681,7 +1682,6 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
         return recv(s, buf, len, 0);
     }
 
-    return 0;
 }
 
 /*****************************************************************************
@@ -2042,6 +2042,8 @@ int _setsockopt_tcp(struct BSDSocket * s,
         {
             s->tcpNoDelay = *option_value;
         }
+        break;
+
         default:
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
@@ -2070,7 +2072,6 @@ int _setsockopt_ipv6(struct BSDSocket * s,
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
     }
-    return -1;
 }
 
 int _setsockopt_icmp6(struct BSDSocket * s,
@@ -2285,6 +2286,8 @@ int _getsockopt_tcp(struct BSDSocket * s,
             }
             *option_length = 1;
         }
+        break;
+
         default:
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
@@ -2312,7 +2315,6 @@ int _getsockopt_ipv6(struct BSDSocket * s,
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
     }
-    return -1;
 }
 
 int _getsockopt_icmp6(struct BSDSocket * s,

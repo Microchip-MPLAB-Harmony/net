@@ -44,9 +44,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
 
 
-// Delimiter to locate IP address from CheckIP server
-static const uint8_t _checkIpSrvrResponse[] = "Address:";
-
 // Response codes from DynDNS Update Server
 static const char* _updateIpSrvrResponse[] =
 {
@@ -151,7 +148,6 @@ static uint32_t     DDnsTimer;
 static TCP_SOCKET   MySocket = INVALID_SOCKET;
 static char const *     ROMStrPtr;
 static char *       RAMStrPtr;
-static TCPIP_NET_HANDLE    netH;
 static uint8_t vBuffer[16];
 static IPV4_ADDR ipParsed;
 // the server address
@@ -315,8 +311,6 @@ static void TCPIP_DDNS_Process(void)
             break;
 
         case SM_DNS_START_RESOLVE:
-
-            netH = TCPIP_STACK_NetDefaultGet();
 
             // resolve the remote server
             if(DDNSClient.ROMPointers.CheckIPServer)
@@ -497,8 +491,6 @@ static void TCPIP_DDNS_Process(void)
             break;
 
         case SM_IP_UPDATE_HOME:
-
-            netH = TCPIP_STACK_NetDefaultGet();
 
             // resolve the remote update server
             if(DDNSClient.ROMPointers.UpdateServer)

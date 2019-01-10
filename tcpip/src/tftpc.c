@@ -61,19 +61,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 
-static const void*          tftpcMemH = NULL;           // memory handle
-static TFTP_STATE   _tftpCmdState;
-static tcpipSignalHandle tftpcSignalHandle = 0;
-static uint8_t tftpcInitCount=0;
-static TFTP_CLIENT_VARS gTFTPClientDcpt;
-static TCPIP_NET_IF*  pTftpcIf = 0;       // we use only one interface for tftp (for now at least)
-static TCPIP_NET_IF*  pTftpDefIf = 0;    // default TFTPC interface
-static TCPIP_TFTPC_OPERATION_RESULT      tftpClientError;
-static uint32_t     tftpcTimer;
+static const void*                  tftpcMemH = NULL;           // memory handle
+static TFTP_STATE                   _tftpCmdState;
+static tcpipSignalHandle            tftpcSignalHandle = 0;
+static uint8_t                      tftpcInitCount=0;
+static TFTP_CLIENT_VARS             gTFTPClientDcpt;
+static TCPIP_NET_IF *               pTftpcIf = 0;               // we use only one interface for tftp (for now at least)
+static TCPIP_NET_IF *               pTftpDefIf = 0;             // default TFTPC interface
+static uint32_t                     tftpcTimer;
 // Tracker variable for the number of TFTP retries
-static uint8_t _tftpRetries;
+static uint8_t                      _tftpRetries;
 
-static uint16_t _tftpError;                // Variable to preserve error condition causes for later transmission
+static uint16_t                     _tftpError;                // Variable to preserve error condition causes for later transmission
 
 // TFTP Static functions
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -175,7 +174,7 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         gTFTPClientDcpt.netH =  NULL;
         gTFTPClientDcpt.smState = SM_TFTP_END;
         gTFTPClientDcpt.callbackPos = 0;
-        gTFTPClientDcpt.fileDescr =  SYS_FS_HANDLE_INVALID;
+        gTFTPClientDcpt.fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
         gTFTPClientDcpt.tftpServerAddr.v4Add.Val = 0;
         memset(gTFTPClientDcpt.fileName,0,sizeof(gTFTPClientDcpt.fileName));
 
@@ -477,7 +476,6 @@ static void TCPIP_TFTPC_Process(void)
             }
             if(pTftpcIf == 0)
             {   // wait some more
-                tftpClientError = TFTPC_ERROR_INVALID_INTERFACE;
                 break;
             }
             if(pClient->ipAddrType == IP_ADDRESS_TYPE_IPV4)
