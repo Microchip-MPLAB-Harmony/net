@@ -141,7 +141,7 @@ const IPV6_ADDRESS_POLICY gPolicyTable[] = {
     {{{0xfe, 0xc0, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},  10,  1, 11},            // 
     {{{0x3f, 0xfe, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00}},  16,  1, 12},            // 
 
-    {{},0xFF,0,0},
+    {{{0}},0xFF,0,0},
 };
 
 // Array of global configuration and state variables for an IPv6 interface
@@ -1464,19 +1464,19 @@ bool TCPIP_IPV6_PacketTransmitInFragments (IPV6_PACKET * pkt, uint16_t mtu)
             {
                 if (mtu - currentPayloadLen > 8)
                 {
-                    currentPayloadLen = mtu - (mtu & 0b111);
+                    currentPayloadLen = mtu - (mtu & 0x07);
                 }
                 else
                 {
                     if (currentPayloadLen % 8 != 0)
                     {
-                        if ((ptrSegment->segmentLen - offsetInSegment) > (8 - (currentPayloadLen & 0b111)))
+                        if ((ptrSegment->segmentLen - offsetInSegment) > (8 - (currentPayloadLen & 0x07)))
                         {
-                            currentPayloadLen += (8 - (currentPayloadLen & 0b111));
+                            currentPayloadLen += (8 - (currentPayloadLen & 0x07));
                         }
                         else
                         {
-                            currentPayloadLen -= (currentPayloadLen & 0b111);
+                            currentPayloadLen -= (currentPayloadLen & 0x07);
                         }
                     }
                 }
@@ -2078,7 +2078,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd (TCPIP_NET_HANDLE netH, IPV6_ADD
                 if (!skipProcessing)
                 {
                     TCPIP_NDP_LinkedListEntryInsert (pNetIf, entryLocation, IPV6_HEAP_ADDR_UNICAST_TENTATIVE_ID);
-                    if (TCPIP_NDP_DupAddrDiscoveryDetect (pNetIf, entryLocation) == -1)
+                    if( TCPIP_NDP_DupAddrDiscoveryDetect( pNetIf, entryLocation) == (char) -1 )
                     {
                         TCPIP_NDP_LinkedListEntryRemove (pNetIf, entryLocation, IPV6_HEAP_ADDR_UNICAST_TENTATIVE_ID);
                         entryLocation = NULL;
@@ -2098,28 +2098,32 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd (TCPIP_NET_HANDLE netH, IPV6_ADD
 
 
 // ipv6_private.h
-uint8_t TCPIP_IPV6_HopByHopOptionsHeaderProcess (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, uint8_t * nextHeader, uint16_t * length)
+uint8_t
+TCPIP_IPV6_HopByHopOptionsHeaderProcess(
+    TCPIP_NET_IF *      pNetIf,
+    TCPIP_MAC_PACKET *  pRxPkt,
+    uint8_t *           nextHeader,
+    uint16_t *          length
+    )
 {
     uint8_t headerLength;
-    uint8_t option;
     uint8_t optionLength;
     uint8_t data[8];
     uint8_t i;
     uint8_t j;
+    IPV6_TLV_OPTION_TYPE anIpV6TlvOption;
 
-    TCPIP_IPV6_GetOptionHeader (pRxPkt, data, 1);
+    TCPIP_IPV6_GetOptionHeader( pRxPkt, data, 1 );
 
     *nextHeader = data[0];
     headerLength = data[1] + 1;
     *length = (uint16_t)headerLength << 3;
 
-    option = data[2];
-
+    anIpV6TlvOption.b = data[2];
     i = 3;
 
-    do
-    {
-        switch (option)
+    do {
+        switch( anIpV6TlvOption.b )
         {
             case IPV6_TLV_PAD_1:
                 // If this option is present, let the post-switch code load new
@@ -2147,7 +2151,7 @@ uint8_t TCPIP_IPV6_HopByHopOptionsHeaderProcess (TCPIP_NET_IF * pNetIf, TCPIP_MA
             case IPV6_TLV_HBHO_ROUTER_ALERT:
                 break;
             default:
-                switch (((IPV6_TLV_OPTION_TYPE)option).bits.unrecognizedAction)
+                switch( anIpV6TlvOption.bits.unrecognizedAction )
                 {
                     case IPV6_TLV_UNREC_OPT_SKIP_OPTION:
                         // Ignore this option (treat it like a padding option)
@@ -2182,43 +2186,47 @@ uint8_t TCPIP_IPV6_HopByHopOptionsHeaderProcess (TCPIP_NET_IF * pNetIf, TCPIP_MA
                 }
                 break;
         }
-        if (i == 8)
+        if( i == 8 )
         {
             headerLength--;
             i = 0;
-            if (headerLength != 0)
-                TCPIP_IPV6_GetOptionHeader (pRxPkt, data, 1);
+            if( headerLength != 0 )
+                TCPIP_IPV6_GetOptionHeader( pRxPkt, data, 1 );
         }
-        option = data[i++];
-    }while (headerLength);
+        anIpV6TlvOption.b = data[ i++ ];
+    } while( headerLength );
 
     return IPV6_ACTION_NONE;
 }
 
 
 // ipv6_private.h
-uint8_t TCPIP_IPV6_DestinationOptionsHeaderProcess (TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, uint8_t * nextHeader, uint16_t * length)
+uint8_t
+TCPIP_IPV6_DestinationOptionsHeaderProcess(
+    TCPIP_NET_IF *      pNetIf,
+    TCPIP_MAC_PACKET *  pRxPkt,
+    uint8_t *           nextHeader,
+    uint16_t *          length
+    )
 {
     uint8_t headerLength;
-    uint8_t option;
     uint8_t optionLength;
     uint8_t data[8];
     uint8_t i;
     uint8_t j;
+    IPV6_TLV_OPTION_TYPE anIpV6TlvOption;
 
-    TCPIP_IPV6_GetOptionHeader (pRxPkt, data, 1);
+    TCPIP_IPV6_GetOptionHeader( pRxPkt, data, 1 );
 
     *nextHeader = data[0];
     headerLength = data[1] + 1;
     *length = (uint16_t)headerLength << 3;
 
-    option = data[2];
-
+    anIpV6TlvOption.b = data[ 2 ];
     i = 3;
 
-    do
-    {
-        switch (option)
+    do {
+        switch( anIpV6TlvOption.bits.option )
         {
             // There are only two options current defined, and they're padding options
             case IPV6_TLV_PAD_1:
@@ -2243,7 +2251,7 @@ uint8_t TCPIP_IPV6_DestinationOptionsHeaderProcess (TCPIP_NET_IF * pNetIf, TCPIP
                 }
                 break;
             default:
-                switch (((IPV6_TLV_OPTION_TYPE)option).bits.unrecognizedAction)
+                switch( anIpV6TlvOption.bits.unrecognizedAction )
                 {
                     case IPV6_TLV_UNREC_OPT_SKIP_OPTION:
                         // Ignore this option (treat it like a padding option)
@@ -2281,15 +2289,15 @@ uint8_t TCPIP_IPV6_DestinationOptionsHeaderProcess (TCPIP_NET_IF * pNetIf, TCPIP
                 }
                 break;
         }
-        if (i == 8)
+        if( i == 8 )
         {
             headerLength--;
             i = 0;
-            if (headerLength != 0)
-                TCPIP_IPV6_GetOptionHeader (pRxPkt, data, 1);
+            if( headerLength != 0 )
+                TCPIP_IPV6_GetOptionHeader( pRxPkt, data, 1 );
         }
-        option = data[i++];
-    }while (headerLength);
+        anIpV6TlvOption.b = data[ i++ ];
+    } while( headerLength );
 
     return IPV6_ACTION_NONE;
 }
@@ -2311,12 +2319,21 @@ void TCPIP_IPV6_FragmentBufferFree (void * ptrFragment)
 
 
 // ipv6_private.h
-uint8_t TCPIP_IPV6_FragmentationHeaderProcess (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * remoteIP, const IPV6_ADDR * localIP, uint8_t * nextHeader, uint16_t dataCount, uint16_t headerLen, TCPIP_MAC_PACKET* pRxPkt, uint16_t previousHeaderLen)
+uint8_t
+TCPIP_IPV6_FragmentationHeaderProcess(
+    TCPIP_NET_IF *      pNetIf,
+    const IPV6_ADDR *   remoteIP,
+    const IPV6_ADDR *   localIP,
+    uint8_t *           nextHeader,
+    uint16_t            dataCount,
+    uint16_t            headerLen,
+    TCPIP_MAC_PACKET *  pRxPkt,
+    uint16_t            previousHeaderLen
+    )
 {
-    IPV6_RX_FRAGMENT_BUFFER * ptrFragment;
-    IPV6_FRAGMENT_HEADER fragmentHeader;
-    IPV6_INTERFACE_CONFIG*  pIpv6Config;
-
+    IPV6_RX_FRAGMENT_BUFFER *   ptrFragment;
+    IPV6_FRAGMENT_HEADER        fragmentHeader;
+    IPV6_INTERFACE_CONFIG *     pIpv6Config;
 
     if ((pNetIf == NULL) || (dataCount < sizeof (IPV6_FRAGMENT_HEADER)))
         return IPV6_ACTION_DISCARD_SILENT;
@@ -2432,18 +2449,18 @@ uint8_t TCPIP_IPV6_FragmentationHeaderProcess (TCPIP_NET_IF * pNetIf, const IPV6
     }
 
     //
-    //
-    //
     if (ptrFragment->packetSize == ptrFragment->bytesInPacket)
     {
-        TCPIP_MAC_PTR_TYPE tempReadPtr;
-        TCPIP_MAC_PTR_TYPE tempBaseReadPtr;
+        TCPIP_MAC_PTR_TYPE  tempReadPtr;
+        TCPIP_MAC_PTR_TYPE  tempBaseReadPtr;
+        TCPIP_UINT16_VAL    aTcpIpUInt16Val;
 
         // Subtract the length of the IPV6 header from the payload
         ptrFragment->packetSize -= sizeof (IPV6_HEADER);
 
-        ptrFragment->ptrPacket[IPV6_HEADER_OFFSET_PAYLOAD_LENGTH] = ((TCPIP_UINT16_VAL)ptrFragment->packetSize).v[1];
-        ptrFragment->ptrPacket[IPV6_HEADER_OFFSET_PAYLOAD_LENGTH + 1] = ((TCPIP_UINT16_VAL)ptrFragment->packetSize).v[0];
+        aTcpIpUInt16Val.Val = ptrFragment->packetSize;
+        ptrFragment->ptrPacket[ IPV6_HEADER_OFFSET_PAYLOAD_LENGTH ] =       aTcpIpUInt16Val.v[ 1 ];
+        ptrFragment->ptrPacket[ IPV6_HEADER_OFFSET_PAYLOAD_LENGTH + 1 ] =   aTcpIpUInt16Val.v[ 0 ];
 
         tempReadPtr = MACSetReadPtr (pRxPkt, (TCPIP_MAC_PTR_TYPE)ptrFragment->ptrPacket);
         tempBaseReadPtr = MACSetBaseReadPtr (pRxPkt, (TCPIP_MAC_PTR_TYPE)ptrFragment->ptrPacket - sizeof (TCPIP_MAC_ETHERNET_HEADER));
