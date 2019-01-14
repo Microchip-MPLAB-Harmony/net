@@ -758,7 +758,7 @@ static void TCPIP_NDP_DupAddrDiscoveryTask (void)
   ***************************************************************************/
 char TCPIP_NDP_DupAddrDiscoveryDetect (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT * localAddressPointer)
 {
-    unsigned char i;
+    unsigned i;
 
     for (i = 0; i < DUPLICATE_ADDR_DISCOVERY_THREADS; i++)
     {
@@ -770,12 +770,12 @@ char TCPIP_NDP_DupAddrDiscoveryDetect (TCPIP_NET_IF * pNetIf, IPV6_ADDR_STRUCT *
             gDuplicateAddrDetectState[i].receivedSolicitations = 0;
             gDuplicateAddrDetectState[i].netConfig = pNetIf;
             ndpDADCount++;
-            return i;
+            return (char) i;
         }
     }
 
     // No free IP addr slots or DAD thread slots
-    return DAD_UNAVAILABLE;
+    return (char) DAD_UNAVAILABLE;
 }
 
 
@@ -1641,7 +1641,7 @@ void TCPIP_NDP_AddressConstructFromPrefix (TCPIP_NET_IF * pNetIf, IPV6_ADDR * de
 
     // We'll never construct an address from a prefix
     // that isn't 64 bits (since our interface ID is also 64 bits).
-    if ((prefixLength & 0b111) == 0)
+    if ((prefixLength & 0x07) == 0)
     {
         destination->v[offset++] = pNetIf->netMACAddr.v[0] | 0x02;
         destination->v[offset++] = pNetIf->netMACAddr.v[1];

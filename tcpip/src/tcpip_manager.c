@@ -1925,9 +1925,9 @@ TCPIP_NET_HANDLE TCPIP_STACK_NetMulticastGet(void)
 {
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
     return tcpipDefIf.defaultMcastNet;
-#endif
-
+#else
     return 0;
+#endif
 }
 
 bool TCPIP_STACK_NetMulticastSet(TCPIP_NET_HANDLE netH)

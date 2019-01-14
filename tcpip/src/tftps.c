@@ -53,8 +53,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 
-#include "tftps_private.h"
 #include "tcpip/src/common/sys_fs_wrapper.h"
+#include "tftps_private.h"
 
 // *****************************************************************************
 // *****************************************************************************

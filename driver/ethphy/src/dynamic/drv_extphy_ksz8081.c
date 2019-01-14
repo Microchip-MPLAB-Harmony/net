@@ -101,7 +101,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
             uint16_t high;
         };
         uint32_t    w;
-    }vendorData = {};
+    } vendorData = { 0 };
 
     __KSZ8081_PhyControl2Bits_t phyCtrl2;
     uint16_t    phyReg = 0;
