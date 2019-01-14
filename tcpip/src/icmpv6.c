@@ -806,8 +806,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
     memcpy (&pseudoHeader.DestAddress, localIP, sizeof (IPV6_ADDR));
     // Total payload length is the length of data + extension headers
     pseudoHeader.PacketLength = TCPIP_Helper_ntohs(dataLen);
-    pseudoHeader.zero1 = 0;
-    pseudoHeader.zero2 = 0;
+    pseudoHeader.zero1 = (unsigned short) 0;
+    pseudoHeader.zero2 = (unsigned char) 0;
     pseudoHeader.NextHeader = IPV6_PROT_ICMPV6;
 
     checksums.w[0] = ~TCPIP_Helper_CalcIPChecksum((uint8_t*)&pseudoHeader,
@@ -817,7 +817,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
     if(checksums.w[0] != checksums.w[1])
     {
-        pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
+        pRxPkt->pktClientData = (uint16_t) TCPIP_MAC_PKT_ACK_CHKSUM_ERR;
         return;
     }
 
@@ -953,7 +953,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
                 if (TCPIP_IPV6_TxIsPutReady(pkt, dataLen - 8) < (dataLen - 8))
                 {
-                    pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_ALLOC_ERR;
+                    pRxPkt->pktClientData = (uint16_t) TCPIP_MAC_PKT_ACK_ALLOC_ERR;
                     TCPIP_IPV6_PacketFree (pkt);
                     return;
                 }
@@ -974,7 +974,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
                 if (TCPIP_IPV6_TxIsPutReady(pkt, dataLen - 8) < (dataLen - 8))
                 {
-                    pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_ALLOC_ERR;
+                    pRxPkt->pktClientData = (uint16_t) TCPIP_MAC_PKT_ACK_ALLOC_ERR;
                     TCPIP_IPV6_PacketFree (pkt);
                     return;
                 }

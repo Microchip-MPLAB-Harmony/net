@@ -1640,6 +1640,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_uploadedmd5(TCPIP_HTTP_NET_CONN_HANDLE
         return TCPIP_HTTP_DYN_PRINT_RES_DONE;
     }
 
+#if defined(HTTP_APP_USE_MD5)
     if(HTTP_APP_DYNVAR_BUFFER_SIZE < 80)
     {
         TCPIP_HTTP_NET_DynamicWriteString(vDcpt, "<b>Not enough room to output a MD5!</b>", false);
@@ -1670,6 +1671,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_uploadedmd5(TCPIP_HTTP_NET_CONN_HANDLE
 
     TCPIP_HTTP_NET_DynamicWriteString(vDcpt, pDynBuffer->data, true);
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
+#endif
 }
 
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_hostname(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)

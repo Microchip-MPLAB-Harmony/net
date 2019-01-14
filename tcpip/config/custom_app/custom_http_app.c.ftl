@@ -2305,6 +2305,7 @@ void TCPIP_HTTP_Print_uploadedmd5(HTTP_CONN_HANDLE connHandle)
         return;
     }
 
+#if defined( HTTP_APP_USE_MD5 )
     TCPIP_TCP_StringPut(sktHTTP, (const uint8_t*)"<b>Uploaded File's MD5 was:</b><br />");
     httpDataBuff = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
 
@@ -2318,6 +2319,7 @@ void TCPIP_HTTP_Print_uploadedmd5(HTTP_CONN_HANDLE connHandle)
     }
 
     TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x00);
+#endif
 }
 
 void HTTPPrintIP(HTTP_CONN_HANDLE connHandle, IPV4_ADDR ip)
@@ -4910,8 +4912,6 @@ void TCPIP_HTTP_Print_status_fail(HTTP_CONN_HANDLE connHandle)
 
 void TCPIP_HTTP_Print_uploadedmd5(HTTP_CONN_HANDLE connHandle)
 {
-    uint8_t i;
-    uint8_t *httpDataBuff;
     TCP_SOCKET sktHTTP = TCPIP_HTTP_CurrentConnectionSocketGet(connHandle);
 
     // Set a flag to indicate not finished
@@ -4930,20 +4930,27 @@ void TCPIP_HTTP_Print_uploadedmd5(HTTP_CONN_HANDLE connHandle)
         TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0);
         return;
     }
-
-    TCPIP_TCP_StringPut(sktHTTP, (const uint8_t *)"<b>Uploaded File's MD5 was:</b><br />");
-    httpDataBuff = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
-
-    // Write a byte of the md5 sum at a time
-    for(i = 0; i < 16u; ++i)
+#if defined( HTTP_APP_USE_MD5 )
+    else
     {
-        TCPIP_TCP_Put(sktHTTP, btohexa_high(httpDataBuff[i]));
-        TCPIP_TCP_Put(sktHTTP, btohexa_low(httpDataBuff[i]));
-        if((i & 0x03) == 3u)
-            TCPIP_TCP_Put(sktHTTP, ' ');
+        uint8_t     i;
+        uint8_t *   httpDataBuff;
+    
+        TCPIP_TCP_StringPut(sktHTTP, (const uint8_t *)"<b>Uploaded File's MD5 was:</b><br />");
+        httpDataBuff = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
+    
+        // Write a byte of the md5 sum at a time
+        for(i = 0; i < 16u; ++i)
+        {
+            TCPIP_TCP_Put(sktHTTP, btohexa_high(httpDataBuff[i]));
+            TCPIP_TCP_Put(sktHTTP, btohexa_low(httpDataBuff[i]));
+            if((i & 0x03) == 3u)
+                TCPIP_TCP_Put(sktHTTP, ' ');
+        }
+    
+        TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x00);
     }
-
-    TCPIP_HTTP_CurrentConnectionCallbackPosSet(connHandle, 0x00);
+#endif
 }
 
 void TCPIP_HTTP_Print_config_hostname(HTTP_CONN_HANDLE connHandle)

@@ -1583,7 +1583,7 @@ static TCPIP_SMTPC_STATUS smtpDcptMailDoneReport(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt
             }
         }
         
-        msgReport.errorStat = pDcpt->errorStat ? smtpStatusTxlate(pDcpt->errorStat) : TCPIP_SMTPC_MESSAGE_STAT_NONE;
+        msgReport.errorStat = (bool) pDcpt->errorStat ? smtpStatusTxlate(pDcpt->errorStat) : TCPIP_SMTPC_MESSAGE_STAT_NONE;
         msgReport.messageWarn = pDcpt->messageWarn;
         (*pDcpt->smtpMailMessage.messageCallback)(pDcpt, &msgReport);
     }

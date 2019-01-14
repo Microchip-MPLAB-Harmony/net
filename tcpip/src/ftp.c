@@ -273,7 +273,7 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
             pDcpt->ftpCommandSm = TCPIP_FTP_CMD_SM_IDLE;
             pDcpt->callbackPos = 0;
             pDcpt->ftpTcpDataSocketSignal=0;
-            pDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+            pDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
             
         }
         if(initFail == true)
@@ -413,7 +413,7 @@ static void TCPIP_FTP_ServerProcess(void)
             if(pFTPDcpt->fileDescr != SYS_FS_HANDLE_INVALID)
             {
                 SYS_FS_FileClose(pFTPDcpt->fileDescr);
-                pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
             }
             continue;
         }
@@ -1154,7 +1154,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
             if ( TCPIP_TCP_IsConnected(pFTPDcpt->ftpDataskt) && (pFTPDcpt->callbackPos == 0x00u))
             {
                 fp = SYS_FS_FileOpen_Wrapper((const char*)pFTPDcpt->ftp_argv[1],SYS_FS_FILE_OPEN_WRITE);
-                if (fp == SYS_FS_HANDLE_INVALID)
+                if( fp == (int32_t) SYS_FS_HANDLE_INVALID )
                 {// File not found, so abort
                     _FTP_ReleaseDataSocket(pFTPDcpt);
                     break;
@@ -1182,7 +1182,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
             {
             // If no bytes were read, an EOF was reached
                 SYS_FS_FileClose(pFTPDcpt->fileDescr);
-                pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                 pFTPDcpt->callbackPos = 0;
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION;
                 pFTPDcpt->ftpFlag.Bits.pasvMode = false;
@@ -1202,7 +1202,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                 if(wLen == 0)
                 {// If no bytes were read, an EOF was reached
                     SYS_FS_FileClose(pFTPDcpt->fileDescr);
-                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                     pFTPDcpt->callbackPos = 0;
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
                     pFTPDcpt->ftpFlag.Bits.pasvMode = false;
@@ -1214,7 +1214,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                     if(SYS_FS_FileWrite(fp,data,wLen) == SYS_FS_HANDLE_INVALID)
                     {
                         SYS_FS_FileClose(pFTPDcpt->fileDescr);
-                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                        pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                         pFTPDcpt->callbackPos = 0;
                         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
                         pFTPDcpt->ftpFlag.Bits.pasvMode = false;
@@ -1355,14 +1355,14 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_ARC | SYS_FS_ATTR_DIR, &fs_stat) == SYS_FS_RES_FAILURE)
                 {
                     SYS_FS_DirClose(fp);
-                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                     break;
                 }
                 newNode = (FTP_LIST_NODE*)TCPIP_FTP_LIST_Add(&DirectoryFileList,sTCPIPFtpMemH , sizeof(*newNode));
                 if(newNode == NULL)
                 {
                     SYS_FS_DirClose(fp);
-                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST;
                     _FTP_ReleaseDataSocket(pFTPDcpt);                    
                     if(DirectoryFileList.list.nNodes > 0)
@@ -1401,7 +1401,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                     else
                     {
                         SYS_FS_DirClose(fp);
-                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                        pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST;
                         _FTP_ReleaseDataSocket(pFTPDcpt);                    
                         if(DirectoryFileList.list.nNodes > 0)
@@ -2049,14 +2049,14 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                 if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_ARC, &fs_stat) == SYS_FS_RES_FAILURE)
                 {
                     SYS_FS_DirClose(fp);
-                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                     break;
                 }
                 newNode = (FTP_LIST_NODE*)TCPIP_FTP_LIST_Add(&DirectoryFileList,sTCPIPFtpMemH , sizeof(*newNode));
                 if(newNode == NULL)
                 {
                     SYS_FS_DirClose(fp);
-                    pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                    pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST;
                     _FTP_ReleaseDataSocket(pFTPDcpt);  
                     if(DirectoryFileList.list.nNodes > 0)
@@ -2095,7 +2095,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
                     else
                     {
                         SYS_FS_DirClose(fp);
-                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                        pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
                         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST;
                         _FTP_ReleaseDataSocket(pFTPDcpt);  
                         if(DirectoryFileList.list.nNodes > 0)
