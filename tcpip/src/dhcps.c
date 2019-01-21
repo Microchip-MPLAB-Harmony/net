@@ -589,6 +589,7 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
     uint32_t            ix=0;
     uint8_t             getBuffer[TCPIP_DHCPS_MAX_RECEIVED_BUFFER_SIZE];
     TCPIP_DHCPS_DATA    udpGetBufferData;
+    IPV4_ADDR           ClientIP;
     
     s = dhcps_mod.uSkt;
     if(gPdhcpSDcpt == NULL)
@@ -639,7 +640,8 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
         hE = TCPIP_OAHASH_EntryLookup(pdhcpsHashDcpt->hashDcpt, &BOOTPHeader.ClientMAC);
         if(hE != 0)
         {
-            if(TCPIP_DHCPS_HashIPKeyCompare(pdhcpsHashDcpt->hashDcpt, hE, BOOTPHeader.ClientIP.v) == 0)
+            ClientIP = BOOTPHeader.ClientIP;
+            if(TCPIP_DHCPS_HashIPKeyCompare(pdhcpsHashDcpt->hashDcpt, hE, ClientIP.v) == 0)
             {
                 bRenew= true;
                 bAccept = true;
@@ -730,7 +732,8 @@ static bool _DHCPS_ProcessGetPktandSendResponse(void)
                         // Need to handle these if supporting more than one DHCP lease
                         case DHCP_RELEASE_MESSAGE:
                         case DHCP_DECLINE_MESSAGE:
-                            DHCPSRemoveHashEntry(&BOOTPHeader.ClientMAC, BOOTPHeader.ClientIP.v);
+                            ClientIP = BOOTPHeader.ClientIP;
+                            DHCPSRemoveHashEntry(&BOOTPHeader.ClientMAC, ClientIP.v);
                             break;
                         case DHCP_INFORM_MESSAGE:
                             DHCPSReplyToInform(pNetIfFromDcpt,&BOOTPHeader,pDhcpsDcpt,pdhcpsHashDcpt,bAccept,&udpGetBufferData);
@@ -1003,6 +1006,7 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
     BOOTP_HEADER    rxHeader;
     uint32_t magicCookie = 0x63538263;
     TCPIP_DHCPS_OPTION optionType;
+    IPV4_ADDR           ClientIP;
     uint32_t    optionTypeTotalLen=0;
 
     if(getBuf == NULL)
@@ -1058,9 +1062,10 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
             }
             Len -= 7;
             hE = TCPIP_OAHASH_EntryLookup(pdhcpsHashDcpt->hashDcpt, &tmp_MacAddr);
+            ClientIP = boot_header->ClientIP;
             if(hE !=0)
             {
-                if(TCPIP_DHCPS_HashIPKeyCompare(pdhcpsHashDcpt->hashDcpt, hE, boot_header->ClientIP.v) == 0)
+                if(TCPIP_DHCPS_HashIPKeyCompare(pdhcpsHashDcpt->hashDcpt, hE, ClientIP.v) == 0)
                 {
                     bAccept = true;
                 }
@@ -1074,9 +1079,9 @@ static void DHCPSReplyToInform(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, D
                 // do a IP address validation .check if the Ip address in the same subnet
                 // as per IP address range is decided per interface.
                 if((pNetIf->netIPAddr.Val & pNetIf->netMask.Val)==
-                        (boot_header->ClientIP.Val & pNetIf->netMask.Val))
+                        (ClientIP.Val & pNetIf->netMask.Val))
                 {
-                    if(_DHCPSAddCompleteEntry(pDhcpsDcpt->netIx, boot_header->ClientIP.v, &boot_header->ClientMAC,DHCPS_FLAG_ENTRY_COMPLETE) != DHCPS_RES_OK)
+                    if(_DHCPSAddCompleteEntry(pDhcpsDcpt->netIx, ClientIP.v, &boot_header->ClientMAC,DHCPS_FLAG_ENTRY_COMPLETE) != DHCPS_RES_OK)
                     {
                         return;
                     }
@@ -1278,7 +1283,8 @@ static void DHCPReplyToRequest(TCPIP_NET_IF* pNetIf,BOOTP_HEADER *boot_header, b
                 hE = TCPIP_OAHASH_EntryLookup(pdhcpsHashDcpt->hashDcpt, &tmp_MacAddr);
                 if(hE !=0)
                 {
-                    if(TCPIP_DHCPS_HashIPKeyCompare(pdhcpsHashDcpt->hashDcpt, hE, boot_header->ClientIP.v) == 0)
+                    IPV4_ADDR ClientIP = boot_header->ClientIP;
+                    if(TCPIP_DHCPS_HashIPKeyCompare(pdhcpsHashDcpt->hashDcpt, hE, ClientIP.v) == 0)
                     {
                         DHCPS_HASH_ENTRY * dhcpsHE = (DHCPS_HASH_ENTRY *)hE;
                         // update lease time;

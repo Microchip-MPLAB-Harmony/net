@@ -851,7 +851,9 @@ char TCPIP_NDP_DupAddrDiscoveryStatus (IPV6_ADDR_STRUCT * localAddressPointer)
                                                                     gDuplicateAddrDetectState[i].addressPointer->address.v[15]}};
                         IPV6_PACKET * pkt;
 
-                        pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (gDuplicateAddrDetectState[i].netConfig, (IPV6_ADDR *)&IPV6_FIXED_ADDR_UNSPECIFIED, &solicitedNodeMulticastAddr, &gDuplicateAddrDetectState[i].addressPointer->address);
+                        IPV6_ADDR_STRUCT* pDadStruct = (gDuplicateAddrDetectState + i)->addressPointer;
+                        IPV6_ADDR* pDadAdd = (IPV6_ADDR*)((uint8_t*)pDadStruct + offsetof(IPV6_ADDR_STRUCT, address));
+                        pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (gDuplicateAddrDetectState[i].netConfig, (IPV6_ADDR *)&IPV6_FIXED_ADDR_UNSPECIFIED, &solicitedNodeMulticastAddr, pDadAdd);
                         if (pkt != NULL)
                         {
                             if (!TCPIP_ICMPV6_Flush(pkt))
@@ -1005,6 +1007,8 @@ static void TCPIP_NDP_RouterSolicitTask (void)
     int netIx;
     TCPIP_NET_IF * pNetIf;
     RS_STATIC_VARS* pRs;
+    IPV6_ADDR_STRUCT* pRsStruct; 
+    IPV6_ADDR* pRsAdd;
 
     for(netIx=0; netIx< nStackIfs; netIx++)
     {
@@ -1038,7 +1042,10 @@ static void TCPIP_NDP_RouterSolicitTask (void)
                         sllaOption.vType = NDP_OPTION_TYPE_LLA_SOURCE;
                         sllaOption.vLength = 1;
                         memcpy(&sllaOption.mLinkLayerAddr , &(pNetIf->netMACAddr), sizeof (TCPIP_MAC_ADDR));
-                        pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, &pRs->address->address, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
+
+                        pRsStruct = pRs->address; 
+                        pRsAdd = (IPV6_ADDR*)((uint8_t*)pRsStruct + offsetof(IPV6_ADDR_STRUCT, address));
+                        pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, pRsAdd, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
                         if (pkt == NULL)
                             return;
                         if (TCPIP_IPV6_TxIsPutReady(pkt, sizeof(NDP_OPTION_LLA)))
@@ -1059,7 +1066,9 @@ static void TCPIP_NDP_RouterSolicitTask (void)
                     sllaOption.vLength = 1;
                     memcpy(&sllaOption.mLinkLayerAddr , &(pNetIf->netMACAddr), sizeof (TCPIP_MAC_ADDR));
                     // The previously selected IP address is still valid; use it
-                    pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, &pRs->address->address, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
+                    pRsStruct = pRs->address; 
+                    pRsAdd = (IPV6_ADDR*)((uint8_t*)pRsStruct + offsetof(IPV6_ADDR_STRUCT, address));
+                    pkt = TCPIP_ICMPV6_HeaderRouterSolicitationPut (pNetIf, pRsAdd, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_ROUTER_MULTICAST);
                     if (pkt == NULL)
                         return;
                     if (TCPIP_IPV6_TxIsPutReady(pkt, sizeof(NDP_OPTION_LLA)))
@@ -1205,7 +1214,8 @@ void * TCPIP_NDP_PrefixFind (TCPIP_NET_IF * pNetIf, IPV6_ADDR * prefix, unsigned
             {
                 if (prefixLength == localAddressPointer->prefixLen)
                 {
-                    if (TCPIP_Helper_FindCommonPrefix ((void *)prefix, (void *)&localAddressPointer->address, sizeof (IPV6_ADDR)) >= prefixLength)
+                    const IPV6_ADDR* pLclAdd = (const IPV6_ADDR*)((uint8_t*)localAddressPointer + offsetof(IPV6_ADDR_STRUCT, address));
+                    if (TCPIP_Helper_FindCommonPrefix ((uint8_t*)prefix, (uint8_t*)pLclAdd, sizeof (IPV6_ADDR)) >= prefixLength)
                     {
                         return localAddressPointer;
                     }
@@ -1459,20 +1469,23 @@ IPV6_HEAP_NDP_NC_ENTRY * TCPIP_NDP_NextHopGet (TCPIP_NET_IF * pNetIf, const IPV6
 void TCPIP_NDP_SAAPrefixInfoProcess (TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_INFO * prefixInfo)
 {
     IPV6_ADDR_STRUCT * localAddressPointer;
+    IPV6_ADDR* pPrefixAdd;
 
     if ((prefixInfo->flags.bA) && !((prefixInfo->aPrefix.v[0] == 0xFE) && ((prefixInfo->aPrefix.v[1] & 0xC0) == 0x80)))
     {
         // Check to ensure that the prefix option preferred lifetime is less than the valid lifetime
         if (prefixInfo->dPreferredLifetime <= prefixInfo->dValidLifetime)
         {
-            if ((localAddressPointer = TCPIP_NDP_PrefixFind (pNetIf, &prefixInfo->aPrefix, prefixInfo->vPrefixLen, false)) == NULL)
+            pPrefixAdd = (IPV6_ADDR*)((uint8_t*)prefixInfo + offsetof(NDP_OPTION_PREFIX_INFO, aPrefix));
+            if ((localAddressPointer = TCPIP_NDP_PrefixFind (pNetIf, pPrefixAdd, prefixInfo->vPrefixLen, false)) == NULL)
             {
                 // Prefix is not equal to the prefix of an address configured by Stateless Address Autoconfiguration
                 if (prefixInfo->dValidLifetime != 0)
                 {
                     if (prefixInfo->vPrefixLen + IPV6_INTERFACE_ID_SIZE != 128)
                         return;
-                    TCPIP_NDP_AddressConstructFromPrefix (pNetIf, &tempAddress, &prefixInfo->aPrefix, prefixInfo->vPrefixLen);
+                    pPrefixAdd = (IPV6_ADDR*)((uint8_t*)prefixInfo + offsetof(NDP_OPTION_PREFIX_INFO, aPrefix));
+                    TCPIP_NDP_AddressConstructFromPrefix (pNetIf, &tempAddress, pPrefixAdd, prefixInfo->vPrefixLen);
                     localAddressPointer = TCPIP_IPV6_UnicastAddressAdd (pNetIf, &tempAddress, 0, false);
                     if (localAddressPointer != NULL)
                     {
@@ -1531,16 +1544,19 @@ void TCPIP_NDP_SAAPrefixInfoProcess (TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_IN
 void TCPIP_NDP_PrefixInfoProcessForOnLinkStatus (TCPIP_NET_IF * pNetIf, NDP_OPTION_PREFIX_INFO * prefixInfo)
 {
     IPV6_HEAP_NDP_PL_ENTRY * prefixPointer;
+    IPV6_ADDR* pPrefixAdd;
+
+    pPrefixAdd = (IPV6_ADDR*)((uint8_t*)prefixInfo + offsetof(NDP_OPTION_PREFIX_INFO, aPrefix));
 
     if ((prefixInfo->flags.bL) && !((prefixInfo->aPrefix.v[0] == 0xFE) && ((prefixInfo->aPrefix.v[1] & 0xC0) == 0x80)))
     {
-        if ((prefixPointer = TCPIP_NDP_PrefixFind (pNetIf, &prefixInfo->aPrefix, prefixInfo->vPrefixLen, true)) == NULL)
+        if ((prefixPointer = TCPIP_NDP_PrefixFind (pNetIf, pPrefixAdd, prefixInfo->vPrefixLen, true)) == NULL)
         {
             if (prefixInfo->dValidLifetime != 0)
             {
                 // Store this prefix in the heap so it can be used to determine if
                 // addresses are on-link
-                prefixPointer = TCPIP_NDP_PrefixListEntryCreate (pNetIf, &prefixInfo->aPrefix, prefixInfo->vPrefixLen, prefixInfo->dValidLifetime);
+                prefixPointer = TCPIP_NDP_PrefixListEntryCreate (pNetIf, pPrefixAdd, prefixInfo->vPrefixLen, prefixInfo->dValidLifetime);
             }
         }
         else
@@ -1750,6 +1766,7 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
     NDP_OPTION_LLA sllaOption;
     IPV6_INTERFACE_CONFIG*  pIpv6Config;
     IPV6_PACKET * pkt;
+    IPV6_ADDR *pPrefAdd, *pSrcAdd;
 
     ndpNUDCount = 0;
 
@@ -1854,7 +1871,8 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
 
                             if (neighborPointer->preferredSource != NULL)
                             {
-                                sourceAddress = TCPIP_IPV6_DASSourceAddressSelect (pNetIf, &neighborPointer->remoteIPAddress, &(neighborPointer->preferredSource->address));
+                                pPrefAdd = (IPV6_ADDR*)((uint8_t*)&neighborPointer->preferredSource + offsetof(IPV6_ADDR_STRUCT, address));
+                                sourceAddress = TCPIP_IPV6_DASSourceAddressSelect (pNetIf, &neighborPointer->remoteIPAddress, pPrefAdd);
                             }
                             if (sourceAddress == NULL)
                             {
@@ -1872,7 +1890,8 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                             memcpy (&sllaOption.mLinkLayerAddr, &pNetIf->netMACAddr, sizeof (TCPIP_MAC_ADDR));
 
 
-                            pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (pNetIf, &(sourceAddress->address), &(neighborPointer->remoteIPAddress), &(neighborPointer->remoteIPAddress));
+                            pSrcAdd = (IPV6_ADDR*)((uint8_t*)sourceAddress + offsetof(IPV6_ADDR_STRUCT, address));
+                            pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (pNetIf, pSrcAdd, &(neighborPointer->remoteIPAddress), &(neighborPointer->remoteIPAddress));
                             if (pkt == NULL)
                             {
                                 // If we can't allocate a transmit packet structure,
@@ -1932,7 +1951,8 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
 
                             if (neighborPointer->preferredSource != NULL)
                             {
-                                sourceAddress = TCPIP_IPV6_DASSourceAddressSelect (pNetIf, &neighborPointer->remoteIPAddress, &neighborPointer->preferredSource->address);
+                                pPrefAdd = (IPV6_ADDR*)((uint8_t*)&neighborPointer->preferredSource + offsetof(IPV6_ADDR_STRUCT, address));
+                                sourceAddress = TCPIP_IPV6_DASSourceAddressSelect (pNetIf, &neighborPointer->remoteIPAddress, pPrefAdd);
                             }
                             if (sourceAddress == NULL)
                             {
@@ -1952,7 +1972,8 @@ static void TCPIP_NDP_NborUnreachDetectTask (void)
                             sllaOption.vLength = 1;
                             memcpy (&sllaOption.mLinkLayerAddr, &pNetIf->netMACAddr, sizeof (TCPIP_MAC_ADDR));
 
-                            pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (pNetIf, &sourceAddress->address, &solicitedNodeMulticastAddr, &neighborPointer->remoteIPAddress);
+                            pSrcAdd = (IPV6_ADDR*)((uint8_t*)sourceAddress + offsetof(IPV6_ADDR_STRUCT, address));
+                            pkt = TCPIP_ICMPV6_HeaderNeighborSolicitationPut (pNetIf, pSrcAdd, &solicitedNodeMulticastAddr, &neighborPointer->remoteIPAddress);
                             if (pkt == NULL)
                             {
                                 neighborPointer->nextNUDTime = SYS_TMR_TickCountGet();
