@@ -2387,7 +2387,9 @@ IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_
             IPV6_ADDR_STRUCT * currAddress = unicastHead;
             while(currAddress != addrNode)
             {
-                if(memcmp(addrNode->address.v + sizeof (IPV6_ADDR) - 3, currAddress->address.v + sizeof (IPV6_ADDR) - 3, 3) == 0)
+                IPV6_ADDR* pAddNode = (IPV6_ADDR*)((uint8_t*)addrNode + offsetof(IPV6_ADDR_STRUCT, address));
+                IPV6_ADDR* pAddCurr = (IPV6_ADDR*)((uint8_t*)currAddress + offsetof(IPV6_ADDR_STRUCT, address));
+                if(memcmp(pAddNode->v + sizeof (IPV6_ADDR) - 3, pAddCurr->v + sizeof (IPV6_ADDR) - 3, 3) == 0)
                 {   // address match; skip this one
                     addrNode = addrNode->next;
                     if(addrNode == 0)
@@ -2414,7 +2416,8 @@ IPV6_ADDR_HANDLE TCPIP_STACK_NetIPv6AddressGet(TCPIP_NET_HANDLE netH, IPV6_ADDR_
             pAddStruct->next = pAddStruct->prev = 0;
             if(addrNode->flags.type == IPV6_ADDR_TYPE_UNICAST)
             {   // construct the solicited node multicast address
-                memcpy(pAddStruct->address.v, IPV6_SOLICITED_NODE_MULTICAST.v, sizeof (IPV6_ADDR) - 3);
+                IPV6_ADDR* pAddNode = (IPV6_ADDR*)((uint8_t*)pAddStruct + offsetof(IPV6_ADDR_STRUCT, address));
+                memcpy(pAddNode->v, IPV6_SOLICITED_NODE_MULTICAST.v, sizeof (IPV6_ADDR) - 3);
                 pAddStruct->flags.type = IPV6_ADDR_TYPE_MULTICAST;
             }
         }

@@ -563,6 +563,7 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #endif // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_IPV6)
     char   addrBuff[44];
+    IPV6_ADDR addr6;
 #else
     char   addrBuff[20];
 #endif
@@ -622,7 +623,8 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             nextHandle = TCPIP_STACK_NetIPv6AddressGet(netH, IPV6_ADDR_TYPE_UNICAST, &currIpv6Add, prevHandle);
             if(nextHandle)
             {   // have a valid address; display it
-                TCPIP_Helper_IPv6AddressToString(&currIpv6Add.address, addrBuff, sizeof(addrBuff));
+                addr6 = currIpv6Add.address;
+                TCPIP_Helper_IPv6AddressToString(&addr6, addrBuff, sizeof(addrBuff));
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "    %s\r\n", addrBuff);
                 prevHandle = nextHandle;
             }
@@ -640,7 +642,8 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             nextHandle = TCPIP_STACK_NetIPv6AddressGet(netH, IPV6_ADDR_TYPE_MULTICAST, &currIpv6Add, prevHandle);
             if(nextHandle)
             {   // have a valid address; display it
-                TCPIP_Helper_IPv6AddressToString(&currIpv6Add.address, addrBuff, sizeof(addrBuff));
+                addr6 = currIpv6Add.address;
+                TCPIP_Helper_IPv6AddressToString(&addr6, addrBuff, sizeof(addrBuff));
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "    %s\r\n", addrBuff);
                 prevHandle = nextHandle;
             }
