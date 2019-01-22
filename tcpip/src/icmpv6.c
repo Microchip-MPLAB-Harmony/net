@@ -241,7 +241,8 @@ bool TCPIP_ICMPV6_EchoRequestSend(TCPIP_NET_HANDLE netH, IPV6_ADDR * targetAddr,
         return false;
     }
 
-    pkt = TCPIP_ICMPV6_HeaderEchoRequestPut (pNetIf, &localAddress->address, targetAddr, ICMPV6_INFO_ECHO_REQUEST,
+    const IPV6_ADDR* pLclAdd = (const IPV6_ADDR*)((uint8_t*)localAddress + offsetof(IPV6_ADDR_STRUCT, address));
+    pkt = TCPIP_ICMPV6_HeaderEchoRequestPut (pNetIf, pLclAdd, targetAddr, ICMPV6_INFO_ECHO_REQUEST,
                                         identifier, sequenceNumber);
 
     if(packetSize ==0)
@@ -581,7 +582,8 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborSolicitationPut (TCPIP_NET_IF * pNetIf,
     header.vCode = 0;
     header.wChecksum = 0x0000;
     header.Reserved = 0x00000000;
-    memcpy (&header.aTargetAddress, targetAddr, sizeof (IPV6_ADDR));
+    IPV6_ADDR* pDstAdd = (IPV6_ADDR*)((uint8_t*)&header + offsetof(ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress));
+    memcpy (pDstAdd, targetAddr, sizeof (IPV6_ADDR));
 
     TCPIP_IPV6_HeaderPut(pkt, IPV6_PROT_ICMPV6);
 
@@ -628,7 +630,7 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborSolicitationPut (TCPIP_NET_IF * pNetIf,
   Remarks:
     None
   ***************************************************************************/
-IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP, IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr, bool solicited, bool override)
+IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr, bool solicited, bool override)
 {
     ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT header;
     IPV6_PACKET * pkt;
@@ -650,7 +652,8 @@ IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (TCPIP_NET_IF * pNetIf
     if (solicited)
         header.flags.bits.S = 1;
 
-    memcpy(&header.aTargetAddress, targetAddr, sizeof(IPV6_ADDR));
+    IPV6_ADDR* pDstAdd = (IPV6_ADDR*)((uint8_t*)&header + offsetof(ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT, aTargetAddress));
+    memcpy(pDstAdd, targetAddr, sizeof(IPV6_ADDR));
 
     TCPIP_IPV6_HeaderPut(pkt, IPV6_PROT_ICMPV6);
 
@@ -793,6 +796,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
     IPV6_ADDR_STRUCT * localAddressPointer;
     IPV6_PACKET * pkt;
     IPV6_INTERFACE_CONFIG*  pIpv6Config;
+    const IPV6_ADDR* pLclAdd;
+    IPV6_ADDR* pTargetAdd, *pDestAdd;
 
     pRxPkt->pktClientData = TCPIP_MAC_PKT_ACK_RX_OK;
     
@@ -945,9 +950,10 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                 return;
             }
 
+            pLclAdd = (const IPV6_ADDR*)((uint8_t*)localIPStruct + offsetof(IPV6_ADDR_STRUCT, address));
             if (addrType == IPV6_ADDR_TYPE_UNICAST)
             {
-                pkt = TCPIP_ICMPV6_PutHeaderEchoReply (pNetIf, &localIPStruct->address, remoteIP, ICMPV6_INFO_ECHO_REPLY, h.header_Echo.identifier, h.header_Echo.sequenceNumber);
+                pkt = TCPIP_ICMPV6_PutHeaderEchoReply (pNetIf, pLclAdd, remoteIP, ICMPV6_INFO_ECHO_REPLY, h.header_Echo.identifier, h.header_Echo.sequenceNumber);
                 if (pkt == NULL)
                     return;
 
@@ -968,7 +974,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                 if (localAddressPointer == NULL)
                     return;
 
-                pkt = TCPIP_ICMPV6_PutHeaderEchoReply (pNetIf, &localIPStruct->address, remoteIP, ICMPV6_INFO_ECHO_REPLY, h.header_Echo.identifier, h.header_Echo.sequenceNumber);
+                pkt = TCPIP_ICMPV6_PutHeaderEchoReply (pNetIf, pLclAdd, remoteIP, ICMPV6_INFO_ECHO_REPLY, h.header_Echo.identifier, h.header_Echo.sequenceNumber);
                 if (pkt == NULL)
                     return;
 
@@ -1237,7 +1243,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             break;
         case ICMPV6_INFO_NEIGHBOR_SOLICITATION:
             // Check for packet validity
-            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, &h.header_NS.aTargetAddress);
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NS + offsetof(ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress));
+            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
             if ((tempAddressType.bits.type == IPV6_ADDR_TYPE_MULTICAST) ||
                 (hopLimit != 255) || (h.header_NS.vCode != 0) || (dataLen < 24))
                 return;
@@ -1290,7 +1297,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             }
 
             // If the target address is tentative, process it using stateless address autoconfiguration rules
-            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, &h.header_NS.aTargetAddress, IPV6_ADDR_TYPE_UNICAST_TENTATIVE)) != NULL)
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NS + offsetof(ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress));
+            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, pTargetAdd, IPV6_ADDR_TYPE_UNICAST_TENTATIVE)) != NULL)
             {
                 // If the source address is the unspecified address, process this NS message as a DAD event (otherwise it is
                 // being used for address resolution)
@@ -1301,7 +1309,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
             // Even though the packet was accepted by our filters, the target address isn't necessarily an
             // address used by our interface.  Check to see if it's a valid target.
-            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, &h.header_NS.aTargetAddress, IPV6_ADDR_TYPE_UNICAST)) == NULL)
+            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, pTargetAdd, IPV6_ADDR_TYPE_UNICAST)) == NULL)
             {
                 return;
             }
@@ -1332,8 +1340,10 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             else
             {
                 // Send a Neighbor Advertisement to the All-nodes multicast address
-                pkt = TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (pNetIf, &localAddressPointer->address, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_NODES_MULTICAST,
-                                            &h.header_NS.aTargetAddress, false, true);
+                pLclAdd = (const IPV6_ADDR*)((uint8_t*)localAddressPointer + offsetof(IPV6_ADDR_STRUCT, address));
+                pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NS + offsetof(ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress));
+                pkt = TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (pNetIf, pLclAdd, (IPV6_ADDR *)&IPV6_FIXED_ADDR_ALL_NODES_MULTICAST,
+                                            pTargetAdd, false, true);
                 if (pkt == NULL)
                     return;
 
@@ -1358,8 +1368,10 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                 return;
 
             // Send a Neighbor Advertisement to the soliciting node
-            pkt = TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (pNetIf, &localAddressPointer->address, &neighborPointer->remoteIPAddress,
-                                        &h.header_NS.aTargetAddress, true, true);
+            pLclAdd = (const IPV6_ADDR*)((uint8_t*)localAddressPointer + offsetof(IPV6_ADDR_STRUCT, address));
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NS + offsetof(ICMPV6_HEADER_NEIGHBOR_SOLICITATION, aTargetAddress));
+            pkt = TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (pNetIf, pLclAdd, &neighborPointer->remoteIPAddress,
+                                        pTargetAdd, true, true);
 
             llaOption.vType = NDP_OPTION_TYPE_LLA_TARGET;
             llaOption.vLength = 1;
@@ -1381,7 +1393,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             break;
         case ICMPV6_INFO_NEIGHBOR_ADVERTISEMENT:
             // Check packet for validity
-            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, &h.header_NA.aTargetAddress);
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NA + offsetof(ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT, aTargetAddress));
+            tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
             if ((tempAddressType.bits.type == IPV6_ADDR_TYPE_MULTICAST) ||
                 (hopLimit != 255) || (h.header_NA.vCode != 0) || (dataLen < 24))
                 return;
@@ -1427,19 +1440,20 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             if (((addrType == IPV6_ADDR_TYPE_MULTICAST) || (addrType == IPV6_ADDR_TYPE_SOLICITED_NODE_MULTICAST)) && h.header_NA.flags.bits.S)
                 return;
 
-            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, &h.header_NA.aTargetAddress, IPV6_ADDR_TYPE_UNICAST_TENTATIVE)) != NULL)
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NA + offsetof(ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT, aTargetAddress));
+            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, pTargetAdd, IPV6_ADDR_TYPE_UNICAST_TENTATIVE)) != NULL)
             {
                 TCPIP_NDP_DupAddrDiscoveryProcess (localAddressPointer, IPV6_NDP_DAD_NA_RECEIVED);
                 return;
             }
-            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, &h.header_NA.aTargetAddress, IPV6_ADDR_TYPE_UNICAST)) != NULL)
+            if ((localAddressPointer = TCPIP_IPV6_AddressFind (pNetIf, pTargetAdd, IPV6_ADDR_TYPE_UNICAST)) != NULL)
             {
                 return;
             }
 
             // Determine if the target address has an entry in the Neighbor Cache.
             // There's no point in storing it if we weren't the one soliciting it.
-            if ((neighborPointer = TCPIP_NDP_RemoteNodeFind (pNetIf, &h.header_NA.aTargetAddress, IPV6_HEAP_NDP_NC_ID)) == NULL)
+            if ((neighborPointer = TCPIP_NDP_RemoteNodeFind (pNetIf, pTargetAdd, IPV6_HEAP_NDP_NC_ID)) == NULL)
             {
                 return;
             }
@@ -1511,7 +1525,8 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                     neighborPointer->flags.bIsRouter = h.header_NA.flags.bits.R;
                     if (!neighborPointer->flags.bIsRouter)
                     {
-                        if ((routerPointer = TCPIP_NDP_RemoteNodeFind (pNetIf, &h.header_NA.aTargetAddress, IPV6_HEAP_NDP_DR_ID)) != NULL)
+                        pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_NA + offsetof(ICMPV6_HEADER_NEIGHBOR_ADVERTISEMENT, aTargetAddress));
+                        if ((routerPointer = TCPIP_NDP_RemoteNodeFind (pNetIf, pTargetAdd, IPV6_HEAP_NDP_DR_ID)) != NULL)
                         {
                             // Remote this router from the default router list (this will update all Destination Cache entries that use it as a router)
                             TCPIP_NDP_LinkedListEntryRemove (pNetIf, routerPointer, IPV6_HEAP_NDP_DR_ID);
@@ -1537,9 +1552,11 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             // The RFC specifies that the target address in a Redirect header is ALWAYS considered link-local,
             // even if the prefix isn't explicitly known to be link-local, so the only real test we can apply
             // here is to check to see if the target address is a non-link-local multicast address.
-            if (memcmp (&h.header_Rd.aTargetAddress, &h.header_Rd.aDestinationAddress, sizeof (IPV6_ADDR)) != 0)
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_Rd + offsetof(ICMPV6_HEADER_REDIRECT, aTargetAddress));
+            pDestAdd = (IPV6_ADDR*)((uint8_t*)&h.header_Rd + offsetof(ICMPV6_HEADER_REDIRECT, aDestinationAddress));
+            if (memcmp (pTargetAdd, pDestAdd, sizeof (IPV6_ADDR)) != 0)
             {
-                tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, &h.header_Rd.aTargetAddress);
+                tempAddressType = TCPIP_IPV6_AddressTypeGet (pNetIf, pTargetAdd);
                 if (tempAddressType.bits.type != IPV6_ADDR_TYPE_UNICAST)
                     return;
                 // Don't check the scope - we must assume that the target address is link-local
@@ -1549,7 +1566,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 
             // Determine if IP source address of the redirect message is the same as the first-hop router
             // for the specified ICMP Destination Address
-            neighborPointer = TCPIP_NDP_NextHopGet (pNetIf, &h.header_Rd.aDestinationAddress);
+            neighborPointer = TCPIP_NDP_NextHopGet (pNetIf, pDestAdd);
             if (neighborPointer == NULL)
                 return;
             if (memcmp (remoteIP, &neighborPointer->remoteIPAddress, sizeof (IPV6_ADDR)) != 0)
@@ -1595,21 +1612,23 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
             i = false;
 
             // If the target address is not the same as the destination address we must treat the target address as a router
-            if (memcmp (&h.header_Rd.aTargetAddress, &h.header_Rd.aDestinationAddress, sizeof (IPV6_ADDR)) != 0)
+            pTargetAdd = (IPV6_ADDR*)((uint8_t*)&h.header_Rd + offsetof(ICMPV6_HEADER_REDIRECT, aTargetAddress));
+            pDestAdd = (IPV6_ADDR*)((uint8_t*)&h.header_Rd + offsetof(ICMPV6_HEADER_REDIRECT, aDestinationAddress));
+            if (memcmp (pTargetAdd, pDestAdd, sizeof (IPV6_ADDR)) != 0)
             {
                 i = true;
             }
 
-            neighborPointer = (IPV6_HEAP_NDP_NC_ENTRY *)TCPIP_NDP_RemoteNodeFind (pNetIf, &h.header_Rd.aTargetAddress, IPV6_HEAP_NDP_NC_ID);
+            neighborPointer = (IPV6_HEAP_NDP_NC_ENTRY *)TCPIP_NDP_RemoteNodeFind (pNetIf, pTargetAdd, IPV6_HEAP_NDP_NC_ID);
             if (neighborPointer == NULL)
             {
                 if (llaOption.vType == NDP_OPTION_TYPE_LLA_TARGET)
                 {
-                    neighborPointer = TCPIP_NDP_NborEntryCreate (pNetIf, &h.header_Rd.aTargetAddress, &llaOption.mLinkLayerAddr, NDP_STATE_STALE, i, localIPStruct);
+                    neighborPointer = TCPIP_NDP_NborEntryCreate (pNetIf, pTargetAdd, &llaOption.mLinkLayerAddr, NDP_STATE_STALE, i, localIPStruct);
                 }
                 else
                 {
-                    neighborPointer = TCPIP_NDP_NborEntryCreate (pNetIf, &h.header_Rd.aTargetAddress, NULL, NDP_STATE_NONE, i, localIPStruct);
+                    neighborPointer = TCPIP_NDP_NborEntryCreate (pNetIf, pTargetAdd, NULL, NDP_STATE_NONE, i, localIPStruct);
                 }
                 if (neighborPointer == NULL)
                     return;
@@ -1632,11 +1651,12 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
                 }
             }
 
-            destinationPointer = (IPV6_HEAP_NDP_DC_ENTRY *)TCPIP_NDP_RemoteNodeFind (pNetIf, &h.header_Rd.aDestinationAddress, IPV6_HEAP_NDP_DC_ID);
+            pDestAdd = (IPV6_ADDR*)((uint8_t*)&h.header_Rd + offsetof(ICMPV6_HEADER_REDIRECT, aDestinationAddress));
+            destinationPointer = (IPV6_HEAP_NDP_DC_ENTRY *)TCPIP_NDP_RemoteNodeFind (pNetIf, pDestAdd, IPV6_HEAP_NDP_DC_ID);
 
             if (destinationPointer == NULL)
             {
-                destinationPointer = TCPIP_NDP_DestCacheEntryCreate (pNetIf, &h.header_Rd.aDestinationAddress, pIpv6Config->linkMTU, neighborPointer);
+                destinationPointer = TCPIP_NDP_DestCacheEntryCreate (pNetIf, pDestAdd, pIpv6Config->linkMTU, neighborPointer);
             }
             else
             {
