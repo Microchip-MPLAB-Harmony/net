@@ -113,14 +113,14 @@ typedef struct _tag_TCPIP_POOL_DCPT
     void                    (*free_fnc)(void* ptr); // free function needed to delete the heap
     uint16_t                nEntries;               // number of entries
     uint16_t                expansionSize;          // size of the expansion buffer
-    uint16_t                lastPoolErr;            // TCPIP_STACK_HEAP_RES: last error encountered
+    int16_t                 lastPoolErr;            // TCPIP_STACK_HEAP_RES: last error encountered
     uint16_t                flags;                  // TCPIP_STACK_HEAP_FLAGS value
     OSAL_SEM_HANDLE_TYPE    poolSemaphore;          // synchronization object
                                                     // A semaphore per entry might be more efficient at run time
                                                     // However it's expensive.
     uint8_t                 entryExpBlks[0];        // nEntries array of # of blocks to expand when an entry runs out of mem
                                                     // 0 means no expansion
-    TCPIP_POOL_ENTRY        poolEntry[0];           // pools themselves, different sizes
+    //TCPIP_POOL_ENTRY      poolEntry[0];           // pools themselves, different sizes
 }TCPIP_POOL_DCPT;   // pool descriptor: collection of pool entries
                     // Note: Must be 32 bit aligned!
 
