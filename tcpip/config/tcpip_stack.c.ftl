@@ -218,13 +218,13 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 };
 </#if>
 
-<#if (drvSamv71Gmac.TCPIP_USE_ETH_MAC)?has_content && (drvSamv71Gmac.TCPIP_USE_ETH_MAC)  == true>
-<#if (drvSamv71Gmac.DRV_GMAC_PHY_TYPE)?has_content>
-<#if (drvSamv71Gmac.DRV_GMAC_PHY_TYPE)  == "KSZ8061">
+<#if (drvGmac.TCPIP_USE_ETH_MAC)?has_content && (drvGmac.TCPIP_USE_ETH_MAC)  == true>
+<#if (drvGmac.DRV_GMAC_PHY_TYPE)?has_content>
+<#if (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8061">
 <#assign emac_phy_type = drvExtPhyKsz8061.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (drvSamv71Gmac.DRV_GMAC_PHY_TYPE)  == "LAN8740">
+<#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "LAN8740">
 <#assign emac_phy_type = drvExtPhyLan8740.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_RESET_CALLBACK>
@@ -268,7 +268,7 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_0)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_0)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_0)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_0)  == true>
 	.gmac_queue_config[0].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[0].queueEnable	= false,	
@@ -279,7 +279,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
 	
 	/** QUEUE 1 Intialization**/
-<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_1)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_1)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_1)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_1)  == true>
 	.gmac_queue_config[1].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[1].queueEnable	= false,	
@@ -290,7 +290,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[1].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
 
 	/** QUEUE 2 Intialization**/
-<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_2)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_2)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_2)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_2)  == true>
 	.gmac_queue_config[2].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[2].queueEnable	= false,	
@@ -301,7 +301,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[2].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
 
 	/** QUEUE 3 Intialization**/
-<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_3)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_3)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_3)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_3)  == true>
 	.gmac_queue_config[3].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[3].queueEnable	= false,	
@@ -312,7 +312,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[3].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
 
 	/** QUEUE 4 Intialization**/
-<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_4)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_4)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_4)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_4)  == true>
 	.gmac_queue_config[4].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[4].queueEnable	= false,	
@@ -323,7 +323,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[4].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE4,
 
 	/** QUEUE 5 Intialization**/
-<#if (drvSamv71Gmac.TCPIP_GMAC_QUEUE_5)?has_content && (drvSamv71Gmac.TCPIP_GMAC_QUEUE_5)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_5)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_5)  == true>
 	.gmac_queue_config[5].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[5].queueEnable	= false,	

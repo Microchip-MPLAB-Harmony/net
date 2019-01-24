@@ -21,7 +21,7 @@
 # ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 # THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ##############################################################################
-autoConnectTableMAC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvSamv71Gmac:libdrvSamv71Gmac"]]
+autoConnectTableMAC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvGmac:libdrvGmac"]]
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -136,11 +136,11 @@ def tcpipAutoConfigGMACEnable(symbol, event):
 	tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
 	enableTcpipAutoConfigDrv(True)
 	if (event["value"] == True):
-		res = Database.activateComponents(["drvSamv71Gmac"],"DRIVER LAYER")	
-		tcpipAutoConfigDriverGroup.setAttachmentVisible("drvSamv71Gmac", "libdrvSamv71Gmac")
+		res = Database.activateComponents(["drvGmac"],"DRIVER LAYER")	
+		tcpipAutoConfigDriverGroup.setAttachmentVisible("drvGmac", "libdrvGmac")
 		res = Database.connectDependencies(autoConnectTableMAC)
 	else:
-		res = Database.deactivateComponents(["drvSamv71Gmac"])
+		res = Database.deactivateComponents(["drvGmac"])
 	
 def tcpipAutoConfigETHMACEnable(symbol, event):
 	tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
