@@ -33,7 +33,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  
     Summary: List of Multiple Queues supported by GMAC    
 */
-#define DRV_GMAC_NUMBER_OF_QUEUES TCPIP_MODULE_PIC32C_GMAC_NUMBER_OF_QUEUES
 typedef enum  
 {
 	GMAC_QUE_0 = 0,
