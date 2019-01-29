@@ -203,30 +203,14 @@ def loadModule():
 	tcpipZeroConfComponent.setDisplayType("TCP/IP Library")
 
 	###########  TCP/IP LIBRARY Datalink & Physical Layer Configurations  ###########
-	# if Peripheral.moduleExists("GMAC"):
-		# drvSamv71GmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
-		# drvSamv71GmacComponent.addCapability("libdrvSamv71Gmac","MAC")
-		# drvSamv71GmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)	
-	# elif "PIC32M" in Variables.get("__PROCESSOR"):
-		# drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
-		# drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
-		# drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
-	
 	if Peripheral.moduleExists("GMAC"):
-		gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="GMAC"]')
-		gmac_periphID = str(gmac_node.getAttribute("id"))
-		if(gmac_periphID == "11046"): # SAME70, SAMV71
-			drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac_11046/config/drv_gmac.py")
-			drvGmacComponent.addCapability("libdrvGmac","MAC")
-			drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)
-		elif (gmac_periphID == "U2005"): # SAME54
-			drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac_u2005/config/drv_gmac.py")
-			drvGmacComponent.addCapability("libdrvGmac","MAC")
-			drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)
-		elif (gmac_periphID == "44152"): # SAMA5D2
-			drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac_44152/config/drv_gmac.py")
-			drvGmacComponent.addCapability("libdrvGmac","MAC")
-			drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)
+		drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
+		drvGmacComponent.addCapability("libdrvGmac","MAC")
+		drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)	
+	elif "PIC32M" in Variables.get("__PROCESSOR"):
+		drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
+		drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")
+		drvPic32mEthmacComponent.addDependency("ETHMAC_PHY_Dependency", "PHY", None, True, True)
 			
 	## MIIM Driver
 	drvMiimComponent = Module.CreateComponent("drvMiim", "MIIM Driver", "/Harmony/Drivers/", "driver/miim/config/drv_miim.py")

@@ -268,62 +268,73 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-<#if (drvGmac.TCPIP_GMAC_QUEUE_0)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_0)  == true>
-	.gmac_queue_config[0].queueEnable	= true,
-<#else>	
-	.gmac_queue_config[0].queueEnable	= false,	
-</#if>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_0)?has_content>
+	<#if (drvGmac.TCPIP_GMAC_QUEUE_0)  == true>
+		.gmac_queue_config[0].queueEnable	= true,
+	<#else>	
+		.gmac_queue_config[0].queueEnable	= false,	
+	</#if>
 	.gmac_queue_config[0].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
-	
+</#if>	
+
+<#if (drvGmac.TCPIP_GMAC_QUEUE_1)?has_content>
 	/** QUEUE 1 Intialization**/
-<#if (drvGmac.TCPIP_GMAC_QUEUE_1)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_1)  == true>
-	.gmac_queue_config[1].queueEnable	= true,
-<#else>	
-	.gmac_queue_config[1].queueEnable	= false,	
-</#if>
+	<#if (drvGmac.TCPIP_GMAC_QUEUE_1)  == true>
+		.gmac_queue_config[1].queueEnable	= true,
+	<#else>	
+		.gmac_queue_config[1].queueEnable	= false,	
+	</#if>
 	.gmac_queue_config[1].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1,
 	.gmac_queue_config[1].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1,
 	.gmac_queue_config[1].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE1,
 	.gmac_queue_config[1].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
-
-	/** QUEUE 2 Intialization**/
-<#if (drvGmac.TCPIP_GMAC_QUEUE_2)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_2)  == true>
-	.gmac_queue_config[2].queueEnable	= true,
-<#else>	
-	.gmac_queue_config[2].queueEnable	= false,	
 </#if>
+
+<#if (drvGmac.TCPIP_GMAC_QUEUE_2)?has_content>
+	/** QUEUE 2 Intialization**/
+	<#if (drvGmac.TCPIP_GMAC_QUEUE_2)  == true>
+		.gmac_queue_config[2].queueEnable	= true,
+	<#else>	
+		.gmac_queue_config[2].queueEnable	= false,	
+	</#if>
 	.gmac_queue_config[2].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2,
 	.gmac_queue_config[2].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2,
 	.gmac_queue_config[2].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE2,
 	.gmac_queue_config[2].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
-
-	/** QUEUE 3 Intialization**/
-<#if (drvGmac.TCPIP_GMAC_QUEUE_3)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_3)  == true>
-	.gmac_queue_config[3].queueEnable	= true,
-<#else>	
-	.gmac_queue_config[3].queueEnable	= false,	
 </#if>
+
+<#if (drvGmac.TCPIP_GMAC_QUEUE_3)?has_content>
+	/** QUEUE 3 Intialization**/
+	<#if (drvGmac.TCPIP_GMAC_QUEUE_3)  == true>
+		.gmac_queue_config[3].queueEnable	= true,
+	<#else>	
+		.gmac_queue_config[3].queueEnable	= false,	
+	</#if>
 	.gmac_queue_config[3].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3,
 	.gmac_queue_config[3].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3,
 	.gmac_queue_config[3].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE3,
 	.gmac_queue_config[3].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
-
-	/** QUEUE 4 Intialization**/
-<#if (drvGmac.TCPIP_GMAC_QUEUE_4)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_4)  == true>
-	.gmac_queue_config[4].queueEnable	= true,
-<#else>	
-	.gmac_queue_config[4].queueEnable	= false,	
 </#if>
+
+<#if (drvGmac.TCPIP_GMAC_QUEUE_4)?has_content>	
+	/** QUEUE 4 Intialization**/
+	<#if (drvGmac.TCPIP_GMAC_QUEUE_4)  == true>
+		.gmac_queue_config[4].queueEnable	= true,
+	<#else>	
+		.gmac_queue_config[4].queueEnable	= false,	
+	</#if>
 	.gmac_queue_config[4].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4,
 	.gmac_queue_config[4].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4,
 	.gmac_queue_config[4].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE4,
 	.gmac_queue_config[4].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE4,
+</#if>
 
+<#if (drvGmac.TCPIP_GMAC_QUEUE_5)?has_content>
 	/** QUEUE 5 Intialization**/
-<#if (drvGmac.TCPIP_GMAC_QUEUE_5)?has_content && (drvGmac.TCPIP_GMAC_QUEUE_5)  == true>
+<#if (drvGmac.TCPIP_GMAC_QUEUE_5)  == true>
 	.gmac_queue_config[5].queueEnable	= true,
 <#else>	
 	.gmac_queue_config[5].queueEnable	= false,	
@@ -332,7 +343,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[5].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5,
 	.gmac_queue_config[5].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE5,
 	.gmac_queue_config[5].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE5,
-	
+</#if>
 	.ethFlags               = TCPIP_GMAC_ETH_OPEN_FLAGS,	
 	.linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,

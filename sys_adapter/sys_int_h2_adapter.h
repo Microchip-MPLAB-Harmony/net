@@ -71,7 +71,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 // DOM-IGNORE-END
 
-
+#if 0 //niyas
 static __inline__ bool __attribute__((always_inline)) SYS_INT_SourceRestore( INT_SOURCE source, int status )
 {
     if (status)
@@ -79,4 +79,5 @@ static __inline__ bool __attribute__((always_inline)) SYS_INT_SourceRestore( INT
      /* return the source status */
     return (bool)status;
 }
+#endif
 #endif //SYS_INT_ADPATER_H

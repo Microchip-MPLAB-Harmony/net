@@ -170,8 +170,7 @@ typedef enum
 }TCPIP_MODULE_MAC_ID;
 
 // *****************************************************************************
-//For PIC32C device
-#define TCPIP_MODULE_PIC32C_GMAC_NUMBER_OF_QUEUES				6
+
 /**
  * Configuration Structure for Queues in GMAC.
  */
@@ -206,7 +205,7 @@ typedef struct
 {
 	TCPIP_MAC_ADDR                  macAddress;
 	/* Configuration for each GMAC queues*/
-	TCPIP_MODULE_GMAC_QUEUE_CONFIG  gmac_queue_config[TCPIP_MODULE_PIC32C_GMAC_NUMBER_OF_QUEUES];    
+	TCPIP_MODULE_GMAC_QUEUE_CONFIG  gmac_queue_config[DRV_GMAC_NUMBER_OF_QUEUES];    
 
     /*  Delay to wait after the lomk is coming up (milliseconds) */
     /*  for insuring that the PHY is ready to transmit data. */

@@ -50,7 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 static bool _MacPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
-extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
+//extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
 
 /* TX descriptors for 6 Queues */
             
@@ -75,11 +75,6 @@ typedef struct
 
 // place the descriptors in an uncached memory region
 __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000))) __attribute__((keep))DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
-
-static void _EthMacReset(void)
-{
-}
-
 
 /****************************************************************************
  * Function:        DRV_PIC32CGMAC_LibInit
@@ -113,18 +108,22 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 	GMAC_REGS->GMAC_ISRPQ[1] ;
 	//Set network configurations like speed, full duplex, copy all frames, no broadcast, 
 	// pause enable, remove FCS, MDC clock
-    uint32_t ncfgr_reg = GMAC_NCFGR_FD_Msk  |(GMAC_NCFGR_DBW_Msk & ((0) << GMAC_NCFGR_DBW_Pos)) | GMAC_NCFGR_CLK_MCK_64  |	GMAC_NCFGR_PEN_Msk  | GMAC_NCFGR_RFCS_Msk;
-	GMAC_REGS->GMAC_NCFGR = ncfgr_reg;
+    //niyas uint32_t ncfgr_reg = GMAC_NCFGR_FD_Msk  |(GMAC_NCFGR_DBW_Msk & ((0) << GMAC_NCFGR_DBW_Pos)) | GMAC_NCFGR_CLK_MCK_64  |	GMAC_NCFGR_PEN_Msk  | GMAC_NCFGR_RFCS_Msk;
+	//niyas GMAC_REGS->GMAC_NCFGR = ncfgr_reg;
+    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_DBW(0) | GMAC_NCFGR_CLK(4)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);//niyas
 	// Set MAC address
-	GMAC_REGS->GMAC_SA[0].GMAC_SAB = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[3] << 24)
+	/*GMAC_REGS->SA[0].GMAC_SAB = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[3] << 24)
 															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[2] << 16)
 															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[1] <<  8)
 															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[0]);
 		
-	GMAC_REGS->GMAC_SA[0].GMAC_SAT = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[5] <<  8)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[4]) ;
+	GMAC_REGS->SA[0].GMAC_SAT = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[5] <<  8)
+															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[4]) ;*/
+    
+    DRV_PIC32CGMAC_LibSetMacAddr((const uint8_t *)(pMACDrv->sGmacData.gmacConfig.macAddress.v));
 	// MII mode config
-	GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
+	//niyas GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
+    GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0); //niyas
 }
 
 
@@ -153,10 +152,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
     if(queueIdx)
     {   //for all QUEUEs other than QUEUE 0
         if(queueIdx < DRV_GMAC_NUMBER_OF_QUEUES)
-        {
-            //dma configuration
+    {
+        //dma configuration
             wDmaCfg = (GMAC_RBSRPQ_RBS_Msk & ((wRxBufferSize_temp >> 6) << GMAC_RBSRPQ_RBS_Pos));
-            //write dma configuration to register
+        //write dma configuration to register
             GMAC_REGS->GMAC_RBSRPQ[queueIdx - 1] = wDmaCfg;
             //enable GMAC interrupts
             GMAC_REGS->GMAC_IERPQ[queueIdx - 1] = GMAC_INT_BITS;
@@ -204,8 +203,6 @@ void DRV_PIC32CGMAC_LibClose(DRV_GMAC_DRIVER * pMACDrv, DRV_PIC32CGMAC_CLOSE_FLA
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk;
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;
 
-	_EthMacReset();	
-
 	GMAC_REGS->GMAC_ISR;
 	GMAC_REGS->GMAC_ISRPQ[0];
 	GMAC_REGS->GMAC_ISRPQ[1];
@@ -244,11 +241,15 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
 	
 	if(oFlags & TCPIP_ETH_OPEN_RMII)	
 	{
-		GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
+		//niyas GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
+        //Configure in RMII mode
+        GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0); //niyas
 	}
 	else
 	{
-		GMAC_REGS->GMAC_UR |= GMAC_UR_RMII_Msk;
+		//niyas GMAC_REGS->GMAC_UR |= GMAC_UR_RMII_Msk;
+        //Configure in MII mode
+        GMAC_REGS->GMAC_UR = GMAC_UR_RMII(1); //niyas
 	}
 	
 	GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;
@@ -796,12 +797,12 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
 		
 	}
 	
-    if(bna_flag)
+    if(bna_flag == true)
     {
-        GMAC_REGS->GMAC_RSR = GMAC_RSR_BNA_Msk ; //Clear Buffer Not Available Flag	
-        bna_flag = 0;
-       __DMB();  
-        
+		//Clear Buffer Not Available Flag	
+        GMAC_REGS->GMAC_RSR = GMAC_RSR_BNA_Msk ; 
+        bna_flag = false;
+      	__DMB();          
     }
     
 	return res;	
@@ -932,6 +933,32 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxFilterHash_Calculate(DRV_GMAC_DRIVER* 
 
     return DRV_PIC32CGMAC_RES_OK;
 }
+
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr)
+{
+    GMAC_REGS->GMAC_SA[0].GMAC_SAB = (pMacAddr[3] << 24)
+                                | (pMacAddr[2] << 16)
+                                | (pMacAddr[1] <<  8)
+                                | (pMacAddr[0]);
+
+    GMAC_REGS->GMAC_SA[0].GMAC_SAT = (pMacAddr[5] <<  8)
+                                | (pMacAddr[4]) ;
+    
+    return DRV_PIC32CGMAC_RES_OK;
+}
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr)
+{
+
+    pMacAddr[0] = (GMAC_REGS->GMAC_SA[0].GMAC_SAB)& 0xFF;
+    pMacAddr[1] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>8)& 0xFF;
+    pMacAddr[2] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>16)& 0xFF;
+    pMacAddr[3] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>24)& 0xFF;
+    pMacAddr[4] = (GMAC_REGS->GMAC_SA[0].GMAC_SAT)& 0xFF;
+    pMacAddr[5] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAT)>>8)& 0xFF;
+    
+    return DRV_PIC32CGMAC_RES_OK;
+}
+
 /****************************************************************************
  * Function:        _MacPacketAck
  * Summary: ACK function to free the RX/TX packet

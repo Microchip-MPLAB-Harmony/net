@@ -152,7 +152,7 @@ static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void);
 static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
 
 // external function reference
-extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
+//niyas extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
 
 /******************************************************************************
  * PIC32C GMAC object implementation
@@ -193,7 +193,7 @@ extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
 // to support multiple instances
 // create an array/list of MAC_DCPT structures
 // or allocate dynamically
-static DRV_GMAC_DRIVER _pic32c_emb_mac_dcpt[1] = 
+static DRV_GMAC_DRIVER _gmac_drv_dcpt[1] = 
 {
 	{
 		&DRV_GMAC_Object,
@@ -264,11 +264,11 @@ static const _DRV_GMAC_LinkStateF _DRV_GMAC_LinkStateTbl[] =
 };
 
 //convert mac id to index
-static __inline__ int __attribute__((always_inline)) _PIC32CMacIdToIx(TCPIP_MODULE_MAC_ID macId)
+static __inline__ int __attribute__((always_inline)) _GmacIdToIndex(TCPIP_MODULE_MAC_ID macId)
 {    
 	int macIx = macId - TCPIP_MODULE_MAC_PIC32C_0;
 
-    if(macIx >= 0 && macIx < sizeof(_pic32c_emb_mac_dcpt)/sizeof(*_pic32c_emb_mac_dcpt))
+    if(macIx >= 0 && macIx < sizeof(_gmac_drv_dcpt)/sizeof(*_gmac_drv_dcpt))
     {
         return macIx;
     }
@@ -309,14 +309,14 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 	GMAC_QUE_LIST		queueIdx;	
 	GMAC_RX_FILTERS		gmacRxFilt;
 	
-	macIx = _PIC32CMacIdToIx(index);
+	macIx = _GmacIdToIndex(index);
 	
 	if(macIx < 0 )
 	{   
 		return SYS_MODULE_OBJ_INVALID;      // no such type supported
 	}
    
-    pMACDrv = _pic32c_emb_mac_dcpt + macIx;
+    pMACDrv = _gmac_drv_dcpt + macIx;
 
 	if(pMACDrv->sGmacData._macFlags._init != 0)
 	{   // already initialized	
@@ -629,11 +629,11 @@ DRV_HANDLE DRV_GMAC_Open(const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT in
     DRV_GMAC_DRIVER * pMACDrv;
     DRV_HANDLE    hMac = DRV_HANDLE_INVALID;
 	
-	macIx = _PIC32CMacIdToIx(drvIndex);
+	macIx = _GmacIdToIndex(drvIndex);
 	
 	if(macIx >= 0 )
 	{
-		pMACDrv = _pic32c_emb_mac_dcpt + macIx;
+		pMACDrv = _gmac_drv_dcpt + macIx;
 		if(pMACDrv->sGmacData._macFlags._init == 1)
 		{
 			if(pMACDrv->sGmacData._macFlags._open == 0)
@@ -1147,13 +1147,8 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 	if(pMACDrv->sGmacData.sysStat == SYS_STATUS_READY)
 	{
 		if(pMacParams)
-		{			
-			pMacParams->ifPhyAddress.v[0] = (GMAC_REGS->GMAC_SA[0].GMAC_SAB)& 0xFF;
-			pMacParams->ifPhyAddress.v[1] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>8)& 0xFF;
-			pMacParams->ifPhyAddress.v[2] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>16)& 0xFF;
-			pMacParams->ifPhyAddress.v[3] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAB)>>24)& 0xFF;
-			pMacParams->ifPhyAddress.v[4] = (GMAC_REGS->GMAC_SA[0].GMAC_SAT)& 0xFF;
-			pMacParams->ifPhyAddress.v[5] = ((GMAC_REGS->GMAC_SA[0].GMAC_SAT)>>8)& 0xFF;
+		{		
+            DRV_PIC32CGMAC_LibGetMacAddr(pMacParams->ifPhyAddress.v);
 			
 			pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
 			pMacParams->macType = TCPIP_MAC_TYPE_ETH;
@@ -1217,13 +1212,10 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	}
 	
 	//packet in queue for transmission
-	while( (pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0)
+	while(((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0) && (ethRes != DRV_PIC32CGMAC_RES_NO_DESCRIPTORS))
 	{
 		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv, queueIdx);
         
-        //exit loop to avoid deadlock when no Tx descriptors are available
-        if(ethRes == DRV_PIC32CGMAC_RES_NO_DESCRIPTORS)
-            break; 
 	}
 		
 	if((ethRes == DRV_PIC32CGMAC_RES_OK)||(ethRes == DRV_PIC32CGMAC_RES_NO_PACKET))
@@ -1394,6 +1386,7 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ object );
 	eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_DONE))? GMAC_EV_RXCOMPLETE:0;	
 	eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_OVFLOW))? GMAC_EV_RXOVERRUN:0;
 	eEvents |= (tcpEv&(TCPIP_MAC_EV_TX_BUSERR))? GMAC_EV_TXFRAMECORRUPT:0;
+    eEvents |= (tcpEv&(TCPIP_MAC_EV_TX_ABORT))? GMAC_EV_TXUNDERRUN:0;
 	eEvents |= (tcpEv&(TCPIP_MAC_EV_RX_BUFNA))? GMAC_EV_RXUSEDBITREAD:0; // mapping RX Used bit interrupt to BUFNA;
                                                                          // reason is no GMAC interrupt bit for BUFNA
                                                                          // and RXUBR interrupt will trigger with BUFNA
@@ -1611,8 +1604,12 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 	if(enable)
 	{
 		GMAC_EVENTS  ethSetEvents;
-		//volatile uint32_t int_status;
-		
+       
+#if !defined(PIC32C_GMAC_ISR_TX)
+        //mask TX DONE event/interrupt when TX Interrupt processing is disabled
+        macEvMask &= ~TCPIP_MAC_EV_TX_DONE;
+#endif  // defined(PIC32C_GMAC_ISR_TX)
+        
 		ethSetEvents = _XtlEventsTcp2Eth(macEvMask);
 
 		if(pDcpt->_TcpEnabledEvents != 0)
@@ -1845,7 +1842,7 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 	GMAC_EVENTS  currEthEvents = (GMAC_EVENTS)GMAC_EV_NONE;
     GMAC_EVENTS currGroupEvents = (GMAC_EVENTS)GMAC_EV_NONE;
 	DRV_GMAC_EVENT_DCPT* pDcpt;	
-	DRV_GMAC_DRIVER * pMACDrv = &_pic32c_emb_mac_dcpt[macIndex];		
+	DRV_GMAC_DRIVER * pMACDrv = &_gmac_drv_dcpt[macIndex];		
 	
 	currEthEvents = (GMAC_EVENTS)GMAC_REGS->GMAC_ISR;
     __DMB();
