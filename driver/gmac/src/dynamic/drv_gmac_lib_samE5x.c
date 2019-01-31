@@ -39,7 +39,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 //DOM-IGNORE-END
 
-
 #include "driver/gmac/src/dynamic/drv_gmac_lib.h"
 
 #if defined(PIC32C_GMAC_ISR_TX) //GMAC with TX interrupt enabled
@@ -48,33 +47,15 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 	#define GMAC_INT_BITS  (GMAC_INT_RX_BITS)
 #endif
 
-
 static bool _MacPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param);
-//extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
-
-/* TX descriptors for 6 Queues */
-            
+   
 typedef struct
 {
-	DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue0[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0];
-	/* niyas DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue1[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1];
-    DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue2[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2];
-	DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue3[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3];
-    DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue4[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4];
-	DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue5[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5];*/
-    
-    DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue0[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0];
-	/* niyas DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue1[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1];
-    DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue2[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2];
-	DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue3[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3];
-    DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue4[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4];
-	DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue5[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5];*/
-    
+	DRV_PIC32CGMAC_HW_TXDCPT sTxDesc_queue0[TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0];    
+    DRV_PIC32CGMAC_HW_RXDCPT sRxDesc_queue0[TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0];    
 } DRV_PIC32CGMAC_HW_DCPT_ARRAY ; 
 
-
-// place the descriptors in an uncached memory region
-//niyas __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000))) __attribute__((keep))DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
+// place the descriptors in 8-byte aligned memory region
 __attribute__((__aligned__(8))) __attribute__((keep))DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
 
 /****************************************************************************
@@ -94,13 +75,7 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;
 	
 	//disable all GMAC interrupts for QUEUE 0
-	GMAC_REGS->GMAC_IDR = GMAC_INT_ALL;
-	//disable all GMAC interrupts for QUEUE 1
-	//niyas GMAC_REGS->GMAC_IDRPQ[0] = GMAC_INT_ALL;
-	//disable all GMAC interrupts for QUEUE 2
-	//niyas GMAC_REGS->GMAC_IDRPQ[1] = GMAC_INT_ALL;
-	
-	//Clear statistics register
+	GMAC_REGS->GMAC_IDR = GMAC_INT_ALL;	//Clear statistics register
 	GMAC_REGS->GMAC_NCR |=  GMAC_NCR_CLRSTAT_Msk;
 	//Clear RX Status
 	GMAC_REGS->GMAC_RSR =  GMAC_RSR_RXOVR_Msk | GMAC_RSR_REC_Msk | GMAC_RSR_BNA_Msk  | GMAC_RSR_HNO_Msk;
@@ -110,27 +85,17 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 									
 	//Clear Interrupt status
 	GMAC_REGS->GMAC_ISR;
-	//niyas GMAC_REGS->GMAC_ISRPQ[0] ;   
-	//niyas GMAC_REGS->GMAC_ISRPQ[1] ;
+
 	//Set network configurations like speed, full duplex, copy all frames, no broadcast, 
-	// pause enable, remove FCS, MDC clock
-    //niyas uint32_t ncfgr_reg = GMAC_NCFGR_FD_Msk  |(GMAC_NCFGR_DBW_Msk & ((0) << GMAC_NCFGR_DBW_Pos)) | GMAC_NCFGR_CLK_MCK_64  |	GMAC_NCFGR_PEN_Msk  | GMAC_NCFGR_RFCS_Msk;
-	//niyas GMAC_REGS->GMAC_NCFGR = ncfgr_reg;
-    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_CLK(3)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);//niyas
-	// Set MAC address
-	/*GMAC_REGS->SA[0].GMAC_SAB = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[3] << 24)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[2] << 16)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[1] <<  8)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[0]);
-		
-	GMAC_REGS->SA[0].GMAC_SAT = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[5] <<  8)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[4]) ;*/
-    
+	// pause enable, remove FCS, MDC clock   
+    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_CLK(3)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);
+	
+	// Set MAC address	    
     DRV_PIC32CGMAC_LibSetMacAddr((const uint8_t *)(pMACDrv->sGmacData.gmacConfig.macAddress.v));
+	
 	// MII mode config
-	//niyas GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
     //Configure in RMII mode
-    GMAC_REGS->GMAC_UR = GMAC_UR_MII(0); //niyas
+    GMAC_REGS->GMAC_UR = GMAC_UR_MII(0);
 }
 
 
@@ -146,8 +111,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
 	uint16_t wRxDescCnt_temp = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt;
 	uint16_t wTxDescCnt_temp = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt;
 	uint16_t wRxBufferSize_temp = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
-
-//	uint32_t wDmaCfg;
 	
 	if (wRxDescCnt_temp < 1 || wTxDescCnt_temp < 1)
 	return DRV_PIC32CGMAC_RES_DESC_CNT_ERR;
@@ -155,16 +118,12 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
 	if (!wRxBufferSize_temp || wRxBufferSize_temp > TCPIP_GMAC_RX_MAX_FRAME)
 	return DRV_PIC32CGMAC_RES_RX_SIZE_ERR;
 
-    // Setup the interrupts for RX/TX completion (and errors) 
-    {
-        //dma configuration
-       //niyas wDmaCfg = (GMAC_DCFGR_DRBS_Msk & ((wRxBufferSize_temp >> 6) << GMAC_DCFGR_DRBS_Pos))| (GMAC_DCFGR_RXBMS_Msk & ((3) << GMAC_DCFGR_RXBMS_Pos)) | GMAC_DCFGR_TXPBMS_Msk  | GMAC_DCFGR_FBLDO_INCR4 | GMAC_DCFGR_DDRP_Msk;
-        //write dma configuration to register
-        //niyas GMAC_REGS->GMAC_DCFGR = wDmaCfg;
-        GMAC_REGS->GMAC_DCFGR = GMAC_DCFGR_DRBS((wRxBufferSize_temp >> 6)) | GMAC_DCFGR_RXBMS(3) | GMAC_DCFGR_TXPBMS(1) | GMAC_DCFGR_FBLDO(4) | GMAC_DCFGR_DDRP(1);//niyas
-        //enable GMAC interrupts
-        GMAC_REGS->GMAC_IER = GMAC_INT_BITS;
-    }
+	//write dma configuration to register
+	GMAC_REGS->GMAC_DCFGR = GMAC_DCFGR_DRBS((wRxBufferSize_temp >> 6)) | GMAC_DCFGR_RXBMS(3) | GMAC_DCFGR_TXPBMS(1) | GMAC_DCFGR_FBLDO(4) | GMAC_DCFGR_DDRP(1);
+	
+	//enable GMAC interrupts
+	GMAC_REGS->GMAC_IER = GMAC_INT_BITS;
+    
 	return DRV_PIC32CGMAC_RES_OK;
 	
 }
@@ -193,10 +152,10 @@ void DRV_PIC32CGMAC_LibClose(DRV_GMAC_DRIVER * pMACDrv, DRV_PIC32CGMAC_CLOSE_FLA
 
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk;
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_RXEN_Msk;
-
+	
+	// Clear interrupt status
 	GMAC_REGS->GMAC_ISR;
-	//niyas GMAC_REGS->GMAC_ISRPQ[0];
-	//niyas GMAC_REGS->GMAC_ISRPQ[1];
+
 }
 
 
@@ -232,15 +191,13 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
 	
 	if(oFlags & TCPIP_ETH_OPEN_RMII)	
 	{
-		//niyas GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
         //Configure in RMII mode
-        GMAC_REGS->GMAC_UR = GMAC_UR_MII(0); //niyas
+        GMAC_REGS->GMAC_UR = GMAC_UR_MII(0);
 	}
 	else
 	{
-		//niyas GMAC_REGS->GMAC_UR |= GMAC_UR_RMII_Msk;
         //Configure in MII mode
-        GMAC_REGS->GMAC_UR = GMAC_UR_MII(1); //niyas
+        GMAC_REGS->GMAC_UR = GMAC_UR_MII(1);
 	}
 	
 	GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;
@@ -331,10 +288,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv)
 		{
 			break;
 		}
-		//niyasif (!queue_idx)
-			GMAC_REGS->GMAC_RBQB = GMAC_RBQB_ADDR_Msk & ((uint32_t)pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc);
-		//niyas else
-			//niyas GMAC_REGS->GMAC_RBQBAPQ[queue_idx - 1] = GMAC_RBQB_ADDR_Msk & ((uint32_t)pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc);
+		
+		GMAC_REGS->GMAC_RBQB = GMAC_RBQB_ADDR_Msk & ((uint32_t)pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc);
+		
 	}
 	
 	return gmacRes;
@@ -367,11 +323,9 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
 			DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queue_idx]._TxNewQueue, (DRV_PIC32CGMAC_SGL_LIST_NODE*)pNewQueueNode); // each gmac_queue will have seperate _TxNewQueue
 		}
 		pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc[desc_idx-1].tx_desc_status.val |= GMAC_TX_WRAP_BIT;
-				
-		//niyas if (!queue_idx)
+		
 		GMAC_REGS->GMAC_TBQB = GMAC_TBQB_ADDR_Msk & ((uint32_t)pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc);
-		//niyas else
-		//niyas 	GMAC_REGS->GMAC_TBQBAPQ[queue_idx - 1] = GMAC_TBQB_ADDR_Msk & ((uint32_t)pMACDrv->sGmacData.gmac_queue[queue_idx].pTxDesc);
+
 	}
 	
 	return gmacRes;
@@ -434,13 +388,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 	{
 		wTxIndex = pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead ;
 		wNewTxHead = fixed_mod((wTxIndex + nTotalDesc_count),wTxDescCount);
-        
-        //Clean D-Cache is cache is enabled
-        //niyas 
-        /*if( (SCB->CCR & SCB_CCR_DC_Msk) == SCB_CCR_DC_Msk)
-        {
-            SCB_CleanDCache();
-        }*/
 		
 		while (pPkt)
 		{
@@ -484,9 +431,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
 		}
 		//Update new Tx Head Index
 		pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead = wNewTxHead;
-		
-		//memory barrier to ensure all the memories updated before enabling transmission
-        //niyas __DMB();
+
 		//Enable Transmission
 		GMAC_REGS->GMAC_NCR |= GMAC_NCR_TSTART_Msk;	
 		
@@ -792,8 +737,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
     {
 		//Clear Buffer Not Available Flag	
         GMAC_REGS->GMAC_RSR = GMAC_RSR_BNA_Msk ; 
-        bna_flag = false;
-      //niyas __DMB();          
+        bna_flag = false;          
     }
     
 	return res;	

@@ -151,9 +151,6 @@ static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void);
 //Transform TCPIP MAC filters to GMAC filters
 static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
 
-// external function reference
-//niyas extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
-
 /******************************************************************************
  * PIC32C GMAC object implementation
  ******************************************************************************/

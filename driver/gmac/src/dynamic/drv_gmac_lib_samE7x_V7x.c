@@ -109,22 +109,12 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 	GMAC_REGS->GMAC_ISRPQ[1] ;
 	//Set network configurations like speed, full duplex, copy all frames, no broadcast, 
 	// pause enable, remove FCS, MDC clock
-    //niyas uint32_t ncfgr_reg = GMAC_NCFGR_FD_Msk  |(GMAC_NCFGR_DBW_Msk & ((0) << GMAC_NCFGR_DBW_Pos)) | GMAC_NCFGR_CLK_MCK_64  |	GMAC_NCFGR_PEN_Msk  | GMAC_NCFGR_RFCS_Msk;
-	//niyas GMAC_REGS->GMAC_NCFGR = ncfgr_reg;
-    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_DBW(0) | GMAC_NCFGR_CLK(4)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);//niyas
-	// Set MAC address
-	/*GMAC_REGS->SA[0].GMAC_SAB = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[3] << 24)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[2] << 16)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[1] <<  8)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[0]);
-		
-	GMAC_REGS->SA[0].GMAC_SAT = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[5] <<  8)
-															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[4]) ;*/
-    
+    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_DBW(0) | GMAC_NCFGR_CLK(4)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);
+	
+	// Set MAC address    
     DRV_PIC32CGMAC_LibSetMacAddr((const uint8_t *)(pMACDrv->sGmacData.gmacConfig.macAddress.v));
 	// MII mode config
-	//niyas GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
-    GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0); //niyas
+    GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0);
 }
 
 
@@ -242,15 +232,13 @@ void DRV_PIC32CGMAC_LibMACOpen(DRV_GMAC_DRIVER * pMACDrv, TCPIP_ETH_OPEN_FLAGS o
 	
 	if(oFlags & TCPIP_ETH_OPEN_RMII)	
 	{
-		//niyas GMAC_REGS->GMAC_UR &= ~GMAC_UR_RMII_Msk;
         //Configure in RMII mode
-        GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0); //niyas
+        GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0);
 	}
 	else
 	{
-		//niyas GMAC_REGS->GMAC_UR |= GMAC_UR_RMII_Msk;
         //Configure in MII mode
-        GMAC_REGS->GMAC_UR = GMAC_UR_RMII(1); //niyas
+        GMAC_REGS->GMAC_UR = GMAC_UR_RMII(1);
 	}
 	
 	GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;
