@@ -224,6 +224,10 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 <#assign emac_phy_type = drvExtPhyKsz8061.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8091">
+<#assign emac_phy_type = drvExtPhyKsz8091.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_RESET_CALLBACK>
 <#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "LAN8740">
 <#assign emac_phy_type = drvExtPhyLan8740.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_USE_RESET_CALLBACK>
