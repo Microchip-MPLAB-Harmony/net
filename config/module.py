@@ -217,14 +217,22 @@ def loadModule():
 	drvMiimComponent.addCapability("libdrvMiim","MIIM",True)	
 	
 	## External PHY Driver
+	#Driver for Micrel KSZ8061 PHY
 	drvExtPhyKsz8061Component = Module.CreateComponent("drvExtPhyKsz8061", "KSZ8061", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8061.py")
 	drvExtPhyKsz8061Component.addCapability("libdrvExtPhyKsz8061","PHY",True)	
 	drvExtPhyKsz8061Component.addDependency("KSZ8061_MIIM_Dependency", "MIIM", None, True, True)	
 	
+	#Driver for Micrel KSZ8081 PHY
 	drvExtPhyKsz8081Component = Module.CreateComponent("drvExtPhyKsz8081", "KSZ8081", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8081.py")
 	drvExtPhyKsz8081Component.addCapability("libdrvExtPhyKsz8081","PHY",True)	
 	drvExtPhyKsz8081Component.addDependency("KSZ8081_MIIM_Dependency", "MIIM", None, True, True)	
 	
+	#Driver for Micrel KSZ8091 PHY
+	drvExtPhyKsz8091Component = Module.CreateComponent("drvExtPhyKsz8091", "KSZ8091", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_ksz8091.py")
+	drvExtPhyKsz8091Component.addCapability("libdrvExtPhyKsz8091","PHY",True)	
+	drvExtPhyKsz8091Component.addDependency("KSZ8091_MIIM_Dependency", "MIIM", None, True, True)	
+	
+	#Driver for SMSC LAN8740 PHY
 	drvExtPhyLan8740Component = Module.CreateComponent("drvExtPhyLan8740", "LAN8740", "/Harmony/Drivers/PHY Driver", "driver/ethphy/config/drv_extphy_lan8740.py")
 	drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)	
 	drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)		
