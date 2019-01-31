@@ -1,3 +1,4 @@
+// DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -20,14 +21,37 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+// DOM-IGNORE-END
 
-#ifndef TOOLCHAIN_SPECIFICS_H
-#define TOOLCHAIN_SPECIFICS_H
-
+#include <stdio.h>
+#include <stdarg.h>
 #include <sys/types.h>
-#define NO_INIT    __attribute__((section(".no_init")))
-#define SECTION(a) __attribute__((__section__(a)))
+#include <sys/stat.h>
+#include <device.h> /* for ARM CMSIS __BKPT() */
 
+#ifdef __cplusplus
+extern "C" {
+#endif
 
-#endif // end of header
+/* Harmony specific
+ * We implement only the syscalls we want over the stubs provided by libpic32c
+ */
+extern void _exit(int status);
 
+extern void _exit(int status)
+{
+    /* Software breakpoint */
+#ifdef DEBUG
+//    asm("bkpt #0");
+    __BKPT(0);
+#endif
+
+    /* halt CPU */
+    while (1)
+    {
+    }
+}
+
+#ifdef __cplusplus
+}
+#endif
