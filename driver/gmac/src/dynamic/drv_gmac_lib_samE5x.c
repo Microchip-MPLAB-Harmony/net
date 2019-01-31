@@ -83,6 +83,11 @@ __attribute__((__aligned__(8))) __attribute__((keep))DRV_PIC32CGMAC_HW_DCPT_ARRA
  *****************************************************************************/
 void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv) 
 {		
+	/* Configure the AHB Bridge Clock for GMAC */
+    MCLK_REGS->MCLK_AHBMASK |= MCLK_AHBMASK_GMAC(1);	
+	/* Configure the APBB Bridge Clock for GMAC */
+    MCLK_REGS->MCLK_APBCMASK |= MCLK_APBCMASK_GMAC(1);
+	
 	//disable Tx
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk;
 	//disable Rx
@@ -111,7 +116,7 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 	// pause enable, remove FCS, MDC clock
     //niyas uint32_t ncfgr_reg = GMAC_NCFGR_FD_Msk  |(GMAC_NCFGR_DBW_Msk & ((0) << GMAC_NCFGR_DBW_Pos)) | GMAC_NCFGR_CLK_MCK_64  |	GMAC_NCFGR_PEN_Msk  | GMAC_NCFGR_RFCS_Msk;
 	//niyas GMAC_REGS->GMAC_NCFGR = ncfgr_reg;
-    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_CLK(4)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);//niyas
+    GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_CLK(3)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);//niyas
 	// Set MAC address
 	/*GMAC_REGS->SA[0].GMAC_SAB = 	  (pMACDrv->sGmacData.gmacConfig.macAddress.v[3] << 24)
 															| (pMACDrv->sGmacData.gmacConfig.macAddress.v[2] << 16)

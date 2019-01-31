@@ -82,6 +82,7 @@ __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000)))
  *****************************************************************************/
 void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv) 
 {		
+	
 	//disable Tx
 	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk;
 	//disable Rx
@@ -447,7 +448,11 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxSendPacket(DRV_GMAC_DRIVER * pMACDrv,G
         //Clean D-Cache is cache is enabled
         if( (SCB->CCR & SCB_CCR_DC_Msk) == SCB_CCR_DC_Msk)
         {
-            SCB_CleanDCache();
+#ifdef CACHE_CLEAN_BY_ADDRESS
+			SCB_CleanDCache_by_Addr ((uint32_t*)pPkt->segLoad, (int32_t) pPkt_temp->segLen);
+#else
+			SCB_CleanDCache();
+#endif			
         }
 		
 		while (pPkt)
