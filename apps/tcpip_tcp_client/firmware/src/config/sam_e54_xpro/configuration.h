@@ -85,7 +85,7 @@ extern "C" {
 #define SYS_TIME_HW_COUNTER_WIDTH            32
 #define SYS_TIME_HW_COUNTER_PERIOD           4294967295
 #define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
-#define SYS_TIME_CPU_CLOCK_FREQUENCY         48000000
+#define SYS_TIME_CPU_CLOCK_FREQUENCY         120000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (188)
 
 /* Console System Service Configuration Options */

@@ -68,9 +68,9 @@ extern "C" {
 // Section: L1, L2 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
-#define DCACHE_CLEAN_BY_ADDR(addr,sz)
-#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-#define DATA_CACHE_ENABLED                             false
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  SCB_CleanDCache_by_Addr(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             SCB_InvalidateDCache_by_Addr(addr,sz)
+#define DATA_CACHE_ENABLED                             true
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

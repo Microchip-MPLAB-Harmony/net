@@ -44,6 +44,15 @@ SUBSTITUTE  GOODS,  TECHNOLOGY,  SERVICES,  OR  ANY  CLAIMS  BY  THIRD   PARTIES
 static void OSCCTRL_Initialize(void)
 {
 
+    /****************** XOSC1 Initialization   ********************************/
+
+    /* Configure External Oscillator */
+    OSCCTRL_REGS->OSCCTRL_XOSCCTRL[1] = OSCCTRL_XOSCCTRL_STARTUP(0) | OSCCTRL_XOSCCTRL_IMULT(4) | OSCCTRL_XOSCCTRL_IPTAT(3) | OSCCTRL_XOSCCTRL_XTALEN_Msk | OSCCTRL_XOSCCTRL_ENABLE_Msk;
+
+    while((OSCCTRL_REGS->OSCCTRL_STATUS & OSCCTRL_STATUS_XOSCRDY1_Msk) != OSCCTRL_STATUS_XOSCRDY1_Msk)
+    {
+        /* Waiting for the XOSC Ready state */
+    }
 }
 
 static void OSC32KCTRL_Initialize(void)
@@ -52,6 +61,36 @@ static void OSC32KCTRL_Initialize(void)
     OSC32KCTRL_REGS->OSC32KCTRL_RTCCTRL = OSC32KCTRL_RTCCTRL_RTCSEL(0);
 }
 
+static void FDPLL0_Initialize(void)
+{
+
+    /****************** DPLL Initialization  *********************************/
+
+    /* Configure DPLL    */
+    OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_DCOFILTER(0) | OSCCTRL_DPLLCTRLB_LTIME(0x0)| OSCCTRL_DPLLCTRLB_REFCLK(3) | OSCCTRL_DPLLCTRLB_DIV(5);
+
+
+    OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLRATIO = OSCCTRL_DPLLRATIO_LDRFRAC(0) | OSCCTRL_DPLLRATIO_LDR(119);
+
+    while((OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_DPLLRATIO_Msk) == OSCCTRL_DPLLSYNCBUSY_DPLLRATIO_Msk)
+    {
+        /* Waiting for the synchronization */
+    }
+
+    /* Enable DPLL */
+    OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLA = OSCCTRL_DPLLCTRLA_ENABLE_Msk   ;
+
+    while((OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLSYNCBUSY & OSCCTRL_DPLLSYNCBUSY_ENABLE_Msk) == OSCCTRL_DPLLSYNCBUSY_ENABLE_Msk )
+    {
+        /* Waiting for the DPLL enable synchronization */
+    }
+
+    while((OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLSTATUS & (OSCCTRL_DPLLSTATUS_LOCK_Msk | OSCCTRL_DPLLSTATUS_CLKRDY_Msk)) !=
+                (OSCCTRL_DPLLSTATUS_LOCK_Msk | OSCCTRL_DPLLSTATUS_CLKRDY_Msk))
+    {
+        /* Waiting for the Ready state */
+    }
+}
 
 
 static void DFLL_Initialize(void)
@@ -61,7 +100,7 @@ static void DFLL_Initialize(void)
 
 static void GCLK0_Initialize(void)
 {
-    GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
+    GCLK_REGS->GCLK_GENCTRL[0] = GCLK_GENCTRL_DIV(1) | GCLK_GENCTRL_SRC(7) | GCLK_GENCTRL_GENEN_Msk;
 
     while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL_GCLK0) == GCLK_SYNCBUSY_GENCTRL_GCLK0)
     {
@@ -72,7 +111,7 @@ static void GCLK0_Initialize(void)
 void CLOCK_Initialize (void)
 {
     /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLA |= NVMCTRL_CTRLA_RWS(1);
+    NVMCTRL_REGS->NVMCTRL_CTRLA |= NVMCTRL_CTRLA_RWS(5);
 
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
@@ -80,8 +119,9 @@ void CLOCK_Initialize (void)
     /* Function to Initialize the 32KHz Oscillators */
     OSC32KCTRL_Initialize();
 
-   GCLK0_Initialize();
-   DFLL_Initialize();
+    FDPLL0_Initialize();
+    DFLL_Initialize();
+    GCLK0_Initialize();
 
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_DIV(0x01);
