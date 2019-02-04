@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+  <executable name="dist/sam_e54_xpro/production/sam_e54_xpro.X.production.elf">
+    <memory name="program">
+      <units>bytes</units>
+      <length>1048576</length>
+      <used>119674</used>
+      <free>928902</free>
+    </memory>
+    <memory name="data">
+      <units>bytes</units>
+      <length>262144</length>
+      <used>9732</used>
+      <free>252412</free>
+    </memory>
+  </executable>
+</project>
