@@ -1,4 +1,21 @@
 /*******************************************************************************
+  NVIC PLIB Header
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    plib_nvic.h
+
+  Summary:
+    NVIC PLIB Header File
+
+  Description:
+    None
+
+*******************************************************************************/
+
+/*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -21,13 +38,30 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
-#ifndef TOOLCHAIN_SPECIFICS_H
-#define TOOLCHAIN_SPECIFICS_H
+#ifndef PLIB_NVIC_H
+#define PLIB_NVIC_H
 
-#include <sys/types.h>
-#define NO_INIT    __attribute__((section(".no_init")))
-#define SECTION(a) __attribute__((__section__(a)))
+#include <stddef.h>
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 
-#endif // end of header
+/***************************** NVIC Inline *******************************/
 
+void NVIC_Initialize( void );
+
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    }
+
+#endif
+// DOM-IGNORE-END
+#endif // PLIB_NVIC_H
