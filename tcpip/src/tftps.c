@@ -53,8 +53,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 
-#include "tcpip/src/common/sys_fs_wrapper.h"
 #include "tftps_private.h"
+#include "tcpip/src/common/sys_fs_wrapper.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -63,6 +63,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 #define mMIN(a, b)  ((a<b)?a:b)
+__attribute__ ((aligned (32))) uint8_t wrBuffer[512];
+__attribute__ ((aligned (32))) uint8_t rdBuffer[512];
 
 static TFTPS_CB            gTftpClientCB[TCPIP_TFTPS_CLIENT_NUMBER];
 static TCPIP_TFTPS_DCPT    gTftpsDcpt;
@@ -95,14 +97,14 @@ static TFTPS_CB  *_TFTPS_GetClientCB(uint8_t client_cnt);
 static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_received);
 static TCPIP_TFTPS_RESULT _TFTPS_validateClientRquest(UDP_SOCKET_INFO *sktInfo,TFTPS_CB *pClientCB);
 
-static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con, uint16_t bytes_received);
-static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con, uint16_t bytes_received);
-static bool _TFTPS_Send_Data_State(TFTPS_CB* tftp_con, uint16_t bytes_received);
+static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con);
+static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con);
+static bool _TFTPS_Send_Data_State(TFTPS_CB* tftp_con);
 
 // TFTPS server state function
 // returns >= 0 the size of the option added
 // returns < 0 for failure
-typedef bool (*_TFTPS_StateFnc)(TFTPS_CB* tftp_con, uint16_t byteRecived);
+typedef bool (*_TFTPS_StateFnc)(TFTPS_CB* tftp_con);
 typedef struct
 {
     //unsigned uint8_t        state;         // implicit state option
@@ -122,9 +124,10 @@ static const _TFTPS_STATE_TBL_ENTRY   _TFTPSStateTbl[SM_TFTPS_END] =
 /*
  * This Function is for TFTP server state SM_TFTPS_RRECV
  */
-static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con, uint16_t bytes_received)
+static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con)
 {
     TCPIP_TFTPS_RESULT res=TFTPS_RES_OK;
+    uint16_t bytes_received=0;
     
     res = _TFTPS_RRecv(&tftp_con,&bytes_received);
     if(res != TFTPS_RES_OK)
@@ -139,6 +142,11 @@ static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con, uint16_t bytes_receive
 // check if the TFTP client control block , if the status TFTPS_CB_FREE, then client process should not proceed
     if(tftp_con->status == TFTPS_CB_FREE)
     {
+        return 0;
+    }
+    if(tftp_con->trans_buf == 0)
+    {
+        tftp_con->smState = SM_TFTPS_RRECV;
         return 0;
     }
 
@@ -165,8 +173,10 @@ static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con, uint16_t bytes_receive
 /*
  * This Function is for TFTP server state SM_TFTPS_PROCESS_DATA
  */
-static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con, uint16_t bytes_received)
+static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con)
 {
+    uint16_t bytes_received=0;
+    
     if((tftp_con == NULL) ||(tftp_con->status == TFTPS_CB_FREE))
     {
         tftp_con->smState = SM_TFTPS_RRECV;
@@ -213,8 +223,10 @@ static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con, uint16_t bytes_receive
 /*
  * This Function is for TFTP server state SM_TFTPS_SEND_DATA
  */
-static bool _TFTPS_Send_Data_State(TFTPS_CB* tftp_con, uint16_t bytes_received)
+static bool _TFTPS_Send_Data_State(TFTPS_CB* tftp_con)
 {
+    uint16_t bytes_received=0;
+    
      // check if there is valid TFTP control block.
     if((tftp_con == NULL) ||(tftp_con->status == TFTPS_CB_FREE))
     {
@@ -233,7 +245,7 @@ static bool _TFTPS_Send_Data_State(TFTPS_CB* tftp_con, uint16_t bytes_received)
         }
     }
     
-     /* Process the first data packet that was sent to the server. */
+    /* Process the first data packet that was sent to the server. */
     if(_TFTPS_Send_Data(tftp_con, bytes_received) != TFTPS_RES_OK)
     {
         if(tftp_con->status != TFTPS_TRANSFER_COMPLETE)
@@ -267,6 +279,8 @@ static inline uint16_t __attribute__((always_inline)) _TFTPS_Get16(unsigned char
     return TCPIP_Helper_ntohs(*((uint16_t*)(ptr + offset)));
 } /* _TFTPS_Get16 */
 
+#if 0
+//TODO aa: this is unused and results in build warnings!!!
 static __inline__ void __attribute__((always_inline)) _TFTPS_Disconnect(UDP_SOCKET uSkt)
 {   
     // This will put the socket in the initial open state, 
@@ -274,12 +288,13 @@ static __inline__ void __attribute__((always_inline)) _TFTPS_Disconnect(UDP_SOCK
     //whatever comes first.
     TCPIP_UDP_Disconnect(uSkt,false);
 }
+#endif
 
 static bool _TFTP_Server_start(TCPIP_NET_HANDLE hNet,IP_ADDRESS_TYPE ipType)
 {
     UDP_SOCKET s;
-    const unsigned int minTftpsTxSize=TCPIP_TFTPS_BUFFER_SIZE_MIN;
-    uint16_t   bufferSize=0;
+    const unsigned int minTftpsTxSize=TCPIP_TFTPS_MIN_UDP_TX_BUFFER_SIZE;
+    uint16_t   txBuffSize=0;
     TCPIP_TFTPS_DCPT     *pTftpDcpt=NULL;
     pTftpDcpt = &gTftpsDcpt;
     
@@ -292,12 +307,12 @@ static bool _TFTP_Server_start(TCPIP_NET_HANDLE hNet,IP_ADDRESS_TYPE ipType)
     }
 
     // this is the initial buffer size for TFTP server communication
-    bufferSize = TCPIP_UDP_TxPutIsReady(s, TCPIP_TFTPS_BUFFER_SIZE_MIN);
-    if(bufferSize < TCPIP_TFTPS_BUFFER_SIZE_MIN)
+    // make sure the socket is created with enough TX space
+    TCPIP_UDP_OptionsGet(s, UDP_OPTION_TX_BUFF, (void*)&txBuffSize);
+    if(txBuffSize < (uint16_t)minTftpsTxSize)
     {
         if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_TX_BUFF, (void*)minTftpsTxSize))
-        {
-            // close the server socket
+        {  // close the server socket
             TCPIP_UDP_Close(s);
             return false;
         }
@@ -485,8 +500,6 @@ void TCPIP_TFTPS_Task(void)
 static void TCPIP_TFTPS_Process(void)
 {    
     TFTPS_CB                        *tftp_con=NULL;
-    uint16_t                        bytes_received=0;
-    const _TFTPS_STATE_TBL_ENTRY    *pEntry;
     uint8_t                         clientCnt=0;
     
 
@@ -502,8 +515,7 @@ static void TCPIP_TFTPS_Process(void)
     // and new client block will be created from the global array gTftpClientCB[] 
     // if the above condition is passed and also the number of client block should
     // be less than the value of TCPIP_TFTPS_CLIENT_NUMBER.
-   
-    pEntry = _TFTPSStateTbl;
+
     for(clientCnt=0;clientCnt<TCPIP_TFTPS_CLIENT_NUMBER;clientCnt++)
     {
         tftp_con = _TFTPS_GetClientCB(clientCnt);
@@ -511,35 +523,19 @@ static void TCPIP_TFTPS_Process(void)
         {
             continue;
         }
-        switch(tftp_con->smState)
+        if((unsigned int)tftp_con->smState < sizeof(_TFTPSStateTbl) / sizeof(*_TFTPSStateTbl))
         {
-            case SM_TFTPS_RRECV:
-         /* Receive a message from a client and don't return until data
-         * is received from the socket.
-         */     if(*(pEntry+SM_TFTPS_RRECV)->tftpServStateFnc != NULL)
-                {//_TFTPS_Recv_Request_State()
-                    (*(pEntry+SM_TFTPS_RRECV)->tftpServStateFnc)(tftp_con, bytes_received);
-                }                
-               break;
-            case SM_TFTPS_PROCESS_DATA:
-                if(*(pEntry+SM_TFTPS_PROCESS_DATA)->tftpServStateFnc != NULL)
-                {//_TFTPS_Process_Data_State()
-                    (*(pEntry+SM_TFTPS_PROCESS_DATA)->tftpServStateFnc)(tftp_con, bytes_received);
-                }
-                break;
-
-             case SM_TFTPS_SEND_DATA:
-                if(*(pEntry+SM_TFTPS_SEND_DATA)->tftpServStateFnc != NULL)
-                {//_TFTPS_Send_Data_State()
-                    (*(pEntry+SM_TFTPS_SEND_DATA)->tftpServStateFnc)(tftp_con, bytes_received);
-                }
-                break;
-            default:
-                // if the client block is reached in a undefined state, then release that client .
-                _TFTPS_ReleaseDataSocket(tftp_con);
-                break;
-
+            _TFTPS_StateFnc stateFnc = (_TFTPSStateTbl + tftp_con->smState)->tftpServStateFnc;
+            if(stateFnc != 0)
+            {
+                (*stateFnc)(tftp_con);
+            }
         }
+        else
+        {   // wrong internal state!
+            // if the client block is reached in a undefined state, then release that client .
+             _TFTPS_ReleaseDataSocket(tftp_con);
+        }        
     }
 } /* end TFTP_Server_Task */
 
@@ -876,6 +872,10 @@ static TCPIP_TFTPS_RESULT _TFTPS_RRecv(TFTPS_CB   **tftp_con,uint16_t *byteRecei
         }
         *tftp_con = pTftpCon;
     }
+    else if(pTftpCon->trans_buf == 0)
+    {
+        return TFTPS_RES_MEMORY_ALLOC_ERR;
+    }
     else
     {
         // read the ACK and update the status to transferring file
@@ -915,19 +915,18 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
 {
     UDP_SOCKET_INFO sktInfo;
     TCPIP_UINT16_VAL tOpcode,blockNum;
-    uint8_t rxBuf[TCPIP_TFTP_MAX_BUFFER_SIZE];
+    uint8_t rxBuf[TCPIP_TFTPS_MIN_UDP_TX_BUFFER_SIZE];
     uint8_t *p=NULL;
-    int wCnt=0;
-    int maxRecvByte=bytes_received;
-    if(sizeof(rxBuf)<maxRecvByte)
-    {
-        wCnt = sizeof(rxBuf);
-    }
-    memset(rxBuf,0,sizeof(rxBuf));
+    uint32_t wCnt=0;
+    uint32_t maxRecvByte=bytes_received;
+    uint32_t    bufferSize=sizeof(rxBuf);
+    
+    memset(rxBuf,0,bufferSize);
     // get the received packet. Not require to check again the byte count. 
     // This has been already checked from the called function.
     // first packet
-    wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,mMIN(maxRecvByte, sizeof(rxBuf)));
+    
+    wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,mMIN(maxRecvByte, bufferSize));
     // get the socket info.
     TCPIP_UDP_SocketInfoGet(tftp_con->cSkt, &sktInfo);
    
@@ -958,25 +957,28 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
 
                 p = rxBuf + TFTP_DATA_OFFSET;
                 /* Calculate the amount of data in the packet. */
-                wCnt = wCnt - TFTP_DATA_OFFSET;
-                
+                wCnt = wCnt - (TFTP_DATA_OFFSET+1);
+                /// copy the content to the byte aligned buffer.
+                memcpy(rdBuffer,p,wCnt);
                 SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);
-                for(;wCnt<maxRecvByte;)
+                for(maxRecvByte=(bytes_received-5);maxRecvByte>0;)
                 {
                     if(wCnt != 0)
-                    {
-                        if(SYS_FS_FileWrite(tftp_con->file_desc,p,wCnt) == SYS_FS_HANDLE_INVALID)
+                    {                        
+                        if(SYS_FS_FileWrite(tftp_con->file_desc,rdBuffer,wCnt) == SYS_FS_HANDLE_INVALID)
                         {                                              
                             break;
                         }
-                        maxRecvByte -= (wCnt+TFTP_DATA_OFFSET);
-                        memset(rxBuf,0,sizeof(rxBuf));
+                        if(wCnt <= maxRecvByte)
+                        {
+                            maxRecvByte -= wCnt;
+                        }
+                        memset(rdBuffer,0,sizeof(rdBuffer));
                         if(maxRecvByte > 0)
                         {
-                            wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,mMIN(maxRecvByte, sizeof(rxBuf)));
+                            wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rdBuffer,mMIN(maxRecvByte, sizeof(rdBuffer)));
                         }
                         tftp_con->callbackPos = SYS_FS_FileTell(tftp_con->file_desc);
-                        p = rxBuf;
                         // send the error packet if SYS_FS_FileTell returns -1
                         if(tftp_con->callbackPos == -1)
                         {
@@ -1042,7 +1044,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
 {
     uint8_t *p = NULL;
     uint16_t   count = 2, count1 = 0;   
-    char    temp[50];
+    char    temp[TCPIP_TFTPS_FILENAME_LEN+1];    
     TCPIP_TFTPS_RESULT  res = TFTPS_RES_OK;
     int32_t     file_desc;    /* File Descriptor for in-memory file system */
     
@@ -1056,7 +1058,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
         
      /*  get the Filename */
     p = rxBuf+TFTP_FILENAME_OFFSET;
-    while ((*p != '\0') && (count1 < TCPIP_TFTP_FILE_NAME_LEN))
+    while ((*p != '\0') && (count1 < TCPIP_TFTPS_FILENAME_LEN))
     {
         temp[count1] = *p;
         count ++;
@@ -1066,7 +1068,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
     if(*p != '\0')
     {
         _TFTPS_Error(tftp_con->cSkt, TFTP_FILE_NOT_FOUND_ERROR, "Error: File length is exceeds the Max size");
-        return TFTS_RES_FILE_LENGTH_ERROR;        
+        return TFTPS_RES_FILE_LENGTH_ERROR;        
     }
 
     temp[count1] = '\0';
@@ -1146,14 +1148,14 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_WriteReqPacket(TFTPS_CB *tftp_con, uint
 {
     uint8_t *p = NULL;
     uint16_t   count = 2, count1 = 0;   
-    char    temp[50];
+    char    temp[TCPIP_TFTPS_FILENAME_LEN+1];
     TCPIP_TFTPS_RESULT  res = TFTPS_RES_OK;
     int32_t     file_desc;    /* File Descriptor for in-memory file system */
     
      /* Get the Filename */
     p = rxBuf+TFTP_FILENAME_OFFSET;
     while ((*p != '\0') && 
-        (count1 < TCPIP_TFTP_FILE_NAME_LEN))
+        (count1 < TCPIP_TFTPS_FILENAME_LEN))
     {
         temp[count1] = *p;
         count ++;
@@ -1163,7 +1165,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_WriteReqPacket(TFTPS_CB *tftp_con, uint
     if(*p != '\0')
     {
         _TFTPS_Error(tftp_con->cSkt, TFTP_FILE_NOT_FOUND_ERROR, "Error: File length is exceeds the Max size");
-        return TFTS_RES_FILE_LENGTH_ERROR;        
+        return TFTPS_RES_FILE_LENGTH_ERROR;        
     }
     temp[count1] = '\0';
     strncpy((char*)tftp_con->file_name, temp,count1);
@@ -1249,7 +1251,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_WriteReqPacket(TFTPS_CB *tftp_con, uint
 static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint32_t bytes_received)
 {
     TCPIP_UINT16_VAL tOpcode;
-    uint8_t rxBuf[TCPIP_TFTPS_BUFFER_SIZE_MIN+1];
+    uint8_t rxBuf[TCPIP_TFTPS_MIN_UDP_RX_BUFFER_SIZE+1];
     TCPIP_TFTPS_DCPT    *pTftpDcpt=NULL;
     TCPIP_TFTPS_RESULT  res = TFTPS_RES_OK;
     
@@ -1265,6 +1267,13 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint3
         {
             return TFTPS_RES_RECEIVE_ERROR;
         }
+    }
+    
+   // check the length and truncate to the rxBuf length if the 
+    // rxBuf size is less than the length of the received bytes.
+    if(bytes_received > sizeof(rxBuf))
+    {
+        bytes_received =  sizeof(rxBuf);
     }
     TCPIP_UDP_ArrayGet(pTftpDcpt->uSkt,rxBuf,bytes_received);
       
@@ -1428,11 +1437,17 @@ static TCPIP_TFTPS_RESULT _TFTPS_Ack(TFTPS_CB *tftp_con)
 static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_received)
 {
     TCPIP_UINT16_VAL tOpcode,blockNum;
-    uint8_t         rxBuf[bytes_received];
+    uint8_t         rxBuf[TCPIP_TFTPS_MIN_UDP_RX_BUFFER_SIZE+1];
     UDP_SOCKET_INFO sktInfo;
     
+    // check the length 
+    if(bytes_received > sizeof(rxBuf))
+    {
+        bytes_received =  sizeof(rxBuf);
+    }
+        
     memset(rxBuf,0,sizeof(rxBuf));
-
+    // collect the TFTP ack receive bytes
     TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,bytes_received);
     // opcode value
     tOpcode.Val = _TFTPS_Get16(rxBuf,TFTP_OPCODE_OFFSET);
@@ -1524,6 +1539,9 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
 {
     uint32_t            num_bytes=0;
     uint8_t             *wrPtr;
+    uint32_t             wCnt=0;
+    uint32_t             maxReadByte=0;
+    uint16_t             bufferSize=sizeof(wrBuffer);                    
     
     /* If we received something, setup the tid and process the ACK. */
    if (bytes_received)
@@ -1546,25 +1564,49 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
     }
     /* Fill in the opcode and block number. */
     _TFTPS_Put16(wrPtr,TFTP_OPCODE_OFFSET, TFTPS_DATA_OPCODE);
-    _TFTPS_Put16(wrPtr,TFTP_DATA_BLOCKNUM_OFFSET, tftp_con->block_number);
+    _TFTPS_Put16(wrPtr,TFTP_DATA_BLOCKNUM_OFFSET, tftp_con->block_number);   
     wrPtr=wrPtr+TFTP_DATA_OFFSET;
-
-    /*  Read data from the file into the the TFTP CB send buffer. */     
-    num_bytes = SYS_FS_FileRead(tftp_con->file_desc, wrPtr,tftp_con->options.blksize);
-    num_bytes = num_bytes + TCPIP_TFTP_HEADER_MINSIZE;
-    
+    // To support the different block size, might be less than the wrBuffer buffer size 
+    if(tftp_con->options.blksize<bufferSize)
+    {
+        maxReadByte = tftp_con->options.blksize;
+    }
+    else
+    {
+        maxReadByte = bufferSize;
+    }
+    for(wCnt=0;wCnt<tftp_con->options.blksize;)
+    {
+        /*  Read data from the file into the the TFTP CB send buffer. */     
+        num_bytes = SYS_FS_FileRead(tftp_con->file_desc, wrBuffer,maxReadByte);
+        memcpy(wrPtr,wrBuffer,num_bytes);
+        wCnt = wCnt+num_bytes;
+        wrPtr = wrPtr+num_bytes;
+        memset(wrBuffer,0,bufferSize);
+        // the number of bytes is less than the size of the wrBuffer
+        if(num_bytes < maxReadByte)
+        {
+            break;
+        }
+        // if the block size is more than the wrBuffer size, set the maxReadByte to a new value.
+        maxReadByte = tftp_con->options.blksize - maxReadByte;
+    }
+        
     /* If this is the last packet update the status. */
-    if (num_bytes < tftp_con->options.blksize)
+    if (wCnt < tftp_con->options.blksize)
     {
         tftp_con->status = TFTPS_TRANSFER_COMPLETE;
     }
     
+     /*  Read data from the file into the the TFTP CB send buffer. */     
+    num_bytes = wCnt + TCPIP_TFTP_HEADER_MINSIZE;
     // Put complete TFTP error packet buffer to the UDP buffer
     // Once writing is completed into the buffer, TX offset need to be updated again,
     // because the socket flush function calculates how many bytes are in 
     // the buffer using the current write pointer:
     TCPIP_UDP_TxOffsetSet(tftp_con->cSkt, num_bytes, false);
     tftp_con->lastTxPktSize = num_bytes;
+   
     /* Send the data. */
     if(TCPIP_UDP_Flush(tftp_con->cSkt) != num_bytes)
     {
@@ -1785,13 +1827,17 @@ static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t byte
            
         else if (strcmp(op_holder, "blksize") == 0)
         {           
-            /* Check that the requested blksize is <= 65464 and >= 8*/
+            /* Check that the requested blksize is <= 1468 and >= 8*/
             if (((uint16_t)atoi(value_holder) <= TCPIP_TFTP_BLOCK_SIZE_MAX) &&
                 ((uint16_t)atoi(value_holder) >= TCPIP_TFTP_BLOCK_SIZE_MIN))
             {
                 tftp_con->options.blksize = (uint16_t)atoi(value_holder); //+TCPIP_TFTP_HEADER_MINSIZE+1; 
             }
-               
+            else
+            {
+                // TFTP block size fixed to 1468 bytes
+                tftp_con->options.blksize = TCPIP_TFTPS_DEFAULT_BLOCK_SIZE;
+            }               
             tftp_con->options.tftpoptionAckflag.bits.blksize_ack = true;
         }
     }
@@ -1802,7 +1848,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t byte
         TCPIP_UDP_OptionsGet(tftp_con->cSkt, UDP_OPTION_TX_BUFF, (void*)&configTftpTxBufSize);
 
         if(tftpTxBufSize != configTftpTxBufSize)
-        {           
+        {       
             /* Reallocate the original socket memory */            
             if(!TCPIP_UDP_OptionsSet(tftp_con->cSkt, UDP_OPTION_TX_BUFF, (void*)&tftpTxBufSize))
             {
