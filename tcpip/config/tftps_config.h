@@ -85,4 +85,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // and TFTP Client wait for these many seconds before retransmitting .
 #define TCPIP_TFTPS_DEFAULT_TIMEOUT           false 
 
+// The default length of the file name is defined to 64 bytes.
+#define TCPIP_TFTPS_FILENAME_LEN	64
+
 #endif  // _TFTPS_CONFIG_H_

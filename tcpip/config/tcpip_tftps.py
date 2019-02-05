@@ -29,9 +29,9 @@ def instantiateComponent(tcpipTftpsComponent):
 	
 	# TFTP Server Retransmit count value to retransmit the last packet sent
 	tcpipTftpsRetransmitCnt= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_RETRANSMIT_COUNT", None)
-	tcpipTftpsRetransmitCnt.setLabel("TFTP Server command process timeout in sec")
+	tcpipTftpsRetransmitCnt.setLabel("TFTP Server retransmit count")
 	tcpipTftpsRetransmitCnt.setVisible(True)
-	tcpipTftpsRetransmitCnt.setDescription("TFTP Server command process timeout in sec")
+	tcpipTftpsRetransmitCnt.setDescription("TFTP Server retransmit count")
 	tcpipTftpsRetransmitCnt.setDefaultValue(3)
 	#tcpipTftpsRetransmitCnt.setDependencies(tcpipTftpsMenuVisibleSingle, ["TCPIP_USE_TFTPS_MODULE"])
 	
@@ -62,11 +62,19 @@ def instantiateComponent(tcpipTftpsComponent):
 	
 	# TFTP Server command process timeout in sec
 	tcpipTftpsDefTimeout= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_DEFAULT_TIMEOUT", None)
-	tcpipTftpsDefTimeout.setLabel("TFTP Server command process timeout in sec")
+	tcpipTftpsDefTimeout.setLabel("TFTP Server default timeout option")
 	tcpipTftpsDefTimeout.setVisible(True)
-	tcpipTftpsDefTimeout.setDescription("TFTP Server command process timeout in sec")
+	tcpipTftpsDefTimeout.setDescription("TFTP Server default timeout option")
 	tcpipTftpsDefTimeout.setDefaultValue(10)
 	#tcpipTftpsDefTimeout.setDependencies(tcpipTftpsMenuVisibleSingle, ["TCPIP_USE_TFTPS_MODULE"])
+	
+	# TFTP Server command source file name length
+	tcpipTftpsFileNameLength= tcpipTftpsComponent.createIntegerSymbol("TCPIP_TFTPS_FILENAME_LEN", None)
+	tcpipTftpsFileNameLength.setLabel("TFTP Server default file name length")
+	tcpipTftpsFileNameLength.setVisible(True)
+	tcpipTftpsFileNameLength.setDescription("TFTP Server default file name length")
+	tcpipTftpsFileNameLength.setDefaultValue(64)
+	#tcpipTftpsFileNameLength.setDependencies(tcpipTftpsMenuVisibleSingle, ["TCPIP_USE_TFTPS_MODULE"])
 
 	# Enable User Notification
 	tcpipTftpsUsrNotify = tcpipTftpsComponent.createBooleanSymbol("TCPIP_TFTPS_USER_NOTIFICATION", None)
