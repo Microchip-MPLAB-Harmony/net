@@ -84,12 +84,12 @@ def instantiateComponent(tcpipDhcpsComponent):
 		tcpipDhcpsInstance[index].setLabel("DHCP Server Instance "+ str(index))
 		#tcpipDhcpsInstance[index].setVisible(True)
 		if (index < tcpipDhcpsInstancesNum.getValue()):
-			#tcpipDhcpsInstance[index].setVisible(True)
+			tcpipDhcpsInstance[index].setVisible(True)
 			tcpipDhcpsInstance[index].setDefaultValue(True)
 		else:
 			tcpipDhcpsInstance[index].setDefaultValue(False)
-			#tcpipDhcpsInstance[index].setVisible(False)	
-		tcpipDhcpsInstance[index].setVisible(False)	
+			tcpipDhcpsInstance[index].setVisible(False)	
+		#tcpipDhcpsInstance[index].setVisible(True)	
 		tcpipDhcpsInstance[index].setDependencies(tcpipDhcpsEnableInstance, ["TCPIP_DHCP_SERVER_INSTANCES_NUMBER", "tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER", "TCPIP_STACK_USE_DHCP_SERVER"])		
 		
 		# DHCP Server Address Range Start
