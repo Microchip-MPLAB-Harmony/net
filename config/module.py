@@ -122,7 +122,7 @@ def loadModule():
 	tcpipHttpNetComponent.addCapability("libtcpipHttpNet","HTTPNET",True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TCP_Dependency", "TCP", None, True, True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-	tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO")
+	# tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO")
 	tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres", True, True)
 	tcpipHttpNetComponent.setDisplayType("TCP/IP Library")
 	
@@ -163,7 +163,7 @@ def loadModule():
 	tcpipSnmpComponent.addCapability("libtcpipSnmp","SNMP",True)	
 	tcpipSnmpComponent.addDependency("Snmp_UDP_Dependency", "UDP", None, True, True)	
 	tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-	tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO")
+	# tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO")
 	tcpipSnmpComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipSnmpv3Component = Module.CreateComponent("tcpipSnmpv3", "SNMPV3", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmpv3.py")
@@ -242,6 +242,7 @@ def loadModule():
 	########################## Harmony Network Presentation Module #################################	
 	netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
 	netPresComponent.addCapability("libNetPres","net_pres",True)	
+	netPresComponent.addDependency("NetPres_Crypto_Dependency", "LIB_CRYPTO", None, False, False)
 	
 	############################### Third Party wolfSSL Module #####################################
 	tlsComponent = Module.CreateComponent("lib_wolfssl", "wolfSSL Library", "//Third Party Libraries/wolfSSL/", "config\wolfssl.py")

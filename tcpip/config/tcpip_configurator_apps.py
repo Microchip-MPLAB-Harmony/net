@@ -28,8 +28,8 @@
 # autoConnectTableCRYPTOHttp = [["tcpipHttp", "Http_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 autoConnectTableCRYPTOHttp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 # autoConnectTableCRYPTOHttpNet = [["tcpipHttpNet", "HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-autoConnectTableCRYPTOHttpNet = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-autoConnectTableCRYPTOSnmp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
+# autoConnectTableCRYPTOHttpNet = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
+# autoConnectTableCRYPTOSnmp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
 # autoConnectTableNetPresBSD = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
 # autoConnectTableNetPresSMTPC = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipSmtpc:Smtpc_NetPres_Dependency"]]
 ############################################################################
@@ -372,8 +372,8 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipHttpNet"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
-		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_Crypto_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_Crypto_Dependency")
+		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_Crypto_Dependency")
+		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_Crypto_Dependency")
 		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_NetPres_Dependency")
 		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_NetPres_Dependency")
 		
@@ -383,9 +383,9 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])	
 		# res = Database.activateComponents(["lib_crypto"], Database.getRootGroup().getID(), True)	
-		if(Database.getComponentByID("lib_crypto") == None):
-			res = Database.activateComponents(["lib_crypto"])
-		res = Database.connectDependencies(autoConnectTableCRYPTOHttpNet)
+		# if(Database.getComponentByID("lib_crypto") == None):
+			# res = Database.activateComponents(["lib_crypto"])
+		# res = Database.connectDependencies(autoConnectTableCRYPTOHttpNet)
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -482,10 +482,10 @@ def tcpipAutoConfigSNMPEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipSnmp"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "libtcpipSnmp")
-		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_Crypto_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSnmp:Snmp_Crypto_Dependency")
-		res = Database.activateComponents(["lib_crypto"])
-		res = Database.connectDependencies(autoConnectTableCRYPTOSnmp)
+		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_Crypto_Dependency")
+		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSnmp:Snmp_Crypto_Dependency")
+		# res = Database.activateComponents(["lib_crypto"])
+		# res = Database.connectDependencies(autoConnectTableCRYPTOSnmp)
 		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_TcpipFs_Dependency")
 		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)	
