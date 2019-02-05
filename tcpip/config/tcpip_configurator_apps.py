@@ -282,6 +282,8 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+		if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
+			Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipBerkeleyApi"])
 	
@@ -465,6 +467,8 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
 		
 		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+		if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
+			Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipSmtpc"])
 	
@@ -504,8 +508,8 @@ def tcpipAutoConfigSNTPEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipSntp"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSntp", "libtcpipSntp")		
-		if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+		if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
+			Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipSntp"])
 	

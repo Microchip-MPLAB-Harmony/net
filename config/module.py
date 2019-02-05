@@ -80,6 +80,7 @@ def loadModule():
 	tcpipBerkeleyApiComponent.addDependency("BSD_TCP_Dependency", "TCP", None, True, True)
 	tcpipBerkeleyApiComponent.addDependency("BSD_UDP_Dependency", "UDP", None, True, True)
 	tcpipBerkeleyApiComponent.addDependency("BSD_NETPRES_Dependency", "net_pres")
+	tcpipBerkeleyApiComponent.addDependency("BSD_DNSC_Dependency", "DNSC", None, True, True)
 	tcpipBerkeleyApiComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipDdnsComponent = Module.CreateComponent("tcpipDdns", "DDNS", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ddns.py")
@@ -154,6 +155,7 @@ def loadModule():
 	tcpipSmtpcComponent.addCapability("libtcpipSmtpc","SMTPC",True)
 	tcpipSmtpcComponent.addDependency("Smtpc_TCP_Dependency", "TCP", None, True, True)	
 	tcpipSmtpcComponent.addDependency("Smtpc_NetPres_Dependency", "net_pres")
+	tcpipSmtpcComponent.addDependency("Smtpc_DNSC_Dependency", "DNSC", None, True, True)
 	tcpipSmtpcComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipSnmpComponent = Module.CreateComponent("tcpipSnmp", "SNMP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmp.py")
@@ -170,8 +172,7 @@ def loadModule():
 
 	tcpipSntpComponent = Module.CreateComponent("tcpipSntp", "SNTP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_sntp.py")
 	tcpipSntpComponent.addCapability("libtcpipSntp","SNTP",True)	
-	tcpipSntpComponent.addDependency("Sntp_UDP_Dependency", "UDP", None, True, True)
-	#tcpipSntpComponent.addDependency("Sntp_MAC_Dependency", "MAC")
+	tcpipSntpComponent.addDependency("Sntp_DNSC_Dependency", "DNSC", None, True, True)
 	tcpipSntpComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipTelnetComponent = Module.CreateComponent("tcpipTelnet", "TELNET", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_telnet.py")
