@@ -14,7 +14,7 @@ def loadModule():
 	tcpipNetConfigComponent.addDependency("NETCONFIG_MAC_Dependency", "MAC")
 	tcpipNetConfigComponent.addCapability("libtcpipNetConfig","NETCONFIG",True)
 	tcpipNetConfigComponent.setDisplayType("TCP/IP Library")
-	
+
 	tcpipSysFsWrapperComponent = Module.CreateSharedComponent("tcpipSysFsWrapper", "TCPIP File System Wrapper", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_sysfs_wrapper.py")
 	tcpipSysFsWrapperComponent.addCapability("libtcpipSysFsWrapper","TCPIP_FS_WRAPPER",True)	
 	tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "SYS_FS")	
@@ -79,7 +79,7 @@ def loadModule():
 	tcpipBerkeleyApiComponent.addCapability("libtcpipBerkeleyApi","BSD",True)	
 	tcpipBerkeleyApiComponent.addDependency("BSD_TCP_Dependency", "TCP", None, True, True)
 	tcpipBerkeleyApiComponent.addDependency("BSD_UDP_Dependency", "UDP", None, True, True)
-	tcpipBerkeleyApiComponent.addDependency("BSD_NETPRES_Dependency", "net_pres")
+	tcpipBerkeleyApiComponent.addDependency("BSD_NETPRES_Dependency", "net_pres", True, True)
 	tcpipBerkeleyApiComponent.addDependency("BSD_DNSC_Dependency", "DNSC", None, True, True)
 	tcpipBerkeleyApiComponent.setDisplayType("TCP/IP Library")
 	
@@ -123,7 +123,7 @@ def loadModule():
 	tcpipHttpNetComponent.addDependency("HttpNet_TCP_Dependency", "TCP", None, True, True)	
 	tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
 	tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO")
-	tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres")
+	tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres", True, True)
 	tcpipHttpNetComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipHttpComponent = Module.CreateComponent("tcpipHttp", "HTTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http.py")
@@ -154,8 +154,9 @@ def loadModule():
 	tcpipSmtpcComponent = Module.CreateComponent("tcpipSmtpc", "SMTP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_smtpc.py")
 	tcpipSmtpcComponent.addCapability("libtcpipSmtpc","SMTPC",True)
 	tcpipSmtpcComponent.addDependency("Smtpc_TCP_Dependency", "TCP", None, True, True)	
-	tcpipSmtpcComponent.addDependency("Smtpc_NetPres_Dependency", "net_pres")
+	tcpipSmtpcComponent.addDependency("Smtpc_NetPres_Dependency", "net_pres", True, True)
 	tcpipSmtpcComponent.addDependency("Smtpc_DNSC_Dependency", "DNSC", None, True, True)
+	tcpipSmtpcComponent.addDependency("Smtpc_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
 	tcpipSmtpcComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipSnmpComponent = Module.CreateComponent("tcpipSnmp", "SNMP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmp.py")
@@ -178,7 +179,7 @@ def loadModule():
 	tcpipTelnetComponent = Module.CreateComponent("tcpipTelnet", "TELNET", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_telnet.py")
 	tcpipTelnetComponent.addCapability("libtcpipTelnet","TELNET",True)
 	tcpipTelnetComponent.addDependency("Telnet_TcpipCmd_Dependency", "TCPIP_CMD", None, True, True)
-	tcpipTelnetComponent.addDependency("Telnet_NetPres_Dependency", "net_pres")
+	tcpipTelnetComponent.addDependency("Telnet_NetPres_Dependency", "net_pres", True, True)
 	tcpipTelnetComponent.setDisplayType("TCP/IP Library")
 	
 	tcpipTftpcComponent = Module.CreateComponent("tcpipTftpc", "TFTP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_tftpc.py")
@@ -238,9 +239,10 @@ def loadModule():
 	drvExtPhyLan8740Component.addCapability("libdrvExtPhyLan8740","PHY",True)	
 	drvExtPhyLan8740Component.addDependency("LAN8740_MIIM_Dependency", "MIIM", None, True, True)		
 
-	########################## Harmony Network Presentation Module #################################
+	########################## Harmony Network Presentation Module #################################	
 	netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
-	netPresComponent.addCapability("libNetPres","net_pres")	
+	netPresComponent.addCapability("libNetPres","net_pres",True)	
+	
 	############################### Third Party wolfSSL Module #####################################
 	tlsComponent = Module.CreateComponent("lib_wolfssl", "wolfSSL Library", "//Third Party Libraries/wolfSSL/", "config\wolfssl.py")
 	

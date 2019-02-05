@@ -272,8 +272,8 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipBerkeleyApi"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "libtcpipBerkeleyApi")
-		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "BSD_NETPRES_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipBerkeleyApi:BSD_NETPRES_Dependency")
+		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "BSD_NETPRES_Dependency")
+		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipBerkeleyApi:BSD_NETPRES_Dependency")
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])	
 			# res = Database.connectDependencies(autoConnectTableNetPresBSD)
@@ -374,8 +374,8 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_Crypto_Dependency")
 		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_Crypto_Dependency")
-		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_NetPres_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_NetPres_Dependency")
+		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_NetPres_Dependency")
+		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_NetPres_Dependency")
 		
 		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
@@ -459,8 +459,8 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipSmtpc"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "libtcpipSmtpc")
-		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "Smtpc_NetPres_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSmtpc:Smtpc_NetPres_Dependency")
+		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "Smtpc_NetPres_Dependency")
+		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSmtpc:Smtpc_NetPres_Dependency")
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])	
 			# res = Database.connectDependencies(autoConnectTableNetPresSMTPC)
@@ -469,6 +469,9 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
 			Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
 		if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
 			Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
+		if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
+			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
+			
 	else:
 		res = Database.deactivateComponents(["tcpipSmtpc"])
 	
@@ -520,8 +523,8 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipTelnet"],"APPLICATION LAYER", False)	
 		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "libtcpipTelnet")
-		tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "Telnet_NetPres_Dependency")
-		tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipTelnet:Telnet_NetPres_Dependency")
+		# tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "Telnet_NetPres_Dependency")
+		# tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipTelnet:Telnet_NetPres_Dependency")
 		
 		if(Database.getComponentByID("netPres") == None):
 			res = Database.activateComponents(["netPres"])
