@@ -63,8 +63,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 #define mMIN(a, b)  ((a<b)?a:b)
+// TODO HS: Temporary workaround for SYS_FS Jira MH3-5235
+#define SYS_FS_MH3_5235_WORKAROUND 1 
+
+#ifdef SYS_FS_MH3_5235_WORKAROUND
 __attribute__ ((aligned (32))) uint8_t wrBuffer[512];
 __attribute__ ((aligned (32))) uint8_t rdBuffer[512];
+#endif
 
 static TFTPS_CB            gTftpClientCB[TCPIP_TFTPS_CLIENT_NUMBER];
 static TCPIP_TFTPS_DCPT    gTftpsDcpt;
@@ -957,11 +962,12 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
 
                 p = rxBuf + TFTP_DATA_OFFSET;
                 /* Calculate the amount of data in the packet. */
-                wCnt = wCnt - (TFTP_DATA_OFFSET+1);
+                wCnt = wCnt - TCPIP_TFTP_HEADER_MINSIZE;
+#ifdef SYS_FS_MH3_5235_WORKAROUND                 
                 /// copy the content to the byte aligned buffer.
                 memcpy(rdBuffer,p,wCnt);
                 SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);
-                for(maxRecvByte=(bytes_received-5);maxRecvByte>0;)
+                for(maxRecvByte=(bytes_received-TCPIP_TFTP_HEADER_MINSIZE);maxRecvByte>0;)
                 {
                     if(wCnt != 0)
                     {                        
@@ -986,6 +992,36 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                         }
                     }
                 }
+#else
+                SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);                
+                for(maxRecvByte=(bytes_received-5);maxRecvByte>0;)
+                {
+                    if(wCnt != 0)
+                    {                        
+                        if(SYS_FS_FileWrite(tftp_con->file_desc,p,wCnt) == SYS_FS_HANDLE_INVALID)
+                        {                                              
+                            break;
+                        }
+                        if(wCnt <= maxRecvByte)
+                        {
+                            maxRecvByte -= wCnt;
+                        }
+                        memset(rxBuf,0,sizeof(rxBuf));
+                        if(maxRecvByte > 0)
+                        {
+                            wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,mMIN(maxRecvByte, (bufferSize-TCPIP_TFTP_HEADER_MINSIZE)));
+                        }
+                        tftp_con->callbackPos = SYS_FS_FileTell(tftp_con->file_desc);
+                        p=rxBuf;
+                        // send the error packet if SYS_FS_FileTell returns -1
+                        if(tftp_con->callbackPos == -1)
+                        {
+                            _TFTPS_Error(tftp_con->cSkt,TFTP_ALLOCATION_ERROR,"Error: No space available for the new data");
+                        }
+                    }
+                }
+
+#endif                
                 /* If all the bytes of data was copied then send an ACK.  We know
                  * that the other side will send at least one more data packet,
                  * and that all data in the current packet was accepted. 
@@ -1541,7 +1577,9 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
     uint8_t             *wrPtr;
     uint32_t             wCnt=0;
     uint32_t             maxReadByte=0;
-    uint16_t             bufferSize=sizeof(wrBuffer);                    
+#ifdef SYS_FS_MH3_5235_WORKAROUND	    
+    uint16_t             bufferSize=sizeof(wrBuffer);
+#endif    
     
     /* If we received something, setup the tid and process the ACK. */
    if (bytes_received)
@@ -1566,6 +1604,7 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
     _TFTPS_Put16(wrPtr,TFTP_OPCODE_OFFSET, TFTPS_DATA_OPCODE);
     _TFTPS_Put16(wrPtr,TFTP_DATA_BLOCKNUM_OFFSET, tftp_con->block_number);   
     wrPtr=wrPtr+TFTP_DATA_OFFSET;
+#ifdef SYS_FS_MH3_5235_WORKAROUND	    
     // To support the different block size, might be less than the wrBuffer buffer size 
     if(tftp_con->options.blksize<bufferSize)
     {
@@ -1591,7 +1630,12 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
         // if the block size is more than the wrBuffer size, set the maxReadByte to a new value.
         maxReadByte = tftp_con->options.blksize - maxReadByte;
     }
-        
+#else
+    maxReadByte = tftp_con->options.blksize;
+/*  Read data from the file into the the TFTP CB send buffer. */     
+	wCnt = SYS_FS_FileRead(tftp_con->file_desc, wrPtr,maxReadByte);
+#endif
+    
     /* If this is the last packet update the status. */
     if (wCnt < tftp_con->options.blksize)
     {
