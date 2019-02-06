@@ -284,16 +284,6 @@ static inline uint16_t __attribute__((always_inline)) _TFTPS_Get16(unsigned char
     return TCPIP_Helper_ntohs(*((uint16_t*)(ptr + offset)));
 } /* _TFTPS_Get16 */
 
-#if 0
-//TODO aa: this is unused and results in build warnings!!!
-static __inline__ void __attribute__((always_inline)) _TFTPS_Disconnect(UDP_SOCKET uSkt)
-{   
-    // This will put the socket in the initial open state, 
-    //ready to listen again for either IPv4 or IPv6 transactions, 
-    //whatever comes first.
-    TCPIP_UDP_Disconnect(uSkt,false);
-}
-#endif
 
 static bool _TFTP_Server_start(TCPIP_NET_HANDLE hNet,IP_ADDRESS_TYPE ipType)
 {
