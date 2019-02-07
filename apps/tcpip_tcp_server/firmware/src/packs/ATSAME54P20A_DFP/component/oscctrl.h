@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-23T10:08:36Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_OSCCTRL_COMPONENT_H_
 #define _SAME54_OSCCTRL_COMPONENT_H_
 
@@ -61,6 +61,38 @@
 #define OSCCTRL_DPLLCTRLB_FILTER_Pos          _U_(0)                                               /**< (OSCCTRL_DPLLCTRLB) Proportional Integral Filter Selection Position */
 #define OSCCTRL_DPLLCTRLB_FILTER_Msk          (_U_(0xF) << OSCCTRL_DPLLCTRLB_FILTER_Pos)           /**< (OSCCTRL_DPLLCTRLB) Proportional Integral Filter Selection Mask */
 #define OSCCTRL_DPLLCTRLB_FILTER(value)       (OSCCTRL_DPLLCTRLB_FILTER_Msk & ((value) << OSCCTRL_DPLLCTRLB_FILTER_Pos))
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER1_Val _U_(0x0)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.76  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER2_Val _U_(0x1)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 1.08  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER3_Val _U_(0x2)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.38  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER4_Val _U_(0x3)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.54  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER5_Val _U_(0x4)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 0.56  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER6_Val _U_(0x5)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 185Khz and Damping Factor = 0.79  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER7_Val _U_(0x6)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.28  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER8_Val _U_(0x7)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.39  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER9_Val _U_(0x8)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 1.49  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER10_Val _U_(0x9)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 2.11  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER11_Val _U_(0xA)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 23.2Khz and Damping Factor = 0.75  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER12_Val _U_(0xB)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 1.06  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER13_Val _U_(0xC)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 1.07  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER14_Val _U_(0xD)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 1.51  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER15_Val _U_(0xE)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 0.53  */
+#define   OSCCTRL_DPLLCTRLB_FILTER_FILTER16_Val _U_(0xF)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.75  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER1      (OSCCTRL_DPLLCTRLB_FILTER_FILTER1_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.76 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER2      (OSCCTRL_DPLLCTRLB_FILTER_FILTER2_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 1.08 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER3      (OSCCTRL_DPLLCTRLB_FILTER_FILTER3_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.38 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER4      (OSCCTRL_DPLLCTRLB_FILTER_FILTER4_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.54 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER5      (OSCCTRL_DPLLCTRLB_FILTER_FILTER5_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 0.56 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER6      (OSCCTRL_DPLLCTRLB_FILTER_FILTER6_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 185Khz and Damping Factor = 0.79 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER7      (OSCCTRL_DPLLCTRLB_FILTER_FILTER7_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.28 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER8      (OSCCTRL_DPLLCTRLB_FILTER_FILTER8_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.39 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER9      (OSCCTRL_DPLLCTRLB_FILTER_FILTER9_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 1.49 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER10     (OSCCTRL_DPLLCTRLB_FILTER_FILTER10_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 2.11 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER11     (OSCCTRL_DPLLCTRLB_FILTER_FILTER11_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 23.2Khz and Damping Factor = 0.75 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER12     (OSCCTRL_DPLLCTRLB_FILTER_FILTER12_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 1.06 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER13     (OSCCTRL_DPLLCTRLB_FILTER_FILTER13_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 1.07 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER14     (OSCCTRL_DPLLCTRLB_FILTER_FILTER14_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 1.51 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER15     (OSCCTRL_DPLLCTRLB_FILTER_FILTER15_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 0.53 Position  */
+#define OSCCTRL_DPLLCTRLB_FILTER_FILTER16     (OSCCTRL_DPLLCTRLB_FILTER_FILTER16_Val << OSCCTRL_DPLLCTRLB_FILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.75 Position  */
 #define OSCCTRL_DPLLCTRLB_WUF_Pos             _U_(4)                                               /**< (OSCCTRL_DPLLCTRLB) Wake Up Fast Position */
 #define OSCCTRL_DPLLCTRLB_WUF_Msk             (_U_(0x1) << OSCCTRL_DPLLCTRLB_WUF_Pos)              /**< (OSCCTRL_DPLLCTRLB) Wake Up Fast Mask */
 #define OSCCTRL_DPLLCTRLB_WUF(value)          (OSCCTRL_DPLLCTRLB_WUF_Msk & ((value) << OSCCTRL_DPLLCTRLB_WUF_Pos))
@@ -94,38 +126,22 @@
 #define OSCCTRL_DPLLCTRLB_DCOFILTER_Pos       _U_(12)                                              /**< (OSCCTRL_DPLLCTRLB) Sigma-Delta DCO Filter Selection Position */
 #define OSCCTRL_DPLLCTRLB_DCOFILTER_Msk       (_U_(0x7) << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos)        /**< (OSCCTRL_DPLLCTRLB) Sigma-Delta DCO Filter Selection Mask */
 #define OSCCTRL_DPLLCTRLB_DCOFILTER(value)    (OSCCTRL_DPLLCTRLB_DCOFILTER_Msk & ((value) << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos))
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER1_Val _U_(0x0)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.76  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER2_Val _U_(0x1)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 1.08  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER3_Val _U_(0x2)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.38  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER4_Val _U_(0x3)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.54  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER5_Val _U_(0x4)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 0.56  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER6_Val _U_(0x5)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 185Khz and Damping Factor = 0.79  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER7_Val _U_(0x6)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.28  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER8_Val _U_(0x7)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.39  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER9_Val _U_(0x8)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 1.49  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER10_Val _U_(0x9)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 2.11  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER11_Val _U_(0xA)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 23.2Khz and Damping Factor = 0.75  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER12_Val _U_(0xB)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 1.06  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER13_Val _U_(0xC)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 1.07  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER14_Val _U_(0xD)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 1.51  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER15_Val _U_(0xE)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 0.53  */
-#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER16_Val _U_(0xF)                                             /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.75  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER1   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER1_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.76 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER2   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER2_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 1.08 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER3   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER3_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.38 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER4   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER4_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.54 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER5   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER5_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 131Khz and Damping Factor = 0.56 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER6   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER6_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 185Khz and Damping Factor = 0.79 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER7   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER7_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 0.28 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER8   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER8_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 0.39 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER9   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER9_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 1.49 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER10  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER10_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 2.11 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER11  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER11_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 23.2Khz and Damping Factor = 0.75 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER12  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER12_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 1.06 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER13  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER13_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 65.6Khz and Damping Factor = 1.07 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER14  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER14_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 92.7Khz and Damping Factor = 1.51 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER15  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER15_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 32.8Khz and Damping Factor = 0.53 Position  */
-#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER16  (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER16_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Bandwidth = 46.4Khz and Damping Factor = 0.75 Position  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER1_Val _U_(0x0)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 0.5 and Bandwidth Fn (MHz) = 3.21  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER2_Val _U_(0x1)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 1 and Bandwidth Fn (MHz) = 1.6  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER3_Val _U_(0x2)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 1.5 and Bandwidth Fn (MHz) = 1.1  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER4_Val _U_(0x3)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 2 and Bandwidth Fn (MHz) = 0.8  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER5_Val _U_(0x4)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 2.5 and Bandwidth Fn (MHz) = 0.64  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER6_Val _U_(0x5)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 3 and Bandwidth Fn (MHz) = 0.55  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER7_Val _U_(0x6)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 3.5 and Bandwidth Fn (MHz) = 0.45  */
+#define   OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER8_Val _U_(0x7)                                             /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 4 and Bandwidth Fn (MHz) = 0.4  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER1   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER1_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 0.5 and Bandwidth Fn (MHz) = 3.21 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER2   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER2_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 1 and Bandwidth Fn (MHz) = 1.6 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER3   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER3_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 1.5 and Bandwidth Fn (MHz) = 1.1 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER4   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER4_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 2 and Bandwidth Fn (MHz) = 0.8 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER5   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER5_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 2.5 and Bandwidth Fn (MHz) = 0.64 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER6   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER6_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 3 and Bandwidth Fn (MHz) = 0.55 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER7   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER7_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 3.5 and Bandwidth Fn (MHz) = 0.45 Position  */
+#define OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER8   (OSCCTRL_DPLLCTRLB_DCOFILTER_FILTER8_Val << OSCCTRL_DPLLCTRLB_DCOFILTER_Pos) /**< (OSCCTRL_DPLLCTRLB) Capacitor(pF) = 4 and Bandwidth Fn (MHz) = 0.4 Position  */
 #define OSCCTRL_DPLLCTRLB_DCOEN_Pos           _U_(15)                                              /**< (OSCCTRL_DPLLCTRLB) DCO Filter Enable Position */
 #define OSCCTRL_DPLLCTRLB_DCOEN_Msk           (_U_(0x1) << OSCCTRL_DPLLCTRLB_DCOEN_Pos)            /**< (OSCCTRL_DPLLCTRLB) DCO Filter Enable Mask */
 #define OSCCTRL_DPLLCTRLB_DCOEN(value)        (OSCCTRL_DPLLCTRLB_DCOEN_Msk & ((value) << OSCCTRL_DPLLCTRLB_DCOEN_Pos))
