@@ -6,7 +6,7 @@
 
   File Name:
     integer.h
-  
+
   Summary:
     Crypto Framework Library header for cryptographic functions.
 
@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,14 +42,10 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
 //DOM-IGNORE-END
-
-
-
-/*
- * Based on public domain LibTomMath 0.38 by Tom St Denis, tomstdenis@iahu.ca,
- * http://math.libtomcrypt.com
- */
 
 
 #ifndef WOLF_CRYPT_INTEGER_H
@@ -59,7 +55,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
    may not be faster on all
 */
 #include "crypto/src/types.h"       /* will set MP_xxBIT if not default */
-#ifdef USE_FAST_MATH
+#ifdef WOLFSSL_SP_MATH
+    #include "crypto/src/sp_int.h"
+#elif defined(USE_FAST_MATH)
     #include "crypto/src/tfm.h"
 #else
 
@@ -93,6 +91,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 extern "C" {
 
 /* C++ compilers don't like assigning void * to mp_digit * */
+#define  OPT_CAST(x)  (x *)
+
+#elif defined(_SH3)
+
+/* SuperH SH3 compiler doesn't like assigning voi* to mp_digit* */
 #define  OPT_CAST(x)  (x *)
 
 #else
@@ -256,6 +259,14 @@ typedef int ltm_prime_callback(unsigned char *dst, int len, void *dat);
    #define PRIME_SIZE      256
 #endif
 
+#ifndef MAX_INVMOD_SZ
+    #if defined(WOLFSSL_MYSQL_COMPATIBLE)
+        #define MAX_INVMOD_SZ 8192
+    #else
+        #define MAX_INVMOD_SZ 4096
+    #endif
+#endif
+
 #define mp_prime_random(a, t, size, bbs, cb, dat) \
    mp_prime_random_ex(a, t, ((size) * 8) + 1, (bbs==1)?LTM_PRIME_BBS:0, cb, dat)
 
@@ -266,14 +277,23 @@ typedef int ltm_prime_callback(unsigned char *dst, int len, void *dat);
 #define mp_mag_size(mp)           mp_unsigned_bin_size(mp)
 #define mp_tomag(mp, str)         mp_to_unsigned_bin((mp), (str))
 
-#define mp_tobinary(M, S)  mp_toradix((M), (S), 2)
-#define mp_tooctal(M, S)   mp_toradix((M), (S), 8)
-#define mp_todecimal(M, S) mp_toradix((M), (S), 10)
-#define mp_tohex(M, S)     mp_toradix((M), (S), 16)
+#define MP_RADIX_BIN  2
+#define MP_RADIX_OCT  8
+#define MP_RADIX_DEC  10
+#define MP_RADIX_HEX  16
+#define MP_RADIX_MAX  64
+
+#define mp_tobinary(M, S)  mp_toradix((M), (S), MP_RADIX_BIN)
+#define mp_tooctal(M, S)   mp_toradix((M), (S), MP_RADIX_OCT)
+#define mp_todecimal(M, S) mp_toradix((M), (S), MP_RADIX_DEC)
+#define mp_tohex(M, S)     mp_toradix((M), (S), MP_RADIX_HEX)
 
 #define s_mp_mul(a, b, c) s_mp_mul_digs(a, b, c, (a)->used + (b)->used + 1)
 
+#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || defined(HAVE_COMP_KEY) || \
+    defined(WOLFSSL_DEBUG_MATH) || defined(DEBUG_WOLFSSL)
 extern const char *mp_s_rmap;
+#endif
 
 /* 6 functions needed by Rsa */
 MP_API int  mp_init (mp_int * a);
@@ -284,6 +304,7 @@ MP_API int  mp_unsigned_bin_size(mp_int * a);
 MP_API int  mp_read_unsigned_bin (mp_int * a, const unsigned char *b, int c);
 MP_API int  mp_to_unsigned_bin_at_pos(int x, mp_int *t, unsigned char *b);
 MP_API int  mp_to_unsigned_bin (mp_int * a, unsigned char *b);
+MP_API int  mp_to_unsigned_bin_len(mp_int * a, unsigned char *b, int c);
 MP_API int  mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y);
 /* end functions needed by Rsa */
 
@@ -370,15 +391,19 @@ MP_API int mp_radix_size (mp_int * a, int radix, int *size);
     #define mp_dump(desc, a, verbose)
 #endif
 
-#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN)
+#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN) || !defined(NO_RSA) || \
+    !defined(NO_DSA) || !defined(NO_DH)
     MP_API int mp_sqrmod(mp_int* a, mp_int* b, mp_int* c);
 #endif
-#if defined(HAVE_ECC) || defined(WOLFSSL_KEY_GEN)
+#if !defined(NO_DSA) || defined(HAVE_ECC)
     MP_API int mp_read_radix(mp_int* a, const char* str, int radix);
 #endif
 
-#ifdef WOLFSSL_KEY_GEN
+#if defined(WOLFSSL_KEY_GEN) || !defined(NO_RSA) || !defined(NO_DSA) || !defined(NO_DH)
     MP_API int mp_prime_is_prime (mp_int * a, int t, int *result);
+    MP_API int mp_prime_is_prime_ex (mp_int * a, int t, int *result, WC_RNG*);
+#endif /* WOLFSSL_KEY_GEN NO_RSA NO_DSA NO_DH */
+#ifdef WOLFSSL_KEY_GEN
     MP_API int mp_gcd (mp_int * a, mp_int * b, mp_int * c);
     MP_API int mp_lcm (mp_int * a, mp_int * b, mp_int * c);
     MP_API int mp_rand_prime(mp_int* N, int len, WC_RNG* rng, void* heap);
@@ -389,7 +414,7 @@ MP_API int mp_mod_d(mp_int* a, mp_digit b, mp_digit* c);
 
 
 /* wolf big int and common functions */
-#include <crypto/src/wolfmath.h>
+#include "crypto/src/wolfmath.h"
 
 
 #ifdef __cplusplus

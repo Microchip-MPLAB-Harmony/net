@@ -953,14 +953,16 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
 
     DRV_ETHPHY_OBJ * hDriver = NULL;
-    DRV_ETHPHY_CONFIG_FLAGS configFlags = DRV_ETHPHY_CFG_DEFAULT, hwFlags = DRV_ETHPHY_CFG_DEFAULT, swFlags = DRV_ETHPHY_CFG_DEFAULT;
+    DRV_ETHPHY_CONFIG_FLAGS configFlags = DRV_ETHPHY_CFG_DEFAULT;
     TCPIP_ETH_OPEN_FLAGS      openFlags = TCPIP_ETH_OPEN_DEFAULT;      // flags required at open time
 
     hDriver = hClientObj->hDriver;
 
     configFlags = hDriver->configFlags;
 
+#if defined(__PIC32MX__) || defined(__PIC32MZ__)
     // get the way the hw is configured
+    DRV_ETHPHY_CONFIG_FLAGS hwFlags = DRV_ETHPHY_CFG_DEFAULT;
     DRV_ETHPHY_HWConfigFlagsGet((DRV_HANDLE)hClientObj, &hwFlags);
 
     if(configFlags & DRV_ETHPHY_CFG_AUTO)
@@ -969,13 +971,14 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     }
     else
     {   // some minimal check against the way the hw is configured
-        swFlags = configFlags & (DRV_ETHPHY_CFG_RMII|DRV_ETHPHY_CFG_ALTERNATE);
+        DRV_ETHPHY_CONFIG_FLAGS swFlags = configFlags & (DRV_ETHPHY_CFG_RMII|DRV_ETHPHY_CFG_ALTERNATE);
 
         if((swFlags ^ hwFlags) != 0)
         {   // hw-sw configuration mismatch MII/RMII, ALT/DEF config
             _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_CFG_ERR);
         }
     }
+#endif
 
     openFlags = hDriver->openFlags;
     if(openFlags & (TCPIP_ETH_OPEN_PHY_LOOPBACK | TCPIP_ETH_OPEN_MAC_LOOPBACK))
@@ -2271,8 +2274,7 @@ static void _DRV_ETHPHY_NegResultPhase_ANAD(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
         }
     }
     else
-    {
-        lpAD.w     = _ANAD_BASE10T_MASK;  // lowest priority resolution
+    {   // even if negotiation is not enabled, the link partner advertising shows the configuration
         linkStat |= DRV_ETHPHY_LINK_ST_LP_NEG_UNABLE;
         if(phyExp.PDF)
         {

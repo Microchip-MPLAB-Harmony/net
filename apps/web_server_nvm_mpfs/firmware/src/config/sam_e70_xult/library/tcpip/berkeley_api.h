@@ -208,9 +208,9 @@ typedef struct sockaddr_in6 SOCKADDR_IN6;
 AF_UNIX). 128 bytes reserved.  */
 
 #if ULONG_MAX > 0xffffffff
-# define __ss_aligntype __uint64_t
+# define __ss_aligntype uint64_t
 #else
-# define __ss_aligntype __uint32_t
+# define __ss_aligntype uint32_t
 #endif
 #define _SS_SIZE        128
 #define _SS_PADSIZE     (_SS_SIZE - (2 * sizeof (__ss_aligntype)))

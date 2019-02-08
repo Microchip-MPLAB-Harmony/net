@@ -65,13 +65,13 @@ DSTATUS disk_initialize (
 	uint8_t pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	switch (pdrv) {
+	switch( pdrv ) {
 	case 0:
     default:
         break;
 	}
 
-    SYS_FS_MEDIA_MANAGER_RegisterTransferHandler (diskEventHandler);
+    SYS_FS_MEDIA_MANAGER_RegisterTransferHandler( (void *) diskEventHandler );
     return 0;
 }
 

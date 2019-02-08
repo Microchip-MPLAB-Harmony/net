@@ -86,6 +86,7 @@ void _APP1_Tasks(  void *pvParameters  )
     while(1)
     {
         APP1_Tasks();
+        vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
 /* Handle for the APP2_Tasks. */
@@ -96,6 +97,7 @@ void _APP2_Tasks(  void *pvParameters  )
     while(1)
     {
         APP2_Tasks();
+        vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
 /* Handle for the APP3_Tasks. */
@@ -106,6 +108,7 @@ void _APP3_Tasks(  void *pvParameters  )
     while(1)
     {
         APP3_Tasks();
+        vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
 /* Handle for the APP4_Tasks. */
@@ -116,7 +119,7 @@ void _APP4_Tasks(  void *pvParameters  )
     while(1)
     {
         APP4_Tasks();
-        vTaskDelay(50 / portTICK_PERIOD_MS);
+        vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
 

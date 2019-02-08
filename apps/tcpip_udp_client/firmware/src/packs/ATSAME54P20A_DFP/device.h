@@ -41,7 +41,7 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#include "toolchain_specifics.h"
 #include "atsame54p20a.h"
 #include "device_cache.h"
+#include "toolchain_specifics.h"
 

@@ -4,17 +4,14 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f4" displayName="arm" projectFiles="true">
-        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="sam_e70_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult_freertos/bsp/bsp.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+          <logicalFolder name="f6" displayName="driver" projectFiles="true">
             <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -50,7 +47,7 @@
             <itemPath>../src/config/sam_e70_xult_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
+          <logicalFolder name="f4" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
@@ -171,14 +168,14 @@
               <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="net" projectFiles="true">
+          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xult_freertos/net/pres/net_pres.h</itemPath>
-              <itemPath>../src/config/sam_e70_xult_freertos/net/pres/net_pres_socketapi.h</itemPath>
-              <itemPath>../src/config/sam_e70_xult_freertos/net/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult_freertos/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
@@ -201,9 +198,15 @@
               <itemPath>../src/config/sam_e70_xult_freertos/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="console" projectFiles="true">
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/sam_e70_xult_freertos/system/cache/sys_cache.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult_freertos/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_e70_xult_freertos/system/console/sys_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
@@ -213,9 +216,9 @@
             <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_reset_h2_adapter.h</itemPath>
@@ -227,11 +230,13 @@
           <itemPath>../src/config/sam_e70_xult_freertos/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/user.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/configuration.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult_freertos/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult_freertos/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/definitions.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/FreeRTOSConfig.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="FreeRTOS" projectFiles="true">
+      <logicalFolder name="f4" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
           <logicalFolder name="f1" displayName="include" projectFiles="true">
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/croutine.h</itemPath>
@@ -318,6 +323,7 @@
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
@@ -352,10 +358,10 @@
         <logicalFolder name="f1"
                        displayName="sam_e70_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult_freertos/bsp/bsp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+          <logicalFolder name="f5" displayName="driver" projectFiles="true">
             <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -368,7 +374,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult_freertos/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/driver/gmac/src/dynamic/drv_gmac_lib.c</itemPath>
+                  <itemPath>../src/config/sam_e70_xult_freertos/driver/gmac/src/dynamic/drv_gmac_lib_samE7x_V7x.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
@@ -405,7 +411,7 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult_freertos/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
@@ -428,12 +434,12 @@
           <logicalFolder name="f6" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult_freertos/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_local.h</itemPath>
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/sam_e70_xult_freertos/system/cache/sys_cache.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_console_uart.c</itemPath>
               <itemPath>../src/config/sam_e70_xult_freertos/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
@@ -442,7 +448,6 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/src/sys_time.c</itemPath>
-              <itemPath>../src/config/sam_e70_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
@@ -450,7 +455,7 @@
           <itemPath>../src/config/sam_e70_xult_freertos/initialization.c</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/interrupts.c</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/exceptions.c</itemPath>
-          <itemPath>../src/config/sam_e70_xult_freertos/startup.c</itemPath>
+          <itemPath>../src/config/sam_e70_xult_freertos/startup_xc32.c</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/libc_syscalls.c</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/freertos_hooks.c</itemPath>
         </logicalFolder>
@@ -472,7 +477,7 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/list.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/queue.c</itemPath>
-          <itemPath>../src/third_party/rtos/FreeRTOS/Source/tasks.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/FreeRTOS_tasks.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/timers.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/event_groups.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
@@ -505,13 +510,13 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.10</languageToolchainVersion>
+        <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.133"/>
+        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.160"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -571,7 +576,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e70_xult_freertos/library;../src/config/sam_e70_xult_freertos/library/tcpip/src;../src/config/sam_e70_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include"/>
+                  value="../src/config/sam_e70_xult_freertos/library;../src/config/sam_e70_xult_freertos/library/tcpip/src;../src/config/sam_e70_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include;../src/third_party/rtos/FreeRTOS/Source/include"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -692,6 +697,31 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2.000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="400000-5fffff"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+      </EdbgTool>
       <ICD4Tool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>

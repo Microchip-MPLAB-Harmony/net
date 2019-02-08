@@ -53,7 +53,6 @@
 */
 #include "device.h"
 #include "plib_tc0.h"
-
  
 
  
@@ -129,9 +128,9 @@ void TC0_CH0_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context
 
 void TC0_CH0_InterruptHandler(void)
 {
-    TC_TIMER_STATUS timer_status = TC0_REGS->TC_CHANNEL[0].TC_SR & TC_TIMER_STATUS_MSK;
+    TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(TC0_REGS->TC_CHANNEL[0].TC_SR & TC_TIMER_STATUS_MSK);
     /* Call registered callback function */
-    if (TC0_CH0_CallbackObj.callback_fn != NULL)
+    if ((TC_TIMER_NONE != timer_status) && TC0_CH0_CallbackObj.callback_fn != NULL)
     {
         TC0_CH0_CallbackObj.callback_fn(timer_status, TC0_CH0_CallbackObj.context);
     }
@@ -151,6 +150,7 @@ void TC0_CH0_InterruptHandler(void)
 
  
 
+ 
 /**
  End of File
 */
