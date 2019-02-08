@@ -1419,7 +1419,7 @@ enum {
 
 /* AES */
 typedef struct CRYPT_AES_CTX {
-    int holder[90];   /* This structure should be large enough to hold 
+    int holder[93];   /* This structure should be large enough to hold 
                          the internal representation, the size is checked 
                          during initialization*/
 } CRYPT_AES_CTX;

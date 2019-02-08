@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -44,13 +44,33 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
+
+
+
+
+
+
+
+
 #ifdef HAVE_CONFIG_H
-    #include <config.h>
+    #include "config.h"
 #endif
 
 #include "crypto/src/settings.h"
 
 #if defined(WOLFSSL_CMAC) && !defined(NO_AES) && defined(WOLFSSL_AES_DIRECT)
+
+#if defined(HAVE_FIPS) && \
+	defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
+
+    /* set NO_WRAPPERS before headers, use direct internal f()s not wrappers */
+    #define FIPS_NO_WRAPPERS
+
+    #ifdef USE_WINDOWS_API
+        #pragma code_seg(".fipsA$n")
+        #pragma const_seg(".fipsB$n")
+    #endif
+#endif
 
 #ifdef NO_INLINE
     #include "crypto/src/misc.h"
@@ -74,7 +94,7 @@ static void ShiftAndXorRb(byte* out, byte* in)
 
     for (i = 1, j = AES_BLOCK_SIZE - 1; i <= AES_BLOCK_SIZE; i++, j--) {
         last = (in[j] & 0x80) ? 1 : 0;
-        out[j] = (in[j] << 1) | mask;
+        out[j] = (byte)((in[j] << 1) | mask);
         mask = last;
         if (xorRb) {
             out[j] ^= Rb;
@@ -141,10 +161,10 @@ int wc_CmacFinal(Cmac* cmac, byte* out, word32* outSz)
 {
     const byte* subKey;
 
-    if (cmac == NULL || out == NULL)
+    if (cmac == NULL || out == NULL || outSz == NULL)
         return BAD_FUNC_ARG;
 
-    if (outSz != NULL && *outSz < AES_BLOCK_SIZE)
+    if (*outSz < WC_CMAC_TAG_MIN_SZ || *outSz > WC_CMAC_TAG_MAX_SZ)
         return BUFFER_E;
 
     if (cmac->bufferSz == AES_BLOCK_SIZE) {
@@ -163,13 +183,13 @@ int wc_CmacFinal(Cmac* cmac, byte* out, word32* outSz)
     }
     xorbuf(cmac->buffer, cmac->digest, AES_BLOCK_SIZE);
     xorbuf(cmac->buffer, subKey, AES_BLOCK_SIZE);
-    wc_AesEncryptDirect(&cmac->aes, out, cmac->buffer);
+    wc_AesEncryptDirect(&cmac->aes, cmac->digest, cmac->buffer);
 
-    if (outSz != NULL)
-        *outSz = AES_BLOCK_SIZE;
+    XMEMCPY(out, cmac->digest, *outSz);
+
     ForceZero(cmac, sizeof(Cmac));
 
-    return 0; 
+    return 0;
 }
 
 

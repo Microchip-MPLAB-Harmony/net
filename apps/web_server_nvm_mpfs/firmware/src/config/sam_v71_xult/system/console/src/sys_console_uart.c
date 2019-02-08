@@ -72,27 +72,101 @@ static CONSOLE_UART_DATA gConsoleUartData[SYS_CONSOLE_UART_MAX_INSTANCES];
 
 #define CONSOLE_UART_GET_INSTANCE(index)    (index >= SYS_CONSOLE_UART_MAX_INSTANCES)? NULL : &gConsoleUartData[index]
 
+static void Console_UART_DisableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
+{
+    bool interruptStatus;
+    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* intInfo = pConsoleUartData->interruptSources;
+
+    if (intInfo->isSingleIntSrc == true)
+    {
+        /* Disable USART interrupt */
+        SYS_INT_SourceDisable(intInfo->intSources.usartInterrupt);
+    }
+    else
+    {
+        interruptStatus = SYS_INT_Disable();
+
+        /* Disable USART interrupt sources */
+        if(intInfo->intSources.multi.usartTxReadyInt != -1)
+        {
+            SYS_INT_SourceDisable(intInfo->intSources.multi.usartTxReadyInt);
+        }
+
+        if(intInfo->intSources.multi.usartTxCompleteInt != -1)
+        {
+            SYS_INT_SourceDisable(intInfo->intSources.multi.usartTxCompleteInt);
+        }
+
+        if(intInfo->intSources.multi.usartRxCompleteInt != -1)
+        {
+            SYS_INT_SourceDisable(intInfo->intSources.multi.usartRxCompleteInt);
+        }
+
+        if(intInfo->intSources.multi.usartErrorInt != -1)
+        {
+            SYS_INT_SourceDisable(intInfo->intSources.multi.usartErrorInt);
+        }
+
+        SYS_INT_Restore(interruptStatus);
+    }
+}
+
+static void Console_UART_EnableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
+{
+    bool interruptStatus;
+    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* intInfo = pConsoleUartData->interruptSources;
+
+    if (intInfo->isSingleIntSrc == true)
+    {
+        /* Enable USART interrupt */
+        SYS_INT_SourceEnable(intInfo->intSources.usartInterrupt);
+    }
+    else
+    {
+        interruptStatus = SYS_INT_Disable();
+        /* Enable USART interrupt sources */
+
+        if(intInfo->intSources.multi.usartTxReadyInt != -1)
+        {
+            SYS_INT_SourceEnable(intInfo->intSources.multi.usartTxReadyInt);
+        }
+
+        if(intInfo->intSources.multi.usartTxCompleteInt != -1)
+        {
+            SYS_INT_SourceEnable(intInfo->intSources.multi.usartTxCompleteInt);
+        }
+
+        if(intInfo->intSources.multi.usartRxCompleteInt != -1)
+        {
+            SYS_INT_SourceEnable(intInfo->intSources.multi.usartRxCompleteInt);
+        }
+
+        if(intInfo->intSources.multi.usartErrorInt != -1)
+        {
+            SYS_INT_SourceEnable(intInfo->intSources.multi.usartErrorInt);
+        }
+
+        SYS_INT_Restore(interruptStatus);
+    }
+}
+
 static bool Console_UART_ResourceLock(CONSOLE_UART_DATA* pConsoleUartData)
 {
     if(pConsoleUartData->inInterruptContext == false)
     {
         /* Grab a mutex. This is okay because we are not in an interrupt context */
-        if(OSAL_MUTEX_Lock(&(pConsoleUartData->mutexTransferObjects), OSAL_WAIT_FOREVER) == OSAL_RESULT_TRUE)
-        {
-            SYS_INT_SourceDisable(pConsoleUartData->interruptSource);
-            return true;
-        }
-        else
+        if(OSAL_MUTEX_Lock(&(pConsoleUartData->mutexTransferObjects), OSAL_WAIT_FOREVER) == OSAL_RESULT_FALSE)
         {
             return false;
         }
     }
+    Console_UART_DisableInterrupts(pConsoleUartData);
     return true;
 }
 
 static void Console_UART_ResourceUnlock(CONSOLE_UART_DATA* pConsoleUartData)
 {
-    SYS_INT_SourceEnable(pConsoleUartData->interruptSource);
+    Console_UART_EnableInterrupts(pConsoleUartData);
 
     if(pConsoleUartData->inInterruptContext == false)
     {
@@ -380,7 +454,7 @@ void Console_UART_Initialize(uint32_t index, const void* initData)
     pConsoleUartData->writeQueue.maxQElements = consoleUsartInitData->writeQueueDepth;
     pConsoleUartData->readQueue.pQElementArr = consoleUsartInitData->readQueueElementsArr;
     pConsoleUartData->writeQueue.pQElementArr = consoleUsartInitData->writeQueueElementsArr;
-    pConsoleUartData->interruptSource = consoleUsartInitData->interruptSource;
+    pConsoleUartData->interruptSources = consoleUsartInitData->interruptSources;
 
     pConsoleUartData->readQueue.inIndex = pConsoleUartData->readQueue.outIndex;
     pConsoleUartData->writeQueue.inIndex = pConsoleUartData->writeQueue.outIndex;
@@ -431,7 +505,3 @@ void Console_UART_Tasks(uint32_t index, SYS_MODULE_OBJ object)
 {
     /* Do nothing. */
 }
-
-/*******************************************************************************
- End of File
- */

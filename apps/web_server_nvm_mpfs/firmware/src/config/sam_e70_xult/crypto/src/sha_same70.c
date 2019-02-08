@@ -16,8 +16,8 @@
 **************************************************************************/
 
 //DOM-IGNORE-BEGIN
-/******************************************************************************
- Copyright (C) 2016-2018 Microchip Technology Inc. and its subsidiaries.
+/*****************************************************************************
+ Copyright (C) 2016-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -39,7 +39,20 @@ BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
 FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
+*****************************************************************************/
+
+
+
+
+
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -211,6 +224,15 @@ int wc_ShaFinal(Sha* sha, byte* hash)
     return wc_InitSha(sha);
 }
 
+void wc_ShaFree(Sha* sha)
+{
+    if (sha == NULL)
+        return;
+
+#if defined(WOLFSSL_ASYNC_CRYPT) && defined(WC_ASYNC_ENABLE_SHA)
+    wolfAsync_DevCtxFree(&sha->asyncDev, WOLFSSL_ASYNC_MARKER_SHA);
+#endif /* WOLFSSL_ASYNC_CRYPT */
+}
 
 
 #endif /* NO_SHA */

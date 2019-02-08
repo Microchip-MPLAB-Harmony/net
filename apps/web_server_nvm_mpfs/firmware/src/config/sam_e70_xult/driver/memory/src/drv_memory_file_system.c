@@ -58,6 +58,7 @@
 // *****************************************************************************
 
 /* FS Function registration table. */
+typedef SYS_FS_MEDIA_COMMAND_STATUS (* CommandStatusGetType)( DRV_HANDLE, SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE );
 
 const SYS_FS_MEDIA_FUNCTIONS memoryMediaFunctions =
 {
@@ -66,7 +67,7 @@ const SYS_FS_MEDIA_FUNCTIONS memoryMediaFunctions =
     .sectorRead         = DRV_MEMORY_AsyncRead,
     .sectorWrite        = DRV_MEMORY_AsyncEraseWrite,
     .eventHandlerset    = DRV_MEMORY_TransferHandlerSet,
-    .commandStatusGet   = (void *)DRV_MEMORY_CommandStatusGet,
+    .commandStatusGet   = (CommandStatusGetType)DRV_MEMORY_CommandStatusGet,
     .Read               = DRV_MEMORY_AsyncRead,
     .erase              = DRV_MEMORY_AsyncErase,
     .addressGet         = DRV_MEMORY_AddressGet,

@@ -108,15 +108,15 @@ bool DRV_EFC_GeometryGet( const DRV_HANDLE handle, MEMORY_DEVICE_GEOMETRY *geome
 {
     /* Read block size and number of blocks */
     geometry->read_blockSize = 1;
-    geometry->read_numBlocks = (DRV_MEMORY_DEVICE_MEDIA_SIZE * DRV_MEMORY_DEVICE_MEDIA_SIZE);
+    geometry->read_numBlocks = (DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024);
 
     /* Write block size and number of blocks */
     geometry->write_blockSize = DRV_MEMORY_DEVICE_PROGRAM_SIZE;
-    geometry->write_numBlocks = ((DRV_MEMORY_DEVICE_MEDIA_SIZE * DRV_MEMORY_DEVICE_MEDIA_SIZE) / DRV_MEMORY_DEVICE_PROGRAM_SIZE);
+    geometry->write_numBlocks = ((DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024) / DRV_MEMORY_DEVICE_PROGRAM_SIZE);
 
     /* Erase block size and number of blocks */
     geometry->erase_blockSize = DRV_MEMORY_DEVICE_ERASE_SIZE;
-    geometry->erase_numBlocks = ((DRV_MEMORY_DEVICE_MEDIA_SIZE * DRV_MEMORY_DEVICE_MEDIA_SIZE) / DRV_MEMORY_DEVICE_ERASE_SIZE);
+    geometry->erase_numBlocks = ((DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024) / DRV_MEMORY_DEVICE_ERASE_SIZE);
 
     geometry->numReadRegions = 1;
     geometry->numWriteRegions = 1;

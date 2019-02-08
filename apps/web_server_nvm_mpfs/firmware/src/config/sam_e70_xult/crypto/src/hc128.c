@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -40,6 +40,14 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
+
+
+
+
 
 //DOM-IGNORE-END
 
@@ -99,7 +107,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
      (ctx->T[(u)]) += tem2+(tem0 ^ tem1);       \
      (ctx->X[(a)]) = (ctx->T[(u)]);             \
      (n) = tem3 ^ (ctx->T[(u)]) ;               \
-}       
+}
 
 /*one step of HC-128, update Q and generate 32 bits keystream*/
 #define step_Q(ctx,u,v,a,b,c,d,n){              \
@@ -111,17 +119,17 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
      (ctx->T[(u)]) += tem2 + (tem0 ^ tem1);     \
      (ctx->Y[(a)]) = (ctx->T[(u)]);             \
      (n) = tem3 ^ (ctx->T[(u)]) ;               \
-}   
+}
 
 /*16 steps of HC-128, generate 512 bits keystream*/
-static void generate_keystream(HC128* ctx, word32* keystream)  
+static void generate_keystream(HC128* ctx, word32* keystream)
 {
    word32 cc,dd;
    cc = ctx->counter1024 & 0x1ff;
    dd = (cc+16)&0x1ff;
 
-   if (ctx->counter1024 < 512)	
-   {   		
+   if (ctx->counter1024 < 512)
+   {
       ctx->counter1024 = (ctx->counter1024 + 16) & 0x3ff;
       step_P(ctx, cc+0, cc+1, 0, 6, 13,4, keystream[0]);
       step_P(ctx, cc+1, cc+2, 1, 7, 14,5, keystream[1]);
@@ -140,7 +148,7 @@ static void generate_keystream(HC128* ctx, word32* keystream)
       step_P(ctx, cc+14,cc+15,14,4, 11,2, keystream[14]);
       step_P(ctx, cc+15,dd+0, 15,5, 12,3, keystream[15]);
    }
-   else				    
+   else
    {
 	  ctx->counter1024 = (ctx->counter1024 + 16) & 0x3ff;
       step_Q(ctx, 512+cc+0, 512+cc+1, 0, 6, 13,4, keystream[0]);
@@ -176,7 +184,7 @@ static void generate_keystream(HC128* ctx, word32* keystream)
      h1((ctx),(ctx->X[(d)]),tem3);                  \
      (ctx->T[(u)]) = ((ctx->T[(u)]) + tem2+(tem0^tem1)) ^ tem3;     \
      (ctx->X[(a)]) = (ctx->T[(u)]);                 \
-}  
+}
 
 /*update table Q*/
 #define update_Q(ctx,u,v,a,b,c,d){                  \
@@ -187,7 +195,7 @@ static void generate_keystream(HC128* ctx, word32* keystream)
      h2((ctx),(ctx->Y[(d)]),tem3);                  \
      (ctx->T[(u)]) = ((ctx->T[(u)]) + tem2+(tem0^tem1)) ^ tem3;     \
      (ctx->Y[(a)]) = (ctx->T[(u)]);                 \
-}     
+}
 
 /*16 steps of HC-128, without generating keystream, */
 /*but use the outputs to update P and Q*/
@@ -197,8 +205,8 @@ static void setup_update(HC128* ctx)  /*each time 16 steps*/
    cc = ctx->counter1024 & 0x1ff;
    dd = (cc+16)&0x1ff;
 
-   if (ctx->counter1024 < 512)	
-   {   		
+   if (ctx->counter1024 < 512)
+   {
       ctx->counter1024 = (ctx->counter1024 + 16) & 0x3ff;
       update_P(ctx, cc+0, cc+1, 0, 6, 13, 4);
       update_P(ctx, cc+1, cc+2, 1, 7, 14, 5);
@@ -215,9 +223,9 @@ static void setup_update(HC128* ctx)  /*each time 16 steps*/
       update_P(ctx, cc+12,cc+13,12,2, 9,  0);
       update_P(ctx, cc+13,cc+14,13,3, 10, 1);
       update_P(ctx, cc+14,cc+15,14,4, 11, 2);
-      update_P(ctx, cc+15,dd+0, 15,5, 12, 3);   
+      update_P(ctx, cc+15,dd+0, 15,5, 12, 3);
    }
-   else				    
+   else
    {
       ctx->counter1024 = (ctx->counter1024 + 16) & 0x3ff;
       update_Q(ctx, 512+cc+0, 512+cc+1, 0, 6, 13, 4);
@@ -235,8 +243,8 @@ static void setup_update(HC128* ctx)  /*each time 16 steps*/
       update_Q(ctx, 512+cc+12,512+cc+13,12,2, 9,  0);
       update_Q(ctx, 512+cc+13,512+cc+14,13,3, 10, 1);
       update_Q(ctx, 512+cc+14,512+cc+15,14,4, 11, 2);
-      update_Q(ctx, 512+cc+15,512+dd+0, 15,5, 12, 3); 
-   }       
+      update_Q(ctx, 512+cc+15,512+dd+0, 15,5, 12, 3);
+   }
 }
 
 
@@ -258,7 +266,7 @@ static void setup_update(HC128* ctx)  /*each time 16 steps*/
 
 
 static void Hc128_SetIV(HC128* ctx, const byte* inIv)
-{ 
+{
     word32 i;
     word32 iv[4];
 
@@ -266,46 +274,46 @@ static void Hc128_SetIV(HC128* ctx, const byte* inIv)
         XMEMCPY(iv, inIv, sizeof(iv));
     else
         XMEMSET(iv,    0, sizeof(iv));
-    
+
 	for (i = 0; i < (128 >> 5); i++)
         ctx->iv[i] = LITTLE32(iv[i]);
-	
+
     for (; i < 8; i++) ctx->iv[i] = ctx->iv[i-4];
-  
-    /* expand the key and IV into the table T */ 
-    /* (expand the key and IV into the table P and Q) */ 
-	
+
+    /* expand the key and IV into the table T */
+    /* (expand the key and IV into the table P and Q) */
+
 	for (i = 0; i < 8;  i++)   ctx->T[i] = ctx->key[i];
 	for (i = 8; i < 16; i++)   ctx->T[i] = ctx->iv[i-8];
 
-    for (i = 16; i < (256+16); i++) 
+    for (i = 16; i < (256+16); i++)
 		ctx->T[i] = f2(ctx->T[i-2]) + ctx->T[i-7] + f1(ctx->T[i-15]) +
                                                        ctx->T[i-16]+i;
-    
+
 	for (i = 0; i < 16;  i++)  ctx->T[i] = ctx->T[256+i];
 
-	for (i = 16; i < 1024; i++) 
+	for (i = 16; i < 1024; i++)
 		ctx->T[i] = f2(ctx->T[i-2]) + ctx->T[i-7] + f1(ctx->T[i-15]) +
                                                        ctx->T[i-16]+256+i;
-    
+
     /* initialize counter1024, X and Y */
 	ctx->counter1024 = 0;
 	for (i = 0; i < 16; i++) ctx->X[i] = ctx->T[512-16+i];
     for (i = 0; i < 16; i++) ctx->Y[i] = ctx->T[512+512-16+i];
-    
+
     /* run the cipher 1024 steps before generating the output */
-	for (i = 0; i < 64; i++)  setup_update(ctx);  
+	for (i = 0; i < 64; i++)  setup_update(ctx);
 }
 
 
-static INLINE int DoKey(HC128* ctx, const byte* key, const byte* iv)
-{ 
-  word32 i;  
+static WC_INLINE int DoKey(HC128* ctx, const byte* key, const byte* iv)
+{
+  word32 i;
 
-  /* Key size in bits 128 */ 
+  /* Key size in bits 128 */
   for (i = 0; i < (128 >> 5); i++)
       ctx->key[i] = LITTLE32(((word32*)key)[i]);
- 
+
   for ( ; i < 8 ; i++) ctx->key[i] = ctx->key[i-4];
 
   Hc128_SetIV(ctx, iv);
@@ -361,7 +369,7 @@ int wc_Hc128_SetKey(HC128* ctx, const byte* key, const byte* iv)
 
 
 /* The following defines the encryption of data stream */
-static INLINE int DoProcess(HC128* ctx, byte* output, const byte* input,
+static WC_INLINE int DoProcess(HC128* ctx, byte* output, const byte* input,
                             word32 msglen)
 {
   word32 i, keystream[16];
@@ -398,7 +406,7 @@ static INLINE int DoProcess(HC128* ctx, byte* output, const byte* input,
       {
           word32 wordsLeft = msglen / sizeof(word32);
           if (msglen % sizeof(word32)) wordsLeft++;
-          
+
           ByteReverseWords(keystream, keystream, wordsLeft * sizeof(word32));
       }
 #endif

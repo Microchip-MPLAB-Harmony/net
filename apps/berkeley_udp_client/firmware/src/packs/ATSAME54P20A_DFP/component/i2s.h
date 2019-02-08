@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-23T10:08:36Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_I2S_COMPONENT_H_
 #define _SAME54_I2S_COMPONENT_H_
 
@@ -297,6 +297,15 @@
 /* -------- I2S_TXCTRL : (I2S Offset: 0x20) (R/W 32) Tx Serializer Control -------- */
 #define I2S_TXCTRL_RESETVALUE                 _U_(0x00)                                            /**<  (I2S_TXCTRL) Tx Serializer Control  Reset Value */
 
+#define I2S_TXCTRL_SERMODE_Pos                _U_(0)                                               /**< (I2S_TXCTRL) Serializer Mode Position */
+#define I2S_TXCTRL_SERMODE_Msk                (_U_(0x3) << I2S_TXCTRL_SERMODE_Pos)                 /**< (I2S_TXCTRL) Serializer Mode Mask */
+#define I2S_TXCTRL_SERMODE(value)             (I2S_TXCTRL_SERMODE_Msk & ((value) << I2S_TXCTRL_SERMODE_Pos))
+#define   I2S_TXCTRL_SERMODE_RX_Val           _U_(0x0)                                             /**< (I2S_TXCTRL) Receive  */
+#define   I2S_TXCTRL_SERMODE_TX_Val           _U_(0x1)                                             /**< (I2S_TXCTRL) Transmit  */
+#define   I2S_TXCTRL_SERMODE_PDM2_Val         _U_(0x2)                                             /**< (I2S_TXCTRL) Receive one PDM data on each serial clock edge  */
+#define I2S_TXCTRL_SERMODE_RX                 (I2S_TXCTRL_SERMODE_RX_Val << I2S_TXCTRL_SERMODE_Pos) /**< (I2S_TXCTRL) Receive Position  */
+#define I2S_TXCTRL_SERMODE_TX                 (I2S_TXCTRL_SERMODE_TX_Val << I2S_TXCTRL_SERMODE_Pos) /**< (I2S_TXCTRL) Transmit Position  */
+#define I2S_TXCTRL_SERMODE_PDM2               (I2S_TXCTRL_SERMODE_PDM2_Val << I2S_TXCTRL_SERMODE_Pos) /**< (I2S_TXCTRL) Receive one PDM data on each serial clock edge Position  */
 #define I2S_TXCTRL_TXDEFAULT_Pos              _U_(2)                                               /**< (I2S_TXCTRL) Line Default Line when Slot Disabled Position */
 #define I2S_TXCTRL_TXDEFAULT_Msk              (_U_(0x3) << I2S_TXCTRL_TXDEFAULT_Pos)               /**< (I2S_TXCTRL) Line Default Line when Slot Disabled Mask */
 #define I2S_TXCTRL_TXDEFAULT(value)           (I2S_TXCTRL_TXDEFAULT_Msk & ((value) << I2S_TXCTRL_TXDEFAULT_Pos))
@@ -313,6 +322,13 @@
 #define   I2S_TXCTRL_TXSAME_SAME_Val          _U_(0x1)                                             /**< (I2S_TXCTRL) Last data transmitted in case of underrun  */
 #define I2S_TXCTRL_TXSAME_ZERO                (I2S_TXCTRL_TXSAME_ZERO_Val << I2S_TXCTRL_TXSAME_Pos) /**< (I2S_TXCTRL) Zero data transmitted in case of underrun Position  */
 #define I2S_TXCTRL_TXSAME_SAME                (I2S_TXCTRL_TXSAME_SAME_Val << I2S_TXCTRL_TXSAME_Pos) /**< (I2S_TXCTRL) Last data transmitted in case of underrun Position  */
+#define I2S_TXCTRL_CLKSEL_Pos                 _U_(5)                                               /**< (I2S_TXCTRL) Clock Unit Selection Position */
+#define I2S_TXCTRL_CLKSEL_Msk                 (_U_(0x1) << I2S_TXCTRL_CLKSEL_Pos)                  /**< (I2S_TXCTRL) Clock Unit Selection Mask */
+#define I2S_TXCTRL_CLKSEL(value)              (I2S_TXCTRL_CLKSEL_Msk & ((value) << I2S_TXCTRL_CLKSEL_Pos))
+#define   I2S_TXCTRL_CLKSEL_CLK0_Val          _U_(0x0)                                             /**< (I2S_TXCTRL) Use Clock Unit 0  */
+#define   I2S_TXCTRL_CLKSEL_CLK1_Val          _U_(0x1)                                             /**< (I2S_TXCTRL) Use Clock Unit 1  */
+#define I2S_TXCTRL_CLKSEL_CLK0                (I2S_TXCTRL_CLKSEL_CLK0_Val << I2S_TXCTRL_CLKSEL_Pos) /**< (I2S_TXCTRL) Use Clock Unit 0 Position  */
+#define I2S_TXCTRL_CLKSEL_CLK1                (I2S_TXCTRL_CLKSEL_CLK1_Val << I2S_TXCTRL_CLKSEL_Pos) /**< (I2S_TXCTRL) Use Clock Unit 1 Position  */
 #define I2S_TXCTRL_SLOTADJ_Pos                _U_(7)                                               /**< (I2S_TXCTRL) Data Slot Formatting Adjust Position */
 #define I2S_TXCTRL_SLOTADJ_Msk                (_U_(0x1) << I2S_TXCTRL_SLOTADJ_Pos)                 /**< (I2S_TXCTRL) Data Slot Formatting Adjust Mask */
 #define I2S_TXCTRL_SLOTADJ(value)             (I2S_TXCTRL_SLOTADJ_Msk & ((value) << I2S_TXCTRL_SLOTADJ_Pos))
@@ -402,7 +418,7 @@
 #define   I2S_TXCTRL_DMA_MULTIPLE_Val         _U_(0x1)                                             /**< (I2S_TXCTRL) One DMA channel per data channel  */
 #define I2S_TXCTRL_DMA_SINGLE                 (I2S_TXCTRL_DMA_SINGLE_Val << I2S_TXCTRL_DMA_Pos)    /**< (I2S_TXCTRL) Single DMA channel Position  */
 #define I2S_TXCTRL_DMA_MULTIPLE               (I2S_TXCTRL_DMA_MULTIPLE_Val << I2S_TXCTRL_DMA_Pos)  /**< (I2S_TXCTRL) One DMA channel per data channel Position  */
-#define I2S_TXCTRL_Msk                        _U_(0x03FFF79C)                                      /**< (I2S_TXCTRL) Register Mask  */
+#define I2S_TXCTRL_Msk                        _U_(0x03FFF7BF)                                      /**< (I2S_TXCTRL) Register Mask  */
 
 #define I2S_TXCTRL_SLOTDIS_Pos                _U_(16)                                              /**< (I2S_TXCTRL Position) Slot x Disabled for this Serializer */
 #define I2S_TXCTRL_SLOTDIS_Msk                (_U_(0xFF) << I2S_TXCTRL_SLOTDIS_Pos)                /**< (I2S_TXCTRL Mask) SLOTDIS */

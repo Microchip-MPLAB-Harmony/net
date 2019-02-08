@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,6 +42,15 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -61,7 +70,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 enum {
 	ARC4_ENC_TYPE   = 4,    /* cipher unique type */
-    ARC4_STATE_SIZE = 256
+    ARC4_STATE_SIZE = 256,
+    RC4_KEY_SIZE    = 16,   /* always 128bit           */
 };
 
 /* ARC4 encryption and decryption */

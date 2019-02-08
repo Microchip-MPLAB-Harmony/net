@@ -16,8 +16,8 @@
 **************************************************************************/
 
 //DOM-IGNORE-BEGIN
-/******************************************************************************
- Copyright (C) 2017-2018 Microchip Technology Inc. and its subsidiaries.
+/*****************************************************************************
+ Copyright (C) 2017-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -39,9 +39,11 @@ BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
 FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*******************************************************************************/
-//DOM-IGNORE-END
+*****************************************************************************/
 
+
+
+//DOM-IGNORE-END
 
 
 #ifdef HAVE_CONFIG_H

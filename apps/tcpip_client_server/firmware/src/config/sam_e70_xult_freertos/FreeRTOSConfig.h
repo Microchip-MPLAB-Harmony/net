@@ -120,4 +120,6 @@ standard names. */
 #define xPortPendSVHandler PendSV_Handler
 #define vPortSVCHandler SVCall_Handler
 
+#define configSETUP_TICK_INTERRUPT 
+
 #endif /* FREERTOS_H */
