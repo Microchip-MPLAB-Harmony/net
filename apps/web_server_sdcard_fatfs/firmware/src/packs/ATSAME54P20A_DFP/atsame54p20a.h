@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAME54P20A
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54P20A_H_
 #define _SAME54P20A_H_
 
@@ -612,11 +612,6 @@ void SDHC1_Handler                 ( void );
 #include "component/trng.h"
 #include "component/usb.h"
 #include "component/wdt.h"
-//#include "component/coredebug.h"
-//#include "component/dwt.h"
-//#include "component/etm.h"
-//#include "component/itm.h"
-//#include "component/tpi.h"
 /** @}  end of Peripheral Software API */
 
 /** \addtogroup SAME54P20A_id Peripheral Ids Definitions
@@ -755,11 +750,6 @@ void SDHC1_Handler                 ( void );
 #define TRNG_REGS                        ((trng_registers_t*)0x42002800)               /**< \brief TRNG Registers Address       */
 #define USB_REGS                         ((usb_registers_t*)0x41000000)                /**< \brief USB Registers Address        */
 #define WDT_REGS                         ((wdt_registers_t*)0x40002000)                /**< \brief WDT Registers Address        */
-#define CoreDebug_REGS                   ((coredebug_registers_t*)0xe000edf0)          /**< \brief CoreDebug Registers Address  */
-#define DWT_REGS                         ((dwt_registers_t*)0xe0001000)                /**< \brief DWT Registers Address        */
-#define ETM_REGS                         ((etm_registers_t*)0xe0041000)                /**< \brief ETM Registers Address        */
-#define ITM_REGS                         ((itm_registers_t*)0xe0041000)                /**< \brief ITM Registers Address        */
-#define TPI_REGS                         ((tpi_registers_t*)0xe0040000)                /**< \brief TPI Registers Address        */
 #endif /* (defined(__ASSEMBLER__) || defined(__IAR_SYSTEMS_ASM__)) */
 /** @}  end of Peripheral Base Address Definitions */
 
@@ -829,11 +819,6 @@ void SDHC1_Handler                 ( void );
 #define TRNG_BASE_ADDRESS                _UL_(0x42002800)                              /**< \brief TRNG Base Address */
 #define USB_BASE_ADDRESS                 _UL_(0x41000000)                              /**< \brief USB Base Address */
 #define WDT_BASE_ADDRESS                 _UL_(0x40002000)                              /**< \brief WDT Base Address */
-#define CoreDebug_BASE_ADDRESS           _UL_(0xe000edf0)                              /**< \brief CoreDebug Base Address */
-#define DWT_BASE_ADDRESS                 _UL_(0xe0001000)                              /**< \brief DWT Base Address */
-#define ETM_BASE_ADDRESS                 _UL_(0xe0041000)                              /**< \brief ETM Base Address */
-#define ITM_BASE_ADDRESS                 _UL_(0xe0041000)                              /**< \brief ITM Base Address */
-#define TPI_BASE_ADDRESS                 _UL_(0xe0040000)                              /**< \brief TPI Base Address */
 /** @}  end of Peripheral Base Address Definitions */
 
 /** \addtogroup SAME54P20A_pio Peripheral Pio Definitions
@@ -881,7 +866,6 @@ void SDHC1_Handler                 ( void );
 #define BKUPRAM_SIZE                   _UL_(0x00002000)    /*    8kB Memory segment type: ram */
 #define PPB_SIZE                       _UL_(0x00100000)    /* 1024kB Memory segment type: io */
 #define SCS_SIZE                       _UL_(0x00001000)    /*    4kB Memory segment type: io */
-#define PERIPHERALS_SIZE               _UL_(0x20000000)    /* 524288kB Memory segment type: io */
 
 #define FLASH_ADDR                     _UL_(0x00000000)    /**< FLASH base address (type: flash)*/
 #define SW0_ADDR                       _UL_(0x00800080)    /**< SW0 base address (type: fuses)*/
@@ -905,7 +889,6 @@ void SDHC1_Handler                 ( void );
 #define BKUPRAM_ADDR                   _UL_(0x47000000)    /**< BKUPRAM base address (type: ram)*/
 #define PPB_ADDR                       _UL_(0xe0000000)    /**< PPB base address (type: io)*/
 #define SCS_ADDR                       _UL_(0xe000e000)    /**< SCS base address (type: io)*/
-#define PERIPHERALS_ADDR               _UL_(0x40000000)    /**< PERIPHERALS base address (type: io)*/
 
 /* ************************************************************************** */
 /**  DEVICE SIGNATURES FOR SAME54P20A                                         */

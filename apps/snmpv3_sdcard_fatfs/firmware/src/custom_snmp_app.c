@@ -2127,12 +2127,12 @@ bool TCPIP_SNMP_NextIndexGet(SNMP_ID var, SNMP_INDEX* index)
  */
 bool TCPIP_SNMP_VarbindGet(SNMP_ID var, SNMP_INDEX index, uint8_t* ref, SNMP_VAL* val)
 {
-   uint8_t myRef;
-   static uint8_t AN0String[8];
-   uint16_t     randPotVal=0;
+	uint8_t myRef;
+	static uint8_t AN0String[8];
+	uint16_t     randPotVal=0;
 
     // Convert potentiometer result into ASCII string
-    randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
+	randPotVal= (uint16_t)SYS_RANDOM_PseudoGet();
     uitoa(randPotVal,AN0String);
 
 

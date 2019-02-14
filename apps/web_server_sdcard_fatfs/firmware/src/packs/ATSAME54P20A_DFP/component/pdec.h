@@ -1,7 +1,7 @@
 /**
  * \brief Component description for PDEC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_PDEC_COMPONENT_H_
 #define _SAME54_PDEC_COMPONENT_H_
 
@@ -141,14 +141,14 @@
 #define   PDEC_CTRLBSET_CMD_RETRIGGER_Val     _U_(0x1)                                             /**< (PDEC_CTRLBSET) Force a counter restart or retrigger  */
 #define   PDEC_CTRLBSET_CMD_UPDATE_Val        _U_(0x2)                                             /**< (PDEC_CTRLBSET) Force update of double buffered registers  */
 #define   PDEC_CTRLBSET_CMD_READSYNC_Val      _U_(0x3)                                             /**< (PDEC_CTRLBSET) Force a read synchronization of COUNT  */
-#define   PDEC_CTRLBSET_CMD_Start_Val         _U_(0x4)                                             /**< (PDEC_CTRLBSET) Start QDEC/HALL  */
-#define   PDEC_CTRLBSET_CMD_Stop_Val          _U_(0x5)                                             /**< (PDEC_CTRLBSET) Stop QDEC/HALL  */
+#define   PDEC_CTRLBSET_CMD_START_Val         _U_(0x4)                                             /**< (PDEC_CTRLBSET) Start QDEC/HALL  */
+#define   PDEC_CTRLBSET_CMD_STOP_Val          _U_(0x5)                                             /**< (PDEC_CTRLBSET) Stop QDEC/HALL  */
 #define PDEC_CTRLBSET_CMD_NONE                (PDEC_CTRLBSET_CMD_NONE_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) No action Position  */
 #define PDEC_CTRLBSET_CMD_RETRIGGER           (PDEC_CTRLBSET_CMD_RETRIGGER_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Force a counter restart or retrigger Position  */
 #define PDEC_CTRLBSET_CMD_UPDATE              (PDEC_CTRLBSET_CMD_UPDATE_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Force update of double buffered registers Position  */
 #define PDEC_CTRLBSET_CMD_READSYNC            (PDEC_CTRLBSET_CMD_READSYNC_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Force a read synchronization of COUNT Position  */
-#define PDEC_CTRLBSET_CMD_Start               (PDEC_CTRLBSET_CMD_Start_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Start QDEC/HALL Position  */
-#define PDEC_CTRLBSET_CMD_Stop                (PDEC_CTRLBSET_CMD_Stop_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Stop QDEC/HALL Position  */
+#define PDEC_CTRLBSET_CMD_START               (PDEC_CTRLBSET_CMD_START_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Start QDEC/HALL Position  */
+#define PDEC_CTRLBSET_CMD_STOP                (PDEC_CTRLBSET_CMD_STOP_Val << PDEC_CTRLBSET_CMD_Pos) /**< (PDEC_CTRLBSET) Stop QDEC/HALL Position  */
 #define PDEC_CTRLBSET_Msk                     _U_(0xE2)                                            /**< (PDEC_CTRLBSET) Register Mask  */
 
 

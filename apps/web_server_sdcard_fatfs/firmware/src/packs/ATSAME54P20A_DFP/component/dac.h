@@ -1,7 +1,7 @@
 /**
  * \brief Component description for DAC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_DAC_COMPONENT_H_
 #define _SAME54_DAC_COMPONENT_H_
 
@@ -294,12 +294,12 @@
 #define DAC_DACCTRL_CCTRL_Pos                 _U_(2)                                               /**< (DAC_DACCTRL) Current Control Position */
 #define DAC_DACCTRL_CCTRL_Msk                 (_U_(0x3) << DAC_DACCTRL_CCTRL_Pos)                  /**< (DAC_DACCTRL) Current Control Mask */
 #define DAC_DACCTRL_CCTRL(value)              (DAC_DACCTRL_CCTRL_Msk & ((value) << DAC_DACCTRL_CCTRL_Pos))
-#define   DAC_DACCTRL_CCTRL_CC100K_Val        _U_(0x0)                                             /**< (DAC_DACCTRL) GCLK_DAC <= 1.2MHz (100kSPS)  */
-#define   DAC_DACCTRL_CCTRL_CC1M_Val          _U_(0x1)                                             /**< (DAC_DACCTRL) 1.2MHz < GCLK_DAC  <= 6MHz (500kSPS)  */
-#define   DAC_DACCTRL_CCTRL_CC12M_Val         _U_(0x2)                                             /**< (DAC_DACCTRL) 6MHz < GCLK_DAC <= 12MHz (1MSPS)  */
-#define DAC_DACCTRL_CCTRL_CC100K              (DAC_DACCTRL_CCTRL_CC100K_Val << DAC_DACCTRL_CCTRL_Pos) /**< (DAC_DACCTRL) GCLK_DAC <= 1.2MHz (100kSPS) Position  */
-#define DAC_DACCTRL_CCTRL_CC1M                (DAC_DACCTRL_CCTRL_CC1M_Val << DAC_DACCTRL_CCTRL_Pos) /**< (DAC_DACCTRL) 1.2MHz < GCLK_DAC  <= 6MHz (500kSPS) Position  */
-#define DAC_DACCTRL_CCTRL_CC12M               (DAC_DACCTRL_CCTRL_CC12M_Val << DAC_DACCTRL_CCTRL_Pos) /**< (DAC_DACCTRL) 6MHz < GCLK_DAC <= 12MHz (1MSPS) Position  */
+#define   DAC_DACCTRL_CCTRL_CC100K_Val        _U_(0x0)                                             /**< (DAC_DACCTRL) 100kSPS  */
+#define   DAC_DACCTRL_CCTRL_CC1M_Val          _U_(0x1)                                             /**< (DAC_DACCTRL) 500kSPS  */
+#define   DAC_DACCTRL_CCTRL_CC12M_Val         _U_(0x2)                                             /**< (DAC_DACCTRL) 1MSPS  */
+#define DAC_DACCTRL_CCTRL_CC100K              (DAC_DACCTRL_CCTRL_CC100K_Val << DAC_DACCTRL_CCTRL_Pos) /**< (DAC_DACCTRL) 100kSPS Position  */
+#define DAC_DACCTRL_CCTRL_CC1M                (DAC_DACCTRL_CCTRL_CC1M_Val << DAC_DACCTRL_CCTRL_Pos) /**< (DAC_DACCTRL) 500kSPS Position  */
+#define DAC_DACCTRL_CCTRL_CC12M               (DAC_DACCTRL_CCTRL_CC12M_Val << DAC_DACCTRL_CCTRL_Pos) /**< (DAC_DACCTRL) 1MSPS Position  */
 #define DAC_DACCTRL_FEXT_Pos                  _U_(5)                                               /**< (DAC_DACCTRL) Standalone Filter Position */
 #define DAC_DACCTRL_FEXT_Msk                  (_U_(0x1) << DAC_DACCTRL_FEXT_Pos)                   /**< (DAC_DACCTRL) Standalone Filter Mask */
 #define DAC_DACCTRL_FEXT(value)               (DAC_DACCTRL_FEXT_Msk & ((value) << DAC_DACCTRL_FEXT_Pos))
@@ -312,9 +312,53 @@
 #define DAC_DACCTRL_REFRESH_Pos               _U_(8)                                               /**< (DAC_DACCTRL) Refresh period Position */
 #define DAC_DACCTRL_REFRESH_Msk               (_U_(0xF) << DAC_DACCTRL_REFRESH_Pos)                /**< (DAC_DACCTRL) Refresh period Mask */
 #define DAC_DACCTRL_REFRESH(value)            (DAC_DACCTRL_REFRESH_Msk & ((value) << DAC_DACCTRL_REFRESH_Pos))
+#define   DAC_DACCTRL_REFRESH_REFRESH_0_Val   _U_(0x0)                                             /**< (DAC_DACCTRL) Do not Refresh  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_1_Val   _U_(0x1)                                             /**< (DAC_DACCTRL) Refresh every 30US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_2_Val   _U_(0x2)                                             /**< (DAC_DACCTRL) Refresh every 60US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_3_Val   _U_(0x3)                                             /**< (DAC_DACCTRL) Refresh every 90US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_4_Val   _U_(0x4)                                             /**< (DAC_DACCTRL) Refresh every 120US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_5_Val   _U_(0x5)                                             /**< (DAC_DACCTRL) Refresh every 150US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_6_Val   _U_(0x6)                                             /**< (DAC_DACCTRL) Refresh every 180US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_7_Val   _U_(0x7)                                             /**< (DAC_DACCTRL) Refresh every 210US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_8_Val   _U_(0x8)                                             /**< (DAC_DACCTRL) Refresh every 2400US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_9_Val   _U_(0x9)                                             /**< (DAC_DACCTRL) Refresh every 2700US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_10_Val  _U_(0xA)                                             /**< (DAC_DACCTRL) Refresh every 300US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_11_Val  _U_(0xB)                                             /**< (DAC_DACCTRL) Refresh every 330US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_12_Val  _U_(0xC)                                             /**< (DAC_DACCTRL) Refresh every 360US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_13_Val  _U_(0xD)                                             /**< (DAC_DACCTRL) Refresh every 390US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_14_Val  _U_(0xE)                                             /**< (DAC_DACCTRL) Refresh every 420US  */
+#define   DAC_DACCTRL_REFRESH_REFRESH_15_Val  _U_(0xF)                                             /**< (DAC_DACCTRL) Refresh every 450US  */
+#define DAC_DACCTRL_REFRESH_REFRESH_0         (DAC_DACCTRL_REFRESH_REFRESH_0_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Do not Refresh Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_1         (DAC_DACCTRL_REFRESH_REFRESH_1_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 30US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_2         (DAC_DACCTRL_REFRESH_REFRESH_2_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 60US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_3         (DAC_DACCTRL_REFRESH_REFRESH_3_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 90US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_4         (DAC_DACCTRL_REFRESH_REFRESH_4_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 120US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_5         (DAC_DACCTRL_REFRESH_REFRESH_5_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 150US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_6         (DAC_DACCTRL_REFRESH_REFRESH_6_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 180US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_7         (DAC_DACCTRL_REFRESH_REFRESH_7_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 210US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_8         (DAC_DACCTRL_REFRESH_REFRESH_8_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 2400US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_9         (DAC_DACCTRL_REFRESH_REFRESH_9_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 2700US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_10        (DAC_DACCTRL_REFRESH_REFRESH_10_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 300US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_11        (DAC_DACCTRL_REFRESH_REFRESH_11_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 330US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_12        (DAC_DACCTRL_REFRESH_REFRESH_12_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 360US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_13        (DAC_DACCTRL_REFRESH_REFRESH_13_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 390US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_14        (DAC_DACCTRL_REFRESH_REFRESH_14_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 420US Position  */
+#define DAC_DACCTRL_REFRESH_REFRESH_15        (DAC_DACCTRL_REFRESH_REFRESH_15_Val << DAC_DACCTRL_REFRESH_Pos) /**< (DAC_DACCTRL) Refresh every 450US Position  */
 #define DAC_DACCTRL_OSR_Pos                   _U_(13)                                              /**< (DAC_DACCTRL) Sampling Rate Position */
 #define DAC_DACCTRL_OSR_Msk                   (_U_(0x7) << DAC_DACCTRL_OSR_Pos)                    /**< (DAC_DACCTRL) Sampling Rate Mask */
 #define DAC_DACCTRL_OSR(value)                (DAC_DACCTRL_OSR_Msk & ((value) << DAC_DACCTRL_OSR_Pos))
+#define   DAC_DACCTRL_OSR_OSR_1_Val           _U_(0x0)                                             /**< (DAC_DACCTRL) No Over Sampling  */
+#define   DAC_DACCTRL_OSR_OSR_2_Val           _U_(0x1)                                             /**< (DAC_DACCTRL) 2x Over Sampling Ratio  */
+#define   DAC_DACCTRL_OSR_OSR_4_Val           _U_(0x2)                                             /**< (DAC_DACCTRL) 4x Over Sampling Ratio  */
+#define   DAC_DACCTRL_OSR_OSR_8_Val           _U_(0x3)                                             /**< (DAC_DACCTRL) 8x Over Sampling Ratio  */
+#define   DAC_DACCTRL_OSR_OSR_16_Val          _U_(0x4)                                             /**< (DAC_DACCTRL) 16x Over Sampling Ratio  */
+#define   DAC_DACCTRL_OSR_OSR_32_Val          _U_(0x5)                                             /**< (DAC_DACCTRL) 32x Over Sampling Ratio  */
+#define DAC_DACCTRL_OSR_OSR_1                 (DAC_DACCTRL_OSR_OSR_1_Val << DAC_DACCTRL_OSR_Pos)   /**< (DAC_DACCTRL) No Over Sampling Position  */
+#define DAC_DACCTRL_OSR_OSR_2                 (DAC_DACCTRL_OSR_OSR_2_Val << DAC_DACCTRL_OSR_Pos)   /**< (DAC_DACCTRL) 2x Over Sampling Ratio Position  */
+#define DAC_DACCTRL_OSR_OSR_4                 (DAC_DACCTRL_OSR_OSR_4_Val << DAC_DACCTRL_OSR_Pos)   /**< (DAC_DACCTRL) 4x Over Sampling Ratio Position  */
+#define DAC_DACCTRL_OSR_OSR_8                 (DAC_DACCTRL_OSR_OSR_8_Val << DAC_DACCTRL_OSR_Pos)   /**< (DAC_DACCTRL) 8x Over Sampling Ratio Position  */
+#define DAC_DACCTRL_OSR_OSR_16                (DAC_DACCTRL_OSR_OSR_16_Val << DAC_DACCTRL_OSR_Pos)  /**< (DAC_DACCTRL) 16x Over Sampling Ratio Position  */
+#define DAC_DACCTRL_OSR_OSR_32                (DAC_DACCTRL_OSR_OSR_32_Val << DAC_DACCTRL_OSR_Pos)  /**< (DAC_DACCTRL) 32x Over Sampling Ratio Position  */
 #define DAC_DACCTRL_Msk                       _U_(0xEFEF)                                          /**< (DAC_DACCTRL) Register Mask  */
 
 

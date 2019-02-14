@@ -1,7 +1,7 @@
 /**
  * \brief Component description for DMAC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_DMAC_COMPONENT_H_
 #define _SAME54_DMAC_COMPONENT_H_
 
@@ -235,19 +235,11 @@
 #define   DMAC_CHPRILVL_PRILVL_LVL0_Val       _U_(0x0)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 0 (Lowest Level)  */
 #define   DMAC_CHPRILVL_PRILVL_LVL1_Val       _U_(0x1)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 1  */
 #define   DMAC_CHPRILVL_PRILVL_LVL2_Val       _U_(0x2)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 2  */
-#define   DMAC_CHPRILVL_PRILVL_LVL3_Val       _U_(0x3)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 3  */
-#define   DMAC_CHPRILVL_PRILVL_LVL4_Val       _U_(0x4)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 4  */
-#define   DMAC_CHPRILVL_PRILVL_LVL5_Val       _U_(0x5)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 5  */
-#define   DMAC_CHPRILVL_PRILVL_LVL6_Val       _U_(0x6)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 6  */
-#define   DMAC_CHPRILVL_PRILVL_LVL7_Val       _U_(0x7)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 7 (Highest Level)  */
+#define   DMAC_CHPRILVL_PRILVL_LVL3_Val       _U_(0x3)                                             /**< (DMAC_CHPRILVL) Channel Priority Level 3 (Highest Level)  */
 #define DMAC_CHPRILVL_PRILVL_LVL0             (DMAC_CHPRILVL_PRILVL_LVL0_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 0 (Lowest Level) Position  */
 #define DMAC_CHPRILVL_PRILVL_LVL1             (DMAC_CHPRILVL_PRILVL_LVL1_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 1 Position  */
 #define DMAC_CHPRILVL_PRILVL_LVL2             (DMAC_CHPRILVL_PRILVL_LVL2_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 2 Position  */
-#define DMAC_CHPRILVL_PRILVL_LVL3             (DMAC_CHPRILVL_PRILVL_LVL3_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 3 Position  */
-#define DMAC_CHPRILVL_PRILVL_LVL4             (DMAC_CHPRILVL_PRILVL_LVL4_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 4 Position  */
-#define DMAC_CHPRILVL_PRILVL_LVL5             (DMAC_CHPRILVL_PRILVL_LVL5_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 5 Position  */
-#define DMAC_CHPRILVL_PRILVL_LVL6             (DMAC_CHPRILVL_PRILVL_LVL6_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 6 Position  */
-#define DMAC_CHPRILVL_PRILVL_LVL7             (DMAC_CHPRILVL_PRILVL_LVL7_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 7 (Highest Level) Position  */
+#define DMAC_CHPRILVL_PRILVL_LVL3             (DMAC_CHPRILVL_PRILVL_LVL3_Val << DMAC_CHPRILVL_PRILVL_Pos) /**< (DMAC_CHPRILVL) Channel Priority Level 3 (Highest Level) Position  */
 #define DMAC_CHPRILVL_Msk                     _U_(0x03)                                            /**< (DMAC_CHPRILVL) Register Mask  */
 
 

@@ -38,7 +38,7 @@
 
 extern void SNMPV2TrapDemo(void);
 extern void SNMPTrapDemo(void);
-
+bool freeRtosFlag = 0;
 APP_LED_STATE LEDstate = APP_LED_STATE_OFF;
 // *****************************************************************************
 /* Application Data
@@ -235,6 +235,7 @@ void APP_Tasks ( void )
                     SYS_CONSOLE_MESSAGE(TCPIP_STACK_NetNameGet(netH));
                     SYS_CONSOLE_MESSAGE(" IP Address: ");
                     SYS_CONSOLE_PRINT("%d.%d.%d.%d \r\n", ipAddr.v[0], ipAddr.v[1], ipAddr.v[2], ipAddr.v[3]);
+                    freeRtosFlag = 1;
                 }
             }
             SYS_CMD_READY_TO_READ();
