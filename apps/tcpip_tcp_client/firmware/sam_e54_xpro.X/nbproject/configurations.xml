@@ -452,7 +452,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Atmel" version="1.0.115"/>
+        <pack name="SAME54_DFP" vendor="Atmel" version="1.0.94"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>

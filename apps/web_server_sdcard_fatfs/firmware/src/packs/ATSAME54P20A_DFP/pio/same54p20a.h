@@ -1,7 +1,7 @@
 /**
  * \brief Peripheral I/O description for SAME54P20A
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54P20A_GPIO_H_
 #define _SAME54P20A_GPIO_H_
 
@@ -357,166 +357,6 @@
 #define MUX_PB03B_ADC0_AIN15                       (1L)        
 #define PINMUX_PB03B_ADC0_AIN15                    ((PIN_PB03B_ADC0_AIN15 << 16) | MUX_PB03B_ADC0_AIN15)
 #define PORT_PB03B_ADC0_AIN15                      ((1UL) << 3)
-
-#define PIN_PA03O_ADC0_DRV0                        (3L)         
-#define MUX_PA03O_ADC0_DRV0                        (14L)       
-#define PINMUX_PA03O_ADC0_DRV0                     ((PIN_PA03O_ADC0_DRV0 << 16) | MUX_PA03O_ADC0_DRV0)
-#define PORT_PA03O_ADC0_DRV0                       ((1UL) << 3)
-
-#define PIN_PB08O_ADC0_DRV1                        (40L)        
-#define MUX_PB08O_ADC0_DRV1                        (14L)       
-#define PINMUX_PB08O_ADC0_DRV1                     ((PIN_PB08O_ADC0_DRV1 << 16) | MUX_PB08O_ADC0_DRV1)
-#define PORT_PB08O_ADC0_DRV1                       ((1UL) << 8)
-
-#define PIN_PB09O_ADC0_DRV2                        (41L)        
-#define MUX_PB09O_ADC0_DRV2                        (14L)       
-#define PINMUX_PB09O_ADC0_DRV2                     ((PIN_PB09O_ADC0_DRV2 << 16) | MUX_PB09O_ADC0_DRV2)
-#define PORT_PB09O_ADC0_DRV2                       ((1UL) << 9)
-
-#define PIN_PA04O_ADC0_DRV3                        (4L)         
-#define MUX_PA04O_ADC0_DRV3                        (14L)       
-#define PINMUX_PA04O_ADC0_DRV3                     ((PIN_PA04O_ADC0_DRV3 << 16) | MUX_PA04O_ADC0_DRV3)
-#define PORT_PA04O_ADC0_DRV3                       ((1UL) << 4)
-
-#define PIN_PA06O_ADC0_DRV4                        (6L)         
-#define MUX_PA06O_ADC0_DRV4                        (14L)       
-#define PINMUX_PA06O_ADC0_DRV4                     ((PIN_PA06O_ADC0_DRV4 << 16) | MUX_PA06O_ADC0_DRV4)
-#define PORT_PA06O_ADC0_DRV4                       ((1UL) << 6)
-
-#define PIN_PA07O_ADC0_DRV5                        (7L)         
-#define MUX_PA07O_ADC0_DRV5                        (14L)       
-#define PINMUX_PA07O_ADC0_DRV5                     ((PIN_PA07O_ADC0_DRV5 << 16) | MUX_PA07O_ADC0_DRV5)
-#define PORT_PA07O_ADC0_DRV5                       ((1UL) << 7)
-
-#define PIN_PA08O_ADC0_DRV6                        (8L)         
-#define MUX_PA08O_ADC0_DRV6                        (14L)       
-#define PINMUX_PA08O_ADC0_DRV6                     ((PIN_PA08O_ADC0_DRV6 << 16) | MUX_PA08O_ADC0_DRV6)
-#define PORT_PA08O_ADC0_DRV6                       ((1UL) << 8)
-
-#define PIN_PA09O_ADC0_DRV7                        (9L)         
-#define MUX_PA09O_ADC0_DRV7                        (14L)       
-#define PINMUX_PA09O_ADC0_DRV7                     ((PIN_PA09O_ADC0_DRV7 << 16) | MUX_PA09O_ADC0_DRV7)
-#define PORT_PA09O_ADC0_DRV7                       ((1UL) << 9)
-
-#define PIN_PA10O_ADC0_DRV8                        (10L)        
-#define MUX_PA10O_ADC0_DRV8                        (14L)       
-#define PINMUX_PA10O_ADC0_DRV8                     ((PIN_PA10O_ADC0_DRV8 << 16) | MUX_PA10O_ADC0_DRV8)
-#define PORT_PA10O_ADC0_DRV8                       ((1UL) << 10)
-
-#define PIN_PA11O_ADC0_DRV9                        (11L)        
-#define MUX_PA11O_ADC0_DRV9                        (14L)       
-#define PINMUX_PA11O_ADC0_DRV9                     ((PIN_PA11O_ADC0_DRV9 << 16) | MUX_PA11O_ADC0_DRV9)
-#define PORT_PA11O_ADC0_DRV9                       ((1UL) << 11)
-
-#define PIN_PA16O_ADC0_DRV10                       (16L)        
-#define MUX_PA16O_ADC0_DRV10                       (14L)       
-#define PINMUX_PA16O_ADC0_DRV10                    ((PIN_PA16O_ADC0_DRV10 << 16) | MUX_PA16O_ADC0_DRV10)
-#define PORT_PA16O_ADC0_DRV10                      ((1UL) << 16)
-
-#define PIN_PA17O_ADC0_DRV11                       (17L)        
-#define MUX_PA17O_ADC0_DRV11                       (14L)       
-#define PINMUX_PA17O_ADC0_DRV11                    ((PIN_PA17O_ADC0_DRV11 << 16) | MUX_PA17O_ADC0_DRV11)
-#define PORT_PA17O_ADC0_DRV11                      ((1UL) << 17)
-
-#define PIN_PA18O_ADC0_DRV12                       (18L)        
-#define MUX_PA18O_ADC0_DRV12                       (14L)       
-#define PINMUX_PA18O_ADC0_DRV12                    ((PIN_PA18O_ADC0_DRV12 << 16) | MUX_PA18O_ADC0_DRV12)
-#define PORT_PA18O_ADC0_DRV12                      ((1UL) << 18)
-
-#define PIN_PA19O_ADC0_DRV13                       (19L)        
-#define MUX_PA19O_ADC0_DRV13                       (14L)       
-#define PINMUX_PA19O_ADC0_DRV13                    ((PIN_PA19O_ADC0_DRV13 << 16) | MUX_PA19O_ADC0_DRV13)
-#define PORT_PA19O_ADC0_DRV13                      ((1UL) << 19)
-
-#define PIN_PA20O_ADC0_DRV14                       (20L)        
-#define MUX_PA20O_ADC0_DRV14                       (14L)       
-#define PINMUX_PA20O_ADC0_DRV14                    ((PIN_PA20O_ADC0_DRV14 << 16) | MUX_PA20O_ADC0_DRV14)
-#define PORT_PA20O_ADC0_DRV14                      ((1UL) << 20)
-
-#define PIN_PA21O_ADC0_DRV15                       (21L)        
-#define MUX_PA21O_ADC0_DRV15                       (14L)       
-#define PINMUX_PA21O_ADC0_DRV15                    ((PIN_PA21O_ADC0_DRV15 << 16) | MUX_PA21O_ADC0_DRV15)
-#define PORT_PA21O_ADC0_DRV15                      ((1UL) << 21)
-
-#define PIN_PA22O_ADC0_DRV16                       (22L)        
-#define MUX_PA22O_ADC0_DRV16                       (14L)       
-#define PINMUX_PA22O_ADC0_DRV16                    ((PIN_PA22O_ADC0_DRV16 << 16) | MUX_PA22O_ADC0_DRV16)
-#define PORT_PA22O_ADC0_DRV16                      ((1UL) << 22)
-
-#define PIN_PA23O_ADC0_DRV17                       (23L)        
-#define MUX_PA23O_ADC0_DRV17                       (14L)       
-#define PINMUX_PA23O_ADC0_DRV17                    ((PIN_PA23O_ADC0_DRV17 << 16) | MUX_PA23O_ADC0_DRV17)
-#define PORT_PA23O_ADC0_DRV17                      ((1UL) << 23)
-
-#define PIN_PA27O_ADC0_DRV18                       (27L)        
-#define MUX_PA27O_ADC0_DRV18                       (14L)       
-#define PINMUX_PA27O_ADC0_DRV18                    ((PIN_PA27O_ADC0_DRV18 << 16) | MUX_PA27O_ADC0_DRV18)
-#define PORT_PA27O_ADC0_DRV18                      ((1UL) << 27)
-
-#define PIN_PA30O_ADC0_DRV19                       (30L)        
-#define MUX_PA30O_ADC0_DRV19                       (14L)       
-#define PINMUX_PA30O_ADC0_DRV19                    ((PIN_PA30O_ADC0_DRV19 << 16) | MUX_PA30O_ADC0_DRV19)
-#define PORT_PA30O_ADC0_DRV19                      ((1UL) << 30)
-
-#define PIN_PB02O_ADC0_DRV20                       (34L)        
-#define MUX_PB02O_ADC0_DRV20                       (14L)       
-#define PINMUX_PB02O_ADC0_DRV20                    ((PIN_PB02O_ADC0_DRV20 << 16) | MUX_PB02O_ADC0_DRV20)
-#define PORT_PB02O_ADC0_DRV20                      ((1UL) << 2)
-
-#define PIN_PB03O_ADC0_DRV21                       (35L)        
-#define MUX_PB03O_ADC0_DRV21                       (14L)       
-#define PINMUX_PB03O_ADC0_DRV21                    ((PIN_PB03O_ADC0_DRV21 << 16) | MUX_PB03O_ADC0_DRV21)
-#define PORT_PB03O_ADC0_DRV21                      ((1UL) << 3)
-
-#define PIN_PB04O_ADC0_DRV22                       (36L)        
-#define MUX_PB04O_ADC0_DRV22                       (14L)       
-#define PINMUX_PB04O_ADC0_DRV22                    ((PIN_PB04O_ADC0_DRV22 << 16) | MUX_PB04O_ADC0_DRV22)
-#define PORT_PB04O_ADC0_DRV22                      ((1UL) << 4)
-
-#define PIN_PB05O_ADC0_DRV23                       (37L)        
-#define MUX_PB05O_ADC0_DRV23                       (14L)       
-#define PINMUX_PB05O_ADC0_DRV23                    ((PIN_PB05O_ADC0_DRV23 << 16) | MUX_PB05O_ADC0_DRV23)
-#define PORT_PB05O_ADC0_DRV23                      ((1UL) << 5)
-
-#define PIN_PB06O_ADC0_DRV24                       (38L)        
-#define MUX_PB06O_ADC0_DRV24                       (14L)       
-#define PINMUX_PB06O_ADC0_DRV24                    ((PIN_PB06O_ADC0_DRV24 << 16) | MUX_PB06O_ADC0_DRV24)
-#define PORT_PB06O_ADC0_DRV24                      ((1UL) << 6)
-
-#define PIN_PB07O_ADC0_DRV25                       (39L)        
-#define MUX_PB07O_ADC0_DRV25                       (14L)       
-#define PINMUX_PB07O_ADC0_DRV25                    ((PIN_PB07O_ADC0_DRV25 << 16) | MUX_PB07O_ADC0_DRV25)
-#define PORT_PB07O_ADC0_DRV25                      ((1UL) << 7)
-
-#define PIN_PB12O_ADC0_DRV26                       (44L)        
-#define MUX_PB12O_ADC0_DRV26                       (14L)       
-#define PINMUX_PB12O_ADC0_DRV26                    ((PIN_PB12O_ADC0_DRV26 << 16) | MUX_PB12O_ADC0_DRV26)
-#define PORT_PB12O_ADC0_DRV26                      ((1UL) << 12)
-
-#define PIN_PB13O_ADC0_DRV27                       (45L)        
-#define MUX_PB13O_ADC0_DRV27                       (14L)       
-#define PINMUX_PB13O_ADC0_DRV27                    ((PIN_PB13O_ADC0_DRV27 << 16) | MUX_PB13O_ADC0_DRV27)
-#define PORT_PB13O_ADC0_DRV27                      ((1UL) << 13)
-
-#define PIN_PB14O_ADC0_DRV28                       (46L)        
-#define MUX_PB14O_ADC0_DRV28                       (14L)       
-#define PINMUX_PB14O_ADC0_DRV28                    ((PIN_PB14O_ADC0_DRV28 << 16) | MUX_PB14O_ADC0_DRV28)
-#define PORT_PB14O_ADC0_DRV28                      ((1UL) << 14)
-
-#define PIN_PB15O_ADC0_DRV29                       (47L)        
-#define MUX_PB15O_ADC0_DRV29                       (14L)       
-#define PINMUX_PB15O_ADC0_DRV29                    ((PIN_PB15O_ADC0_DRV29 << 16) | MUX_PB15O_ADC0_DRV29)
-#define PORT_PB15O_ADC0_DRV29                      ((1UL) << 15)
-
-#define PIN_PB00O_ADC0_DRV30                       (32L)        
-#define MUX_PB00O_ADC0_DRV30                       (14L)       
-#define PINMUX_PB00O_ADC0_DRV30                    ((PIN_PB00O_ADC0_DRV30 << 16) | MUX_PB00O_ADC0_DRV30)
-#define PORT_PB00O_ADC0_DRV30                      ((1UL) << 0)
-
-#define PIN_PB01O_ADC0_DRV31                       (33L)        
-#define MUX_PB01O_ADC0_DRV31                       (14L)       
-#define PINMUX_PB01O_ADC0_DRV31                    ((PIN_PB01O_ADC0_DRV31 << 16) | MUX_PB01O_ADC0_DRV31)
-#define PORT_PB01O_ADC0_DRV31                      ((1UL) << 1)
 
 #define PIN_PA03B_ADC0_X0                          (3L)         
 #define MUX_PA03B_ADC0_X0                          (1L)        

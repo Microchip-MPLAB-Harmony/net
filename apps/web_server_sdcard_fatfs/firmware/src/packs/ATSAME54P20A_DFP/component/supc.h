@@ -1,7 +1,7 @@
 /**
  * \brief Component description for SUPC
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_SUPC_COMPONENT_H_
 #define _SAME54_SUPC_COMPONENT_H_
 
@@ -256,29 +256,59 @@
 /* -------- SUPC_BKOUT : (SUPC Offset: 0x24) (R/W 32) Backup Output Control -------- */
 #define SUPC_BKOUT_RESETVALUE                 _U_(0x00)                                            /**<  (SUPC_BKOUT) Backup Output Control  Reset Value */
 
-#define SUPC_BKOUT_EN_Pos                     _U_(0)                                               /**< (SUPC_BKOUT) Enable Output Position */
-#define SUPC_BKOUT_EN_Msk                     (_U_(0x3) << SUPC_BKOUT_EN_Pos)                      /**< (SUPC_BKOUT) Enable Output Mask */
-#define SUPC_BKOUT_EN(value)                  (SUPC_BKOUT_EN_Msk & ((value) << SUPC_BKOUT_EN_Pos))
-#define SUPC_BKOUT_CLR_Pos                    _U_(8)                                               /**< (SUPC_BKOUT) Clear Output Position */
-#define SUPC_BKOUT_CLR_Msk                    (_U_(0x3) << SUPC_BKOUT_CLR_Pos)                     /**< (SUPC_BKOUT) Clear Output Mask */
-#define SUPC_BKOUT_CLR(value)                 (SUPC_BKOUT_CLR_Msk & ((value) << SUPC_BKOUT_CLR_Pos))
-#define SUPC_BKOUT_SET_Pos                    _U_(16)                                              /**< (SUPC_BKOUT) Set Output Position */
-#define SUPC_BKOUT_SET_Msk                    (_U_(0x3) << SUPC_BKOUT_SET_Pos)                     /**< (SUPC_BKOUT) Set Output Mask */
-#define SUPC_BKOUT_SET(value)                 (SUPC_BKOUT_SET_Msk & ((value) << SUPC_BKOUT_SET_Pos))
-#define SUPC_BKOUT_RTCTGL_Pos                 _U_(24)                                              /**< (SUPC_BKOUT) RTC Toggle Output Position */
-#define SUPC_BKOUT_RTCTGL_Msk                 (_U_(0x3) << SUPC_BKOUT_RTCTGL_Pos)                  /**< (SUPC_BKOUT) RTC Toggle Output Mask */
-#define SUPC_BKOUT_RTCTGL(value)              (SUPC_BKOUT_RTCTGL_Msk & ((value) << SUPC_BKOUT_RTCTGL_Pos))
+#define SUPC_BKOUT_ENOUT0_Pos                 _U_(0)                                               /**< (SUPC_BKOUT) Enable OUT0 Position */
+#define SUPC_BKOUT_ENOUT0_Msk                 (_U_(0x1) << SUPC_BKOUT_ENOUT0_Pos)                  /**< (SUPC_BKOUT) Enable OUT0 Mask */
+#define SUPC_BKOUT_ENOUT0(value)              (SUPC_BKOUT_ENOUT0_Msk & ((value) << SUPC_BKOUT_ENOUT0_Pos))
+#define SUPC_BKOUT_ENOUT1_Pos                 _U_(1)                                               /**< (SUPC_BKOUT) Enable OUT1 Position */
+#define SUPC_BKOUT_ENOUT1_Msk                 (_U_(0x1) << SUPC_BKOUT_ENOUT1_Pos)                  /**< (SUPC_BKOUT) Enable OUT1 Mask */
+#define SUPC_BKOUT_ENOUT1(value)              (SUPC_BKOUT_ENOUT1_Msk & ((value) << SUPC_BKOUT_ENOUT1_Pos))
+#define SUPC_BKOUT_CLROUT0_Pos                _U_(8)                                               /**< (SUPC_BKOUT) Clear OUT0 Position */
+#define SUPC_BKOUT_CLROUT0_Msk                (_U_(0x1) << SUPC_BKOUT_CLROUT0_Pos)                 /**< (SUPC_BKOUT) Clear OUT0 Mask */
+#define SUPC_BKOUT_CLROUT0(value)             (SUPC_BKOUT_CLROUT0_Msk & ((value) << SUPC_BKOUT_CLROUT0_Pos))
+#define SUPC_BKOUT_CLROUT1_Pos                _U_(9)                                               /**< (SUPC_BKOUT) Clear OUT1 Position */
+#define SUPC_BKOUT_CLROUT1_Msk                (_U_(0x1) << SUPC_BKOUT_CLROUT1_Pos)                 /**< (SUPC_BKOUT) Clear OUT1 Mask */
+#define SUPC_BKOUT_CLROUT1(value)             (SUPC_BKOUT_CLROUT1_Msk & ((value) << SUPC_BKOUT_CLROUT1_Pos))
+#define SUPC_BKOUT_SETOUT0_Pos                _U_(16)                                              /**< (SUPC_BKOUT) Set OUT0 Position */
+#define SUPC_BKOUT_SETOUT0_Msk                (_U_(0x1) << SUPC_BKOUT_SETOUT0_Pos)                 /**< (SUPC_BKOUT) Set OUT0 Mask */
+#define SUPC_BKOUT_SETOUT0(value)             (SUPC_BKOUT_SETOUT0_Msk & ((value) << SUPC_BKOUT_SETOUT0_Pos))
+#define SUPC_BKOUT_SETOUT1_Pos                _U_(17)                                              /**< (SUPC_BKOUT) Set OUT1 Position */
+#define SUPC_BKOUT_SETOUT1_Msk                (_U_(0x1) << SUPC_BKOUT_SETOUT1_Pos)                 /**< (SUPC_BKOUT) Set OUT1 Mask */
+#define SUPC_BKOUT_SETOUT1(value)             (SUPC_BKOUT_SETOUT1_Msk & ((value) << SUPC_BKOUT_SETOUT1_Pos))
+#define SUPC_BKOUT_RTCTGLOUT0_Pos             _U_(24)                                              /**< (SUPC_BKOUT) RTC Toggle OUT0 Position */
+#define SUPC_BKOUT_RTCTGLOUT0_Msk             (_U_(0x1) << SUPC_BKOUT_RTCTGLOUT0_Pos)              /**< (SUPC_BKOUT) RTC Toggle OUT0 Mask */
+#define SUPC_BKOUT_RTCTGLOUT0(value)          (SUPC_BKOUT_RTCTGLOUT0_Msk & ((value) << SUPC_BKOUT_RTCTGLOUT0_Pos))
+#define SUPC_BKOUT_RTCTGLOUT1_Pos             _U_(25)                                              /**< (SUPC_BKOUT) RTC Toggle OUT1 Position */
+#define SUPC_BKOUT_RTCTGLOUT1_Msk             (_U_(0x1) << SUPC_BKOUT_RTCTGLOUT1_Pos)              /**< (SUPC_BKOUT) RTC Toggle OUT1 Mask */
+#define SUPC_BKOUT_RTCTGLOUT1(value)          (SUPC_BKOUT_RTCTGLOUT1_Msk & ((value) << SUPC_BKOUT_RTCTGLOUT1_Pos))
 #define SUPC_BKOUT_Msk                        _U_(0x03030303)                                      /**< (SUPC_BKOUT) Register Mask  */
 
+#define SUPC_BKOUT_ENOUT_Pos                  _U_(0)                                               /**< (SUPC_BKOUT Position) Enable OUTx */
+#define SUPC_BKOUT_ENOUT_Msk                  (_U_(0x3) << SUPC_BKOUT_ENOUT_Pos)                   /**< (SUPC_BKOUT Mask) ENOUT */
+#define SUPC_BKOUT_ENOUT(value)               (SUPC_BKOUT_ENOUT_Msk & ((value) << SUPC_BKOUT_ENOUT_Pos)) 
+#define SUPC_BKOUT_CLROUT_Pos                 _U_(8)                                               /**< (SUPC_BKOUT Position) Clear OUTx */
+#define SUPC_BKOUT_CLROUT_Msk                 (_U_(0x3) << SUPC_BKOUT_CLROUT_Pos)                  /**< (SUPC_BKOUT Mask) CLROUT */
+#define SUPC_BKOUT_CLROUT(value)              (SUPC_BKOUT_CLROUT_Msk & ((value) << SUPC_BKOUT_CLROUT_Pos)) 
+#define SUPC_BKOUT_SETOUT_Pos                 _U_(16)                                              /**< (SUPC_BKOUT Position) Set OUTx */
+#define SUPC_BKOUT_SETOUT_Msk                 (_U_(0x3) << SUPC_BKOUT_SETOUT_Pos)                  /**< (SUPC_BKOUT Mask) SETOUT */
+#define SUPC_BKOUT_SETOUT(value)              (SUPC_BKOUT_SETOUT_Msk & ((value) << SUPC_BKOUT_SETOUT_Pos)) 
+#define SUPC_BKOUT_RTCTGLOUT_Pos              _U_(24)                                              /**< (SUPC_BKOUT Position) RTC Toggle OUTx */
+#define SUPC_BKOUT_RTCTGLOUT_Msk              (_U_(0x3) << SUPC_BKOUT_RTCTGLOUT_Pos)               /**< (SUPC_BKOUT Mask) RTCTGLOUT */
+#define SUPC_BKOUT_RTCTGLOUT(value)           (SUPC_BKOUT_RTCTGLOUT_Msk & ((value) << SUPC_BKOUT_RTCTGLOUT_Pos)) 
 
 /* -------- SUPC_BKIN : (SUPC Offset: 0x28) ( R/ 32) Backup Input Control -------- */
 #define SUPC_BKIN_RESETVALUE                  _U_(0x00)                                            /**<  (SUPC_BKIN) Backup Input Control  Reset Value */
 
-#define SUPC_BKIN_BKIN_Pos                    _U_(0)                                               /**< (SUPC_BKIN) Backup Input Value Position */
-#define SUPC_BKIN_BKIN_Msk                    (_U_(0xFF) << SUPC_BKIN_BKIN_Pos)                    /**< (SUPC_BKIN) Backup Input Value Mask */
-#define SUPC_BKIN_BKIN(value)                 (SUPC_BKIN_BKIN_Msk & ((value) << SUPC_BKIN_BKIN_Pos))
-#define SUPC_BKIN_Msk                         _U_(0x000000FF)                                      /**< (SUPC_BKIN) Register Mask  */
+#define SUPC_BKIN_BKIN0_Pos                   _U_(0)                                               /**< (SUPC_BKIN) Backup Input 0 Position */
+#define SUPC_BKIN_BKIN0_Msk                   (_U_(0x1) << SUPC_BKIN_BKIN0_Pos)                    /**< (SUPC_BKIN) Backup Input 0 Mask */
+#define SUPC_BKIN_BKIN0(value)                (SUPC_BKIN_BKIN0_Msk & ((value) << SUPC_BKIN_BKIN0_Pos))
+#define SUPC_BKIN_BKIN1_Pos                   _U_(1)                                               /**< (SUPC_BKIN) Backup Input 1 Position */
+#define SUPC_BKIN_BKIN1_Msk                   (_U_(0x1) << SUPC_BKIN_BKIN1_Pos)                    /**< (SUPC_BKIN) Backup Input 1 Mask */
+#define SUPC_BKIN_BKIN1(value)                (SUPC_BKIN_BKIN1_Msk & ((value) << SUPC_BKIN_BKIN1_Pos))
+#define SUPC_BKIN_Msk                         _U_(0x00000003)                                      /**< (SUPC_BKIN) Register Mask  */
 
+#define SUPC_BKIN_BKIN_Pos                    _U_(0)                                               /**< (SUPC_BKIN Position) Backup Input x */
+#define SUPC_BKIN_BKIN_Msk                    (_U_(0x3) << SUPC_BKIN_BKIN_Pos)                     /**< (SUPC_BKIN Mask) BKIN */
+#define SUPC_BKIN_BKIN(value)                 (SUPC_BKIN_BKIN_Msk & ((value) << SUPC_BKIN_BKIN_Pos)) 
 
 /** \brief SUPC register offsets definitions */
 #define SUPC_INTENCLR_REG_OFST         (0x00)              /**< (SUPC_INTENCLR) Interrupt Enable Clear Offset */

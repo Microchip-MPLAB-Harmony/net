@@ -1,7 +1,7 @@
 /**
  * \brief Component description for GCLK
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_GCLK_COMPONENT_H_
 #define _SAME54_GCLK_COMPONENT_H_
 
@@ -43,335 +43,35 @@
 #define GCLK_SYNCBUSY_SWRST_Pos               _U_(0)                                               /**< (GCLK_SYNCBUSY) Software Reset Synchroniation Busy bit Position */
 #define GCLK_SYNCBUSY_SWRST_Msk               (_U_(0x1) << GCLK_SYNCBUSY_SWRST_Pos)                /**< (GCLK_SYNCBUSY) Software Reset Synchroniation Busy bit Mask */
 #define GCLK_SYNCBUSY_SWRST(value)            (GCLK_SYNCBUSY_SWRST_Msk & ((value) << GCLK_SYNCBUSY_SWRST_Pos))
-#define GCLK_SYNCBUSY_GENCTRL0_Pos            _U_(2)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 0 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL0_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL0_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 0 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL0(value)         (GCLK_SYNCBUSY_GENCTRL0_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL0_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL0_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK0          (GCLK_SYNCBUSY_GENCTRL0_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK1          (GCLK_SYNCBUSY_GENCTRL0_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK2          (GCLK_SYNCBUSY_GENCTRL0_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK3          (GCLK_SYNCBUSY_GENCTRL0_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK4          (GCLK_SYNCBUSY_GENCTRL0_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK5          (GCLK_SYNCBUSY_GENCTRL0_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK6          (GCLK_SYNCBUSY_GENCTRL0_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK7          (GCLK_SYNCBUSY_GENCTRL0_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK8          (GCLK_SYNCBUSY_GENCTRL0_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK9          (GCLK_SYNCBUSY_GENCTRL0_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK10         (GCLK_SYNCBUSY_GENCTRL0_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL0_GCLK11         (GCLK_SYNCBUSY_GENCTRL0_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL0_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_Pos            _U_(3)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 1 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL1_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL1_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 1 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL1(value)         (GCLK_SYNCBUSY_GENCTRL1_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL1_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL1_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK0          (GCLK_SYNCBUSY_GENCTRL1_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK1          (GCLK_SYNCBUSY_GENCTRL1_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK2          (GCLK_SYNCBUSY_GENCTRL1_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK3          (GCLK_SYNCBUSY_GENCTRL1_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK4          (GCLK_SYNCBUSY_GENCTRL1_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK5          (GCLK_SYNCBUSY_GENCTRL1_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK6          (GCLK_SYNCBUSY_GENCTRL1_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK7          (GCLK_SYNCBUSY_GENCTRL1_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK8          (GCLK_SYNCBUSY_GENCTRL1_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK9          (GCLK_SYNCBUSY_GENCTRL1_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK10         (GCLK_SYNCBUSY_GENCTRL1_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL1_GCLK11         (GCLK_SYNCBUSY_GENCTRL1_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL1_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_Pos            _U_(4)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 2 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL2_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL2_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 2 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL2(value)         (GCLK_SYNCBUSY_GENCTRL2_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL2_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL2_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK0          (GCLK_SYNCBUSY_GENCTRL2_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK1          (GCLK_SYNCBUSY_GENCTRL2_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK2          (GCLK_SYNCBUSY_GENCTRL2_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK3          (GCLK_SYNCBUSY_GENCTRL2_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK4          (GCLK_SYNCBUSY_GENCTRL2_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK5          (GCLK_SYNCBUSY_GENCTRL2_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK6          (GCLK_SYNCBUSY_GENCTRL2_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK7          (GCLK_SYNCBUSY_GENCTRL2_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK8          (GCLK_SYNCBUSY_GENCTRL2_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK9          (GCLK_SYNCBUSY_GENCTRL2_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK10         (GCLK_SYNCBUSY_GENCTRL2_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL2_GCLK11         (GCLK_SYNCBUSY_GENCTRL2_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL2_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_Pos            _U_(5)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 3 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL3_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL3_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 3 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL3(value)         (GCLK_SYNCBUSY_GENCTRL3_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL3_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL3_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK0          (GCLK_SYNCBUSY_GENCTRL3_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK1          (GCLK_SYNCBUSY_GENCTRL3_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK2          (GCLK_SYNCBUSY_GENCTRL3_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK3          (GCLK_SYNCBUSY_GENCTRL3_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK4          (GCLK_SYNCBUSY_GENCTRL3_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK5          (GCLK_SYNCBUSY_GENCTRL3_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK6          (GCLK_SYNCBUSY_GENCTRL3_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK7          (GCLK_SYNCBUSY_GENCTRL3_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK8          (GCLK_SYNCBUSY_GENCTRL3_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK9          (GCLK_SYNCBUSY_GENCTRL3_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK10         (GCLK_SYNCBUSY_GENCTRL3_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL3_GCLK11         (GCLK_SYNCBUSY_GENCTRL3_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL3_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_Pos            _U_(6)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 4 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL4_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL4_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 4 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL4(value)         (GCLK_SYNCBUSY_GENCTRL4_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL4_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL4_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK0          (GCLK_SYNCBUSY_GENCTRL4_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK1          (GCLK_SYNCBUSY_GENCTRL4_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK2          (GCLK_SYNCBUSY_GENCTRL4_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK3          (GCLK_SYNCBUSY_GENCTRL4_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK4          (GCLK_SYNCBUSY_GENCTRL4_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK5          (GCLK_SYNCBUSY_GENCTRL4_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK6          (GCLK_SYNCBUSY_GENCTRL4_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK7          (GCLK_SYNCBUSY_GENCTRL4_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK8          (GCLK_SYNCBUSY_GENCTRL4_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK9          (GCLK_SYNCBUSY_GENCTRL4_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK10         (GCLK_SYNCBUSY_GENCTRL4_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL4_GCLK11         (GCLK_SYNCBUSY_GENCTRL4_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL4_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_Pos            _U_(7)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 5 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL5_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL5_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 5 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL5(value)         (GCLK_SYNCBUSY_GENCTRL5_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL5_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL5_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK0          (GCLK_SYNCBUSY_GENCTRL5_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK1          (GCLK_SYNCBUSY_GENCTRL5_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK2          (GCLK_SYNCBUSY_GENCTRL5_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK3          (GCLK_SYNCBUSY_GENCTRL5_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK4          (GCLK_SYNCBUSY_GENCTRL5_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK5          (GCLK_SYNCBUSY_GENCTRL5_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK6          (GCLK_SYNCBUSY_GENCTRL5_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK7          (GCLK_SYNCBUSY_GENCTRL5_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK8          (GCLK_SYNCBUSY_GENCTRL5_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK9          (GCLK_SYNCBUSY_GENCTRL5_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK10         (GCLK_SYNCBUSY_GENCTRL5_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL5_GCLK11         (GCLK_SYNCBUSY_GENCTRL5_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL5_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_Pos            _U_(8)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 6 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL6_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL6_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 6 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL6(value)         (GCLK_SYNCBUSY_GENCTRL6_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL6_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL6_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK0          (GCLK_SYNCBUSY_GENCTRL6_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK1          (GCLK_SYNCBUSY_GENCTRL6_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK2          (GCLK_SYNCBUSY_GENCTRL6_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK3          (GCLK_SYNCBUSY_GENCTRL6_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK4          (GCLK_SYNCBUSY_GENCTRL6_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK5          (GCLK_SYNCBUSY_GENCTRL6_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK6          (GCLK_SYNCBUSY_GENCTRL6_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK7          (GCLK_SYNCBUSY_GENCTRL6_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK8          (GCLK_SYNCBUSY_GENCTRL6_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK9          (GCLK_SYNCBUSY_GENCTRL6_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK10         (GCLK_SYNCBUSY_GENCTRL6_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL6_GCLK11         (GCLK_SYNCBUSY_GENCTRL6_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL6_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_Pos            _U_(9)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 7 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL7_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL7_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 7 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL7(value)         (GCLK_SYNCBUSY_GENCTRL7_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL7_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL7_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK0          (GCLK_SYNCBUSY_GENCTRL7_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK1          (GCLK_SYNCBUSY_GENCTRL7_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK2          (GCLK_SYNCBUSY_GENCTRL7_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK3          (GCLK_SYNCBUSY_GENCTRL7_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK4          (GCLK_SYNCBUSY_GENCTRL7_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK5          (GCLK_SYNCBUSY_GENCTRL7_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK6          (GCLK_SYNCBUSY_GENCTRL7_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK7          (GCLK_SYNCBUSY_GENCTRL7_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK8          (GCLK_SYNCBUSY_GENCTRL7_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK9          (GCLK_SYNCBUSY_GENCTRL7_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK10         (GCLK_SYNCBUSY_GENCTRL7_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL7_GCLK11         (GCLK_SYNCBUSY_GENCTRL7_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL7_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_Pos            _U_(10)                                              /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 8 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL8_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL8_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 8 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL8(value)         (GCLK_SYNCBUSY_GENCTRL8_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL8_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL8_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK0          (GCLK_SYNCBUSY_GENCTRL8_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK1          (GCLK_SYNCBUSY_GENCTRL8_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK2          (GCLK_SYNCBUSY_GENCTRL8_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK3          (GCLK_SYNCBUSY_GENCTRL8_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK4          (GCLK_SYNCBUSY_GENCTRL8_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK5          (GCLK_SYNCBUSY_GENCTRL8_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK6          (GCLK_SYNCBUSY_GENCTRL8_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK7          (GCLK_SYNCBUSY_GENCTRL8_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK8          (GCLK_SYNCBUSY_GENCTRL8_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK9          (GCLK_SYNCBUSY_GENCTRL8_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK10         (GCLK_SYNCBUSY_GENCTRL8_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL8_GCLK11         (GCLK_SYNCBUSY_GENCTRL8_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL8_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_Pos            _U_(11)                                              /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 9 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL9_Msk            (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL9_Pos)             /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 9 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL9(value)         (GCLK_SYNCBUSY_GENCTRL9_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL9_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK0_Val    _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK1_Val    _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK2_Val    _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK3_Val    _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK4_Val    _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK5_Val    _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK6_Val    _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK7_Val    _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK8_Val    _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK9_Val    _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK10_Val   _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL9_GCLK11_Val   _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK0          (GCLK_SYNCBUSY_GENCTRL9_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK1          (GCLK_SYNCBUSY_GENCTRL9_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK2          (GCLK_SYNCBUSY_GENCTRL9_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK3          (GCLK_SYNCBUSY_GENCTRL9_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK4          (GCLK_SYNCBUSY_GENCTRL9_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK5          (GCLK_SYNCBUSY_GENCTRL9_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK6          (GCLK_SYNCBUSY_GENCTRL9_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK7          (GCLK_SYNCBUSY_GENCTRL9_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK8          (GCLK_SYNCBUSY_GENCTRL9_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK9          (GCLK_SYNCBUSY_GENCTRL9_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK10         (GCLK_SYNCBUSY_GENCTRL9_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL9_GCLK11         (GCLK_SYNCBUSY_GENCTRL9_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL9_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_Pos           _U_(12)                                              /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 10 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL10_Msk           (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL10_Pos)            /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 10 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL10(value)        (GCLK_SYNCBUSY_GENCTRL10_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL10_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK0_Val   _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK1_Val   _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK2_Val   _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK3_Val   _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK4_Val   _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK5_Val   _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK6_Val   _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK7_Val   _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK8_Val   _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK9_Val   _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK10_Val  _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL10_GCLK11_Val  _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK0         (GCLK_SYNCBUSY_GENCTRL10_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK1         (GCLK_SYNCBUSY_GENCTRL10_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK2         (GCLK_SYNCBUSY_GENCTRL10_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK3         (GCLK_SYNCBUSY_GENCTRL10_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK4         (GCLK_SYNCBUSY_GENCTRL10_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK5         (GCLK_SYNCBUSY_GENCTRL10_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK6         (GCLK_SYNCBUSY_GENCTRL10_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK7         (GCLK_SYNCBUSY_GENCTRL10_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK8         (GCLK_SYNCBUSY_GENCTRL10_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK9         (GCLK_SYNCBUSY_GENCTRL10_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK10        (GCLK_SYNCBUSY_GENCTRL10_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL10_GCLK11        (GCLK_SYNCBUSY_GENCTRL10_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL10_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_Pos           _U_(13)                                              /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 11 Synchronization Busy bits Position */
-#define GCLK_SYNCBUSY_GENCTRL11_Msk           (_U_(0x1) << GCLK_SYNCBUSY_GENCTRL11_Pos)            /**< (GCLK_SYNCBUSY) Generic Clock Generator Control 11 Synchronization Busy bits Mask */
-#define GCLK_SYNCBUSY_GENCTRL11(value)        (GCLK_SYNCBUSY_GENCTRL11_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL11_Pos))
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK0_Val   _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK1_Val   _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK2_Val   _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK3_Val   _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK4_Val   _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK5_Val   _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK6_Val   _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK7_Val   _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK8_Val   _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK9_Val   _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK10_Val  _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
-#define   GCLK_SYNCBUSY_GENCTRL11_GCLK11_Val  _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK0         (GCLK_SYNCBUSY_GENCTRL11_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK1         (GCLK_SYNCBUSY_GENCTRL11_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK2         (GCLK_SYNCBUSY_GENCTRL11_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK3         (GCLK_SYNCBUSY_GENCTRL11_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK4         (GCLK_SYNCBUSY_GENCTRL11_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK5         (GCLK_SYNCBUSY_GENCTRL11_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK6         (GCLK_SYNCBUSY_GENCTRL11_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK7         (GCLK_SYNCBUSY_GENCTRL11_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK8         (GCLK_SYNCBUSY_GENCTRL11_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK9         (GCLK_SYNCBUSY_GENCTRL11_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK10        (GCLK_SYNCBUSY_GENCTRL11_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
-#define GCLK_SYNCBUSY_GENCTRL11_GCLK11        (GCLK_SYNCBUSY_GENCTRL11_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL11_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_Pos             _U_(2)                                               /**< (GCLK_SYNCBUSY) Generic Clock Generator Control n Synchronization Busy bits Position */
+#define GCLK_SYNCBUSY_GENCTRL_Msk             (_U_(0xFFF) << GCLK_SYNCBUSY_GENCTRL_Pos)            /**< (GCLK_SYNCBUSY) Generic Clock Generator Control n Synchronization Busy bits Mask */
+#define GCLK_SYNCBUSY_GENCTRL(value)          (GCLK_SYNCBUSY_GENCTRL_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL_Pos))
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK0_Val     _U_(0x1)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 0  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK1_Val     _U_(0x2)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 1  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK2_Val     _U_(0x4)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 2  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK3_Val     _U_(0x8)                                             /**< (GCLK_SYNCBUSY) Generic clock generator 3  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK4_Val     _U_(0x10)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 4  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK5_Val     _U_(0x20)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 5  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK6_Val     _U_(0x40)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 6  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK7_Val     _U_(0x80)                                            /**< (GCLK_SYNCBUSY) Generic clock generator 7  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK8_Val     _U_(0x100)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 8  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK9_Val     _U_(0x200)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 9  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK10_Val    _U_(0x400)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 10  */
+#define   GCLK_SYNCBUSY_GENCTRL_GCLK11_Val    _U_(0x800)                                           /**< (GCLK_SYNCBUSY) Generic clock generator 11  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK0           (GCLK_SYNCBUSY_GENCTRL_GCLK0_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 0 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK1           (GCLK_SYNCBUSY_GENCTRL_GCLK1_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 1 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK2           (GCLK_SYNCBUSY_GENCTRL_GCLK2_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 2 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK3           (GCLK_SYNCBUSY_GENCTRL_GCLK3_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 3 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK4           (GCLK_SYNCBUSY_GENCTRL_GCLK4_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 4 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK5           (GCLK_SYNCBUSY_GENCTRL_GCLK5_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 5 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK6           (GCLK_SYNCBUSY_GENCTRL_GCLK6_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 6 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK7           (GCLK_SYNCBUSY_GENCTRL_GCLK7_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 7 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK8           (GCLK_SYNCBUSY_GENCTRL_GCLK8_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 8 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK9           (GCLK_SYNCBUSY_GENCTRL_GCLK9_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 9 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK10          (GCLK_SYNCBUSY_GENCTRL_GCLK10_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 10 Position  */
+#define GCLK_SYNCBUSY_GENCTRL_GCLK11          (GCLK_SYNCBUSY_GENCTRL_GCLK11_Val << GCLK_SYNCBUSY_GENCTRL_Pos) /**< (GCLK_SYNCBUSY) Generic clock generator 11 Position  */
 #define GCLK_SYNCBUSY_Msk                     _U_(0x00003FFD)                                      /**< (GCLK_SYNCBUSY) Register Mask  */
 
-#define GCLK_SYNCBUSY_GENCTRL_Pos             _U_(2)                                               /**< (GCLK_SYNCBUSY Position) Generic Clock Generator Control xx Synchronization Busy bits */
-#define GCLK_SYNCBUSY_GENCTRL_Msk             (_U_(0xFFF) << GCLK_SYNCBUSY_GENCTRL_Pos)            /**< (GCLK_SYNCBUSY Mask) GENCTRL */
-#define GCLK_SYNCBUSY_GENCTRL(value)          (GCLK_SYNCBUSY_GENCTRL_Msk & ((value) << GCLK_SYNCBUSY_GENCTRL_Pos)) 
 
 /* -------- GCLK_GENCTRL : (GCLK Offset: 0x20) (R/W 32) Generic Clock Generator Control -------- */
 #define GCLK_GENCTRL_RESETVALUE               _U_(0x00)                                            /**<  (GCLK_GENCTRL) Generic Clock Generator Control  Reset Value */

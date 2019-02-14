@@ -186,6 +186,8 @@ def instantiateComponent(tcpipStackComponent):
 		tcpipStackDeviceFamily.setDefaultValue("SAME70")
 	elif "SAMV71" in Variables.get("__PROCESSOR"):
 		tcpipStackDeviceFamily.setDefaultValue("SAMV71")
+	elif "SAME54" in Variables.get("__PROCESSOR"):
+		tcpipStackDeviceFamily.setDefaultValue("SAME54")
 	elif "PIC32M" in Variables.get("__PROCESSOR"):
 		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
 		

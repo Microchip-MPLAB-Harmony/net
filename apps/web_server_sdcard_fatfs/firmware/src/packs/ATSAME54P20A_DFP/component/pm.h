@@ -1,7 +1,7 @@
 /**
  * \brief Component description for PM
  *
- * Copyright (c) 2018 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2018-12-05T04:45:25Z */
+/* file generated from device description version 2019-02-04T09:12:27Z */
 #ifndef _SAME54_PM_COMPONENT_H_
 #define _SAME54_PM_COMPONENT_H_
 
@@ -43,16 +43,12 @@
 #define PM_SLEEPCFG_SLEEPMODE_Pos             _U_(0)                                               /**< (PM_SLEEPCFG) Sleep Mode Position */
 #define PM_SLEEPCFG_SLEEPMODE_Msk             (_U_(0x7) << PM_SLEEPCFG_SLEEPMODE_Pos)              /**< (PM_SLEEPCFG) Sleep Mode Mask */
 #define PM_SLEEPCFG_SLEEPMODE(value)          (PM_SLEEPCFG_SLEEPMODE_Msk & ((value) << PM_SLEEPCFG_SLEEPMODE_Pos))
-#define   PM_SLEEPCFG_SLEEPMODE_IDLE0_Val     _U_(0x0)                                             /**< (PM_SLEEPCFG) CPU clock is OFF  */
-#define   PM_SLEEPCFG_SLEEPMODE_IDLE1_Val     _U_(0x1)                                             /**< (PM_SLEEPCFG) AHB clock is OFF  */
-#define   PM_SLEEPCFG_SLEEPMODE_IDLE2_Val     _U_(0x2)                                             /**< (PM_SLEEPCFG) APB clock are OFF  */
+#define   PM_SLEEPCFG_SLEEPMODE_IDLE_Val      _U_(0x2)                                             /**< (PM_SLEEPCFG) CPU, AHBx, and APBx clocks are OFF  */
 #define   PM_SLEEPCFG_SLEEPMODE_STANDBY_Val   _U_(0x4)                                             /**< (PM_SLEEPCFG) All Clocks are OFF  */
 #define   PM_SLEEPCFG_SLEEPMODE_HIBERNATE_Val _U_(0x5)                                             /**< (PM_SLEEPCFG) Backup domain is ON as well as some PDRAMs  */
 #define   PM_SLEEPCFG_SLEEPMODE_BACKUP_Val    _U_(0x6)                                             /**< (PM_SLEEPCFG) Only Backup domain is powered ON  */
 #define   PM_SLEEPCFG_SLEEPMODE_OFF_Val       _U_(0x7)                                             /**< (PM_SLEEPCFG) All power domains are powered OFF  */
-#define PM_SLEEPCFG_SLEEPMODE_IDLE0           (PM_SLEEPCFG_SLEEPMODE_IDLE0_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) CPU clock is OFF Position  */
-#define PM_SLEEPCFG_SLEEPMODE_IDLE1           (PM_SLEEPCFG_SLEEPMODE_IDLE1_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) AHB clock is OFF Position  */
-#define PM_SLEEPCFG_SLEEPMODE_IDLE2           (PM_SLEEPCFG_SLEEPMODE_IDLE2_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) APB clock are OFF Position  */
+#define PM_SLEEPCFG_SLEEPMODE_IDLE            (PM_SLEEPCFG_SLEEPMODE_IDLE_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) CPU, AHBx, and APBx clocks are OFF Position  */
 #define PM_SLEEPCFG_SLEEPMODE_STANDBY         (PM_SLEEPCFG_SLEEPMODE_STANDBY_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) All Clocks are OFF Position  */
 #define PM_SLEEPCFG_SLEEPMODE_HIBERNATE       (PM_SLEEPCFG_SLEEPMODE_HIBERNATE_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) Backup domain is ON as well as some PDRAMs Position  */
 #define PM_SLEEPCFG_SLEEPMODE_BACKUP          (PM_SLEEPCFG_SLEEPMODE_BACKUP_Val << PM_SLEEPCFG_SLEEPMODE_Pos) /**< (PM_SLEEPCFG) Only Backup domain is powered ON Position  */
@@ -93,15 +89,23 @@
 #define PM_STDBYCFG_RAMCFG_Pos                _U_(0)                                               /**< (PM_STDBYCFG) Ram Configuration Position */
 #define PM_STDBYCFG_RAMCFG_Msk                (_U_(0x3) << PM_STDBYCFG_RAMCFG_Pos)                 /**< (PM_STDBYCFG) Ram Configuration Mask */
 #define PM_STDBYCFG_RAMCFG(value)             (PM_STDBYCFG_RAMCFG_Msk & ((value) << PM_STDBYCFG_RAMCFG_Pos))
-#define   PM_STDBYCFG_RAMCFG_RET_Val          _U_(0x0)                                             /**< (PM_STDBYCFG) All the RAMs are retained  */
-#define   PM_STDBYCFG_RAMCFG_PARTIAL_Val      _U_(0x1)                                             /**< (PM_STDBYCFG) Only the first 32K bytes are retained  */
-#define   PM_STDBYCFG_RAMCFG_OFF_Val          _U_(0x2)                                             /**< (PM_STDBYCFG) All the RAMs are OFF  */
-#define PM_STDBYCFG_RAMCFG_RET                (PM_STDBYCFG_RAMCFG_RET_Val << PM_STDBYCFG_RAMCFG_Pos) /**< (PM_STDBYCFG) All the RAMs are retained Position  */
-#define PM_STDBYCFG_RAMCFG_PARTIAL            (PM_STDBYCFG_RAMCFG_PARTIAL_Val << PM_STDBYCFG_RAMCFG_Pos) /**< (PM_STDBYCFG) Only the first 32K bytes are retained Position  */
-#define PM_STDBYCFG_RAMCFG_OFF                (PM_STDBYCFG_RAMCFG_OFF_Val << PM_STDBYCFG_RAMCFG_Pos) /**< (PM_STDBYCFG) All the RAMs are OFF Position  */
+#define   PM_STDBYCFG_RAMCFG_RET_Val          _U_(0x0)                                             /**< (PM_STDBYCFG) All the system RAM is retained  */
+#define   PM_STDBYCFG_RAMCFG_PARTIAL_Val      _U_(0x1)                                             /**< (PM_STDBYCFG) Only the first 32Kbytes of the system RAM is retained  */
+#define   PM_STDBYCFG_RAMCFG_OFF_Val          _U_(0x2)                                             /**< (PM_STDBYCFG) All the system RAM is turned OFF  */
+#define PM_STDBYCFG_RAMCFG_RET                (PM_STDBYCFG_RAMCFG_RET_Val << PM_STDBYCFG_RAMCFG_Pos) /**< (PM_STDBYCFG) All the system RAM is retained Position  */
+#define PM_STDBYCFG_RAMCFG_PARTIAL            (PM_STDBYCFG_RAMCFG_PARTIAL_Val << PM_STDBYCFG_RAMCFG_Pos) /**< (PM_STDBYCFG) Only the first 32Kbytes of the system RAM is retained Position  */
+#define PM_STDBYCFG_RAMCFG_OFF                (PM_STDBYCFG_RAMCFG_OFF_Val << PM_STDBYCFG_RAMCFG_Pos) /**< (PM_STDBYCFG) All the system RAM is turned OFF Position  */
 #define PM_STDBYCFG_FASTWKUP_Pos              _U_(4)                                               /**< (PM_STDBYCFG) Fast Wakeup Position */
 #define PM_STDBYCFG_FASTWKUP_Msk              (_U_(0x3) << PM_STDBYCFG_FASTWKUP_Pos)               /**< (PM_STDBYCFG) Fast Wakeup Mask */
 #define PM_STDBYCFG_FASTWKUP(value)           (PM_STDBYCFG_FASTWKUP_Msk & ((value) << PM_STDBYCFG_FASTWKUP_Pos))
+#define   PM_STDBYCFG_FASTWKUP_NO_Val         _U_(0x0)                                             /**< (PM_STDBYCFG) Fast Wakeup is disabled  */
+#define   PM_STDBYCFG_FASTWKUP_NVM_Val        _U_(0x1)                                             /**< (PM_STDBYCFG) Fast Wakeup is enabled on NVM  */
+#define   PM_STDBYCFG_FASTWKUP_MAINVREG_Val   _U_(0x2)                                             /**< (PM_STDBYCFG) Fast Wakeup is enabled on the main voltage regulator (MAINVREG)  */
+#define   PM_STDBYCFG_FASTWKUP_BOTH_Val       _U_(0x3)                                             /**< (PM_STDBYCFG) Fast Wakeup is enabled on both NVM and MAINVREG  */
+#define PM_STDBYCFG_FASTWKUP_NO               (PM_STDBYCFG_FASTWKUP_NO_Val << PM_STDBYCFG_FASTWKUP_Pos) /**< (PM_STDBYCFG) Fast Wakeup is disabled Position  */
+#define PM_STDBYCFG_FASTWKUP_NVM              (PM_STDBYCFG_FASTWKUP_NVM_Val << PM_STDBYCFG_FASTWKUP_Pos) /**< (PM_STDBYCFG) Fast Wakeup is enabled on NVM Position  */
+#define PM_STDBYCFG_FASTWKUP_MAINVREG         (PM_STDBYCFG_FASTWKUP_MAINVREG_Val << PM_STDBYCFG_FASTWKUP_Pos) /**< (PM_STDBYCFG) Fast Wakeup is enabled on the main voltage regulator (MAINVREG) Position  */
+#define PM_STDBYCFG_FASTWKUP_BOTH             (PM_STDBYCFG_FASTWKUP_BOTH_Val << PM_STDBYCFG_FASTWKUP_Pos) /**< (PM_STDBYCFG) Fast Wakeup is enabled on both NVM and MAINVREG Position  */
 #define PM_STDBYCFG_Msk                       _U_(0x33)                                            /**< (PM_STDBYCFG) Register Mask  */
 
 
@@ -111,9 +115,21 @@
 #define PM_HIBCFG_RAMCFG_Pos                  _U_(0)                                               /**< (PM_HIBCFG) Ram Configuration Position */
 #define PM_HIBCFG_RAMCFG_Msk                  (_U_(0x3) << PM_HIBCFG_RAMCFG_Pos)                   /**< (PM_HIBCFG) Ram Configuration Mask */
 #define PM_HIBCFG_RAMCFG(value)               (PM_HIBCFG_RAMCFG_Msk & ((value) << PM_HIBCFG_RAMCFG_Pos))
+#define   PM_HIBCFG_RAMCFG_RET_Val            _U_(0x0)                                             /**< (PM_HIBCFG) All the system RAM is retained  */
+#define   PM_HIBCFG_RAMCFG_PARTIAL_Val        _U_(0x1)                                             /**< (PM_HIBCFG) Only the first 32Kbytes of the system RAM is retained  */
+#define   PM_HIBCFG_RAMCFG_OFF_Val            _U_(0x2)                                             /**< (PM_HIBCFG) All the system RAM is turned OFF  */
+#define PM_HIBCFG_RAMCFG_RET                  (PM_HIBCFG_RAMCFG_RET_Val << PM_HIBCFG_RAMCFG_Pos)   /**< (PM_HIBCFG) All the system RAM is retained Position  */
+#define PM_HIBCFG_RAMCFG_PARTIAL              (PM_HIBCFG_RAMCFG_PARTIAL_Val << PM_HIBCFG_RAMCFG_Pos) /**< (PM_HIBCFG) Only the first 32Kbytes of the system RAM is retained Position  */
+#define PM_HIBCFG_RAMCFG_OFF                  (PM_HIBCFG_RAMCFG_OFF_Val << PM_HIBCFG_RAMCFG_Pos)   /**< (PM_HIBCFG) All the system RAM is turned OFF Position  */
 #define PM_HIBCFG_BRAMCFG_Pos                 _U_(2)                                               /**< (PM_HIBCFG) Backup Ram Configuration Position */
 #define PM_HIBCFG_BRAMCFG_Msk                 (_U_(0x3) << PM_HIBCFG_BRAMCFG_Pos)                  /**< (PM_HIBCFG) Backup Ram Configuration Mask */
 #define PM_HIBCFG_BRAMCFG(value)              (PM_HIBCFG_BRAMCFG_Msk & ((value) << PM_HIBCFG_BRAMCFG_Pos))
+#define   PM_HIBCFG_BRAMCFG_RET_Val           _U_(0x0)                                             /**< (PM_HIBCFG) All the backup RAM is retained  */
+#define   PM_HIBCFG_BRAMCFG_PARTIAL_Val       _U_(0x1)                                             /**< (PM_HIBCFG) Only the first 4Kbytes of the backup RAM is retained  */
+#define   PM_HIBCFG_BRAMCFG_OFF_Val           _U_(0x2)                                             /**< (PM_HIBCFG) All the backup RAM is turned OFF  */
+#define PM_HIBCFG_BRAMCFG_RET                 (PM_HIBCFG_BRAMCFG_RET_Val << PM_HIBCFG_BRAMCFG_Pos) /**< (PM_HIBCFG) All the backup RAM is retained Position  */
+#define PM_HIBCFG_BRAMCFG_PARTIAL             (PM_HIBCFG_BRAMCFG_PARTIAL_Val << PM_HIBCFG_BRAMCFG_Pos) /**< (PM_HIBCFG) Only the first 4Kbytes of the backup RAM is retained Position  */
+#define PM_HIBCFG_BRAMCFG_OFF                 (PM_HIBCFG_BRAMCFG_OFF_Val << PM_HIBCFG_BRAMCFG_Pos) /**< (PM_HIBCFG) All the backup RAM is turned OFF Position  */
 #define PM_HIBCFG_Msk                         _U_(0x0F)                                            /**< (PM_HIBCFG) Register Mask  */
 
 
@@ -123,6 +139,12 @@
 #define PM_BKUPCFG_BRAMCFG_Pos                _U_(0)                                               /**< (PM_BKUPCFG) Ram Configuration Position */
 #define PM_BKUPCFG_BRAMCFG_Msk                (_U_(0x3) << PM_BKUPCFG_BRAMCFG_Pos)                 /**< (PM_BKUPCFG) Ram Configuration Mask */
 #define PM_BKUPCFG_BRAMCFG(value)             (PM_BKUPCFG_BRAMCFG_Msk & ((value) << PM_BKUPCFG_BRAMCFG_Pos))
+#define   PM_BKUPCFG_BRAMCFG_RET_Val          _U_(0x0)                                             /**< (PM_BKUPCFG) All the backup RAM is retained  */
+#define   PM_BKUPCFG_BRAMCFG_PARTIAL_Val      _U_(0x1)                                             /**< (PM_BKUPCFG) Only the first 4Kbytes of the backup RAM is retained  */
+#define   PM_BKUPCFG_BRAMCFG_OFF_Val          _U_(0x2)                                             /**< (PM_BKUPCFG) All the backup RAM is turned OFF  */
+#define PM_BKUPCFG_BRAMCFG_RET                (PM_BKUPCFG_BRAMCFG_RET_Val << PM_BKUPCFG_BRAMCFG_Pos) /**< (PM_BKUPCFG) All the backup RAM is retained Position  */
+#define PM_BKUPCFG_BRAMCFG_PARTIAL            (PM_BKUPCFG_BRAMCFG_PARTIAL_Val << PM_BKUPCFG_BRAMCFG_Pos) /**< (PM_BKUPCFG) Only the first 4Kbytes of the backup RAM is retained Position  */
+#define PM_BKUPCFG_BRAMCFG_OFF                (PM_BKUPCFG_BRAMCFG_OFF_Val << PM_BKUPCFG_BRAMCFG_Pos) /**< (PM_BKUPCFG) All the backup RAM is turned OFF Position  */
 #define PM_BKUPCFG_Msk                        _U_(0x03)                                            /**< (PM_BKUPCFG) Register Mask  */
 
 
