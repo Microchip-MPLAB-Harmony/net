@@ -129,6 +129,15 @@
                   <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                 </logicalFolder>
+                <logicalFolder name="f2" displayName="crypto" projectFiles="true">
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_cbc.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_cfb.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ctr.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ecb.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ecb_pic32.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ofb.h</itemPath>
+                </logicalFolder>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp_private.h</itemPath>
@@ -333,19 +342,19 @@
               <itemPath>../src/config/sam_e54_xpro/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_e54_xpro/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/system.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/system_common.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/system_media.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/sam_e54_xpro/system_config.h</itemPath>
-          <itemPath>../src/config/sam_e54_xpro/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/user.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/configuration.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/system_config.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/device_cache.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/definitions.h</itemPath>
@@ -380,6 +389,7 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+      <itemPath>../src/mib.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -484,13 +494,14 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="library" projectFiles="true">
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.c</itemPath>
                   <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
@@ -515,6 +526,8 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/sntp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmpv3.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmpv3_usm.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -526,7 +539,7 @@
               <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
@@ -595,6 +608,7 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/mpfs_img2.c</itemPath>
+      <itemPath>../src/custom_snmp_app.c</itemPath>
       <itemPath>../src/http_print.c</itemPath>
       <itemPath>../src/custom_http_app.c</itemPath>
       <itemPath>../src/app.c</itemPath>
@@ -629,6 +643,7 @@
       <compileType>
         <linkerTool>
           <linkerLibItems>
+            <linkerLibFileItem>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_pic32mc.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>
