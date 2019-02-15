@@ -115,7 +115,7 @@ typedef struct
     SYS_FS_ERROR errorValue;
     
     /* Name of file is stored in a buffer for future use */
-    uint8_t fileName[FAT_FS_MAX_LFN + 1] COHERENT_ALIGNED;
+    uint8_t fileName[FAT_FS_MAX_LFN + 1] CACHE_ALIGN;
 
 }SYS_FS_OBJ;
 

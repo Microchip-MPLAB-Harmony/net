@@ -663,6 +663,8 @@ typedef struct
 #include "tcpip/nbns.h"
 #include "tcpip/sntp.h"
 #include "tcpip/http.h"
+#include "tcpip/snmp.h"
+#include "tcpip/snmpv3.h"
 #include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"
 #include "tcpip/smtpc.h"
