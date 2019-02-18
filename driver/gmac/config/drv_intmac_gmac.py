@@ -517,6 +517,16 @@ def instantiateComponent(drvGmacComponent):
 		drvGmacQueueNum.setDefaultValue(1)
 	elif (gmac_periphID == "44152"): # SAMA5D2
 		drvGmacQueueNum.setDefaultValue(6)
+	
+	# Driver GMAC RMII Mode Selection Value
+	drvGmacRmiiVal = drvGmacComponent.createIntegerSymbol("DRV_GMAC_RMII_VALUE", None)
+	drvGmacRmiiVal.setVisible(False)
+	if(gmac_periphID == "11046"): # SAME70, SAMV71
+		drvGmacRmiiVal.setDefaultValue(0)	
+	elif (gmac_periphID == "U2005"): # SAME54
+		drvGmacRmiiVal.setDefaultValue(0)
+	elif (gmac_periphID == "44152"): # SAMA5D2
+		drvGmacRmiiVal.setDefaultValue(1)
 		
 	# Driver GMAC Interrupt Mode
 	drvGmacIntrMode = drvGmacComponent.createBooleanSymbol("DRV_GMAC_INTERRUPT_MODE", None)
