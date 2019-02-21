@@ -211,7 +211,7 @@ void APP_Tasks ( void )
             }
             int16_t wMaxGet, wMaxPut, wCurrentChunk;
             uint16_t w, w2;
-            uint8_t AppBuffer[32];
+            uint8_t AppBuffer[32 + 1];
             // Figure out how many bytes have been received and how many we can transmit.
             wMaxGet = TCPIP_TCP_GetIsReady(appData.socket);	// Get TCP RX FIFO byte count
             wMaxPut = TCPIP_TCP_PutIsReady(appData.socket);	// Get TCP TX FIFO free space
@@ -223,11 +223,11 @@ void APP_Tasks ( void )
             // Process all bytes that we can
             // This is implemented as a loop, processing up to sizeof(AppBuffer) bytes at a time.
             // This limits memory usage while maximizing performance.  Single byte Gets and Puts are a lot slower than multibyte GetArrays and PutArrays.
-            wCurrentChunk = sizeof(AppBuffer);
-            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer))
+            wCurrentChunk = sizeof(AppBuffer) -1;
+            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer) - 1)
             {
                 // Make sure the last chunk, which will likely be smaller than sizeof(AppBuffer), is treated correctly.
-                if(w + sizeof(AppBuffer) > wMaxGet)
+                if(w + sizeof(AppBuffer) - 1 > wMaxGet)
                     wCurrentChunk = wMaxGet - w;
 
                 // Transfer the data out of the TCP RX FIFO and into our local processing buffer.
@@ -242,12 +242,13 @@ void APP_Tasks ( void )
                             i -= ('a' - 'A');
                             AppBuffer[w2] = i;
                     }
-                    else if(i == '\e')   //escape
+                    else if(i == '\x1b')   // escape
                     {
                         appData.state = APP_TCPIP_CLOSING_CONNECTION;
                         SYS_CONSOLE_MESSAGE("Connection was closed\r\n");
                     }
                 }
+                AppBuffer[w2] = 0;  // end the console string properly
 
                 // Transfer the data out of our local processing buffer and into the TCP TX FIFO.
                 SYS_CONSOLE_PRINT("Server Sending %s\r\n", AppBuffer);
