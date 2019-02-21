@@ -220,8 +220,8 @@ void APP_Tasks ( void )
             }
             int16_t wMaxGet, wMaxPut, wCurrentChunk;
             uint16_t w, w2;
-            uint8_t AppBuffer[32];
-            memset(AppBuffer, 0, 32);
+            uint8_t AppBuffer[32 + 1];
+            memset(AppBuffer, 0, sizeof(AppBuffer));
             // Figure out how many bytes have been received and how many we can transmit.
             wMaxGet = TCPIP_UDP_GetIsReady(appData.socket);	// Get UDP RX FIFO byte count
             wMaxPut = TCPIP_UDP_PutIsReady(appData.socket);
@@ -242,15 +242,15 @@ void APP_Tasks ( void )
             // Process all bytes that we can
             // This is implemented as a loop, processing up to sizeof(AppBuffer) bytes at a time.
             // This limits memory usage while maximizing performance.  Single byte Gets and Puts are a lot slower than multibyte GetArrays and PutArrays.
-            wCurrentChunk = sizeof(AppBuffer);
-            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer))
+            wCurrentChunk = sizeof(AppBuffer) - 1;
+            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer) - 1)
             {
                 // Make sure the last chunk, which will likely be smaller than sizeof(AppBuffer), is treated correctly.
-                if(w + sizeof(AppBuffer) > wMaxGet)
+                if(w + sizeof(AppBuffer) - 1 > wMaxGet)
                     wCurrentChunk = wMaxGet - w;
 
                 // Transfer the data out of the TCP RX FIFO and into our local processing buffer.
-                int rxed = TCPIP_UDP_ArrayGet(appData.socket, AppBuffer, sizeof(AppBuffer));
+                int rxed = TCPIP_UDP_ArrayGet(appData.socket, AppBuffer, sizeof(AppBuffer) - 1);
 
                 SYS_CONSOLE_PRINT("\tReceived a message of '%s' and length %d\r\n", AppBuffer, rxed);
 
@@ -263,11 +263,12 @@ void APP_Tasks ( void )
                             i -= ('a' - 'A');
                             AppBuffer[w2] = i;
                     }
-                    else if(i == '\e')   //escape
+                    else if(i == '\x1b')   // escape
                     {
                         SYS_CONSOLE_MESSAGE("Connection was closed\r\n");
                     }
                 }
+                AppBuffer[w2] = 0;
 
                 SYS_CONSOLE_PRINT("\tSending a messages '%s'\r\n", AppBuffer);
 
