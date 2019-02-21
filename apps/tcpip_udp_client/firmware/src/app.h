@@ -89,6 +89,7 @@ typedef struct
     /* TODO: Define any additional data used by the application. */
     UDP_SOCKET              socket;
 
+    uint32_t    tmoMs;
     uint64_t    mTimeOut;
 
 } APP_DATA;
