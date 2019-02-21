@@ -210,7 +210,7 @@ void _APP_ClientTasks()
             }
             sprintf(buffer, "GET /%s HTTP/1.1\r\n"
                     "Host: %s\r\n"
-                    "Connection: close\r\n\r\n", appData.path, appData.host);
+                    "Connection: close\r\n\r\n", appData.path ? appData.path : "null", appData.host);
             SYS_CONSOLE_PRINT("Sending data %s\r\n", buffer);
             TCPIP_TCP_ArrayPut(appData.clientSocket, (uint8_t*)buffer, strlen(buffer) + 1);
             appData.clientState = APP_TCPIP_WAIT_FOR_RESPONSE;
@@ -281,7 +281,7 @@ void _APP_ServerTasks()
             }
             int16_t wMaxGet, wMaxPut, wCurrentChunk;
             uint16_t w, w2;
-            uint8_t AppBuffer[160];
+            uint8_t AppBuffer[160 + 1];
             // Figure out how many bytes have been received and how many we can transmit.
             wMaxGet = TCPIP_TCP_GetIsReady(appData.serverSocket);	// Get TCP RX FIFO byte count
             wMaxPut = TCPIP_TCP_PutIsReady(appData.serverSocket);	// Get TCP TX FIFO free space
@@ -293,11 +293,11 @@ void _APP_ServerTasks()
             // Process all bytes that we can
             // This is implemented as a loop, processing up to sizeof(AppBuffer) bytes at a time.
             // This limits memory usage while maximizing performance.  Single byte Gets and Puts are a lot slower than multibyte GetArrays and PutArrays.
-            wCurrentChunk = sizeof(AppBuffer);
-            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer))
+            wCurrentChunk = sizeof(AppBuffer) - 1;
+            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer) - 1)
             {
                 // Make sure the last chunk, which will likely be smaller than sizeof(AppBuffer), is treated correctly.
-                if(w + sizeof(AppBuffer) > wMaxGet)
+                if(w + sizeof(AppBuffer) - 1 > wMaxGet)
                     wCurrentChunk = wMaxGet - w;
 
                 // Transfer the data out of the TCP RX FIFO and into our local processing buffer.
@@ -312,12 +312,14 @@ void _APP_ServerTasks()
                             i -= ('a' - 'A');
                             AppBuffer[w2] = i;
                     }
-                    else if(i == '\e')   //escape
+                    else if(i == '\x1b')   //escape
                     {
                         appData.serverState = APP_TCPIP_CLOSING_CONNECTION;
                         SYS_CONSOLE_MESSAGE("Connection was closed\r\n");
                     }
                 }
+                AppBuffer[w2] = 0;  // end the console string properly
+
 
                 // Transfer the data out of our local processing buffer and into the TCP TX FIFO.
                 SYS_CONSOLE_PRINT("Server Sending %s\r\n", AppBuffer);
@@ -482,25 +484,25 @@ int32_t _APP_ParseUrl(char *uri, char **host, char **path, uint16_t * port)
 
 int8_t _APP_PumpDNS(const char * hostname, IPV4_ADDR *ipv4Addr)
 {
+    int8_t retval = -1;
     TCPIP_DNS_RESULT result = TCPIP_DNS_IsResolved(hostname, (IP_MULTI_ADDRESS*)ipv4Addr, IP_ADDRESS_TYPE_IPV4);
+
     switch (result)
     {
         case TCPIP_DNS_RES_OK:
-        {
             // We now have an IPv4 Address
             // Open a socket
-            return 1;
-        }
+            retval = 1;
+            break;
         case TCPIP_DNS_RES_PENDING:
-            return 0;
+            retval = 0;
+            break;
         case TCPIP_DNS_RES_SERVER_TMO:
         default:
             SYS_CONSOLE_MESSAGE("TCPIP_DNS_IsResolved returned failure\r\n");
-            return -1;
+            break;
     }
-    // Should not be here!
-    return -1;
-
+    return retval;
 }
 
 /*******************************************************************************
