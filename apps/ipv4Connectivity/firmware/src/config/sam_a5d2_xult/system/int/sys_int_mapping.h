@@ -1,0 +1,3 @@
+#ifndef SYS_INT_MAPPING_H
+#define SYS_INT_MAPPING_H
+#endif // SYS_INT_MAPPING_H
