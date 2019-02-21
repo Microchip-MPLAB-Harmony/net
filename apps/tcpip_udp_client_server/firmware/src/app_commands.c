@@ -49,12 +49,14 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 static int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static int _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static const SYS_CMD_DESCRIPTOR    appCmdTbl[]=
 {
-    {"sendudppacket",     _APP_Commands_SendUDPPacket,              ": Sends the UDP Packet"},
-    {"getudppacketoptions",     _APP_Commands_GetOptions,              ": Gets the hostname, port and message"},
-    {"setudppacketoptions",     _APP_Commands_SetOptions,              ": Sets the current hostname, port, and message"},
+    {"sendudp",     _APP_Commands_SendUDPPacket,        ": Sends the UDP Packet"},
+    {"getopt",      _APP_Commands_GetOptions,           ": Gets the hostname, port and message"},
+    {"setopt",      _APP_Commands_SetOptions,           ": Sets the current hostname, port, and message"},
+    {"settmo",      _APP_Commands_SetTimeout,           ": Sets the current receive timeout"},
 };
 
 bool APP_Commands_Init()
@@ -83,8 +85,8 @@ int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
 
     if (argc != 1)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: sendudppacket\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: sendudppacket\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: sendudp\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: sendudp\r\n");
         return true;
     }
     APP_Send_Packet = true;
@@ -98,8 +100,8 @@ int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc != 4)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: setudppacketoptions <hostname> <port> <message>\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: setudppacketoptions 10.0.1.4 9760 Hello\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: setopt <hostname> <port> <message>\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: setopt 10.0.1.4 9760 Hello\r\n");
         return true;
     }
 
@@ -116,8 +118,8 @@ int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc != 1)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: getudppacketoptions\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: getudppacketoptions\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: getopt\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: getopt\r\n");
         return true;
     }
 
@@ -129,8 +131,36 @@ int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
      sprintf(buffer, "\tmessage: '%s'\r\n", APP_Message_Buffer);
      (*pCmdIO->pCmdApi->msg)(cmdIoParam, buffer);
 
-    return true;
+    return false;
 }
 
+extern APP_DATA appData;
+int _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+
+    if (argc != 2)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: settmo <ms>\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: settmo 2000\r\n");
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Current tmo is: %d\r\n", appData.tmoMs);
+        return true;
+    }
+
+    int tmoMs = atoi(argv[1]);
+    if (tmoMs == 0)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s is not a valid tmo. Retry.\r\n", argv[1]);
+    }
+    else
+    {
+        appData.tmoMs = tmoMs; 
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Set the timeout to: %d\r\n", tmoMs);
+    }
+
+
+    return true;
+}
 
 #endif

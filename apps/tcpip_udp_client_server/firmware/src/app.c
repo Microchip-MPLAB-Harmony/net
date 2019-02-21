@@ -96,6 +96,7 @@ void APP_Initialize ( void )
 {
     appData.clientState = APP_TCPIP_WAIT_INIT;
     appData.serverState = APP_TCPIP_WAIT_INIT;
+    appData.tmoMs = 1000;
     
     /* TODO: Initialize your application's state machine and other
      */
@@ -192,7 +193,7 @@ void _APP_ClientTasks()
             TCPIP_UDP_ArrayPut(appData.clientSocket, (uint8_t*)APP_Message_Buffer, strlen(APP_Message_Buffer));
             TCPIP_UDP_Flush(appData.clientSocket);
             appData.clientState = APP_TCPIP_WAIT_FOR_RESPONSE;
-            appData.mTimeOut = SYS_TMR_SystemCountGet() + SYS_TMR_SystemCountFrequencyGet();
+            appData.mTimeOut = SYS_TMR_SystemCountGet() + (SYS_TMR_SystemCountFrequencyGet() * (uint64_t)appData.tmoMs) / 1000ull;
         }
         break;
 
@@ -272,8 +273,8 @@ void _APP_ServerTasks( void )
             }
             int16_t wMaxGet, wMaxPut, wCurrentChunk;
             uint16_t w, w2;
-            uint8_t AppBuffer[32];
-            memset(AppBuffer, 0, 32);
+            uint8_t AppBuffer[32 + 1];
+            memset(AppBuffer, 0, sizeof(AppBuffer));
             // Figure out how many bytes have been received and how many we can transmit.
             wMaxGet = TCPIP_UDP_GetIsReady(appData.serverSocket);	// Get UDP RX FIFO byte count
             wMaxPut = TCPIP_UDP_PutIsReady(appData.serverSocket);
@@ -294,15 +295,15 @@ void _APP_ServerTasks( void )
             // Process all bytes that we can
             // This is implemented as a loop, processing up to sizeof(AppBuffer) bytes at a time.
             // This limits memory usage while maximizing performance.  Single byte Gets and Puts are a lot slower than multibyte GetArrays and PutArrays.
-            wCurrentChunk = sizeof(AppBuffer);
-            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer))
+            wCurrentChunk = sizeof(AppBuffer) - 1;
+            for(w = 0; w < wMaxGet; w += sizeof(AppBuffer) - 1)
             {
                 // Make sure the last chunk, which will likely be smaller than sizeof(AppBuffer), is treated correctly.
-                if(w + sizeof(AppBuffer) > wMaxGet)
+                if(w + sizeof(AppBuffer) - 1 > wMaxGet)
                     wCurrentChunk = wMaxGet - w;
 
                 // Transfer the data out of the TCP RX FIFO and into our local processing buffer.
-                int rxed = TCPIP_UDP_ArrayGet(appData.serverSocket, AppBuffer, sizeof(AppBuffer));
+                int rxed = TCPIP_UDP_ArrayGet(appData.serverSocket, AppBuffer, sizeof(AppBuffer) - 1);
 
                 SYS_CONSOLE_PRINT("\tReceived a message of '%s' and length %d\r\n", AppBuffer, rxed);
 
@@ -316,11 +317,12 @@ void _APP_ServerTasks( void )
                             i -= ('a' - 'A');
                             AppBuffer[w2] = i;
                     }
-                    else if(i == '\e')   //escape
+                    else if(i == '\x1b')   // escape
                     {
                         SYS_CONSOLE_MESSAGE("Server Connection was closed\r\n");
                     }
                 }
+                AppBuffer[w2] = 0;
 
                 SYS_CONSOLE_PRINT("\tServer Sending a messages '%s'\r\n", AppBuffer);
 
@@ -427,7 +429,7 @@ void APP_Tasks ( void )
 			// all interfaces ready. Could start transactions!!!
 			appData.clientState = APP_TCPIP_WAITING_FOR_COMMAND;
 			appData.serverState = APP_TCPIP_OPENING_SERVER;
-			SYS_CONSOLE_MESSAGE("Waiting for command type: sendudppacket\r\n");
+			SYS_CONSOLE_MESSAGE("Waiting for command type: sendudp\r\n");
             break;
 
 
@@ -444,25 +446,25 @@ void APP_Tasks ( void )
 
 int8_t _APP_PumpDNS(const char * hostname, IPV4_ADDR *ipv4Addr)
 {
+    int8_t  retval = -1;
     TCPIP_DNS_RESULT result = TCPIP_DNS_IsResolved(hostname, (IP_MULTI_ADDRESS*)ipv4Addr, IP_ADDRESS_TYPE_IPV4);
+
     switch (result)
     {
         case TCPIP_DNS_RES_OK:
-        {
             // We now have an IPv4 Address
             // Open a socket
-            return 1;
-        }
+            retval = 1;
+            break;
         case TCPIP_DNS_RES_PENDING:
-            return 0;
+            retval = 0;
+            break;
         case TCPIP_DNS_RES_SERVER_TMO:
         default:
             SYS_CONSOLE_MESSAGE("TCPIP_DNS_IsResolved returned failure\r\n");
-            return -1;
+            break;
     }
-    // Should not be here!
-    return -1;
-
+    return retval;
 }
  
 
