@@ -95,6 +95,7 @@ void APP_Initialize ( void )
 {
     /* Place the App state machine in its initial state. */
     appData.state = APP_TCPIP_WAIT_INIT;
+    appData.tmoMs = 1000;
     
     /* TODO: Initialize your application's state machine and other
      */
@@ -179,7 +180,7 @@ void APP_Tasks ( void )
 			}
 			// all interfaces ready. Could start transactions!!!
 			appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
-            SYS_CONSOLE_MESSAGE("Waiting for command type: sendudppacket\r\n");
+            SYS_CONSOLE_MESSAGE("Waiting for command type: sendudp\r\n");
             
 			break;
         case APP_TCPIP_WAITING_FOR_COMMAND:
@@ -265,7 +266,7 @@ void APP_Tasks ( void )
             }
             TCPIP_UDP_ArrayPut(appData.socket, (uint8_t*)APP_Message_Buffer, strlen(APP_Message_Buffer));
             TCPIP_UDP_Flush(appData.socket);
-            appData.mTimeOut = SYS_TMR_SystemCountGet() + SYS_TMR_SystemCountFrequencyGet();
+            appData.mTimeOut = SYS_TMR_SystemCountGet() + (SYS_TMR_SystemCountFrequencyGet() * (uint64_t)appData.tmoMs) / 1000ull;
             appData.state = APP_TCPIP_WAIT_FOR_RESPONSE;
         }
         break;
@@ -307,25 +308,25 @@ void APP_Tasks ( void )
 
 int8_t _APP_PumpDNS(const char * hostname, IPV4_ADDR *ipv4Addr)
 {
+    int8_t retval = -1;
     TCPIP_DNS_RESULT result = TCPIP_DNS_IsResolved(hostname, (IP_MULTI_ADDRESS*)ipv4Addr, IP_ADDRESS_TYPE_IPV4);
+
     switch (result)
     {
         case TCPIP_DNS_RES_OK:
-        {
             // We now have an IPv4 Address
             // Open a socket
-            return 1;
-        }
+            retval = 1;
+            break;
         case TCPIP_DNS_RES_PENDING:
-            return 0;
+            retval = 0;
+            break;
         case TCPIP_DNS_RES_SERVER_TMO:
         default:
             SYS_CONSOLE_MESSAGE("TCPIP_DNS_IsResolved returned failure\r\n");
-            return -1;
     }
-    // Should not be here!
-    return -1;
 
+    return retval;
 }
  
 
