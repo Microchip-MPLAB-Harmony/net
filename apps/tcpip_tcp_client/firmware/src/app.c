@@ -275,7 +275,7 @@ void APP_Tasks ( void )
             }
             sprintf(buffer, "GET /%s HTTP/1.1\r\n"
                     "Host: %s\r\n"
-                    "Connection: close\r\n\r\n", appData.path, appData.host);
+                    "Connection: close\r\n\r\n", appData.path ? appData.path : "null" , appData.host);
             TCPIP_TCP_ArrayPut(appData.socket, (uint8_t*)buffer, strlen(buffer));
             appData.state = APP_TCPIP_WAIT_FOR_RESPONSE;
         }
@@ -358,7 +358,8 @@ int32_t _APP_ParseUrl(char *uri, char **host, char **path, uint16_t * port)
 int8_t _APP_PumpDNS(const char * hostname, IPV4_ADDR *ipv4Addr)
 {
     IP_MULTI_ADDRESS mAddr;
-    
+    int8_t retval = -1;
+
     TCPIP_DNS_RESULT result = TCPIP_DNS_IsResolved(hostname, &mAddr, IP_ADDRESS_TYPE_IPV4);
     switch (result)
     {
@@ -367,18 +368,19 @@ int8_t _APP_PumpDNS(const char * hostname, IPV4_ADDR *ipv4Addr)
             // We now have an IPv4 Address
             // Open a socket
             ipv4Addr->Val = mAddr.v4Add.Val;
-            return 1;
+            retval = 1;
+            break;
         }
         case TCPIP_DNS_RES_PENDING:
-            return 0;
+            retval = 0;
+            break;
         case TCPIP_DNS_RES_SERVER_TMO:
         case TCPIP_DNS_RES_NO_IP_ENTRY:
         default:
             SYS_CONSOLE_MESSAGE("TCPIP_DNS_IsResolved returned failure\r\n");
-            return -1;
     }
-    // Should not be here!
-    return -1;
+
+    return retval;
 
 }
 
