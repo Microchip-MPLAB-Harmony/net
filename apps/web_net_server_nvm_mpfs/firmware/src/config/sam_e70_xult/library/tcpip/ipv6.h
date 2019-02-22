@@ -136,17 +136,17 @@ typedef enum {
 #define IPV6_TLV_HBHO_ROUTER_ALERT              0x05u
 
 /* IPv6 action code for the unrecognized option reaction to skip the option */
-#define IPV6_TLV_UNREC_OPT_SKIP_OPTION          0b00
+#define IPV6_TLV_UNREC_OPT_SKIP_OPTION          0x00
 /* IPv6 action code for the unrecognized option reaction to discard the packet silently */
-#define IPV6_TLV_UNREC_OPT_DISCARD_SILENT       0b01
+#define IPV6_TLV_UNREC_OPT_DISCARD_SILENT       0x01
 /* IPv6 action code for the unrecognized option reaction to discard the packet and send 
 an ICMP parameter problem message 
 */
-#define IPV6_TLV_UNREC_OPT_DISCARD_PP           0b10
+#define IPV6_TLV_UNREC_OPT_DISCARD_PP           0x02
 /* IPv6 action code for the unrecognized option reaction to discard the packet and send
  an ICMP parameter problem message is the destination address isn't a multicast address
 */
-#define IPV6_TLV_UNREC_OPT_DISCARD_PP_NOT_MC    0b11
+#define IPV6_TLV_UNREC_OPT_DISCARD_PP_NOT_MC    0x03
 
 /* Header offset for payload length */
 #define IPV6_HEADER_OFFSET_PAYLOAD_LENGTH       (0x04u) 
@@ -1205,7 +1205,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd(TCPIP_NET_HANDLE netH,
 //*****************************************************************************
 /*
   Function:
-    void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, IPV6_ADDR * address)
+    void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, const IPV6_ADDR * address)
 
   Summary:
     Removed a configured unicast address from an interface.
@@ -1227,7 +1227,7 @@ IPV6_ADDR_STRUCT * TCPIP_IPV6_UnicastAddressAdd(TCPIP_NET_HANDLE netH,
   Remarks:
     None.
 */
-void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, IPV6_ADDR * address);
+void TCPIP_IPV6_AddressUnicastRemove(TCPIP_NET_HANDLE netH, const IPV6_ADDR * address);
 
 
 //*****************************************************************************
