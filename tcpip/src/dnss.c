@@ -143,7 +143,10 @@ bool TCPIP_DNSS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 
         if(pDnsSDcpt->dnssHashDcpt == 0)
         {
-            cacheEntries = pDnsSConfig->IPv4EntriesPerDNSName+pDnsSConfig->IPv6EntriesPerDNSName;
+            cacheEntries = pDnsSConfig->IPv4EntriesPerDNSName;
+#ifdef TCPIP_STACK_USE_IPV6
+            cacheEntries += pDnsSConfig->IPv6EntriesPerDNSName;
+#endif
             hashMemSize = sizeof(OA_HASH_DCPT) + cacheEntries * sizeof(DNSS_HASH_ENTRY);
             hashDcpt = (OA_HASH_DCPT*)TCPIP_HEAP_Calloc(pDnsSDcpt->memH,1,hashMemSize);
             if(hashDcpt == 0)

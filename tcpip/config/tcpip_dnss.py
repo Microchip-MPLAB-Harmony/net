@@ -1,8 +1,9 @@
-    
+
 def instantiateComponent(tcpipDnssComponent):
 	print("TCPIP DNS Client Component")
 	configName = Variables.get("__CONFIGURATION_NAME")
 	
+	processor = Variables.get("__PROCESSOR")
 	# Enable DNS Server
 	tcpipDnss = tcpipDnssComponent.createBooleanSymbol("TCPIP_USE_DNSS", None)
 	tcpipDnss.setLabel("DNS Server")
@@ -35,14 +36,15 @@ def instantiateComponent(tcpipDnssComponent):
 	tcpipDnssIpv4EntryMaxNum.setDefaultValue(2)
 	#tcpipDnssIpv4EntryMaxNum.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
-	# Maximum Number of IPv6 Entries
-	tcpipDnssIpv6EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", None)
-	tcpipDnssIpv6EntryMaxNum.setLabel("Maximum Number of IPv6 Entries")
-	tcpipDnssIpv6EntryMaxNum.setVisible(False)
-	tcpipDnssIpv6EntryMaxNum.setDescription("Maximum Number of IPv6 Entries")
-	tcpipDnssIpv6EntryMaxNum.setDefaultValue(1)
-	tcpipDnssIpv6EntryMaxNum.setDependencies(tcpipDnssIpv6EntryVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
-
+	if "SAMA5" not in processor:
+		# Maximum Number of IPv6 Entries
+		tcpipDnssIpv6EntryMaxNum = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", None)
+		tcpipDnssIpv6EntryMaxNum.setLabel("Maximum Number of IPv6 Entries")
+		tcpipDnssIpv6EntryMaxNum.setVisible(False)
+		tcpipDnssIpv6EntryMaxNum.setDescription("Maximum Number of IPv6 Entries")
+		tcpipDnssIpv6EntryMaxNum.setDefaultValue(1)
+		tcpipDnssIpv6EntryMaxNum.setDependencies(tcpipDnssIpv6EntryVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])
+	
 	# Default TTL Time for an IP Address in Seconds
 	tcpipDnssTtlTime = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_TTL_TIME", None)
 	tcpipDnssTtlTime.setLabel("Default TTL Time for an IP Address in Seconds")

@@ -31,6 +31,8 @@
 ############################################################################
 def instantiateComponent(tcpipAutoConfigNetworkComponent):
 
+	processor = Variables.get("__PROCESSOR")
+
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
 		tcpipAutoConfigStackGroup = Database.createGroup(None, "TCP/IP STACK")
@@ -43,7 +45,6 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
 	tcpipAutoConfigNetEnable = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_NET_ENABLE", None)
 	tcpipAutoConfigNetEnable.setVisible(False)
 	tcpipAutoConfigNetEnable.setDefaultValue(True)
-
 			
 	# Enable ARP
 	tcpipAutoConfigARP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ARP", None)
@@ -72,20 +73,23 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
 	tcpipAutoConfigIPv4.setVisible(True)
 	tcpipAutoConfigIPv4.setDescription("Enable IPv4")
 	tcpipAutoConfigIPv4.setDependencies(tcpipAutoConfigIPv4Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV4"])
+	if "SAMA5" in processor:
+		tcpipAutoConfigIPv4.setReadOnly(True)
 	
-	# Enable IPv6
-	tcpipAutoConfigIPv6 = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IPV6", None)
-	tcpipAutoConfigIPv6.setLabel("IPv6")
-	tcpipAutoConfigIPv6.setVisible(True)
-	tcpipAutoConfigIPv6.setDescription("Enable IPv6")
-	tcpipAutoConfigIPv6.setDependencies(tcpipAutoConfigIPv6Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV6"])
-	
-	# Enable NDP
-	tcpipAutoConfigNDP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_NDP", None)
-	tcpipAutoConfigNDP.setLabel("NDP")
-	tcpipAutoConfigNDP.setVisible(True)
-	tcpipAutoConfigNDP.setDescription("Enable NDP")	
-	tcpipAutoConfigNDP.setDependencies(tcpipAutoConfigNDPEnable, ["TCPIP_AUTOCONFIG_ENABLE_NDP"])
+	if "SAMA5" not in processor:
+		# Enable IPv6
+		tcpipAutoConfigIPv6 = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IPV6", None)
+		tcpipAutoConfigIPv6.setLabel("IPv6")
+		tcpipAutoConfigIPv6.setVisible(True)
+		tcpipAutoConfigIPv6.setDescription("Enable IPv6")
+		tcpipAutoConfigIPv6.setDependencies(tcpipAutoConfigIPv6Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV6"])
+		
+		# Enable NDP
+		tcpipAutoConfigNDP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_NDP", None)
+		tcpipAutoConfigNDP.setLabel("NDP")
+		tcpipAutoConfigNDP.setVisible(True)
+		tcpipAutoConfigNDP.setDescription("Enable NDP")	
+		tcpipAutoConfigNDP.setDependencies(tcpipAutoConfigNDPEnable, ["TCPIP_AUTOCONFIG_ENABLE_NDP"])
 	
 ########################################################################################################
 def finalizeComponent(tcpipAutoConfigNetworkComponent):

@@ -70,7 +70,7 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
 	tcpipAutoConfigKSZ8081.setLabel("KSZ8081")
 	tcpipAutoConfigKSZ8081.setVisible(True)
 	tcpipAutoConfigKSZ8081.setDescription("Enable KSZ8081")	
-	tcpipAutoConfigKSZ8081.setDependencies(tcpipAutoConfigKSZ8061Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8081"])	
+	tcpipAutoConfigKSZ8081.setDependencies(tcpipAutoConfigKSZ8081Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8081"])	
 
 	# Enable KSZ8091
 	tcpipAutoConfigKSZ8091 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8091", None)

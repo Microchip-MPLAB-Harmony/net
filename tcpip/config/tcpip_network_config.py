@@ -7,14 +7,13 @@ tcpipNetConfigNumPrev = 1
 def instantiateComponent(tcpipNetConfigComponent, index):
 	print("TCPIP TCP Component")
 	configName = Variables.get("__CONFIGURATION_NAME")	
-
-	
 	print(tcpipNetConfigComponent.getID())
+
+	processor = Variables.get("__PROCESSOR")
 	
 	tcpipNetConfigIndex = tcpipNetConfigComponent.createIntegerSymbol("INDEX", None)
 	tcpipNetConfigIndex.setVisible(False)
 	tcpipNetConfigIndex.setDefaultValue(index)	
-	
 	
 	# Network interface Number
 	tcpipNetConfigNum = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_CONFIG_NUMBER", None)
@@ -44,8 +43,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 	tcpipNetHostName.setDefaultValue("")
 	#tcpipNetHostName.setDependencies(tcpipNetHostNameUpdate, ["TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"])	
 	tcpipNetHostName.setDependencies(tcpipNetHostNameUpdate, [tcpipNetIfName.getID()])
-	
-	
+
 	# Network Interface MAC address
 	tcpipNetMacAddress = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX" + str(index),None)
 	tcpipNetMacAddress.setLabel("Mac Address")
@@ -127,34 +125,35 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 	tcpipNetMcastEnable.setDefaultValue(False)
 	#tcpipNetMcastEnable.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetConfig[index].getID()])
 
-	# Input IPv6 Static Address and Subnet Prefix Length
-	tcpipNetIpv6AddrSubnetInput = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX"+str(index),tcpipNetStartupFlag)
-	tcpipNetIpv6AddrSubnetInput.setLabel("IPv6 Static Address and Subnet Prefix Length")
-	tcpipNetIpv6AddrSubnetInput.setVisible(False)
-	tcpipNetIpv6AddrSubnetInput.setDefaultValue(False)	
-	tcpipNetIpv6AddrSubnetInput.setDependencies(tcpipNetConfigMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])	
-	
-	# IPv6 Static address for this interface
-	tcpipNetIpv6StatAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
-	tcpipNetIpv6StatAddr.setLabel("IPv6 Static Address")
-	tcpipNetIpv6StatAddr.setVisible(False)
-	tcpipNetIpv6StatAddr.setDefaultValue("fde4:8dba:82e1::")
-	tcpipNetIpv6StatAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])	
-	
-	# IPv6 Static address Prefix Length for this interface
-	tcpipNetIpv6StatAddrPrfxLen = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
-	tcpipNetIpv6StatAddrPrfxLen.setLabel("IPv6 Static Address Prefix Length")
-	tcpipNetIpv6StatAddrPrfxLen.setVisible(False)
-	tcpipNetIpv6StatAddrPrfxLen.setDefaultValue(64)
-	tcpipNetIpv6StatAddrPrfxLen.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])
+	if "SAMA5" not in processor:
+		# Input IPv6 Static Address and Subnet Prefix Length
+		tcpipNetIpv6AddrSubnetInput = tcpipNetConfigComponent.createBooleanSymbol("TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX"+str(index),tcpipNetStartupFlag)
+		tcpipNetIpv6AddrSubnetInput.setLabel("IPv6 Static Address and Subnet Prefix Length")
+		tcpipNetIpv6AddrSubnetInput.setVisible(False)
+		tcpipNetIpv6AddrSubnetInput.setDefaultValue(False)	
+		tcpipNetIpv6AddrSubnetInput.setDependencies(tcpipNetConfigMenuVisible, ["tcpipIPv6.TCPIP_STACK_USE_IPV6"])	
 		
-	# IPv6 Default Gateway Address for this interface
-	tcpipNetIpv6GatewayAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
-	tcpipNetIpv6GatewayAddr.setLabel("IPv6 Default Gateway Address")
-	tcpipNetIpv6GatewayAddr.setVisible(False)
-	tcpipNetIpv6GatewayAddr.setDefaultValue("")
-	tcpipNetIpv6GatewayAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])
-
+		# IPv6 Static address for this interface
+		tcpipNetIpv6StatAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IPV6_ADDRESS_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
+		tcpipNetIpv6StatAddr.setLabel("IPv6 Static Address")
+		tcpipNetIpv6StatAddr.setVisible(False)
+		tcpipNetIpv6StatAddr.setDefaultValue("fde4:8dba:82e1::")
+		tcpipNetIpv6StatAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])	
+		
+		# IPv6 Static address Prefix Length for this interface
+		tcpipNetIpv6StatAddrPrfxLen = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_NETWORK_DEFAULT_IPV6_PREFIX_LENGTH_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
+		tcpipNetIpv6StatAddrPrfxLen.setLabel("IPv6 Static Address Prefix Length")
+		tcpipNetIpv6StatAddrPrfxLen.setVisible(False)
+		tcpipNetIpv6StatAddrPrfxLen.setDefaultValue(64)
+		tcpipNetIpv6StatAddrPrfxLen.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])
+			
+		# IPv6 Default Gateway Address for this interface
+		tcpipNetIpv6GatewayAddr = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_IPV6_GATEWAY_IDX" + str(index), tcpipNetIpv6AddrSubnetInput)
+		tcpipNetIpv6GatewayAddr.setLabel("IPv6 Default Gateway Address")
+		tcpipNetIpv6GatewayAddr.setVisible(False)
+		tcpipNetIpv6GatewayAddr.setDefaultValue("")
+		tcpipNetIpv6GatewayAddr.setDependencies(tcpipNetConfigMenuVisible, [tcpipNetIpv6AddrSubnetInput.getID()])
+	
 	# Network Interface MAC Driver Object
 	tcpipNetMacDrvObj = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX" + str(index),None)
 	tcpipNetMacDrvObj.setLabel("Network MAC Driver")
