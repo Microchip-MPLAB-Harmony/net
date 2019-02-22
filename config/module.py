@@ -1,7 +1,8 @@
 ######################  TCP/IP LIBRARY  ######################
 def loadModule():
 	print("Load Module: Harmony TCP/IP Stack")
-	
+
+	processor = Variables.get("__PROCESSOR")
 	###########  TCP/IP LIBRARY General Configurations  ###########	
 	tcpipStackComponent = Module.CreateSharedComponent("tcpipStack", "TCPIP CORE", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_stack.py")
 	tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE",True)
@@ -48,15 +49,16 @@ def loadModule():
 	tcpipIPv4Component.addDependency("Ipv4_Arp_Dependency", "ARP", None, True, True)	
 	tcpipIPv4Component.setDisplayType("TCP/IP Library")
 	
-	tcpipIPv6Component = Module.CreateSharedComponent("tcpipIPv6", "IPv6", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv6.py")
-	tcpipIPv6Component.addCapability("libTcpipIPv6","IPv6",True)
-	tcpipIPv6Component.addCapability("libTcpipIPv6IP","IP",True)
-	tcpipIPv6Component.addDependency("Ipv6_Ndp_Dependency", "NDP", None, True, True)
-	tcpipIPv6Component.setDisplayType("TCP/IP Library")
-	
-	tcpipNdpComponent = Module.CreateComponent("tcpipNdp", "NDP", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ndp.py")
-	tcpipNdpComponent.addCapability("libtcpipNdp","NDP",True)
-	tcpipNdpComponent.setDisplayType("TCP/IP Library")
+	if "SAMA5" not in processor:
+		tcpipIPv6Component = Module.CreateSharedComponent("tcpipIPv6", "IPv6", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ipv6.py")
+		tcpipIPv6Component.addCapability("libTcpipIPv6","IPv6",True)
+		tcpipIPv6Component.addCapability("libTcpipIPv6IP","IP",True)
+		tcpipIPv6Component.addDependency("Ipv6_Ndp_Dependency", "NDP", None, True, True)
+		tcpipIPv6Component.setDisplayType("TCP/IP Library")
+		
+		tcpipNdpComponent = Module.CreateComponent("tcpipNdp", "NDP", "/Libraries/TCPIP/Layer3-NETWORK/", "tcpip/config/tcpip_ndp.py")
+		tcpipNdpComponent.addCapability("libtcpipNdp","NDP",True)
+		tcpipNdpComponent.setDisplayType("TCP/IP Library")
 	###########  TCP/IP LIBRARY Transport Layer Configurations  ###########
 	tcpipTcpComponent = Module.CreateSharedComponent("tcpipTcp", "TCP", "/Libraries/TCPIP/Layer4-TRANSPORT/", "tcpip/config/tcpip_tcp.py")
 	tcpipTcpComponent.addCapability("libtcpipTcp","TCP",True)
@@ -126,12 +128,13 @@ def loadModule():
 	tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres", True, True)
 	tcpipHttpNetComponent.setDisplayType("TCP/IP Library")
 	
-	tcpipHttpComponent = Module.CreateComponent("tcpipHttp", "HTTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http.py")
-	tcpipHttpComponent.addCapability("libtcpipHttp","HTTP",True)
-	tcpipHttpComponent.addDependency("Http_TCP_Dependency", "TCP", None, True, True)
-	tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-	tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO")
-	tcpipHttpComponent.setDisplayType("TCP/IP Library")
+	if "SAMA5" not in processor:
+		tcpipHttpComponent = Module.CreateComponent("tcpipHttp", "HTTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http.py")
+		tcpipHttpComponent.addCapability("libtcpipHttp","HTTP",True)
+		tcpipHttpComponent.addDependency("Http_TCP_Dependency", "TCP", None, True, True)
+		tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+		tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO")
+		tcpipHttpComponent.setDisplayType("TCP/IP Library")
 
 	tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_iperf.py")
 	tcpipIperfComponent.addCapability("libtcpipIperf","IPERF",True)
@@ -165,11 +168,12 @@ def loadModule():
 	tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
 	# tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO")
 	tcpipSnmpComponent.setDisplayType("TCP/IP Library")
-	
-	tcpipSnmpv3Component = Module.CreateComponent("tcpipSnmpv3", "SNMPV3", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmpv3.py")
-	tcpipSnmpv3Component.addCapability("libtcpipSnmpv3","SNMPV3",True)	
-	tcpipSnmpv3Component.addDependency("Snmpv3_SNMP_Dependency", "SNMP", None, True, True)
-	tcpipSnmpv3Component.setDisplayType("TCP/IP Library")
+
+	if "SAMA5" not in processor:
+		tcpipSnmpv3Component = Module.CreateComponent("tcpipSnmpv3", "SNMPV3", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmpv3.py")
+		tcpipSnmpv3Component.addCapability("libtcpipSnmpv3","SNMPV3",True)	
+		tcpipSnmpv3Component.addDependency("Snmpv3_SNMP_Dependency", "SNMP", None, True, True)
+		tcpipSnmpv3Component.setDisplayType("TCP/IP Library")
 
 	tcpipSntpComponent = Module.CreateComponent("tcpipSntp", "SNTP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_sntp.py")
 	tcpipSntpComponent.addCapability("libtcpipSntp","SNTP",True)	
