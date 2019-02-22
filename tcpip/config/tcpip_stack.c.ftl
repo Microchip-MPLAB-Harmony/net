@@ -224,6 +224,10 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 <#assign emac_phy_type = drvExtPhyKsz8061.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8081">
+<#assign emac_phy_type = drvExtPhyKsz8081.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyKsz8081.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyKsz8081.DRV_ETHPHY_RESET_CALLBACK>
 <#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8091">
 <#assign emac_phy_type = drvExtPhyKsz8091.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_USE_RESET_CALLBACK>
@@ -915,20 +919,20 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
 // MAC modules
 <#if (tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX)?has_content>
-	<#function checkInterface interface>
-	<#list 0..(tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX - 1) as i>
-		<#assign netConfigEnabled = "tcpipNetConfig_${i}">
-		<#if .vars[netConfigEnabled]?has_content>
-			<#assign network_interface_name_idx = "tcpipNetConfig_${i}.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${i}"?eval>
-			<#if network_interface_name_idx??>
-				<#if network_interface_name_idx == interface>
-					<#return true>
-				</#if>
-			</#if>		
-		</#if>	
-	</#list>
-	<#return false>
-	</#function>
+    <#function checkInterface interface>
+    <#list 0..(tcpipNetConfig.TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX - 1) as i>
+        <#assign netConfigEnabled = "tcpipNetConfig_${i}">
+        <#if .vars[netConfigEnabled]?has_content>
+            <#assign network_interface_name_idx = "tcpipNetConfig_${i}.TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX${i}"?eval>
+            <#if network_interface_name_idx??>
+                <#if network_interface_name_idx == interface>
+                    <#return true>
+                </#if>
+            </#if>
+        </#if>
+    </#list>
+    <#return false>
+    </#function>
 <#if checkInterface("ETHMAC")>
     {TCPIP_MODULE_MAC_PIC32INT,     &tcpipMACPIC32INTInitData},     // TCPIP_MODULE_MAC_PIC32INT
 </#if>

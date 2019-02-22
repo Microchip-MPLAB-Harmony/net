@@ -37,6 +37,8 @@ autoConnectTableCRYPTOHttp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http
 ############################################################################
 def instantiateComponent(tcpipAutoConfigAppsComponent):
 
+	processor = Variables.get("__PROCESSOR")
+
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
 		tcpipAutoConfigStackGroup = Database.createGroup(None, "TCP/IP STACK")
@@ -113,13 +115,14 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
 	tcpipAutoConfigHTTP_NET_SERVER.setDescription("Enable HTTP_NET_SERVER")
 	tcpipAutoConfigHTTP_NET_SERVER.setDependencies(tcpipAutoConfigHTTPNETSERVEREnable, ["TCPIP_AUTOCONFIG_ENABLE_HTTP_NET_SERVER"])
 
-	# Enable HTTP_SERVER
-	tcpipAutoConfigHTTP_SERVER = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER", None)
-	tcpipAutoConfigHTTP_SERVER.setLabel("HTTP SERVER")
-	tcpipAutoConfigHTTP_SERVER.setVisible(True)
-	tcpipAutoConfigHTTP_SERVER.setDescription("Enable HTTP_SERVER")	
-	tcpipAutoConfigHTTP_SERVER.setDependencies(tcpipAutoConfigHTTPSERVEREnable, ["TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER"])
-
+	if "SAMA5" not in processor:
+		# Enable HTTP_SERVER
+		tcpipAutoConfigHTTP_SERVER = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER", None)
+		tcpipAutoConfigHTTP_SERVER.setLabel("HTTP SERVER")
+		tcpipAutoConfigHTTP_SERVER.setVisible(True)
+		tcpipAutoConfigHTTP_SERVER.setDescription("Enable HTTP_SERVER")	
+		tcpipAutoConfigHTTP_SERVER.setDependencies(tcpipAutoConfigHTTPSERVEREnable, ["TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER"])
+	
 	# Enable IPERF
 	tcpipAutoConfigIPERF = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IPERF", None)
 	tcpipAutoConfigIPERF.setLabel("IPERF")
@@ -148,20 +151,21 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
 	tcpipAutoConfigSMTP_CLIENT.setDescription("Enable SMTP_CLIENT")
 	tcpipAutoConfigSMTP_CLIENT.setDependencies(tcpipAutoConfigSMTPCLIENTEnable, ["TCPIP_AUTOCONFIG_ENABLE_SMTP_CLIENT"])
 	
-	# Enable SNMP
-	tcpipAutoConfigSNMP = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SNMP", None)
-	tcpipAutoConfigSNMP.setLabel("SNMP")
-	tcpipAutoConfigSNMP.setVisible(True)
-	tcpipAutoConfigSNMP.setDescription("Enable SNMP")
-	tcpipAutoConfigSNMP.setDependencies(tcpipAutoConfigSNMPEnable, ["TCPIP_AUTOCONFIG_ENABLE_SNMP"])
-
-	# Enable SNMPV3
-	tcpipAutoConfigSNMPV3 = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SNMPV3", None)
-	tcpipAutoConfigSNMPV3.setLabel("SNMPV3")
-	tcpipAutoConfigSNMPV3.setVisible(True)
-	tcpipAutoConfigSNMPV3.setDescription("Enable SNMPV3")
-	tcpipAutoConfigSNMPV3.setDependencies(tcpipAutoConfigSNMPV3Enable, ["TCPIP_AUTOCONFIG_ENABLE_SNMPV3"])
+	if "SAMA5" not in processor:
+		# Enable SNMP
+		tcpipAutoConfigSNMP = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SNMP", None)
+		tcpipAutoConfigSNMP.setLabel("SNMP")
+		tcpipAutoConfigSNMP.setVisible(True)
+		tcpipAutoConfigSNMP.setDescription("Enable SNMP")
+		tcpipAutoConfigSNMP.setDependencies(tcpipAutoConfigSNMPEnable, ["TCPIP_AUTOCONFIG_ENABLE_SNMP"])
 	
+		# Enable SNMPV3
+		tcpipAutoConfigSNMPV3 = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SNMPV3", None)
+		tcpipAutoConfigSNMPV3.setLabel("SNMPV3")
+		tcpipAutoConfigSNMPV3.setVisible(True)
+		tcpipAutoConfigSNMPV3.setDescription("Enable SNMPV3")
+		tcpipAutoConfigSNMPV3.setDependencies(tcpipAutoConfigSNMPV3Enable, ["TCPIP_AUTOCONFIG_ENABLE_SNMPV3"])
+		
 	# Enable SNTP
 	tcpipAutoConfigSNTP = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SNTP", None)
 	tcpipAutoConfigSNTP.setLabel("SNTP")
@@ -473,6 +477,7 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
 			Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
 			
 	else:
+		# this assumes that tcpipSmtpc is present in the graph, if the protocol is removed then this fails
 		res = Database.deactivateComponents(["tcpipSmtpc"])
 	
 def tcpipAutoConfigSNMPEnable(symbol, event):

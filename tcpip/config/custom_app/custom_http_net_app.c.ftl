@@ -39,7 +39,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
+<#if LIB_CRYPTO?? >
 #include "crypto/crypto.h"
+</#if>
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_time_h2_adapter.h"
@@ -105,8 +107,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
 
+<#if LIB_CRYPTO?? >
+#ifdef CRYPTO_CONFIG_H && !defined( NO_MD5 )        // no MD5 if no crypto header or if crypto_config.h says NO_MD5   
 // Use the MD5 Demo web page (~5kb ROM, ~160b RAM)
 #define HTTP_APP_USE_MD5
+#endif
+</#if>
 
 // Use the e-mail demo web page
 #if defined(TCPIP_STACK_USE_SMTPC)
@@ -1139,11 +1145,20 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHan
             // prepare the message attachment
             // output the system status as a CSV file.
             // Write the header and button strings
-            postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", (int)APP_SWITCH_1StateGet() + '0', (int)APP_SWITCH_2StateGet() + '0', (int)APP_SWITCH_3StateGet() + '0');
-            // Write the header and button strings
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", (int)APP_LED_1StateGet() + '0', (int)APP_LED_2StateGet() + '0', (int)APP_LED_3StateGet() + '0');
-            // add a potentiometer read: a random string
-            postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%lu\r\n", SYS_RANDOM_PseudoGet());
+            { // avoid volatile evaluation warnings by using a temp variable
+                int xtch1, xtch2, xtch3;
+                xtch1 = (int)APP_SWITCH_1StateGet() + '0';
+                xtch2 = (int)APP_SWITCH_2StateGet() + '0';
+                xtch3 = (int)APP_SWITCH_3StateGet() + '0';
+                postEmail.attachLen = sprintf(postEmail.mailAttachment, "SYSTEM STATUS\r\nButtons:,%c,%c,%c\r\n", xtch1, xtch2, xtch3 );
+                // Write the header and button strings
+                xtch1 = (int)APP_LED_1StateGet() + '0';
+                xtch2 = (int)APP_LED_2StateGet() + '0';
+                xtch3 = (int)APP_LED_3StateGet() + '0';
+                postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", xtch1, xtch2, xtch3 );
+                // add a potentiometer read: a random string
+                postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%lu\r\n", SYS_RANDOM_PseudoGet());
+            }
 
             // prepare the message itself
             memset(&mySMTPMessage, 0, sizeof(mySMTPMessage));
@@ -1626,13 +1641,13 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_status_fail(TCPIP_HTTP_NET_CONN_HANDLE
 
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_uploadedmd5(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
+#if defined(HTTP_APP_USE_MD5)
     char *pMd5;
     uint8_t i;
     uint8_t *httpDataBuff;
     HTTP_APP_DYNVAR_BUFFER *pDynBuffer;
 
     // Check for flag set in HTTPPostMD5
-#if defined(HTTP_APP_USE_MD5)
     if(TCPIP_HTTP_NET_ConnectionPostSmGet(connHandle) != SM_MD5_POST_COMPLETE)
 #endif
     {// No file uploaded, so just return

@@ -104,11 +104,11 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetBase64Decode.setDefaultValue(False) 
 	
 
-	# Enable Basic Authenication Support
+	# Enable Basic Authentication Support
 	tcpipHttpNetAuth = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_AUTHENTICATION", None)
-	tcpipHttpNetAuth.setLabel("Enable Basic Authenication Support")
+	tcpipHttpNetAuth.setLabel("Enable Basic Authentication Support")
 	tcpipHttpNetAuth.setVisible(True)
-	tcpipHttpNetAuth.setDescription("Enable Basic Authenication Support")
+	tcpipHttpNetAuth.setDescription("Enable Basic Authentication Support")
 	tcpipHttpNetAuth.setDefaultValue(True)
 	tcpipHttpNetBase64Decode.setDependencies(tcpipHttpNetBase64DecodeOpt, ["TCPIP_HTTP_NET_USE_AUTHENTICATION"])
 

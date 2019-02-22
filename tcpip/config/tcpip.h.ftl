@@ -652,9 +652,11 @@ typedef struct
 <#if (tcpipNdp.TCPIP_USE_NDP)?has_content && (tcpipNdp.TCPIP_USE_NDP) == true>
 #include "tcpip/ndp.h"
 </#if>
-<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true) || ((tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true) >
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true) >
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
+</#if>
+<#if ((tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true) >
 #include "tcpip/icmpv6.h"
 #include "tcpip/dhcpv6.h"
 </#if>
@@ -679,7 +681,10 @@ typedef struct
 #include "tcpip/zero_conf_link_local.h"
 #include "tcpip/zero_conf_multicast_dns.h"
 </#if>
-<#if ((tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content &&  (tcpipDns.TCPIP_USE_DNS_CLIENT) == true) || ((tcpipDnss.TCPIP_USE_DNSS)?has_content &&  (tcpipDnss.TCPIP_USE_DNSS) == true)>
+<#if ((tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content && (tcpipDns.TCPIP_USE_DNS_CLIENT) == true) 
+    || ((tcpipDnss.TCPIP_USE_DNSS)?has_content && (tcpipDnss.TCPIP_USE_DNSS) == true) 
+    || ((tcpip_apps_config.TCPIP_AUTOCONFIG_ENABLE_SNTP)?has_content && (tcpip_apps_config.TCPIP_AUTOCONFIG_ENABLE_SNTP) == true)
+    >
 #include "tcpip/dns.h"
 </#if>
 <#if (tcpipDnss.TCPIP_USE_DNSS)?has_content &&  (tcpipDnss.TCPIP_USE_DNSS) == true>

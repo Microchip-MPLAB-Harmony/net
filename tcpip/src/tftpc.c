@@ -72,7 +72,7 @@ static uint32_t                     tftpcTimer;
 // Tracker variable for the number of TFTP retries
 static uint8_t                      _tftpRetries;
 
-static uint16_t                     _tftpError;                // Variable to preserve error condition causes for later transmission
+static volatile uint16_t            _tftpError;                 // Variable to preserve error condition causes for later transmission
 
 // TFTP Static functions
 #if (TCPIP_STACK_DOWN_OPERATION != 0)

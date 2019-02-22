@@ -18,6 +18,8 @@ def instantiateComponent(tcpipStackComponent):
 	configName = Variables.get("__CONFIGURATION_NAME")
 	res = Database.activateComponents(["HarmonyCore"])
 	
+	processor = Variables.get("__PROCESSOR")
+
 	# Enable dependent Harmony core components
 	Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON")
 	Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True, 2)
@@ -190,6 +192,8 @@ def instantiateComponent(tcpipStackComponent):
 		tcpipStackDeviceFamily.setDefaultValue("SAME54")
 	elif "PIC32M" in Variables.get("__PROCESSOR"):
 		tcpipStackDeviceFamily.setDefaultValue("PIC32M")
+	elif "ATSAMA5" in Variables.get("__PROCESSOR"):
+		tcpipStackDeviceFamily.setDefaultValue("SAMA5")
 		
 	###########################################################################################
 	###########################################################################################
@@ -237,7 +241,7 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
 	
 	# source "$HARMONY_VERSION_PATH/framework/tcpip/config/tcpip_pool_idx.ftl" 20 instances
-#####################################################################################################
+	#####################################################################################################
 	for index in range(0,tcpipStackHeapPoolNumMaximum):	
 		tcpipStackHeapPoolEntry.append(tcpipStackComponent.createBooleanSymbol("TCPIP_HEAP_POOL_ENTRY_NUMBERX"+str(index),tcpipStackHeap))
 		tcpipStackHeapPoolEntry[index].setLabel("Pool Entry "+ str(index))
@@ -271,7 +275,7 @@ def instantiateComponent(tcpipStackComponent):
 		tcpipStackHeapPoolExpBlkNum[index].setMin(0)
 		tcpipStackHeapPoolExpBlkNum[index].setMax(4096)
 		tcpipStackHeapPoolExpBlkNum[index].setDependencies(tcpipStackHeapPoolExpBlkMenu, [tcpipStackHeapPoolEntry[index].getID(),"TCPIP_STACK_USE_HEAP_CONFIG"])
-#####################################################################################################
+	#####################################################################################################
 	# Stack allocation function, malloc style
 	tcpipStackHeapStackMalloc = tcpipStackComponent.createStringSymbol("TCPIP_STACK_MALLOC_FUNC", tcpipStackHeap)
 	tcpipStackHeapStackMalloc.setLabel("Stack allocation function, malloc style")
@@ -565,15 +569,6 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackICMPv6HeaderFile.setType("HEADER")
 	tcpipStackICMPv6HeaderFile.setOverwrite(True)
 
-	# Add icmpv6_manager.h file to project
-	tcpipStackICMPv6ManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackICMPv6ManagerHeaderFile.setSourcePath("tcpip/src/icmpv6_manager.h")
-	tcpipStackICMPv6ManagerHeaderFile.setOutputName("icmpv6_manager.h")
-	tcpipStackICMPv6ManagerHeaderFile.setDestPath("library/tcpip/src/")
-	tcpipStackICMPv6ManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-	tcpipStackICMPv6ManagerHeaderFile.setType("HEADER")
-	tcpipStackICMPv6ManagerHeaderFile.setOverwrite(True)
-
 	# Add icmp_manager.h file to project
 	tcpipStackIcmpManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackIcmpManagerHeaderFile.setSourcePath("tcpip/src/icmp_manager.h")
@@ -583,6 +578,15 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackIcmpManagerHeaderFile.setType("HEADER")
 	tcpipStackIcmpManagerHeaderFile.setOverwrite(True)
 			
+	# Add icmpv6_manager.h file to project
+	tcpipStackICMPv6ManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackICMPv6ManagerHeaderFile.setSourcePath("tcpip/src/icmpv6_manager.h")
+	tcpipStackICMPv6ManagerHeaderFile.setOutputName("icmpv6_manager.h")
+	tcpipStackICMPv6ManagerHeaderFile.setDestPath("library/tcpip/src/")
+	tcpipStackICMPv6ManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+	tcpipStackICMPv6ManagerHeaderFile.setType("HEADER")
+	tcpipStackICMPv6ManagerHeaderFile.setOverwrite(True)
+
 	# file DHCPV6_H "$HARMONY_VERSION_PATH/framework/tcpip/dhcpv6.h" to "$PROJECT_HEADER_FILES/framework/tcpip/dhcpv6.h"
 	tcpipStackDhcpv6HeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackDhcpv6HeaderFile.setSourcePath("tcpip/dhcpv6.h")
@@ -1597,13 +1601,23 @@ def instantiateComponent(tcpipStackComponent):
 	tcpipStackInclPath.setAppend(True, ";")
 #########################################################################################
 #### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
+	tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+	tcpipStackSysClkAdapterHeaderFile.setSourcePath("sys_adapter/templates/system/sys_clk_h2_adapter.h.ftl")
+	tcpipStackSysClkAdapterHeaderFile.setOutputName("sys_clk_h2_adapter.h")
+	tcpipStackSysClkAdapterHeaderFile.setDestPath("system/")
+	tcpipStackSysClkAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
+	tcpipStackSysClkAdapterHeaderFile.setType("HEADER")
+	tcpipStackSysClkAdapterHeaderFile.setOverwrite(True)	
+	tcpipStackSysClkAdapterHeaderFile.setMarkup(True)
+
 	tcpipStackSysTimeAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackSysTimeAdapterHeaderFile.setSourcePath("sys_adapter/sys_time_h2_adapter.h")
+	tcpipStackSysTimeAdapterHeaderFile.setSourcePath("sys_adapter/templates/system/sys_time_h2_adapter.h.ftl")
 	tcpipStackSysTimeAdapterHeaderFile.setOutputName("sys_time_h2_adapter.h")
 	tcpipStackSysTimeAdapterHeaderFile.setDestPath("system/")
 	tcpipStackSysTimeAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
 	tcpipStackSysTimeAdapterHeaderFile.setType("HEADER")
 	tcpipStackSysTimeAdapterHeaderFile.setOverwrite(True)
+	tcpipStackSysTimeAdapterHeaderFile.setMarkup(True)
 	
 	tcpipStackSysTimeAdapterSourceFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackSysTimeAdapterSourceFile.setSourcePath("sys_adapter/sys_time_h2_adapter.c")
@@ -1622,14 +1636,6 @@ def instantiateComponent(tcpipStackComponent):
 	# tcpipStackSysIntAdapterHeaderFile.setType("HEADER")
 	# tcpipStackSysIntAdapterHeaderFile.setOverwrite(True)	
 	
-	tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-	tcpipStackSysClkAdapterHeaderFile.setSourcePath("sys_adapter/sys_clk_h2_adapter.h")
-	tcpipStackSysClkAdapterHeaderFile.setOutputName("sys_clk_h2_adapter.h")
-	tcpipStackSysClkAdapterHeaderFile.setDestPath("system/")
-	tcpipStackSysClkAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
-	tcpipStackSysClkAdapterHeaderFile.setType("HEADER")
-	tcpipStackSysClkAdapterHeaderFile.setOverwrite(True)	
-
 	tcpipStackSysRandomAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
 	tcpipStackSysRandomAdapterHeaderFile.setSourcePath("sys_adapter/sys_random_h2_adapter.h")
 	tcpipStackSysRandomAdapterHeaderFile.setOutputName("sys_random_h2_adapter.h")
