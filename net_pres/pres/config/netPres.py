@@ -3,6 +3,7 @@ def instantiateComponent(netPresComponent, index):
 	configName = Variables.get("__CONFIGURATION_NAME")	
 	
 	print(netPresComponent.getID())
+	processor = Variables.get("__PROCESSOR")
 	
 	netPresInstnIndex = netPresComponent.createIntegerSymbol("INDEX", None)
 	netPresInstnIndex.setVisible(False)
@@ -58,6 +59,9 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnEncryptEnable.setLabel("Support Encryption?")
 	netPresInstnEncryptEnable.setVisible(True)
 	netPresInstnEncryptEnable.setDefaultValue(False)
+	if "ATSAMA5" in Variables.get("__PROCESSOR"):
+		netPresInstnEncryptEnable.setReadOnly( True )
+
 
 # H3_ToDo	
 # config NET_PRES_USE_WOLF_SSL_IDX${INSTANCE}
