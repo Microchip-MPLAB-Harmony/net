@@ -790,7 +790,9 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
 <#assign netConfigEnabled = "tcpipNetConfig_${i}">
 <#if .vars[netConfigEnabled]?has_content>
 <#assign network_config_idx = "tcpipNetConfig_${i}.TCPIP_STACK_NETWORK_CONFIG_IDX${i}"?eval>
+<#if .vars["TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${i?string}"]?has_content >
 <#assign network_ipv6_idx = "tcpipNetConfig_${i}.TCPIP_NETWORK_INTERFACE_FLAG_IPV6_ADDRESS_IDX${i}"?eval>
+</#if>
 <#if network_config_idx??>
 <#if network_config_idx == true>
 	/*** Network Configuration Index ${i} ***/
