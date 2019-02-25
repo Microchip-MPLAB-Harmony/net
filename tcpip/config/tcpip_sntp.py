@@ -48,11 +48,11 @@ def instantiateComponent(tcpipSntpComponent):
 	#tcpipSntpConnType.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# Sntp Epoch
-	tcpipSntpEpoch = tcpipSntpComponent.createIntegerSymbol("TCPIP_NTP_EPOCH", None)
+	tcpipSntpEpoch = tcpipSntpComponent.createLongSymbol("TCPIP_NTP_EPOCH", None)
 	tcpipSntpEpoch.setLabel("Epoch")
 	tcpipSntpEpoch.setVisible(True)
 	tcpipSntpEpoch.setDescription("Sntp Epoch")
-	tcpipSntpEpoch.setDefaultValue(2147483216)   # H3_ToDo to set the correct value  2208988800  
+	tcpipSntpEpoch.setDefaultValue(2208988800) 
 	#tcpipSntpEpoch.setDependencies(tcpipSntpMenuVisibleSingle, ["TCPIP_USE_SNTP_CLIENT"])
 
 	# SNTP Reply Time-out in Seconds
