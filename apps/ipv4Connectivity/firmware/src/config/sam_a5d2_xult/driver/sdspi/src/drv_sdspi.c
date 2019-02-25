@@ -84,7 +84,7 @@ static const DRV_SDSPI_CMD_OBJ gDrvSDSPICmdTable[] =
 static DRV_SDSPI_OBJ gDrvSDSPIObj[DRV_SDSPI_INSTANCES_NUMBER];
 
 /* Dummy data transmitted by TX DMA, common to all driver instances. */
-static __attribute__ ((aligned (32))) uint8_t  txCommonDummyData[32];
+static CACHE_ALIGN uint8_t  txCommonDummyData[32];
 
 // *****************************************************************************
 // *****************************************************************************
@@ -230,6 +230,7 @@ static bool _DRV_SDSPI_CommandSend(
     uint32_t arg
 )
 {
+    uint32_t i;
     bool isSuccess = false;
     uint32_t nBytes = DRV_SDSPI_PACKET_SIZE;
 
@@ -295,7 +296,7 @@ static bool _DRV_SDSPI_CommandSend(
     }
 
     /* Save the response in little-endian format */
-    for (uint32_t i = 0 ; i < nBytes; i++)
+    for (i = 0 ; i < nBytes; i++)
     {
         ((uint8_t*)&dObj->cmdResponse)[nBytes-i] = dObj->cmdRespBuffer[i];
     }
@@ -307,8 +308,10 @@ static bool _DRV_SDSPI_CommandSend(
 
 static bool _DRV_SDSPI_SendInitClockPulses(DRV_SDSPI_OBJ* const dObj)
 {
+    uint8_t i;
+
     /* Fill dummy-data to generate clock pulses */
-    for (uint8_t i = 0; i < MEDIA_INIT_ARRAY_SIZE; i++)
+    for (i = 0; i < MEDIA_INIT_ARRAY_SIZE; i++)
     {
         dObj->cmdRespBuffer[i] = 0xFF;
     }
@@ -431,7 +434,7 @@ static bool _DRV_SDSPI_SendACMD41(DRV_SDSPI_OBJ* const dObj)
 static bool _DRV_SDSPI_ReadOCR(DRV_SDSPI_OBJ* const dObj)
 {
     bool isSuccess = false;
-    uint32_t* ocrRegister = (uint32_t*)&dObj->cmdResponse[1];
+    uint32_t ocrRegister;
 
     if (_DRV_SDSPI_CommandSend(dObj, DRV_SDSPI_READ_OCR, 0x00) == true)
     {
@@ -441,9 +444,12 @@ static bool _DRV_SDSPI_ReadOCR(DRV_SDSPI_OBJ* const dObj)
            OCR[15:23] = VDD Voltage Window supported by the card.
         */
 
-        if (*ocrRegister & (0x01U << 31))
+        ocrRegister = (((uint32_t)dObj->cmdResponse[4] << 24)|((uint32_t)dObj->cmdResponse[3] << 16) |
+                ((uint32_t)dObj->cmdResponse[2] << 8) | ((uint32_t)dObj->cmdResponse[1]));
+
+        if (ocrRegister & (0x01U << 31))
         {
-            if (*ocrRegister & (0x01U << 30))
+            if (ocrRegister & (0x01U << 30))
             {
                 dObj->sdCardType = DRV_SDSPI_MODE_HC;
             }
@@ -512,6 +518,7 @@ static bool _DRV_SDSPI_ReadResponseWithTimeout(
     uint32_t timeout
 )
 {
+    uint8_t i;
     bool isSuccess = false;
 
     if (_DRV_SDSPI_TimerStart(dObj, timeout) == false)
@@ -536,7 +543,7 @@ static bool _DRV_SDSPI_ReadResponseWithTimeout(
        Make sure we read the status once after the timeout */
     if ((dObj->timerExpired == true) && (dObj->cmdRespBuffer[0] != expectedResponse))
     {
-        for (uint8_t i = 0; i < 2; i++)
+        for (i = 0; i < 2; i++)
         {
             if (_DRV_SDSPI_SPIRead(dObj, dObj->cmdRespBuffer, 1) == true)
             {
@@ -639,7 +646,7 @@ static bool _DRV_SDSPI_WriteBlock(
     /* Read the data response token and then poll busy status of the SD Card */
     if (_DRV_SDSPI_SPIRead(dObj, dObj->cmdRespBuffer, 1) == true)
     {
-        if ((dObj->cmdRespBuffer[0] & DRV_SDSPI_WRITE_RESPONSE_TOKEN_MASK) == \
+        if ((dObj->cmdRespBuffer[0] & DRV_SDSPI_WRITE_RESPONSE_TOKEN_MASK) ==
                 DRV_SDSPI_DATA_ACCEPTED)
         {
             /* Card accepted the data, now poll the BUSY status of the SD card's
@@ -661,6 +668,7 @@ static bool _DRV_SDSPI_Write(
     uint32_t nBlock
 )
 {
+    uint32_t i;
     DRV_SDSPI_RESPONSE_1* r1Response = NULL;
     bool isSuccess = false;
 
@@ -706,7 +714,7 @@ static bool _DRV_SDSPI_Write(
             return isSuccess;
         }
         /* Write the requested blocks of data */
-        for (uint32_t i = 0; i < nBlock; i++)
+        for (i = 0; i < nBlock; i++)
         {
             /* Write a single block of data */
             if (_DRV_SDSPI_WriteBlock(dObj, sourceBuffer, writeCommand) == true)
@@ -754,6 +762,7 @@ static bool _DRV_SDSPI_Read(
     uint32_t nBlock
 )
 {
+    uint32_t i;
     DRV_SDSPI_RESPONSE_1* r1Response;
     DRV_SDSPI_COMMANDS readCommand = DRV_SDSPI_READ_SINGLE_BLOCK;
     bool isSuccess = false;
@@ -796,7 +805,7 @@ static bool _DRV_SDSPI_Read(
             return isSuccess;
         }
         /* Read the requested blocks of data */
-        for (uint32_t i = 0; i < nBlock; i++)
+        for (i = 0; i < nBlock; i++)
         {
             /* Read a single block of data */
             if (_DRV_SDSPI_ReadBlock(dObj, targetBuffer) == true)
@@ -913,8 +922,11 @@ static bool _DRV_SDSPI_SetupXfer (
     if(clientObj->eventHandler != NULL)
     {
         /* Call the event handler (needed for compatibility with the file system) */
-        clientObj->eventHandler((SYS_MEDIA_BLOCK_EVENT)evtStatus, \
-                (DRV_SDSPI_COMMAND_HANDLE)commandHandle, clientObj->context);
+        clientObj->eventHandler(
+            (SYS_MEDIA_BLOCK_EVENT)evtStatus,
+            (DRV_SDSPI_COMMAND_HANDLE)commandHandle,
+            clientObj->context
+        );
     }
 
     OSAL_MUTEX_Unlock(&dObj->transferMutex);
@@ -1113,7 +1125,7 @@ static void _DRV_SDSPI_MediaInitialize( SYS_MODULE_OBJ object )
 static DRV_SDSPI_ATTACH _DRV_SDSPI_MediaCommandDetect ( SYS_MODULE_OBJ object )
 {
     DRV_SDSPI_OBJ* dObj;
-    DRV_SDSPI_RESPONSE_2* r2Response;
+    uint16_t r2Response;
     DRV_SDSPI_ATTACH isCardAttached = DRV_SDSPI_IS_DETACHED;
 
     dObj = (DRV_SDSPI_OBJ*)_DRV_SDSPI_INSTANCE_GET(object);
@@ -1142,8 +1154,8 @@ static DRV_SDSPI_ATTACH _DRV_SDSPI_MediaCommandDetect ( SYS_MODULE_OBJ object )
             if (_DRV_SDSPI_CommandSend (dObj, DRV_SDSPI_SEND_STATUS, 0x00) == true)
             {
                 /* For status command SD card will respond with R2 type packet */
-                r2Response = (DRV_SDSPI_RESPONSE_2*)&dObj->cmdResponse[0];
-                if ((r2Response->word & 0xEC0C) == 0x0000)
+                r2Response = (((uint16_t)dObj->cmdResponse[1] << 16) | ((uint16_t)dObj->cmdResponse[0])) ;
+                if ((r2Response & 0xEC0C) == 0x0000)
                 {
                     isCardAttached = DRV_SDSPI_IS_ATTACHED;
                 }
@@ -1232,7 +1244,7 @@ void DRV_SDSPI_Tasks ( SYS_MODULE_OBJ object )
 // *****************************************************************************
 // *****************************************************************************
 
-void __attribute__ ((weak)) DRV_SDSPI_RegisterWithSysFs
+__WEAK void DRV_SDSPI_RegisterWithSysFs
 (
     const SYS_MODULE_INDEX drvIndex
 )
@@ -1246,6 +1258,7 @@ SYS_MODULE_OBJ DRV_SDSPI_Initialize(
     const SYS_MODULE_INIT * const init
 )
 {
+    uint32_t i;
     const DRV_SDSPI_INIT* sdSPIInit = (const DRV_SDSPI_INIT *)init;
     DRV_SDSPI_OBJ* dObj = NULL;
 
@@ -1300,14 +1313,6 @@ SYS_MODULE_OBJ DRV_SDSPI_Initialize(
     dObj->chipSelectPin         = sdSPIInit->chipSelectPin;
     dObj->sdcardSpeedHz         = sdSPIInit->sdcardSpeedHz;
     dObj->blockStartAddress     = sdSPIInit->blockStartAddress;
-
-    for (uint32_t i = 0; i < sizeof(txCommonDummyData); i++)
-    {
-        txCommonDummyData[i] = 0xFF;
-    }
-
-    /* Each driver instance points to the common dummy data array. */
-    dObj->txDummyData            = txCommonDummyData;
     dObj->clientToken           = 1;
     dObj->commandToken          = 1;
 
@@ -1324,14 +1329,24 @@ SYS_MODULE_OBJ DRV_SDSPI_Initialize(
     /* De-assert Chip Select pin to begin with */
     SYS_PORT_PinSet(dObj->chipSelectPin);
 
-    /* Register call-backs with the DMA System Service */
-    if (dObj->txDMAChannel != SYS_DMA_CHANNEL_NONE && dObj->rxDMAChannel != SYS_DMA_CHANNEL_NONE)
+    /* Each driver instance points to the common dummy data array. */
+    dObj->txDummyData            = txCommonDummyData;
+
+    for (i = 0; i < sizeof(txCommonDummyData); i++)
+    {
+        txCommonDummyData[i] = 0xFF;
+    }
+    if (dObj->txDMAChannel != SYS_DMA_CHANNEL_NONE)
     {
         /* Ensure txCommonDummyData (0xFF) is pushed to the main memory for the DMA.
          * This operation is needed only once as CPU is not going to modify
          * txCommonDummyData */
+        SYS_CACHE_CleanDCache_by_Addr ((uint32_t*)txCommonDummyData, sizeof(txCommonDummyData));
+    }
 
-        SYS_CACHE_CleanDCache_by_Addr ((uint32_t*)txCommonDummyData, 32);
+    /* Register call-backs with the DMA System Service */
+    if (dObj->txDMAChannel != SYS_DMA_CHANNEL_NONE && dObj->rxDMAChannel != SYS_DMA_CHANNEL_NONE)
+    {
 
         SYS_DMA_ChannelCallbackRegister(dObj->txDMAChannel, _DRV_SDSPI_TX_DMA_CallbackHandler, (uintptr_t)dObj);
         SYS_DMA_ChannelCallbackRegister(dObj->rxDMAChannel, _DRV_SDSPI_RX_DMA_CallbackHandler, (uintptr_t)dObj);
@@ -1416,7 +1431,7 @@ DRV_HANDLE DRV_SDSPI_Open(
             /* Generate and save the client handle in the client object, which will
              * be then used to verify the validity of the client handle.
              */
-            clientObj->clientHandle = (DRV_HANDLE)_DRV_SDSPI_MAKE_HANDLE(dObj->clientToken, \
+            clientObj->clientHandle = (DRV_HANDLE)_DRV_SDSPI_MAKE_HANDLE(dObj->clientToken,
                     (uint8_t)drvIndex, iClient);
 
             /* Increment the instance specific token counter */
@@ -1584,7 +1599,7 @@ DRV_SDSPI_COMMAND_STATUS DRV_SDSPI_CommandStatusGet(
 {
     DRV_SDSPI_CLIENT_OBJ* clientObj;
     DRV_SDSPI_OBJ* dObj;
-    DRV_SDSPI_COMMAND_STATUS status = DRV_SDSPI_COMMAND_ERROR_UNKNOWN;
+    DRV_SDSPI_COMMAND_STATUS status = DRV_SDSPI_COMMAND_COMPLETED;
 
     clientObj = _DRV_SDSPI_DriverHandleValidate (handle);
 
