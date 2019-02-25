@@ -1604,9 +1604,7 @@ static int _Command_ShowDNSResolvedInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     TCPIP_DNS_RESULT res;
     bool entryPresent= false;
-#if defined(TCPIP_STACK_USE_IPV6)
     IPV6_ADDR   ipv6Addr[TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS];
-#endif
     char        addrPrintBuff[44];
     const char* strictName, *prefName;
 
@@ -1622,10 +1620,8 @@ static int _Command_ShowDNSResolvedInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
     dnsQuery.ipv4Entry = ipv4Addr;
     dnsQuery.nIPv4Entries = sizeof(ipv4Addr) / sizeof(*ipv4Addr);
 
-#if defined(TCPIP_STACK_USE_IPV6)
     dnsQuery.ipv6Entry = ipv6Addr;
     dnsQuery.nIPv6Entries = sizeof(ipv6Addr) / sizeof(*ipv6Addr);
-#endif
 
     res = TCPIP_DNS_ClientInfoGet(&clientInfo);
     if(res != TCPIP_DNS_RES_OK)
@@ -1664,7 +1660,6 @@ static int _Command_ShowDNSResolvedInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
                     (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv4 =%s\r\n", addrPrintBuff);
                 }
             }
-#if defined(TCPIP_STACK_USE_IPV6)
             if(dnsQuery.nIPv6Entries > 0)
             {
                 for(ix = 0; ix < dnsQuery.nIPv6ValidEntries; ix++)
@@ -1673,7 +1668,6 @@ static int _Command_ShowDNSResolvedInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
                     (*pCmdIO->pCmdApi->print)(cmdIoParam, "IPv6 = %s\r\n",addrPrintBuff);
                 }
             }
-#endif
             (*pCmdIO->pCmdApi->print)(cmdIoParam,"----------------------------------------------------\r\n",0);
         }
         if(res == TCPIP_DNS_RES_OK || res == TCPIP_DNS_RES_PENDING || res == TCPIP_DNS_RES_EMPTY_IX_ENTRY)
@@ -2652,15 +2646,12 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 void TCPIPCmdDnsTask(void)
 {
     TCPIP_DNS_RESULT  dnsRes;
-    char        ipv4Index = 0;
+    char ipv4Index=0,ipv6Index=0;
     int         nIPv4Entries;
     IPV4_ADDR   ip4Address;
-#if defined(TCPIP_STACK_USE_IPV6)
-    char        ipv6Index = 0;
     int         nIPv6Entries;
     IPV6_ADDR   ip6Address;
     uint8_t     addrBuf[44];
-#endif
     uint32_t    timeout=0;
 
     switch(tcpipCmdStat)
@@ -2701,14 +2692,8 @@ void TCPIPCmdDnsTask(void)
             // success
             (*pTcpipCmdDevice->pCmdApi->msg)(dnsLookupCmdIoParam, "Lookup Answer:\r\n----------------------\r\n");
             nIPv4Entries = TCPIP_DNS_GetIPAddressesNumber(dnslookupTargetHost,IP_ADDRESS_TYPE_IPV4);
-#if defined(TCPIP_STACK_USE_IPV6)
             nIPv6Entries = TCPIP_DNS_GetIPAddressesNumber(dnslookupTargetHost,IP_ADDRESS_TYPE_IPV6);
-#endif
-            if(     (nIPv4Entries == 0)
-#if defined(TCPIP_STACK_USE_IPV6)
-                &&  (nIPv6Entries == 0)
-#endif
-            )
+            if((nIPv4Entries == 0) && (nIPv6Entries == 0))
             {
                 (*pTcpipCmdDevice->pCmdApi->print)(dnsLookupCmdIoParam, "No Lookup entry for [%s]\r\n",dnslookupTargetHost);
                 break;
@@ -2722,7 +2707,6 @@ void TCPIPCmdDnsTask(void)
                             ip4Address.v[1],ip4Address.v[2],ip4Address.v[3]);
                     ipv4Index++;
                 }
-#if defined(TCPIP_STACK_USE_IPV6)
                 else if(ipv6Index<nIPv6Entries)
                 {
                     TCPIP_DNS_GetIPv6Addresses(dnslookupTargetHost, ipv6Index, &ip6Address, 1);
@@ -2731,7 +2715,6 @@ void TCPIPCmdDnsTask(void)
                     (*pTcpipCmdDevice->pCmdApi->print)(dnsLookupCmdIoParam, "[%s] AAAA IPv6 Address :%s\r\n",dnslookupTargetHost,addrBuf);
                     ipv6Index++;
                 }
-#endif
                 else
                 {
                     break;

@@ -214,7 +214,7 @@ typedef int(*_HTTP_HeaderMsgFnc)(TCPIP_HTTP_NET_CONN* pHttpCon, char* buffer, si
 // header message printing helper
 static int _HTTP_HeaderMsg_Print(char* buffer, size_t bufferSize, const char* fmt, ...);
 
-static const _HTTP_HeaderMsgFnc const HTTPResponseFunctions[] =
+static const _HTTP_HeaderMsgFnc HTTPResponseFunctions[] =
 {
     
     0,                              // TCPIP_HTTP_NET_STAT_GET
