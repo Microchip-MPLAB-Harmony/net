@@ -720,7 +720,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>web_server_sdcard_fatfs_freertos.out</state>
+                    <state>web_net_server_sdcard_fatfs_freertos.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1017,7 +1017,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>web_server_sdcard_fatfs_freertos_import_lib.o</state>
+                    <state>web_net_server_sdcard_fatfs_freertos_import_lib.o</state>
                 </option>
             </data>
         </settings>
