@@ -47,7 +47,6 @@
 #if defined( __ICCARM__ )
     #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL
     const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {
-//    const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] @".region_nocache" = {
 #else
     const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))
     NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {

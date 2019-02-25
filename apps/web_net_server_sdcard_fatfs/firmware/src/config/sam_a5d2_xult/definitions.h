@@ -64,7 +64,6 @@
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
 #include "system/int/sys_int.h"
-#include "system/cache/sys_cache.h"
 #include "osal/osal.h"
 #include "driver/sdmmc/drv_sdmmc.h"
 #include "peripheral/mmu/plib_mmu.h"

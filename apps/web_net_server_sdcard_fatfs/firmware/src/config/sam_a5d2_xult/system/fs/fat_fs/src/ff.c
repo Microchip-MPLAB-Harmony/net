@@ -438,8 +438,8 @@ static FATFS *FatFs[SYS_FS_VOLUME_NUMBER];	/* Pointer to the file system objects
 static uint16_t Fsid;				/* File system mount ID */
 
 /* Added. */
-static FATFS_VOLUME_OBJECT SYS_FS_COHERENT_ALIGNED FAFFSVolume[SYS_FS_VOLUME_NUMBER];
-static FATFS_FILE_OBJECT SYS_FS_COHERENT_ALIGNED FATFSFileObject[SYS_FS_MAX_FILES];
+static FATFS_VOLUME_OBJECT CACHE_ALIGN FAFFSVolume[SYS_FS_VOLUME_NUMBER];
+static FATFS_FILE_OBJECT CACHE_ALIGN FATFSFileObject[SYS_FS_MAX_FILES];
 static FATFS_DIR_OBJECT FATFSDirObject[SYS_FS_MAX_FILES];
 static uint8_t startupflag = 0;
 
