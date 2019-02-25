@@ -708,7 +708,7 @@
                 </option>
                 <option>
                     <name>IlinkOutputFile</name>
-                    <state>web_server_sdcard_fatfs.out</state>
+                    <state>web_net_server_sdcard_fatfs.out</state>
                 </option>
                 <option>
                     <name>IlinkDebugInfoEnable</name>
@@ -1005,7 +1005,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>web_server_sdcard_fatfs_import_lib.o</state>
+                    <state>web_net_server_sdcard_fatfs_import_lib.o</state>
                 </option>
             </data>
         </settings>
