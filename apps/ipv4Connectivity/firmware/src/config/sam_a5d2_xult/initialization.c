@@ -65,7 +65,7 @@
 // <editor-fold defaultstate="collapsed" desc="DRV_SDSPI Instance 0 Initialization Data">
 
 /* SD Card Client Objects Pool */
-static DRV_SDSPI_CLIENT_OBJ drvSDSPI0ClientObjPool[DRV_SDSPI_CLIENTS_NUMBER_IDX0] = {0};
+static DRV_SDSPI_CLIENT_OBJ drvSDSPI0ClientObjPool[DRV_SDSPI_CLIENTS_NUMBER_IDX0];
 
 /* SPI PLIB Interface Initialization for SDSPI Driver */
 const DRV_SDSPI_PLIB_INTERFACE drvSDSPI0PlibAPI = {
@@ -95,31 +95,33 @@ const uint32_t drvSDSPI0remapClockPhase[] = { 0x0, 0x2 };
 const DRV_SDSPI_INIT drvSDSPI0InitData =
 {
     /* SD Card SPI PLIB API interface*/
-    .spiPlib            = &drvSDSPI0PlibAPI,
+    .spiPlib                = &drvSDSPI0PlibAPI,
 
-    .remapDataBits = drvSDSPI0remapDataBits,
+    .remapDataBits          = drvSDSPI0remapDataBits,
 
-    .remapClockPolarity = drvSDSPI0remapClockPolarity,
+    .remapClockPolarity     = drvSDSPI0remapClockPolarity,
 
-    .remapClockPhase = drvSDSPI0remapClockPhase,
+    .remapClockPhase        = drvSDSPI0remapClockPhase,
 
     /* SDSPI Number of clients */
-    .numClients         = DRV_SDSPI_CLIENTS_NUMBER_IDX0,
+    .numClients             = DRV_SDSPI_CLIENTS_NUMBER_IDX0,
 
     /* SDSPI Client Objects Pool */
-    .clientObjPool      = (uintptr_t)&drvSDSPI0ClientObjPool[0],
+    .clientObjPool          = (uintptr_t)&drvSDSPI0ClientObjPool[0],
 
-    .chipSelectPin      = DRV_SDSPI_CHIP_SELECT_PIN_IDX0,
+    .chipSelectPin          = DRV_SDSPI_CHIP_SELECT_PIN_IDX0,
 
-    .sdcardSpeedHz      = DRV_SDSPI_SPEED_HZ_IDX0,
+    .sdcardSpeedHz          = DRV_SDSPI_SPEED_HZ_IDX0,
 
-    .writeProtectPin    = SYS_PORT_PIN_NONE,
+    .writeProtectPin        = SYS_PORT_PIN_NONE,
 
-    .isFsEnabled        = true,
+    .isFsEnabled            = true,
+
     /* DMA Channel for Transmit */
-    .txDMAChannel = SYS_DMA_CHANNEL_NONE,
+    .txDMAChannel           = SYS_DMA_CHANNEL_NONE,
+
     /* DMA Channel for Receive */
-    .rxDMAChannel  = SYS_DMA_CHANNEL_NONE,
+    .rxDMAChannel           = SYS_DMA_CHANNEL_NONE,
 };
 
 // </editor-fold>
@@ -150,11 +152,11 @@ static const DRV_MIIM_INIT drvMiimInitData =
 
 // <editor-fold defaultstate="collapsed" desc="DRV_MEMORY Instance 0 Initialization Data">
 
-static uint8_t gDrvMemory0EraseBuffer[DRV_MX25L_ERASE_BUFFER_SIZE] __attribute__((aligned(32)));
+static uint8_t gDrvMemory0EraseBuffer[DRV_MX25L_ERASE_BUFFER_SIZE] CACHE_ALIGN;
 
-static DRV_MEMORY_CLIENT_OBJECT gDrvMemory0ClientObject[DRV_MEMORY_CLIENTS_NUMBER_IDX0] = { 0 };
+static DRV_MEMORY_CLIENT_OBJECT gDrvMemory0ClientObject[DRV_MEMORY_CLIENTS_NUMBER_IDX0];
 
-static DRV_MEMORY_BUFFER_OBJECT gDrvMemory0BufferObject[DRV_MEMORY_BUFFER_QUEUE_SIZE_IDX0] = { 0 };
+static DRV_MEMORY_BUFFER_OBJECT gDrvMemory0BufferObject[DRV_MEMORY_BUFFER_QUEUE_SIZE_IDX0];
 
 const DRV_MEMORY_DEVICE_INTERFACE drvMemory0DeviceAPI = {
     .Open               = DRV_MX25L_Open,
@@ -602,203 +604,230 @@ static const NET_PRES_INIT_DATA netPresInitData =
 // *****************************************************************************
 /*** ARP Service Initialization Data ***/
 const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
-{
-    .cacheEntries =       TCPIP_ARP_CACHE_ENTRIES,
-    .deleteOld =          TCPIP_ARP_CACHE_DELETE_OLD,
-    .entrySolvedTmo =     TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO,
-    .entryPendingTmo =    TCPIP_ARP_CACHE_PENDING_ENTRY_TMO,
-    .entryRetryTmo =      TCPIP_ARP_CACHE_PENDING_RETRY_TMO,
-    .permQuota =          TCPIP_ARP_CACHE_PERMANENT_QUOTA,
-    .purgeThres =         TCPIP_ARP_CACHE_PURGE_THRESHOLD,
-    .purgeQuanta =        TCPIP_ARP_CACHE_PURGE_QUANTA,
-    .retries =            TCPIP_ARP_CACHE_ENTRY_RETRIES,
-    .gratProbeCount =     TCPIP_ARP_GRATUITOUS_PROBE_COUNT,
+{ 
+    .cacheEntries       = TCPIP_ARP_CACHE_ENTRIES,     
+    .deleteOld          = TCPIP_ARP_CACHE_DELETE_OLD,    
+    .entrySolvedTmo     = TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO, 
+    .entryPendingTmo    = TCPIP_ARP_CACHE_PENDING_ENTRY_TMO, 
+    .entryRetryTmo      = TCPIP_ARP_CACHE_PENDING_RETRY_TMO, 
+    .permQuota          = TCPIP_ARP_CACHE_PERMANENT_QUOTA, 
+    .purgeThres         = TCPIP_ARP_CACHE_PURGE_THRESHOLD, 
+    .purgeQuanta        = TCPIP_ARP_CACHE_PURGE_QUANTA, 
+    .retries            = TCPIP_ARP_CACHE_ENTRY_RETRIES, 
+    .gratProbeCount     = TCPIP_ARP_GRATUITOUS_PROBE_COUNT,
 };
-
 /*** telnet Server Initialization Data ***/
 const TCPIP_TELNET_MODULE_CONFIG tcpipTelnetInitData =
-{
+{ 
     0
 };
 
 /*** Announce Discovery Initialization Data ***/
 const TCPIP_ANNOUNCE_MODULE_CONFIG tcpipAnnounceInitData =
-{
+{ 
     0
 };
 
 /*** UDP Sockets Initialization Data ***/
 const TCPIP_UDP_MODULE_CONFIG tcpipUDPInitData =
 {
-    .nSockets =       TCPIP_UDP_MAX_SOCKETS,
-    .sktTxBuffSize =  TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE,
+    .nSockets       = TCPIP_UDP_MAX_SOCKETS,
+    .sktTxBuffSize  = TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE, 
 };
 
 /*** TCP Sockets Initialization Data ***/
 const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
 {
-    .nSockets =       TCPIP_TCP_MAX_SOCKETS,
-    .sktTxBuffSize =  TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE,
-    .sktRxBuffSize =  TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE,
+    .nSockets       = TCPIP_TCP_MAX_SOCKETS,
+    .sktTxBuffSize  = TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE, 
+    .sktRxBuffSize  = TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE,
 };
+
 
 /*** HTTP_NET Server Initialization Data ***/
 const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
 {
-    .nConnections =     TCPIP_HTTP_NET_MAX_CONNECTIONS,
-    .dataLen =          TCPIP_HTTP_NET_MAX_DATA_LEN,
-    .sktTxBuffSize =    TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE,
-    .sktRxBuffSize =    TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE,
-    .listenPort =       TCPIP_HTTP_NET_LISTEN_PORT,
-    .nDescriptors =     TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER,
-    .nChunks =          TCPIP_HTTP_NET_CHUNKS_NUMBER,
-    .maxRecurseLevel =  TCPIP_HTTP_NET_MAX_RECURSE_LEVEL,
-    .configFlags =      TCPIP_HTTP_NET_CONFIG_FLAGS,
-    .nFileBuffers =     TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER,
-    .fileBufferSize =   TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE,
+    .nConnections   = TCPIP_HTTP_NET_MAX_CONNECTIONS,
+    .dataLen		= TCPIP_HTTP_NET_MAX_DATA_LEN,
+    .sktTxBuffSize	= TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize	= TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE,
+    .listenPort	    = TCPIP_HTTP_NET_LISTEN_PORT,
+    .nDescriptors   = TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER,
+    .nChunks        = TCPIP_HTTP_NET_CHUNKS_NUMBER, 
+    .maxRecurseLevel= TCPIP_HTTP_NET_MAX_RECURSE_LEVEL,    
+    .configFlags	= TCPIP_HTTP_NET_CONFIG_FLAGS,
+    .nFileBuffers   = TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER,
+    .fileBufferSize = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE,
     .chunkPoolRetries = TCPIP_HTTP_NET_CHUNK_RETRIES,
     .fileBufferRetries = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES,
-    .dynVarRetries =    TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES,
-    .connTimeout =      TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
-    .http_malloc_fnc =  TCPIP_HTTP_NET_MALLOC_FUNC,
-    .http_free_fnc =    TCPIP_HTTP_NET_FREE_FUNC,
+    .dynVarRetries  = TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES,
+    .connTimeout        = TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
+    .http_malloc_fnc    = TCPIP_HTTP_NET_MALLOC_FUNC,
+    .http_free_fnc      = TCPIP_HTTP_NET_FREE_FUNC,
 };
 
 /*** SNTP Client Initialization Data ***/
 const TCPIP_SNTP_MODULE_CONFIG tcpipSNTPInitData =
 {
-    .ntp_server =           TCPIP_NTP_SERVER,
-    .ntp_interface =        TCPIP_NTP_DEFAULT_IF,
-    .ntp_connection_type =  TCPIP_NTP_DEFAULT_CONNECTION_TYPE,
-    .ntp_reply_timeout =    TCPIP_NTP_REPLY_TIMEOUT,
-    .ntp_stamp_timeout =    TCPIP_NTP_TIME_STAMP_TMO,
-    .ntp_success_interval = TCPIP_NTP_QUERY_INTERVAL,
-    .ntp_error_interval =   TCPIP_NTP_FAST_QUERY_INTERVAL,
+    .ntp_server		        = TCPIP_NTP_SERVER,
+    .ntp_interface		    = TCPIP_NTP_DEFAULT_IF,
+    .ntp_connection_type	= TCPIP_NTP_DEFAULT_CONNECTION_TYPE,
+    .ntp_reply_timeout		= TCPIP_NTP_REPLY_TIMEOUT,
+    .ntp_stamp_timeout		= TCPIP_NTP_TIME_STAMP_TMO,
+    .ntp_success_interval	= TCPIP_NTP_QUERY_INTERVAL,
+    .ntp_error_interval		= TCPIP_NTP_FAST_QUERY_INTERVAL,
 };
-
 
 
 /*** SMTPC client Initialization Data ***/
 const TCPIP_SMTPC_MODULE_CONFIG tcpipSMTPCInitData =
 {
-    .nMailConnections =       TCPIP_SMTPC_MAIL_CONNECTIONS,
-    .serverReplyTmo =         TCPIP_SMTPC_SERVER_REPLY_TIMEOUT,
-    .serverDataTmo =          TCPIP_SMTPC_SERVER_DATA_TIMEOUT,
-    .tlsHandshakeTmo =        TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT,
-    .nMailRetries =           TCPIP_SMTPC_MAIL_RETRIES,
-    .serverRetryTmo =         TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT,
-    .smtpcRetryTmo =          TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT,
-    .sktTxBuffSize =          TCPIP_SMTPC_SKT_TX_BUFF_SIZE,
-    .sktRxBuffSize =          TCPIP_SMTPC_SKT_RX_BUFF_SIZE,
+    .nMailConnections       = TCPIP_SMTPC_MAIL_CONNECTIONS,
+    .serverReplyTmo         = TCPIP_SMTPC_SERVER_REPLY_TIMEOUT,
+    .serverDataTmo          = TCPIP_SMTPC_SERVER_DATA_TIMEOUT,
+    .tlsHandshakeTmo        = TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT,
+    .nMailRetries           = TCPIP_SMTPC_MAIL_RETRIES,
+    .serverRetryTmo         = TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT,
+    .smtpcRetryTmo          = TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT,
+    .sktTxBuffSize          = TCPIP_SMTPC_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize          = TCPIP_SMTPC_SKT_RX_BUFF_SIZE,
 };
 
 /*** DHCP client Initialization Data ***/
 const TCPIP_DHCP_MODULE_CONFIG tcpipDHCPInitData =
-{
-    .dhcpEnable =     TCPIP_DHCP_CLIENT_ENABLED,
-    .dhcpTmo =        TCPIP_DHCP_TIMEOUT,
-    .dhcpCliPort =    TCPIP_DHCP_CLIENT_CONNECT_PORT,
-    .dhcpSrvPort =    TCPIP_DHCP_SERVER_LISTEN_PORT,
+{     
+    .dhcpEnable     = TCPIP_DHCP_CLIENT_ENABLED,   
+    .dhcpTmo        = TCPIP_DHCP_TIMEOUT,
+    .dhcpCliPort    = TCPIP_DHCP_CLIENT_CONNECT_PORT,
+    .dhcpSrvPort    = TCPIP_DHCP_SERVER_LISTEN_PORT,
 
 };
 
+
 /*** ICMP Server Initialization Data ***/
-const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData =
+const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData = 
 {
     0
 };
 
+
+
+
+
 /*** ETH PHY Initialization Data ***/
+
+
+
 const DRV_ETHPHY_INIT tcpipPhyInitData =
-{
-    .ethphyId =               TCPIP_INTMAC_MODULE_ID,
-    .phyAddress =             TCPIP_INTMAC_PHY_ADDRESS,
-    .phyFlags =               TCPIP_INTMAC_PHY_CONFIG_FLAGS,
-    .pPhyObject =             &DRV_ETHPHY_OBJECT_KSZ8081,
-    .resetFunction =          0,
-    .pMiimObject =            &DRV_MIIM_OBJECT_BASE_Default,
-    .pMiimInit =              &drvMiimInitData,
-    .miimIndex =              DRV_MIIM_DRIVER_INDEX,
+{    
+    .ethphyId               = TCPIP_INTMAC_MODULE_ID,
+    .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
+    .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,
+    .pPhyObject             = &DRV_ETHPHY_OBJECT_KSZ8081,
+    .resetFunction          = 0,
+    .pMiimObject            = &DRV_MIIM_OBJECT_BASE_Default,
+    .pMiimInit              = &drvMiimInitData,
+    .miimIndex              = DRV_MIIM_DRIVER_INDEX,
+
 };
 
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
-{
-    /** QUEUE 0 Intialization**/
-    .gmac_queue_config[0].queueEnable =  true,
-    .gmac_queue_config[0].nRxDescCnt =   TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
-    .gmac_queue_config[0].nTxDescCnt =   TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
-    .gmac_queue_config[0].rxBufferSize = TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
-    .gmac_queue_config[0].txBufferSize = TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
-    /** QUEUE 1 Intialization**/
-    .gmac_queue_config[1].queueEnable =   false,
-    .gmac_queue_config[1].nRxDescCnt =    TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1,
-    .gmac_queue_config[1].nTxDescCnt =    TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1,
-    .gmac_queue_config[1].rxBufferSize =  TCPIP_GMAC_RX_BUFF_SIZE_QUE1,
-    .gmac_queue_config[1].txBufferSize =  TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
-    /** QUEUE 2 Intialization**/
-    .gmac_queue_config[2].queueEnable =  false,
-    .gmac_queue_config[2].nRxDescCnt =   TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2,
-    .gmac_queue_config[2].nTxDescCnt =   TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2,
-    .gmac_queue_config[2].rxBufferSize = TCPIP_GMAC_RX_BUFF_SIZE_QUE2,
-    .gmac_queue_config[2].txBufferSize = TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
-    /** QUEUE 3 Intialization**/
-    .gmac_queue_config[3].queueEnable =  false,
-    .gmac_queue_config[3].nRxDescCnt =   TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3,
-    .gmac_queue_config[3].nTxDescCnt =   TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3,
-    .gmac_queue_config[3].rxBufferSize = TCPIP_GMAC_RX_BUFF_SIZE_QUE3,
-    .gmac_queue_config[3].txBufferSize = TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
-    /** QUEUE 4 Intialization**/
-    .gmac_queue_config[4].queueEnable =  false,
-    .gmac_queue_config[4].nRxDescCnt =   TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4,
-    .gmac_queue_config[4].nTxDescCnt =   TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4,
-    .gmac_queue_config[4].rxBufferSize = TCPIP_GMAC_RX_BUFF_SIZE_QUE4,
-    .gmac_queue_config[4].txBufferSize = TCPIP_GMAC_TX_BUFF_SIZE_QUE4,
-    /** QUEUE 5 Intialization**/
-    .gmac_queue_config[5].queueEnable =  false,
-    .gmac_queue_config[5].nRxDescCnt =   TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5,
-    .gmac_queue_config[5].nTxDescCnt =   TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5,
-    .gmac_queue_config[5].rxBufferSize = TCPIP_GMAC_RX_BUFF_SIZE_QUE5,
-    .gmac_queue_config[5].txBufferSize = TCPIP_GMAC_TX_BUFF_SIZE_QUE5,
-    .ethFlags =               TCPIP_GMAC_ETH_OPEN_FLAGS,
-    .linkInitDelay =          TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
-    .ethModuleId =            TCPIP_INTMAC_MODULE_ID,
-    .pPhyBase =               &DRV_ETHPHY_OBJECT_BASE_Default,
-    .pPhyInit =               &tcpipPhyInitData,
+{ 
+	/** QUEUE 0 Intialization**/
+		.gmac_queue_config[0].queueEnable	= true,
+	.gmac_queue_config[0].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
+	.gmac_queue_config[0].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
+	.gmac_queue_config[0].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
+	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
+
+	/** QUEUE 1 Intialization**/
+		.gmac_queue_config[1].queueEnable	= false,	
+	.gmac_queue_config[1].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1,
+	.gmac_queue_config[1].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1,
+	.gmac_queue_config[1].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE1,
+	.gmac_queue_config[1].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
+
+	/** QUEUE 2 Intialization**/
+		.gmac_queue_config[2].queueEnable	= false,	
+	.gmac_queue_config[2].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2,
+	.gmac_queue_config[2].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2,
+	.gmac_queue_config[2].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE2,
+	.gmac_queue_config[2].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
+
+	/** QUEUE 3 Intialization**/
+		.gmac_queue_config[3].queueEnable	= false,	
+	.gmac_queue_config[3].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3,
+	.gmac_queue_config[3].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3,
+	.gmac_queue_config[3].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE3,
+	.gmac_queue_config[3].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
+
+	/** QUEUE 4 Intialization**/
+		.gmac_queue_config[4].queueEnable	= false,	
+	.gmac_queue_config[4].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4,
+	.gmac_queue_config[4].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4,
+	.gmac_queue_config[4].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE4,
+	.gmac_queue_config[4].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE4,
+
+	/** QUEUE 5 Intialization**/
+	.gmac_queue_config[5].queueEnable	= false,	
+	.gmac_queue_config[5].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5,
+	.gmac_queue_config[5].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5,
+	.gmac_queue_config[5].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE5,
+	.gmac_queue_config[5].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE5,
+	.ethFlags               = TCPIP_GMAC_ETH_OPEN_FLAGS,	
+	.linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+    .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
+    .pPhyInit               = &tcpipPhyInitData,
 };
+
+
+
+
+
+
 
 
 /*** TFTP Client Initialization Data ***/
 const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 {
-    .tftpc_interface =      TCPIP_TFTPC_DEFAULT_IF,
-    .tftpc_reply_timeout =  TCPIP_TFTPC_CMD_PROCESS_TIMEOUT,
+    .tftpc_interface        = TCPIP_TFTPC_DEFAULT_IF,
+    .tftpc_reply_timeout	= TCPIP_TFTPC_CMD_PROCESS_TIMEOUT,  
 };
+
+
+
 
 /*** DNS Client Initialization Data ***/
 const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 {
-    .deleteOldLease =       TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES,
-    .cacheEntries =         TCPIP_DNS_CLIENT_CACHE_ENTRIES,
-    .entrySolvedTmo =       TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO,
-    .nIPv4Entries =         TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS,
-    .ipAddressType =        TCPIP_DNS_CLIENT_ADDRESS_TYPE,
+    .deleteOldLease         = TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES,
+    .cacheEntries           = TCPIP_DNS_CLIENT_CACHE_ENTRIES,
+    .entrySolvedTmo         = TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO,    
+    .nIPv4Entries  = TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS,
+    .ipAddressType       = TCPIP_DNS_CLIENT_ADDRESS_TYPE,
+    .nIPv6Entries  = TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS,
 };
+
+
+
 
 TCPIP_STACK_HEAP_INTERNAL_CONFIG tcpipHeapConfig =
 {
-    .heapType =     TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP,
-    .heapFlags =    TCPIP_STACK_HEAP_USE_FLAGS,
-    .heapUsage =    TCPIP_STACK_HEAP_USAGE_CONFIG,
-    .malloc_fnc =   TCPIP_STACK_MALLOC_FUNC,
-    .calloc_fnc =   TCPIP_STACK_CALLOC_FUNC,
-    .free_fnc =     TCPIP_STACK_FREE_FUNC,
-    .heapSize =     TCPIP_STACK_DRAM_SIZE,
+    .heapType = TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP,
+    .heapFlags = TCPIP_STACK_HEAP_USE_FLAGS,
+    .heapUsage = TCPIP_STACK_HEAP_USAGE_CONFIG,
+    .malloc_fnc = TCPIP_STACK_MALLOC_FUNC,
+    .calloc_fnc = TCPIP_STACK_CALLOC_FUNC,
+    .free_fnc = TCPIP_STACK_FREE_FUNC,
+    .heapSize = TCPIP_STACK_DRAM_SIZE,
 };
+
 
 const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] =
 {
-    /*** Network Configuration Index 0 ***/
+	/*** Network Configuration Index 0 ***/
     {
         TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0,       // interface
         TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0,            // hostName
@@ -810,9 +839,11 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
         TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX0,           // secondDNS
         TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX0,           // powerMode
         TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX0,      // startFlags
-        &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0,          // pMacObject
+       &TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0,           // pMacObject
     },
 };
+
+
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
@@ -917,6 +948,16 @@ const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
     .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)UART1_ErrorGet,
 };
 
+
+const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
+{
+    /* Peripheral has single interrupt vector */
+    .isSingleIntSrc                        = true,
+
+    /* Peripheral interrupt line */
+    .intSources.usartInterrupt             = UART1_IRQn,
+};
+
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
 {
     .uartPLIB = &sysConsole0UARTPlibAPI,
@@ -924,7 +965,7 @@ const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
     .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
     .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
     .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSource = UART1_IRQn,
+    .interruptSources = &sysConsole0UARTInterruptSources,
 };
 
 const SYS_CONSOLE_INIT sysConsole0Init =

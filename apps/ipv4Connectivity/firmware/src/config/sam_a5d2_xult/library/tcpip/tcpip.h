@@ -650,7 +650,7 @@ typedef struct
 #include "tcpip/tcpip_helpers.h"
 
 #include "tcpip/ipv4.h"
-#include "tcpip/ipv6.h"     // FELIPE --  should not be required but DNS has depencencies on ipv6!
+#include "tcpip/ipv6.h"
 #include "tcpip/arp.h"
 #include "tcpip/tcp.h"
 #include "tcpip/udp.h"

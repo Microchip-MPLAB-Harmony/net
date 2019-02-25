@@ -73,6 +73,11 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 
 /* TTB Section Descriptor: Section Base Address */
 #define TTB_SECT_ADDR(x)           ((x) & 0xFFF00000)
+/* L1 data cache line size, Number of ways and Number of sets */
+#define L1_DATA_CACHE_BYTES        32U
+#define L1_DATA_CACHE_WAYS         4U
+#define L1_DATA_CACHE_SETS         256U
+#define L1_DATA_CACHE_SETWAY(set, way) (((set) << 5) | ((way) << 30))
 
 __ALIGNED(16384) static uint32_t tlb[4096];
 
@@ -86,15 +91,15 @@ __ALIGNED(16384) static uint32_t tlb[4096];
 */
 static void mmu_configure(void *tlb)
 {
-	/* Translation Table Base Register 0 */
-	__set_TTBR0((uint32_t)tlb);
+    /* Translation Table Base Register 0 */
+    __set_TTBR0((uint32_t)tlb);
 
-	/* Domain Access Register */
-	/* only domain 15: access are not checked */
-	__set_DACR(0xC0000000);
+    /* Domain Access Register */
+    /* only domain 15: access are not checked */
+    __set_DACR(0xC0000000);
 
-	__DSB();
-	__ISB();
+    __DSB();
+    __ISB();
 }
 
 // *****************************************************************************
@@ -107,74 +112,138 @@ static void mmu_configure(void *tlb)
 */
 static void mmu_enable(void)
 {
-	uint32_t control;
+    uint32_t control;
 
-	control = __get_SCTLR();
-	if ((control & SCTLR_M_Msk) == 0)
-		__set_SCTLR(control | SCTLR_M_Msk);
+    control = __get_SCTLR();
+    if ((control & SCTLR_M_Msk) == 0)
+        __set_SCTLR(control | SCTLR_M_Msk);
 }
 
-// *****************************************************************************
-/* Function:
-     void icache_invalidate(void)
-
-  Summary:
-    Invalidate instruction cache.
-
-*/
-static void icache_invalidate(void)
+void icache_InvalidateAll(void)
 {
-	__set_ICIALLU(0);
-	__ISB();
+    __set_ICIALLU(0);
+    __ISB();
 }
 
-// *****************************************************************************
-/* Function(or Macro):
-     void icache_enable(void)
-
-  Summary:
-    Enable instruction cache.
-
-*/
-static void icache_enable(void)
+void icache_Enable(void)
 {
-	uint32_t sctlr = __get_SCTLR();
-	if ((sctlr & SCTLR_I_Msk) == 0) {
-		icache_invalidate();
-		__set_SCTLR(sctlr | SCTLR_I_Msk);
-	}
+    uint32_t sctlr = __get_SCTLR();
+    if ((sctlr & SCTLR_I_Msk) == 0)
+    {
+        icache_InvalidateAll();
+        __set_SCTLR(sctlr | SCTLR_I_Msk);
+    }
 }
 
-// *****************************************************************************
-/* Function(or Macro):
-     void dcache_invalidate(void)
-
-  Summary:
-    Invalidate data cache.
-
-*/
-static void dcache_invalidate(void)
+void icache_Disable(void)
 {
-	__set_DCCIMVAC(0);
-	__DSB();
+    uint32_t sctlr = __get_SCTLR();
+    if (sctlr & SCTLR_I_Msk)
+    {
+        __set_SCTLR(sctlr & ~SCTLR_I_Msk);
+        icache_InvalidateAll();
+    }
 }
 
-// *****************************************************************************
-/* Function(or Macro):
-     void dcache_enable(void)
-
-  Summary:
-    Enable data cache
-
-*/
-static void dcache_enable(void)
+void dcache_InvalidateAll(void)
 {
-	uint32_t sctlr = __get_SCTLR();
-	if ((sctlr & SCTLR_C_Msk) == 0) {
-		dcache_invalidate();
-		__set_SCTLR(sctlr | SCTLR_C_Msk);
-	}
+    uint32_t set, way;
+
+    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
+    {
+        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
+        {
+            __set_DCISW(L1_DATA_CACHE_SETWAY(set, way));
+        }
+    }
+    __DSB();
 }
+
+void dcache_CleanAll(void)
+{
+    uint32_t set, way;
+
+    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
+    {
+        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
+        {
+            __set_DCCSW(L1_DATA_CACHE_SETWAY(set, way));
+        }
+    }
+    __DSB();
+}
+
+void dcache_CleanInvalidateAll(void)
+{
+    uint32_t set, way;
+
+    for (way = 0; way < L1_DATA_CACHE_WAYS; way++)
+    {
+        for (set = 0; set < L1_DATA_CACHE_SETS; set++)
+        {
+            __set_DCCISW(L1_DATA_CACHE_SETWAY(set, way));
+        }
+    }
+    __DSB();
+}
+
+void dcache_InvalidateByAddr (uint32_t *addr, uint32_t size)
+{
+    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
+
+    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
+    {
+        __set_DCIMVAC(mva);
+        __DMB();
+    }
+    __DSB();
+}
+
+void dcache_CleanByAddr (uint32_t *addr, uint32_t size)
+{
+    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
+
+    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
+    {
+        __set_DCCMVAC(mva);
+        __DMB();
+    }
+    __DSB();
+}
+
+void dcache_CleanInvalidateByAddr (uint32_t *addr, uint32_t size)
+{
+    uint32_t mva = (uint32_t)addr & ~(L1_DATA_CACHE_BYTES - 1);
+
+    for ( ; mva < ((uint32_t)addr + size); mva += L1_DATA_CACHE_BYTES)
+    {
+        __set_DCCIMVAC((uint32_t)mva);
+        __DMB();
+    }
+    __DSB();
+}
+
+void dcache_Enable(void)
+{
+    uint32_t sctlr = __get_SCTLR();
+    if ((sctlr & SCTLR_C_Msk) == 0)
+    {
+        dcache_InvalidateAll();
+        __set_SCTLR(sctlr | SCTLR_C_Msk);
+    }
+}
+
+void dcache_Disable(void)
+{
+    uint32_t sctlr = __get_SCTLR();
+    if (sctlr & SCTLR_C_Msk)
+    {
+        dcache_CleanAll();
+        __set_SCTLR(sctlr & ~SCTLR_C_Msk);
+        dcache_InvalidateAll();
+    }
+}
+
 
 static inline uint32_t cp15_read_sctlr(void)
 {
@@ -210,242 +279,238 @@ static inline void cp15_write_sctlr(uint32_t value)
 */
 void MMU_Initialize(void)
 {
-	uint32_t addr;
+    uint32_t addr;
 
-	/* Reset table entries */
-	for (addr = 0; addr < 4096; addr++)
-		tlb[addr] = 0;
+    /* Reset table entries */
+    for (addr = 0; addr < 4096; addr++)
+        tlb[addr] = 0;
 
-	/* 0x00000000: ROM */
-	tlb[0x000] = TTB_SECT_ADDR(0x00000000)
-	           | TTB_SECT_AP_READ_ONLY
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC
-	           | TTB_SECT_CACHEABLE_WB
-	           | TTB_TYPE_SECT;
+    /* 0x00000000: ROM */
+    tlb[0x000] = TTB_SECT_ADDR(0x00000000)
+               | TTB_SECT_AP_READ_ONLY
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC
+               | TTB_SECT_CACHEABLE_WB
+               | TTB_TYPE_SECT;
 
-	/* 0x00100000: NFC SRAM */
-	tlb[0x001] = TTB_SECT_ADDR(0x00100000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
+    /* 0x00100000: NFC SRAM */
+    tlb[0x001] = TTB_SECT_ADDR(0x00100000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
 
-	/* 0x00200000: SRAM */
-	tlb[0x002] = TTB_SECT_ADDR(0x00200000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC
-	           | TTB_SECT_CACHEABLE_WB
-	           | TTB_TYPE_SECT;
+    /* 0x00200000: SRAM */
+    tlb[0x002] = TTB_SECT_ADDR(0x00200000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC
+               | TTB_SECT_CACHEABLE_WB
+               | TTB_TYPE_SECT;
 
-	/* 0x00300000: UDPHS (RAM) */
-	tlb[0x003] = TTB_SECT_ADDR(0x00300000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
+    /* 0x00300000: UDPHS (RAM) */
+    tlb[0x003] = TTB_SECT_ADDR(0x00300000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
 
-	/* 0x00400000: UHPHS (OHCI) */
-	tlb[0x004] = TTB_SECT_ADDR(0x00400000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
+    /* 0x00400000: UHPHS (OHCI) */
+    tlb[0x004] = TTB_SECT_ADDR(0x00400000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
 
-	/* 0x00500000: UDPHS (EHCI) */
-	tlb[0x005] = TTB_SECT_ADDR(0x00500000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
+    /* 0x00500000: UDPHS (EHCI) */
+    tlb[0x005] = TTB_SECT_ADDR(0x00500000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
 
-	/* 0x00600000: AXIMX */
-	tlb[0x006] = TTB_SECT_ADDR(0x00600000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
+    /* 0x00600000: AXIMX */
+    tlb[0x006] = TTB_SECT_ADDR(0x00600000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
 
-	/* 0x00700000: DAP */
-	tlb[0x007] = TTB_SECT_ADDR(0x00700000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
-	/* 0x00800000: pPP */
-	tlb[0x008] = TTB_SECT_ADDR(0x00800000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
-	/* 0x00a00000: L2CC */
-	tlb[0x00a] = TTB_SECT_ADDR(0x00a00000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
-	tlb[0x00b] = TTB_SECT_ADDR(0x00b00000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC_NEVER
-	           | TTB_SECT_SHAREABLE_DEVICE
-	           | TTB_TYPE_SECT;
+    /* 0x00700000: DAP */
+    tlb[0x007] = TTB_SECT_ADDR(0x00700000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
+    /* 0x00800000: pPP */
+    tlb[0x008] = TTB_SECT_ADDR(0x00800000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
+    /* 0x00a00000: L2CC */
+    tlb[0x00a] = TTB_SECT_ADDR(0x00a00000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
+    tlb[0x00b] = TTB_SECT_ADDR(0x00b00000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC_NEVER
+               | TTB_SECT_SHAREABLE_DEVICE
+               | TTB_TYPE_SECT;
 
-	/* 0x10000000: EBI Chip Select 0 */
-	for (addr = 0x100; addr < 0x200; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0x10000000: EBI Chip Select 0 */
+    for (addr = 0x100; addr < 0x200; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0x20000000: DDR Chip Select */
-	/* (16MB strongly ordered, 448MB cacheable) */
-	for (addr = 0x200; addr < 0x210; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
-	for (addr = 0x210; addr < 0x400; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC
-	                  | TTB_SECT_CACHEABLE_WB
-	                  | TTB_TYPE_SECT;
+    /* 0x20000000: DDR Chip Select */
+    /* (16MB strongly ordered, 448MB cacheable) */
+    for (addr = 0x200; addr < 0x210; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
+    for (addr = 0x210; addr < 0x400; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC
+                      | TTB_SECT_CACHEABLE_WB
+                      | TTB_TYPE_SECT;
 
-	/* 0x40000000: DDR AESB Chip Select */
-	for (addr = 0x400; addr < 0x600; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC
-	                  | TTB_SECT_CACHEABLE_WB
-	                  | TTB_TYPE_SECT;
+    /* 0x40000000: DDR AESB Chip Select */
+    for (addr = 0x400; addr < 0x600; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC
+                      | TTB_SECT_CACHEABLE_WB
+                      | TTB_TYPE_SECT;
 
-	/* 0x60000000: EBI Chip Select 1 */
-	for (addr = 0x600; addr < 0x700; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0x60000000: EBI Chip Select 1 */
+    for (addr = 0x600; addr < 0x700; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0x70000000: EBI Chip Select 2 */
-	for (addr = 0x700; addr < 0x800; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0x70000000: EBI Chip Select 2 */
+    for (addr = 0x700; addr < 0x800; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0x80000000: EBI Chip Select 3 */
-	for (addr = 0x800; addr < 0x900; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0x80000000: EBI Chip Select 3 */
+    for (addr = 0x800; addr < 0x900; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0x90000000: QSPI0/1 AESB MEM */
-	for (addr = 0x900; addr < 0xa00; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0x90000000: QSPI0/1 AESB MEM */
+    for (addr = 0x900; addr < 0xa00; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0xa0000000: SDMMC0 */
-	for (addr = 0xa00; addr < 0xb00; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  //| TTB_SECT_SHAREABLE_DEVICE
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0xa0000000: SDMMC0 */
+    for (addr = 0xa00; addr < 0xb00; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      //| TTB_SECT_SHAREABLE_DEVICE
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0xb0000000: SDMMC1 */
-	for (addr = 0xb00; addr < 0xc00; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  //| TTB_SECT_SHAREABLE_DEVICE
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0xb0000000: SDMMC1 */
+    for (addr = 0xb00; addr < 0xc00; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      //| TTB_SECT_SHAREABLE_DEVICE
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0xc0000000: NFC Command Register */
-	for (addr = 0xc00; addr < 0xd00; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC_NEVER
-	                  //| TTB_SECT_SHAREABLE_DEVICE
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0xc0000000: NFC Command Register */
+    for (addr = 0xc00; addr < 0xd00; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC_NEVER
+                      //| TTB_SECT_SHAREABLE_DEVICE
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0xd0000000: QSPI0/1 MEM */
-	for (addr = 0xd00; addr < 0xe00; addr++)
-		tlb[addr] = TTB_SECT_ADDR(addr << 20)
-	                  | TTB_SECT_AP_FULL_ACCESS
-	                  | TTB_SECT_DOMAIN(0xf)
-	                  | TTB_SECT_EXEC
-	                  | TTB_SECT_STRONGLY_ORDERED
-	                  | TTB_TYPE_SECT;
+    /* 0xd0000000: QSPI0/1 MEM */
+    for (addr = 0xd00; addr < 0xe00; addr++)
+        tlb[addr] = TTB_SECT_ADDR(addr << 20)
+                      | TTB_SECT_AP_FULL_ACCESS
+                      | TTB_SECT_DOMAIN(0xf)
+                      | TTB_SECT_EXEC
+                      | TTB_SECT_STRONGLY_ORDERED
+                      | TTB_TYPE_SECT;
 
-	/* 0xf0000000: Internal Peripherals */
-	tlb[0xf00] = TTB_SECT_ADDR(0xf0000000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_TYPE_SECT;
+    /* 0xf0000000: Internal Peripherals */
+    tlb[0xf00] = TTB_SECT_ADDR(0xf0000000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC
+               | TTB_SECT_STRONGLY_ORDERED
+               | TTB_TYPE_SECT;
 
-	/* 0xf8000000: Internal Peripherals */
-	tlb[0xf80] = TTB_SECT_ADDR(0xf8000000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_TYPE_SECT;
+    /* 0xf8000000: Internal Peripherals */
+    tlb[0xf80] = TTB_SECT_ADDR(0xf8000000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC
+               | TTB_SECT_STRONGLY_ORDERED
+               | TTB_TYPE_SECT;
 
-	/* 0xfc000000: Internal Peripherals */
-	tlb[0xfc0] = TTB_SECT_ADDR(0xfc000000)
-	           | TTB_SECT_AP_FULL_ACCESS
-	           | TTB_SECT_DOMAIN(0xf)
-	           | TTB_SECT_EXEC
-	           | TTB_SECT_STRONGLY_ORDERED
-	           | TTB_TYPE_SECT;
+    /* 0xfc000000: Internal Peripherals */
+    tlb[0xfc0] = TTB_SECT_ADDR(0xfc000000)
+               | TTB_SECT_AP_FULL_ACCESS
+               | TTB_SECT_DOMAIN(0xf)
+               | TTB_SECT_EXEC
+               | TTB_SECT_STRONGLY_ORDERED
+               | TTB_TYPE_SECT;
 
-	/* Enable MMU, I-Cache and D-Cache */
-	mmu_configure(tlb);
-	icache_enable();
-	mmu_enable();
-	dcache_enable();
+    /* Enable MMU, I-Cache and D-Cache */
+    mmu_configure(tlb);
+    icache_Enable();
+    mmu_enable();
+    dcache_Enable();
 
     // disable the processor alignment fault testing
     uint32_t sctlrValue = cp15_read_sctlr();
     sctlrValue &= ~0x00000002;
     cp15_write_sctlr( sctlrValue );
 }
-
-/*******************************************************************************
- End of File
-*/

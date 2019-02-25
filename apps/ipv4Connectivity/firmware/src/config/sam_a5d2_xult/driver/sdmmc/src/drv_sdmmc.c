@@ -1103,7 +1103,7 @@ static void _DRV_SDMMC_MediaInitialize (
 // *****************************************************************************
 // *****************************************************************************
 
-void __attribute ((weak)) DRV_SDMMC_RegisterWithSysFs(
+__WEAK void DRV_SDMMC_RegisterWithSysFs(
     const SYS_MODULE_INDEX drvIndex
 )
 {

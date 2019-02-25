@@ -47,53 +47,6 @@
 // *****************************************************************************
 #include "device.h"
 #include "system/cache/sys_cache.h"
-#include "peripheral/l2cc/plib_l2cc.h"
-
-#define DATA_CACHE_IS_ENABLED            (__get_SCTLR() & (uint32_t)SCTLR_C_Msk)
-#define INSTRUCTION_CACHE_IS_ENABLED     (__get_SCTLR() & (uint32_t)SCTLR_I_Msk)
-#define L2_DATA_CACHE_IS_ENABLED         (L2CC_REGS->L2CC_CR & L2CC_CR_L2CEN_Msk)
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local Functions
-// *****************************************************************************
-// *****************************************************************************
-
-/*
- * Enable Instruction Cache by setting I bit in SCTLR register.
- */
-static inline void L1C_EnableICache(void)
-{
-    __set_SCTLR( __get_SCTLR() | SCTLR_I_Msk );
-    __ISB();
-}
-
-/*
- * Disable Instruction Cache by clearing I bit in SCTLR register.
- */
-static inline void L1C_DisableICache(void)
-{
-    __set_SCTLR( __get_SCTLR() & (~SCTLR_I_Msk) );
-    __ISB();
-}
-
-/*
- * Enable Data Cache by setting C bit in SCTLR register.
- */
-static inline void L1C_EnableDCache(void)
-{
-    __set_SCTLR( __get_SCTLR() | SCTLR_C_Msk );
-    __ISB();
-}
-
-/*
- * Disable Data Cache by clearing C bit in SCTLR register.
- */
-static inline void L1C_DisableDCache(void)
-{
-    __set_SCTLR( __get_SCTLR() & (~SCTLR_C_Msk) );
-    __ISB();
-}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -102,141 +55,107 @@ static inline void L1C_DisableDCache(void)
 // *****************************************************************************
 
 /*
- * Enables both Data and Instruction Caches by setting C and I bits in SCTLR register.
+ * Enable both Data and Instruction Caches.
  */
 void SYS_CACHE_EnableCaches (void)
 {
-    if ((DATA_CACHE_IS_ENABLED == 0) && (INSTRUCTION_CACHE_IS_ENABLED == 0)) // If Data and Instruction Caches are disabled
-    {
-        L1C_EnableCaches();
-    }
+    L1_ICACHE_ENABLE();
+    L1_DCACHE_ENABLE();
 }
 
 /*
- * Disables both Data and Instruction Caches by clearing C and I bits in SCTLR register.
+ * Disable both Data and Instruction Caches.
  */
 void SYS_CACHE_DisableCaches (void)
 {
-    if (DATA_CACHE_IS_ENABLED && INSTRUCTION_CACHE_IS_ENABLED) // If Data and Instruction Caches are enabled
-    {
-        L1C_DisableCaches();
-    }
+    L1_ICACHE_DISABLE();
+    L1_DCACHE_DISABLE();
 }
 
+/*
+ * Enable Instruction Cache.
+ */
 void SYS_CACHE_EnableICache (void)
 {
-    if (INSTRUCTION_CACHE_IS_ENABLED == 0) // If Instruction Cache is disabled
-    {
-        L1C_EnableICache();
-    }
+    L1_ICACHE_ENABLE();
 }
 
+/*
+ * Disable Instruction Cache.
+ */
 void SYS_CACHE_DisableICache (void)
 {
-    if (INSTRUCTION_CACHE_IS_ENABLED) // If Instruction Cache is enabled
-    {
-        L1C_DisableICache();
-    }
+    L1_ICACHE_DISABLE();
 }
 
+/*
+ * Invalidate Instruction Cache.
+ */
 void SYS_CACHE_InvalidateICache (void)
 {
-    if (INSTRUCTION_CACHE_IS_ENABLED) // If Instruction Cache is enabled
-    {
-        L1C_InvalidateICacheAll();
-    }
+    L1_ICACHE_INVALIDATE_ALL();
 }
 
+/*
+ * Enable Data Cache.
+ */
 void SYS_CACHE_EnableDCache (void)
 {
-    if (DATA_CACHE_IS_ENABLED == 0) // If Data Cache is disabled
-    {
-        L1C_EnableDCache();
-    }
+    L1_DCACHE_ENABLE();
 }
 
+/*
+ * Disable Data Cache.
+ */
 void SYS_CACHE_DisableDCache (void)
 {
-    if (DATA_CACHE_IS_ENABLED) // If Data Cache is enabled
-    {
-        L1C_DisableDCache();
-    }
+    L1_DCACHE_DISABLE();
 }
 
+/*
+ * Invalidate whole Data Cache.
+ */
 void SYS_CACHE_InvalidateDCache (void)
 {
-    if (DATA_CACHE_IS_ENABLED)
-    {
-        L1C_InvalidateDCacheAll();
-    }
-
-    if (L2_DATA_CACHE_IS_ENABLED && DATA_CACHE_IS_ENABLED)
-    {
-        PLIB_L2CC_InvalidateCache();
-    }
+    DCACHE_INVALIDATE_ALL();
 }
 
+/*
+ * Clean whole Data Cache.
+ */
 void SYS_CACHE_CleanDCache (void)
 {
-    if (DATA_CACHE_IS_ENABLED)
-    {
-        L1C_CleanDCacheAll();
-    }
-
-    if (L2_DATA_CACHE_IS_ENABLED && DATA_CACHE_IS_ENABLED)
-    {
-        PLIB_L2CC_CleanCache();
-    }
+    DCACHE_CLEAN_ALL();
 }
 
+/*
+ * Clean and Invalidate whole Data Cache.
+ */
 void SYS_CACHE_CleanInvalidateDCache (void)
 {
-    if (DATA_CACHE_IS_ENABLED)
-    {
-        L1C_CleanInvalidateDCacheAll();
-    }
-
-    if (L2_DATA_CACHE_IS_ENABLED && DATA_CACHE_IS_ENABLED)
-    {
-        PLIB_L2CC_CleanInvalidateCache();
-    }
+    DCACHE_CLEAN_INVALIDATE_ALL();
 }
 
+/*
+ * Invalidate Data Cache by address.
+ */
 void SYS_CACHE_InvalidateDCache_by_Addr (uint32_t *addr, int32_t size)
 {
-    if (L2_DATA_CACHE_IS_ENABLED && DATA_CACHE_IS_ENABLED)
-    {
-        PLIB_L2CC_InvalidateCacheByAddr(addr, size);
-    }
-
-    if (DATA_CACHE_IS_ENABLED)
-    {
-        L1C_InvalidateDCacheAll();
-    }
+    DCACHE_INVALIDATE_BY_ADDR(addr,(uint32_t)size);
 }
 
+/*
+ * Clean Data Cache by address.
+ */
 void SYS_CACHE_CleanDCache_by_Addr (uint32_t *addr, int32_t size)
 {
-    if (DATA_CACHE_IS_ENABLED)
-    {
-        L1C_CleanDCacheAll();
-    }
-
-    if (L2_DATA_CACHE_IS_ENABLED && DATA_CACHE_IS_ENABLED)
-    {
-        PLIB_L2CC_CleanCacheByAddr(addr, size);
-    }
+    DCACHE_CLEAN_BY_ADDR(addr,(uint32_t)size);
 }
 
+/*
+ * Clean and Invalidate Data Cache by address.
+ */
 void SYS_CACHE_CleanInvalidateDCache_by_Addr (uint32_t *addr, int32_t size)
 {
-    if (L2_DATA_CACHE_IS_ENABLED || DATA_CACHE_IS_ENABLED)
-    {
-        L1C_CleanInvalidateDCacheAll();
-    }
-
-    if (L2_DATA_CACHE_IS_ENABLED && DATA_CACHE_IS_ENABLED)
-    {
-        PLIB_L2CC_CleanInvalidateCacheByAddr(addr, size);
-    }
+    DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,(uint32_t)size);
 }
