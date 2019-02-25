@@ -50,6 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
         
+#include "toolchain_specifics.h"
 #include "system_config.h"
 #include "system/console/sys_debug.h"
 #include "system/console/sys_console.h"
