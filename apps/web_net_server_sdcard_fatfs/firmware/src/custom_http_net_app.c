@@ -661,7 +661,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostMD5(TCPIP_HTTP_NET_CONN_HANDLE connHandl
 
     return TCPIP_HTTP_NET_IO_RES_DONE;
 }
-#endif
+#endif // #if defined(HTTP_APP_USE_MD5)
 
 /*****************************************************************************
   Function:
