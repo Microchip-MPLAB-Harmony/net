@@ -105,22 +105,29 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipIPv6InitTaskProcessRate.setDescription("IPv6 Init Task Processing Rate in ms")
 	tcpipIPv6InitTaskProcessRate.setDefaultValue(32)
 	#tcpipIPv6InitTaskProcessRate.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
-
+	
+	# Enable IPv6 ULA Generation
+	tcpipIPv6UlaEnable = tcpipIPv6Component.createBooleanSymbol("TCPIP_IPV6_ULA_GENERATE_ENABLE", None)
+	tcpipIPv6UlaEnable.setLabel("Enable ULA Generation")
+	tcpipIPv6UlaEnable.setVisible(True)
+	tcpipIPv6UlaEnable.setDescription("Enable ULA Generation")
+	tcpipIPv6UlaEnable.setDefaultValue(False)
+	
 	#NTP Access Time-out For The IPv6 ULA Address Generation in ms
-	tcpipIPv6UlaNtpAccessTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_ULA_NTP_ACCESS_TMO", None)
+	tcpipIPv6UlaNtpAccessTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_ULA_NTP_ACCESS_TMO", tcpipIPv6UlaEnable)
 	tcpipIPv6UlaNtpAccessTimeout.setLabel("NTP Access Time-out For The IPv6 ULA Address Generation - ms")
-	tcpipIPv6UlaNtpAccessTimeout.setVisible(True)
+	tcpipIPv6UlaNtpAccessTimeout.setVisible(False)
 	tcpipIPv6UlaNtpAccessTimeout.setDescription("NTP Access Time-out For The IPv6 ULA Address Generation in ms")
 	tcpipIPv6UlaNtpAccessTimeout.setDefaultValue(12000)
-	#tcpipIPv6UlaNtpAccessTimeout.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
+	tcpipIPv6UlaNtpAccessTimeout.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_IPV6_ULA_GENERATE_ENABLE"])
 
 	#NTP Time Stamp Validity Window in ms
-	tcpipIPv6UlaNtpValidWindowTimestamp = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_ULA_NTP_VALID_WINDOW", None)
+	tcpipIPv6UlaNtpValidWindowTimestamp = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_ULA_NTP_VALID_WINDOW", tcpipIPv6UlaEnable)
 	tcpipIPv6UlaNtpValidWindowTimestamp.setLabel("NTP Time Stamp Validity Window - ms")
-	tcpipIPv6UlaNtpValidWindowTimestamp.setVisible(True)
+	tcpipIPv6UlaNtpValidWindowTimestamp.setVisible(False)
 	tcpipIPv6UlaNtpValidWindowTimestamp.setDescription("NTP Time Stamp Validity Window in ms")
 	tcpipIPv6UlaNtpValidWindowTimestamp.setDefaultValue(1000)
-	#tcpipIPv6UlaNtpValidWindowTimestamp.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
+	tcpipIPv6UlaNtpValidWindowTimestamp.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_IPV6_ULA_GENERATE_ENABLE"])
 
 	#Fragmentation Packet Time-out Value
 	tcpipIPv6FragPktTimeout = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT", None)
