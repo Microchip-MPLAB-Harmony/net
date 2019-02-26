@@ -138,30 +138,6 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipIPv6RxFragBuffSizeMax.setDefaultValue(1514)
 	#tcpipIPv6RxFragBuffSizeMax.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
 
-	# Use ICMPv6 Server
-	tcpipIPv6UseIcmpv6Server = tcpipIPv6Component.createBooleanSymbol("TCPIP_STACK_USE_ICMPV6_SERVER", None)
-	tcpipIPv6UseIcmpv6Server.setLabel("Use ICMPv6 Server")
-	tcpipIPv6UseIcmpv6Server.setVisible(True)
-	tcpipIPv6UseIcmpv6Server.setDescription("Use ICMPv6 Server")
-	tcpipIPv6UseIcmpv6Server.setDefaultValue(True)
-	#tcpipIPv6UseIcmpv6Server.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
-
-	# Use ICMPv6 Client
-	tcpipIPv6UseIcmpv6Client = tcpipIPv6Component.createBooleanSymbol("TCPIP_STACK_USE_ICMPV6_CLIENT", None)
-	tcpipIPv6UseIcmpv6Client.setLabel("Use ICMPv6 Client")
-	tcpipIPv6UseIcmpv6Client.setVisible(True)
-	tcpipIPv6UseIcmpv6Client.setDescription("Use ICMPv6 Client")
-	tcpipIPv6UseIcmpv6Client.setDefaultValue(False)
-	#tcpipIPv6UseIcmpv6Client.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_IPV6"])
-
-	# Enable IPV6 User Notification
-	tcpipIPv6UseIcmpv6Client = tcpipIPv6Component.createBooleanSymbol("TCPIP_ICMPV6_CLIENT_USER_NOTIFICATION", tcpipIPv6UseIcmpv6Client)
-	tcpipIPv6UseIcmpv6Client.setLabel("Enable IPV6 User Notification")
-	tcpipIPv6UseIcmpv6Client.setVisible(False)
-	tcpipIPv6UseIcmpv6Client.setDescription("Enable IPV6 User Notification")
-	tcpipIPv6UseIcmpv6Client.setDefaultValue(True)
-	tcpipIPv6UseIcmpv6Client.setDependencies(tcpipIPv6MenuVisible, ["TCPIP_STACK_USE_ICMPV6_CLIENT"])
-
 	#Add to system_config.h
 	tcpipIPv6HeaderFtl = tcpipIPv6Component.createFileSymbol(None, None)
 	tcpipIPv6HeaderFtl.setSourcePath("tcpip/config/ipv6.h.ftl")
@@ -179,17 +155,6 @@ def instantiateComponent(tcpipIPv6Component):
 	tcpipIPv6SourceFile.setType("SOURCE")
 	tcpipIPv6SourceFile.setEnabled(True)
 	#tcpipIPv6SourceFile.setDependencies(tcpipIpv6GenSourceFile, ["TCPIP_STACK_USE_IPV6"])
-
-	# Add icmpv6.c file
-	tcpipICMPv6SourceFile = tcpipIPv6Component.createFileSymbol(None, None)
-	tcpipICMPv6SourceFile.setSourcePath("tcpip/src/icmpv6.c")
-	tcpipICMPv6SourceFile.setOutputName("icmpv6.c")
-	tcpipICMPv6SourceFile.setOverwrite(True)
-	tcpipICMPv6SourceFile.setDestPath("library/tcpip/src/")
-	tcpipICMPv6SourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-	tcpipICMPv6SourceFile.setType("SOURCE")
-	tcpipICMPv6SourceFile.setEnabled(True)
-	#tcpipICMPv6SourceFile.setDependencies(tcpipIpv6GenSourceFile, ["TCPIP_STACK_USE_IPV6"])
 
 def tcpipIPv6MenuVisible(symbol, event):
 	if (event["value"] == True):
