@@ -100,6 +100,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // The default value is 32 milliseconds.
 #define TCPIP_IPV6_INIT_TASK_PROCESS_RATE           (32)
 
+// Enable the IPv6 ULA address generation
+// SNTP protocol needs to be enabled
+#define TCPIP_IPV6_ULA_GENERATE_ENABLE      0
+
 // NTP access time-out for the IPv6 ULA address generation, ms
 #define TCPIP_IPV6_ULA_NTP_ACCESS_TMO               (12000)
 
