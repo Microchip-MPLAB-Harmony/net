@@ -4,14 +4,11 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f4" displayName="arm" projectFiles="true">
-        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+          <logicalFolder name="f5" displayName="driver" projectFiles="true">
             <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -47,7 +44,7 @@
             <itemPath>../src/config/sam_v71_xult_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
+          <logicalFolder name="f4" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
@@ -61,8 +58,8 @@
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv4_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/arp_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/arp_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/udp_manager.h</itemPath>
@@ -168,21 +165,21 @@
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="net" projectFiles="true">
+          <logicalFolder name="f3" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult_freertos/net/pres/src/net_pres_local.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_certstore.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_encryptionproviderapi.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_socketapi.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_transportapi.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_socketapiconversion.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_enc_glue.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_transportapi.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
@@ -205,9 +202,15 @@
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="console" projectFiles="true">
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/system/cache/sys_cache.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
@@ -217,10 +220,10 @@
             <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/system.h</itemPath>
@@ -231,11 +234,13 @@
           <itemPath>../src/config/sam_v71_xult_freertos/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/user.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/configuration.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult_freertos/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult_freertos/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/definitions.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/FreeRTOSConfig.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="FreeRTOS" projectFiles="true">
+      <logicalFolder name="f4" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
           <logicalFolder name="f1" displayName="include" projectFiles="true">
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/croutine.h</itemPath>
@@ -323,6 +328,7 @@
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
@@ -353,7 +359,7 @@
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+          <logicalFolder name="f5" displayName="driver" projectFiles="true">
             <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -366,7 +372,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
-                  <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/src/dynamic/drv_gmac_lib.c</itemPath>
+                  <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/src/dynamic/drv_gmac_lib_samE7x_V7x.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
@@ -404,15 +410,15 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net" projectFiles="true">
+          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult_freertos/net/pres/src/net_pres.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
@@ -435,12 +441,12 @@
           <logicalFolder name="f6" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult_freertos/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_local.h</itemPath>
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/system/cache/sys_cache.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.c</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_debug.c</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_command.c</itemPath>
@@ -450,7 +456,6 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
@@ -458,7 +463,7 @@
           <itemPath>../src/config/sam_v71_xult_freertos/initialization.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/interrupts.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/exceptions.c</itemPath>
-          <itemPath>../src/config/sam_v71_xult_freertos/startup.c</itemPath>
+          <itemPath>../src/config/sam_v71_xult_freertos/startup_xc32.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/libc_syscalls.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/freertos_hooks.c</itemPath>
         </logicalFolder>
@@ -480,7 +485,7 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/list.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/queue.c</itemPath>
-          <itemPath>../src/third_party/rtos/FreeRTOS/Source/tasks.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/FreeRTOS_tasks.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/timers.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/event_groups.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
@@ -515,7 +520,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.174"/>
+        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.179"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -575,7 +580,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_v71_xult_freertos/library;../src/config/sam_v71_xult_freertos/library/tcpip/src;../src/config/sam_v71_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_v71_xult_freertos;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include;../src/packs/ATSAMV71Q21B_DFP"/>
+                  value="../src/config/sam_v71_xult_freertos/library;../src/config/sam_v71_xult_freertos/library/tcpip/src;../src/config/sam_v71_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_v71_xult_freertos;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include;../src/packs/ATSAMV71Q21B_DFP;../src/third_party/rtos/FreeRTOS/Source/include"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
