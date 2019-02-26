@@ -31,8 +31,6 @@
 ############################################################################
 def instantiateComponent(tcpipAutoConfigNetworkComponent):
 
-	processor = Variables.get("__PROCESSOR")
-
 	tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
 	if (tcpipAutoConfigStackGroup == None):
 		tcpipAutoConfigStackGroup = Database.createGroup(None, "TCP/IP STACK")
@@ -45,7 +43,7 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
 	tcpipAutoConfigNetEnable = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_NET_ENABLE", None)
 	tcpipAutoConfigNetEnable.setVisible(False)
 	tcpipAutoConfigNetEnable.setDefaultValue(True)
-			
+
 	# Enable ARP
 	tcpipAutoConfigARP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ARP", None)
 	tcpipAutoConfigARP.setLabel("ARP")
@@ -73,23 +71,27 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
 	tcpipAutoConfigIPv4.setVisible(True)
 	tcpipAutoConfigIPv4.setDescription("Enable IPv4")
 	tcpipAutoConfigIPv4.setDependencies(tcpipAutoConfigIPv4Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV4"])
-	if "SAMA5" in processor:
-		tcpipAutoConfigIPv4.setReadOnly(True)
 	
-	if "SAMA5" not in processor:
-		# Enable IPv6
-		tcpipAutoConfigIPv6 = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IPV6", None)
-		tcpipAutoConfigIPv6.setLabel("IPv6")
-		tcpipAutoConfigIPv6.setVisible(True)
-		tcpipAutoConfigIPv6.setDescription("Enable IPv6")
-		tcpipAutoConfigIPv6.setDependencies(tcpipAutoConfigIPv6Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV6"])
-		
-		# Enable NDP
-		tcpipAutoConfigNDP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_NDP", None)
-		tcpipAutoConfigNDP.setLabel("NDP")
-		tcpipAutoConfigNDP.setVisible(True)
-		tcpipAutoConfigNDP.setDescription("Enable NDP")	
-		tcpipAutoConfigNDP.setDependencies(tcpipAutoConfigNDPEnable, ["TCPIP_AUTOCONFIG_ENABLE_NDP"])
+	# Enable IPv6
+	tcpipAutoConfigIPv6 = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IPV6", None)
+	tcpipAutoConfigIPv6.setLabel("IPv6")
+	tcpipAutoConfigIPv6.setVisible(True)
+	tcpipAutoConfigIPv6.setDescription("Enable IPv6")
+	tcpipAutoConfigIPv6.setDependencies(tcpipAutoConfigIPv6Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV6"])
+
+	# Enable ICMPv6
+	tcpipAutoConfigICMPv6 = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ICMPv6", None)
+	tcpipAutoConfigICMPv6.setLabel("ICMPv6")
+	tcpipAutoConfigICMPv6.setVisible(True)
+	tcpipAutoConfigICMPv6.setDescription("Enable ICMPv6")	
+	tcpipAutoConfigICMPv6.setDependencies(tcpipAutoConfigIcmpv6Enable, ["TCPIP_AUTOCONFIG_ENABLE_ICMPv6"])	
+	
+	# Enable NDP
+	tcpipAutoConfigNDP = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_NDP", None)
+	tcpipAutoConfigNDP.setLabel("NDP")
+	tcpipAutoConfigNDP.setVisible(True)
+	tcpipAutoConfigNDP.setDescription("Enable NDP")	
+	tcpipAutoConfigNDP.setDependencies(tcpipAutoConfigNDPEnable, ["TCPIP_AUTOCONFIG_ENABLE_NDP"])
 	
 ########################################################################################################
 def finalizeComponent(tcpipAutoConfigNetworkComponent):
@@ -193,11 +195,22 @@ def tcpipAutoConfigIPv6Enable(symbol, event):
 	if (event["value"] == True):
 		res = Database.activateComponents(["tcpipIPv6"],"NETWORK LAYER")	
 		tcpipAutoConfigNetworkGroup.setAttachmentVisible("tcpipIPv6", "libTcpipIPv6")
+		if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv6") != True):
+			Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv6", True, 2)
 		if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_NDP") != True):
 			Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_NDP", True, 2)
 	else:
 		res = Database.deactivateComponents(["tcpipIPv6"])
 	
+def tcpipAutoConfigIcmpv6Enable(symbol, event):
+	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
+	enableTcpipAutoConfigNet(True)
+	if (event["value"] == True):
+		res = Database.activateComponents(["tcpipIcmpv6"],"NETWORK LAYER")	
+		tcpipAutoConfigNetworkGroup.setAttachmentVisible("tcpipIcmpv6", "libtcpipIcmpv6")
+	else:
+		res = Database.deactivateComponents(["tcpipIcmpv6"])
+		
 def tcpipAutoConfigNDPEnable(symbol, event):
 	tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
 	enableTcpipAutoConfigNet(True)
