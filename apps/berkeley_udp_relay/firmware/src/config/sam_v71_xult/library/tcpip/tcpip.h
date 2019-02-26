@@ -651,8 +651,6 @@ typedef struct
 
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
-#include "tcpip/icmpv6.h"
-#include "tcpip/dhcpv6.h"
 #include "tcpip/arp.h"
 #include "tcpip/tcp.h"
 #include "tcpip/udp.h"
