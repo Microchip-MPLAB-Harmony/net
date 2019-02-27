@@ -103,7 +103,7 @@ typedef enum
     TFTPS_RES_RECEIVE_ERROR      = -11,  // TFTP Server has not received any data
     TFTPS_RES_NO_CLIENT_CB       = -12, // No client control block is available
     TFTPS_RES_RCVD_FROM_SAME_CLIENT = -13, // When receive a request from same client with same port which is process
-    TFTS_RES_FILE_LENGTH_ERROR = -14,   // Invalid file name length error
+    TFTPS_RES_FILE_LENGTH_ERROR = -14,   // Invalid file name length error
     TFTPS_RES_FILE_NOT_FOUND_ERROR = -15, // File not found in the File system
     TFTPS_RES_TRANSFERMODE_NOT_SUPPORTED = -16, // Transfer mode not supported
 } TCPIP_TFTPS_RESULT;
