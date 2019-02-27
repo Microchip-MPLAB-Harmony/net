@@ -6044,7 +6044,7 @@ bool TCPIP_TCP_OptionsSet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optPa
                 return true;
 
             case TCP_OPTION_THRES_FLUSH:
-                pSkt->Flags.halfThresType = (TCP_OPTION_THRES_FLUSH_TYPE)optParam;
+                pSkt->Flags.halfThresType = (TCP_OPTION_THRES_FLUSH_TYPE)(uint32_t)optParam;
                 return true;
 
             case TCP_OPTION_DELAY_SEND_ALL_ACK:

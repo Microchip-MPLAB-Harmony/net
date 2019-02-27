@@ -77,9 +77,9 @@ void HardFault_Handler          ( void ) __attribute__((weak, alias("Dummy_Handl
 void MemoryManagement_Handler   ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void BusFault_Handler           ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void UsageFault_Handler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SVCall_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void vPortSVCHandler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void DebugMonitor_Handler       ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void PendSV_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void xPortPendSVHandler         ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void xPortSysTickHandler        ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SUPC_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void RSTC_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -170,9 +170,9 @@ const DeviceVectors exception_table=
     .pfnMemoryManagement_Handler   = ( void * ) MemoryManagement_Handler,
     .pfnBusFault_Handler           = ( void * ) BusFault_Handler,
     .pfnUsageFault_Handler         = ( void * ) UsageFault_Handler,
-    .pfnSVCall_Handler             = ( void * ) SVCall_Handler,
+    .pfnSVCall_Handler             = ( void * ) vPortSVCHandler,
     .pfnDebugMonitor_Handler       = ( void * ) DebugMonitor_Handler,
-    .pfnPendSV_Handler             = ( void * ) PendSV_Handler,
+    .pfnPendSV_Handler             = ( void * ) xPortPendSVHandler,
     .pfnSysTick_Handler            = ( void * ) xPortSysTickHandler,
     .pfnSUPC_Handler               = ( void * ) SUPC_Handler,
     .pfnRSTC_Handler               = ( void * ) RSTC_Handler,

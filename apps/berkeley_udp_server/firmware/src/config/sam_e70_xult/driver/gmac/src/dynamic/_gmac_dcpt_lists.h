@@ -33,7 +33,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  
     Summary: List of Multiple Queues supported by GMAC    
 */
-#define DRV_GMAC_NUMBER_OF_QUEUES TCPIP_MODULE_PIC32C_GMAC_NUMBER_OF_QUEUES
 typedef enum  
 {
 	GMAC_QUE_0 = 0,
@@ -43,34 +42,6 @@ typedef enum
 	GMAC_QUE_4 = 4,
 	GMAC_QUE_5 = 5
 } GMAC_QUE_LIST;
-
-// *****************************************************************************
-/*  Packet Descriptor
-
-  Summary:
-    Descriptor of a packet accepted by the TX/RX Ethernet engine.
-
-  Description:
-    A packet handled by the Ethernet TX/RX engine is a list of buffer
-    descriptors.  A packet consists of multiple buffers and each buffer needs a
-    descriptor.  Although the number of buffers per packet is not limited, note
-    that the hardware overhead is higher when many buffers have to be handled
-    for one packet.  The list ends when the next field is NULL or when the pBuff
-    is NULL.
-*/
-
-typedef struct _tag_DRV_PIC32CGMAC_PKT_DCPT
-{
-    // Next descriptor in chain. NULL to end
-    struct _tag_DRV_PIC32CGMAC_PKT_DCPT  *next;
-
-    // Buffer to be transmitted
-    void                   *pBuff;
-
-    // Number of bytes in the buffer 0-2047 allowed
-    unsigned short int      nBytes;
-
-} /*DOM-IGNORE-BEGIN*/ __attribute__ ((__packed__)) /*DOM-IGNORE-END*/ DRV_PIC32CGMAC_PKT_DCPT;
 
 // *****************************************************************************
 /*  TX Packet Descriptor Status Word

@@ -203,8 +203,8 @@
           <Name dnOrder="1">interrupts.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1770EEDBE3FFCE78851F0912FC9701CA</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1770EEDBE3FFCE78851F0912FC9701CA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1F8D9C7E6F66A31E3E98F62E37EA0CAC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1F8D9C7E6F66A31E3E98F62E37EA0CAC</UserChecksum>
         </File>
         <File dnOrder="25">
           <Type dnOrder="0">SOURCE</Type>
@@ -699,8 +699,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">504B246210B92C6264384BB234CFD5E7</GeneratedChecksum>
-          <UserChecksum dnOrder="5">504B246210B92C6264384BB234CFD5E7</UserChecksum>
+          <GeneratedChecksum dnOrder="4">7AC8C1A533096C4D4BD0922CCC01FF60</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7AC8C1A533096C4D4BD0922CCC01FF60</UserChecksum>
         </File>
         <File dnOrder="87">
           <Type dnOrder="0">HEADER</Type>
@@ -2423,7 +2423,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME70_DFP\3.0.3\same70b\atdf\ATSAME70Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;gfx;net;usb;"/>
     </Settings>
   </Configurator>

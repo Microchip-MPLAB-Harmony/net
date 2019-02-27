@@ -58,9 +58,12 @@
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Type Definitions
@@ -114,8 +117,8 @@ typedef struct
 
     SYS_CONSOLE_STATUS status;
 
-    /* Interrupt source ID for UART interrupt. */
-    INT_SOURCE interruptSource;
+    /* Interrupt source(s) for UART interrupt. */
+    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* interruptSources;
 
     /* True if in interrupt context */
     bool inInterruptContext;
@@ -129,6 +132,16 @@ typedef struct
     Queue readQueue;
 
     Queue writeQueue;
+
+    int32_t         usartTxReadyIntStatus;
+
+    int32_t         usartTxCompleteIntStatus;
+
+    int32_t         usartRxCompleteIntStatus;
+
+    int32_t         usartErrorIntStatus;
+
+    int32_t         usartInterruptStatus;
 
     /* Mutex to protect access to the transfer objects */
     OSAL_MUTEX_DECLARE(mutexTransferObjects);
@@ -151,7 +164,3 @@ SYS_CONSOLE_STATUS Console_UART_Status (uint32_t index);
 // DOM-IGNORE-END
 
 #endif //#ifndef SYS_CONSOLE_UART_H
-
-/*******************************************************************************
- End of File
-*/
