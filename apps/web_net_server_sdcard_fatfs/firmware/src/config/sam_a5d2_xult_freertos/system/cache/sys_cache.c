@@ -48,15 +48,6 @@
 #include "device.h"
 #include "system/cache/sys_cache.h"
 
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Local Functions
-// *****************************************************************************
-// *****************************************************************************
-
-
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Cache Interface Functions
@@ -64,65 +55,107 @@
 // *****************************************************************************
 
 /*
- * Enables both Data and Instruction Caches by setting C and I bits in SCTLR register.
+ * Enable both Data and Instruction Caches.
  */
 void SYS_CACHE_EnableCaches (void)
 {
+    L1_ICACHE_ENABLE();
+    L1_DCACHE_ENABLE();
 }
 
 /*
- * Disables both Data and Instruction Caches by clearing C and I bits in SCTLR register.
+ * Disable both Data and Instruction Caches.
  */
 void SYS_CACHE_DisableCaches (void)
 {
+    L1_ICACHE_DISABLE();
+    L1_DCACHE_DISABLE();
 }
 
+/*
+ * Enable Instruction Cache.
+ */
 void SYS_CACHE_EnableICache (void)
 {
+    L1_ICACHE_ENABLE();
 }
 
+/*
+ * Disable Instruction Cache.
+ */
 void SYS_CACHE_DisableICache (void)
 {
+    L1_ICACHE_DISABLE();
 }
 
+/*
+ * Invalidate Instruction Cache.
+ */
 void SYS_CACHE_InvalidateICache (void)
 {
+    L1_ICACHE_INVALIDATE_ALL();
 }
 
+/*
+ * Enable Data Cache.
+ */
 void SYS_CACHE_EnableDCache (void)
 {
+    L1_DCACHE_ENABLE();
 }
 
+/*
+ * Disable Data Cache.
+ */
 void SYS_CACHE_DisableDCache (void)
 {
+    L1_DCACHE_DISABLE();
 }
 
+/*
+ * Invalidate whole Data Cache.
+ */
 void SYS_CACHE_InvalidateDCache (void)
 {
-
+    DCACHE_INVALIDATE_ALL();
 }
 
+/*
+ * Clean whole Data Cache.
+ */
 void SYS_CACHE_CleanDCache (void)
 {
-
+    DCACHE_CLEAN_ALL();
 }
 
+/*
+ * Clean and Invalidate whole Data Cache.
+ */
 void SYS_CACHE_CleanInvalidateDCache (void)
 {
-
+    DCACHE_CLEAN_INVALIDATE_ALL();
 }
 
+/*
+ * Invalidate Data Cache by address.
+ */
 void SYS_CACHE_InvalidateDCache_by_Addr (uint32_t *addr, int32_t size)
 {
-
+    DCACHE_INVALIDATE_BY_ADDR(addr,(uint32_t)size);
 }
 
+/*
+ * Clean Data Cache by address.
+ */
 void SYS_CACHE_CleanDCache_by_Addr (uint32_t *addr, int32_t size)
 {
-
+    DCACHE_CLEAN_BY_ADDR(addr,(uint32_t)size);
 }
 
+/*
+ * Clean and Invalidate Data Cache by address.
+ */
 void SYS_CACHE_CleanInvalidateDCache_by_Addr (uint32_t *addr, int32_t size)
 {
-
+    DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,(uint32_t)size);
 }
