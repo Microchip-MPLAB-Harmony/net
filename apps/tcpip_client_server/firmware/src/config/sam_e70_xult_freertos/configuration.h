@@ -83,7 +83,7 @@ extern "C" {
 #define SYS_TIME_INDEX_0                     0
 #define SYS_TIME_MAX_TIMERS                  5
 #define SYS_TIME_HW_COUNTER_WIDTH            16
-#define SYS_TIME_HW_COUNTER_PERIOD           65535
+#define SYS_TIME_HW_COUNTER_PERIOD           65535U
 #define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
@@ -103,7 +103,7 @@ extern "C" {
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_PRINT_BUFFER_SIZE          2560
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
@@ -379,12 +379,12 @@ extern "C" {
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				6
 #define DRV_GMAC_CLIENTS_NUMBER					1
-#define DRV_GMAC_INDEX	    	    			1
+#define DRV_GMAC_INDEX	    	    				1
 #define DRV_GMAC_PERIPHERAL_ID					1
 #define DRV_GMAC_INTERRUPT_SOURCE				GMAC_IRQn
 
-#define DRV_GMAC_INTERRUPT_MODE        			true
-
+#define DRV_GMAC_INTERRUPT_MODE        				true
+#define DRV_GMAC_RMII_MODE					0
 
 
 
