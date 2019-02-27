@@ -880,6 +880,7 @@ static void _DRV_SDMMC_MediaInitialize (
             dObj->dataTransferFlags.transferDir = DRV_SDMMC_DATA_TRANSFER_DIR_READ;
             dObj->dataTransferFlags.transferType = DRV_SDMMC_DATA_TRANSFER_TYPE_SINGLE;
 
+
             /* Set up the DMA for the data transfer. */
             dObj->sdmmcPlib->sdhostSetupDma (&dObj->cardCtxt.scrBuffer[0], 8, DRV_SDMMC_OPERATION_TYPE_READ);
             dObj->initState = DRV_SDMMC_INIT_SEND_SCR;
@@ -972,6 +973,7 @@ static void _DRV_SDMMC_MediaInitialize (
             dObj->dataTransferFlags.isDataPresent = true;
             dObj->dataTransferFlags.transferDir = DRV_SDMMC_DATA_TRANSFER_DIR_READ;
             dObj->dataTransferFlags.transferType = DRV_SDMMC_DATA_TRANSFER_TYPE_SINGLE;
+
 
             /* Set up the DMA for the data transfer. */
             dObj->sdmmcPlib->sdhostSetupDma (&dObj->cardCtxt.switchStatusBuffer[0], 64, DRV_SDMMC_OPERATION_TYPE_READ);
@@ -1966,6 +1968,7 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                     {
                         evtStatus = DRV_SDMMC_EVENT_COMMAND_ERROR;
                     }
+
 
                     if(clientObj->eventHandler != NULL)
                     {
