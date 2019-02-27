@@ -1078,7 +1078,7 @@ void TCPIP_Helper_FormatNetBIOSName(uint8_t Name[])
 	}
 }
 
-unsigned char TCPIP_Helper_FindCommonPrefix (unsigned char * addr1, unsigned char * addr2, unsigned char bytes)
+unsigned char TCPIP_Helper_FindCommonPrefix (const unsigned char * addr1, const unsigned char * addr2, unsigned char bytes)
 {
     unsigned char i = 0;
     unsigned char matchLen = 0;

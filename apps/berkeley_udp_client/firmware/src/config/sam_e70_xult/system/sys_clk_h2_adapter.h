@@ -62,7 +62,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 #include "system/system.h"
-
+#include "toolchain_specifics.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -195,7 +195,7 @@ SYS_STATUS_ERROR    Indicates that the specified module is in an error state
 
 static __inline__ uint32_t __attribute__((always_inline)) SYS_CLK_FrequencyGet ( SYS_CLK_CLOCK clock  )
 {
- return 150000000;
+    return 150000000;           // ATSAME70Q21B
 }
 
 

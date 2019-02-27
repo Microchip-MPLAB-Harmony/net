@@ -1068,6 +1068,7 @@ static void TCPIP_ARP_Process(void)
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_ARP_RESULT arpReqRes;
     IPV4_ADDR targetAdd;
+    IPV4_ADDR alignedIpV4Addr;
 
 
     // extract queued ARP packets
@@ -1099,7 +1100,8 @@ static void TCPIP_ARP_Process(void)
 #endif
 
             // Handle incoming ARP packet
-            hE = TCPIP_OAHASH_EntryLookup(pArpDcpt->hashDcpt, &pArpPkt->SenderIPAddr.Val);
+            alignedIpV4Addr.Val = pArpPkt->SenderIPAddr.Val;
+            hE = TCPIP_OAHASH_EntryLookup(pArpDcpt->hashDcpt, &alignedIpV4Addr.Val);
             if(hE != 0)
             {   // we already have this sender and we should update it
                 _ARPUpdateEntry(pIf, (ARP_HASH_ENTRY*)hE, &pArpPkt->SenderMACAddr);
@@ -1109,7 +1111,8 @@ static void TCPIP_ARP_Process(void)
             {   // we are the target and we should add to cache anyway
                 if(hE == 0)
                 {   // not there yet
-                    arpReqRes = _ARPAddCompleteEntry(pIf, &pArpPkt->SenderIPAddr, &pArpPkt->SenderMACAddr);
+                    alignedIpV4Addr.Val = pArpPkt->SenderIPAddr.Val;
+                    arpReqRes = _ARPAddCompleteEntry(pIf, &alignedIpV4Addr, &pArpPkt->SenderMACAddr);
                 }
 
                 // Handle incoming ARP operation

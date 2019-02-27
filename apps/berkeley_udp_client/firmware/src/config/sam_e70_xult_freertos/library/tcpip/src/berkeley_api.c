@@ -41,13 +41,17 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_BERKELEY
 
 #include "tcpip/src/tcpip_private.h"
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_USE_BERKELEY_API)
 
 extern __attribute__((section(".bss.errno"))) int errno;
+#ifdef __ICCARM__
+__attribute__((section(".bss.errno"))) int errno = 0;           // initialization required to provide definition
+#include "toolchain_specifics.h"                                // extended E codes not provided in IAR errno.h
+#else
 #include <sys/errno.h>
-
+#endif
 
 static bool HandlePossibleTCPDisconnection(SOCKET s);
 
@@ -476,9 +480,10 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
 #if defined(TCPIP_STACK_USE_IPV6)
     else
     {
-        struct sockaddr_in6 *local_addr;
-        local_addr = (struct sockaddr_in6*) name;
-        memcpy(&lAddr6, &(local_addr->sin6_addr), sizeof(struct in6_addr));
+        struct sockaddr_in6 *local_addr = (struct sockaddr_in6*) name;
+        struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)local_addr + offsetof(struct sockaddr_in6, sin6_addr));
+        memcpy(&lAddr6, sin6_addr->in6_u.u6_addr8, sizeof(struct in6_addr));
+
         if (lAddr6.d[0] == IP_ADDR_ANY)
         {
             lAddr6.d[0] = 0;
@@ -909,7 +914,8 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
     {
         addr6 = (struct sockaddr_in6 *) name;
         remotePort = addr6->sin6_port;
-        memcpy(remoteIP6.d, addr6->sin6_addr.in6_u.u6_addr32, sizeof(IPV6_ADDR));
+        struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+        memcpy(remoteIP6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
         localAddr6.d[0] = socket->localIP;
         localAddr6.d[1] = socket->localIPv6[0];
         localAddr6.d[2] = socket->localIPv6[1];
@@ -1133,8 +1139,6 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
         return 0; //success
     }
 
-    errno = EINVAL;
-    return SOCKET_ERROR;
 }
 
 /*****************************************************************************
@@ -1286,8 +1290,10 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
                     errno = EFAULT;
                     return SOCKET_ERROR;
                 }
-                wRemotePort = ((struct sockaddr_in6*) to)->sin6_port;
-                memcpy(remoteIp6.d, ((struct sockaddr_in6*) to)->sin6_addr.in6_u.u6_addr32, sizeof(IPV6_ADDR));
+                struct sockaddr_in6* addr6 = (struct sockaddr_in6*)to;
+                wRemotePort = addr6->sin6_port;
+                struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+                memcpy(remoteIp6.d, sin6_addr->in6_u.u6_addr8, sizeof(IPV6_ADDR));
             }
 #endif
 
@@ -1612,7 +1618,8 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
                         NET_PRES_SocketInfoGet(socket->SocketID, &udpSockInfo);
                         if (udpSockInfo.addressType == IP_ADDRESS_TYPE_IPV6)
                         {
-                            memcpy(rem_addr6->sin6_addr.in6_u.u6_addr32, udpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
+                            struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+                            memcpy(sin6_addr->in6_u.u6_addr8, udpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
                             rem_addr6->sin6_port = udpSockInfo.remotePort;
                             *fromlen = sizeof (struct sockaddr_in6);
                         }
@@ -1668,7 +1675,8 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
                     NET_PRES_SocketInfoGet(socket->SocketID, &tcpSockInfo);
                     if (tcpSockInfo.addressType == IP_ADDRESS_TYPE_IPV6)
                     {
-                        memcpy(rem_addr6->sin6_addr.in6_u.u6_addr32, tcpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
+                        struct  in6_addr* sin6_addr = (struct  in6_addr*)((uint8_t*)rem_addr6 + offsetof(struct sockaddr_in6, sin6_addr));
+                        memcpy(sin6_addr->in6_u.u6_addr8, tcpSockInfo.remoteIPaddress.v6Add.d, sizeof(IPV6_ADDR));
                         rem_addr6->sin6_port = tcpSockInfo.remotePort;
                         *fromlen = sizeof (struct sockaddr_in6);
 
@@ -1681,7 +1689,6 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
         return recv(s, buf, len, 0);
     }
 
-    return 0;
 }
 
 /*****************************************************************************
@@ -2042,6 +2049,8 @@ int _setsockopt_tcp(struct BSDSocket * s,
         {
             s->tcpNoDelay = *option_value;
         }
+        break;
+
         default:
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
@@ -2070,7 +2079,6 @@ int _setsockopt_ipv6(struct BSDSocket * s,
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
     }
-    return -1;
 }
 
 int _setsockopt_icmp6(struct BSDSocket * s,
@@ -2285,6 +2293,8 @@ int _getsockopt_tcp(struct BSDSocket * s,
             }
             *option_length = 1;
         }
+        break;
+
         default:
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
@@ -2312,7 +2322,6 @@ int _getsockopt_ipv6(struct BSDSocket * s,
             errno = EOPNOTSUPP;
             return SOCKET_ERROR;
     }
-    return -1;
 }
 
 int _getsockopt_icmp6(struct BSDSocket * s,
