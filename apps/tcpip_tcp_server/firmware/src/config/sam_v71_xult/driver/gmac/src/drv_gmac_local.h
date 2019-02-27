@@ -338,7 +338,7 @@ typedef uint32_t (*DRV_PIC32CGMAC_HW_REG_FUNC)(void);
 
 typedef struct
 {
-    char                    regName[8];     // hardware name
+    char                    regName[36];     // hardware name
     DRV_PIC32CGMAC_HW_REG_FUNC  regFunc;    // register access function
 } DRV_PIC32CGMAC_HW_REG_DCPT;
 

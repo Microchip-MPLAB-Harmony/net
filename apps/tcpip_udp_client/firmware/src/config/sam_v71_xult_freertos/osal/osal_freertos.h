@@ -57,7 +57,7 @@ extern "C" {
 #include "queue.h"
 #include "semphr.h"
 #include "task.h"
-
+#include "device.h"
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Types
@@ -132,8 +132,41 @@ void OSAL_Free(void* pData);
 
 OSAL_RESULT OSAL_Initialize();
 
-// Added gnu_inline attribute for compatibility with C89 and C99 for unused method in OSAL
-__inline__ __attribute__ ((gnu_inline)) __attribute__((always_inline)) inline const char* OSAL_Name (void);
+// *****************************************************************************
+/* Function: const char* OSAL_Name()
+
+  Summary:
+    Obtain the name of the underlying RTOS.
+
+  Description:
+    This function returns a const char* to the textual name of the RTOS.
+    The name is a NULL terminated string.
+
+  Precondition:
+    None
+
+  Parameters:
+    None
+
+  Returns:
+    const char* -   Name of the underlying RTOS or NULL
+
+  Example:
+    <code>
+    // get the RTOS name
+    const char* sName;
+
+    sName = OSAL_Name();
+    sprintf(buff, "RTOS: %s", sName);
+    </code>
+
+  Remarks:
+
+ */
+__STATIC_INLINE __attribute__((always_inline)) const char* OSAL_Name (void)
+{
+    return "FreeRTOS";
+}
 
 
 // *****************************************************************************

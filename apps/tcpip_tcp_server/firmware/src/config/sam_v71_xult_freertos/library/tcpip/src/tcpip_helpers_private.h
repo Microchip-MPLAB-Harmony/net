@@ -51,7 +51,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-unsigned char   TCPIP_Helper_FindCommonPrefix (unsigned char * addr1, unsigned char * addr2, unsigned char bytes);
+unsigned char   TCPIP_Helper_FindCommonPrefix (const unsigned char * addr1, const unsigned char * addr2, unsigned char bytes);
 
 TCPIP_MAC_POWER_MODE TCPIP_Helper_StringToPowerMode(const char* str);
 
