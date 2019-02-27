@@ -61,8 +61,8 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv4_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/arp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/arp_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/udp_manager.h</itemPath>
@@ -218,8 +218,8 @@
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/system.h</itemPath>

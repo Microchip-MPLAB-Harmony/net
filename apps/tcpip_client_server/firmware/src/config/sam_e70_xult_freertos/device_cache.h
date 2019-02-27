@@ -1,11 +1,11 @@
 /*******************************************************************************
-  L1, L2 Cache Header
+  Cortex-M L1 Cache Header
 
   File Name:
-    cache_cortex_a.h
+    device_cache.h
 
   Summary:
-    Preprocessor definitions to provide L1 and L2 Cache control.
+    Preprocessor definitions to provide L1 Cache control.
 
   Description:
     An MPLAB PLIB or Project can include this header to perform cache cleans,
@@ -43,8 +43,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef CACHE_CORTEX_M_H
-#define CACHE_CORTEX_M_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -65,11 +65,22 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: L1, L2 Cache Configuration
+// Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
+#define ICACHE_ENABLE()                                SCB_EnableICache()
+#define ICACHE_DISABLE()                               SCB_DisableICache()
+#define ICACHE_INVALIDATE()                            SCB_InvalidateICache()
+#define INSTRUCTION_CACHE_ENABLED                      true
+
+#define DCACHE_ENABLE()                                SCB_EnableDCache()
+#define DCACHE_DISABLE()                               SCB_DisableDCache()
+#define DCACHE_INVALIDATE()                            SCB_InvalidateDCache()
+#define DCACHE_CLEAN()                                 SCB_CleanDCache()
+#define DCACHE_CLEAN_INVALIDATE()                      SCB_CleanInvalidateDCache()
 #define DCACHE_CLEAN_BY_ADDR(addr,sz)                  SCB_CleanDCache_by_Addr(addr,sz)
 #define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             SCB_InvalidateDCache_by_Addr(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)       SCB_CleanInvalidateDCache_by_Addr(addr,sz)
 #define DATA_CACHE_ENABLED                             true
 
 //DOM-IGNORE-BEGIN
@@ -78,4 +89,4 @@ extern "C" {
 #endif
 //DOM-IGNORE-END
 
-#endif // end of header
+#endif // #ifndef DEVICE_CACHE_H
