@@ -42,7 +42,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <string.h>
 #include <stdlib.h>
 
-#if !defined(__PIC32C__)
+#if !defined(__PIC32C__) && !defined(__SAMA5D2__)
 #include <sys/kmem.h>
 #endif
 
@@ -58,7 +58,7 @@ typedef struct __attribute__((aligned(16)))
 {
     uint64_t     pad[2];
 }_heap_Align;
-#elif defined(__PIC32C__)
+#elif defined(__PIC32C__) || defined(__SAMA5D2__)
 typedef struct __attribute__((aligned(32)))
 {
     uint32_t     pad[8];
