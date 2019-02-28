@@ -507,12 +507,14 @@ static void SYS_TIME_ClientNotify(void)
 
 static void SYS_TIME_UpdateTime(uint32_t elapsedCounts)
 {
+    uint8_t i;
+    
     SYS_TIME_UpdateTimerList(elapsedCounts);
 
     SYS_TIME_ClientNotify();
 
     /* Add the removed timers back into the linked list if the timer type is periodic. */
-    for (uint8_t i = 0; i < SYS_TIME_MAX_TIMERS; i++)
+    for ( i = 0; i < SYS_TIME_MAX_TIMERS; i++)
     {
         /* tmrElapsed is cleared anytime a timer is stopped, started, reloaded
          * or destroyed.

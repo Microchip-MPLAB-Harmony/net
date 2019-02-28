@@ -540,7 +540,22 @@ void DRV_GMAC_Tasks(SYS_MODULE_OBJ object)
 	DRV_ETHPHY_RESULT           phyInitRes;
 	const DRV_ETHPHY_OBJECT_BASE* pPhyBase;
 	DRV_GMAC_DRIVER * pMACDrv = (DRV_GMAC_DRIVER *)object;
-	
+	static bool discard_flag = false;
+    
+    if( (pMACDrv->sGmacData._negResult.linkStatus & DRV_ETHPHY_LINK_ST_UP) == 0 )
+	{
+        if(discard_flag == true)
+        {            
+            _MacTxDiscardQueues(pMACDrv,0, TCPIP_MAC_PKT_ACK_LINK_DOWN);
+            discard_flag = false;
+        }
+    }
+    else
+    {
+        discard_flag = true;
+    }
+    
+    
 	if(pMACDrv->sGmacData._macFlags._init == 0)
 	{   // nothing to do
 		return;
@@ -675,13 +690,13 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 	GMAC_QUE_LIST queueIdx = GMAC_QUE_0;	
 	
 	_DRV_GMAC_TxLock(pMACDrv);
-
+    
 	//new packet for transmission
 	while(ptrPacket)
 	{
 		//valid packet data
 		if (ptrPacket->pDSeg != NULL)
-		{			
+		{		
 			if((pTxQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxNewQueue))!= NULL)
 			{						
 				pTxQueueNode->data = (TCPIP_MAC_PACKET*) ptrPacket;
@@ -990,7 +1005,7 @@ static void _DRV_GMAC_LinkStateNegResult(DRV_GMAC_DRIVER * pMACDrv)
 		pMACDrv->sGmacData._negResult.linkFlags |= (phyCfgFlags & DRV_ETHPHY_CFG_RMII) ? TCPIP_ETH_OPEN_RMII : TCPIP_ETH_OPEN_MII ;
 		pauseType = pMACDrv->sGmacData._negResult.pauseType;
 		DRV_PIC32CGMAC_LibMACOpen(pMACDrv, pMACDrv->sGmacData._negResult.linkFlags, pauseType);
-
+        
 		pMACDrv->sGmacData._macFlags._linkPrev = 1;
 		pMACDrv->sGmacData._linkCheckState = DRV_GMAC_LINK_CHECK_START_LINK;
 	}
@@ -1201,14 +1216,8 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	
 	DRV_PIC32CGMAC_RESULT ethRes = DRV_PIC32CGMAC_RES_NO_PACKET;
 	
-	if(pMACDrv->sGmacData._macFlags._linkPrev == false)
-	{   // discard the TX queues
-		_MacTxDiscardQueues(pMACDrv,queueIdx, TCPIP_MAC_PKT_ACK_LINK_DOWN);
-		// no need to try to schedule for TX
-		return TCPIP_MAC_RES_PENDING;
-	}
-	
-	//packet in queue for transmission
+
+    //packet in queue for transmission
 	while(((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0) && (ethRes != DRV_PIC32CGMAC_RES_NO_DESCRIPTORS))
 	{
 		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv, queueIdx);
@@ -1316,29 +1325,48 @@ static void _MacTxDiscardQueues(DRV_GMAC_DRIVER * pMACDrv,GMAC_QUE_LIST queueIdx
 {
 	TCPIP_MAC_PACKET* pPkt;
 	DRV_PIC32CGMAC_SGL_LIST_NODE* tx_queue_node;
-	
-	//remove the packets queued for transmission
-    while( (tx_queue_node = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue)) != 0) 
-    {   // acknowledge the packet
-		pPkt = tx_queue_node->data;
-        (*pMACDrv->sGmacData.pktAckF)(pPkt, ackRes,TCPIP_THIS_MODULE_ID); //Remove the Tx Packets
-		//clean the current Node
-		_Clear_TxNode(tx_queue_node);
-		// add the node to Free queue
-		DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxNewQueue, tx_queue_node);
-    }
-	
-	//remove the packets queued for Acknowledgement
-	while( (tx_queue_node = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue)) != 0)
-	{   // acknowledge the packet
-		pPkt = tx_queue_node->data;
-		(*pMACDrv->sGmacData.pktAckF)(pPkt, ackRes,TCPIP_THIS_MODULE_ID); //Remove the Tx Packets
-		//clean the current Node
-		_Clear_TxNode(tx_queue_node);
-		// add the node to Free queue
-		DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxNewQueue,tx_queue_node);
-	}
+    uint8_t desc_idx;
 
+    
+	GMAC_REGS->GMAC_NCR &= ~GMAC_NCR_TXEN_Msk; 
+	//remove the packets queued for transmission
+    if((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.nNodes) != 0)
+    {
+        while( (tx_queue_node = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue)) != 0) 
+        {   // acknowledge the packet
+            pPkt = tx_queue_node->data;
+            (*pMACDrv->sGmacData.pktAckF)(pPkt, ackRes,TCPIP_THIS_MODULE_ID); //Remove the Tx Packets
+            //clean the current Node
+            _Clear_TxNode(tx_queue_node);
+            // add the node to Free queue
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxNewQueue, tx_queue_node);
+        }
+	}
+	//remove the packets queued for Acknowledgement
+    if((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue.nNodes) != 0) 
+    {
+        while( (tx_queue_node = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue)) != 0)
+        {   // acknowledge the packet
+            pPkt = tx_queue_node->data;
+            (*pMACDrv->sGmacData.pktAckF)(pPkt, ackRes,TCPIP_THIS_MODULE_ID); //Remove the Tx Packets
+            //clean the current Node
+            _Clear_TxNode(tx_queue_node);
+            // add the node to Free queue
+            DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxNewQueue,tx_queue_node);
+        }
+    }
+    
+    pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescHead = 0;
+    pMACDrv->sGmacData.gmac_queue[queueIdx].nTxDescTail = 0;
+    for(desc_idx=0; desc_idx < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt; desc_idx++)
+    {    
+        pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc[desc_idx].tx_desc_buffaddr = 0;
+        pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc[desc_idx].tx_desc_status.val = GMAC_TX_USED_BIT | GMAC_TX_LAST_BUFFER_BIT;
+    }
+    pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc[desc_idx-1].tx_desc_status.val |= GMAC_TX_WRAP_BIT;
+
+    GMAC_REGS->GMAC_TBQB = GMAC_TBQB_ADDR_Msk & ((uint32_t)pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc);
+    GMAC_REGS->GMAC_NCR |= GMAC_NCR_TXEN_Msk; 
 }
 
 /*************************

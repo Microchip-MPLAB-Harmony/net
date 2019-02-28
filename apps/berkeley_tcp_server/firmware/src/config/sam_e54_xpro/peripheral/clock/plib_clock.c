@@ -64,10 +64,10 @@ static void OSC32KCTRL_Initialize(void)
 static void FDPLL0_Initialize(void)
 {
 
-    /****************** DPLL Initialization  *********************************/
+    /****************** DPLL0 Initialization  *********************************/
 
     /* Configure DPLL    */
-    OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_DCOFILTER(0) | OSCCTRL_DPLLCTRLB_LTIME(0x0)| OSCCTRL_DPLLCTRLB_REFCLK(3) | OSCCTRL_DPLLCTRLB_DIV(5);
+    OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLCTRLB = OSCCTRL_DPLLCTRLB_FILTER(0) | OSCCTRL_DPLLCTRLB_LTIME(0x0)| OSCCTRL_DPLLCTRLB_REFCLK(3) | OSCCTRL_DPLLCTRLB_DIV(5);
 
 
     OSCCTRL_REGS->DPLL[0].OSCCTRL_DPLLRATIO = OSCCTRL_DPLLRATIO_LDRFRAC(0) | OSCCTRL_DPLLRATIO_LDR(119);

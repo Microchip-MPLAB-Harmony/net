@@ -95,6 +95,26 @@ typedef struct
 
 typedef struct
 {
+    int32_t         usartTxReadyInt;
+    int32_t         usartTxCompleteInt;
+    int32_t         usartRxCompleteInt;
+    int32_t         usartErrorInt;
+} SYS_CONSOLE_UART_MULTI_INT_SRC;
+
+typedef union
+{
+    SYS_CONSOLE_UART_MULTI_INT_SRC              multi;
+    int32_t                                     usartInterrupt;
+} SYS_CONSOLE_UART_INT_SRC;
+
+typedef struct
+{
+    bool                                        isSingleIntSrc;
+    SYS_CONSOLE_UART_INT_SRC                    intSources;
+} SYS_CONSOLE_UART_INTERRUPT_SOURCES;
+
+typedef struct
+{
     const SYS_CONSOLE_UART_PLIB_INTERFACE* uartPLIB;
 
     QElement* readQueueElementsArr;
@@ -105,7 +125,7 @@ typedef struct
 
     uint32_t writeQueueDepth;
 
-    INT_SOURCE interruptSource;
+    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* interruptSources;
 
 } SYS_CONSOLE_UART_INIT_DATA;
 
@@ -114,7 +134,3 @@ typedef struct
 #endif
 
 #endif /* _SYS_CONSOLE_UART_DEFINITIONS_H */
-
-/* *****************************************************************************
- End of File
- */

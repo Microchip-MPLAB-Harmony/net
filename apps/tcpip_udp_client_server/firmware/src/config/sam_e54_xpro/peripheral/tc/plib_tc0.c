@@ -89,7 +89,7 @@ void TC0_TimerInitialize( void )
 
     /* Configure timer period */
     TC0_REGS->COUNT32.TC_CC[0U] = 468U;
-    
+
     /* Clear all interrupt flags */
     TC0_REGS->COUNT32.TC_INTFLAG = TC_INTFLAG_Msk;
 
@@ -193,16 +193,16 @@ void TC0_TimerCallbackRegister( TC_TIMER_CALLBACK callback, uintptr_t context )
 /* Timer Interrupt handler */
 void TC0_TimerInterruptHandler( void )
 {
-    TC_TIMER_STATUS status;
-    status = TC0_REGS->COUNT32.TC_INTFLAG;
-    /* Clear interrupt flags */
-    TC0_REGS->COUNT32.TC_INTFLAG = TC_INTFLAG_Msk;
-    if((status != TC_TIMER_STATUS_NONE) && TC0_CallbackObject.callback != NULL)
+    if (TC0_REGS->COUNT32.TC_INTENSET != 0)
     {
-        TC0_CallbackObject.callback(status, TC0_CallbackObject.context);
+        TC_TIMER_STATUS status;
+        status = TC0_REGS->COUNT32.TC_INTFLAG;
+        /* Clear interrupt flags */
+        TC0_REGS->COUNT32.TC_INTFLAG = TC_INTFLAG_Msk;
+        if((status != TC_TIMER_STATUS_NONE) && TC0_CallbackObject.callback != NULL)
+        {
+            TC0_CallbackObject.callback(status, TC0_CallbackObject.context);
+        }
     }
 }
-
-
-
 
