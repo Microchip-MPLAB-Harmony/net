@@ -220,6 +220,7 @@
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state>__SAMA5D2__</state>
                     <state>__PIC32C__</state>
                 </option>
                 <option>
@@ -1267,6 +1268,7 @@
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state>__SAMA5D2__</state>
                     <state>__PIC32C__</state>
                 </option>
                 <option>

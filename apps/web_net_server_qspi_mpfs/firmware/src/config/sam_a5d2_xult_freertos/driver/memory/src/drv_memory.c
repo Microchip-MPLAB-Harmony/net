@@ -119,6 +119,7 @@ static const DRV_MEMORY_TransferOperation gMemoryXferFuncPtr[4] =
 static void DRV_MEMORY_EventHandler( MEMORY_DEVICE_TRANSFER_STATUS status, uintptr_t context )
 {
     DRV_MEMORY_OBJECT *dObj = (DRV_MEMORY_OBJECT *)context;
+    dObj->isTransferDone = true;
     OSAL_SEM_PostISR(&dObj->transferDone);
 }
 
@@ -335,6 +336,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleWrite
 
         case DRV_MEMORY_WRITE_MEM:
         {
+            dObj->isTransferDone = false;
             if (dObj->memoryDevice->PageWrite(dObj->memDevHandle, (void *)dObj->writePtr, dObj->blockAddress) == true)
             {
                 dObj->writeState = DRV_MEMORY_WRITE_MEM_STATUS;
@@ -397,6 +399,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleErase
 
         case DRV_MEMORY_ERASE_CMD:
         {
+            dObj->isTransferDone = false;
             if (dObj->memoryDevice->SectorErase(dObj->memDevHandle, dObj->blockAddress) == true)
             {
                 dObj->eraseState = DRV_MEMORY_ERASE_CMD_STATUS;
@@ -597,12 +600,15 @@ static bool DRV_MEMORY_StartXfer( DRV_MEMORY_OBJECT *dObj )
         }
         else if ((dObj->isMemDevInterruptEnabled == true) && (dObj->memDevStatusPollUs == 0))
         {
-            /* Wait for the request to process before checking status. This semaphore is released from the
-             * event handler called from attached memory device.
-            */
-            if (OSAL_RESULT_TRUE != OSAL_SEM_Pend( &dObj->transferDone, OSAL_WAIT_FOREVER ))
+            if (dObj->isTransferDone == false)
             {
-                return false;
+                /* Wait for the request to process before checking status. This semaphore is released from the
+                 * event handler called from attached memory device.
+                */
+                if (OSAL_RESULT_TRUE != OSAL_SEM_Pend( &dObj->transferDone, OSAL_WAIT_FOREVER ))
+                {
+                    return false;
+                }
             }
         }
 
@@ -717,7 +723,7 @@ static bool DRV_MEMORY_SetupXfer
 // *****************************************************************************
 // *****************************************************************************
 
-void __attribute__ ((weak)) DRV_MEMORY_RegisterWithSysFs
+__WEAK void DRV_MEMORY_RegisterWithSysFs
 (
     const SYS_MODULE_INDEX drvIndex,
     uint8_t mediaType
@@ -750,6 +756,8 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
     }
 
     dObj->status = SYS_STATUS_UNINITIALIZED;
+
+    dObj->isTransferDone = false;
 
     /* Indicate that this object is in use */
     dObj->inUse = true;

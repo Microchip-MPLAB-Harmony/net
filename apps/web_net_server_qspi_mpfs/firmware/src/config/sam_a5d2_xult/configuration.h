@@ -528,7 +528,7 @@ extern "C" {
 #define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
 #define TCPIP_NTP_VERSION             			    	4
 #define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
-#define TCPIP_NTP_EPOCH		                		2147483216ul
+#define TCPIP_NTP_EPOCH		                		2208988800ul
 #define TCPIP_NTP_REPLY_TIMEOUT		        		6
 #define TCPIP_NTP_MAX_STRATUM		        		15
 #define TCPIP_NTP_TIME_STAMP_TMO				660

@@ -61,7 +61,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 
-static const void * volatile        tftpcMemH = NULL;           // memory handle
+static const void* volatile         tftpcMemH = NULL;           // memory handle
 static TFTP_STATE                   _tftpCmdState;
 static tcpipSignalHandle            tftpcSignalHandle = 0;
 static uint8_t                      tftpcInitCount=0;

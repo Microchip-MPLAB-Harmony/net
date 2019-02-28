@@ -321,6 +321,9 @@
             <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\common\sys_fs_wrapper.c</path>
             <path>\library\tcpip\src\http_net.c</path>
+            <path>\..\..\http_net_print.c</path>
+            <path>\..\..\custom_http_net_app.c</path>
+            <path>\..\..\mpfs_img2_net.c</path>
             <path>\library\tcpip\src\dhcp.c</path>
             <path>\peripheral\tc\plib_tc0.c</path>
             <path>\driver\sdspi\src\drv_sdspi.c</path>

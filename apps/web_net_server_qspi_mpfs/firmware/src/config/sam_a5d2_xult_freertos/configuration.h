@@ -194,6 +194,7 @@ extern "C" {
 #define TCPIP_DNS_CLIENT_CACHE_ENTRIES				5
 #define TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO			0
 #define TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS		5
+#define TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS		1
 #define TCPIP_DNS_CLIENT_ADDRESS_TYPE			    IP_ADDRESS_TYPE_IPV4
 #define TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL		1200
 #define TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO	10
@@ -338,6 +339,7 @@ extern "C" {
 													TCPIP_NETWORK_CONFIG_IP_STATIC
 													
 #define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
+
 
 
 /*** tcpip_cmd Configuration ***/
@@ -529,12 +531,12 @@ extern "C" {
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				6
 #define DRV_GMAC_CLIENTS_NUMBER					1
-#define DRV_GMAC_INDEX	    	    			1
+#define DRV_GMAC_INDEX	    	    				1
 #define DRV_GMAC_PERIPHERAL_ID					1
 #define DRV_GMAC_INTERRUPT_SOURCE				GMAC_IRQn
 
-#define DRV_GMAC_INTERRUPT_MODE        			true
-
+#define DRV_GMAC_INTERRUPT_MODE        				true
+#define DRV_GMAC_RMII_MODE					1
 
 
 
@@ -543,7 +545,7 @@ extern "C" {
 #define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
 #define TCPIP_NTP_VERSION             			    	4
 #define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
-#define TCPIP_NTP_EPOCH		                		2147483216ul
+#define TCPIP_NTP_EPOCH		                		2208988800ul
 #define TCPIP_NTP_REPLY_TIMEOUT		        		6
 #define TCPIP_NTP_MAX_STRATUM		        		15
 #define TCPIP_NTP_TIME_STAMP_TMO				660
