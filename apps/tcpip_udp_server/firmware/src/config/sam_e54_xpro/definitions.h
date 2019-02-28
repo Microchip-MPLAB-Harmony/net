@@ -58,7 +58,6 @@
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
 #include "system/int/sys_int.h"
-#include "system/cache/sys_cache.h"
 #include "osal/osal.h"
 #include "peripheral/sercom/usart/plib_sercom2_usart.h"
 #include "peripheral/evsys/plib_evsys.h"
@@ -67,7 +66,6 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
-#include "system/console/sys_debug.h"
 #include "system/console/sys_command.h"
 #include "app.h"
 
@@ -195,7 +193,6 @@ typedef struct
     SYS_MODULE_OBJ  tcpip;
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysConsole0;
-    SYS_MODULE_OBJ  sysDebug;
 
 
 } SYSTEM_OBJECTS;

@@ -42,6 +42,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_COMMAND
+#include "system/sys_clk_h2_adapter.h"
+
 
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"

@@ -1552,7 +1552,7 @@
         <Boolean dnOrder="1" id="SYS_COMMAND_DEBUG_ENABLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
@@ -1606,50 +1606,45 @@
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="8" id="SYS_DEBUG_ENABLE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <File dnOrder="9" id="SYS_DEBUG_HEADER">
+        <File dnOrder="8" id="SYS_DEBUG_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Combo dnOrder="10" id="SYS_DEBUG_LEVEL">
+        <Combo dnOrder="9" id="SYS_DEBUG_LEVEL">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <File dnOrder="11" id="SYS_DEBUG_LOCAL">
+        <File dnOrder="10" id="SYS_DEBUG_LOCAL">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Integer dnOrder="12" id="SYS_DEBUG_PRINT_BUFFER_SIZE">
+        <Integer dnOrder="11" id="SYS_DEBUG_PRINT_BUFFER_SIZE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Integer>
-        <File dnOrder="13" id="SYS_DEBUG_SOURCE">
+        <File dnOrder="12" id="SYS_DEBUG_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Boolean dnOrder="14" id="SYS_DEBUG_USE_CONSOLE">
+        <Boolean dnOrder="13" id="SYS_DEBUG_USE_CONSOLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
+              <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </Boolean>
@@ -1754,28 +1749,21 @@
             </Dynamic>
           </Values>
         </Integer>
-        <Comment dnOrder="8" id="TC_INTERRUPT_ENABLE_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-        <Comment dnOrder="9" id="TC_Resolution">
+        <Comment dnOrder="8" id="TC_Resolution">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****Timer&amp;#160;resolution&amp;#160;is&amp;#160;2133.33333333&amp;#160;nS****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="10" id="TC_SYS_TIME_CONNECTED">
+        <Boolean dnOrder="9" id="TC_SYS_TIME_CONNECTED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="11" id="TC_TIMER_INTENSET_MC1">
+        <Boolean dnOrder="10" id="TC_TIMER_INTENSET_MC1">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -1787,7 +1775,7 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="12" id="TC_TIMER_INTENSET_OVF">
+        <Boolean dnOrder="11" id="TC_TIMER_INTENSET_OVF">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
@@ -1795,14 +1783,14 @@
             <User dnOrder="1" value="true"/>
           </Values>
         </Boolean>
-        <Long dnOrder="13" id="TC_TIMER_PERIOD">
+        <Long dnOrder="12" id="TC_TIMER_PERIOD">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="468"/>
             </Dynamic>
           </Values>
         </Long>
-        <Float dnOrder="14" id="TC_TIMER_TIME_MS">
+        <Float dnOrder="13" id="TC_TIMER_TIME_MS">
           <Attributes dnOrder="0">
             <Float dnOrder="0" id="max">
               <Value dnOrder="0">9162597.0</Value>
@@ -1812,14 +1800,14 @@
             </Boolean>
           </Attributes>
         </Float>
-        <String dnOrder="15" id="TIMER_PERIOD_MAX">
+        <String dnOrder="14" id="TIMER_PERIOD_MAX">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
-              <Value dnOrder="0" id="tc0" priority="2" value="4294967296"/>
+              <Value dnOrder="0" id="tc0" priority="2" value="4294967295"/>
             </Dynamic>
           </Values>
         </String>
-        <Integer dnOrder="16" id="TIMER_WIDTH">
+        <Integer dnOrder="15" id="TIMER_WIDTH">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="32"/>
@@ -2070,51 +2058,14 @@
     </GroupComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="__ROOTVIEW">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="HarmonyCore" x="464" y="63"/>
-        <ElementPosition dnOrder="1" id="TCP/IP STACK" x="554" y="241"/>
-        <ElementPosition dnOrder="2" id="cmsis" x="500" y="20"/>
-        <ElementPosition dnOrder="3" id="core" x="400" y="20"/>
-        <ElementPosition dnOrder="4" id="dfp" x="180" y="20"/>
-        <ElementPosition dnOrder="5" id="evsys" x="20" y="20"/>
-        <ElementPosition dnOrder="6" id="sercom2" x="162" y="203"/>
-        <ElementPosition dnOrder="7" id="sys_console" x="320" y="181"/>
-        <ElementPosition dnOrder="8" id="sys_time" x="544" y="312"/>
-        <ElementPosition dnOrder="9" id="tc0" x="368" y="358"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="1" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="0" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipDhcp" x="320" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipDns" x="460" y="20"/>
         <ElementPosition dnOrder="2" id="tcpip_apps_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="3"/>
-    <ComponentGraph dnOrder="4" id="DRIVER LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="drvExtPhyKsz8091" x="380" y="20"/>
-        <ElementPosition dnOrder="1" id="drvGmac" x="280" y="20"/>
-        <ElementPosition dnOrder="2" id="drvMiim" x="500" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="5" id="NETWORK LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="6" id="TCP/IP STACK">
+    <ComponentGraph dnOrder="1" id="TCP/IP STACK">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
         <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="423" y="145"/>
@@ -2123,7 +2074,43 @@
         <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="2" id="NETWORK LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="3" id="DRIVER LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="drvExtPhyKsz8091" x="380" y="20"/>
+        <ElementPosition dnOrder="1" id="drvGmac" x="280" y="20"/>
+        <ElementPosition dnOrder="2" id="drvMiim" x="500" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="4" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="HarmonyCore" x="465" y="63"/>
+        <ElementPosition dnOrder="1" id="TCP/IP STACK" x="554" y="241"/>
+        <ElementPosition dnOrder="2" id="cmsis" x="500" y="20"/>
+        <ElementPosition dnOrder="3" id="core" x="400" y="20"/>
+        <ElementPosition dnOrder="4" id="dfp" x="180" y="20"/>
+        <ElementPosition dnOrder="5" id="evsys" x="20" y="20"/>
+        <ElementPosition dnOrder="6" id="sercom2" x="162" y="203"/>
+        <ElementPosition dnOrder="7" id="sys_console" x="320" y="180"/>
+        <ElementPosition dnOrder="8" id="sys_time" x="544" y="312"/>
+        <ElementPosition dnOrder="9" id="tc0" x="349" y="357"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="5" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpip_transport_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="6" id="BASIC CONFIGURATION">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
@@ -2131,5 +2118,6 @@
         <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="7"/>
   </UserData>
 </Configuration>

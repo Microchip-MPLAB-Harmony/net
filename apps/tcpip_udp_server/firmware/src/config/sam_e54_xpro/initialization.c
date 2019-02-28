@@ -374,6 +374,19 @@ const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
     .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)SERCOM2_USART_ErrorGet,
 };
 
+
+const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
+{
+    /* Peripheral has more than one interrupt vector */
+    .isSingleIntSrc                        = false,
+
+    /* Peripheral interrupt lines */
+    .intSources.multi.usartTxCompleteInt   = SERCOM2_1_IRQn,
+    .intSources.multi.usartTxReadyInt      = SERCOM2_0_IRQn,
+    .intSources.multi.usartRxCompleteInt   = SERCOM2_2_IRQn,
+    .intSources.multi.usartErrorInt        = SERCOM2_OTHER_IRQn,
+};
+
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
 {
     .uartPLIB = &sysConsole0UARTPlibAPI,
@@ -381,7 +394,7 @@ const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
     .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
     .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
     .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSource = SERCOM2_0_IRQn,
+    .interruptSources = &sysConsole0UARTInterruptSources,
 };
 
 const SYS_CONSOLE_INIT sysConsole0Init =
@@ -391,12 +404,6 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .deviceIndex = 0,
 };
 
-const SYS_DEBUG_INIT debugInit =
-{
-    .moduleInit = {0},
-    .errorLevel = SYS_DEBUG_GLOBAL_ERROR_LEVEL,
-    .consoleIndex = 0,
-};
 
 const SYS_CMD_INIT sysCmdInit =
 {
@@ -434,8 +441,6 @@ void SYS_Initialize ( void* data )
     EVSYS_Initialize();
 
 
-    NVIC_Initialize();
-
 
     /* Initialize the MIIM Driver */
     sysObj.drvMiim = DRV_MIIM_Initialize( DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT *) &drvMiimInitData );
@@ -443,7 +448,6 @@ void SYS_Initialize ( void* data )
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
-    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
     SYS_CMD_Initialize((SYS_MODULE_INIT*)&sysCmdInit);
 
 
@@ -457,7 +461,8 @@ void SYS_Initialize ( void* data )
     APP_Initialize();
 
 
-  
+    NVIC_Initialize();
+
 }
 
 

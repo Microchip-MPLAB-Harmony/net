@@ -1,11 +1,11 @@
 /*******************************************************************************
-  L1, L2 Cache Header
+  Cortex-M L1 Cache Header
 
   File Name:
-    cache_cortex_a.h
+    device_cache.h
 
   Summary:
-    Preprocessor definitions to provide L1 and L2 Cache control.
+    Preprocessor definitions to provide L1 Cache control.
 
   Description:
     An MPLAB PLIB or Project can include this header to perform cache cleans,
@@ -43,8 +43,8 @@
 *******************************************************************************/
 // DOM-IGNORE-END
 
-#ifndef CACHE_CORTEX_M_H
-#define CACHE_CORTEX_M_H
+#ifndef DEVICE_CACHE_H
+#define DEVICE_CACHE_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -65,12 +65,23 @@ extern "C" {
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: L1, L2 Cache Configuration
+// Section: L1 Cache Configuration
 // *****************************************************************************
 // *****************************************************************************
-#define DCACHE_CLEAN_BY_ADDR(addr,sz)                  SCB_CleanDCache_by_Addr(addr,sz)
-#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)             SCB_InvalidateDCache_by_Addr(addr,sz)
-#define DATA_CACHE_ENABLED                             true
+#define ICACHE_ENABLE()
+#define ICACHE_DISABLE()
+#define ICACHE_INVALIDATE()
+#define INSTRUCTION_CACHE_ENABLED                      false
+
+#define DCACHE_ENABLE()
+#define DCACHE_DISABLE()
+#define DCACHE_INVALIDATE()
+#define DCACHE_CLEAN()
+#define DCACHE_CLEAN_INVALIDATE()
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
+#define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DATA_CACHE_ENABLED                             false
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -78,4 +89,4 @@ extern "C" {
 #endif
 //DOM-IGNORE-END
 
-#endif // end of header
+#endif // #ifndef DEVICE_CACHE_H

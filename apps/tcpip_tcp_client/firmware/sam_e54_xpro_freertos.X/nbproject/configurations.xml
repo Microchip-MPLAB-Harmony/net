@@ -58,8 +58,8 @@
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ipv4_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ipv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/arp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/arp_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/udp_manager.h</itemPath>
@@ -202,9 +202,9 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/sys_debug.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/sys_command.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/system/int/sys_int.h</itemPath>
@@ -215,8 +215,8 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_e54_xpro_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/system/system.h</itemPath>
@@ -507,7 +507,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Atmel" version="1.0.94"/>
+        <pack name="SAME54_DFP" vendor="Atmel" version="1.0.115"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>

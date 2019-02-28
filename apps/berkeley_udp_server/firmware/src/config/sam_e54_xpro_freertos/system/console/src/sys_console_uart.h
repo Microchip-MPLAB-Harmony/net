@@ -133,6 +133,16 @@ typedef struct
 
     Queue writeQueue;
 
+    int32_t         usartTxReadyIntStatus;
+
+    int32_t         usartTxCompleteIntStatus;
+
+    int32_t         usartRxCompleteIntStatus;
+
+    int32_t         usartErrorIntStatus;
+
+    int32_t         usartInterruptStatus;
+
     /* Mutex to protect access to the transfer objects */
     OSAL_MUTEX_DECLARE(mutexTransferObjects);
 

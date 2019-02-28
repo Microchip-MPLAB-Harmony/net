@@ -72,27 +72,103 @@ static CONSOLE_UART_DATA gConsoleUartData[SYS_CONSOLE_UART_MAX_INSTANCES];
 
 #define CONSOLE_UART_GET_INSTANCE(index)    (index >= SYS_CONSOLE_UART_MAX_INSTANCES)? NULL : &gConsoleUartData[index]
 
+static void Console_UART_DisableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
+{
+    bool interruptStatus;
+    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* intInfo = pConsoleUartData->interruptSources;
+    const SYS_CONSOLE_UART_MULTI_INT_SRC* multiVector = &intInfo->intSources.multi;
+
+    if (intInfo->isSingleIntSrc == true)
+    {
+        /* Disable USART interrupt */
+        pConsoleUartData->usartInterruptStatus = SYS_INT_SourceDisable(intInfo->intSources.usartInterrupt);
+    }
+    else
+    {
+        interruptStatus = SYS_INT_Disable();
+
+        /* Disable USART interrupt sources */
+        if(multiVector->usartTxReadyInt != -1)
+        {
+            pConsoleUartData->usartTxReadyIntStatus = SYS_INT_SourceDisable(multiVector->usartTxReadyInt);
+        }
+
+        if(multiVector->usartTxCompleteInt != -1)
+        {
+            pConsoleUartData->usartTxCompleteIntStatus = SYS_INT_SourceDisable(multiVector->usartTxCompleteInt);
+        }
+
+        if(multiVector->usartRxCompleteInt != -1)
+        {
+            pConsoleUartData->usartRxCompleteIntStatus = SYS_INT_SourceDisable(multiVector->usartRxCompleteInt);
+        }
+
+        if(multiVector->usartErrorInt != -1)
+        {
+            pConsoleUartData->usartErrorIntStatus = SYS_INT_SourceDisable(multiVector->usartErrorInt);
+        }
+
+        SYS_INT_Restore(interruptStatus);
+    }
+}
+
+static void Console_UART_EnableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
+{
+    bool interruptStatus;
+    const SYS_CONSOLE_UART_INTERRUPT_SOURCES* intInfo = pConsoleUartData->interruptSources;
+    const SYS_CONSOLE_UART_MULTI_INT_SRC* multiVector = &intInfo->intSources.multi;
+
+    if (intInfo->isSingleIntSrc == true)
+    {
+        /* Enable USART interrupt */
+        SYS_INT_SourceRestore(intInfo->intSources.usartInterrupt, pConsoleUartData->usartInterruptStatus);
+    }
+    else
+    {
+        interruptStatus = SYS_INT_Disable();
+        /* Enable USART interrupt sources */
+
+        if(multiVector->usartTxReadyInt != -1)
+        {
+            SYS_INT_SourceRestore(multiVector->usartTxReadyInt, pConsoleUartData->usartTxReadyIntStatus);
+        }
+
+        if(multiVector->usartTxCompleteInt != -1)
+        {
+            SYS_INT_SourceRestore(multiVector->usartTxCompleteInt, pConsoleUartData->usartTxCompleteIntStatus);
+        }
+
+        if(multiVector->usartRxCompleteInt != -1)
+        {
+            SYS_INT_SourceRestore(multiVector->usartRxCompleteInt, pConsoleUartData->usartRxCompleteIntStatus);
+        }
+
+        if(multiVector->usartErrorInt != -1)
+        {
+            SYS_INT_SourceRestore(multiVector->usartErrorInt, pConsoleUartData->usartErrorIntStatus);
+        }
+
+        SYS_INT_Restore(interruptStatus);
+    }
+}
+
 static bool Console_UART_ResourceLock(CONSOLE_UART_DATA* pConsoleUartData)
 {
     if(pConsoleUartData->inInterruptContext == false)
     {
         /* Grab a mutex. This is okay because we are not in an interrupt context */
-        if(OSAL_MUTEX_Lock(&(pConsoleUartData->mutexTransferObjects), OSAL_WAIT_FOREVER) == OSAL_RESULT_TRUE)
-        {
-            SYS_INT_SourceDisable(pConsoleUartData->interruptSource);
-            return true;
-        }
-        else
+        if(OSAL_MUTEX_Lock(&(pConsoleUartData->mutexTransferObjects), OSAL_WAIT_FOREVER) == OSAL_RESULT_FALSE)
         {
             return false;
         }
     }
+    Console_UART_DisableInterrupts(pConsoleUartData);
     return true;
 }
 
 static void Console_UART_ResourceUnlock(CONSOLE_UART_DATA* pConsoleUartData)
 {
-    SYS_INT_SourceEnable(pConsoleUartData->interruptSource);
+    Console_UART_EnableInterrupts(pConsoleUartData);
 
     if(pConsoleUartData->inInterruptContext == false)
     {
@@ -158,8 +234,8 @@ ssize_t Console_UART_Read(uint32_t index, int fd, void* buf, size_t count)
     {
         /* Read is not busy. Submit read request now itself */
         pConsoleUartData->readQueue.curQElement = qElement;
-        Console_UART_ReadSubmit(pConsoleUartData, pConsoleUartData->readQueue.curQElement);
         pConsoleUartData->rdState = CONSOLE_UART_READ_STATE_BUSY;
+        Console_UART_ReadSubmit(pConsoleUartData, pConsoleUartData->readQueue.curQElement);
     }
     else
     {
@@ -203,8 +279,8 @@ ssize_t Console_UART_Write(uint32_t index, int fd, const void* buf, size_t count
     {
         /* Write is not busy. Submit write request now itself. */
         pConsoleUartData->writeQueue.curQElement = qElement;
-        Console_UART_WriteSubmit(pConsoleUartData, pConsoleUartData->writeQueue.curQElement);
         pConsoleUartData->wrState = CONSOLE_UART_WRITE_STATE_BUSY;
+        Console_UART_WriteSubmit(pConsoleUartData, pConsoleUartData->writeQueue.curQElement);
     }
     else
     {
@@ -268,7 +344,7 @@ static void Console_UART_ReadTasks(CONSOLE_UART_DATA* pConsoleUartData)
         case CONSOLE_UART_READ_STATE_IDLE:
             break;
         case CONSOLE_UART_READ_STATE_BUSY:
-            if ((pConsoleUartData->readStatus == CONSOLE_UART_READ_DONE) || \
+            if ((pConsoleUartData->readStatus == CONSOLE_UART_READ_DONE) ||
                     (pConsoleUartData->readStatus == CONSOLE_UART_READ_ERROR))
             {
                 /* Give a callback to the client (console/application) */
@@ -380,7 +456,7 @@ void Console_UART_Initialize(uint32_t index, const void* initData)
     pConsoleUartData->writeQueue.maxQElements = consoleUsartInitData->writeQueueDepth;
     pConsoleUartData->readQueue.pQElementArr = consoleUsartInitData->readQueueElementsArr;
     pConsoleUartData->writeQueue.pQElementArr = consoleUsartInitData->writeQueueElementsArr;
-    pConsoleUartData->interruptSource = consoleUsartInitData->interruptSource;
+    pConsoleUartData->interruptSources = consoleUsartInitData->interruptSources;
 
     pConsoleUartData->readQueue.inIndex = pConsoleUartData->readQueue.outIndex;
     pConsoleUartData->writeQueue.inIndex = pConsoleUartData->writeQueue.outIndex;
@@ -414,7 +490,7 @@ SYS_CONSOLE_STATUS Console_UART_Status(uint32_t index)
         return SYS_CONSOLE_STATUS_ERROR;
     }
 
-    if ((pConsoleUartData->wrState == CONSOLE_UART_WRITE_STATE_BUSY) || \
+    if ((pConsoleUartData->wrState == CONSOLE_UART_WRITE_STATE_BUSY) ||
             (pConsoleUartData->rdState == CONSOLE_UART_READ_STATE_BUSY))
     {
         status = SYS_CONSOLE_STATUS_BUSY;
@@ -431,7 +507,3 @@ void Console_UART_Tasks(uint32_t index, SYS_MODULE_OBJ object)
 {
     /* Do nothing. */
 }
-
-/*******************************************************************************
- End of File
- */
