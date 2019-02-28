@@ -2491,6 +2491,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcps_private.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\dhcpv6.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\dhcpv6_manager.h</name>
             </file>
             <file>
@@ -2638,6 +2641,15 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\icmp.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\icmp_manager.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\icmpv6.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\icmpv6_manager.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\igmp.h</name>
             </file>
             <file>
@@ -2660,6 +2672,15 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv4_private.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ipv6.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv6_manager.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ipv6_private.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\isc.h</name>
@@ -2789,9 +2810,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio_pin.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pit\plib_pit.h</name>

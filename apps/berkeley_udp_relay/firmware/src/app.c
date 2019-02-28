@@ -718,7 +718,7 @@ static void _APP_RelayClientTasks() {
             break;
         case APP_STATE_RELAY_CLIENT_RUNNING:
         {
-#if !defined(__PIC32C__)
+#if !defined(__PIC32C__) && !defined(__SAMA5D2)
             itoa(cannedData, appData.relayClientNumberOfPackets, 10);
 #else
             itoa(appData.relayClientNumberOfPackets, cannedData, 10);

@@ -3196,6 +3196,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\cstartup.s</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\custom_http_net_app.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\dhcp.c</name>
             </file>
             <file>
@@ -3262,6 +3265,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\http_net.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\http_net_print.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\stdio\iar_monitor.c</name>
             </file>
             <file>
@@ -3284,6 +3290,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\fs\mpfs\src\mpfs.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\mpfs_img2_net.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\src\net_pres.c</name>
