@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,11 +41,19 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 #ifdef HAVE_CONFIG_H
     #include "config.h"
 #endif
-
+#include "configuration.h"
 #include "crypto/src/settings.h"
 
 
@@ -64,8 +72,8 @@ int wolfEvent_Init(WOLF_EVENT* event, WOLF_EVENT_TYPE type, void* context)
         return BAD_FUNC_ARG;
     }
 
-    if (event->pending) {
-        WOLFSSL_MSG("event already pending!");
+    if (event->state == WOLF_EVENT_STATE_PENDING) {
+        WOLFSSL_MSG("Event already pending!");
         return BAD_COND_E;
     }
 
@@ -122,10 +130,6 @@ int wolfEventQueue_Push(WOLF_EVENT_QUEUE* queue, WOLF_EVENT* event)
     }
 #endif
 
-    /* Setup event */
-    event->next = NULL;
-    event->pending = 1;
-
     ret = wolfEventQueue_Add(queue, event);
 
 #ifndef SINGLE_THREADED
@@ -168,6 +172,8 @@ int wolfEventQueue_Add(WOLF_EVENT_QUEUE* queue, WOLF_EVENT* event)
         return BAD_FUNC_ARG;
     }
 
+    event->next = NULL; /* added to end */
+    event->prev = NULL;
     if (queue->tail == NULL)  {
         queue->head = event;
     }
@@ -241,7 +247,7 @@ int wolfEventQueue_Poll(WOLF_EVENT_QUEUE* queue, void* context_filter,
             if (ret < 0) break; /* exit for */
 
             /* If event is done then process */
-            if (event->done) {
+            if (event->state == WOLF_EVENT_STATE_DONE) {
                 /* remove from queue */
                 ret = wolfEventQueue_Remove(queue, event);
                 if (ret < 0) break; /* exit for */

@@ -230,6 +230,9 @@ typedef struct
     /* Erase write state */
     DRV_MEMORY_EW_STATE ewState;
 
+    /* Flag to check transfer status */
+    volatile bool isTransferDone;
+
     /* Flag to indicate in use  */
     bool inUse;
 

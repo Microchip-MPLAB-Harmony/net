@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,6 +42,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -50,7 +58,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef WOLF_CRYPT_MISC_H
 #define WOLF_CRYPT_MISC_H
 
-#include "configuration.h"
 
 #include "crypto/src/types.h"
 
@@ -108,6 +115,26 @@ void   ByteReverseWords64(word64*, const word64*, word32);
     WOLFSSL_LOCAL word32 max(word32 a, word32 b);
 #endif /* WOLFSSL_HAVE_MAX */
 
+
+void c32to24(word32 in, word24 out);
+void c16toa(word16 u16, byte* c);
+void c32toa(word32 u32, byte* c);
+void c24to32(const word24 u24, word32* u32);
+void ato16(const byte* c, word16* u16);
+void ato24(const byte* c, word32* u24);
+void ato32(const byte* c, word32* u32);
+word32 btoi(byte b);
+
+
+WOLFSSL_LOCAL byte ctMaskGT(int a, int b);
+WOLFSSL_LOCAL byte ctMaskGTE(int a, int b);
+WOLFSSL_LOCAL byte ctMaskLT(int a, int b);
+WOLFSSL_LOCAL byte ctMaskLTE(int a, int b);
+WOLFSSL_LOCAL byte ctMaskEq(int a, int b);
+WOLFSSL_LOCAL byte ctMaskNotEq(int a, int b);
+WOLFSSL_LOCAL byte ctMaskSel(byte m, byte a, byte b);
+WOLFSSL_LOCAL int  ctMaskSelInt(byte m, int a, int b);
+WOLFSSL_LOCAL byte ctSetLTE(int a, int b);
 
 #endif /* NO_INLINE */
 

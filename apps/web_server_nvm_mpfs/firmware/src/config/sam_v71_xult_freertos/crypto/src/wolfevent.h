@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,6 +42,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 #ifndef _WOLF_EVENT_H_
 #define _WOLF_EVENT_H_
@@ -54,16 +62,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     #include "crypto/src/wc_port.h"
 #endif
 
-#ifndef WOLFSSL_WOLFSSL_TYPE_DEFINED
-#define WOLFSSL_WOLFSSL_TYPE_DEFINED
-typedef struct WOLFSSL WOLFSSL;
-#endif
 typedef struct WOLF_EVENT WOLF_EVENT;
-#ifndef WOLFSSL_WOLFSSL_CTX_TYPE_DEFINED
-#define WOLFSSL_WOLFSSL_CTX_TYPE_DEFINED
-typedef struct WOLFSSL_CTX WOLFSSL_CTX;
-#endif
-
 typedef unsigned short WOLF_EVENT_FLAG;
 
 typedef enum WOLF_EVENT_TYPE {
@@ -75,6 +74,12 @@ typedef enum WOLF_EVENT_TYPE {
     WOLF_EVENT_TYPE_ASYNC_LAST = WOLF_EVENT_TYPE_ASYNC_WOLFCRYPT,
 #endif /* WOLFSSL_ASYNC_CRYPT */
 } WOLF_EVENT_TYPE;
+
+typedef enum WOLF_EVENT_STATE {
+    WOLF_EVENT_STATE_READY,
+    WOLF_EVENT_STATE_PENDING,
+    WOLF_EVENT_STATE_DONE,
+} WOLF_EVENT_STATE;
 
 struct WOLF_EVENT {
     /* double linked list */
@@ -89,16 +94,18 @@ struct WOLF_EVENT {
 #endif
     } dev;
 #ifdef HAVE_CAVIUM
-    CavReqId            reqId;
+    word64              reqId;
+    #ifdef WOLFSSL_NITROX_DEBUG
+    word32              pendCount;
+    #endif
+#endif
+#ifndef WC_NO_ASYNC_THREADING
+    pthread_t           threadId;
 #endif
     int                 ret;    /* Async return code */
     unsigned int        flags;
     WOLF_EVENT_TYPE     type;
-
-    /* event flags */
-    WOLF_EVENT_FLAG     pending:1;
-    WOLF_EVENT_FLAG     done:1;
-    /* Future event flags can go here */
+    WOLF_EVENT_STATE    state;
 };
 
 enum WOLF_POLL_FLAGS {

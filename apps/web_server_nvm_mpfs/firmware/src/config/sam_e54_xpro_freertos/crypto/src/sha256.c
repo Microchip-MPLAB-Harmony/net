@@ -176,7 +176,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if !defined(WOLFSSL_PIC32MZ_HASH) && !defined(STM32_HASH_SHA2) && \
     (!defined(WOLFSSL_IMX6_CAAM) || defined(NO_IMX6_CAAM_HASH)) && \
     !defined(WOLFSSL_AFALG_HASH) && !defined(WOLFSSL_DEVCRYPTO_HASH) && \
-    (!defined(WOLFSSL_ESP32WROOM32_CRYPT) || defined(NO_WOLFSSL_ESP32WROOM32_CRYPT_HASH))
+    (!defined(WOLFSSL_ESP32WROOM32_CRYPT) || defined(NO_WOLFSSL_ESP32WROOM32_CRYPT_HASH)) && \
+    !defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256)
 static int InitSha256(wc_Sha256* sha256)
 {
     int ret = 0;
@@ -425,6 +426,24 @@ static int InitSha256(wc_Sha256* sha256)
 #elif defined(WOLFSSL_PIC32MZ_HASH)
     #include <wolfssl/wolfcrypt/port/pic32/pic32mz-crypt.h>
 
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256)
+#include "crypt_sha256_hw.h"
+
+    int wc_InitSha256_ex(wc_Sha256* sha, void* heap, int devId)
+    {
+        return CRYPT_SHA256_InitSha(sha, heap, devId);
+    }
+    
+    int wc_Sha256Update(wc_Sha256* sha, const byte* data, word32 len)
+    {
+        return CRYPT_SHA256_Update(sha, data, len);
+    }
+    
+    int wc_Sha256Final(wc_Sha256* sha, byte* hash)
+    {
+        return CRYPT_SHA256_Final(sha, hash);
+    }
+    
 #elif defined(STM32_HASH_SHA2)
 
     /* Supports CubeMX HAL or Standard Peripheral Library */

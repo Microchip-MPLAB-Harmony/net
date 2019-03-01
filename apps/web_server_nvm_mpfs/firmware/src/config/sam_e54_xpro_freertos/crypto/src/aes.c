@@ -54,227 +54,74 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 /* Tip: Locate the software cipher modes by searching for "Software AES" */
 
-#if defined(HAVE_FIPS) && \
-    defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
-
-    /* set NO_WRAPPERS before headers, use direct internal f()s not wrappers */
-    #define FIPS_NO_WRAPPERS
-
-    #ifdef USE_WINDOWS_API
-        #pragma code_seg(".fipsA$g")
-        #pragma const_seg(".fipsB$g")
-    #endif
-#endif
 
 #include "crypto/src/aes.h"
 
 
-/* fips wrapper calls, user can call direct */
-#if defined(HAVE_FIPS) && \
-    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
-
-    int wc_AesSetKey(Aes* aes, const byte* key, word32 len, const byte* iv,
-                              int dir)
-    {
-        if (aes == NULL ||  !( (len == 16) || (len == 24) || (len == 32)) ) {
-            return BAD_FUNC_ARG;
-        }
-
-        return AesSetKey_fips(aes, key, len, iv, dir);
-    }
-    int wc_AesSetIV(Aes* aes, const byte* iv)
-    {
-        if (aes == NULL) {
-            return BAD_FUNC_ARG;
-        }
-
-        return AesSetIV_fips(aes, iv);
-    }
-    #ifdef HAVE_AES_CBC
-        int wc_AesCbcEncrypt(Aes* aes, byte* out, const byte* in, word32 sz)
-        {
-            if (aes == NULL || out == NULL || in == NULL) {
-                return BAD_FUNC_ARG;
-            }
-
-            return AesCbcEncrypt_fips(aes, out, in, sz);
-        }
-        #ifdef HAVE_AES_DECRYPT
-            int wc_AesCbcDecrypt(Aes* aes, byte* out, const byte* in, word32 sz)
-            {
-                if (aes == NULL || out == NULL || in == NULL
-                                            || sz % AES_BLOCK_SIZE != 0) {
-                    return BAD_FUNC_ARG;
-                }
-
-                return AesCbcDecrypt_fips(aes, out, in, sz);
-            }
-        #endif /* HAVE_AES_DECRYPT */
-    #endif /* HAVE_AES_CBC */
-
-    /* AES-CTR */
-    #ifdef WOLFSSL_AES_COUNTER
-        int wc_AesCtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz)
-        {
-            if (aes == NULL || out == NULL || in == NULL) {
-                return BAD_FUNC_ARG;
-            }
-
-            return AesCtrEncrypt(aes, out, in, sz);
-        }
-    #endif
-
-    /* AES-DIRECT */
-    #if defined(WOLFSSL_AES_DIRECT)
-        void wc_AesEncryptDirect(Aes* aes, byte* out, const byte* in)
-        {
-            AesEncryptDirect(aes, out, in);
-        }
-
-        #ifdef HAVE_AES_DECRYPT
-            void wc_AesDecryptDirect(Aes* aes, byte* out, const byte* in)
-            {
-                AesDecryptDirect(aes, out, in);
-            }
-        #endif /* HAVE_AES_DECRYPT */
-
-        int wc_AesSetKeyDirect(Aes* aes, const byte* key, word32 len,
-                                        const byte* iv, int dir)
-        {
-            return AesSetKeyDirect(aes, key, len, iv, dir);
-        }
-    #endif /* WOLFSSL_AES_DIRECT */
-
-    /* AES-GCM */
-    #ifdef HAVE_AESGCM
-        int wc_AesGcmSetKey(Aes* aes, const byte* key, word32 len)
-        {
-            if (aes == NULL || !( (len == 16) || (len == 24) || (len == 32)) ) {
-                return BAD_FUNC_ARG;
-            }
-
-            return AesGcmSetKey_fips(aes, key, len);
-        }
-        int wc_AesGcmEncrypt(Aes* aes, byte* out, const byte* in, word32 sz,
-                                      const byte* iv, word32 ivSz,
-                                      byte* authTag, word32 authTagSz,
-                                      const byte* authIn, word32 authInSz)
-        {
-            if (aes == NULL || authTagSz > AES_BLOCK_SIZE
-                                    || authTagSz < WOLFSSL_MIN_AUTH_TAG_SZ ||
-                                    ivSz > AES_BLOCK_SIZE) {
-                return BAD_FUNC_ARG;
-            }
-
-            return AesGcmEncrypt_fips(aes, out, in, sz, iv, ivSz, authTag,
-                authTagSz, authIn, authInSz);
-        }
-
-        #ifdef HAVE_AES_DECRYPT
-            int wc_AesGcmDecrypt(Aes* aes, byte* out, const byte* in, word32 sz,
-                                          const byte* iv, word32 ivSz,
-                                          const byte* authTag, word32 authTagSz,
-                                          const byte* authIn, word32 authInSz)
-            {
-                if (aes == NULL || out == NULL || in == NULL || iv == NULL
-                        || authTag == NULL || authTagSz > AES_BLOCK_SIZE ||
-                        ivSz > AES_BLOCK_SIZE) {
-                    return BAD_FUNC_ARG;
-                }
-
-                return AesGcmDecrypt_fips(aes, out, in, sz, iv, ivSz, authTag,
-                    authTagSz, authIn, authInSz);
-            }
-        #endif /* HAVE_AES_DECRYPT */
-
-        int wc_GmacSetKey(Gmac* gmac, const byte* key, word32 len)
-        {
-            if (gmac == NULL || key == NULL || !((len == 16) ||
-                                (len == 24) || (len == 32)) ) {
-                return BAD_FUNC_ARG;
-            }
-
-            return GmacSetKey(gmac, key, len);
-        }
-        int wc_GmacUpdate(Gmac* gmac, const byte* iv, word32 ivSz,
-                                      const byte* authIn, word32 authInSz,
-                                      byte* authTag, word32 authTagSz)
-        {
-            if (gmac == NULL || authTagSz > AES_BLOCK_SIZE ||
-                               authTagSz < WOLFSSL_MIN_AUTH_TAG_SZ) {
-                return BAD_FUNC_ARG;
-            }
-
-            return GmacUpdate(gmac, iv, ivSz, authIn, authInSz,
-                              authTag, authTagSz);
-        }
-    #endif /* HAVE_AESGCM */
-
-    /* AES-CCM */
-    #if defined(HAVE_AESCCM) && \
-        defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
-        int wc_AesCcmSetKey(Aes* aes, const byte* key, word32 keySz)
-        {
-            return AesCcmSetKey(aes, key, keySz);
-        }
-        int wc_AesCcmEncrypt(Aes* aes, byte* out, const byte* in, word32 inSz,
-                                      const byte* nonce, word32 nonceSz,
-                                      byte* authTag, word32 authTagSz,
-                                      const byte* authIn, word32 authInSz)
-        {
-            /* sanity check on arguments */
-            if (aes == NULL || out == NULL || in == NULL || nonce == NULL
-                    || authTag == NULL || nonceSz < 7 || nonceSz > 13)
-                return BAD_FUNC_ARG;
-
-            AesCcmEncrypt(aes, out, in, inSz, nonce, nonceSz, authTag,
-                authTagSz, authIn, authInSz);
-            return 0;
-        }
-
-        #ifdef HAVE_AES_DECRYPT
-            int  wc_AesCcmDecrypt(Aes* aes, byte* out,
-                const byte* in, word32 inSz,
-                const byte* nonce, word32 nonceSz,
-                const byte* authTag, word32 authTagSz,
-                const byte* authIn, word32 authInSz)
-            {
-
-                if (aes == NULL || out == NULL || in == NULL || nonce == NULL
-                    || authTag == NULL || nonceSz < 7 || nonceSz > 13) {
-                        return BAD_FUNC_ARG;
-                }
-
-                return AesCcmDecrypt(aes, out, in, inSz, nonce, nonceSz,
-                    authTag, authTagSz, authIn, authInSz);
-            }
-        #endif /* HAVE_AES_DECRYPT */
-    #endif /* HAVE_AESCCM && HAVE_FIPS_VERSION 2 */
-
-    int wc_AesInit(Aes* aes, void* h, int i)
-    {
-        if (aes == NULL)
-            return BAD_FUNC_ARG;
-
-        (void)h;
-        (void)i;
-
-        /* FIPS doesn't support:
-            return AesInit(aes, h, i); */
-        return 0;
-    }
-    void wc_AesFree(Aes* aes)
-    {
-        (void)aes;
-        /* FIPS doesn't support:
-            AesFree(aes); */
-    }
-
-#else /* else build without fips, or for FIPS v2 */
 
 
 #if defined(WOLFSSL_TI_CRYPT)
     #include "crypto/src/port/ti/ti-aes.c"
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_AES)
+#include "crypt_aes_hw.h"
+#include "crypt_aes_hwInt.h"
+
+WOLFSSL_API int  wc_AesSetKey(Aes* aes, const byte* key, word32 len,
+                              const byte* iv, int dir)
+{
+    return crypt_aes_SetKey(aes, key, len, iv, dir);
+}
+
+
+WOLFSSL_API int  wc_AesCbcEncrypt(Aes* aes, byte* out,
+                                  const byte* in, word32 sz)
+{
+    return crypt_aes_CbcEncrypt(aes, out, in, sz);
+}
+WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out,
+                                  const byte* in, word32 sz)
+{
+    return crypt_aes_CbcDecrypt(aes, out, in, sz);
+}
+
+ WOLFSSL_API int wc_AesCtrEncrypt(Aes* aes, byte* out,
+                                   const byte* in, word32 sz)
+ {
+     return crypt_aes_CtrEncrypt(aes, out, in, sz);
+ }
+ 
+#if defined(HAVE_AESGCM)
+ 
+ WOLFSSL_API int  wc_AesGcmSetKey(Aes* aes, const byte* key, word32 len)
+ {
+     return crypt_aes_SetKey(aes, key, len, NULL, 0);
+     
+ }
+ 
+ 
+ WOLFSSL_API int  wc_AesGcmEncrypt(Aes* aes, byte* out,
+                                   const byte* in, word32 sz,
+                                   const byte* iv, word32 ivSz,
+                                   byte* authTag, word32 authTagSz,
+                                   const byte* authIn, word32 authInSz)
+ {
+     return crypt_aes_GcmEncrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+ }
+ 
+ 
+ 
+ WOLFSSL_API int  wc_AesGcmDecrypt(Aes* aes, byte* out,
+                                   const byte* in, word32 sz,
+                                   const byte* iv, word32 ivSz,
+                                   const byte* authTag, word32 authTagSz,
+                                   const byte* authIn, word32 authInSz)
+ {
+     return crypt_aes_GcmDecrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+ }
+ 
+#endif
+ 
+
 #else
 
 #include "crypto/src/logging.h"
@@ -560,6 +407,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     }
     #endif /* HAVE_AES_DECRYPT */
 
+    
 #elif defined(WOLFSSL_PIC32MZ_CRYPT)
 
     #include "crypto/src/pic32mz-crypt.h"
@@ -10477,5 +10325,4 @@ int wc_AesXtsDecrypt(XtsAes* xaes, byte* out, const byte* in, word32 sz,
 
 #endif /* WOLFSSL_AES_XTS */
 
-#endif /* HAVE_FIPS */
 #endif /* !NO_AES */

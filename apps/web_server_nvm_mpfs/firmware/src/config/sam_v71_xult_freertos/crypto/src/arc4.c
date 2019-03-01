@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,12 +41,21 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
 
 #ifdef HAVE_CONFIG_H
-    #include "config.h"
+    #include <config.h>
 #endif
 #include "configuration.h"
 
@@ -96,7 +105,7 @@ int wc_Arc4SetKey(Arc4* arc4, const byte* key, word32 length)
 }
 
 
-static INLINE byte MakeByte(word32* x, word32* y, byte* s)
+static WC_INLINE byte MakeByte(word32* x, word32* y, byte* s)
 {
     word32 a = s[*x], b;
     *y = (*y+a) & 0xff;

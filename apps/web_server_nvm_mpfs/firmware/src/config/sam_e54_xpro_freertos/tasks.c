@@ -72,7 +72,7 @@ void _NET_PRES_Tasks(  void *pvParameters  )
     while(1)
     {
         NET_PRES_Tasks(sysObj.netPres);
-        vTaskDelay(1000 / portTICK_PERIOD_MS);
+        vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
 
@@ -122,7 +122,7 @@ void _SYS_CMD_Tasks(  void *pvParameters  )
     while(1)
     {
         SYS_CMD_Tasks();
-        vTaskDelay(10 / portTICK_PERIOD_MS);
+        vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
 

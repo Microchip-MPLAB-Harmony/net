@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,6 +41,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -48,6 +56,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
+	#include "configuration.h"
 #endif
 
 #include "crypto/src/settings.h"
@@ -64,7 +73,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     #include "crypto/src/misc.c"
 #endif
 
-
 void fprime_copy(byte *x, const byte *a)
 {
     int i;
@@ -80,8 +88,18 @@ void lm_copy(byte* x, const byte* a)
         x[i] = a[i];
 }
 
+#if ((defined(HAVE_CURVE25519) && !defined(CURVE25519_SMALL)) || \
+    (defined(HAVE_ED25519) && !defined(ED25519_SMALL))) &&      \
+    !defined(FREESCALE_LTC_ECC)
+    /* to be Complementary to fe_low_mem.c */
+#else
+void fe_init(void)
+{
+}
+#endif
 
 #ifdef CURVE25519_SMALL
+
 /* Double an X-coordinate */
 static void xc_double(byte *x3, byte *z3,
 		      const byte *x1, const byte *z1)
