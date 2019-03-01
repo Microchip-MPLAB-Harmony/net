@@ -71,9 +71,8 @@ extern "C" {
 // Section: System Configuration
 // *****************************************************************************
 // *****************************************************************************
-#define DCACHE_CLEAN_BY_ADDR(data, size)       SCB_CleanDCache_by_Addr((uint32_t *)data, size)
-#define DCACHE_INVALIDATE_BY_ADDR(data, size)  SCB_InvalidateDCache_by_Addr((uint32_t *)data, size)
-#define DATA_CACHE_ENABLED                     true
+
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -84,7 +83,7 @@ extern "C" {
 #define SYS_TIME_INDEX_0                     0
 #define SYS_TIME_MAX_TIMERS                  5
 #define SYS_TIME_HW_COUNTER_WIDTH            16
-#define SYS_TIME_HW_COUNTER_PERIOD           0xFFFF
+#define SYS_TIME_HW_COUNTER_PERIOD           65535U
 #define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         300000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
@@ -150,6 +149,7 @@ extern "C" {
 #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL
 #define DRV_MEMORY_DEVICE_PROGRAM_SIZE       512
 #define DRV_MEMORY_DEVICE_ERASE_SIZE         8192
+
 
 
 
@@ -257,7 +257,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH     20
 #define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   20
 #define TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE       "SSI Echo - Not Found: "
-#define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		1000
+#define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		0
 #define TCPIP_HTTP_NET_MALLOC_FUNC                     0
 #define TCPIP_HTTP_NET_FREE_FUNC                        0
 
@@ -283,77 +283,6 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
-
-
-/*** TCPIP MAC Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY				1
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY				1
-#define TCPIP_GMAC_RX_BUFF_SIZE_DUMMY				    	64
-#define TCPIP_GMAC_TX_BUFF_SIZE_DUMMY				    	64
-
-/*** QUEUE 0 Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0				10
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0				10
-#define TCPIP_GMAC_RX_BUFF_SIZE_QUE0				    	1536
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536
-
-/*** QUEUE 1 Disabled; Dummy Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_BUFF_SIZE_QUE1				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE1				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
-
-/*** QUEUE 2 Disabled; Dummy Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_BUFF_SIZE_QUE2				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE2				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
-
-/*** QUEUE 3 Disabled; Dummy Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_BUFF_SIZE_QUE3				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE3				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
-
-/*** QUEUE 4 Disabled; Dummy Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_BUFF_SIZE_QUE4				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE4				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
-
-/*** QUEUE 5 Disabled; Dummy Configuration ***/
-#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
-#define TCPIP_GMAC_RX_BUFF_SIZE_QUE5				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
-#define TCPIP_GMAC_TX_BUFF_SIZE_QUE5				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
-
-#define TCPIP_GMAC_RX_MAX_FRAME		    			1536
-#define TCPIP_GMAC_RX_FILTERS                       \
-                                                    TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT |\
-                                                    TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT |\
-                                                    TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT |\
-                                                    TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT |\
-                                                    0
-#define TCPIP_GMAC_ETH_OPEN_FLAGS       			\
-                                                    TCPIP_ETH_OPEN_AUTO |\
-                                                    TCPIP_ETH_OPEN_FDUPLEX |\
-                                                    TCPIP_ETH_OPEN_HDUPLEX |\
-                                                    TCPIP_ETH_OPEN_100 |\
-                                                    TCPIP_ETH_OPEN_10 |\
-                                                    TCPIP_ETH_OPEN_MDIX_AUTO |\
-                                                    TCPIP_ETH_OPEN_RMII |\
-                                                    0
-
-#define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
-
-#define DRV_GMAC_INSTANCES_NUMBER				1
-#define DRV_GMAC_CLIENTS_NUMBER					1
-#define DRV_GMAC_INDEX	    	    			1
-#define DRV_GMAC_PERIPHERAL_ID					1
-#define DRV_GMAC_INTERRUPT_SOURCE				GMAC_IRQn
-
-#define DRV_GMAC_INTERRUPT_MODE        			true
-
 
 
 
@@ -382,6 +311,9 @@ extern "C" {
 #define TCPIP_ARP_TASK_PROCESS_RATE		        	2
 #define TCPIP_ARP_PRIMARY_CACHE_ONLY		        	true
 
+
+
+#define TCPIP_STACK_USE_ICMPV6_SERVER
 
 
 #define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY 	1
@@ -446,12 +378,11 @@ extern "C" {
 #define TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT 			10
 #define TCPIP_IPV6_TASK_PROCESS_RATE 					1000
 #define TCPIP_IPV6_INIT_TASK_PROCESS_RATE 				32
+#define TCPIP_IPV6_ULA_GENERATE_ENABLE 					false
 #define TCPIP_IPV6_ULA_NTP_ACCESS_TMO 					12000
 #define TCPIP_IPV6_ULA_NTP_VALID_WINDOW 				1000
 #define TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT 				60
 #define TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE 			1514
-
-#define TCPIP_STACK_USE_ICMPV6_SERVER
 
 
 /*** telnet Configuration ***/
@@ -531,6 +462,78 @@ extern "C" {
 /*** TCP/IP Configuration ***/
 
 
+/*** TCPIP MAC Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY				1
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY				1
+#define TCPIP_GMAC_RX_BUFF_SIZE_DUMMY				    	64
+#define TCPIP_GMAC_TX_BUFF_SIZE_DUMMY				    	64
+
+/*** QUEUE 0 Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0				10
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0				10
+#define TCPIP_GMAC_RX_BUFF_SIZE_QUE0				    	1536
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536
+
+/*** QUEUE 1 Disabled; Dummy Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_BUFF_SIZE_QUE1				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE1				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+
+/*** QUEUE 2 Disabled; Dummy Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_BUFF_SIZE_QUE2				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE2				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+
+/*** QUEUE 3 Disabled; Dummy Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_BUFF_SIZE_QUE3				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE3				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+
+/*** QUEUE 4 Disabled; Dummy Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_BUFF_SIZE_QUE4				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE4				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+
+/*** QUEUE 5 Disabled; Dummy Configuration ***/
+#define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
+#define TCPIP_GMAC_RX_BUFF_SIZE_QUE5				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_TX_BUFF_SIZE_QUE5				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+
+#define TCPIP_GMAC_RX_MAX_FRAME		    			1536
+#define TCPIP_GMAC_RX_FILTERS                       \
+                                                    TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT |\
+                                                    TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT |\
+                                                    TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT |\
+                                                    TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT |\
+                                                    0
+#define TCPIP_GMAC_ETH_OPEN_FLAGS       			\
+                                                    TCPIP_ETH_OPEN_AUTO |\
+                                                    TCPIP_ETH_OPEN_FDUPLEX |\
+                                                    TCPIP_ETH_OPEN_HDUPLEX |\
+                                                    TCPIP_ETH_OPEN_100 |\
+                                                    TCPIP_ETH_OPEN_10 |\
+                                                    TCPIP_ETH_OPEN_MDIX_AUTO |\
+                                                    TCPIP_ETH_OPEN_RMII |\
+                                                    0
+
+#define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
+
+#define DRV_GMAC_INSTANCES_NUMBER				1
+#define DRV_GMAC_NUMBER_OF_QUEUES				6
+#define DRV_GMAC_CLIENTS_NUMBER					1
+#define DRV_GMAC_INDEX	    	    				1
+#define DRV_GMAC_PERIPHERAL_ID					1
+#define DRV_GMAC_INTERRUPT_SOURCE				GMAC_IRQn
+
+#define DRV_GMAC_INTERRUPT_MODE        				true
+#define DRV_GMAC_RMII_MODE					0
+
+
 
 /*** UDP Configuration ***/
 #define TCPIP_UDP_MAX_SOCKETS		                	10
@@ -568,22 +571,31 @@ extern "C" {
 #define NO_DSA
 #define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
-#define MICROCHIP_SAME70
-#define WOLFSSL_MICROCHIP_SAME70
-#define WOLFSSL_SAME70_HASH
-#define NO_CERTS
-#define NO_PWDBASED
-#define NO_OLD_TLS
-#define NO_SHA
+#define WOLFSSL_IGNORE_FILE_WARN
+
+#define MICROCHIP_MPLAB_HARMONY
+#define MICROCHIP_MPLAB_HARMONY_3
+
+#define SIZEOF_LONG_LONG 8
+#define SINGLE_THREADED
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define NO_DEV_RANDOM
+#define NO_FILESYSTEM
+#define USE_FAST_MATH
+#define TFM_TIMING_RESISTANT
+#define USE_CERT_BUFFERS_2048
+#define HAVE_MICROCHIP_HARMONY3_HW_SHA1
 #define NO_AES
-#define NO_SHA256
-#define WC_NO_RNG
+#define HAVE_MICROCHIP_HARMONY3_HW_SHA256
+#define HAVE_MICROCHIP_HARMONY3_HW_RNG
 #define NO_ASN
 #define NO_RSA
-#define NO_HMAC
 #define NO_DES3
 #define NO_RNG
 #define NO_RNG_TEST
+#define CRYPTO_AES_HW_6149
+#define CRYPTO_SHA_HW_11105
 
 
 
