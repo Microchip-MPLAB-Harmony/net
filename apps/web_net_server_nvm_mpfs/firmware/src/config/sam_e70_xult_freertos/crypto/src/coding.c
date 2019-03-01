@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,6 +41,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -62,7 +70,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 enum {
     BAD         = 0xFF,  /* invalid encoding */
     PAD         = '=',
-    PEM_LINE_SZ = 64
+    PEM_LINE_SZ = 64,
+    BASE64_MIN  = 0x2B,
+    BASE16_MIN  = 0x30,
 };
 
 
@@ -85,7 +95,7 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
     word32 i = 0;
     word32 j = 0;
     word32 plainSz = inLen - ((inLen + (PEM_LINE_SZ - 1)) / PEM_LINE_SZ );
-    const byte maxIdx = (byte)sizeof(base64Decode) + 0x2B - 1;
+    const byte maxIdx = (byte)sizeof(base64Decode) + BASE64_MIN - 1;
 
     plainSz = (plainSz * 3 + 3) / 4;
     if (plainSz > *outLen) return BAD_FUNC_ARG;
@@ -107,7 +117,7 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
         if (e4 == PAD)
             pad4 = 1;
 
-        if (e1 < 0x2B || e2 < 0x2B || e3 < 0x2B || e4 < 0x2B) {
+        if (e1 < BASE64_MIN || e2 < BASE64_MIN || e3 < BASE64_MIN || e4 < BASE64_MIN) {
             WOLFSSL_MSG("Bad Base64 Decode data, too small");
             return ASN_INPUT_E;
         }
@@ -117,10 +127,10 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
             return ASN_INPUT_E;
         }
 
-        e1 = base64Decode[e1 - 0x2B];
-        e2 = base64Decode[e2 - 0x2B];
-        e3 = (e3 == PAD) ? 0 : base64Decode[e3 - 0x2B];
-        e4 = (e4 == PAD) ? 0 : base64Decode[e4 - 0x2B];
+        e1 = base64Decode[e1 - BASE64_MIN];
+        e2 = base64Decode[e2 - BASE64_MIN];
+        e3 = (e3 == PAD) ? 0 : base64Decode[e3 - BASE64_MIN];
+        e4 = (e4 == PAD) ? 0 : base64Decode[e4 - BASE64_MIN];
 
         b1 = (byte)((e1 << 2) | (e2 >> 4));
         b2 = (byte)(((e2 & 0xF) << 4) | (e3 >> 2));
@@ -307,7 +317,7 @@ static int DoBase64_Encode(const byte* in, word32 inLen, byte* out,
         inLen -= 3;
 
         /* Insert newline after PEM_LINE_SZ, unless no \n requested */
-        if (escaped != WC_NO_NL_ENC && (++n % (PEM_LINE_SZ/4)) == 0 && inLen){
+        if (escaped != WC_NO_NL_ENC && (++n % (PEM_LINE_SZ/4)) == 0 && inLen) {
             ret = CEscape(escaped, '\n', out, &i, *outLen, 1, getSzOnly);
             if (ret != 0) break;
         }
@@ -370,11 +380,10 @@ int Base64_Encode_NoNl(const byte* in, word32 inLen, byte* out, word32* outLen)
     return DoBase64_Encode(in, inLen, out, outLen, WC_NO_NL_ENC);
 }
 
-#endif  /* defined(WOLFSSL_BASE64_ENCODE) */
+#endif /* WOLFSSL_BASE64_ENCODE */
 
 
-#if defined(OPENSSL_EXTRA) || defined(HAVE_WEBSERVER) || defined(HAVE_FIPS) \
-                           || defined(HAVE_ECC_CDH)
+#ifdef WOLFSSL_BASE16
 
 static
 const byte hexDecode[] = { 0, 1, 2, 3, 4, 5, 6, 7, 8, 9,
@@ -396,7 +405,7 @@ int Base16_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
         return BAD_FUNC_ARG;
 
     if (inLen == 1 && *outLen && in) {
-        byte b = in[inIdx++] - 0x30;  /* 0 starts at 0x30 */
+        byte b = in[inIdx++] - BASE16_MIN;  /* 0 starts at 0x30 */
 
         /* sanity check */
         if (b >=  sizeof(hexDecode)/sizeof(hexDecode[0]))
@@ -420,8 +429,8 @@ int Base16_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
         return BAD_FUNC_ARG;
 
     while (inLen) {
-        byte b  = in[inIdx++] - 0x30;  /* 0 starts at 0x30 */
-        byte b2 = in[inIdx++] - 0x30;
+        byte b  = in[inIdx++] - BASE16_MIN;  /* 0 starts at 0x30 */
+        byte b2 = in[inIdx++] - BASE16_MIN;
 
         /* sanity checks */
         if (b >=  sizeof(hexDecode)/sizeof(hexDecode[0]))
@@ -480,6 +489,6 @@ int Base16_Encode(const byte* in, word32 inLen, byte* out, word32* outLen)
     return 0;
 }
 
-#endif /* (OPENSSL_EXTRA) || (HAVE_WEBSERVER) || (HAVE_FIPS) */
+#endif /* WOLFSSL_BASE16 */
 
-#endif /* NO_CODING */
+#endif /* !NO_CODING */
