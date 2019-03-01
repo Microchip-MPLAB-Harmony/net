@@ -880,6 +880,49 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv,GM
 
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket (DRV_GMAC_DRIVER * pMACDrv,  TCPIP_MAC_PACKET **pPkt, int *pnBuffs, DRV_GMAC_RXDCPT_STATUS* pRxStat,GMAC_QUE_LIST queueIdx );
 
+
+/*******************************************************************************
+  Function:
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr)
+
+  Summary:
+    Set MAC address for Ethernet controller
+  Description:
+    This function performs setting of MAC address of the Ethernet Controller(GMAC).
+
+  Precondition:
+    None.
+
+  Parameters:
+    pMacAddr -  address of MAC Address array.
+
+  Returns:
+    DRV_PIC32CGMAC_RESULT
+
+  ************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr);
+
+/*******************************************************************************
+  Function:
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr)
+
+  Summary:
+    Get MAC address for Ethernet controller
+  Description:
+    This function performs reading of MAC address from the Ethernet Controller(GMAC).
+
+  Precondition:
+    None.
+
+  Parameters:
+    pMacAddr -  address of MAC Address array.
+
+  Returns:
+    DRV_PIC32CGMAC_RESULT
+
+  ************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr);
+
 /*******************************************************************************/
 //Clear the Tx node in the single linked list
 static inline void _Clear_TxNode(DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxNode)

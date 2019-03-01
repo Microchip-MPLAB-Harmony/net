@@ -68,8 +68,13 @@
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
 #include "system/int/sys_int.h"
+<<<<<<< HEAD
 #include "system/cache/sys_cache.h"
 #include "osal/osal.h"
+=======
+#include "system/cache/sys_cache.h"
+#include "osal/osal.h"
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"

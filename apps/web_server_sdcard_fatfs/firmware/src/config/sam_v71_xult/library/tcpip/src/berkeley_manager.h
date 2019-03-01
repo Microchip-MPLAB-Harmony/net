@@ -51,7 +51,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifndef __BERKELEY_MANAGER_H_
 #define __BERKELEY_MANAGER_H_
-#include "net/pres/net_pres.h"
+#include "net_pres/pres/net_pres.h"
 
 typedef enum
 {

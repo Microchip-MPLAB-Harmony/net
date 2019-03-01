@@ -45,6 +45,8 @@
 // *****************************************************************************
 #include "configuration.h"
 #include "definitions.h"
+#include "device.h"
+
 
 
 // ****************************************************************************
@@ -83,23 +85,12 @@
 
 
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Driver Initialization Data
 // *****************************************************************************
 // *****************************************************************************
-
-/*** SDHC Driver Initialization Data ***/
-const DRV_SDHC_INIT drvSDHCInitData =
-{
-    .sdCardDetectEnable     = false,
-    .sdWriteProtectEnable   = false,
-    .speedMode              = DRV_SDHC_SPEED_MODE_DEFAULT,
-    .busWidth               = DRV_SDHC_BUS_WIDTH_4_BIT,
-    .isFsEnabled            = true,
-};
-
-// </editor-fold>
 
 
 /* MIIM Driver Configuration */
@@ -107,6 +98,53 @@ static const DRV_MIIM_INIT drvMiimInitData =
 {
     .ethphyId = DRV_MIIM_ETH_MODULE_ID,
 };
+
+// <editor-fold defaultstate="collapsed" desc="DRV_SDMMC Instance 0 Initialization Data">
+
+/* SDMMC Client Objects Pool */
+static DRV_SDMMC_CLIENT_OBJ drvSDMMC0ClientObjPool[DRV_SDMMC_CLIENTS_NUMBER_IDX0] = {0};
+
+/* SDMMC Transfer Objects Pool */
+static DRV_SDMMC_BUFFER_OBJ drvSDMMC0BufferObjPool[DRV_SDMMC_QUEUE_SIZE_IDX0] = {0};
+
+
+const DRV_SDMMC_PLIB_API drvSDMMC0PlibAPI = {
+    .sdhostCallbackRegister = (DRV_SDMMC_PLIB_CALLBACK_REGISTER)HSMCI_CallbackRegister,
+    .sdhostInitModule = (DRV_SDMMC_PLIB_INIT_MODULE)HSMCI_ModuleInit,
+    .sdhostSetClock  = (DRV_SDMMC_PLIB_SET_CLOCK)HSMCI_ClockSet,
+    .sdhostIsCmdLineBusy = (DRV_SDMMC_PLIB_IS_CMD_LINE_BUSY)HSMCI_IsCmdLineBusy,
+    .sdhostIsDatLineBusy = (DRV_SDMMC_PLIB_IS_DATA_LINE_BUSY)HSMCI_IsDatLineBusy,
+    .sdhostSendCommand = (DRV_SDMMC_PLIB_SEND_COMMAND)HSMCI_CommandSend,
+    .sdhostReadResponse = (DRV_SDMMC_PLIB_READ_RESPONSE)HSMCI_ResponseRead,
+    .sdhostSetBlockCount = (DRV_SDMMC_PLIB_SET_BLOCK_COUNT)HSMCI_BlockCountSet,
+    .sdhostSetBlockSize = (DRV_SDMMC_PLIB_SET_BLOCK_SIZE)HSMCI_BlockSizeSet,
+    .sdhostSetBusWidth = (DRV_SDMMC_PLIB_SET_BUS_WIDTH)HSMCI_BusWidthSet,
+    .sdhostSetSpeedMode = (DRV_SDMMC_PLIB_SET_SPEED_MODE)HSMCI_SpeedModeSet,
+    .sdhostSetupDma = (DRV_SDMMC_PLIB_SETUP_DMA)HSMCI_DmaSetup,
+    .sdhostGetCommandError = (DRV_SDMMC_PLIB_GET_COMMAND_ERROR)HSMCI_CommandErrorGet,
+    .sdhostGetDataError = (DRV_SDMMC_PLIB_GET_DATA_ERROR)HSMCI_DataErrorGet,
+    .sdhostClockEnable = (DRV_SDMMC_PLIB_CLOCK_ENABLE)NULL,
+    .sdhostResetError = (DRV_SDMMC_PLIB_RESET_ERROR)NULL,
+    .sdhostIsCardAttached = (DRV_SDMMC_PLIB_IS_CARD_ATTACHED)NULL,
+    .sdhostIsWriteProtected = (DRV_SDMMC_PLIB_IS_WRITE_PROTECTED)NULL,
+};
+
+/*** SDMMC Driver Initialization Data ***/
+const DRV_SDMMC_INIT drvSDMMC0InitData =
+{
+    .sdmmcPlib                      = &drvSDMMC0PlibAPI,
+    .bufferObjPool                  = (uintptr_t)&drvSDMMC0BufferObjPool[0],
+    .bufferObjPoolSize              = DRV_SDMMC_QUEUE_SIZE_IDX0,
+    .clientObjPool                  = (uintptr_t)&drvSDMMC0ClientObjPool[0],
+    .numClients                     = DRV_SDMMC_CLIENTS_NUMBER_IDX0,
+    .isCardDetectEnabled            = false,
+    .isWriteProtectCheckEnabled     = false,
+    .speedMode                      = (DRV_SDMMC_SPEED_MODE)DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
+    .busWidth                       = (DRV_SDMMC_BUS_WIDTH)DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
+    .isFsEnabled                    = true,
+};
+
+// </editor-fold>
 
 
 
@@ -117,13 +155,14 @@ static const DRV_MIIM_INIT drvMiimInitData =
 // *****************************************************************************
 /* Structure to hold the object handles for the modules in the system. */
 SYSTEM_OBJECTS sysObj;
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
 /* Net Presentation Layer Data Definitions */
-#include "net/pres/net_pres_enc_glue.h"
+#include "net_pres/pres/net_pres_enc_glue.h"
 
 static const NET_PRES_TransportObject netPresTransObject0SS = {
     .fpOpen        = (NET_PRES_TransOpen)TCPIP_TCP_ServerOpen,
@@ -370,35 +409,35 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
 	/** QUEUE 0 Intialization**/
-	.gmac_queue_config[0].queueEnable	= true,
+		.gmac_queue_config[0].queueEnable	= true,
 	.gmac_queue_config[0].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0,
 	.gmac_queue_config[0].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE0,
 	.gmac_queue_config[0].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE0,
-	
+
 	/** QUEUE 1 Intialization**/
-	.gmac_queue_config[1].queueEnable	= false,	
+		.gmac_queue_config[1].queueEnable	= false,	
 	.gmac_queue_config[1].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1,
 	.gmac_queue_config[1].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1,
 	.gmac_queue_config[1].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE1,
 	.gmac_queue_config[1].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE1,
 
 	/** QUEUE 2 Intialization**/
-	.gmac_queue_config[2].queueEnable	= false,	
+		.gmac_queue_config[2].queueEnable	= false,	
 	.gmac_queue_config[2].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2,
 	.gmac_queue_config[2].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2,
 	.gmac_queue_config[2].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE2,
 	.gmac_queue_config[2].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE2,
 
 	/** QUEUE 3 Intialization**/
-	.gmac_queue_config[3].queueEnable	= false,	
+		.gmac_queue_config[3].queueEnable	= false,	
 	.gmac_queue_config[3].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3,
 	.gmac_queue_config[3].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3,
 	.gmac_queue_config[3].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE3,
 	.gmac_queue_config[3].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE3,
 
 	/** QUEUE 4 Intialization**/
-	.gmac_queue_config[4].queueEnable	= false,	
+		.gmac_queue_config[4].queueEnable	= false,	
 	.gmac_queue_config[4].nRxDescCnt	= TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4,
 	.gmac_queue_config[4].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4,
 	.gmac_queue_config[4].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE4,
@@ -410,7 +449,6 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 	.gmac_queue_config[5].nTxDescCnt	= TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5,
 	.gmac_queue_config[5].rxBufferSize	= TCPIP_GMAC_RX_BUFF_SIZE_QUE5,
 	.gmac_queue_config[5].txBufferSize	= TCPIP_GMAC_TX_BUFF_SIZE_QUE5,
-	
 	.ethFlags               = TCPIP_GMAC_ETH_OPEN_FLAGS,	
 	.linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
@@ -715,6 +753,16 @@ const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
     .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)USART1_ErrorGet,
 };
 
+
+const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
+{
+    /* Peripheral has single interrupt vector */
+    .isSingleIntSrc                        = true,
+
+    /* Peripheral interrupt line */
+    .intSources.usartInterrupt             = USART1_IRQn,
+};
+
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
 {
     .uartPLIB = &sysConsole0UARTPlibAPI,
@@ -722,7 +770,7 @@ const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
     .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
     .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
     .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSource = USART1_IRQn,
+    .interruptSources = &sysConsole0UARTInterruptSources,
 };
 
 const SYS_CONSOLE_INIT sysConsole0Init =
@@ -742,6 +790,7 @@ const SYS_CMD_INIT sysCmdInit =
 
 
 
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -754,6 +803,7 @@ const SYS_CMD_INIT sysCmdInit =
 
 void SYS_Initialize ( void* data )
 {
+  
     CLK_Initialize();
 	PIO_Initialize();
 
@@ -765,20 +815,21 @@ void SYS_Initialize ( void* data )
 	BSP_Initialize();
 	USART1_Initialize();
 
-    NVIC_Initialize();
     XDMAC_Initialize();
 
 	RSWDT_REGS->RSWDT_MR = RSWDT_MR_WDDIS_Msk;	// Disable RSWDT 
 
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
+	HSMCI_Initialize();
 
-
-sysObj.drvSDHC = DRV_SDHC_Initialize(DRV_SDHC_INDEX_0,(SYS_MODULE_INIT *)&drvSDHCInitData);
 
 
     /* Initialize the MIIM Driver */
-    sysObj.drvMiim = DRV_MIIM_Initialize(DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT  * const)&drvMiimInitData);
+    sysObj.drvMiim = DRV_MIIM_Initialize( DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT *) &drvMiimInitData );
+
+
+    sysObj.drvSDMMC0 = DRV_SDMMC_Initialize(DRV_SDMMC_INDEX_0,(SYS_MODULE_INIT *)&drvSDMMC0InitData);
 
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
@@ -801,10 +852,11 @@ sysObj.drvSDHC = DRV_SDHC_Initialize(DRV_SDHC_INDEX_0,(SYS_MODULE_INIT *)&drvSDH
     APP_Initialize();
 
 
+    NVIC_Initialize();
+
 }
 
 
 /*******************************************************************************
  End of File
 */
-

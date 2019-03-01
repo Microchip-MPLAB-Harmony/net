@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,6 +42,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -57,22 +65,22 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 /* Known Answer Test string inputs are hex, internal */
-CYASSL_LOCAL int DoKnownAnswerTests(char*, int);
+WOLFSSL_LOCAL int DoKnownAnswerTests(char*, int);
 
 
 /* FIPS failure callback */
 typedef void(*wolfCrypt_fips_cb)(int ok, int err, const char* hash);
 
 /* Public set function */
-CYASSL_API int wolfCrypt_SetCb_fips(wolfCrypt_fips_cb cbf);
+WOLFSSL_API int wolfCrypt_SetCb_fips(wolfCrypt_fips_cb cbf);
 
 /* Public get status functions */
-CYASSL_API int wolfCrypt_GetStatus_fips(void);
-CYASSL_API const char* wolfCrypt_GetCoreHash_fips(void);
+WOLFSSL_API int wolfCrypt_GetStatus_fips(void);
+WOLFSSL_API const char* wolfCrypt_GetCoreHash_fips(void);
 
 #ifdef HAVE_FORCE_FIPS_FAILURE
     /* Public function to force failure mode for operational testing */
-    CYASSL_API int wolfCrypt_SetStatus_fips(int);
+    WOLFSSL_API int wolfCrypt_SetStatus_fips(int);
 #endif
 
 

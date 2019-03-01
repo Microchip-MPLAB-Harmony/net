@@ -277,12 +277,4 @@
 /  *3:Some compilers generate LDM/STM for mem_cpy function.
 */
 
-#if defined (__PIC32C__)
-#define SYS_FS_ALIGNED          __attribute__ ((aligned(32)))
-#define SYS_FS_COHERENT_ALIGNED
-#else
-#define SYS_FS_ALIGNED          __attribute__ ((aligned(16)))
-#define SYS_FS_COHERENT_ALIGNED __attribute__ ((coherent, aligned(16)))
-#endif
-
 #endif /* _FFCONFIG */

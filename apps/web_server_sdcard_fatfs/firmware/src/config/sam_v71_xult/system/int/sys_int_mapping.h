@@ -1,5 +1,3 @@
-#ifndef SYS_INT_MAPPING_H
-#define SYS_INT_MAPPING_H
 /*******************************************************************************
   Interrupt System Service Mapping File
 
@@ -43,11 +41,15 @@
 *******************************************************************************/
 //DOM-IGNORE-END
 
+#ifndef SYS_INT_MAPPING_H
+#define SYS_INT_MAPPING_H
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Interrupt System Service Mapping
 // *****************************************************************************
 // *****************************************************************************
+
 #define SYS_INT_IsEnabled()                 ( __get_PRIMASK() == 0 )
 #define SYS_INT_SourceEnable( source )      NVIC_EnableIRQ( source )
 #define SYS_INT_SourceIsEnabled( source )   NVIC_GetEnableIRQ( source )
@@ -55,7 +57,4 @@
 #define SYS_INT_SourceStatusSet( source )   NVIC_SetPendingIRQ( source )
 #define SYS_INT_SourceStatusClear( source ) NVIC_ClearPendingIRQ( source )
 
-/*******************************************************************************
- End of File
-*/
 #endif // SYS_INT_MAPPING_H

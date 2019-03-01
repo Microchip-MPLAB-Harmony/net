@@ -118,7 +118,7 @@ typedef struct {
 	uint32_t	dirbase;		/* Root directory start sector (FAT32:Cluster#) */
 	uint32_t	database;		/* Data start sector */
 	uint32_t	winsect;		/* Current sector appearing in the win[] */
-	uint8_t SYS_FS_ALIGNED win[FAT_FS_MAX_SS];	/* Disk access window for Directory, FAT (and file data at tiny cfg) */
+	uint8_t CACHE_ALIGN win[FAT_FS_MAX_SS];	/* Disk access window for Directory, FAT (and file data at tiny cfg) */
 } FATFS;
 
 
@@ -146,7 +146,7 @@ typedef struct {
 	uint32_t	lockid;			/* File lock ID origin from 1 (index of file semaphore table Files[]) */
 #endif
 #if !_FS_TINY
-	uint8_t	SYS_FS_ALIGNED buf[FAT_FS_MAX_SS];	/* File private data read/write window */
+	uint8_t	CACHE_ALIGN buf[FAT_FS_MAX_SS];	/* File private data read/write window */
 #endif
 } FIL;
 

@@ -619,6 +619,9 @@ bool   TCPIP_UDP_Bind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT localPo
     and not currently bound to a different address type.
     TCPIP_UDP_Disconnect could be issued to remove a previous IP type binding.
 
+    If the socket is a server socket and is bound to a remote port,
+    the TCPIP_UDP_Disconnect won't remove the port binding.
+
   */
 bool   TCPIP_UDP_RemoteBind(UDP_SOCKET hUDP, IP_ADDRESS_TYPE addType, UDP_PORT remotePort,  
                             IP_MULTI_ADDRESS* remoteAddress);
@@ -849,9 +852,9 @@ bool                TCPIP_UDP_Close(UDP_SOCKET hUDP);
   Remarks:
     The call will try to maintain as much as possible from the socket state.
    
-    For a server socket the remote port will be cleared.
-    A new TCPIP_UDP_RemoteBind or TCPIP_UDP_DestinationPortSet operation is needed
-    if the remote port needs to be maintained.
+    For a server socket the remote port will be cleared unless a TCPIP_UDP_RemoteBind() was performed.
+    If the remote port is cleared, a new TCPIP_UDP_RemoteBind or TCPIP_UDP_DestinationPortSet operation
+    will be needed if the remote port needs to be maintained.
 
     For a client socket the remote port is maintained.
 

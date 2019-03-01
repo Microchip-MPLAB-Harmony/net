@@ -9,14 +9,18 @@
 
 #include "system/fs/fat_fs/src/hardware_access/diskio.h"		/* FatFs lower layer API */
 #include "system/fs/sys_fs_media_manager.h"
+#include <string.h>
+
+#define ALIGN_32_BYTE_MASK  0x0000001F
 
 typedef struct
 {
     SYS_FS_MEDIA_COMMAND_STATUS commandStatus;
     SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE commandHandle;
-} SYS_FS_DISK_STATUS;
+    uint8_t alignedBuffer[FAT_FS_MAX_SS] __ALIGNED(32);
+} SYS_FS_DISK_DATA;
 
-static SYS_FS_DISK_STATUS gSysFsDiskStatus[SYS_FS_MEDIA_NUMBER];
+static SYS_FS_DISK_DATA CACHE_ALIGN gSysFsDiskData[SYS_FS_MEDIA_NUMBER];
 
 void diskEventHandler
 (
@@ -28,14 +32,41 @@ void diskEventHandler
     switch(event)
     {
         case SYS_FS_MEDIA_EVENT_BLOCK_COMMAND_COMPLETE:
-            gSysFsDiskStatus[context].commandStatus = SYS_FS_MEDIA_COMMAND_COMPLETED;
+            gSysFsDiskData[context].commandStatus = SYS_FS_MEDIA_COMMAND_COMPLETED;
             break;
         case SYS_FS_MEDIA_EVENT_BLOCK_COMMAND_ERROR:
-            gSysFsDiskStatus[context].commandStatus= SYS_FS_MEDIA_COMMAND_UNKNOWN;
+            gSysFsDiskData[context].commandStatus= SYS_FS_MEDIA_COMMAND_UNKNOWN;
             break;
         default:
             break;
     }
+}
+
+static DRESULT disk_checkCommandStatus(uint8_t pdrv)
+{
+    DRESULT result = RES_ERROR;
+
+    /* Buffer is invalid report error */
+    if (gSysFsDiskData[pdrv].commandHandle == SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID)
+    {
+        result = RES_PARERR;
+    }
+
+    /* process the read request by blocking on the task routine that process the 
+     I/O request */
+    while (gSysFsDiskData[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_IN_PROGRESS)
+    {
+        SYS_FS_MEDIA_MANAGER_TransferTask (pdrv);
+    }
+
+
+    if (gSysFsDiskData[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_COMPLETED)
+    {
+        /* Buffer processed successfully */
+        result = RES_OK;
+    }        
+
+    return result;
 }
 
 /* Definitions of physical drive number for each drive */
@@ -65,13 +96,13 @@ DSTATUS disk_initialize (
 	uint8_t pdrv				/* Physical drive nmuber to identify the drive */
 )
 {
-	switch (pdrv) {
+	switch( pdrv ) {
 	case 0:
     default:
         break;
 	}
 
-    SYS_FS_MEDIA_MANAGER_RegisterTransferHandler (diskEventHandler);
+    SYS_FS_MEDIA_MANAGER_RegisterTransferHandler( (void *) diskEventHandler );
     return 0;
 }
 
@@ -89,38 +120,53 @@ DRESULT disk_read
     uint32_t count   /* Number of sectors to read (1..128) */
 )
 {
-    gSysFsDiskStatus[pdrv].commandHandle = SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID;
+    uint32_t i;
+    DRESULT result = RES_ERROR;
 
-    gSysFsDiskStatus[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
-    /* submit the read request */
-    gSysFsDiskStatus[pdrv].commandHandle = SYS_FS_MEDIA_MANAGER_SectorRead(pdrv /* DISK 0 */ ,
-            buff /* Destination Sector*/,
-            sector,
-            count /* Number of Sectors */);
-    
-    /* Buffer is invalid report error */
-    if (gSysFsDiskStatus[pdrv].commandHandle == SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID)
+    gSysFsDiskData[pdrv].commandHandle = SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID;
+
+    /* Use aligned buffer to read if the received buffer address is not Aligned to 32 Bytes */
+    if (((uint32_t)buff & ALIGN_32_BYTE_MASK) != 0)
     {
-        return RES_PARERR;
+        /* Read One Sector at a Time */
+        for (i = 0; i < count; i++)
+        {
+            gSysFsDiskData[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
+
+            /* submit the read request */
+            gSysFsDiskData[pdrv].commandHandle = SYS_FS_MEDIA_MANAGER_SectorRead(pdrv /* DISK 0 */ ,
+                    gSysFsDiskData[pdrv].alignedBuffer /* Destination Sector*/,
+                    sector,
+                    1 /* Number of Sectors */);
+
+            result = disk_checkCommandStatus(pdrv);
+
+            if (result != RES_OK)
+            {
+                break;
+            }
+
+            /* Copy the received data from aligned buffer to actual buffer */
+            memcpy(buff, gSysFsDiskData[pdrv].alignedBuffer, FAT_FS_MAX_SS);
+
+            buff += FAT_FS_MAX_SS;
+            sector++;
+        }
     }
-
-    /* process the read request by blocking on the task routine that process the 
-     I/O request */
-    while (gSysFsDiskStatus[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_IN_PROGRESS)
-    {
-        SYS_FS_MEDIA_MANAGER_TransferTask (pdrv);
-    }
-
-    if (gSysFsDiskStatus[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_COMPLETED)
-    {
-        /* Buffer processed successfully */
-        return RES_OK;
-    }        
     else
     {
-        /* Buffer processing failed */
-        return RES_ERROR;
+        gSysFsDiskData[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
+
+        /* submit the read request */
+        gSysFsDiskData[pdrv].commandHandle = SYS_FS_MEDIA_MANAGER_SectorRead(pdrv /* DISK 0 */ ,
+                buff /* Destination Sector*/,
+                sector,
+                count /* Number of Sectors */);
+
+        result = disk_checkCommandStatus(pdrv);
     }
+
+    return result;
 }
 
 /*-----------------------------------------------------------------------*/
@@ -136,37 +182,52 @@ DRESULT disk_write
     uint32_t count       /* Number of sectors to write (1..128) */
 )
 {
-    gSysFsDiskStatus[pdrv].commandHandle = SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID;
-    gSysFsDiskStatus[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
-    
-    /* Submit the write request to media */
-    gSysFsDiskStatus[pdrv].commandHandle = SYS_FS_MEDIA_MANAGER_SectorWrite(pdrv /* DISK 0 */ ,
+    uint32_t i;
+    DRESULT result = RES_ERROR;
+
+    gSysFsDiskData[pdrv].commandHandle = SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID;
+
+    /* Use aligned buffer to write if the received buffer address is not Aligned to 32 Bytes */
+    if (((uint32_t)buff & ALIGN_32_BYTE_MASK) != 0)
+    {
+        for (i = 0; i < count; i++)
+        {
+            /* Copy the actual buffer data into aligned buffer */
+            memcpy(gSysFsDiskData[pdrv].alignedBuffer, buff, FAT_FS_MAX_SS);
+
+            gSysFsDiskData[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
+
+            /* Submit the write request to media */
+            gSysFsDiskData[pdrv].commandHandle = SYS_FS_MEDIA_MANAGER_SectorWrite(pdrv /* DISK 0 */ ,
+                sector /* Destination Sector*/,
+                gSysFsDiskData[pdrv].alignedBuffer,
+                1 /* Number of Sectors */);
+
+            result = disk_checkCommandStatus(pdrv);
+
+            if (result != RES_OK)
+            {
+                break;
+            }
+
+            buff += FAT_FS_MAX_SS;
+            sector++;
+        }
+    }
+    else
+    {
+        gSysFsDiskData[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
+
+        /* Submit the write request to media */
+        gSysFsDiskData[pdrv].commandHandle = SYS_FS_MEDIA_MANAGER_SectorWrite(pdrv /* DISK 0 */ ,
             sector /* Destination Sector*/,
             (uint8_t *)buff,
             count /* Number of Sectors */);
-   
-    /* Write request failed , return with error */
-    if(gSysFsDiskStatus[pdrv].commandHandle == SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE_INVALID)
-    {
-        return RES_PARERR;
+
+        result = disk_checkCommandStatus(pdrv);
     }
 
-    /* Run the task routine of media to process the request  */
-    while(gSysFsDiskStatus[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_IN_PROGRESS)
-    {
-        SYS_FS_MEDIA_MANAGER_TransferTask (pdrv);
-    }
-    
-    if(gSysFsDiskStatus[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_COMPLETED)
-    {
-        /* Buffer processed successfully */
-        return RES_OK;
-    }        
-    else
-    {
-        /* Buffer processing failed */
-        return RES_ERROR;
-    }
+    return result;
 }
 #endif
 

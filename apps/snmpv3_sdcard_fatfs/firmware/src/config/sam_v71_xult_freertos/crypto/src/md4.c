@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -40,6 +40,14 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
+
+
+
+
 
 //DOM-IGNORE-END
 
@@ -106,7 +114,7 @@ static void Transform(Md4* md4)
     function(C,D,A,B,14,11);
     function(B,C,D,A,15,19);
 
-#undef function	  
+#undef function
 #define function(a,b,c,d,k,s) \
     a=rotlFixed(a+G(b,c,d)+md4->buffer[k]+0x5a827999,s);
 
@@ -127,7 +135,7 @@ static void Transform(Md4* md4)
     function(C,D,A,B,11, 9);
     function(B,C,D,A,15,13);
 
-#undef function	 
+#undef function
 #define function(a,b,c,d,k,s) \
     a=rotlFixed(a+H(b,c,d)+md4->buffer[k]+0x6ed9eba1,s);
 
@@ -147,7 +155,7 @@ static void Transform(Md4* md4)
     function(D,A,B,C,11, 9);
     function(C,D,A,B, 7,11);
     function(B,C,D,A,15,15);
-    
+
     /* Add the working vars back into digest state[]  */
     md4->digest[0] += A;
     md4->digest[1] += B;
@@ -156,7 +164,7 @@ static void Transform(Md4* md4)
 }
 
 
-static INLINE void AddLength(Md4* md4, word32 len)
+static WC_INLINE void AddLength(Md4* md4, word32 len)
 {
     word32 tmp = md4->loLen;
     if ( (md4->loLen += len) < tmp)
@@ -209,9 +217,9 @@ void wc_Md4Final(Md4* md4, byte* hash)
         md4->buffLen = 0;
     }
     XMEMSET(&local[md4->buffLen], 0, MD4_PAD_SIZE - md4->buffLen);
-   
+
     /* put lengths in bits */
-    md4->hiLen = (md4->loLen >> (8*sizeof(md4->loLen) - 3)) + 
+    md4->hiLen = (md4->loLen >> (8*sizeof(md4->loLen) - 3)) +
                  (md4->hiLen << 3);
     md4->loLen = md4->loLen << 3;
 

@@ -58,7 +58,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define __HTTP_NET_H_
 
 #include "system/fs/sys_fs.h"
-#include "net/pres/net_pres.h"
+#include "net_pres/pres/net_pres.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -234,7 +234,15 @@ typedef enum
 
     /* out of memory when trying to allocate space for a SSI command descriptor */
     /* Note that dynamic allocation is used for the SSI commands */
-    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR         = -18,
+    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR     = -18,
+
+    /* out of memory when trying to allocate memory for the peek buffer */
+    /* the peek operation failed */
+    TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR        = -19,
+
+    /* out of memory when trying to allocate memory for the SSI echo buffer */
+    /* the echo operation failed */
+    TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR           = -20,
 
     /* Dynamic parsing warnings. Multiple flags could be set */
 
@@ -2300,6 +2308,8 @@ void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
                     - TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR: SSI command pointer
+                    - TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR: allocation size that failed
+                    - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR: allocation size that failed
                     
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED: dynamic variable name pointer
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED: dynamic variable name pointer

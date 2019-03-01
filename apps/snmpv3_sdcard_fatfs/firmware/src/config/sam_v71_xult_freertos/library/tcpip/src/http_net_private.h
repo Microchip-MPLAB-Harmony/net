@@ -212,6 +212,7 @@ typedef enum
     TCPIP_HTTP_CHUNK_RES_SSI_ATTRIB_ERR = -6,   // SSI attribute error 
     TCPIP_HTTP_CHUNK_RES_SSI_CACHE_FAIL = -7,   // SSI cache failure 
     TCPIP_HTTP_CHUNK_RES_SSI_CACHE_FULL = -8,   // SSI variable name cache full 
+    TCPIP_HTTP_CHUNK_RES_SSI_ALLOC_ERR  = -9,   // SSI allocation failed
 
 
     TCPIP_HTTP_CHUNK_RES_INTERNAL_ERR    = -10,  // internal error, shouldn't happen

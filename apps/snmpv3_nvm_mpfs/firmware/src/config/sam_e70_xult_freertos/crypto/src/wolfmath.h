@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,6 +41,14 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
+
+
+
+
 
 //DOM-IGNORE-END
 
@@ -76,6 +84,14 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     int get_rand_digit(WC_RNG* rng, mp_digit* d);
     int mp_rand(mp_int* a, int digits, WC_RNG* rng);
 
+    enum {
+        /* format type */
+        WC_TYPE_HEX_STR = 1,
+        WC_TYPE_UNSIGNED_BIN = 2,
+    };
+
+    WOLFSSL_API int wc_export_int(mp_int* mp, byte* buf, word32* len, 
+        word32 keySz, int encType);
 
     #ifdef HAVE_WOLF_BIGINT
         void wc_bigint_init(WC_BIGINT* a);
@@ -86,6 +102,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         void wc_bigint_free(WC_BIGINT* a);
 
         int wc_mp_to_bigint(mp_int* src, WC_BIGINT* dst);
+        int wc_mp_to_bigint_sz(mp_int* src, WC_BIGINT* dst, word32 sz);
         int wc_bigint_to_mp(WC_BIGINT* src, mp_int* dst);
     #endif /* HAVE_WOLF_BIGINT */
 

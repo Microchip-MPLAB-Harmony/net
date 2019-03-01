@@ -54,7 +54,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifndef __SMTPC_H
 #define __SMTPC_H
-#include "net/pres/net_pres.h"
+#include "net_pres/pres/net_pres.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 

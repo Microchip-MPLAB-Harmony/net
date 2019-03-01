@@ -438,8 +438,8 @@ static FATFS *FatFs[SYS_FS_VOLUME_NUMBER];	/* Pointer to the file system objects
 static uint16_t Fsid;				/* File system mount ID */
 
 /* Added. */
-static FATFS_VOLUME_OBJECT SYS_FS_COHERENT_ALIGNED FAFFSVolume[SYS_FS_VOLUME_NUMBER];
-static FATFS_FILE_OBJECT SYS_FS_COHERENT_ALIGNED FATFSFileObject[SYS_FS_MAX_FILES];
+static FATFS_VOLUME_OBJECT CACHE_ALIGN FAFFSVolume[SYS_FS_VOLUME_NUMBER];
+static FATFS_FILE_OBJECT CACHE_ALIGN FATFSFileObject[SYS_FS_MAX_FILES];
 static FATFS_DIR_OBJECT FATFSDirObject[SYS_FS_MAX_FILES];
 static uint8_t startupflag = 0;
 
@@ -2552,7 +2552,7 @@ int f_open (
 )
 {
 	FRESULT res = FR_OK;
-	DIR dj = {};
+	DIR dj = { 0 };
 	uint8_t *dir = NULL;
 	DEFINE_NAMEBUF;
 #if !_FS_READONLY
@@ -2983,7 +2983,7 @@ int f_close (
     FIL *fp = &ptr->fileObj;
 
 #if !_FS_READONLY
-	res = f_sync(handle);					/* Flush cached data */
+	res = (FRESULT)f_sync(handle);					/* Flush cached data */
 	if (res == FR_OK)
 #endif
 	{
@@ -3071,7 +3071,7 @@ int f_getcwd (
 	uint32_t len		/* Size of path */
 )
 {
-	FRESULT res = 0;
+	FRESULT res = FR_OK;
 	DIR dj;
 	uint32_t i = 0, n = 0;
 	uint32_t ccl = 0;
@@ -3648,7 +3648,7 @@ int f_getclusters (const char *path, uint32_t *tot_sec, uint32_t *free_sec)
     uint32_t clst = 0;
     FRESULT res = FR_OK;
 
-    res = f_getfree(path, &clst, &ptr);
+    res = (FRESULT)f_getfree(path, &clst, &ptr);
 
     if(res != FR_OK)
     {
@@ -3729,7 +3729,7 @@ int f_unlink (
 	const TCHAR* path		/* Pointer to the file or directory path */
 )
 {
-	FRESULT res = 0;
+	FRESULT res = FR_OK;
 	DIR dj, sdj;
 	uint8_t *dir = NULL;
 	uint32_t dclst = 0;

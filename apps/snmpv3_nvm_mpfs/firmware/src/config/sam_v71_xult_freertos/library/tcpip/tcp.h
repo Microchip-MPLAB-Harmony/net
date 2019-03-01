@@ -1028,7 +1028,8 @@ const uint8_t*      TCPIP_TCP_StringPut(TCP_SOCKET hTCP, const uint8_t* Data);
     hTCP - The socket whose data is to be transmitted.
 
   Returns:
-    None,
+	true if data is flushed from the socket
+    false otherwise
 
   Remarks:
     The application should not call this function explicitly because

@@ -116,8 +116,8 @@ static const SNMP_DATA_TYPE_INFO dataTypeTable[] =
 
 static int snmpInitCount = 0;      // SNMP module initialization count
 
-static int32_t snmpFileDescrptr = SYS_FS_HANDLE_INVALID;
-static int32_t snmpTrapFileDescriptr = SYS_FS_HANDLE_INVALID;
+static int32_t snmpFileDescrptr = (int32_t) SYS_FS_HANDLE_INVALID;
+static int32_t snmpTrapFileDescriptr = (int32_t) SYS_FS_HANDLE_INVALID;
 
 /****************************************************************************
   Section:
@@ -364,7 +364,7 @@ void TCPIP_SNMP_FreeMemory(void)
     if(SNMPStatus.Flags.bIsFileOpen)
     {
         SYS_FS_FileClose(snmpFileDescrptr);
-        snmpFileDescrptr= SYS_FS_HANDLE_INVALID;
+        snmpFileDescrptr = (int32_t) SYS_FS_HANDLE_INVALID;
         SNMPStatus.Flags.bIsFileOpen = false;
     }
 
@@ -1176,7 +1176,6 @@ bool TCPIP_SNMP_NotifyIsReady(IP_MULTI_ADDRESS* remoteHost,SNMP_TRAP_IP_ADDRESS_
     if(TCPIP_UDP_IsOpened(skt)== true)
     {
         snmpTrapTimer = SYS_TMR_TickCountGet();
-        return true;
     }
     else
     {
@@ -2415,7 +2414,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                 //Calulate number of variables to be responded for the received request
                 Getbulk_N = noOfOIDsInReq; Getbulk_M=0; Getbulk_R=0;
                 if(((pduDbPtr->snmpVersion == (uint8_t)SNMP_V2C)||
-                        ((pduDbPtr->snmpVersion == (uint8_t)SNMP_V3))) &&
+                        (pduDbPtr->snmpVersion == (uint8_t)SNMP_V3)) &&
                         (pduDbPtr->pduType == GET_BULK_REQUEST))
                 {
                     if((pduDbPtr->nonRepeators) <= noOfOIDsInReq)
@@ -2425,7 +2424,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                     Getbulk_M = pduDbPtr->maxRepetitions;
 
-                    if((noOfOIDsInReq - Getbulk_N)>=0u)
+                    if( noOfOIDsInReq >= Getbulk_N )
                         Getbulk_R = noOfOIDsInReq-Getbulk_N;
                 }
 
@@ -4371,7 +4370,6 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
 
         return true;
     }
-    return false;
 }
 
 
@@ -4937,7 +4935,6 @@ bool TCPIP_SNMP_OIDStringGetByAddr(int32_t fileDescr,OID_INFO* rec, uint8_t* oid
                 break;
         }
     }
-    return false;
 }
 
 
@@ -5143,7 +5140,7 @@ uint8_t TCPIP_SNMP_ProcessSetVar(PDU_INFO* pduDbPtr,OID_INFO* rec, SNMP_ERR_STAT
     }
 // find the length of the ASN Integer
     dataLen = _SNMP_ParseLength();            
-    if (dataLen == -1) 
+    if (dataLen == (uint8_t) -1)
     {        
         return (0);
     }

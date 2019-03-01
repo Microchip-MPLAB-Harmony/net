@@ -123,7 +123,7 @@ static uint8_t gNumOfFSClients = 0;
   Remarks:
     None
 */
-uint8_t COHERENT_ALIGNED gSYSFSMediaBlockBuffer[SYS_FS_MEDIA_MANAGER_BUFFER_SIZE] = {0};
+uint8_t CACHE_ALIGN gSYSFSMediaBlockBuffer[SYS_FS_MEDIA_MANAGER_BUFFER_SIZE] = {0};
 
 // *****************************************************************************
 /* Media Mount Table
@@ -156,7 +156,7 @@ extern const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[];
 */
 PARTITION VolToPart[SYS_FS_VOLUME_NUMBER];
 
-uint8_t gSYSFSMediaBuffer[SYS_FS_MEDIA_MAX_BLOCK_SIZE] COHERENT_ALIGNED;
+uint8_t CACHE_ALIGN gSYSFSMediaBuffer[SYS_FS_MEDIA_MAX_BLOCK_SIZE];
 
 /* Following structure holds the variables for media manager, including the task states */
 SYS_FS_MEDIA_MANAGER_OBJ gSYSFSMediaManagerObj =
@@ -1336,7 +1336,7 @@ void SYS_FS_MEDIA_MANAGER_EventHandlerSet
     {
         return;
     }
-    gSYSFSEventHandler[gNumOfFSClients].eventHandler = eventHandler;
+    gSYSFSEventHandler[gNumOfFSClients].eventHandler = (SYS_FS_EVENT_HANDLER)eventHandler;
     gSYSFSEventHandler[gNumOfFSClients].context = context;
     gNumOfFSClients++;    
 }
@@ -1361,7 +1361,7 @@ void SYS_FS_MEDIA_MANAGER_RegisterTransferHandler
     const void *eventHandler
 )
 {
-    gSYSFSMediaManagerObj.eventHandler = eventHandler;
+    gSYSFSMediaManagerObj.eventHandler = (SYS_FS_EVENT_HANDLER) eventHandler;
 }
 
 //*****************************************************************************
@@ -1405,7 +1405,7 @@ void SYS_FS_MEDIA_MANAGER_EventHandler
 
     if ((gSYSFSMediaManagerObj.eventHandler != NULL) && (gSYSFSMediaManagerObj.muteEventNotification == false))
     {
-        gSYSFSMediaManagerObj.eventHandler (event, (void *)commandHandle, ((SYS_FS_MEDIA*)context)->mediaIndex);
+        gSYSFSMediaManagerObj.eventHandler ((SYS_FS_EVENT)event, (void *)commandHandle, ((SYS_FS_MEDIA*)context)->mediaIndex);
     }
 }
 
@@ -1551,7 +1551,11 @@ void SYS_FS_MEDIA_MANAGER_Tasks
                 {
                     /* Media driver open successful. Register an event handler for
                      * the media driver events. */
-                    mediaObj->driverFunctions->eventHandlerset(mediaObj->driverHandle, SYS_FS_MEDIA_MANAGER_EventHandler, (uintptr_t)mediaObj);
+                    mediaObj->driverFunctions->eventHandlerset(
+                                                mediaObj->driverHandle,
+                                                (const void *) SYS_FS_MEDIA_MANAGER_EventHandler,
+                                                (uintptr_t) mediaObj
+                                                );
 
                     /* Transition to the next state. */
                     mediaObj->mediaState = SYS_FS_MEDIA_CHECK_ATTACH_STATUS;

@@ -1419,7 +1419,7 @@ enum {
 
 /* AES */
 typedef struct CRYPT_AES_CTX {
-    int holder[90];   /* This structure should be large enough to hold 
+    int holder[93];   /* This structure should be large enough to hold 
                          the internal representation, the size is checked 
                          during initialization*/
 } CRYPT_AES_CTX;
@@ -1643,7 +1643,17 @@ int CRYPT_AES_CBC_Decrypt(CRYPT_AES_CTX*, unsigned char*,
 int CRYPT_AES_CTR_Encrypt(CRYPT_AES_CTX*, unsigned char*,
                           const unsigned char*, unsigned int);
 
-
+int CRYPT_AES_GCM_SetKey(CRYPT_AES_CTX* aes, const unsigned char* key, unsigned int len);
+int CRYPT_AES_GCM_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz);
+int CRYPT_AES_GCM_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   const unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz);
 //******************************************************************************
 /* Function:
     int CRYPT_AES_DIRECT_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
