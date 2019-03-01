@@ -83,7 +83,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     interface and should be considered part it.
 */
 	//Timer COUNT to TICK conversion for tickless implementation : 150,000,000 for 1sec. Configure tick conversion for 1 msec.
-   #define SYS_COUNT_TICK_CONV 150000 //verify the time tick conversion
+#define SYS_COUNT_TICK_CONV         150000
+
    typedef uintptr_t SYS_TMR_HANDLE;
    typedef void ( * SYS_TMR_CALLBACK ) ( uintptr_t context, uint32_t currTick );
    #define SYS_TMR_HANDLE_INVALID          ( ( uintptr_t ) -1 )

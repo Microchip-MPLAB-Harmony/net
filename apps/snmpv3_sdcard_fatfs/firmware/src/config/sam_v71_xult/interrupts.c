@@ -70,7 +70,6 @@ void __attribute__((optimize("-O1"),section(".text.Dummy_Handler"),long_call))Du
     {
     }
 }
-
 /* Device vectors list dummy definition*/
 void Reset_Handler              ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void NonMaskableInt_Handler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -99,7 +98,7 @@ void USART1_InterruptHandler    ( void ) __attribute__((weak, alias("Dummy_Handl
 void USART2_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void PIOD_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void PIOE_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
-void SDHC_InterruptHandler      ( void ) __attribute__((weak, alias("Dummy_Handler")));
+void HSMCI_InterruptHandler     ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TWIHS0_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void TWIHS1_Handler             ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void SPI0_Handler               ( void ) __attribute__((weak, alias("Dummy_Handler")));
@@ -153,7 +152,7 @@ void I2SC1_Handler              ( void ) __attribute__((weak, alias("Dummy_Handl
 void GMAC_Q3_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void GMAC_Q4_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
 void GMAC_Q5_Handler            ( void ) __attribute__((weak, alias("Dummy_Handler")));
-    
+
 
 
 /* Mutiple handlers for vector */
@@ -163,8 +162,8 @@ void GMAC_Q5_Handler            ( void ) __attribute__((weak, alias("Dummy_Handl
 __attribute__ ((section(".vectors")))
 const DeviceVectors exception_table=
 {
-  /* Configure Initial Stack Pointer, using linker-generated symbols */
-  .pvStack = (void*) (&_stack),
+    /* Configure Initial Stack Pointer, using linker-generated symbols */
+    .pvStack = (void*) (&_stack),
 
     .pfnReset_Handler              = ( void * ) Reset_Handler,
     .pfnNonMaskableInt_Handler     = ( void * ) NonMaskableInt_Handler,
@@ -193,7 +192,7 @@ const DeviceVectors exception_table=
     .pfnUSART2_Handler             = ( void * ) USART2_Handler,
     .pfnPIOD_Handler               = ( void * ) PIOD_Handler,
     .pfnPIOE_Handler               = ( void * ) PIOE_Handler,
-    .pfnHSMCI_Handler              = ( void * ) SDHC_InterruptHandler,
+    .pfnHSMCI_Handler              = ( void * ) HSMCI_InterruptHandler,
     .pfnTWIHS0_Handler             = ( void * ) TWIHS0_Handler,
     .pfnTWIHS1_Handler             = ( void * ) TWIHS1_Handler,
     .pfnSPI0_Handler               = ( void * ) SPI0_Handler,
@@ -250,7 +249,6 @@ const DeviceVectors exception_table=
 
 
 };
-
 
 /*******************************************************************************
  End of File

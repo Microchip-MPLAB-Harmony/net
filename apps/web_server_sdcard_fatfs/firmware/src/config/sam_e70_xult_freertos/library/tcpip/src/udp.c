@@ -2167,8 +2167,8 @@ bool TCPIP_UDP_Disconnect(UDP_SOCKET s, bool flushRxQueue)
             pSkt->flags.srcValid = pSkt->flags.srcSolved = 0;
         }
 
-        if(pSkt->extFlags.serverSkt != 0)
-        {   // stop server connection on the remote port; new rbind needed
+        if(pSkt->extFlags.serverSkt != 0 && pSkt->flags.looseRemPort != 0)
+        {   // stop server connection on the remote port if looseRemPort (rbind was not performed);
             pSkt->remotePort = 0;
         }
 

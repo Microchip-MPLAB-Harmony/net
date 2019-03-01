@@ -170,7 +170,9 @@ static void SYS_TIME_HwTimerCompareUpdate(void)
         }
         else
         {
-            nextHwCounterValue = counterObj->hwTimerCurrentValue + tmrActive->relativeTimePending;
+            /* Use a non-volatile intermediate to prevent dual volatile access in single statement */
+            uint32_t relativeTimePending = tmrActive->relativeTimePending;
+            nextHwCounterValue = counterObj->hwTimerCurrentValue + relativeTimePending;
         }
     }
     else
@@ -262,7 +264,9 @@ static bool SYS_TIME_RemoveFromList(SYS_TIME_TIMER_OBJ* delTimer)
     /* Add the deleted timer pending time to the next timer in the list */
     if (delTimer->tmrNext != NULL)
     {
-        delTimer->tmrNext->relativeTimePending += delTimer->relativeTimePending;
+        /* Use a non-volatile intermediate to prevent dual volatile access in single statement */
+        uint32_t relativeTimePending = delTimer->relativeTimePending;
+        delTimer->tmrNext->relativeTimePending += relativeTimePending;
     }
 
     /* If the deleted timer was at the head of the list */
@@ -339,7 +343,9 @@ static bool SYS_TIME_AddToList(SYS_TIME_TIMER_OBJ* newTimer)
         if (newTimer->tmrNext != NULL)
         {
             /* Subtract the new timers time from the next timer in the list */
-            newTimer->tmrNext->relativeTimePending -= newTimer->relativeTimePending;
+            /* Use a non-volatile intermediate to prevent dual volatile access in single statement */
+            newTimerTime = newTimer->relativeTimePending;
+            newTimer->tmrNext->relativeTimePending -= newTimerTime;
         }
     }
     return isHeadTimerUpdated;
@@ -501,12 +507,14 @@ static void SYS_TIME_ClientNotify(void)
 
 static void SYS_TIME_UpdateTime(uint32_t elapsedCounts)
 {
+    uint8_t i;
+    
     SYS_TIME_UpdateTimerList(elapsedCounts);
 
     SYS_TIME_ClientNotify();
 
     /* Add the removed timers back into the linked list if the timer type is periodic. */
-    for (uint8_t i = 0; i < SYS_TIME_MAX_TIMERS; i++)
+    for ( i = 0; i < SYS_TIME_MAX_TIMERS; i++)
     {
         /* tmrElapsed is cleared anytime a timer is stopped, started, reloaded
          * or destroyed.
@@ -759,22 +767,22 @@ void SYS_TIME_CounterSet ( uint32_t count )
 
 uint32_t  SYS_TIME_CountToUS ( uint32_t count )
 {
-    return (uint32_t)(((float)count/gSystemCounterObj.hwTimerFrequency)*1000000.0);
+    return (uint32_t) ((count * 1000000.0) / gSystemCounterObj.hwTimerFrequency);
 }
 
 uint32_t  SYS_TIME_CountToMS ( uint32_t count )
 {
-    return (uint32_t)(((float)count/gSystemCounterObj.hwTimerFrequency)*1000.0);
+    return (uint32_t) ((count * 1000.0) / gSystemCounterObj.hwTimerFrequency);
 }
 
 uint32_t SYS_TIME_USToCount ( uint32_t us )
 {
-    return (uint32_t)(us * ((float)gSystemCounterObj.hwTimerFrequency/1000000));
+    return (uint32_t) (((float) us * (float) gSystemCounterObj.hwTimerFrequency) / 1000000.);
 }
 
 uint32_t SYS_TIME_MSToCount ( uint32_t ms )
 {
-    return (uint32_t)(ms * ((float)gSystemCounterObj.hwTimerFrequency/1000));
+    return (uint32_t) (((float) ms * (float) gSystemCounterObj.hwTimerFrequency) / 1000.);
 }
 
 
@@ -822,6 +830,7 @@ SYS_TIME_RESULT SYS_TIME_TimerReload(
     /* Single shot timers must register a callback. */
     if ((type == SYS_TIME_SINGLE) && (callBack == NULL))
     {
+        SYS_TIME_ResourceUnlock();
         return result;
     }
 

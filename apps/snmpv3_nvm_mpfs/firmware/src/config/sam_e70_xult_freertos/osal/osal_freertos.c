@@ -730,42 +730,6 @@ OSAL_RESULT OSAL_MUTEX_Unlock(OSAL_MUTEX_HANDLE_TYPE* mutexID)
 }
 
 // *****************************************************************************
-/* Function: const char* OSAL_Name()
-
-  Summary:
-    Obtain the name of the underlying RTOS.
-
-  Description:
-    This function returns a const char* to the textual name of the RTOS.
-    The name is a NULL terminated string.
-
-  Precondition:
-    None
-
-  Parameters:
-    None
-
-  Returns:
-    const char* -   Name of the underlying RTOS or NULL
-
-  Example:
-    <code>
-    // get the RTOS name
-    const char* sName;
-
-    sName = OSAL_Name();
-    sprintf(buff, "RTOS: %s", sName);
-    </code>
-
-  Remarks:
-
- */
-__inline__ __attribute__ ((gnu_inline)) __attribute__((always_inline)) inline const char* OSAL_Name (void)
-{
-    return "FreeRTOS";
-}
-
-// *****************************************************************************
 /* Function: OSAL_RESULT OSAL_Initialize()
 
   Summary:

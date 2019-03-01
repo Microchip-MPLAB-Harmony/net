@@ -47,7 +47,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
-#include <alloca.h>
 
 // enable Announce debugging features
 #define TCPIP_ANNOUNCE_DEBUG_MASK_NOTIFY_EVENTS     0x01    // enable notification events display
@@ -117,7 +116,7 @@ typedef struct __attribute__((packed))
     TCPIP_ANNOUNCE_MIN_MAC_NAME_DCPT    macNameDcpt;
     TCPIP_ANNOUNCE_MIN_HOST_NAME_DCPT   hostNameDcpt;
     TCPIP_ANNOUNCE_IPV4_ADDR_DCPT       ipv4AddDcpt;
-    TCPIP_ANNOUNCE_IPV4_ADDR_DCPT       ipv6UnicastDcpt[4];
+    TCPIP_ANNOUNCE_IPV6_ADDR_DCPT       ipv6UnicastDcpt[4];
 }_TCPIP_ANNOUNCE_MIN_MESSAGE;
 #elif defined(TCPIP_STACK_USE_IPV6)
 typedef struct __attribute__((packed))
@@ -126,7 +125,7 @@ typedef struct __attribute__((packed))
     TCPIP_ANNOUNCE_MAC_ADDR_DCPT        macAddDcpt;
     TCPIP_ANNOUNCE_MIN_MAC_NAME_DCPT    macNameDcpt;
     TCPIP_ANNOUNCE_MIN_HOST_NAME_DCPT   hostNameDcpt;
-    TCPIP_ANNOUNCE_IPV4_ADDR_DCPT       ipv6UnicastDcpt[6];
+    TCPIP_ANNOUNCE_IPV6_ADDR_DCPT       ipv6UnicastDcpt[6];
 }_TCPIP_ANNOUNCE_MIN_MESSAGE;
 #else
 typedef struct __attribute__((packed))
@@ -432,7 +431,11 @@ static void TCPIP_ANNOUNCE_Send(void)
     bool        sendOk;
     uint8_t*    pAnnBuffer;
 
-    pAnnBuffer = (uint8_t*)alloca(announceDcpt.txBuffSize);
+    pAnnBuffer = (uint8_t*)TCPIP_HEAP_Malloc(announceDcpt.memH, announceDcpt.txBuffSize);
+    if(pAnnBuffer == 0)
+    {   // failed allocation; retry next time
+        return;
+    }
 
     annSkt = announceDcpt.skt;
 
@@ -469,6 +472,8 @@ static void TCPIP_ANNOUNCE_Send(void)
 
     // unbind socket so it listens on all networks
     TCPIP_UDP_OptionsSet(annSkt, UDP_OPTION_STRICT_NET, 0);
+
+    TCPIP_HEAP_Free(announceDcpt.memH, pAnnBuffer);
 }
 
 // send a message on the specified interface
@@ -846,7 +851,7 @@ const IPV6_ADDR* _FieldIpV6NextAddress(TCPIP_ANNOUNCE_SEND_DCPT* pSDcpt)
             addressPtr = pSDcpt->currAddress->next;
         }
 
-        return (pSDcpt->currAddress = addressPtr) == 0 ? 0 : &addressPtr->address;
+        return (pSDcpt->currAddress = addressPtr) == 0 ? 0 :  (const IPV6_ADDR*)((uint8_t*)addressPtr + offsetof(IPV6_ADDR_STRUCT, address));
     }
 
     if(pSDcpt->fieldType == TCPIP_ANNOUNCE_FIELD_IPV6_DEFAULT_ROUTER)

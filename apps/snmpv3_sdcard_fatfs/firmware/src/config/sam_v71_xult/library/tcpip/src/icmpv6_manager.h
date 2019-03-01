@@ -142,7 +142,7 @@ void TCPIP_ICMPV6_Process(TCPIP_NET_IF * pNetIf, TCPIP_MAC_PACKET* pRxPkt, IPV6_
 IPV6_PACKET * TCPIP_ICMPV6_HeaderErrorPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, uint8_t code, uint8_t type, uint32_t additionalData);
 IPV6_PACKET * TCPIP_ICMPV6_HeaderRouterSolicitationPut (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP, IPV6_ADDR * remoteIP);
 IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborSolicitationPut (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP, IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr);
-IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (TCPIP_NET_IF * pNetIf, IPV6_ADDR * localIP, IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr, bool solicited, bool override);
+IPV6_PACKET * TCPIP_ICMPV6_HeaderNeighborAdvertisementPut (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP, IPV6_ADDR * targetAddr, bool solicited, bool override);
 
 IPV6_PACKET * TCPIP_ICMPV6_Open (TCPIP_NET_IF * pNetIf, const IPV6_ADDR * localIP, const IPV6_ADDR * remoteIP);
 

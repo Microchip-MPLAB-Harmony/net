@@ -585,10 +585,14 @@ extern "C" {
 #define USE_FAST_MATH
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
+<<<<<<< HEAD
 #define HAVE_MICROCHIP_HARMONY3_HW_SHA1
 #define NO_AES
 #define HAVE_MICROCHIP_HARMONY3_HW_SHA256
 #define HAVE_MICROCHIP_HARMONY3_HW_RNG
+=======
+#define NO_AES
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3

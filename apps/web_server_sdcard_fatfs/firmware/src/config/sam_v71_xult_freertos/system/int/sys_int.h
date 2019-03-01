@@ -333,6 +333,46 @@ bool SYS_INT_SourceDisable( INT_SOURCE source );
 
 // *****************************************************************************
 /* Function:
+    void SYS_INT_SourceRestore( INT_SOURCE source, bool state )
+
+   Summary:
+    Restores an interrupt vector to the state specified in the parameter.
+
+   Description:
+    This function restores the interrupt vector to the state specified in the parameters.
+
+   Precondition:
+    SYS_INT_SourceDisable must have been called previously to get the state value.
+
+   Parameters:
+    - true -  Enable Interrupt Vector
+    - false - Disable Interrupt Vector
+
+   Returns:
+    None.
+
+  Example:
+    <code>
+      bool aState;
+
+      // Save interrupt vector state and disable interrupt
+      aState = SYS_INT_SourceDisable( aSrcId );
+
+      // Critical Section
+
+      // Restore interrupt vector state
+      SYS_INT_SourceRestore( aSrcId, aState )
+    </code>
+
+  Remarks:
+    None.
+*/
+
+void SYS_INT_SourceRestore( INT_SOURCE source, bool aState );
+
+
+// *****************************************************************************
+/* Function:
     bool SYS_INT_SourceIsEnabled( INT_SOURCE source )
 
    Summary:

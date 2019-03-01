@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,6 +42,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -53,7 +61,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 /* for compatibility and so that fips is using same name of macro @wc_fips */
-#ifdef HAVE_FIPS
+/* The following visibility wrappers are for old FIPS. New FIPS should use
+ * the same as a non-FIPS build. */
+#if defined(HAVE_FIPS) && \
+    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
     #include <cyassl/ctaocrypt/visibility.h>
     #define WOLFSSL_API   CYASSL_API
 	#define WOLFSSL_LOCAL CYASSL_LOCAL
@@ -66,19 +77,19 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 */
 
 #if defined(BUILDING_WOLFSSL)
-    #if defined(HAVE_VISIBILITY) && HAVE_VISIBILITY
-        #define WOLFSSL_API   __attribute__ ((visibility("default")))
-        #define WOLFSSL_LOCAL __attribute__ ((visibility("hidden")))
-    #elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
-        #define WOLFSSL_API   __global
-        #define WOLFSSL_LOCAL __hidden
-    #elif defined(_MSC_VER) || defined(__MINGW32__)
+    #if defined(_MSC_VER) || defined(__MINGW32__)
         #if defined(WOLFSSL_DLL)
             #define WOLFSSL_API __declspec(dllexport)
         #else
             #define WOLFSSL_API
         #endif
         #define WOLFSSL_LOCAL
+    #elif defined(HAVE_VISIBILITY) && HAVE_VISIBILITY
+        #define WOLFSSL_API   __attribute__ ((visibility("default")))
+        #define WOLFSSL_LOCAL __attribute__ ((visibility("hidden")))
+    #elif defined(__SUNPRO_C) && (__SUNPRO_C >= 0x550)
+        #define WOLFSSL_API   __global
+        #define WOLFSSL_LOCAL __hidden
     #else
         #define WOLFSSL_API
         #define WOLFSSL_LOCAL

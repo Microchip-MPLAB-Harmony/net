@@ -57,7 +57,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 // *****************************************************************************
 #include <string.h>
-#include <strings.h>
 #include <stdlib.h>
 
 #include "tcpip/src/common/sys_fs_wrapper.h"

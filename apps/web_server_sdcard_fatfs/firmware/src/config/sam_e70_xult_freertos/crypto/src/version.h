@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2014-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2014-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,19 +42,29 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
-#pragma once
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-#define LIBWOLFSSL_VERSION_STRING "2.9.0"
-#define LIBWOLFSSL_VERSION_HEX 0x02009000
+#define LIBWOLFSSL_VERSION_STRING "3.15.7"
+#define LIBWOLFSSL_VERSION_HEX 0x03015007
 
 #ifdef __cplusplus
 }
 #endif
+
+
+#endif /* WOLFSSL_VERSION_H */
 

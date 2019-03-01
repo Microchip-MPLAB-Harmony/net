@@ -1061,7 +1061,7 @@ static int CommandHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 static bool ParseCmdBuffer(SYS_CMD_DEVICE_NODE* pCmdIO)
 {
     int  argc = 0;
-    char *argv[MAX_CMD_ARGS + 1] = {};
+    char *argv[MAX_CMD_ARGS + 1] = {0};
     static char saveCmd[SYS_CMD_MAX_LENGTH+1];
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 

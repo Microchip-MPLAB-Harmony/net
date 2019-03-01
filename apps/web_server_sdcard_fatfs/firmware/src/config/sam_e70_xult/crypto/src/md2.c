@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -40,6 +40,14 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
+
+
+
+
 
 //DOM-IGNORE-END
 
@@ -77,7 +85,7 @@ void wc_InitMd2(Md2* md2)
 
 void wc_Md2Update(Md2* md2, const byte* data, word32 len)
 {
-    static const byte S[256] = 
+    static const byte S[256] =
     {
         41, 46, 67, 201, 162, 216, 124, 1, 61, 54, 84, 161, 236, 240, 6,
         19, 98, 167, 5, 243, 192, 199, 115, 140, 152, 147, 43, 217, 188,

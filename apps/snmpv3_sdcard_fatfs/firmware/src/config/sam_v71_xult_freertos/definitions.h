@@ -51,27 +51,28 @@
 #include "crypto/crypto.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "system/time/sys_time.h"
-#include "net/pres/net_pres.h"
-#include "net/pres/net_pres_encryptionproviderapi.h"
-#include "net/pres/net_pres_transportapi.h"
-#include "net/pres/net_pres_socketapi.h"
+#include "net_pres/pres/net_pres.h"
+#include "net_pres/pres/net_pres_encryptionproviderapi.h"
+#include "net_pres/pres/net_pres_transportapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 #include "peripheral/usart/plib_usart1.h"
 #include "system/int/sys_int.h"
+#include "system/cache/sys_cache.h"
 #include "osal/osal.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
 #include "driver/miim/drv_miim.h"
 #include "system/sys_time_h2_adapter.h"
-#include "system/sys_int_h2_adapter.h"
 #include "system/sys_clk_h2_adapter.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
-#include "driver/sdhc/drv_sdhc.h"
+#include "driver/sdmmc/drv_sdmmc.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
 #include "peripheral/xdmac/plib_xdmac.h"
+#include "bsp/bsp.h"
 #include "system/fs/sys_fs.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "system/fs/fat_fs/src/file_system/ff.h"
@@ -83,6 +84,7 @@
 #include "system/console/sys_command.h"
 #include "FreeRTOS.h"
 #include "task.h"
+#include "peripheral/hsmci/plib_hsmci.h"
 #include "app.h"
 
 
@@ -205,9 +207,6 @@ void SYS_Tasks ( void );
 
 typedef struct
 {
-    SYS_MODULE_OBJ  drvSDHC;
-
-
     SYS_MODULE_OBJ  sysTime;
     SYS_MODULE_OBJ  netPres;
 
@@ -215,6 +214,9 @@ typedef struct
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
+
+    SYS_MODULE_OBJ  drvSDMMC0;
+
 
 
 } SYSTEM_OBJECTS;

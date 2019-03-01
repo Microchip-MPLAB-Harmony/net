@@ -1,6 +1,11 @@
 /*
+<<<<<<< HEAD
  * FreeRTOS Kernel V10.0.1
  * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+=======
+ * FreeRTOS Kernel V10.1.1
+ * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -40,11 +45,19 @@ task.h is included from an application file. */
 #include "timers.h"
 #include "stack_macros.h"
 
+<<<<<<< HEAD
 /* Lint e961 and e750 are suppressed as a MISRA exception justified because the
 MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined for the
 header files above, but not in this file, in order to generate the correct
 privileged Vs unprivileged linkage and placement. */
 #undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750. */
+=======
+/* Lint e9021, e961 and e750 are suppressed as a MISRA exception justified
+because the MPU ports require MPU_WRAPPERS_INCLUDED_FROM_API_FILE to be defined
+for the header files above, but not in this file, in order to generate the
+correct privileged Vs unprivileged linkage and placement. */
+#undef MPU_WRAPPERS_INCLUDED_FROM_API_FILE /*lint !e961 !e750 !e9021. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 /* Set configUSE_STATS_FORMATTING_FUNCTIONS to 2 to include the stats formatting
 functions but without including stdio.h here. */
@@ -245,7 +258,11 @@ count overflows. */
  * task should be used in place of the parameter.  This macro simply checks to
  * see if the parameter is NULL and returns a pointer to the appropriate TCB.
  */
+<<<<<<< HEAD
 #define prvGetTCBFromHandle( pxHandle ) ( ( ( pxHandle ) == NULL ) ? ( TCB_t * ) pxCurrentTCB : ( TCB_t * ) ( pxHandle ) )
+=======
+#define prvGetTCBFromHandle( pxHandle ) ( ( ( pxHandle ) == NULL ) ? pxCurrentTCB : ( pxHandle ) )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 /* The item value of the event list item is normally used to hold the priority
 of the task to which it belongs (coded to allow it to be held in reverse
@@ -266,7 +283,11 @@ to its original value when it is released. */
  * and stores task state information, including a pointer to the task's context
  * (the task's run time environment, including register values)
  */
+<<<<<<< HEAD
 typedef struct tskTaskControlBlock
+=======
+typedef struct tskTaskControlBlock /* The old naming convention is used to prevent breaking kernel aware debuggers. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 {
 	volatile StackType_t	*pxTopOfStack;	/*< Points to the location of the last item placed on the tasks stack.  THIS MUST BE THE FIRST MEMBER OF THE TCB STRUCT. */
 
@@ -328,7 +349,11 @@ typedef struct tskTaskControlBlock
 
 	/* See the comments above the definition of
 	tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE. */
+<<<<<<< HEAD
 	#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 Macro has been consolidated for readability reasons. */
+=======
+	#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		uint8_t	ucStaticallyAllocated; 		/*< Set to pdTRUE if the task is a statically allocated to ensure no attempt is made to free the memory. */
 	#endif
 
@@ -336,6 +361,13 @@ typedef struct tskTaskControlBlock
 		uint8_t ucDelayAborted;
 	#endif
 
+<<<<<<< HEAD
+=======
+	#if( configUSE_POSIX_ERRNO == 1 )
+		int iTaskErrno;
+	#endif
+
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 } tskTCB;
 
 /* The old tskTCB name is maintained above then typedefed to the new TCB_t name
@@ -344,10 +376,19 @@ typedef tskTCB TCB_t;
 
 /*lint -save -e956 A manual analysis and inspection has been used to determine
 which static variables must be declared volatile. */
+<<<<<<< HEAD
 
 PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
 
 /* Lists for ready and blocked tasks. --------------------*/
+=======
+PRIVILEGED_DATA TCB_t * volatile pxCurrentTCB = NULL;
+
+/* Lists for ready and blocked tasks. --------------------
+xDelayedTaskList1 and xDelayedTaskList2 could be move to function scople but
+doing so breaks some kernel aware debuggers and debuggers that rely on removing
+the static qualifier. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 PRIVILEGED_DATA static List_t pxReadyTasksLists[ configMAX_PRIORITIES ];/*< Prioritised ready tasks. */
 PRIVILEGED_DATA static List_t xDelayedTaskList1;						/*< Delayed tasks. */
 PRIVILEGED_DATA static List_t xDelayedTaskList2;						/*< Delayed tasks (two lists are used - one for delays that have overflowed the current tick count. */
@@ -368,6 +409,15 @@ PRIVILEGED_DATA static List_t xPendingReadyList;						/*< Tasks that have been r
 
 #endif
 
+<<<<<<< HEAD
+=======
+/* Global POSIX errno. Its value is changed upon context switching to match
+the errno of the currently running task. */
+#if ( configUSE_POSIX_ERRNO == 1 )
+	int FreeRTOS_errno = 0;
+#endif
+
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 /* Other file private variables. --------------------------------*/
 PRIVILEGED_DATA static volatile UBaseType_t uxCurrentNumberOfTasks 	= ( UBaseType_t ) 0U;
 PRIVILEGED_DATA static volatile TickType_t xTickCount 				= ( TickType_t ) configINITIAL_TICK_COUNT;
@@ -392,6 +442,11 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 
 #if ( configGENERATE_RUN_TIME_STATS == 1 )
 
+<<<<<<< HEAD
+=======
+	/* Do not move these variables to function scope as doing so prevents the
+	code working with debuggers that need to remove the static qualifier. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	PRIVILEGED_DATA static uint32_t ulTaskSwitchedInTime = 0UL;	/*< Holds the value of a timer/counter the last time a task was switched in. */
 	PRIVILEGED_DATA static uint32_t ulTotalRunTime = 0UL;		/*< Holds the total amount of execution time as defined by the run time counter clock. */
 
@@ -410,13 +465,21 @@ PRIVILEGED_DATA static volatile UBaseType_t uxSchedulerSuspended	= ( UBaseType_t
 
 #if( configUSE_TICK_HOOK > 0 )
 
+<<<<<<< HEAD
 	extern void vApplicationTickHook( void );
+=======
+	extern void vApplicationTickHook( void ); /*lint !e526 Symbol not defined as it is an application callback. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 #endif
 
 #if( configSUPPORT_STATIC_ALLOCATION == 1 )
 
+<<<<<<< HEAD
 	extern void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize );
+=======
+	extern void vApplicationGetIdleTaskMemory( StaticTask_t **ppxIdleTaskTCBBuffer, StackType_t **ppxIdleTaskStackBuffer, uint32_t *pulIdleTaskStackSize ); /*lint !e526 Symbol not defined as it is an application callback. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 #endif
 
@@ -509,7 +572,11 @@ static void prvAddCurrentTaskToDelayedList( TickType_t xTicksToWait, const BaseT
  */
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
+<<<<<<< HEAD
 	static uint16_t prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte ) PRIVILEGED_FUNCTION;
+=======
+	static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte ) PRIVILEGED_FUNCTION;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 #endif
 
@@ -599,6 +666,10 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 			structure. */
 			volatile size_t xSize = sizeof( StaticTask_t );
 			configASSERT( xSize == sizeof( TCB_t ) );
+<<<<<<< HEAD
+=======
+			( void ) xSize; /* Prevent lint warning when configASSERT() is not used. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		}
 		#endif /* configASSERT_DEFINED */
 
@@ -607,10 +678,17 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 		{
 			/* The memory used for the task's TCB and stack are passed into this
 			function - use them. */
+<<<<<<< HEAD
 			pxNewTCB = ( TCB_t * ) pxTaskBuffer; /*lint !e740 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
 			pxNewTCB->pxStack = ( StackType_t * ) puxStackBuffer;
 
 			#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 Macro has been consolidated for readability reasons. */
+=======
+			pxNewTCB = ( TCB_t * ) pxTaskBuffer; /*lint !e740 !e9087 Unusual cast is ok as the structures are designed to have the same alignment, and the size is checked by an assert. */
+			pxNewTCB->pxStack = ( StackType_t * ) puxStackBuffer;
+
+			#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			{
 				/* Tasks can be created statically or dynamically, so note this
 				task was created statically in case the task is later deleted. */
@@ -769,12 +847,20 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 		StackType_t *pxStack;
 
 			/* Allocate space for the stack used by the task being created. */
+<<<<<<< HEAD
 			pxStack = ( StackType_t * ) pvPortMalloc( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); /*lint !e961 MISRA exception as the casts are only redundant for some ports. */
+=======
+			pxStack = pvPortMalloc( ( ( ( size_t ) usStackDepth ) * sizeof( StackType_t ) ) ); /*lint !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack and this allocation is the stack. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 			if( pxStack != NULL )
 			{
 				/* Allocate space for the TCB. */
+<<<<<<< HEAD
 				pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) ); /*lint !e961 MISRA exception as the casts are only redundant for some paths. */
+=======
+				pxNewTCB = ( TCB_t * ) pvPortMalloc( sizeof( TCB_t ) ); /*lint !e9087 !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack, and the first member of TCB_t is always a pointer to the task's stack. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 				if( pxNewTCB != NULL )
 				{
@@ -797,7 +883,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB ) PRIVILEGED_FUNCTION;
 
 		if( pxNewTCB != NULL )
 		{
+<<<<<<< HEAD
 			#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 Macro has been consolidated for readability reasons. */
+=======
+			#if( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e9029 !e731 Macro has been consolidated for readability reasons. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			{
 				/* Tasks can be created statically or dynamically, so note this
 				task was created dynamically in case it is later deleted. */
@@ -846,6 +936,11 @@ UBaseType_t x;
 		uxPriority &= ~portPRIVILEGE_BIT;
 	#endif /* portUSING_MPU_WRAPPERS == 1 */
 
+<<<<<<< HEAD
+=======
+	configASSERT( pcName );
+
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	/* Avoid dependency on memset() if it is not required. */
 	#if( tskSET_NEW_STACKS_TO_KNOWN_VALUE == 1 )
 	{
@@ -860,8 +955,13 @@ UBaseType_t x;
 	by the port. */
 	#if( portSTACK_GROWTH < 0 )
 	{
+<<<<<<< HEAD
 		pxTopOfStack = pxNewTCB->pxStack + ( ulStackDepth - ( uint32_t ) 1 );
 		pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type. */
+=======
+		pxTopOfStack = &( pxNewTCB->pxStack[ ulStackDepth - ( uint32_t ) 1 ] );
+		pxTopOfStack = ( StackType_t * ) ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack ) & ( ~( ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) ) ); /*lint !e923 !e9033 !e9078 MISRA exception.  Avoiding casts between pointers and integers is not practical.  Size differences accounted for using portPOINTER_SIZE_TYPE type.  Checked by assert(). */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* Check the alignment of the calculated top of stack is correct. */
 		configASSERT( ( ( ( portPOINTER_SIZE_TYPE ) pxTopOfStack & ( portPOINTER_SIZE_TYPE ) portBYTE_ALIGNMENT_MASK ) == 0UL ) );
@@ -895,7 +995,11 @@ UBaseType_t x;
 		/* Don't copy all configMAX_TASK_NAME_LEN if the string is shorter than
 		configMAX_TASK_NAME_LEN characters just in case the memory after the
 		string is not accessible (extremely unlikely). */
+<<<<<<< HEAD
 		if( pcName[ x ] == 0x00 )
+=======
+		if( pcName[ x ] == ( char ) 0x00 )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		{
 			break;
 		}
@@ -1011,7 +1115,11 @@ UBaseType_t x;
 	}
 	#endif /* portUSING_MPU_WRAPPERS */
 
+<<<<<<< HEAD
 	if( ( void * ) pxCreatedTask != NULL )
+=======
+	if( pxCreatedTask != NULL )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	{
 		/* Pass the handle out in an anonymous way.  The handle can be used to
 		change the created task's priority, delete the created task, etc.*/
@@ -1333,8 +1441,13 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 	eTaskState eTaskGetState( TaskHandle_t xTask )
 	{
 	eTaskState eReturn;
+<<<<<<< HEAD
 	List_t *pxStateList;
 	const TCB_t * const pxTCB = ( TCB_t * ) xTask;
+=======
+	List_t const * pxStateList, *pxDelayedList, *pxOverflowedDelayedList;
+	const TCB_t * const pxTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		configASSERT( pxTCB );
 
@@ -1347,11 +1460,21 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 		{
 			taskENTER_CRITICAL();
 			{
+<<<<<<< HEAD
 				pxStateList = ( List_t * ) listLIST_ITEM_CONTAINER( &( pxTCB->xStateListItem ) );
 			}
 			taskEXIT_CRITICAL();
 
 			if( ( pxStateList == pxDelayedTaskList ) || ( pxStateList == pxOverflowDelayedTaskList ) )
+=======
+				pxStateList = listLIST_ITEM_CONTAINER( &( pxTCB->xStateListItem ) );
+				pxDelayedList = pxDelayedTaskList;
+				pxOverflowedDelayedList = pxOverflowDelayedTaskList;
+			}
+			taskEXIT_CRITICAL();
+
+			if( ( pxStateList == pxDelayedList ) || ( pxStateList == pxOverflowedDelayedList ) )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			{
 				/* The task being queried is referenced from one of the Blocked
 				lists. */
@@ -1362,11 +1485,38 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				else if( pxStateList == &xSuspendedTaskList )
 				{
 					/* The task being queried is referenced from the suspended
+<<<<<<< HEAD
 					list.  Is it genuinely suspended or is it block
 					indefinitely? */
 					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL )
 					{
 						eReturn = eSuspended;
+=======
+					list.  Is it genuinely suspended or is it blocked
+					indefinitely? */
+					if( listLIST_ITEM_CONTAINER( &( pxTCB->xEventListItem ) ) == NULL )
+					{
+						#if( configUSE_TASK_NOTIFICATIONS == 1 )
+						{
+							/* The task does not appear on the event list item of
+							and of the RTOS objects, but could still be in the
+							blocked state if it is waiting on its notification
+							rather than waiting on an object. */
+							if( pxTCB->ucNotifyState == taskWAITING_NOTIFICATION )
+							{
+								eReturn = eBlocked;
+							}
+							else
+							{
+								eReturn = eSuspended;
+							}
+						}
+						#else
+						{
+							eReturn = eSuspended;
+						}
+						#endif
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 					}
 					else
 					{
@@ -1401,15 +1551,26 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
+<<<<<<< HEAD
 	UBaseType_t uxTaskPriorityGet( TaskHandle_t xTask )
 	{
 	TCB_t *pxTCB;
+=======
+	UBaseType_t uxTaskPriorityGet( const TaskHandle_t xTask )
+	{
+	TCB_t const *pxTCB;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	UBaseType_t uxReturn;
 
 		taskENTER_CRITICAL();
 		{
+<<<<<<< HEAD
 			/* If null is passed in here then it is the priority of the that
 			called uxTaskPriorityGet() that is being queried. */
+=======
+			/* If null is passed in here then it is the priority of the task
+			that called uxTaskPriorityGet() that is being queried. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			pxTCB = prvGetTCBFromHandle( xTask );
 			uxReturn = pxTCB->uxPriority;
 		}
@@ -1423,9 +1584,15 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 #if ( INCLUDE_uxTaskPriorityGet == 1 )
 
+<<<<<<< HEAD
 	UBaseType_t uxTaskPriorityGetFromISR( TaskHandle_t xTask )
 	{
 	TCB_t *pxTCB;
+=======
+	UBaseType_t uxTaskPriorityGetFromISR( const TaskHandle_t xTask )
+	{
+	TCB_t const *pxTCB;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	UBaseType_t uxReturn, uxSavedInterruptState;
 
 		/* RTOS ports that support interrupt nesting have the concept of a
@@ -1443,7 +1610,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 		separate interrupt safe API to ensure interrupt entry is as fast and as
 		simple as possible.  More information (albeit Cortex-M specific) is
 		provided on the following link:
+<<<<<<< HEAD
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+=======
+		https://www.freertos.org/RTOS-Cortex-M3-M4.html */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 		uxSavedInterruptState = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -1703,7 +1874,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 				/* The scheduler is not running, but the task that was pointed
 				to by pxCurrentTCB has just been suspended and pxCurrentTCB
 				must be adjusted to point to a different task. */
+<<<<<<< HEAD
 				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == uxCurrentNumberOfTasks )
+=======
+				if( listCURRENT_LIST_LENGTH( &xSuspendedTaskList ) == uxCurrentNumberOfTasks ) /*lint !e931 Right has no side effect, just volatile. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				{
 					/* No other tasks are ready, so set pxCurrentTCB back to
 					NULL so when the next task is created pxCurrentTCB will
@@ -1731,7 +1906,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 	static BaseType_t prvTaskIsTaskSuspended( const TaskHandle_t xTask )
 	{
 	BaseType_t xReturn = pdFALSE;
+<<<<<<< HEAD
 	const TCB_t * const pxTCB = ( TCB_t * ) xTask;
+=======
+	const TCB_t * const pxTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* Accesses xPendingReadyList so must be called from a critical
 		section. */
@@ -1776,14 +1955,22 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 
 	void vTaskResume( TaskHandle_t xTaskToResume )
 	{
+<<<<<<< HEAD
 	TCB_t * const pxTCB = ( TCB_t * ) xTaskToResume;
+=======
+	TCB_t * const pxTCB = xTaskToResume;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* It does not make sense to resume the calling task. */
 		configASSERT( xTaskToResume );
 
 		/* The parameter cannot be NULL as it is impossible to resume the
 		currently executing task. */
+<<<<<<< HEAD
 		if( ( pxTCB != NULL ) && ( pxTCB != pxCurrentTCB ) )
+=======
+		if( ( pxTCB != pxCurrentTCB ) && ( pxTCB != NULL ) )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		{
 			taskENTER_CRITICAL();
 			{
@@ -1831,7 +2018,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 	BaseType_t xTaskResumeFromISR( TaskHandle_t xTaskToResume )
 	{
 	BaseType_t xYieldRequired = pdFALSE;
+<<<<<<< HEAD
 	TCB_t * const pxTCB = ( TCB_t * ) xTaskToResume;
+=======
+	TCB_t * const pxTCB = xTaskToResume;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	UBaseType_t uxSavedInterruptStatus;
 
 		configASSERT( xTaskToResume );
@@ -1851,7 +2042,11 @@ static void prvAddNewTaskToReadyList( TCB_t *pxNewTCB )
 		separate interrupt safe API to ensure interrupt entry is as fast and as
 		simple as possible.  More information (albeit Cortex-M specific) is
 		provided on the following link:
+<<<<<<< HEAD
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+=======
+		https://www.freertos.org/RTOS-Cortex-M3-M4.html */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
@@ -1916,7 +2111,11 @@ BaseType_t xReturn;
 												configIDLE_TASK_NAME,
 												ulIdleTaskStackSize,
 												( void * ) NULL, /*lint !e961.  The cast is not redundant for all compilers. */
+<<<<<<< HEAD
 												( tskIDLE_PRIORITY | portPRIVILEGE_BIT ),
+=======
+												portPRIVILEGE_BIT, /* In effect ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), but tskIDLE_PRIORITY is zero. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 												pxIdleTaskStackBuffer,
 												pxIdleTaskTCBBuffer ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
 
@@ -1936,7 +2135,11 @@ BaseType_t xReturn;
 								configIDLE_TASK_NAME,
 								configMINIMAL_STACK_SIZE,
 								( void * ) NULL,
+<<<<<<< HEAD
 								( tskIDLE_PRIORITY | portPRIVILEGE_BIT ),
+=======
+								portPRIVILEGE_BIT, /* In effect ( tskIDLE_PRIORITY | portPRIVILEGE_BIT ), but tskIDLE_PRIORITY is zero. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 								&xIdleTaskHandle ); /*lint !e961 MISRA exception, justified as it is not a redundant explicit cast to all supported compilers. */
 	}
 	#endif /* configSUPPORT_STATIC_ALLOCATION */
@@ -1982,7 +2185,11 @@ BaseType_t xReturn;
 
 		xNextTaskUnblockTime = portMAX_DELAY;
 		xSchedulerRunning = pdTRUE;
+<<<<<<< HEAD
 		xTickCount = ( TickType_t ) 0U;
+=======
+		xTickCount = ( TickType_t ) configINITIAL_TICK_COUNT;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* If configGENERATE_RUN_TIME_STATS is defined then the following
 		macro must be defined to configure the timer/counter used to generate
@@ -1992,6 +2199,11 @@ BaseType_t xReturn;
 		FreeRTOSConfig.h file. */
 		portCONFIGURE_TIMER_FOR_RUN_TIME_STATS();
 
+<<<<<<< HEAD
+=======
+		traceTASK_SWITCHED_IN();
+
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		/* Setting up the timer tick is hardware specific and thus in the
 		portable interface. */
 		if( xPortStartScheduler() != pdFALSE )
@@ -2128,7 +2340,11 @@ BaseType_t xAlreadyYielded = pdFALSE;
 				appropriate ready list. */
 				while( listLIST_IS_EMPTY( &xPendingReadyList ) == pdFALSE )
 				{
+<<<<<<< HEAD
 					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xPendingReadyList ) );
+=======
+					pxTCB = listGET_OWNER_OF_HEAD_ENTRY( ( &xPendingReadyList ) ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 					( void ) uxListRemove( &( pxTCB->xEventListItem ) );
 					( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 					prvAddTaskToReadyList( pxTCB );
@@ -2245,7 +2461,11 @@ UBaseType_t uxSavedInterruptStatus;
 	system call	interrupt priority.  FreeRTOS maintains a separate interrupt
 	safe API to ensure interrupt entry is as fast and as simple as possible.
 	More information (albeit Cortex-M specific) is provided on the following
+<<<<<<< HEAD
 	link: http://www.freertos.org/RTOS-Cortex-M3-M4.html */
+=======
+	link: https://www.freertos.org/RTOS-Cortex-M3-M4.html */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
 	uxSavedInterruptStatus = portTICK_TYPE_SET_INTERRUPT_MASK_FROM_ISR();
@@ -2285,11 +2505,16 @@ TCB_t *pxTCB;
 	TCB_t *pxNextTCB, *pxFirstTCB, *pxReturn = NULL;
 	UBaseType_t x;
 	char cNextChar;
+<<<<<<< HEAD
+=======
+	BaseType_t xBreakLoop;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* This function is called with the scheduler suspended. */
 
 		if( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 )
 		{
+<<<<<<< HEAD
 			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
 
 			do
@@ -2298,6 +2523,17 @@ TCB_t *pxTCB;
 
 				/* Check each character in the name looking for a match or
 				mismatch. */
+=======
+			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );  /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+
+			do
+			{
+				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+
+				/* Check each character in the name looking for a match or
+				mismatch. */
+				xBreakLoop = pdFALSE;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				for( x = ( UBaseType_t ) 0; x < ( UBaseType_t ) configMAX_TASK_NAME_LEN; x++ )
 				{
 					cNextChar = pxNextTCB->pcTaskName[ x ];
@@ -2305,19 +2541,37 @@ TCB_t *pxTCB;
 					if( cNextChar != pcNameToQuery[ x ] )
 					{
 						/* Characters didn't match. */
+<<<<<<< HEAD
 						break;
 					}
 					else if( cNextChar == 0x00 )
+=======
+						xBreakLoop = pdTRUE;
+					}
+					else if( cNextChar == ( char ) 0x00 )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 					{
 						/* Both strings terminated, a match must have been
 						found. */
 						pxReturn = pxNextTCB;
+<<<<<<< HEAD
 						break;
+=======
+						xBreakLoop = pdTRUE;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 					}
 					else
 					{
 						mtCOVERAGE_TEST_MARKER();
 					}
+<<<<<<< HEAD
+=======
+
+					if( xBreakLoop != pdFALSE )
+					{
+						break;
+					}
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				}
 
 				if( pxReturn != NULL )
@@ -2398,7 +2652,11 @@ TCB_t *pxTCB;
 		}
 		( void ) xTaskResumeAll();
 
+<<<<<<< HEAD
 		return ( TaskHandle_t ) pxTCB;
+=======
+		return pxTCB;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	}
 
 #endif /* INCLUDE_xTaskGetHandle */
@@ -2514,7 +2772,11 @@ implementations require configUSE_TICKLESS_IDLE to be set to a value other than
 
 	BaseType_t xTaskAbortDelay( TaskHandle_t xTask )
 	{
+<<<<<<< HEAD
 	TCB_t *pxTCB = ( TCB_t * ) xTask;
+=======
+	TCB_t *pxTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	BaseType_t xReturn;
 
 		configASSERT( pxTCB );
@@ -2639,7 +2901,11 @@ BaseType_t xSwitchRequired = pdFALSE;
 					item at the head of the delayed list.  This is the time
 					at which the task at the head of the delayed list must
 					be removed from the Blocked state. */
+<<<<<<< HEAD
 					pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+=======
+					pxTCB = listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 					xItemValue = listGET_LIST_ITEM_VALUE( &( pxTCB->xStateListItem ) );
 
 					if( xConstTickCount < xItemValue )
@@ -2650,7 +2916,11 @@ BaseType_t xSwitchRequired = pdFALSE;
 						state -	so record the item value in
 						xNextTaskUnblockTime. */
 						xNextTaskUnblockTime = xItemValue;
+<<<<<<< HEAD
 						break;
+=======
+						break; /*lint !e9011 Code structure here is deedmed easier to understand with multiple breaks. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 					}
 					else
 					{
@@ -2772,13 +3042,23 @@ BaseType_t xSwitchRequired = pdFALSE;
 		}
 		else
 		{
+<<<<<<< HEAD
 			xTCB = ( TCB_t * ) xTask;
+=======
+			xTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		}
 
 		/* Save the hook function in the TCB.  A critical section is required as
 		the value can be accessed from an interrupt. */
 		taskENTER_CRITICAL();
+<<<<<<< HEAD
 			xTCB->pxTaskTag = pxHookFunction;
+=======
+		{
+			xTCB->pxTaskTag = pxHookFunction;
+		}
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		taskEXIT_CRITICAL();
 	}
 
@@ -2799,7 +3079,11 @@ BaseType_t xSwitchRequired = pdFALSE;
 		}
 		else
 		{
+<<<<<<< HEAD
 			xTCB = ( TCB_t * ) xTask;
+=======
+			xTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		}
 
 		/* Save the hook function in the TCB.  A critical section is required as
@@ -2826,11 +3110,19 @@ BaseType_t xSwitchRequired = pdFALSE;
 		/* If xTask is NULL then we are calling our own task hook. */
 		if( xTask == NULL )
 		{
+<<<<<<< HEAD
 			xTCB = ( TCB_t * ) pxCurrentTCB;
 		}
 		else
 		{
 			xTCB = ( TCB_t * ) xTask;
+=======
+			xTCB = pxCurrentTCB;
+		}
+		else
+		{
+			xTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		}
 
 		if( xTCB->pxTaskTag != NULL )
@@ -2891,11 +3183,33 @@ void vTaskSwitchContext( void )
 		/* Check for stack overflow, if configured. */
 		taskCHECK_FOR_STACK_OVERFLOW();
 
+<<<<<<< HEAD
 		/* Select a new task to run using either the generic C or port
 		optimised asm code. */
 		taskSELECT_HIGHEST_PRIORITY_TASK();
 		traceTASK_SWITCHED_IN();
 
+=======
+		/* Before the currently running task is switched out, save its errno. */
+		#if( configUSE_POSIX_ERRNO == 1 )
+		{
+			pxCurrentTCB->iTaskErrno = FreeRTOS_errno;
+		}
+		#endif
+
+		/* Select a new task to run using either the generic C or port
+		optimised asm code. */
+		taskSELECT_HIGHEST_PRIORITY_TASK(); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+		traceTASK_SWITCHED_IN();
+
+		/* After the new task is switched in, update the global errno. */
+		#if( configUSE_POSIX_ERRNO == 1 )
+		{
+			FreeRTOS_errno = pxCurrentTCB->iTaskErrno;
+		}
+		#endif
+
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		#if ( configUSE_NEWLIB_REENTRANT == 1 )
 		{
 			/* Switch Newlib's _impure_ptr variable to point to the _reent
@@ -2999,7 +3313,11 @@ BaseType_t xReturn;
 
 	This function assumes that a check has already been made to ensure that
 	pxEventList is not empty. */
+<<<<<<< HEAD
 	pxUnblockedTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxEventList );
+=======
+	pxUnblockedTCB = listGET_OWNER_OF_HEAD_ENTRY( pxEventList ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	configASSERT( pxUnblockedTCB );
 	( void ) uxListRemove( &( pxUnblockedTCB->xEventListItem ) );
 
@@ -3062,7 +3380,11 @@ TCB_t *pxUnblockedTCB;
 
 	/* Remove the event list form the event flag.  Interrupts do not access
 	event flags. */
+<<<<<<< HEAD
 	pxUnblockedTCB = ( TCB_t * ) listGET_LIST_ITEM_OWNER( pxEventListItem );
+=======
+	pxUnblockedTCB = listGET_LIST_ITEM_OWNER( pxEventListItem ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	configASSERT( pxUnblockedTCB );
 	( void ) uxListRemove( pxEventListItem );
 
@@ -3117,7 +3439,11 @@ BaseType_t xReturn;
 		const TickType_t xElapsedTime = xConstTickCount - pxTimeOut->xTimeOnEntering;
 
 		#if( INCLUDE_xTaskAbortDelay == 1 )
+<<<<<<< HEAD
 			if( pxCurrentTCB->ucDelayAborted != pdFALSE )
+=======
+			if( pxCurrentTCB->ucDelayAborted != ( uint8_t ) pdFALSE )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			{
 				/* The delay was aborted, which is not the same as a time out,
 				but has the same result. */
@@ -3177,11 +3503,19 @@ void vTaskMissedYield( void )
 	UBaseType_t uxTaskGetTaskNumber( TaskHandle_t xTask )
 	{
 	UBaseType_t uxReturn;
+<<<<<<< HEAD
 	TCB_t *pxTCB;
 
 		if( xTask != NULL )
 		{
 			pxTCB = ( TCB_t * ) xTask;
+=======
+	TCB_t const *pxTCB;
+
+		if( xTask != NULL )
+		{
+			pxTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			uxReturn = pxTCB->uxTaskNumber;
 		}
 		else
@@ -3199,11 +3533,19 @@ void vTaskMissedYield( void )
 
 	void vTaskSetTaskNumber( TaskHandle_t xTask, const UBaseType_t uxHandle )
 	{
+<<<<<<< HEAD
 	TCB_t *pxTCB;
 
 		if( xTask != NULL )
 		{
 			pxTCB = ( TCB_t * ) xTask;
+=======
+	TCB_t * pxTCB;
+
+		if( xTask != NULL )
+		{
+			pxTCB = xTask;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			pxTCB->uxTaskNumber = uxHandle;
 		}
 	}
@@ -3480,7 +3822,11 @@ static void prvCheckTasksWaitingTermination( void )
 		{
 			taskENTER_CRITICAL();
 			{
+<<<<<<< HEAD
 				pxTCB = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) );
+=======
+				pxTCB = listGET_OWNER_OF_HEAD_ENTRY( ( &xTasksWaitingTermination ) ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				( void ) uxListRemove( &( pxTCB->xStateListItem ) );
 				--uxCurrentNumberOfTasks;
 				--uxDeletedTasksWaitingCleanUp;
@@ -3599,7 +3945,11 @@ static void prvCheckTasksWaitingTermination( void )
 
 		if( listCURRENT_LIST_LENGTH( pxList ) > ( UBaseType_t ) 0 )
 		{
+<<<<<<< HEAD
 			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList );
+=======
+			listGET_OWNER_OF_NEXT_ENTRY( pxFirstTCB, pxList ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 			/* Populate an TaskStatus_t structure within the
 			pxTaskStatusArray array for each task that is referenced from
@@ -3607,7 +3957,11 @@ static void prvCheckTasksWaitingTermination( void )
 			meaning of each TaskStatus_t structure member. */
 			do
 			{
+<<<<<<< HEAD
 				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList );
+=======
+				listGET_OWNER_OF_NEXT_ENTRY( pxNextTCB, pxList ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				vTaskGetInfo( ( TaskHandle_t ) pxNextTCB, &( pxTaskStatusArray[ uxTask ] ), pdTRUE, eState );
 				uxTask++;
 			} while( pxNextTCB != pxFirstTCB );
@@ -3625,7 +3979,11 @@ static void prvCheckTasksWaitingTermination( void )
 
 #if ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) )
 
+<<<<<<< HEAD
 	static uint16_t prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte )
+=======
+	static configSTACK_DEPTH_TYPE prvTaskCheckFreeStackSpace( const uint8_t * pucStackByte )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	{
 	uint32_t ulCount = 0U;
 
@@ -3637,7 +3995,11 @@ static void prvCheckTasksWaitingTermination( void )
 
 		ulCount /= ( uint32_t ) sizeof( StackType_t ); /*lint !e961 Casting is not redundant on smaller architectures. */
 
+<<<<<<< HEAD
 		return ( uint16_t ) ulCount;
+=======
+		return ( configSTACK_DEPTH_TYPE ) ulCount;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	}
 
 #endif /* ( ( configUSE_TRACE_FACILITY == 1 ) || ( INCLUDE_uxTaskGetStackHighWaterMark == 1 ) ) */
@@ -3695,7 +4057,11 @@ static void prvCheckTasksWaitingTermination( void )
 			vPortFree( pxTCB->pxStack );
 			vPortFree( pxTCB );
 		}
+<<<<<<< HEAD
 		#elif( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 Macro has been consolidated for readability reasons. */
+=======
+		#elif( tskSTATIC_AND_DYNAMIC_ALLOCATION_POSSIBLE != 0 ) /*lint !e731 !e9029 Macro has been consolidated for readability reasons. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		{
 			/* The task could have been allocated statically or dynamically, so
 			check what was statically allocated before trying to free the
@@ -3745,7 +4111,11 @@ TCB_t *pxTCB;
 		the item at the head of the delayed list.  This is the time at
 		which the task at the head of the delayed list should be removed
 		from the Blocked state. */
+<<<<<<< HEAD
 		( pxTCB ) = ( TCB_t * ) listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList );
+=======
+		( pxTCB ) = listGET_OWNER_OF_HEAD_ENTRY( pxDelayedTaskList ); /*lint !e9079 void * is used as this macro is used with timers and co-routines too.  Alignment is known to be fine as the type of the pointer stored and retrieved is the same. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 		xNextTaskUnblockTime = listGET_LIST_ITEM_VALUE( &( ( pxTCB )->xStateListItem ) );
 	}
 }
@@ -3800,7 +4170,11 @@ TCB_t *pxTCB;
 
 	BaseType_t xTaskPriorityInherit( TaskHandle_t const pxMutexHolder )
 	{
+<<<<<<< HEAD
 	TCB_t * const pxMutexHolderTCB = ( TCB_t * ) pxMutexHolder;
+=======
+	TCB_t * const pxMutexHolderTCB = pxMutexHolder;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	BaseType_t xReturn = pdFALSE;
 
 		/* If the mutex was given back by an interrupt while the queue was
@@ -3887,7 +4261,11 @@ TCB_t *pxTCB;
 
 	BaseType_t xTaskPriorityDisinherit( TaskHandle_t const pxMutexHolder )
 	{
+<<<<<<< HEAD
 	TCB_t * const pxTCB = ( TCB_t * ) pxMutexHolder;
+=======
+	TCB_t * const pxTCB = pxMutexHolder;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	BaseType_t xReturn = pdFALSE;
 
 		if( pxMutexHolder != NULL )
@@ -3967,7 +4345,11 @@ TCB_t *pxTCB;
 
 	void vTaskPriorityDisinheritAfterTimeout( TaskHandle_t const pxMutexHolder, UBaseType_t uxHighestPriorityWaitingTask )
 	{
+<<<<<<< HEAD
 	TCB_t * const pxTCB = ( TCB_t * ) pxMutexHolder;
+=======
+	TCB_t * const pxTCB = pxMutexHolder;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	UBaseType_t uxPriorityUsedOnEntry, uxPriorityToUse;
 	const UBaseType_t uxOnlyOneMutexHeld = ( UBaseType_t ) 1;
 
@@ -4145,7 +4527,11 @@ TCB_t *pxTCB;
 		}
 
 		/* Terminate. */
+<<<<<<< HEAD
 		pcBuffer[ x ] = 0x00;
+=======
+		pcBuffer[ x ] = ( char ) 0x00;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* Return the new end of string. */
 		return &( pcBuffer[ x ] );
@@ -4159,7 +4545,11 @@ TCB_t *pxTCB;
 	void vTaskList( char * pcWriteBuffer )
 	{
 	TaskStatus_t *pxTaskStatusArray;
+<<<<<<< HEAD
 	volatile UBaseType_t uxArraySize, x;
+=======
+	UBaseType_t uxArraySize, x;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	char cStatus;
 
 		/*
@@ -4188,7 +4578,11 @@ TCB_t *pxTCB;
 
 
 		/* Make sure the write buffer does not contain a string. */
+<<<<<<< HEAD
 		*pcWriteBuffer = 0x00;
+=======
+		*pcWriteBuffer = ( char ) 0x00;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* Take a snapshot of the number of tasks in case it changes while this
 		function is executing. */
@@ -4197,7 +4591,11 @@ TCB_t *pxTCB;
 		/* Allocate an array index for each task.  NOTE!  if
 		configSUPPORT_DYNAMIC_ALLOCATION is set to 0 then pvPortMalloc() will
 		equate to NULL. */
+<<<<<<< HEAD
 		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( TaskStatus_t ) );
+=======
+		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( TaskStatus_t ) ); /*lint !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack and this allocation allocates a struct that has the alignment requirements of a pointer. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		if( pxTaskStatusArray != NULL )
 		{
@@ -4224,9 +4622,16 @@ TCB_t *pxTCB;
 					case eDeleted:		cStatus = tskDELETED_CHAR;
 										break;
 
+<<<<<<< HEAD
 					default:			/* Should not get here, but it is included
 										to prevent static checking errors. */
 										cStatus = 0x00;
+=======
+					case eInvalid:		/* Fall through. */
+					default:			/* Should not get here, but it is included
+										to prevent static checking errors. */
+										cStatus = ( char ) 0x00;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 										break;
 				}
 
@@ -4235,8 +4640,13 @@ TCB_t *pxTCB;
 				pcWriteBuffer = prvWriteNameToBuffer( pcWriteBuffer, pxTaskStatusArray[ x ].pcTaskName );
 
 				/* Write the rest of the string. */
+<<<<<<< HEAD
 				sprintf( pcWriteBuffer, "\t%c\t%u\t%u\t%u\r\n", cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber );
 				pcWriteBuffer += strlen( pcWriteBuffer );
+=======
+				sprintf( pcWriteBuffer, "\t%c\t%u\t%u\t%u\r\n", cStatus, ( unsigned int ) pxTaskStatusArray[ x ].uxCurrentPriority, ( unsigned int ) pxTaskStatusArray[ x ].usStackHighWaterMark, ( unsigned int ) pxTaskStatusArray[ x ].xTaskNumber ); /*lint !e586 sprintf() allowed as this is compiled with many compilers and this is a utility function only - not part of the core kernel implementation. */
+				pcWriteBuffer += strlen( pcWriteBuffer ); /*lint !e9016 Pointer arithmetic ok on char pointers especially as in this case where it best denotes the intent of the code. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			}
 
 			/* Free the array again.  NOTE!  If configSUPPORT_DYNAMIC_ALLOCATION
@@ -4257,7 +4667,11 @@ TCB_t *pxTCB;
 	void vTaskGetRunTimeStats( char *pcWriteBuffer )
 	{
 	TaskStatus_t *pxTaskStatusArray;
+<<<<<<< HEAD
 	volatile UBaseType_t uxArraySize, x;
+=======
+	UBaseType_t uxArraySize, x;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	uint32_t ulTotalTime, ulStatsAsPercentage;
 
 		#if( configUSE_TRACE_FACILITY != 1 )
@@ -4292,7 +4706,11 @@ TCB_t *pxTCB;
 		 */
 
 		/* Make sure the write buffer does not contain a string. */
+<<<<<<< HEAD
 		*pcWriteBuffer = 0x00;
+=======
+		*pcWriteBuffer = ( char ) 0x00;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		/* Take a snapshot of the number of tasks in case it changes while this
 		function is executing. */
@@ -4301,7 +4719,11 @@ TCB_t *pxTCB;
 		/* Allocate an array index for each task.  NOTE!  If
 		configSUPPORT_DYNAMIC_ALLOCATION is set to 0 then pvPortMalloc() will
 		equate to NULL. */
+<<<<<<< HEAD
 		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( TaskStatus_t ) );
+=======
+		pxTaskStatusArray = pvPortMalloc( uxCurrentNumberOfTasks * sizeof( TaskStatus_t ) ); /*lint !e9079 All values returned by pvPortMalloc() have at least the alignment required by the MCU's stack and this allocation allocates a struct that has the alignment requirements of a pointer. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		if( pxTaskStatusArray != NULL )
 		{
@@ -4312,7 +4734,11 @@ TCB_t *pxTCB;
 			ulTotalTime /= 100UL;
 
 			/* Avoid divide by zero errors. */
+<<<<<<< HEAD
 			if( ulTotalTime > 0 )
+=======
+			if( ulTotalTime > 0UL )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			{
 				/* Create a human readable table from the binary data. */
 				for( x = 0; x < uxArraySize; x++ )
@@ -4337,7 +4763,11 @@ TCB_t *pxTCB;
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
+<<<<<<< HEAD
 							sprintf( pcWriteBuffer, "\t%u\t\t%u%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage );
+=======
+							sprintf( pcWriteBuffer, "\t%u\t\t%u%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter, ( unsigned int ) ulStatsAsPercentage ); /*lint !e586 sprintf() allowed as this is compiled with many compilers and this is a utility function only - not part of the core kernel implementation. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 						}
 						#endif
 					}
@@ -4353,12 +4783,20 @@ TCB_t *pxTCB;
 						{
 							/* sizeof( int ) == sizeof( long ) so a smaller
 							printf() library can be used. */
+<<<<<<< HEAD
 							sprintf( pcWriteBuffer, "\t%u\t\t<1%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter );
+=======
+							sprintf( pcWriteBuffer, "\t%u\t\t<1%%\r\n", ( unsigned int ) pxTaskStatusArray[ x ].ulRunTimeCounter ); /*lint !e586 sprintf() allowed as this is compiled with many compilers and this is a utility function only - not part of the core kernel implementation. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 						}
 						#endif
 					}
 
+<<<<<<< HEAD
 					pcWriteBuffer += strlen( pcWriteBuffer );
+=======
+					pcWriteBuffer += strlen( pcWriteBuffer ); /*lint !e9016 Pointer arithmetic ok on char pointers especially as in this case where it best denotes the intent of the code. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				}
 			}
 			else
@@ -4395,7 +4833,11 @@ TickType_t uxReturn;
 
 #if ( configUSE_MUTEXES == 1 )
 
+<<<<<<< HEAD
 	void *pvTaskIncrementMutexHeldCount( void )
+=======
+	TaskHandle_t pvTaskIncrementMutexHeldCount( void )
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	{
 		/* If xSemaphoreCreateMutex() is called before any tasks have been created
 		then pxCurrentTCB will be NULL. */
@@ -4567,7 +5009,11 @@ TickType_t uxReturn;
 	uint8_t ucOriginalNotifyState;
 
 		configASSERT( xTaskToNotify );
+<<<<<<< HEAD
 		pxTCB = ( TCB_t * ) xTaskToNotify;
+=======
+		pxTCB = xTaskToNotify;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		taskENTER_CRITICAL();
 		{
@@ -4610,6 +5056,17 @@ TickType_t uxReturn;
 					/* The task is being notified without its notify value being
 					updated. */
 					break;
+<<<<<<< HEAD
+=======
+
+				default:
+					/* Should not get here if all enums are handled.
+					Artificially force an assert by testing a value the
+					compiler can't assume is const. */
+					configASSERT( pxTCB->ulNotifiedValue == ~0UL );
+
+					break;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			}
 
 			traceTASK_NOTIFY();
@@ -4693,7 +5150,11 @@ TickType_t uxReturn;
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
+<<<<<<< HEAD
 		pxTCB = ( TCB_t * ) xTaskToNotify;
+=======
+		pxTCB = xTaskToNotify;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
@@ -4735,6 +5196,16 @@ TickType_t uxReturn;
 					/* The task is being notified without its notify value being
 					updated. */
 					break;
+<<<<<<< HEAD
+=======
+
+				default:
+					/* Should not get here if all enums are handled.
+					Artificially force an assert by testing a value the
+					compiler can't assume is const. */
+					configASSERT( pxTCB->ulNotifiedValue == ~0UL );
+					break;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 			}
 
 			traceTASK_NOTIFY_FROM_ISR();
@@ -4766,6 +5237,7 @@ TickType_t uxReturn;
 					{
 						*pxHigherPriorityTaskWoken = pdTRUE;
 					}
+<<<<<<< HEAD
 					else
 					{
 						/* Mark that a yield is pending in case the user is not
@@ -4773,6 +5245,13 @@ TickType_t uxReturn;
 						safe FreeRTOS function. */
 						xYieldPending = pdTRUE;
 					}
+=======
+
+					/* Mark that a yield is pending in case the user is not
+					using the "xHigherPriorityTaskWoken" parameter to an ISR
+					safe FreeRTOS function. */
+					xYieldPending = pdTRUE;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				}
 				else
 				{
@@ -4816,7 +5295,11 @@ TickType_t uxReturn;
 		http://www.freertos.org/RTOS-Cortex-M3-M4.html */
 		portASSERT_IF_INTERRUPT_PRIORITY_INVALID();
 
+<<<<<<< HEAD
 		pxTCB = ( TCB_t * ) xTaskToNotify;
+=======
+		pxTCB = xTaskToNotify;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 		uxSavedInterruptStatus = portSET_INTERRUPT_MASK_FROM_ISR();
 		{
@@ -4856,6 +5339,7 @@ TickType_t uxReturn;
 					{
 						*pxHigherPriorityTaskWoken = pdTRUE;
 					}
+<<<<<<< HEAD
 					else
 					{
 						/* Mark that a yield is pending in case the user is not
@@ -4863,6 +5347,13 @@ TickType_t uxReturn;
 						safe FreeRTOS function. */
 						xYieldPending = pdTRUE;
 					}
+=======
+
+					/* Mark that a yield is pending in case the user is not
+					using the "xHigherPriorityTaskWoken" parameter in an ISR
+					safe FreeRTOS function. */
+					xYieldPending = pdTRUE;
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 				}
 				else
 				{
@@ -4929,7 +5420,11 @@ const TickType_t xConstTickCount = xTickCount;
 	{
 		/* The current task must be in a ready list, so there is no need to
 		check, and the port reset macro can be called directly. */
+<<<<<<< HEAD
 		portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority );
+=======
+		portRESET_READY_PRIORITY( pxCurrentTCB->uxPriority, uxTopReadyPriority ); /*lint !e931 pxCurrentTCB cannot change as it is the calling task.  pxCurrentTCB->uxPriority and uxTopReadyPriority cannot change as called with scheduler suspended or in a critical section. */
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 	}
 	else
 	{
@@ -5033,12 +5528,21 @@ when performing module tests). */
 
 	#include "freertos_tasks_c_additions.h"
 
+<<<<<<< HEAD
 	static void freertos_tasks_c_additions_init( void )
 	{
 		#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
 			FREERTOS_TASKS_C_ADDITIONS_INIT();
 		#endif
 	}
+=======
+	#ifdef FREERTOS_TASKS_C_ADDITIONS_INIT
+		static void freertos_tasks_c_additions_init( void )
+		{
+			FREERTOS_TASKS_C_ADDITIONS_INIT();
+		}
+	#endif
+>>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 #endif
 

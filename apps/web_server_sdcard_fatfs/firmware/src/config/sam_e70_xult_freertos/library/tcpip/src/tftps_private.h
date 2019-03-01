@@ -30,25 +30,19 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
-
-
-
-
-
-
-
-
-
 #ifndef __TFTPS_PRIVATE_H_
 #define __TFTPS_PRIVATE_H_
+#include "sys_fs_wrapper.h"
+
+#include "configuration.h"
 
 #define TCPIP_TFTP_MAX_HOSTNAME_LEN  32
-#define TCPIP_TFTP_FILE_NAME_LEN     32
-#define TCPIP_TFTP_MAX_BUFFER_SIZE   (512+5)
 #define TCPIP_TFTP_OPCODE_SIZE        2
 #define TCPIP_TFTP_OCTET_SIZE         6
 #define TCPIP_TFTP_OPTION_SIZE        8
 #define TCPIP_TFTP_HEADER_MINSIZE     4  
+#define TCPIP_TFTP_MIN_BUFFER_SIZE   (512+TCPIP_TFTP_HEADER_MINSIZE)
+
 
 #define TCPIP_TFTP_TRANSFERMODE_OCTET  "octet"
 #define TCPIP_TFTP_TRANSFERMODE_ASCII  "netascii"
@@ -56,10 +50,22 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Even though the RFC allows blocks of up to 65464 bytes, 
 //in practice the limit is set to 1468 bytes: the size of an 
 // Ethernet MTU minus the headers of TFTP (4 bytes), UDP (8 bytes) and IP (20 bytes). 
-#define TCPIP_TFTP_BLOCK_SIZE_MAX         65464UL
+#define TCPIP_TFTP_BLOCK_SIZE_MAX         1468UL
 #define TCPIP_TFTP_BLOCK_SIZE_MIN         8
 
-#define TCPIP_TFTPS_BUFFER_SIZE_MIN        50
+// This includes 2(Opcode)+32 ( sourcefile)+6 (type)+
+// 13 (blksize option, ?blksize? string+ the max value will be 1500) + 
+// 12(timeout option, ?timeout? string + range should be between 1 to 255 ) + 
+// 6 ( tsize option, ?tisze? string + 0 as input value for Read request 
+// and around 10 bytes of value during Write request )
+// The total size is 81 bytes for the write request. 
+// By default the TCPIP_TFTPS_FILENAME_LEN is limited to 64 bytes.
+// same size can be used for the ACK and ERROR opcode received packets.
+// Error message is not processed. Only the error code is processed.So the Error 
+// string is not validated.So the  4 bytes of RX buffer length for 
+// ACK and Error packet is required.
+#define TCPIP_TFTPS_MIN_UDP_RX_BUFFER_SIZE      (TCPIP_TFTPS_FILENAME_LEN+50)
+#define TCPIP_TFTPS_MIN_UDP_TX_BUFFER_SIZE        (TCPIP_TFTP_MIN_BUFFER_SIZE)
 
 /* TFTP Opcodes defined by RFC 783 */
 #define TFTPS_RRQ_OPCODE       1
@@ -121,9 +127,10 @@ typedef enum
 typedef enum
 {
     SM_TFTPS_HOME=0,
-    SM_TFTPS_RRECV,    // Receive a request packet
-    SM_TFTPS_PROCESS_DATA,  // PUT command
-    SM_TFTPS_SEND_DATA,  // GET command    
+    SM_TFTPS_RRECV,    // Receive a message from a client and don't return
+                       // until data is received from the socket. _TFTPS_Recv_Request_State()
+    SM_TFTPS_PROCESS_DATA,  // PUT command , _TFTPS_Process_Data_State()
+    SM_TFTPS_SEND_DATA,  // GET command , _TFTPS_Send_Data_State()   
     SM_TFTPS_END,
 } TFTPS_STATE;
 
@@ -202,7 +209,7 @@ typedef struct
     UDP_SOCKET                  cSkt;                   /* Handle to TFTP Client socket */ 
     uint16_t                    tid;                    /* Server's Transfer ID */
     uint16_t                    block_number;           /* Block number of expected packet. */
-    uint8_t                     file_name[TCPIP_TFTP_FILE_NAME_LEN]; /*File Name */
+    uint8_t                     file_name[TCPIP_TFTPS_FILENAME_LEN]; /*File Name */
     uint8_t                     mode[TCPIP_TFTP_OCTET_SIZE]; /* File Transfer Mode Requested by Client. */
     uint8_t                     errCode;                /* client error code */
     uint8_t                     smState;                /* TFTP Server state machine variable */

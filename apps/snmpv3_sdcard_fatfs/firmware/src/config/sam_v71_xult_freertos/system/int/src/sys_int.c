@@ -116,3 +116,11 @@ bool SYS_INT_SourceDisable( INT_SOURCE source )
     /* return the source status */
     return intSrcStatus;
 }
+
+void SYS_INT_SourceRestore( INT_SOURCE source, bool status )
+{
+    if( status ) {
+        SYS_INT_SourceEnable( source );
+    }
+    return;
+}

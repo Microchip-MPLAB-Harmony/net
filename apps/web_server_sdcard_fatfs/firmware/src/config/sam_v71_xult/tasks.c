@@ -71,13 +71,14 @@
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-    DRV_SDHC_Tasks(sysObj.drvSDHC);
-
-
-
+    
 SYS_FS_Tasks();
 
 SYS_CMD_Tasks();
+
+DRV_SDMMC_Tasks(sysObj.drvSDMMC0);
+
+
 
 
 

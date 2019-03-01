@@ -42,6 +42,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_COMMAND
+#include "system/sys_clk_h2_adapter.h"
+
 
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
@@ -563,6 +565,7 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #endif // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_IPV6)
     char   addrBuff[44];
+    IPV6_ADDR addr6;
 #else
     char   addrBuff[20];
 #endif
@@ -622,7 +625,8 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             nextHandle = TCPIP_STACK_NetIPv6AddressGet(netH, IPV6_ADDR_TYPE_UNICAST, &currIpv6Add, prevHandle);
             if(nextHandle)
             {   // have a valid address; display it
-                TCPIP_Helper_IPv6AddressToString(&currIpv6Add.address, addrBuff, sizeof(addrBuff));
+                addr6 = currIpv6Add.address;
+                TCPIP_Helper_IPv6AddressToString(&addr6, addrBuff, sizeof(addrBuff));
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "    %s\r\n", addrBuff);
                 prevHandle = nextHandle;
             }
@@ -640,7 +644,8 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             nextHandle = TCPIP_STACK_NetIPv6AddressGet(netH, IPV6_ADDR_TYPE_MULTICAST, &currIpv6Add, prevHandle);
             if(nextHandle)
             {   // have a valid address; display it
-                TCPIP_Helper_IPv6AddressToString(&currIpv6Add.address, addrBuff, sizeof(addrBuff));
+                addr6 = currIpv6Add.address;
+                TCPIP_Helper_IPv6AddressToString(&addr6, addrBuff, sizeof(addrBuff));
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "    %s\r\n", addrBuff);
                 prevHandle = nextHandle;
             }
@@ -1845,7 +1850,6 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "Failed to add [%s] entry \r\n",hostName);
             return false;
     }
-    return true;
 }
 
 static int _Command_DnsServService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -2084,95 +2088,111 @@ static int _Command_MACAddressSet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 static int _Command_TFTPServerOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    char *ch;
-    int  opCode = 0;
-    IP_ADDRESS_TYPE ipType=0;
-    bool res = false;
+    // tftps <interface> <start/stop> <add-type>
+    // tftps status
+
+    int  opCode = 0;        // 0- none; 1 - start; 2 - stop
+    bool opRes;
+    IP_ADDRESS_TYPE ipType = IP_ADDRESS_TYPE_ANY;
     TCPIP_NET_HANDLE netH;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool printUsage = true;
 
-    if (argc < 2)
+    while(argc >= 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps <interface> <start/stop> <interface-type>\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps status\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "tftps status command returns number clients running\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "interface type: 1 for IPv4 and 2 for IPv6 and none for ANY \r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: tftps PIC32INT start 1\r\n");
-        return false;
-    }
-    if((strcmp(argv[1],"status") == 0) && (argc == 2))
-    {
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "status: Number of clients running: %d \r\n",TCPIP_TFTPS_ClientsNumber());
-        return true;
-    }
-
-    netH = TCPIP_STACK_NetHandleGet(argv[1]);
-
-    if (netH == 0)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
-        return false;
-    }
-
-    if (memcmp(argv[2], "start",5) == 0)
-    {
-        if(TCPIP_TFTPS_IsEnabled())
+        if((strcmp(argv[1], "status") == 0))
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "This TFTP server already running\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "TFTPS - Number of clients running: %d \r\n", TCPIP_TFTPS_ClientsNumber());
             return true;
         }
 
-        opCode = 1;
-    }
-    else if (memcmp(argv[2], "stop", 4) == 0)
-    {
-        if(TCPIP_TFTPS_IsEnabled() == 0)
+        if(argc < 3)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "This TFTP server already stopped\r\n");
-            return true;
+            break;
         }
-        opCode = 2;
-    }
 
-    ch = argv[3];
-    if(strlen(ch) == 0)
-    {
-        ipType = IP_ADDRESS_TYPE_ANY;
-    }
-    else
-    {        
-        ipType = (IP_ADDRESS_TYPE)atoi(ch);
-        if(ipType != IP_ADDRESS_TYPE_IPV4 && ipType != IP_ADDRESS_TYPE_IPV6)
+        netH = TCPIP_STACK_NetHandleGet(argv[1]);
+        if (netH == 0)
         {
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Invalid IP address type \r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - Unknown interface\r\n");
             return false;
         }
+
+        if (strcmp(argv[2], "start") == 0)
+        {
+            if(TCPIP_TFTPS_IsEnabled())
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - already running\r\n");
+                return true;
+            }
+
+            opCode = 1;
+        }
+        else if (strcmp(argv[2], "stop") == 0)
+        {
+            if(TCPIP_TFTPS_IsEnabled() == 0)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - already stopped\r\n");
+                return true;
+            }
+            opCode = 2;
+        }
+        else
+        {
+            break;
+        }
+
+        if(argc > 3)
+        {
+            int type = atoi(argv[3]);
+            if(type == 4)
+            {
+                ipType = IP_ADDRESS_TYPE_IPV4;
+            }
+            else if(type == 6)
+            {
+                ipType = IP_ADDRESS_TYPE_IPV6;
+            }
+            else if(type == 0)
+            {
+                ipType = IP_ADDRESS_TYPE_ANY;
+            }
+            else
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TFTPS - Invalid address type\r\n");
+                return false;
+            }
+        }
+
+        printUsage = false;
+        break;
     }
 
-    switch(opCode)
-    {
-        case 1:
-            res = TCPIP_TFTPS_Enable(netH,ipType);
-            break;
 
-        case 2:
-            res = TCPIP_TFTPS_Disable(netH);
-            break;      
-        default:
-            res = false;
-            break;
-    }
-    
-    if (res == true)
+    if (printUsage)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation successful!\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps <interface> <start/stop> <add-type>\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: tftps status\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "add-type: 4 for IPv4, 6 for IPv6, 0/none for ANY \r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: tftps eth0 start 4\r\n");
     }
-    else
+
+    if(opCode != 0)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation failed!\r\n");
+        if(opCode == 1)
+        {
+            opRes = TCPIP_TFTPS_Enable(netH, ipType);
+        }
+        else
+        {
+            opRes = TCPIP_TFTPS_Disable(netH);
+        }
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "TFTPS - operation %s!\r\n", opRes ? "succesful" : "failed");
     }
 
     return true;
+
 }
 #endif  
 
@@ -2560,7 +2580,7 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     TCPIP_NET_HANDLE        netH;
     TCPIP_MAC_RX_STATISTICS rxStatistics;
     TCPIP_MAC_TX_STATISTICS txStatistics;
-    TCPIP_MAC_STATISTICS_REG_ENTRY  regEntries[8];
+    TCPIP_MAC_STATISTICS_REG_ENTRY  regEntries[50];
     TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntry;
     int                     jx, hwEntries;
     char                    entryName[sizeof(pRegEntry->registerName) + 1];
@@ -2585,13 +2605,16 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
 
         netName = TCPIP_STACK_NetNameGet(netH);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Interface: %s driver statistics\r\n", netName);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Interface: %s Driver Statistics\r\n", netName);
         if(TCPIP_STACK_NetMACStatisticsGet(netH, &rxStatistics, &txStatistics))
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tnRxOkPackets: %d, nRxPendBuffers: %d, nRxSchedBuffers: %d, ",
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\n Receive Statistics\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t nRxOkPackets: %d\r\n\t nRxPendBuffers: %d\r\n\t nRxSchedBuffers: %d\r\n",
                     rxStatistics.nRxOkPackets, rxStatistics.nRxPendBuffers, rxStatistics.nRxSchedBuffers);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "nRxErrorPackets: %d, nRxFragmentErrors: %d\r\n", rxStatistics.nRxErrorPackets, rxStatistics.nRxFragmentErrors);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tnTxOkPackets: %d, nTxPendBuffers: %d, nTxErrorPackets: %d, nTxQueueFull: %d\r\n",
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t nRxErrorPackets: %d\r\n\t nRxFragmentErrors: %d\r\n\t nRxBuffNotAvailable: %d\r\n", rxStatistics.nRxErrorPackets, rxStatistics.nRxFragmentErrors,rxStatistics.nRxBuffNotAvailable);
+            
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\n Transmit Statistics\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t nTxOkPackets: %d\r\n\t nTxPendBuffers: %d\r\n\t nTxErrorPackets: %d\r\n\t nTxQueueFull: %d\r\n\r\n",
                     txStatistics.nTxOkPackets, txStatistics.nTxPendBuffers, txStatistics.nTxErrorPackets, txStatistics.nTxQueueFull);
         }
         else
@@ -2599,14 +2622,14 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "\tnot supported\r\n");
         }
 
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Interface: %s hardware statistics\r\n", netName);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Interface: %s Hardware Register Status\r\n", netName);
         if(TCPIP_STACK_NetMACRegisterStatisticsGet(netH, regEntries, sizeof(regEntries)/sizeof(*regEntries), &hwEntries))
         {
             entryName[sizeof(entryName) - 1] = 0;
             for(jx = 0, pRegEntry = regEntries; jx < hwEntries && jx < sizeof(regEntries)/sizeof(*regEntries); jx++, pRegEntry++)
             {
                 strncpy(entryName, pRegEntry->registerName, sizeof(entryName) - 1);
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t%s: 0x%8x\r\n", entryName, pRegEntry->registerValue);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t %s: 0x%x\r\n", entryName, pRegEntry->registerValue);
             }
         }
         else
@@ -3204,11 +3227,13 @@ static void TCPIPCmdPingTask(void)
             echoRequest.dataSize = icmpPingSize;
             echoRequest.callback = CommandPingHandler;
 
-            int ix;
-            uint8_t* pBuff = icmpPingBuff;
-            for(ix = 0; ix < icmpPingSize; ix++)
             {
-                *pBuff++ = SYS_RANDOM_PseudoGet();
+                int ix;
+                uint8_t* pBuff = icmpPingBuff;
+                for(ix = 0; ix < icmpPingSize; ix++)
+                {
+                    *pBuff++ = SYS_RANDOM_PseudoGet();
+                }
             }
 
             echoRes = TCPIP_ICMP_EchoRequest (&echoRequest, &icmpReqHandle);

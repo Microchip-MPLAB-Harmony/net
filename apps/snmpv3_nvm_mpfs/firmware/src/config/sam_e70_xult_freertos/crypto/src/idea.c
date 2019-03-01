@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,6 +41,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -49,6 +57,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     #include "config.h"
 #endif
 
+#include "configuration.h"
 #include "crypto/src/settings.h"
 
 #ifdef HAVE_IDEA
@@ -69,7 +78,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
  * IDEA specify a special case when an entry value is 0 ( x or y)
  * then it must be replaced by 2^16
  */
-static INLINE word16 idea_mult(word16 x, word16 y)
+static WC_INLINE word16 idea_mult(word16 x, word16 y)
 {
     long mul, res;
 
@@ -91,7 +100,7 @@ static INLINE word16 idea_mult(word16 x, word16 y)
 
 /* compute 1/a modulo 2^16+1 using Extended euclidean algorithm
  * adapted from fp_invmod */
-static INLINE word16 idea_invmod(word16 x)
+static WC_INLINE word16 idea_invmod(word16 x)
 {
     int   u, v, b, d;
 

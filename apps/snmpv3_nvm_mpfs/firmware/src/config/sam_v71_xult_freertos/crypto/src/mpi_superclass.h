@@ -1,23 +1,54 @@
-/* mpi_superclass.h
- *
- * Copyright (C) 2006-2016 wolfSSL Inc.
- *
- * This file is part of wolfSSL.
- *
- * wolfSSL is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; either version 2 of the License, or
- * (at your option) any later version.
- *
- * wolfSSL is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
- * GNU General Public License for more details.
- *
- * You should have received a copy of the GNU General Public License
- * along with this program; if not, write to the Free Software
- * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1335, USA
- */
+/**************************************************************************
+  Crypto Framework Library Header
+
+  Company:
+    Microchip Technology Inc.
+
+  File Name:
+    mpi_superclass.h
+  
+  Summary:
+    Crypto Framework Library header for cryptographic functions.
+
+  Description:
+    This header file contains function prototypes and definitions of
+    the data types and constants that make up the Cryptographic Framework
+    Library for PIC32 families of Microchip microcontrollers.
+**************************************************************************/
+
+//DOM-IGNORE-BEGIN
+/*****************************************************************************
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
+
+Microchip Technology Inc. and its subsidiaries.
+
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
+
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
+
 
 
 
@@ -83,9 +114,9 @@
    #undef  BN_FAST_MP_INVMOD_C
 
    /* To safely undefine these you have to make sure your RSA key won't exceed the Comba threshold
-    * which is roughly 255 digits [7140 bits for 32-bit machines, 15300 bits for 64-bit machines] 
+    * which is roughly 255 digits [7140 bits for 32-bit machines, 15300 bits for 64-bit machines]
     * which means roughly speaking you can handle up to 2536-bit RSA keys with these defined without
-    * trouble.  
+    * trouble.
     */
    #undef  BN_S_MP_MUL_DIGS_C
    #undef  BN_S_MP_SQR_C

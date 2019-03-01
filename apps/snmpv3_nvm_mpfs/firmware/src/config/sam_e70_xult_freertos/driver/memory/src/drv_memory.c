@@ -119,6 +119,7 @@ static const DRV_MEMORY_TransferOperation gMemoryXferFuncPtr[4] =
 static void DRV_MEMORY_EventHandler( MEMORY_DEVICE_TRANSFER_STATUS status, uintptr_t context )
 {
     DRV_MEMORY_OBJECT *dObj = (DRV_MEMORY_OBJECT *)context;
+    dObj->isTransferDone = true;
     OSAL_SEM_PostISR(&dObj->transferDone);
 }
 
@@ -251,7 +252,7 @@ static bool DRV_MEMORY_UpdateGeometry( DRV_MEMORY_OBJECT *dObj )
     dObj->eraseBlockSize = memoryDeviceGeometry.erase_blockSize;
 
     /* Update the Media Geometry Main Structure */
-    dObj->mediaGeometryObj.mediaProperty = (SYS_MEDIA_READ_IS_BLOCKING | SYS_MEDIA_WRITE_IS_BLOCKING);
+    dObj->mediaGeometryObj.mediaProperty = (SYS_MEDIA_PROPERTY)(SYS_MEDIA_READ_IS_BLOCKING | SYS_MEDIA_WRITE_IS_BLOCKING);
 
     /* Number of read, write and erase entries in the table */
     dObj->mediaGeometryObj.numReadRegions = memoryDeviceGeometry.numReadRegions;
@@ -335,6 +336,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleWrite
 
         case DRV_MEMORY_WRITE_MEM:
         {
+            dObj->isTransferDone = false;
             if (dObj->memoryDevice->PageWrite(dObj->memDevHandle, (void *)dObj->writePtr, dObj->blockAddress) == true)
             {
                 dObj->writeState = DRV_MEMORY_WRITE_MEM_STATUS;
@@ -397,6 +399,7 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleErase
 
         case DRV_MEMORY_ERASE_CMD:
         {
+            dObj->isTransferDone = false;
             if (dObj->memoryDevice->SectorErase(dObj->memDevHandle, dObj->blockAddress) == true)
             {
                 dObj->eraseState = DRV_MEMORY_ERASE_CMD_STATUS;
@@ -597,12 +600,15 @@ static bool DRV_MEMORY_StartXfer( DRV_MEMORY_OBJECT *dObj )
         }
         else if ((dObj->isMemDevInterruptEnabled == true) && (dObj->memDevStatusPollUs == 0))
         {
-            /* Wait for the request to process before checking status. This semaphore is released from the
-             * event handler called from attached memory device.
-            */
-            if (OSAL_RESULT_TRUE != OSAL_SEM_Pend( &dObj->transferDone, OSAL_WAIT_FOREVER ))
+            if (dObj->isTransferDone == false)
             {
-                return false;
+                /* Wait for the request to process before checking status. This semaphore is released from the
+                 * event handler called from attached memory device.
+                */
+                if (OSAL_RESULT_TRUE != OSAL_SEM_Pend( &dObj->transferDone, OSAL_WAIT_FOREVER ))
+                {
+                    return false;
+                }
             }
         }
 
@@ -627,7 +633,7 @@ static bool DRV_MEMORY_StartXfer( DRV_MEMORY_OBJECT *dObj )
     if(clientObj->transferHandler != NULL)
     {
         /* Call the event handler */
-        clientObj->transferHandler(event, bufferObj->commandHandle, clientObj->context);
+        clientObj->transferHandler((SYS_MEDIA_BLOCK_EVENT)event, (DRV_MEMORY_COMMAND_HANDLE)bufferObj->commandHandle, clientObj->context);
     }
 
     return isSuccess;
@@ -717,7 +723,7 @@ static bool DRV_MEMORY_SetupXfer
 // *****************************************************************************
 // *****************************************************************************
 
-void __attribute__ ((weak)) DRV_MEMORY_RegisterWithSysFs
+__WEAK void DRV_MEMORY_RegisterWithSysFs
 (
     const SYS_MODULE_INDEX drvIndex,
     uint8_t mediaType
@@ -750,6 +756,8 @@ SYS_MODULE_OBJ DRV_MEMORY_Initialize
     }
 
     dObj->status = SYS_STATUS_UNINITIALIZED;
+
+    dObj->isTransferDone = false;
 
     /* Indicate that this object is in use */
     dObj->inUse = true;
@@ -839,7 +847,7 @@ static SYS_STATUS DRV_MEMORY_IsReady(DRV_MEMORY_OBJECT *dObj)
 
     if (dObj->memoryDevice->Open != NULL)
     {
-        dObj->memDevHandle = dObj->memoryDevice->Open(dObj->memDevIndex, DRV_IO_INTENT_EXCLUSIVE);
+        dObj->memDevHandle = dObj->memoryDevice->Open(dObj->memDevIndex, (DRV_IO_INTENT)(DRV_IO_INTENT_READWRITE | DRV_IO_INTENT_EXCLUSIVE));
 
         if (dObj->memDevHandle == DRV_HANDLE_INVALID)
         {
@@ -1169,7 +1177,7 @@ void DRV_MEMORY_TransferHandlerSet
     }
 
     /* Set the event handler */
-    clientObj->transferHandler = transferHandler;
+    clientObj->transferHandler = (DRV_MEMORY_TRANSFER_HANDLER)transferHandler;
     clientObj->context = context;
 }
 

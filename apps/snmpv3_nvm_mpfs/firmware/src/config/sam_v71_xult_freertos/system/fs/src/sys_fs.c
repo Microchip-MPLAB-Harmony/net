@@ -641,7 +641,7 @@ SYS_FS_RESULT SYS_FS_Mount
     if (disk->fsFunctions->mount != NULL)
     {
         fileStatus = disk->fsFunctions->mount(disk->diskNumber);
-                errorValue = fileStatus;
+                errorValue = (SYS_FS_ERROR)fileStatus;
         if (fileStatus == SYS_FS_ERROR_NO_FILESYSTEM)
         {
             fileStatus = 0;
@@ -711,7 +711,7 @@ SYS_FS_RESULT SYS_FS_Unmount
     if (disk->fsFunctions->unmount != NULL)
     {
         fileStatus = disk->fsFunctions->unmount(disk->diskNumber);
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -794,7 +794,7 @@ SYS_FS_HANDLE SYS_FS_FileOpen
     uint8_t mode = 0;
     SYS_FS_OBJ *fileObj = NULL;
     SYS_FS_MOUNT_POINT *disk = NULL;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     uint8_t *ptr = NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -915,7 +915,7 @@ SYS_FS_HANDLE SYS_FS_FileOpen
                 fileObj->mountPoint->fsFunctions->close(fileObj->nativeFSFileObj);
             }
         }
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -1002,7 +1002,7 @@ SYS_FS_RESULT SYS_FS_FileClose
     }
     else
     {
-        fileObj->errorValue = fileStatus;
+        fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
         return SYS_FS_RES_FAILURE;
     }
 }
@@ -1137,7 +1137,7 @@ size_t SYS_FS_FileRead
         {
             /* There was an error with the read operation. Update the error value.
              * */
-            fileObj->errorValue = fileStatus;
+            fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
             bytesRead = -1;
         }
     }
@@ -1222,7 +1222,7 @@ size_t SYS_FS_FileWrite
         {
             /* There was an error while writing to the file. Update the error
              * value. */
-            fileObj->errorValue = fileStatus;
+            fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
             bytesWritten = -1;
         }
     }
@@ -1327,7 +1327,7 @@ int32_t SYS_FS_FileSeek
 
         if (fileStatus != 0)
         {
-            obj->errorValue = fileStatus;
+            obj->errorValue = (SYS_FS_ERROR)fileStatus;
             offset = -1;
         }
     }
@@ -1574,7 +1574,7 @@ SYS_FS_RESULT SYS_FS_FileStat
 )
 {
     int fileStatus = -1;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -1605,7 +1605,7 @@ SYS_FS_RESULT SYS_FS_FileStat
     if (osalResult == OSAL_RESULT_TRUE)
     {
         fileStatus = disk->fsFunctions->fstat((const char *)pathWithDiskNo, (uintptr_t)buf);
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
 
         /* Release the acquired mutex. */
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
@@ -1753,7 +1753,7 @@ SYS_FS_RESULT SYS_FS_FileSync
         /* Release the acquired mutex. */
         OSAL_MUTEX_Unlock(&(fileObj->mountPoint->mutexDiskVolume));
 
-        fileObj->errorValue = fileStatus;
+        fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -1821,7 +1821,7 @@ SYS_FS_RESULT SYS_FS_FileTruncate
     }
     else
     {
-        obj->errorValue = fileStatus;
+        obj->errorValue = (SYS_FS_ERROR)fileStatus;
         return SYS_FS_RES_FAILURE;
     }
 }
@@ -1975,7 +1975,7 @@ SYS_FS_RESULT SYS_FS_FileCharacterPut
         }
         else
         {
-            fileObj->errorValue = fileStatus;
+            fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
         }
     }
     else
@@ -2049,7 +2049,7 @@ SYS_FS_RESULT SYS_FS_FileStringPut
 
         if (res == EOF)
         {
-            fileObj->errorValue = fileStatus;
+            fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
         }
         else
         {
@@ -2112,7 +2112,7 @@ SYS_FS_RESULT SYS_FS_FilePrintf
     if (fileObj->mountPoint->fsFunctions->formattedprint == NULL)
     {
         fileObj->errorValue = SYS_FS_ERROR_NOT_SUPPORTED_IN_NATIVE_FS;
-        return -1;
+        return SYS_FS_RES_FAILURE;
     }
 
     /* Clear the error. */
@@ -2132,7 +2132,7 @@ SYS_FS_RESULT SYS_FS_FilePrintf
 
         if (res == EOF)
         {
-            fileObj->errorValue = fileStatus;
+            fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
         }
         else
         {
@@ -2232,7 +2232,7 @@ SYS_FS_RESULT SYS_FS_DirectoryMake
 )
 {
     int fileStatus = -1;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     SYS_FS_MOUNT_POINT *disk = NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -2266,7 +2266,7 @@ SYS_FS_RESULT SYS_FS_DirectoryMake
         /* Release the acquired mutex. */
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
 
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -2298,7 +2298,7 @@ SYS_FS_RESULT SYS_FS_DirectoryChange
 )
 {
     int fileStatus = -1;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -2331,7 +2331,7 @@ SYS_FS_RESULT SYS_FS_DirectoryChange
 
         /* Release the acquired mutex. */
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -2363,7 +2363,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryRemove
 )
 {
     int fileStatus = -1;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -2396,7 +2396,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryRemove
 
         /* Release the acquired mutex. */
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -2428,7 +2428,7 @@ SYS_FS_HANDLE SYS_FS_DirOpen
 )
 {
     int fileStatus = SYS_FS_ERROR_NOT_READY;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
     uint32_t index = 0;
     SYS_FS_DIR_OBJ *fileObj = NULL;
@@ -2491,7 +2491,7 @@ SYS_FS_HANDLE SYS_FS_DirOpen
         }
         else
         {
-            errorValue = fileStatus;
+            errorValue = (SYS_FS_ERROR)fileStatus;
             fileObj->inUse = false;
         }
     }
@@ -2560,7 +2560,7 @@ SYS_FS_RESULT SYS_FS_DirClose
         }
         else
         {
-            fileObj->errorValue = fileStatus;
+            fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
         }
     }
     else
@@ -2625,7 +2625,7 @@ SYS_FS_RESULT SYS_FS_DirRead
 
         OSAL_MUTEX_Unlock(&(fileObj->mountPoint->mutexDiskVolume));
 
-        fileObj->errorValue = fileStatus;
+        fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -2687,7 +2687,7 @@ SYS_FS_RESULT SYS_FS_DirRewind
         fileStatus = fileObj->mountPoint->fsFunctions->readDir(fileObj->nativeFSDirObj, (uintptr_t)NULL);
         OSAL_MUTEX_Unlock(&(fileObj->mountPoint->mutexDiskVolume));
 
-        fileObj->errorValue = fileStatus;
+        fileObj->errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -2726,6 +2726,7 @@ SYS_FS_RESULT SYS_FS_DirSearch
     SYS_FS_FSTAT *stat
 )
 {
+    bool workToDo = true;           // avoid unreachable code warning
     int fileStatus = -1;
     SYS_FS_DIR_OBJ *fileObj = (SYS_FS_DIR_OBJ *)handle;
     char *fileName = NULL;
@@ -2749,7 +2750,7 @@ SYS_FS_RESULT SYS_FS_DirSearch
         return SYS_FS_RES_FAILURE;
     }
 
-    while (1)
+    while( workToDo )
     {
         errorValue = SYS_FS_ERROR_OK;
         osalResult = OSAL_MUTEX_Lock(&(fileObj->mountPoint->mutexDiskVolume), OSAL_WAIT_FOREVER);
@@ -2760,7 +2761,7 @@ SYS_FS_RESULT SYS_FS_DirSearch
 
             if(fileStatus != 0)
             {
-                errorValue = fileStatus;
+                errorValue = (SYS_FS_ERROR)fileStatus;
                 return SYS_FS_RES_FAILURE;
             }
         }
@@ -2837,7 +2838,7 @@ SYS_FS_RESULT SYS_FS_CurrentWorkingDirectoryGet
 {
     SYS_FS_MOUNT_POINT *disk = NULL;
     int fileStatus = -1;
-    char cwd[SYS_FS_CWD_STRING_LEN] = {};
+    char cwd[SYS_FS_CWD_STRING_LEN] = { 0 };
     char *ptr = NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -2872,7 +2873,7 @@ SYS_FS_RESULT SYS_FS_CurrentWorkingDirectoryGet
     fileStatus = disk->fsFunctions->currWD(buffer, len);
     OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
 
-    errorValue = fileStatus;
+    errorValue = (SYS_FS_ERROR)fileStatus;
 
     if (fileStatus == 0)
     {
@@ -2950,7 +2951,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryModeSet
 )
 {
     int fileStatus = -1;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
@@ -2979,7 +2980,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryModeSet
     {
         fileStatus = disk->fsFunctions->chmode((const char *)pathWithDiskNo, attr, mask);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -3013,7 +3014,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryTimeSet
 )
 {
     int fileStatus = -1;
-    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
     SYS_FS_FSTAT stat;
@@ -3047,7 +3048,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryTimeSet
     {
         fileStatus = disk->fsFunctions->chtime((const char *)pathWithDiskNo, (uintptr_t)&stat);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -3081,8 +3082,8 @@ SYS_FS_RESULT SYS_FS_FileDirectoryRenameMove
 )
 {
     int fileStatus = SYS_FS_ERROR_NOT_READY;
-    uint8_t oldPathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
-    uint8_t newPathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    uint8_t oldPathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
+    uint8_t newPathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
 
@@ -3117,7 +3118,7 @@ SYS_FS_RESULT SYS_FS_FileDirectoryRenameMove
         /* This function does not take disk number (like "0:"). Hence use from index "2" onwards */
         fileStatus = disk->fsFunctions->rename((const char *)&oldPathWithDiskNo[2], (const char *)&newPathWithDiskNo[2]);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -3236,7 +3237,7 @@ SYS_FS_RESULT SYS_FS_CurrentDriveSet
         fileStatus = disk->fsFunctions->chdrive(disk->diskNumber);
 
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -3282,7 +3283,7 @@ SYS_FS_RESULT SYS_FS_DriveLabelGet
 {
     int fileStatus = -1;
     SYS_FS_MOUNT_POINT *disk = NULL;
-    uint8_t pathWithDiskNo[3] = {};
+    uint8_t pathWithDiskNo[3] = { 0 };
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
     if (drive != NULL)
@@ -3322,7 +3323,7 @@ SYS_FS_RESULT SYS_FS_DriveLabelGet
     {
         fileStatus = disk->fsFunctions->getlabel((const char *)pathWithDiskNo, buff, sn);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
     else
     {
@@ -3358,7 +3359,7 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
 {
     int fileStatus = SYS_FS_ERROR_NOT_READY;
     SYS_FS_MOUNT_POINT *disk = (SYS_FS_MOUNT_POINT *) NULL;
-    char pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = {};
+    char pathWithDiskNo[SYS_FS_PATH_LEN_WITH_DISK_NUM] = { 0 };
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
     if (label == NULL)
@@ -3408,7 +3409,7 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
         fileStatus = disk->fsFunctions->setlabel((const char *)pathWithDiskNo);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
 
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
 
     return (fileStatus == 0) ? SYS_FS_RES_SUCCESS : SYS_FS_RES_FAILURE;
@@ -3475,7 +3476,7 @@ SYS_FS_RESULT SYS_FS_DriveFormat
         fileStatus = disk->fsFunctions->formatDisk((uint8_t)disk->diskNumber, fmt, clusterSize);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
 
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
 
     return (fileStatus == 0) ? SYS_FS_RES_SUCCESS : SYS_FS_RES_FAILURE;
@@ -3540,7 +3541,7 @@ SYS_FS_RESULT SYS_FS_DrivePartition
         fileStatus = disk->fsFunctions->partitionDisk((uint8_t)disk->diskNumber, partition, work);
         OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
 
-        errorValue = fileStatus;
+        errorValue = (SYS_FS_ERROR)fileStatus;
     }
 
     return (fileStatus == 0) ? SYS_FS_RES_SUCCESS : SYS_FS_RES_FAILURE;
@@ -3575,7 +3576,7 @@ SYS_FS_RESULT SYS_FS_DriveSectorGet
 {
     int fileStatus = -1;
     SYS_FS_MOUNT_POINT *disk = NULL;
-    uint8_t pathWithDiskNo[3] = {};
+    uint8_t pathWithDiskNo[3] = { 0 };
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
     if ((totalSectors == NULL) || (freeSectors == NULL))
@@ -3621,7 +3622,7 @@ SYS_FS_RESULT SYS_FS_DriveSectorGet
     {
        fileStatus = disk->fsFunctions->getCluster((const char *)pathWithDiskNo, totalSectors, freeSectors);
        OSAL_MUTEX_Unlock(&(disk->mutexDiskVolume));
-       errorValue = fileStatus;
+       errorValue = (SYS_FS_ERROR)fileStatus;
     }
 
     return (fileStatus == 0) ? SYS_FS_RES_SUCCESS : SYS_FS_RES_FAILURE;

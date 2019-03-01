@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -40,6 +40,14 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
+
+
+
+
 
 //DOM-IGNORE-END
 
@@ -181,28 +189,28 @@ static word32 SrpHashSize(SrpType type)
     switch (type) {
         case SRP_TYPE_SHA:
             #ifndef NO_SHA
-                return SHA_DIGEST_SIZE;
+                return WC_SHA_DIGEST_SIZE;
             #else
                 return 0;
             #endif
 
         case SRP_TYPE_SHA256:
             #ifndef NO_SHA256
-                return SHA256_DIGEST_SIZE;
+                return WC_SHA256_DIGEST_SIZE;
             #else
                 return 0;
             #endif
 
         case SRP_TYPE_SHA384:
             #ifdef WOLFSSL_SHA384
-                return SHA384_DIGEST_SIZE;
+                return WC_SHA384_DIGEST_SIZE;
             #else
                 return 0;
             #endif
 
         case SRP_TYPE_SHA512:
             #ifdef WOLFSSL_SHA512
-                return SHA512_DIGEST_SIZE;
+                return WC_SHA512_DIGEST_SIZE;
             #else
                 return 0;
             #endif
@@ -293,7 +301,6 @@ void wc_SrpTerm(Srp* srp)
     if (srp) {
         mp_clear(&srp->N);    mp_clear(&srp->g);
         mp_clear(&srp->auth); mp_clear(&srp->priv);
-
         if (srp->salt) {
             ForceZero(srp->salt, srp->saltSz);
             XFREE(srp->salt, srp->heap, DYNAMIC_TYPE_SRP);

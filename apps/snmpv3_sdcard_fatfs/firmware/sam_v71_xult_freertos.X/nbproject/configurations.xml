@@ -4,33 +4,42 @@
     <logicalFolder name="HeaderFiles"
                    displayName="Header Files"
                    projectFiles="true">
-      <logicalFolder name="f4" displayName="arm" projectFiles="true">
-        <itemPath>../src/arm/toolchain_specifics.h</itemPath>
-      </logicalFolder>
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f6" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f6" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_v71_xult_freertos/bsp/bsp.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/crypto.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/aes.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/arc4.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/asn.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/asn_public.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/async.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/camellia.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/certs_test.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/chacha.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/chacha20_poly1305.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/cmac.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/coding.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/compress.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_rng_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dh.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha_sam11105.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_sam6149.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hwInt.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/error-crypt.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ge_operations.h</itemPath>
@@ -43,11 +52,12 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md2.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md4.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md5.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/memory.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/mem_track.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/memory.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/misc.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/mpi_class.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/mpi_superclass.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/pkcs11.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/pkcs12.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/pkcs7.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/poly1305.h</itemPath>
@@ -56,12 +66,15 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/random.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ripemd.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/rsa.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/selftest.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/settings.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha256.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha3.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha512.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/signature.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sniffer.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sniffer_error.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/srp.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ssl.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/tfm.h</itemPath>
@@ -69,8 +82,10 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/version.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/visibility.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_encrypt.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_pkcs11.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_port.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfevent.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfio.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfmath.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/crc32.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/deflate.h</itemPath>
@@ -84,7 +99,7 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+          <logicalFolder name="f4" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -117,11 +132,9 @@
               </logicalFolder>
               <itemPath>../src/config/sam_v71_xult_freertos/driver/miim/drv_miim.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="sdhc" projectFiles="true">
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/src/drv_sdhc_host_local.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/src/drv_sdhc_host.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/drv_sdhc.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/src/drv_sdhc_local.h</itemPath>
+            <logicalFolder name="f2" displayName="sdmmc" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdmmc/drv_sdmmc.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdmmc/drv_sdmmc_definitions.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_v71_xult_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/driver/driver_common.h</itemPath>
@@ -149,8 +162,8 @@
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv4_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/arp_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/arp_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/udp_manager.h</itemPath>
@@ -256,23 +269,27 @@
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="net" projectFiles="true">
+          <logicalFolder name="f3" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult_freertos/net/pres/src/net_pres_local.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_certstore.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_encryptionproviderapi.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_socketapi.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_transportapi.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_socketapiconversion.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_enc_glue.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_transportapi.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/clk/plib_clk.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="hsmci" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/peripheral/hsmci/plib_hsmci_common.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/peripheral/hsmci/plib_hsmci.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="mpu" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/mpu/plib_mpu.h</itemPath>
@@ -297,12 +314,18 @@
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/xdmac/plib_xdmac.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f4" displayName="console" projectFiles="true">
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/system/cache/sys_cache.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="fs" projectFiles="true">
+            <logicalFolder name="f4" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <logicalFolder name="f1" displayName="file_system" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult_freertos/system/fs/fat_fs/src/file_system/ff.h</itemPath>
@@ -328,14 +351,14 @@
             <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/sys_time.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_v71_xult_freertos/system/system.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/system_common.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/system_media.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/sys_int_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
@@ -343,11 +366,13 @@
           <itemPath>../src/config/sam_v71_xult_freertos/configuration.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/system_config.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/system_definitions.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult_freertos/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_v71_xult_freertos/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/definitions.h</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/FreeRTOSConfig.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="FreeRTOS" projectFiles="true">
+      <logicalFolder name="f4" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
           <logicalFolder name="f1" displayName="include" projectFiles="true">
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/croutine.h</itemPath>
@@ -435,6 +460,7 @@
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
@@ -466,23 +492,25 @@
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f7" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_v71_xult_freertos/bsp/bsp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypto.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/aes.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/arc4.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/asm.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/asn.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/async.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/camellia.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/chacha.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/chacha20_poly1305.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/cmac.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/coding.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/compress.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/curve25519.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dh.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dsa.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc_fp.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ed25519.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/error.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fe_low_mem.c</itemPath>
@@ -497,7 +525,6 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/logging.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md2.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md4.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/memory.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/misc.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/pkcs12.c</itemPath>
@@ -505,14 +532,15 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/poly1305.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/pwdbased.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/rabbit.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/random.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ripemd.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha3.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha512.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/signature.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/srp.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/tfm.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_encrypt.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_pkcs11.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_port.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfevent.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfmath.c</itemPath>
@@ -524,13 +552,15 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/random_same70.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/aes.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha256.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/random.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha512.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc_fp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+          <logicalFolder name="f5" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -543,7 +573,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
-                  <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/src/dynamic/drv_gmac_lib.c</itemPath>
+                  <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/src/dynamic/drv_gmac_lib_samE7x_V7x.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
@@ -554,10 +584,10 @@
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="sdhc" projectFiles="true">
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/src/drv_sdhc_host.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/src/drv_sdhc.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdhc/src/drv_sdhc_file_system.c</itemPath>
+            <logicalFolder name="f2" displayName="sdmmc" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdmmc/src/drv_sdmmc.c</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdmmc/src/drv_sdmmc_local.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/driver/sdmmc/src/drv_sdmmc_file_system.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="library" projectFiles="true">
@@ -574,10 +604,10 @@
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv6.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/http.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/smtpc.c</itemPath>
@@ -597,17 +627,20 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net" projectFiles="true">
+          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult_freertos/net/pres/src/net_pres.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/sam_v71_xult_freertos/net/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f3" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/clk/plib_clk.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="hsmci" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/peripheral/hsmci/plib_hsmci.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="mpu" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/mpu/plib_mpu.c</itemPath>
@@ -631,17 +664,17 @@
           <logicalFolder name="f6" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult_freertos/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f4" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_local.h</itemPath>
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/sam_v71_xult_freertos/system/cache/sys_cache.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_console_uart.c</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_debug.c</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="fs" projectFiles="true">
+            <logicalFolder name="f4" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <itemPath>../src/config/sam_v71_xult_freertos/system/fs/fat_fs/src/ff.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/system/fs/fat_fs/src/diskio.c</itemPath>
@@ -657,7 +690,6 @@
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time.c</itemPath>
-              <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
@@ -665,7 +697,7 @@
           <itemPath>../src/config/sam_v71_xult_freertos/initialization.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/interrupts.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/exceptions.c</itemPath>
-          <itemPath>../src/config/sam_v71_xult_freertos/startup.c</itemPath>
+          <itemPath>../src/config/sam_v71_xult_freertos/startup_xc32.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/libc_syscalls.c</itemPath>
           <itemPath>../src/config/sam_v71_xult_freertos/freertos_hooks.c</itemPath>
         </logicalFolder>
@@ -687,7 +719,7 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/list.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/queue.c</itemPath>
-          <itemPath>../src/third_party/rtos/FreeRTOS/Source/tasks.c</itemPath>
+          <itemPath>../src/third_party/rtos/FreeRTOS/Source/FreeRTOS_tasks.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/timers.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/event_groups.c</itemPath>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
@@ -725,7 +757,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.162"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="3.0.8"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -786,7 +818,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_v71_xult_freertos/library;../src/config/sam_v71_xult_freertos/library/tcpip/src;../src/config/sam_v71_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_v71_xult_freertos;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include"/>
+                  value="../src/config/sam_v71_xult_freertos/library;../src/config/sam_v71_xult_freertos/library/tcpip/src;../src/config/sam_v71_xult_freertos/library/tcpip/src/common;../src;../src/config/sam_v71_xult_freertos;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;../src/third_party/rtos/FreeRTOS/Source/Include;../src/third_party/rtos/FreeRTOS/Source/include"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
