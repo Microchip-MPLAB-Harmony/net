@@ -126,7 +126,7 @@ void TC0_TimerStop( void )
 
 uint32_t TC0_TimerFrequencyGet( void )
 {
-    return (uint32_t)(120000000UL);
+    return (uint32_t)(48000000UL);
 }
 
 /* Get the current timer counter value */

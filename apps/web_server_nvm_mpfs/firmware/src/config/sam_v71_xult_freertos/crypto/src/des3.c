@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,6 +41,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -58,10 +66,24 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifndef NO_DES3
 
+#if defined(HAVE_FIPS) && \
+	defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
+
+    /* set NO_WRAPPERS before headers, use direct internal f()s not wrappers */
+    #define FIPS_NO_WRAPPERS
+
+    #ifdef USE_WINDOWS_API
+        #pragma code_seg(".fipsA$i")
+        #pragma const_seg(".fipsB$i")
+    #endif
+#endif
+
 #include "crypto/src/des3.h"
 
 /* fips wrapper calls, user can call direct */
-#ifdef HAVE_FIPS
+#if defined(HAVE_FIPS) && \
+    (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
+
     int wc_Des_SetKey(Des* des, const byte* key, const byte* iv, int dir)
     {
         return Des_SetKey(des, key, iv, dir);
@@ -134,7 +156,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             Des3Free(des3); */
     }
 
-#else /* build without fips */
+#else /* else build without fips, or for FIPS v2 */
 
 
 #if defined(WOLFSSL_TI_CRYPT)
@@ -151,7 +173,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 /* Hardware Acceleration */
-#if defined(STM32F2_CRYPTO) || defined(STM32F4_CRYPTO)
+#if defined(STM32_CRYPTO)
 
     /*
      * STM32F2/F4 hardware DES/3DES support through the standard
@@ -1313,7 +1335,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         0x00001040,0x00040040,0x10000000,0x10041000}
     };
 
-    static INLINE void IPERM(word32* left, word32* right)
+    static WC_INLINE void IPERM(word32* left, word32* right)
     {
         word32 work;
 
@@ -1339,7 +1361,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         *right ^= work;
     }
 
-    static INLINE void FPERM(word32* left, word32* right)
+    static WC_INLINE void FPERM(word32* left, word32* right)
     {
         word32 work;
 
@@ -1609,9 +1631,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             return IntelQaSymDes3CbcEncrypt(&des->asyncDev, out, in, sz,
                 des->key_raw, DES3_KEYLEN, (byte*)des->iv_raw, DES3_IVLEN);
         #else /* WOLFSSL_ASYNC_CRYPT_TEST */
-            WC_ASYNC_TEST* testDev = &des->asyncDev.test;
-            if (testDev->type == ASYNC_TEST_NONE) {
-                testDev->type = ASYNC_TEST_DES3_CBC_ENCRYPT;
+            if (wc_AsyncTestInit(&des->asyncDev, ASYNC_TEST_DES3_CBC_ENCRYPT)) {
+                WC_ASYNC_TEST* testDev = &des->asyncDev.test;
                 testDev->des.des = des;
                 testDev->des.out = out;
                 testDev->des.in = in;
@@ -1652,9 +1673,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             return IntelQaSymDes3CbcDecrypt(&des->asyncDev, out, in, sz,
                 des->key_raw, DES3_KEYLEN, (byte*)des->iv_raw, DES3_IVLEN);
         #else /* WOLFSSL_ASYNC_CRYPT_TEST */
-            WC_ASYNC_TEST* testDev = &des->asyncDev.test;
-            if (testDev->type == ASYNC_TEST_NONE) {
-                testDev->type = ASYNC_TEST_DES3_CBC_DECRYPT;
+            if (wc_AsyncTestInit(&des->asyncDev, ASYNC_TEST_DES3_CBC_DECRYPT)) {
+                WC_ASYNC_TEST* testDev = &des->asyncDev.test;
                 testDev->des.des = des;
                 testDev->des.out = out;
                 testDev->des.in = in;

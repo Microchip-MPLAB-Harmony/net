@@ -963,12 +963,12 @@ TCPIP_SNTP_HANDLE TCPIP_SNTP_HandlerRegister(TCPIP_SNTP_EVENT_HANDLER handler)
     }
 
     ntpEventHandler = handler;
-    return ntpEventHandler;
+    return (TCPIP_SNTP_HANDLE) ntpEventHandler;
 }
 
 bool TCPIP_SNTP_HandlerDeRegister(TCPIP_SNTP_HANDLE hSntp)
 {
-    if(hSntp != ntpEventHandler)
+    if( (TCPIP_SNTP_EVENT_HANDLER) hSntp != ntpEventHandler )
     {
         return false;
     }

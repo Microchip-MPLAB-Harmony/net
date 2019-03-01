@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,6 +42,14 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
@@ -52,7 +60,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifndef NO_DES3
 
-#ifdef HAVE_FIPS
+#if defined(HAVE_FIPS) && \
+    defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)
+    #include <wolfssl/wolfcrypt/fips.h>
+#endif /* HAVE_FIPS_VERSION >= 2 */
+
+#if defined(HAVE_FIPS) && \
+	(!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
 /* included for fips @wc_fips */
 #include "crypto/src/des3.h"
 #endif
@@ -61,17 +75,28 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     extern "C" {
 #endif
 
-#ifndef HAVE_FIPS /* to avoid redefinition of macros */
+/* these are required for FIPS and non-FIPS */
+enum {
+    DES_KEY_SIZE        =  8,  /* des                     */
+    DES3_KEY_SIZE       = 24,  /* 3 des ede               */
+    DES_IV_SIZE         =  8,  /* should be the same as DES_BLOCK_SIZE */
+};
+
+
+/* avoid redefinition of structs */
+#if !defined(HAVE_FIPS) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
 
 #ifdef WOLFSSL_ASYNC_CRYPT
-    #include "crypto/src/async.h"
+    #include <wolfssl/wolfcrypt/async.h>
 #endif
 
 enum {
-    DES_ENC_TYPE    = 2,     /* cipher unique type */
-    DES3_ENC_TYPE   = 3,     /* cipher unique type */
+    DES_ENC_TYPE    = WC_CIPHER_DES,     /* cipher unique type */
+    DES3_ENC_TYPE   = WC_CIPHER_DES3,    /* cipher unique type */
+
     DES_BLOCK_SIZE  = 8,
-    DES_KS_SIZE     = 32,
+    DES_KS_SIZE     = 32,    /* internal DES key buffer size */
 
     DES_ENCRYPTION  = 0,
     DES_DECRYPTION  = 1
@@ -83,7 +108,7 @@ enum {
 #define DES3_KEYLEN 24
 
 
-#if defined(STM32F2_CRYPTO) || defined(STM32F4_CRYPTO)
+#if defined(STM32_CRYPTO)
 enum {
     DES_CBC = 0,
     DES_ECB = 1

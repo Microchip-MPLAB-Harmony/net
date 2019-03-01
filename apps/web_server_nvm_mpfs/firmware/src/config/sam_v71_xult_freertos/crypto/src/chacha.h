@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,6 +41,10 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
 
 //DOM-IGNORE-END
 
@@ -65,12 +69,24 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define CHACHA_CHUNK_WORDS 16
 #define CHACHA_CHUNK_BYTES (CHACHA_CHUNK_WORDS * sizeof(word32))
 
+#ifdef WOLFSSL_X86_64_BUILD
+#if defined(USE_INTEL_SPEEDUP) && !defined(NO_CHACHA_ASM)
+    #define USE_INTEL_CHACHA_SPEEDUP
+    #define HAVE_INTEL_AVX1
+#endif
+#endif
+
 enum {
-	CHACHA_ENC_TYPE = 7     /* cipher unique type */
+	CHACHA_ENC_TYPE = WC_CIPHER_CHACHA,    /* cipher unique type */
+    CHACHA_MAX_KEY_SZ = 32,
 };
 
 typedef struct ChaCha {
     word32 X[CHACHA_CHUNK_WORDS];           /* state of cipher */
+#ifdef HAVE_INTEL_AVX1
+    /* vpshufd reads 16 bytes but we only use bottom 4. */
+    byte extra[12];
+#endif
 } ChaCha;
 
 /**

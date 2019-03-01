@@ -18,7 +18,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,12 +42,23 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
 
 
 
 /* submitted by eof */
 
+/*!
+    \file crypto/src/memory.h
+*/
 
 #ifndef WOLFSSL_MEMORY_H
 #define WOLFSSL_MEMORY_H
@@ -57,6 +68,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #ifdef __cplusplus
     extern "C" {
+#endif
+
+#ifdef WOLFSSL_FORCE_MALLOC_FAIL_TEST
+    WOLFSSL_API void wolfSSL_SetMemFailCount(int memFailCount);
 #endif
 
 #ifdef WOLFSSL_STATIC_MEMORY
@@ -100,7 +115,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 WOLFSSL_API int wolfSSL_SetAllocators(wolfSSL_Malloc_cb,
                                       wolfSSL_Free_cb,
                                       wolfSSL_Realloc_cb);
-
 WOLFSSL_API int wolfSSL_GetAllocators(wolfSSL_Malloc_cb*,
                                       wolfSSL_Free_cb*,
                                       wolfSSL_Realloc_cb*);
@@ -114,18 +128,23 @@ WOLFSSL_API int wolfSSL_GetAllocators(wolfSSL_Malloc_cb*,
         #define WOLFMEM_MAX_BUCKETS  9
     #endif
     #define WOLFMEM_DEF_BUCKETS  9     /* number of default memory blocks */
-    #define WOLFMEM_IO_SZ        16992 /* 16 byte aligned */
+    #ifndef WOLFMEM_IO_SZ
+        #define WOLFMEM_IO_SZ        16992 /* 16 byte aligned */
+    #endif
     #ifndef WOLFMEM_BUCKETS
-        /* default size of chunks of memory to seperate into
-         * having session certs enabled makes a 21k SSL struct */
         #ifndef SESSION_CERTS
+            /* default size of chunks of memory to separate into */
             #define WOLFMEM_BUCKETS 64,128,256,512,1024,2432,3456,4544,16128
+        #elif defined (WOLFSSL_CERT_EXT)
+            /* certificate extensions requires 24k for the SSL struct */
+            #define WOLFMEM_BUCKETS 64,128,256,512,1024,2432,3456,4544,24576
         #else
-            #define WOLFMEM_BUCKETS 64,128,256,512,1024,2432,3456,4544,21056
+            /* increase 23k for object member of WOLFSSL_X509_NAME_ENTRY */
+            #define WOLFMEM_BUCKETS 64,128,256,512,1024,2432,3456,4544,23440
         #endif
     #endif
     #ifndef WOLFMEM_DIST
-        #define WOLFMEM_DIST    8,4,4,12,4,5,8,1,1
+        #define WOLFMEM_DIST    49,10,6,14,5,6,9,1,1
     #endif
 
     /* flags for loading static memory (one hot bit) */

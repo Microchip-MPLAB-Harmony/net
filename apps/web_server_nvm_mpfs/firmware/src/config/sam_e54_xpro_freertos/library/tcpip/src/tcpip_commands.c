@@ -42,6 +42,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_COMMAND
+#include "system/sys_clk_h2_adapter.h"
+
 
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
@@ -4042,7 +4044,7 @@ static void _CommandMiimSetup(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoPara
 
 #if defined (__PIC32MZ__)
     miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
-#elif defined (__PIC32C__)
+#elif defined (__PIC32C__) || defined(__SAMA5D2__)
     miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
 #else
     miimSetup.hostClockFreq = SYS_CLK_SystemFrequencyGet();

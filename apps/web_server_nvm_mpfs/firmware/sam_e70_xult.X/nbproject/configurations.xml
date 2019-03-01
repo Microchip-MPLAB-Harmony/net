@@ -16,20 +16,28 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/asn.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/asn_public.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/async.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/camellia.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/certs_test.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/chacha.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/chacha20_poly1305.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/cmac.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/coding.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/compress.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/cpuid.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_rng_hw.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/dh.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha_sam11105.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_sam6149.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_hwInt.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/error-crypt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ge_operations.h</itemPath>
@@ -42,11 +50,12 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/md2.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/md4.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/md5.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/memory.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/mem_track.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/memory.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/misc.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/mpi_class.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/mpi_superclass.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs11.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs12.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs7.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/poly1305.h</itemPath>
@@ -55,12 +64,15 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/random.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ripemd.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/rsa.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/selftest.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/settings.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha256.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha3.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha512.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/signature.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sniffer.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sniffer_error.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/srp.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ssl.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/tfm.h</itemPath>
@@ -68,8 +80,10 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/version.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/visibility.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wc_encrypt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_pkcs11.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wc_port.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wolfevent.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wolfio.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wolfmath.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/crc32.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/deflate.h</itemPath>
@@ -82,7 +96,7 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zutil.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/same70-hash.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha_hw.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -140,8 +154,8 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/udp_manager.h</itemPath>
@@ -330,8 +344,8 @@
             <itemPath>../src/config/sam_e70_xult/system/system_common.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/system_media.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
@@ -434,21 +448,20 @@
           </logicalFolder>
           <logicalFolder name="f8" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/crypto/src/crypto.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/aes.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/arc4.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/asm.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/asn.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/async.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/camellia.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/chacha.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/chacha20_poly1305.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/cmac.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/coding.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/compress.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/curve25519.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/des3.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/dh.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/dsa.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc_fp.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ed25519.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/error.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/fe_low_mem.c</itemPath>
@@ -463,7 +476,6 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/logging.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/md2.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/md4.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/memory.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/misc.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs12.c</itemPath>
@@ -471,14 +483,15 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/poly1305.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/pwdbased.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/rabbit.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/random.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/ripemd.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/sha3.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/sha512.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/signature.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/srp.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/tfm.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wc_encrypt.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_pkcs11.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wc_port.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wolfevent.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/wolfmath.c</itemPath>
@@ -490,10 +503,17 @@
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/random_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/aes_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/sha_same70.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult/crypto/src/sha256_same70.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_rng_sam6334.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md5.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha1_sam11105.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha256.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha256_sam11105.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha512.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_sam6149.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc_fp.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -538,10 +558,10 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv6.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/http.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/smtpc.c</itemPath>
@@ -652,13 +672,13 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.160"/>
+        <pack name="SAME70_DFP" vendor="Atmel" version="2.4.133"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
