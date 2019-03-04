@@ -726,7 +726,7 @@ static void DRV_MEMORY_SetupXfer
 // *****************************************************************************
 // *****************************************************************************
 
-void __WEAK DRV_MEMORY_RegisterWithSysFs
+__WEAK void DRV_MEMORY_RegisterWithSysFs
 (
     const SYS_MODULE_INDEX drvIndex,
     uint8_t mediaType

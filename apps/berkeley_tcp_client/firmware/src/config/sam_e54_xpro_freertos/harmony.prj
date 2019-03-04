@@ -67,8 +67,8 @@
           <Name dnOrder="1">drv_ethphy.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/driver/ethphy/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">571672FC6AEB78F03B479BE8A23A505C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">571672FC6AEB78F03B479BE8A23A505C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E5FDF7DDBE57F27397F9E55C6D59BDB0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E5FDF7DDBE57F27397F9E55C6D59BDB0</UserChecksum>
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
@@ -275,7 +275,7 @@
           <Name dnOrder="1">plib_sercom2_usart.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3B583F832A9B12BDA4F0A924DCE4F967</GeneratedChecksum>
+          <GeneratedChecksum dnOrder="4">F2DC10BF6A67D547917B02072E30D62B</GeneratedChecksum>
           <UserChecksum dnOrder="5">F2DC10BF6A67D547917B02072E30D62B</UserChecksum>
         </File>
         <File dnOrder="34">
@@ -395,24 +395,24 @@
           <Name dnOrder="1">tcpip_commands.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7C41904362C6DE65DAD83D60A0DC14AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7C41904362C6DE65DAD83D60A0DC14AD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">23EC7EBBE4EA8C25EE9FD6ED0EE70A37</GeneratedChecksum>
+          <UserChecksum dnOrder="5">23EC7EBBE4EA8C25EE9FD6ED0EE70A37</UserChecksum>
         </File>
         <File dnOrder="49">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">tcpip_heap_alloc.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2FA7A26DBAE1E78C9F340D0070CB7495</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2FA7A26DBAE1E78C9F340D0070CB7495</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F32AB907E6453FD371E787121B7EE526</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F32AB907E6453FD371E787121B7EE526</UserChecksum>
         </File>
         <File dnOrder="50">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">tcpip_heap_internal.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0DF7ADD3C41B364B1F9CE638304637DC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0DF7ADD3C41B364B1F9CE638304637DC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A918252C10392FFF4FB8C21AC8C1012C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A918252C10392FFF4FB8C21AC8C1012C</UserChecksum>
         </File>
         <File dnOrder="51">
           <Type dnOrder="0">SOURCE</Type>
@@ -443,8 +443,8 @@
           <Name dnOrder="1">tcpip_packet.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4E33E6B7B4E0BF3555AE008C91683F2A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4E33E6B7B4E0BF3555AE008C91683F2A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6A781DB8A2BF76C1D0017C3DA249C7B2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6A781DB8A2BF76C1D0017C3DA249C7B2</UserChecksum>
         </File>
         <File dnOrder="55">
           <Type dnOrder="0">SOURCE</Type>
@@ -483,7 +483,7 @@
           <Name dnOrder="1">FreeRTOSConfig.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">37C46EA85BA36879DDA3E1B02FDED65A</GeneratedChecksum>
+          <GeneratedChecksum dnOrder="4">5DFCFCC1DC5596F0FF9F95BB8BDB47C5</GeneratedChecksum>
           <UserChecksum dnOrder="5">5DFCFCC1DC5596F0FF9F95BB8BDB47C5</UserChecksum>
         </File>
         <File dnOrder="60">
@@ -963,8 +963,8 @@
           <Name dnOrder="1">drv_miim_mapping.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/driver/miim/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3C8C716F6E22E973C8644CB1C1E04218</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3C8C716F6E22E973C8644CB1C1E04218</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AA558A259B358C8D3090BFC0ABF55743</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AA558A259B358C8D3090BFC0ABF55743</UserChecksum>
         </File>
         <File dnOrder="120">
           <Type dnOrder="0">HEADER</Type>
@@ -2431,7 +2431,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\2.0.3\atdf\ATSAME54P20A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;gfx;net;usb;"/>
     </Settings>
   </Configurator>

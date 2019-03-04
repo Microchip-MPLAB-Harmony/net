@@ -4044,7 +4044,7 @@ static void _CommandMiimSetup(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoPara
 
 #if defined (__PIC32MZ__)
     miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
-#elif defined (__PIC32C__)
+#elif defined (__PIC32C__) || defined(__SAMA5D2__)
     miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
 #else
     miimSetup.hostClockFreq = SYS_CLK_SystemFrequencyGet();

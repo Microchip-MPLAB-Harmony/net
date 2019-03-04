@@ -76,10 +76,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 /* Uncomment next line if using Microchip PIC32 ethernet starter kit */
 /* #define MICROCHIP_PIC32 */
-/* We use configuration.h to pass this in */
-#if !(defined(MICROCHIP_PIC32) || defined(MICROCHIP_SAME70))
-#define MICROCHIP_PIC32
-#endif
 
 /* Uncomment next line if using Microchip TCP/IP stack, version 5 */
 /* #define MICROCHIP_TCPIP_V5 */
@@ -324,22 +320,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     #define NO_FILESYSTEM
     #define USE_FAST_MATH
     #define TFM_TIMING_RESISTANT
-//    #define WOLFSSL_HAVE_MIN
-//    #define WOLFSSL_HAVE_MAX
+    #define WOLFSSL_HAVE_MIN
+    #define WOLFSSL_HAVE_MAX
     #define NO_BIG_INT
-#elif defined(MICROCHIP_SAME70)
-    #define SIZEOF_LONG_LONG 8
-    #define SINGLE_THREADED
-    #define WOLFSSL_USER_IO
-    #define NO_WRITEV
-    #define NO_DEV_RANDOM
-    #define NO_FILESYSTEM
-    #define TFM_TIMING_RESISTANT
-    #define NEED_AES_TABLES
-    #if !defined(USE_CERT_BUFFERS_1024) && !defined(USE_CERT_BUFFERS_4096)
-        #define USE_CERT_BUFFERS_2048
-    #endif
-    #undef  WOLFSSL_HAVE_MIN
 #endif
 
 #ifdef WOLFSSL_MICROCHIP_PIC32MZ
@@ -352,14 +335,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     #ifndef NO_PIC32MZ_HASH
         #define WOLFSSL_PIC32MZ_HASH
     #endif
-    #define NO_BIG_INT
-#elif defined(WOLFSSL_MICROCHIP_SAME70)
-    #define WOLFSSL_SAME70_CRYPT
-    #define CUSTOM_RAND_GENERATE_BLOCK same70_RNG_GenerateBlock
-    #define CUSTOM_RAND_GENERATE_SEED  same70_RNG_GenerateSeed
-    #define HAVE_AES_ENGINE
-    #define HAVE_AESGCM
-    #define NO_BIG_INT
 #endif
 
 #ifdef MICROCHIP_TCPIP_V5
