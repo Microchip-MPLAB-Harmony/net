@@ -53,10 +53,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
 
-
-#include "tcpip/src/common/sys_fs_wrapper.h"
 #include "tftps_private.h"
-
+#include "tcpip/src/common/sys_fs_wrapper.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -66,8 +64,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define mMIN(a, b)  ((a<b)?a:b)
 // TODO HS: Temporary workaround for SYS_FS Jira MH3-5235
-#define SYS_FS_MH3_5235_WORKAROUND 1
-
+#define SYS_FS_MH3_5235_WORKAROUND 1 
 
 #ifdef SYS_FS_MH3_5235_WORKAROUND
 __attribute__ ((aligned (32))) uint8_t wrBuffer[512];
@@ -287,16 +284,6 @@ static inline uint16_t __attribute__((always_inline)) _TFTPS_Get16(unsigned char
     return TCPIP_Helper_ntohs(*((uint16_t*)(ptr + offset)));
 } /* _TFTPS_Get16 */
 
-#if 0
-//TODO aa: this is unused and results in build warnings!!!
-static __inline__ void __attribute__((always_inline)) _TFTPS_Disconnect(UDP_SOCKET uSkt)
-{   
-    // This will put the socket in the initial open state, 
-    //ready to listen again for either IPv4 or IPv6 transactions, 
-    //whatever comes first.
-    TCPIP_UDP_Disconnect(uSkt,false);
-}
-#endif
 
 static bool _TFTP_Server_start(TCPIP_NET_HANDLE hNet,IP_ADDRESS_TYPE ipType)
 {
@@ -1478,11 +1465,12 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
     TCPIP_UINT16_VAL tOpcode,blockNum;
     uint8_t         rxBuf[TCPIP_TFTPS_MIN_UDP_RX_BUFFER_SIZE+1];
     UDP_SOCKET_INFO sktInfo;
+    TCPIP_TFTPS_RESULT retval = TFTPS_RES_OK;
     
     // check the length 
     if(bytes_received > sizeof(rxBuf))
     {
-        bytes_received =  sizeof(rxBuf);
+        bytes_received = sizeof(rxBuf);
     }
         
     memset(rxBuf,0,sizeof(rxBuf));
@@ -1496,13 +1484,12 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
     switch(tOpcode.Val)
     {
         case TFTPS_ACK_OPCODE:
-
-        /* If the current block number is greater than the block number
-         * of the ACK packet we are receiving, then this is an old
-         * packet and we have already processed it - we do not want to
-         * exit, error or acknowledge the packet (because we have 
-         * already processed it) so we will get the next packet
-         */
+            /* If the current block number is greater than the block number
+             * of the ACK packet we are receiving, then this is an old
+             * packet and we have already processed it - we do not want to
+             * exit, error or acknowledge the packet (because we have
+             * already processed it) so we will get the next packet
+             */
             blockNum.Val = _TFTPS_Get16(rxBuf,TFTP_DATA_BLOCKNUM_OFFSET);
             if((tftp_con->block_number > blockNum.Val)
                 && (tftp_con->tid == sktInfo.remotePort))
@@ -1513,8 +1500,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
                 TCPIP_UDP_Discard(tftp_con->cSkt);
                 break;
             }
-
-             // release the TFTP socket for the read type and transfer is completed 
+             // release the TFTP socket for the read type and transfer is completed
             if((tftp_con->type == TFTPS_READ_TYPE) && (tftp_con->status == TFTPS_TRANSFER_COMPLETE))
             {
                 // send event notification after file transfer completion
@@ -1523,7 +1509,6 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
                 _TFTPS_ReleaseDataSocket(tftp_con);
                 break;
             }
-            
             /* Make sure the block number and TID are correct. */
             if((tftp_con->block_number == blockNum.Val)
                          && (tftp_con->tid == sktInfo.remotePort))
@@ -1533,7 +1518,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
 
             else
             {
-                return TFTPS_RES_ILLIGAL_OPERN;
+                retval = TFTPS_RES_ILLIGAL_OPERN;
             }
             
             break;
@@ -1542,22 +1527,24 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
             tftp_con->errCode = _TFTPS_Get16(rxBuf,TFTP_ERROR_VAL_OFFSET);
             if(tftp_con->errCode <= TFTP_BAD_TFTP_ERROR)
             {
-                return TFTPS_RES_CLIENT_ERROR;
+                retval = TFTPS_RES_CLIENT_ERROR;
             }
             else
             {
-                return TFTPS_RES_ILLIGAL_OPERN;
+                retval = TFTPS_RES_ILLIGAL_OPERN;
             }
+            break;
+
         case TFTPS_RRQ_OPCODE:
         case TFTPS_WRQ_OPCODE:
         case TFTPS_DATA_OPCODE:
         default:
             _TFTPS_Error(tftp_con->cSkt,TFTP_ILLIGAL_OPERATION_ERROR, "Error: Illegal TFTP Operation");
-            return TFTPS_RES_ILLIGAL_OPERN;
+            retval = TFTPS_RES_ILLIGAL_OPERN;
+            break;
     }
-    
-    return TFTPS_RES_OK;
-}  /* TFTPS_Process_Ack */
+    return retval;
+}
    
 /************************************************************************
 *   Function                                                             

@@ -225,33 +225,17 @@ bool QSPI0_RegisterWrite( qspi_register_xfer_t *qspi_register_xfer, uint32_t *tx
     return true;
 }
 
+// NOTE: This routine contains a WORKAROUND for alignment issue in the qspi code.
+// DO NOT OVERWRITE!
 bool QSPI0_MemoryRead( qspi_memory_xfer_t *qspi_memory_xfer, uint32_t *rx_data, uint32_t rx_data_length, uint32_t address )
 {
     uint32_t *qspi_mem = (uint32_t *)(QSPI0MEM_ADDR | address);
-#if FELIPE_WANTS_CODE_TO_CRASH
-    uint32_t length_32bit, length_8bit;
-#endif
     volatile uint32_t dummy = 0;
 
     
     if (false == qspi0_setup_transfer(qspi_memory_xfer, QSPI_IFR_TFRTYP_TRSFR_READ_MEMORY_Val, address))
         return false;
-#if FELIPE_WANTS_CODE_TO_CRASH
-    /* Read serial flash memory */
-    length_32bit = rx_data_length / 4;
-    length_8bit = rx_data_length & 0x03;
-
-    if(length_32bit)
-        qspi0_memcpy_32bit(rx_data , qspi_mem,  length_32bit);
-
-    rx_data = rx_data + length_32bit;
-    qspi_mem = qspi_mem + length_32bit;
-
-    if(length_8bit)
-        qspi0_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  length_8bit);
-#else
     qspi0_memcpy_8bit((uint8_t *)rx_data , (uint8_t *)qspi_mem,  rx_data_length);
-#endif
     /* Dummy Read to clear QSPI_SR.INSTRE and QSPI_SR.CSR */
     dummy = QSPI0_REGS->QSPI_SR;
 
