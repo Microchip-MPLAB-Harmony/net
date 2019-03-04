@@ -39,6 +39,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
+#include "crypto/crypto.h"
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_time_h2_adapter.h"
@@ -104,6 +105,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Use the web page in the Demo App (~2.5kb ROM, ~0b RAM)
 #define HTTP_APP_USE_RECONFIG
 
+#if defined(CRYPTO_CONFIG_H) && !defined( NO_MD5 )        // no MD5 if no crypto header or if crypto_config.h says NO_MD5   
+// Use the MD5 Demo web page (~5kb ROM, ~160b RAM)
+#define HTTP_APP_USE_MD5
+#endif
 
 // Use the e-mail demo web page
 #if defined(TCPIP_STACK_USE_SMTPC)
