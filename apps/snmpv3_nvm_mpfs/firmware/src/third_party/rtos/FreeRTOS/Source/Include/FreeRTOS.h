@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.1.1
- * Copyright (C) 2018 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.0.1
+ * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -806,10 +806,6 @@ extern "C" {
 	#define configUSE_TASK_NOTIFICATIONS 1
 #endif
 
-#ifndef configUSE_POSIX_ERRNO
-	#define configUSE_POSIX_ERRNO 0
-#endif
-
 #ifndef portTICK_TYPE_IS_ATOMIC
 	#define portTICK_TYPE_IS_ATOMIC 0
 #endif
@@ -828,13 +824,6 @@ extern "C" {
 	/* Defaults to uint16_t for backward compatibility, but can be overridden
 	in FreeRTOSConfig.h if uint16_t is too restrictive. */
 	#define configSTACK_DEPTH_TYPE uint16_t
-#endif
-
-#ifndef configMESSAGE_BUFFER_LENGTH_TYPE
-	/* Defaults to size_t for backward compatibility, but can be overridden
-	in FreeRTOSConfig.h if lengths will always be less than the number of bytes
-	in a size_t. */
-	#define configMESSAGE_BUFFER_LENGTH_TYPE size_t
 #endif
 
 /* Sanity check the configuration. */
@@ -932,10 +921,6 @@ V8 if desired. */
 	#define pdTASK_CODE TaskFunction_t
 	#define xListItem ListItem_t
 	#define xList List_t
-
-	/* For libraries that break the list data hiding, and access list structure
-	members directly (which is not supposed to be done). */
-	#define pxContainer pvContainer
 #endif /* configENABLE_BACKWARD_COMPATIBILITY */
 
 #if( configUSE_ALTERNATIVE_API != 0 )
@@ -1034,16 +1019,14 @@ typedef struct xSTATIC_TCB
 		uint32_t 		ulDummy18;
 		uint8_t 		ucDummy19;
 	#endif
-	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
+	#if( ( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) ) || ( portUSING_MPU_WRAPPERS == 1 ) )
 		uint8_t			uxDummy20;
 	#endif
 
 	#if( INCLUDE_xTaskAbortDelay == 1 )
 		uint8_t ucDummy21;
 	#endif
-	#if ( configUSE_POSIX_ERRNO == 1 )
-		int				iDummy22;
-	#endif
+
 } StaticTask_t;
 
 /*
@@ -1139,14 +1122,13 @@ typedef struct xSTATIC_TIMER
 	StaticListItem_t	xDummy2;
 	TickType_t			xDummy3;
 	UBaseType_t			uxDummy4;
-	void 				*pvDummy5;
-	TaskFunction_t		pvDummy6;
+	void 				*pvDummy5[ 2 ];
 	#if( configUSE_TRACE_FACILITY == 1 )
-		UBaseType_t		uxDummy7;
+		UBaseType_t		uxDummy6;
 	#endif
 
 	#if( ( configSUPPORT_STATIC_ALLOCATION == 1 ) && ( configSUPPORT_DYNAMIC_ALLOCATION == 1 ) )
-		uint8_t 		ucDummy8;
+		uint8_t 		ucDummy7;
 	#endif
 
 } StaticTimer_t;

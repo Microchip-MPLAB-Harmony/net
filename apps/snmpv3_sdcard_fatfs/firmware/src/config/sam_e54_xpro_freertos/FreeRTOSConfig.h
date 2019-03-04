@@ -114,10 +114,5 @@
 #define INCLUDE_xTaskAbortDelay                 0
 #define INCLUDE_xTaskGetHandle                  0
 
-/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
- * standard names. */
-#define xPortPendSVHandler PendSV_Handler
-#define vPortSVCHandler SVCall_Handler
-
 
 #endif /* FREERTOS_H */

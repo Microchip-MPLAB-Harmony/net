@@ -156,6 +156,9 @@ enum {
     #include "wolfssl/wolfcrypt/port/caam/wolfcaam_sha.h"
 #elif defined(WOLFSSL_AFALG_HASH)
     #include "wolfssl/wolfcrypt/port/af_alg/afalg_hash.h"
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256)
+    #include "crypto/src/crypt_sha256_hw.h"
+    #define wc_Sha256 crypt_sha256_hw_descriptor
 #else
 /* wc_Sha256 digest */
 typedef struct wc_Sha256 {

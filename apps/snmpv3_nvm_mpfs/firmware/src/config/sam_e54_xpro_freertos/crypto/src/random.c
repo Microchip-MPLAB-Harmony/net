@@ -77,6 +77,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "crypto/src/cpuid.h"
 
 
+
+
 /* If building for old FIPS. */
 #if defined(HAVE_FIPS) && \
     (!defined(HAVE_FIPS_VERSION) || (HAVE_FIPS_VERSION < 2))
@@ -159,6 +161,8 @@ int wc_RNG_GenerateByte(WC_RNG* rng, byte* b)
 #elif defined(FREESCALE_KSDK_2_0_RNGA)
     #include "fsl_rnga.h"
 
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+#include "crypt_rng_hw.h"
 #elif defined(NO_DEV_RANDOM)
 #elif defined(CUSTOM_RAND_GENERATE)
 #elif defined(CUSTOM_RAND_GENERATE_BLOCK)
@@ -756,6 +760,10 @@ static int _InitRng(WC_RNG* rng, byte* nonce, word32 nonceSz,
         return 0;
 #endif
 
+#ifdef HAVE_MICROCHIP_HARMONY3_HW_RNG
+    ret = CRYPT_RNG_HwInit();
+#endif
+
 #ifdef CUSTOM_RAND_GENERATE_BLOCK
 	ret = 0; /* success */
 #else
@@ -930,6 +938,10 @@ int wc_RNG_GenerateBlock(WC_RNG* rng, byte* output, word32 sz)
 #endif /* HAVE_HASHDRBG */
 #endif /* CUSTOM_RAND_GENERATE_BLOCK */
 
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+    ret = CRYPT_RNG_GenerateBlock(output, sz);
+#endif
+
     return ret;
 }
 
@@ -962,6 +974,10 @@ int wc_FreeRng(WC_RNG* rng)
 
     rng->status = DRBG_NOT_INIT;
 #endif /* HAVE_HASHDRBG */
+
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+    ret = CRYPT_RNG_FreeRng();
+#endif
 
     return ret;
 }
@@ -1427,7 +1443,6 @@ static int wc_GenerateRand_IntelRD(OS_Seed* os, byte* output, word32 sz)
 
     int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
     {
-        extern int same70_RNG_GenerateSeed(byte* output, word32 sz);
         (void)os; /* Suppress unused arg warning */
         return CUSTOM_RAND_GENERATE_SEED(output, sz);
     }
@@ -1540,20 +1555,36 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 
     return 0;
 }
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+    int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
+    {
+        return CRYPT_RNG_GenerateSeed(output, sz);
+    }
+#elif defined(MICROCHIP_MPLAB_HARMONY_3)
+    #include "system/time/sys_time.h"
+    #define PIC32_SEED_COUNT SYS_TIME_CounterGet
+    int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
+    {
+        int i;
+        srand(PIC32_SEED_COUNT() * 25);
 
+        for (i = 0; i < sz; i++ ) {
+            output[i] = rand() % 256;
+            if ( (i % 8) == 7)
+                srand(PIC32_SEED_COUNT() * 25);
+        }
+        return 0;
+    }
 
-#elif defined(MICROCHIP_SAME70)
-
-int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
-{
-    extern int same70_RNG_GenerateSeed(byte* output, word32 sz);
-
-    return same70_RNG_GenerateSeed(output, sz);
-}
 #elif defined(MICROCHIP_PIC32)
 
     #ifdef MICROCHIP_MPLAB_HARMONY
-        #define PIC32_SEED_COUNT _CP0_GET_COUNT
+        #ifdef MICROCHIP_MPLAB_HARMONY_3
+            #include "system/time/sys_time.h"
+            #define PIC32_SEED_COUNT SYS_TIME_CounterGet
+        #else
+            #define PIC32_SEED_COUNT _CP0_GET_COUNT
+        #endif
     #else
         #if !defined(WOLFSSL_MICROCHIP_PIC32MZ)
             #include <peripheral/timer.h>
@@ -1986,7 +2017,7 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
     }
 
 #elif defined(WOLFSSL_ATMEL)
-    #include "crypto/src/port/atmel/atmel.h"
+    #include <wolfssl/wolfcrypt/port/atmel/atmel.h>
 
     int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
     {
@@ -2035,8 +2066,8 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 
 #elif (defined(WOLFSSL_IMX6_CAAM) || defined(WOLFSSL_IMX6_CAAM_RNG))
 
-    #include "crypto/src/port/caam/wolfcaam.h"
-    #include "crypto/src/port/caam/caam_driver.h"
+    #include <wolfssl/wolfcrypt/port/caam/wolfcaam.h>
+    #include <wolfssl/wolfcrypt/port/caam/caam_driver.h>
 
     int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
     {
@@ -2112,9 +2143,7 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
             return 0;
         }
     #endif /* end WOLFSSL_ESPWROOM32 */
- 
 #elif defined(CUSTOM_RAND_GENERATE_BLOCK)
-    extern int same70_RNG_GenerateBlock(byte* output, word32 sz);
     /* #define CUSTOM_RAND_GENERATE_BLOCK myRngFunc
      * extern int myRngFunc(byte* output, word32 sz);
      */
@@ -2132,6 +2161,8 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
        CUSTOM_RAND_GENERATE_BLOCK */
 
     #define USE_TEST_GENSEED
+
+
 
 #elif defined(NO_DEV_RANDOM)
 
