@@ -2779,9 +2779,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio_pin.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pit\plib_pit.h</name>
             </file>
             <file>
