@@ -17,6 +17,19 @@
         <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</path>
         <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</path>
     </includePath>
+    <asmIncludePath>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library\tcpip\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common</path>
+        <path>$PROJ_DIR$\..\..\firmware\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</path>
+    </asmIncludePath>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\ddr.icf</path>
@@ -309,6 +322,7 @@
             <path>\..\..\http_net_print.c</path>
             <path>\..\..\custom_http_net_app.c</path>
             <path>\..\..\mpfs_img2_net.c</path>
+            <path>\library\tcpip\src\nbns.c</path>
             <path>\library\tcpip\src\tcp.c</path>
             <path>\library\tcpip\src\dhcp.c</path>
             <path>\library\tcpip\src\arp.c</path>

@@ -2,8 +2,8 @@
 #include "definitions.h"
 #include "device.h"
 
-#define RAW_WRITE_DEBUG_ON      1       // display debug messages
-#define RAW_FORCE_WRITE         1       // write the SQI flash even if the initial verification succeeds
+#define RAW_WRITE_DEBUG_ON      0       // display debug messages
+#define RAW_FORCE_WRITE         0       // write the SQI flash even if the initial verification succeeds
 #define RAW_READ_BUFFER_SIZE    2048
 
 struct MEDIA_STORAGE_PARTITION_INFO

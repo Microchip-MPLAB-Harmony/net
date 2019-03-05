@@ -50,7 +50,7 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 
-#define APP_DEBUG_ON                1
+#define APP_DEBUG_ON                0   // display app state and debug messages
 
 #define APP_SWITCH_1StateGet()      SWITCH_Get()
 #define APP_LED_1StateSet()         LED1_Set()
