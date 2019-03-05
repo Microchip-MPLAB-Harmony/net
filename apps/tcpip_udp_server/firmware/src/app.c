@@ -270,15 +270,14 @@ void APP_Tasks ( void )
                 }
                 AppBuffer[w2] = 0;
 
-                SYS_CONSOLE_PRINT("\tSending a messages '%s'\r\n", AppBuffer);
+                SYS_CONSOLE_PRINT("\tSending a message: '%s'\r\n", AppBuffer);
 
                 // Transfer the data out of our local processing buffer and into the TCP TX FIFO.
                 TCPIP_UDP_ArrayPut(appData.socket, AppBuffer, wCurrentChunk);
 
-                TCPIP_UDP_Flush(appData.socket);
-
                 appData.state = APP_TCPIP_WAIT_FOR_CONNECTION;
             }
+            TCPIP_UDP_Flush(appData.socket);
             TCPIP_UDP_Discard(appData.socket);
         }
         break;
