@@ -629,6 +629,15 @@
                     <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source</state>
                     <state>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library\tcpip\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1673,7 +1682,17 @@
                 </option>
                 <option>
                     <name>AUserIncludes</name>
-                    <state></state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library\tcpip\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -2502,9 +2521,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pio\plib_pio_pin.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\peripheral\pit\plib_pit.h</name>

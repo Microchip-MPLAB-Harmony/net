@@ -346,7 +346,7 @@ typedef struct
     To clear the cache use TCPIP_DNS_Disable(hNet, true);
 
   */
-TCPIP_DNS_RESULT  TCPIP_DNS_Resolve( const char* hostName, TCPIP_DNS_RESOLVE_TYPE type);
+TCPIP_DNS_RESULT  TCPIP_DNS_Resolve(const char* hostName, TCPIP_DNS_RESOLVE_TYPE type);
 
 
 //****************************************************************************

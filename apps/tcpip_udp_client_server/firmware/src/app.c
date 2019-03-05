@@ -329,9 +329,9 @@ void _APP_ServerTasks( void )
                 // Transfer the data out of our local processing buffer and into the TCP TX FIFO.
                 TCPIP_UDP_ArrayPut(appData.serverSocket, AppBuffer, wCurrentChunk);
 
-                TCPIP_UDP_Flush(appData.serverSocket);
                 appData.serverState = APP_TCPIP_CLOSING_CONNECTION;
             }
+            TCPIP_UDP_Flush(appData.serverSocket);
             TCPIP_UDP_Discard(appData.serverSocket);
         }
         break;
