@@ -15,6 +15,17 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </includePath>
+    <asmIncludePath>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library\tcpip\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library\tcpip\src\common</path>
+        <path>$PROJ_DIR$\..\..\firmware\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+    </asmIncludePath>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</path>
