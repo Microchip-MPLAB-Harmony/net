@@ -2743,6 +2743,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\clk\plib_clk.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\l2cc\plib_l2cc.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\matrix\plib_matrix.h</name>
             </file>
             <file>
@@ -2750,9 +2753,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio_pin.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\tc\plib_tc0.h</name>
@@ -2858,6 +2858,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\ssc.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\cache\sys_cache.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\sys_clk_h2_adapter.h</name>
@@ -3163,6 +3166,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\clk\plib_clk.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\l2cc\plib_l2cc.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\matrix\plib_matrix.c</name>
             </file>
             <file>
@@ -3176,6 +3182,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\uart\plib_uart1.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\cache\sys_cache.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_command.c</name>
@@ -3203,6 +3212,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\tcp.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\tcpip_announce.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\tcpip_commands.c</name>
