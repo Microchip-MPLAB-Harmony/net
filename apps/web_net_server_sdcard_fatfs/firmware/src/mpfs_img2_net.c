@@ -44,7 +44,7 @@
  * MPFS2 Image Data
  **************************************/ 
 
-#if defined( __ICCARM__ )
+#if defined( __ICCARM__ )   // IAR compiler build
     #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL
     const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {
 #else
