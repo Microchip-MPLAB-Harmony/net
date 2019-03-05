@@ -50,6 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
         
+#include "toolchain_specifics.h"
 #include "system_config.h"
 #include "system/console/sys_debug.h"
 #include "system/console/sys_console.h"
@@ -92,6 +93,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // private stack manager interface
 #include "tcpip/src/tcpip_manager_control.h"
 
+#include "tcpip/src/tcpip_announce_manager.h"
 #include "tcpip/src/ipv4_manager.h"
 #include "tcpip/src/icmp_manager.h"
 #include "tcpip/src/dhcp_manager.h"
