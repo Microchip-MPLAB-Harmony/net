@@ -312,331 +312,6 @@ void PIO_Initialize(void);
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: PIO Functions which operates on one pin at a time
-// *****************************************************************************
-// *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinWrite(PIO_PIN pin, bool value)
-
-  Summary:
-    Writes the selected pin.
-
-  Description:
-    This function writes/drives the "value" on the selected I/O line/pin.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-    value     - value to be written on the selected pin:
-                true  = set pin to high (1).
-                false = clear pin to low (0).
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    PIO_PinWrite(PIO_PIN_PB3, true);
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinWrite(PIO_PIN pin, bool value);
-
-// *****************************************************************************
-/* Function:
-    bool PIO_PinRead(PIO_PIN pin)
-
-  Summary:
-    Read the selected pin value.
-
-  Description:
-    This function reads the selected pin value.
-    it reads the value regardless of pin configuration, whether uniquely as an
-    input, or driven by the PIO Controller, or driven by peripheral.
-
-  Precondition:
-    Reading the I/O line levels requires the clock of the PIO Controller to be
-    enabled, otherwise this API reads the levels present on the I/O line at the
-    time the clock was disabled.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    Returns the read value of the selected I/O pin.
-
-  Example:
-    <code>
-
-    bool value;
-    value = PIO_PinRead(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-       To read the latched value on this pin, PIO_PinLatchRead API should be used.
-*/
-bool  PIO_PinRead(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    bool PIO_PinLatchRead ( PIO_PIN pin )
-
-  Summary:
-    Read the value driven on the selected pin.
-
-  Description:
-    This function reads the data driven on the selected I/O line/pin.
-    Whatever data is written/driven on I/O line by using any of the PIO PLIB
-    APIs, will be read by this API.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    Returns the value driven on the selected I/O pin.
-
-  Example:
-    <code>
-
-    bool value;
-    value = PIO_PinLatchRead(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    To read actual pin value, PIO_PinRead API should be used.
-*/
-bool PIO_PinLatchRead( PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinToggle(PIO_PIN pin)
-
-  Summary:
-    Toggles the selected pin.
-
-  Description:
-    This function toggles/inverts the value on the selected I/O line/pin.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinToggle(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinToggle(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinSet(PIO_PIN pin)
-
-  Summary:
-    Sets the selected pin.
-
-  Description:
-    This function drives '1' on the selected I/O line/pin.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinSet(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinSet(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinClear(PIO_PIN pin)
-
-  Summary:
-    Clears the selected pin.
-
-  Description:
-    This function drives '0' on the selected I/O line/pin.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinClear(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinClear(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinInputEnable(PIO_PIN pin)
-
-  Summary:
-    Enables selected IO pin as input.
-
-  Description:
-    This function enables selected IO pin as input.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinInputEnable(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinInputEnable(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinOutputEnable(PIO_PIN pin)
-
-  Summary:
-    Enables selected IO pin as output.
-
-  Description:
-    This function enables selected IO pin as output.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinOutputEnable(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinOutputEnable(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinInterruptEnable(PIO_PIN pin)
-
-  Summary:
-    Enables IO interrupt on selected IO pin.
-
-  Description:
-    This function enables interrupt on selected IO pin.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin           - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinInterruptEnable(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinInterruptEnable(PIO_PIN pin);
-
-// *****************************************************************************
-/* Function:
-    void PIO_PinInterruptDisable(PIO_PIN pin)
-
-  Summary:
-    Disables IO interrupt on selected IO pin.
-
-  Description:
-    This function disables IO interrupt on selected IO pin.
-
-  Precondition:
-    None.
-
-  Parameters:
-    pin       - One of the IO pins from the enum PIO_PIN
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-
-    PIO_PinInterruptDisable(PIO_PIN_PB3);
-
-    </code>
-
-  Remarks:
-    None.
-*/
-void PIO_PinInterruptDisable(PIO_PIN pin);
-
-// *****************************************************************************
-// *****************************************************************************
 // Section: PIO Functions which operates on multiple pins of a port
 // *****************************************************************************
 // *****************************************************************************
@@ -728,7 +403,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
 
 // *****************************************************************************
 /* Function:
-    uint32_t PIO_PortReadLatch ( PIO_PORT port )
+    uint32_t PIO_PortLatchRead ( PIO_PORT port )
 
   Summary:
     Read the latched value on all the I/O lines of the selected port.
@@ -753,7 +428,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
     <code>
 
     uint32_t value;
-    value = PIO_PortReadLatch(PIO_PORT_C);
+    value = PIO_PortLatchRead(PIO_PORT_C);
 
     </code>
 
@@ -762,7 +437,7 @@ void PIO_PortWrite(PIO_PORT port, uint32_t mask, uint32_t value);
     low (0).
     Implemented pins are Right aligned in the 32-bit return value.
 */
-uint32_t PIO_PortReadLatch ( PIO_PORT port );
+uint32_t PIO_PortLatchRead ( PIO_PORT port );
 
 // *****************************************************************************
 /* Function:
@@ -1025,12 +700,370 @@ void PIO_PortInterruptEnable(PIO_PORT port, uint32_t mask);
 */
 void PIO_PortInterruptDisable(PIO_PORT port, uint32_t mask);
 
-#include "plib_pio_pin.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: PIO Functions which operates on one pin at a time
+// *****************************************************************************
+// *****************************************************************************
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinWrite(PIO_PIN pin, bool value)
+
+  Summary:
+    Writes the selected pin.
+
+  Description:
+    This function writes/drives the "value" on the selected I/O line/pin.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+    value     - value to be written on the selected pin:
+                true  = set pin to high (1).
+                false = clear pin to low (0).
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    PIO_PinWrite(PIO_PIN_PB3, true);
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinWrite(PIO_PIN pin, bool value)
+{
+    PIO_PortWrite((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+}
+
+// *****************************************************************************
+/* Function:
+    bool PIO_PinRead(PIO_PIN pin)
+
+  Summary:
+    Read the selected pin value.
+
+  Description:
+    This function reads the selected pin value.
+    it reads the value regardless of pin configuration, whether uniquely as an
+    input, or driven by the PIO Controller, or driven by peripheral.
+
+  Precondition:
+    Reading the I/O line levels requires the clock of the PIO Controller to be
+    enabled, otherwise this API reads the levels present on the I/O line at the
+    time the clock was disabled.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    Returns the read value of the selected I/O pin.
+
+  Example:
+    <code>
+
+    bool value;
+    value = PIO_PinRead(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+       To read the latched value on this pin, PIO_PinLatchRead API should be used.
+*/
+
+static inline bool PIO_PinRead(PIO_PIN pin)
+{
+    return (bool)((PIO_PortRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+}
+
+
+// *****************************************************************************
+/* Function:
+    bool PIO_PinLatchRead ( PIO_PIN pin )
+
+  Summary:
+    Read the value driven on the selected pin.
+
+  Description:
+    This function reads the data driven on the selected I/O line/pin.
+    Whatever data is written/driven on I/O line by using any of the PIO PLIB
+    APIs, will be read by this API.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    Returns the value driven on the selected I/O pin.
+
+  Example:
+    <code>
+
+    bool value;
+    value = PIO_PinLatchRead(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    To read actual pin value, PIO_PinRead API should be used.
+*/
+static inline bool PIO_PinLatchRead(PIO_PIN pin)
+{
+    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinToggle(PIO_PIN pin)
+
+  Summary:
+    Toggles the selected pin.
+
+  Description:
+    This function toggles/inverts the value on the selected I/O line/pin.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinToggle(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinToggle(PIO_PIN pin)
+{
+    PIO_PortToggle((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinSet(PIO_PIN pin)
+
+  Summary:
+    Sets the selected pin.
+
+  Description:
+    This function drives '1' on the selected I/O line/pin.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinSet(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinSet(PIO_PIN pin)
+{
+    PIO_PortSet((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinClear(PIO_PIN pin)
+
+  Summary:
+    Clears the selected pin.
+
+  Description:
+    This function drives '0' on the selected I/O line/pin.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinClear(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinClear(PIO_PIN pin)
+{
+    PIO_PortClear((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinInputEnable(PIO_PIN pin)
+
+  Summary:
+    Enables selected IO pin as input.
+
+  Description:
+    This function enables selected IO pin as input.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinInputEnable(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinInputEnable(PIO_PIN pin)
+{
+    PIO_PortInputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinOutputEnable(PIO_PIN pin)
+
+  Summary:
+    Enables selected IO pin as output.
+
+  Description:
+    This function enables selected IO pin as output.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinOutputEnable(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinOutputEnable(PIO_PIN pin)
+{
+    PIO_PortOutputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinInterruptEnable(PIO_PIN pin)
+
+  Summary:
+    Enables IO interrupt on selected IO pin.
+
+  Description:
+    This function enables interrupt on selected IO pin.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin           - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinInterruptEnable(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinInterruptEnable(PIO_PIN pin)
+{
+    PIO_PortInterruptEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
+
+// *****************************************************************************
+/* Function:
+    void PIO_PinInterruptDisable(PIO_PIN pin)
+
+  Summary:
+    Disables IO interrupt on selected IO pin.
+
+  Description:
+    This function disables IO interrupt on selected IO pin.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pin       - One of the IO pins from the enum PIO_PIN
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+
+    PIO_PinInterruptDisable(PIO_PIN_PB3);
+
+    </code>
+
+  Remarks:
+    None.
+*/
+static inline void PIO_PinInterruptDisable(PIO_PIN pin)
+{
+    PIO_PortInterruptDisable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x40 * (pin>>5))), 0x1 << (pin & 0x1F));
+}
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
-    }
+}
 
 #endif
 // DOM-IGNORE-END
