@@ -12,8 +12,8 @@
     invalidates etc. For the DCache and ICache.
 
   Remarks:
-    This header should not define any prototypes or data definitions, or 
-    include any files that do.  The file only provides macro definitions for 
+    This header should not define any prototypes or data definitions, or
+    include any files that do.  The file only provides macro definitions for
     build-time.
 
 *******************************************************************************/
@@ -55,6 +55,7 @@
     define this configuration.
 */
 
+#include "peripheral/mmu/plib_mmu.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -70,19 +71,28 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 #define L1_ICACHE_IN_USE                               true
-#define L1_ICACHE_INVALIDATE_ALL()                     L1C_InvalidateICacheAll()
+#define L1_ICACHE_ENABLE()                             icache_Enable()
+#define L1_ICACHE_DISABLE()                            icache_Disable()
+#define L1_ICACHE_INVALIDATE_ALL()                     icache_InvalidateAll()
 
 #define L1_DCACHE_IN_USE                               false
+#define L1_DCACHE_ENABLE()
+#define L1_DCACHE_DISABLE()
 #define L1_DCACHE_CLEAN_ALL()
+#define L1_DCACHE_INVALIDATE_ALL()
 #define L1_DCACHE_CLEAN_INVALIDATE_ALL()
 
 #define L2_DCACHE_IN_USE                               false
 #define L2_DCACHE_CLEAN_ALL()
 #define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-// 
-#define DCACHE_CLEAN_BY_ADDR(addr,sz)  
+//
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
 #define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-// 
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_ALL()
+#define DCACHE_INVALIDATE_ALL()
+#define DCACHE_CLEAN_INVALIDATE_ALL()
+//
 #define DATA_CACHE_ENABLED                             false
 
 //DOM-IGNORE-BEGIN
