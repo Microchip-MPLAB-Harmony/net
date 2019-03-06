@@ -32,7 +32,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 #ifndef __TFTPS_PRIVATE_H_
 #define __TFTPS_PRIVATE_H_
-#include "sys_fs_wrapper.h"             // SYS_FS_HANDLE
+#include "sys_fs_wrapper.h"
 
 #include "configuration.h"
 
