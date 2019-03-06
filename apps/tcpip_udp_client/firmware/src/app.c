@@ -277,7 +277,7 @@ void APP_Tasks ( void )
             memset(buffer, 0, sizeof(buffer));
             if (SYS_TMR_SystemCountGet() > appData.mTimeOut)
             {
-                SYS_CONSOLE_MESSAGE("\r\nTimout waiting for response\r\n");
+                SYS_CONSOLE_MESSAGE("\r\nTime out waiting for response\r\n");
                 TCPIP_UDP_Close(appData.socket);
                 appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
                 break;
