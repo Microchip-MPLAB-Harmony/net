@@ -111,6 +111,10 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
     GMAC_REGS->GMAC_NCFGR = ncfgr_reg;
     // Set MAC address
     DRV_PIC32CGMAC_LibSetMacAddr((const uint8_t *)(pMACDrv->sGmacData.gmacConfig.macAddress.v));
+	if((TCPIP_INTMAC_PHY_CONFIG_FLAGS) & DRV_ETHPHY_CFG_RMII)
+		GMAC_REGS->GMAC_UR = GMAC_UR_RMII(1); //initial mode set as RMII
+	else
+		GMAC_REGS->GMAC_UR = GMAC_UR_RMII(0); //initial mode set as MII
 }
 
 /****************************************************************************
@@ -528,7 +532,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxAckPacket(DRV_GMAC_DRIVER * pMACDrv, G
     res = DRV_PIC32CGMAC_RES_DESC_CNT_ERR;
 
     // any packet to be acknowledged in the TxAckQueue
-    while( pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue.head != 0)
+    while( pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue.nNodes != 0)
     {
         tempIndex = (pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue.head)->startIndex;
 
