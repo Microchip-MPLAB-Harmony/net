@@ -6,27 +6,38 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e54_xpro" projectFiles="true">
-          <logicalFolder name="f6" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_e54_xpro/bsp/bsp.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro/crypto/crypto.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/aes.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/arc4.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/asn.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/asn_public.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/async.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/camellia.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/certs_test.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha20_poly1305.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/cmac.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/coding.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/compress.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/cpuid.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_rng_hw.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/dh.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam11105.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_sam6149.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_hwInt.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/error-crypt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ge_operations.h</itemPath>
@@ -39,11 +50,12 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/md2.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/md4.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/md5.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/memory.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/mem_track.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/memory.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/misc.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/mpi_class.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/mpi_superclass.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs11.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs12.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs7.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/poly1305.h</itemPath>
@@ -52,12 +64,15 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/random.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ripemd.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/rsa.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/selftest.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/settings.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/sha.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/sha256.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/sha3.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/sha512.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/signature.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sniffer.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sniffer_error.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/srp.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ssl.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/tfm.h</itemPath>
@@ -65,8 +80,10 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/version.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/visibility.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_encrypt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_pkcs11.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_port.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfevent.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfio.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfmath.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/crc32.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/deflate.h</itemPath>
@@ -120,7 +137,7 @@
             <itemPath>../src/config/sam_e54_xpro/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
+          <logicalFolder name="f6" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
@@ -134,8 +151,8 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp_manager.h</itemPath>
@@ -241,7 +258,7 @@
               <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres_local.h</itemPath>
@@ -292,9 +309,9 @@
               <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/console/sys_command.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
@@ -328,8 +345,8 @@
             <itemPath>../src/config/sam_e54_xpro/system/system_common.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/system_media.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
@@ -430,23 +447,25 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e54_xpro" projectFiles="true">
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_e54_xpro/bsp/bsp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro/crypto/src/crypto.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/aes.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/arc4.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/asm.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/asn.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/async.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/camellia.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha20_poly1305.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/cmac.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/coding.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/compress.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/curve25519.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/des3.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/dh.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/dsa.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc_fp.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ed25519.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/error.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/fe_low_mem.c</itemPath>
@@ -461,7 +480,6 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/logging.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/md2.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/md4.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/memory.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/misc.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs12.c</itemPath>
@@ -469,14 +487,15 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/poly1305.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/pwdbased.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/rabbit.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/random.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ripemd.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/sha3.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha512.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/signature.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/srp.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/tfm.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_encrypt.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_pkcs11.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_port.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfevent.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfmath.c</itemPath>
@@ -488,10 +507,13 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/aes.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/sha256.c</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/random.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha512.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc_fp.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="driver" projectFiles="true">
             <logicalFolder name="f1" displayName="ethphy" projectFiles="true">
@@ -536,10 +558,10 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc.c</itemPath>
@@ -557,7 +579,7 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f6" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres.c</itemPath>
@@ -590,7 +612,7 @@
               <itemPath>../src/config/sam_e54_xpro/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="stdio" projectFiles="true">
+          <logicalFolder name="f7" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
@@ -652,13 +674,13 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Atmel" version="1.0.94"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>
@@ -779,7 +801,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="74960"/>
+        <property key="heap-size" value="104960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

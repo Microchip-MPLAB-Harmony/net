@@ -599,8 +599,8 @@
                 </logicalFolder>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/arp.c</itemPath>
@@ -750,7 +750,7 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>

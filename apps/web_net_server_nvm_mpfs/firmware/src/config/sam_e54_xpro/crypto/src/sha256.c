@@ -443,6 +443,11 @@ static int InitSha256(wc_Sha256* sha256)
     {
         return CRYPT_SHA256_Final(sha, hash);
     }
+
+    int wc_Sha256FinalRaw(wc_Sha256* sha, byte* hash)
+    {
+        return CRYPT_SHA256_FinalRaw(sha, hash);
+    }
     
 #elif defined(STM32_HASH_SHA2)
 

@@ -158,6 +158,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     {
         return CRYPT_SHA1_Final(sha, hash);
     }
+    
+    int wc_ShaFinalRaw(wc_Sha* sha, byte* hash)
+    {
+        return CRYPT_SHA1_FinalRaw(sha, hash);
+    }
+
 #elif defined(STM32_HASH)
 
     /* Supports CubeMX HAL or Standard Peripheral Library */

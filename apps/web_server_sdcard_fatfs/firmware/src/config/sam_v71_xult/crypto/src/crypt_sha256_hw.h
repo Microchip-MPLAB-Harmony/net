@@ -64,5 +64,6 @@ typedef struct
 int CRYPT_SHA256_InitSha(crypt_sha256_hw_descriptor* sha, void* heap, int devId);
 int CRYPT_SHA256_Update(crypt_sha256_hw_descriptor* sha, const byte* data, word32 len);
 int CRYPT_SHA256_Final(crypt_sha256_hw_descriptor* sha, byte* hash);
+int CRYPT_SHA256_FinalRaw(crypt_sha256_hw_descriptor* sha, byte* hash);
 
 #endif

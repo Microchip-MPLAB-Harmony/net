@@ -51,18 +51,21 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 extern "C" {
 #endif
 
-int crypt_aes_SetKey(Aes* aes, const byte* userKey, word32 keylen, const byte* iv, int dir);
-int crypt_aes_CbcEncrypt(Aes* aes, byte* out, const byte* in, word32 sz);
-int crypt_aes_CbcDecrypt(Aes* aes, byte* out, const byte* in, word32 sz);
-int crypt_aes_CtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz);
+int CRYPT_AES_SetKey(Aes* aes, const byte* userKey, word32 keylen, const byte* iv, int dir);
+int CRYPT_AES_CbcEncrypt(Aes* aes, byte* out, const byte* in, word32 sz);
+int CRYPT_AES_CbcDecrypt(Aes* aes, byte* out, const byte* in, word32 sz);
+int CRYPT_AES_CtrEncrypt(Aes* aes, byte* out, const byte* in, word32 sz);
+
+void CRYPT_AES_Free(Aes* aes);
+int  CRYPT_AES_Init(Aes* aes, void* heap, int devId);
 
 #if defined(HAVE_AESGCM)
- int crypt_aes_GcmEncrypt(Aes* aes, unsigned char* out,
+ int CRYPT_AES_GcmEncrypt(Aes* aes, unsigned char* out,
                                    const unsigned char* in, unsigned int sz,
                                    const unsigned char* iv, unsigned int ivSz,
                                    unsigned char* authTag, unsigned int authTagSz,
                                    const unsigned char* authIn, unsigned int authInSz);
- int crypt_aes_GcmDecrypt(Aes* aes, unsigned char* out,
+ int CRYPT_AES_GcmDecrypt(Aes* aes, unsigned char* out,
                                    const unsigned char* in, unsigned int sz,
                                    const unsigned char* iv, unsigned int ivSz,
                                    const unsigned char* authTag, unsigned int authTagSz,

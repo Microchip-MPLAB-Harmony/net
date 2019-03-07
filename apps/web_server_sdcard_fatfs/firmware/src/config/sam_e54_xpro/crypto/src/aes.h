@@ -104,6 +104,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "crypto/src/port/devcrypto/wc_devcrypto.h"
 #endif
 
+
+
 #if defined(HAVE_AESGCM) && !defined(WC_NO_RNG)
     #include "crypto/src/random.h"
 #endif
@@ -152,9 +154,14 @@ enum {
     AES_MAX_ID_LEN   = 32,
 #endif
 };
-
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_AES)
+#include "crypt_aes_hw.h"
+#endif
 
 typedef struct Aes {
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_AES)
+    crypt_aes_hw_descriptor hwDesc;
+#else
     /* AESNI needs key first, rounds 2nd, not sure why yet */
     ALIGN16 word32 key[60];
     word32  rounds;
@@ -214,6 +221,7 @@ typedef struct Aes {
     WC_CRYPTODEV ctx;
 #endif
     void*  heap; /* memory hint to use */
+#endif
 } Aes;
 
 #ifdef WOLFSSL_AES_XTS

@@ -95,7 +95,6 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/zutil.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha_hw.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -534,13 +533,9 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_rng_sam6334.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md5.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_sam11105.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha256.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_sam11105.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha512.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_sam6149.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/rsa.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.c</itemPath>
@@ -693,7 +688,7 @@
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
-              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_1.c</itemPath>
+              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_3.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
@@ -737,7 +732,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.162"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="3.0.8"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>

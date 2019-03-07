@@ -1,6 +1,6 @@
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
-* © 2018 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -31,9 +31,6 @@
 #include "system/system.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "system/fs/fat_fs/src/hardware_access/diskio.h"
-
-
-#define COHERENT_ALIGNED                    __attribute__((aligned(32)))
 
 /* Read entry in geometry table */
 #define SYS_FS_MEDIA_GEOMETRY_READ          (0)
