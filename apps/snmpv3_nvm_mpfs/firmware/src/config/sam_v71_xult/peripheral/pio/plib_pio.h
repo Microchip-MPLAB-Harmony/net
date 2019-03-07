@@ -80,6 +80,15 @@
 #define LED1_InputEnable()       (PIOC_REGS->PIO_ODR = (1<<9))
 #define LED1_PIN                  PIO_PIN_PC9
 
+/*** Macros for SWITCH1 pin ***/
+#define SWITCH1_Set()               (PIOB_REGS->PIO_SODR = (1<<12))
+#define SWITCH1_Clear()             (PIOB_REGS->PIO_CODR = (1<<12))
+#define SWITCH1_Toggle()            (PIOB_REGS->PIO_ODSR ^= (1<<12))
+#define SWITCH1_Get()               ((PIOB_REGS->PIO_PDSR >> 12) & 0x1)
+#define SWITCH1_OutputEnable()      (PIOB_REGS->PIO_OER = (1<<12))
+#define SWITCH1_InputEnable()       (PIOB_REGS->PIO_ODR = (1<<12))
+#define SWITCH1_PIN                  PIO_PIN_PB12
+
 
 // *****************************************************************************
 /* PIO Port

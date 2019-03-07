@@ -69,32 +69,43 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 WOLFSSL_API int  wc_AesSetKey(Aes* aes, const byte* key, word32 len,
                               const byte* iv, int dir)
 {
-    return crypt_aes_SetKey(aes, key, len, iv, dir);
+    return CRYPT_AES_SetKey(aes, key, len, iv, dir);
 }
 
 
 WOLFSSL_API int  wc_AesCbcEncrypt(Aes* aes, byte* out,
                                   const byte* in, word32 sz)
 {
-    return crypt_aes_CbcEncrypt(aes, out, in, sz);
+    return CRYPT_AES_CbcEncrypt(aes, out, in, sz);
 }
 WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out,
                                   const byte* in, word32 sz)
 {
-    return crypt_aes_CbcDecrypt(aes, out, in, sz);
+    return CRYPT_AES_CbcDecrypt(aes, out, in, sz);
 }
 
  WOLFSSL_API int wc_AesCtrEncrypt(Aes* aes, byte* out,
                                    const byte* in, word32 sz)
  {
-     return crypt_aes_CtrEncrypt(aes, out, in, sz);
+     return CRYPT_AES_CtrEncrypt(aes, out, in, sz);
  }
+ 
+ WOLFSSL_API void wc_AesFree(Aes* aes)
+ {
+     CRYPT_AES_Free(aes);
+ }
+ 
+ WOLFSSL_API int  wc_AesInit(Aes* aes, void* heap, int devId)
+ {
+     return CRYPT_AES_Init(aes, heap, devId);
+ }
+
  
 #if defined(HAVE_AESGCM)
  
  WOLFSSL_API int  wc_AesGcmSetKey(Aes* aes, const byte* key, word32 len)
  {
-     return crypt_aes_SetKey(aes, key, len, NULL, 0);
+     return CRYPT_AES_SetKey(aes, key, len, NULL, 0);
      
  }
  
@@ -105,7 +116,7 @@ WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out,
                                    byte* authTag, word32 authTagSz,
                                    const byte* authIn, word32 authInSz)
  {
-     return crypt_aes_GcmEncrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+     return CRYPT_AES_GcmEncrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
  }
  
  
@@ -116,7 +127,7 @@ WOLFSSL_API int  wc_AesCbcDecrypt(Aes* aes, byte* out,
                                    const byte* authTag, word32 authTagSz,
                                    const byte* authIn, word32 authInSz)
  {
-     return crypt_aes_GcmDecrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+     return CRYPT_AES_GcmDecrypt(aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
  }
  
 #endif

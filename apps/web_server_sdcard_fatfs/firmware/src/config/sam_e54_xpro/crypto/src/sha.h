@@ -126,6 +126,10 @@ enum {
 #elif defined(WOLFSSL_IMX6_CAAM)
     #include "crypto/src/port/caam/wolfcaam_sha.h"
 
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA1)
+    #include "crypto/src/crypt_sha1_hw.h"
+    #define wc_Sha crypt_sha_hw_descriptor
+    
 #else
 /* Sha digest */
 typedef struct wc_Sha {

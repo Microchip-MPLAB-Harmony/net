@@ -522,13 +522,54 @@ int CRYPT_AES_CTR_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
 
 #endif /* WOLFSSL_AES_COUNTER */
 
+#if defined(HAVE_AESGCM)
+int CRYPT_AES_GCM_SetKey(CRYPT_AES_CTX* aes, const unsigned char* key, unsigned int len)
+{
+    typedef char aes_test[sizeof(CRYPT_AES_CTX) >= sizeof(Aes) ? 1 : -1];
+    (void)sizeof(aes_test);
+
+    if (aes == NULL || key == NULL)
+    {
+        return BAD_FUNC_ARG;
+    }
+    return wc_AesGcmSetKey((Aes*)aes, key, len);
+}
+
+int CRYPT_AES_GCM_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz)
+{
+    if (aes == NULL || out == NULL)
+    {
+         return BAD_FUNC_ARG;
+    }
+    return wc_AesGcmEncrypt((Aes*)aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+}
+
+int CRYPT_AES_GCM_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   const unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz)
+{
+    if (aes == NULL)
+    {
+         return BAD_FUNC_ARG;
+    }
+    return wc_AesGcmDecrypt((Aes*)aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+}
+
+#endif
+
 #ifdef WOLFSSL_AES_DIRECT
 
 /* AES Direct mode encrypt, one block at a time */
 int CRYPT_AES_DIRECT_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
                              const unsigned char* in)
 {
-    if (aes == NULL || out == NULL || in == NULL)
+    if (aes == NULL)
         return BAD_FUNC_ARG;
 
     wc_AesEncryptDirect((Aes*)aes, out, in);

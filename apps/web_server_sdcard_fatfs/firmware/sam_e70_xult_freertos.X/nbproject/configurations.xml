@@ -146,15 +146,6 @@
                   <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                 </logicalFolder>
-                <logicalFolder name="f2" displayName="crypto" projectFiles="true">
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_cbc.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_cfb.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_ctr.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_ecb.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_ecb_pic32.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_ofb.h</itemPath>
-                </logicalFolder>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ndp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ndp_private.h</itemPath>
@@ -477,7 +468,6 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/mib.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -596,7 +586,6 @@
                   <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/common/sys_fs_wrapper.c</itemPath>
                   <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/snmp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/nbns.c</itemPath>
@@ -621,8 +610,6 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/sntp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_announce.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/udp.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/snmpv3.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/snmpv3_usm.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -726,7 +713,6 @@
       <logicalFolder name="f2" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_e70_xult_freertos/osal/osal_freertos.c</itemPath>
       </logicalFolder>
-      <itemPath>../src/custom_snmp_app.c</itemPath>
       <itemPath>../src/http_print.c</itemPath>
       <itemPath>../src/custom_http_app.c</itemPath>
       <itemPath>../src/app.c</itemPath>
@@ -761,7 +747,6 @@
       <compileType>
         <linkerTool>
           <linkerLibItems>
-            <linkerLibFileItem>../src/config/sam_e70_xult_freertos/library/tcpip/src/crypto/aes_pic32mc.a</linkerLibFileItem>
           </linkerLibItems>
         </linkerTool>
         <archiverTool>

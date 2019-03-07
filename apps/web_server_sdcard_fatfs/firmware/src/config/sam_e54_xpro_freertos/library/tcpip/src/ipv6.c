@@ -45,11 +45,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_IPV6
 
 #include "tcpip/src/tcpip_private.h"
-#include "tcpip/src/ipv6_private.h"
-#include "crypto/crypto.h"
 
 #if defined(TCPIP_STACK_USE_IPV6)
+#include "tcpip/src/ipv6_private.h"
 
+#if (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
+#include "crypto/crypto.h"
+#endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
 // This is left shifted by 4.  Actual value is 0x04.
 #define IPv4_VERSION        (0x40u)
@@ -148,7 +150,7 @@ const IPV6_ADDRESS_POLICY gPolicyTable[] = {
 static IPV6_INTERFACE_CONFIG* ipv6Config = 0;
 
 // ULA state machine
-#if defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#if (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 static TCPIP_IPV6_ULA_STATE ulaState = TCPIP_IPV6_ULA_IDLE;
 static TCPIP_NET_IF*   ulaNetIf = 0;
 static uint16_t        ulaSubnetId;  // subnet to generate for
@@ -156,7 +158,7 @@ static IPV6_ULA_FLAGS  ulaFlags;
 static uint32_t        ulaOperStartTick;
 
 
-#endif  // defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
 
 /************************************************************************/
@@ -178,12 +180,12 @@ static void _TCPIP_IPV6_QueuedPacketTransmitTask (PROTECTED_SINGLE_LIST* pList);
 
 static void _TCPIP_IPV6_PacketEnqueue(IPV6_PACKET * pkt, SINGLE_LIST* pList, int queueLimit, int tmoSeconds, bool isProtected);
 
-#if defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#if (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
 static void TCPIP_IPV6_UlaTask (void);
 static void TCPIP_IPV6_EUI64(TCPIP_NET_IF* pNetIf, uint64_t* pRes);
 
-#endif  // defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
 // MAC API TX functions
 static uint16_t             TCPIP_IPV6_PacketPayload(IPV6_PACKET* pkt);
@@ -2569,9 +2571,9 @@ static void TCPIP_IPV6_Timeout (void)
         TCPIP_IPV6_TimestampsTaskUpdate();
         _TCPIP_IPV6_QueuedPacketTransmitTask(&mcastQueue);
         _TCPIP_IPV6_QueuedPacketTransmitTask(&ipv6QueuedPackets);
-#if defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#if (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
         TCPIP_IPV6_UlaTask();
-#endif  // defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
         ipv6StartTick =  currTick;
     }
@@ -3508,7 +3510,7 @@ void TCPIP_IPV6_SingleListFree (void * list)
 
 // ipv6.h
 
-#if defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#if (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 IPV6_ULA_RESULT TCPIP_IPV6_UniqueLocalUnicastAddressAdd (TCPIP_NET_HANDLE netH, uint16_t subnetID, IPV6_ULA_FLAGS genFlags, IP_MULTI_ADDRESS* ntpAddress)
 {
 
@@ -3541,7 +3543,7 @@ static void TCPIP_IPV6_UlaTask (void)
 {
     TCPIP_SNTP_RESULT sntpRes;
     uint32_t    lastUpdateTick, tStampWindow, currTick;
-//    CRYPT_SHA_CTX  shaSum;
+    CRYPT_SHA_CTX  shaSum;
     uint8_t shaDigest[20];  // SHA1 size is 160 bits
     IPV6_ADDR ulaAddress;
     IPV6_ULA_RESULT genRes = IPV6_ULA_RES_OK;
@@ -3624,13 +3626,13 @@ static void TCPIP_IPV6_UlaTask (void)
             }
 
             // success, valid response
-            // get the interface RUI64 identifier
+            // get the interface EUI64 identifier
             TCPIP_IPV6_EUI64(ulaNetIf, &ulaTStamp.eui64);
 
             // calculate the SHA1
-//            CRYPT_SHA_Initialize(&shaSum);
-//            CRYPT_SHA_DataAdd(&shaSum, ulaTStamp.b, sizeof(ulaTStamp));
-//            CRYPT_SHA_Finalize(&shaSum, shaDigest);
+            CRYPT_SHA_Initialize(&shaSum);
+            CRYPT_SHA_DataAdd(&shaSum, ulaTStamp.b, sizeof(ulaTStamp));
+            CRYPT_SHA_Finalize(&shaSum, shaDigest);
 
 
             // format the IPv6 address
@@ -3694,7 +3696,7 @@ static void TCPIP_IPV6_EUI64(TCPIP_NET_IF* pNetIf, uint64_t* pRes)
     *pRes = sll.ull;
 
 }
-#endif  // defined (TCPIP_STACK_USE_SNTP_CLIENT)
+#endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
 bool TCPIP_IPV6_RouterAddressAdd(TCPIP_NET_HANDLE netH, IPV6_ADDR * rAddress, unsigned long validTime, int flags)
 {

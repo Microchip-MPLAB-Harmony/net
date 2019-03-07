@@ -53,7 +53,6 @@
 #include "peripheral/efc/plib_efc.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "system/time/sys_time.h"
-#include "bsp/bsp.h"
 #include "driver/memory/drv_memory_efc.h"
 #include "net_pres/pres/net_pres.h"
 #include "net_pres/pres/net_pres_encryptionproviderapi.h"
