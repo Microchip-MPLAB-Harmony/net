@@ -38,7 +38,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-#if !defined(__PIC32C__)
+#if !defined(__PIC32C__) && !defined(__SAMA5D2__)
     #include <sys/kmem.h>
 #else
 //kmem.h dummy definitions
@@ -701,7 +701,7 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
     }
 
     pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
-#if !defined(__PIC32C__)
+#if !defined(__PIC32C__) && !defined(__SAMA5D2__)
     allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET;
 #else
     allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1);
@@ -721,7 +721,7 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
         pSeg->segSize = segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
         pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
-#if defined(__PIC32C__)
+#if defined(__PIC32C__) || defined(__SAMA5D2__)
         //assign the data segment cache-aligned
         pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
 #endif        
