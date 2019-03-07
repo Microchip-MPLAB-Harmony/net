@@ -71,6 +71,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "crypt_sha256_hw.h"
 
+struct icm_descriptor actIcmDescriptor __attribute__((aligned (64)));
+uint8_t  actBuffer[SHA256_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
+uint32_t actDigest[SHA256_DIGEST_SIZE/4] __attribute__((aligned (128)));
 
 
 int CRYPT_SHA256_InitSha(crypt_sha256_hw_descriptor* sha256, void* heap, int devId)
@@ -119,21 +122,24 @@ static int32_t CRYPT_SHA256_Process(crypt_sha256_hw_descriptor* sha256, const ui
 
     /* Transfer size = (tran_size + 1) * 512bits */
     sha256->icm_descriptor.tran_size =  (length >> 6) - 1;
+
+    memcpy(&actIcmDescriptor, &(sha256->icm_descriptor), sizeof(sha256->icm_descriptor));
     
-    SCB_CleanDCache_by_Addr((uint32_t *)(&(sha256->icm_descriptor)), sizeof(struct icm_descriptor));
+    
+    SCB_CleanDCache_by_Addr((uint32_t*) (&actIcmDescriptor), sizeof(sha256->icm_descriptor));
     SCB_CleanDCache_by_Addr((uint32_t *)input, length);
     SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha256->digest), SHA256_DIGEST_SIZE);
 
 
     /* ICM can set up FIPS default starting digest */
-    ICM_REGS->ICM_DSCR = (uint32_t)&sha256->icm_descriptor;
+    ICM_REGS->ICM_DSCR = (uint32_t)&(actIcmDescriptor);
     ICM_REGS->ICM_CFG = ICM_CFG_SLBDIS(1) 
                  | ICM_CFG_BBC(0)
                  | ICM_CFG_UALGO_SHA256
                  | ICM_CFG_UIHASH_Msk;
 
     /* MUST BE ALIGNED at 128! */
-    ICM_REGS->ICM_HASH = (uint32_t)(&(sha256->digest));
+    ICM_REGS->ICM_HASH = (uint32_t)(&(actDigest));
 
     ICM_REGS->ICM_UIHVAL[0] = sha256->digest[0];
     ICM_REGS->ICM_UIHVAL[1] = sha256->digest[1];
@@ -159,7 +165,8 @@ static int32_t CRYPT_SHA256_Process(crypt_sha256_hw_descriptor* sha256, const ui
     ICM_REGS->ICM_CTRL = ICM_CTRL_DISABLE(1);
     ICM_REGS->ICM_CTRL = ICM_CTRL_SWRST(1);
 
-    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha256->digest), SHA256_DIGEST_SIZE);
+    SCB_CleanInvalidateDCache_by_Addr((uint32_t*) (&actDigest), SHA256_DIGEST_SIZE);
+    memcpy(sha256->digest, &actDigest, sizeof(sha256->digest));
     
     return 0;
 }
@@ -183,7 +190,9 @@ int CRYPT_SHA256_Update(crypt_sha256_hw_descriptor* sha256, const byte* data, wo
     if (left && len >= fill)
     {
         memcpy((void *)(sha256->buffer + left), data, fill);
-        result = CRYPT_SHA256_Process(sha256, sha256->buffer, SHA256_BLOCK_SIZE);
+        memcpy(&actBuffer, &(sha256->buffer), sizeof(sha256->buffer));
+
+        result = CRYPT_SHA256_Process(sha256, actBuffer, SHA256_BLOCK_SIZE);
         data += fill;
         len -= fill;
         left = 0;
@@ -192,9 +201,23 @@ int CRYPT_SHA256_Update(crypt_sha256_hw_descriptor* sha256, const byte* data, wo
     /* process a full 64 bytes = 512 bits */
     if (len >= SHA256_BLOCK_SIZE)
     {
-        result = CRYPT_SHA256_Process(sha256, data, len & 0xFFFFFFC0);
-        data += (len & 0xFFFFFFC0);
-        len &= 0x3F;
+        if ((((uint32_t)data) & 63) != 0)
+        {
+            // Data is not aligned!
+            while (len > SHA256_BLOCK_SIZE)
+            {
+                memcpy(&actBuffer, data, SHA256_BLOCK_SIZE);
+                result = CRYPT_SHA256_Process(sha256, actBuffer, SHA256_BLOCK_SIZE);
+                data+=64;
+                len -=64;                
+            }
+        }
+        else {
+        
+            result = CRYPT_SHA256_Process(sha256, data, len & 0xFFFFFFC0);
+            data += (len & 0xFFFFFFC0);
+            len &= 0x3F;
+        }
     }
 
     /* fill in a partial buffer */
@@ -243,12 +266,12 @@ int CRYPT_SHA256_Final(crypt_sha256_hw_descriptor* sha256, byte* hash)
     padn = (last < SHA256_PAD_SIZE) ? (SHA256_PAD_SIZE - last) : (120 - last);
 
     /* future note: Capella will have auto padding with MSGSIZE != 0 */
-    wc_Sha256Update(sha256, sha_padding, padn);
-    wc_Sha256Update(sha256, msg_len, 8);
+    CRYPT_SHA256_Update(sha256, sha_padding, padn);
+    CRYPT_SHA256_Update(sha256, msg_len, 8);
 
     memcpy(hash, (void *)sha256->digest, SHA256_DIGEST_SIZE);
 
-    return wc_InitSha256(sha256);
+    return CRYPT_SHA256_InitSha(sha256, NULL, 0);
 }
 
 
@@ -258,7 +281,10 @@ void CRYPT_SHA256_Free(crypt_sha256_hw_descriptor* sha256)
     (void)sha256;
 }
 
-
+int CRYPT_SHA256_FinalRaw(crypt_sha256_hw_descriptor* sha256, byte* hash)
+{
+    return CRYPT_SHA256_Final(sha256, hash);
+}
 
 #endif /* NO_SHA256 */
 
