@@ -948,7 +948,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                 /* Calculate the amount of data in the packet. */
                 wCnt = wCnt - TCPIP_TFTP_HEADER_MINSIZE;
                 SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);                
-                for(maxRecvByte=(bytes_received-5);maxRecvByte>0;)
+                for(maxRecvByte=(bytes_received-TFTP_DATA_OFFSET);maxRecvByte>0;)
                 {
                     if(wCnt != 0)
                     {                        
