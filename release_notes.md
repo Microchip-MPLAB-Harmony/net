@@ -52,6 +52,7 @@ The following table provides the list of new support for MAC drivers:
 - **Bug Fixes**
 
 The following table provides the list of bug fixes in this release:
+
 | Module                | Description                                             |
 | ------ | ------ |
 | UDP                   | Updated the Disconnect to keep the remote port binding  |
