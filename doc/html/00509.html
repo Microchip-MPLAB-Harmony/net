@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ETHPHY_SMIScanStart Function</title>
+<title>DRV_GMAC_PacketTx Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; c) SMI/MIIM Functions &gt; <a href="00509.html" target="topic">DRV_ETHPHY_SMIScanStart Function</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00596.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00327.html" target="topic">Library Interface</a> &gt; c) Transmit Functions &gt; <a href="00509.html" target="topic">DRV_GMAC_PacketTx Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00506.html" target="topic">Previous</a> | <a href="00340.html" target="topic">Up</a> | <a href="00507.html" target="topic">Next</a></div>
+<a href="00515.html" target="topic">Previous</a> | <a href="00327.html" target="topic">Up</a> | <a href="00501.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_SMIScanStart@DRV_HANDLE@unsigned int Topic Title: DRV_ETHPHY_SMIScanStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_PacketTx@DRV_HANDLE@TCPIP_MAC_PACKET * Topic Title: DRV_GMAC_PacketTx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ETHPHY_SMIScanStart Function</div>
+DRV_GMAC_PacketTx Function</div>
 </div>
 </div>
 
@@ -49,43 +49,51 @@ DRV_ETHPHY_SMIScanStart Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function starts the scan of a requested SMI/MIIM register.</p></div>
+This is the MAC transmit function. Using this function a packet is submitted to the MAC driver for transmission.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00498.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_SMIScanStart</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
-    <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">rIx</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02755.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">DRV_GMAC_PacketTx</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="02672.html" target="topic">TCPIP_MAC_PACKET</a> * <strong><span style="color: #000000">ptrPacket</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element631">
-<li class="Element601">The <a href="00406.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
-<li class="Element601"><a href="00490.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
-<li class="Element601"><a href="00505.html" target="topic">DRV_ETHPHY_Setup</a> must have been called to properly configure the PHY</li>
-</ul></p></div>
+<a href="00505.html" target="topic">DRV_GMAC_Initialize</a>() should have been called. <a href="00507.html" target="topic">DRV_GMAC_Open</a>() should have been called to obtain a valid handle.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-DRV_ETHPHY_RES_PENDING - the scan transaction was initiated and is ongoing &lt; 0 - an error has occurred and the operation could not be completed</p></div>
+
+<ul class="Element631">
+<li class="Element601">TCPIP_MAC_RES_OK if success</li>
+<li class="Element601">a <a href="02755.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Use <a href="00381.html" target="topic">DRV_ETHPHY_ClientStatus</a>() and <a href="00379.html" target="topic">DRV_ETHPHY_ClientOperationResult</a>() to check when the operation was completed and its outcome.&nbsp;</p>
+
+<ul class="Element631">
+<li class="Element601">The MAC driver supports internal queuing. A packet is rejected only if it's not properly formatted. Otherwise it will be scheduled for transmission and queued internally if needed.</li>
+</ul>&nbsp;</p>
 <p class="Element10">
-However, the client status will always be DRV_ETHPHY_CLIENT_STATUS_BUSY and the client result will always show DRV_ETHPHY_RES_PENDING for as long as the scan is active. Use <a href="00511.html" target="topic">DRV_ETHPHY_SMIScanStop</a>() to stop a scan in progress. Use <a href="00510.html" target="topic">DRV_ETHPHY_SMIScanStatusGet</a>() to check is there is scan data available. Use <a href="00508.html" target="topic">DRV_ETHPHY_SMIScanDataGet</a>() to retrieve the scan data.&nbsp;</p>
+
+<ul class="Element631">
+<li class="Element601">Once the packet is scheduled for transmission the MAC driver will set the TCPIP_MAC_PKT_FLAG_QUEUED flag so that the stack is aware that this packet is under processing and cannot be modified.</li>
+</ul>&nbsp;</p>
 <p class="Element10">
-This operation is not supported when the PHY driver uses the MIIM driver for MIIM bus accesses. Use the DRV_MIIM for accessing the MIIM bus.</p></div>
+
+<ul class="Element631">
+<li class="Element601">Once the packet is transmitted, the TCPIP_MAC_PKT_FLAG_QUEUED will be cleared, the proper packet acknowledgment result (ackRes) will be set and the packet acknowledgment function (ackFunc) will be called.</li>
+</ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
@@ -99,7 +107,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; c) SMI/MIIM Functions &gt; <a href="00509.html" target="topic">DRV_ETHPHY_SMIScanStart Function</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00596.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00327.html" target="topic">Library Interface</a> &gt; c) Transmit Functions &gt; <a href="00509.html" target="topic">DRV_GMAC_PacketTx Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +115,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00506.html" target="topic">Previous</a> | <a href="00340.html" target="topic">Up</a> | <a href="00507.html" target="topic">Next</a></div>
+<a href="00515.html" target="topic">Previous</a> | <a href="00327.html" target="topic">Up</a> | <a href="00501.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_SMIScanStart@DRV_HANDLE@unsigned int Topic Title: DRV_ETHPHY_SMIScanStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_PacketTx@DRV_HANDLE@TCPIP_MAC_PACKET * Topic Title: DRV_GMAC_PacketTx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure</title>
+<title>TCPIP_TCP_Abort Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03436.html" target="topic">TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01096.html" target="topic">TCP Module</a> &gt; <a href="01474.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03436.html" target="topic">TCPIP_TCP_Abort Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03429.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03443.html" target="topic">Next</a></div>
+<a href="03450.html" target="topic">Previous</a> | <a href="01474.html" target="topic">Up</a> | <a href="03475.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_EXTERNAL_CONFIG Topic Title: TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_Abort@TCP_SOCKET@bool Topic Title: TCPIP_TCP_Abort Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure</div>
+TCPIP_TCP_Abort Function</div>
 </div>
 </div>
 
@@ -49,78 +49,67 @@ TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-External Heap Configuration Data&nbsp;</p>
+This function aborts a connection to a remote node by sending a RST (if currently connected). Any pending TX/RX data is discarded.&nbsp;</p>
 <p class="Element10">
-This data type defines the data required to initialize the TCP/IP stack external heap.</p></div>
+A client <a href="01077.html" target="topic">socket</a> will always be closed and the associated resources released. The <a href="01077.html" target="topic">socket</a> cannot be used again after this call.&nbsp;</p>
+<p class="Element10">
+A server <a href="01077.html" target="topic">socket</a> will abort the current connection:
+<ul class="Element631">
+<li class="Element601">if killSocket == false the <a href="01077.html" target="topic">socket</a> will remain listening</li>
+<li class="Element601">if killSocket == true the <a href="01077.html" target="topic">socket</a> will be closed and all associated resources released. The <a href="01077.html" target="topic">socket</a> cannot be used again after this call.</li>
+</ul></p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <a href="03490.html" target="topic">TCPIP_STACK_HEAP_TYPE</a> <strong><span style="color: #000000">heapType</span></strong>;
-  <a href="03443.html" target="topic">TCPIP_STACK_HEAP_FLAGS</a> <strong><span style="color: #000000">heapFlags</span></strong>;
-  <a href="03495.html" target="topic">TCPIP_STACK_HEAP_USAGE</a> <strong><span style="color: #000000">heapUsage</span></strong>;
-  <strong><span style="color: #000080">void</span></strong>* (* <strong><span style="color: #000000">malloc_fnc</span></strong>)(size_t bytes);
-  <strong><span style="color: #000080">void</span></strong>* (* <strong><span style="color: #000000">calloc_fnc</span></strong>)(size_t nElems, size_t elemSize);
-  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">free_fnc</span></strong>)(<strong><span style="color: #000080">void</span></strong>* ptr);
-} TCPIP_STACK_HEAP_EXTERNAL_CONFIG;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_TYPE heapType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-type of this heap: TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_FLAGS heapFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-heap creation flags TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED will be always internally set TCPIP_STACK_HEAP_FLAG_NO_MTHREAD_SYNC should be cleared if the external heap functions provide multi-threaded synchronization. Should be set if the synchronization needs to be provided by the TCP/IP heap implementation. TCPIP_STACK_HEAP_FLAG_ALLOC_UNALIGN should be set if the external heap functions provide cache line aligned buffers.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USAGE heapUsage;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-currently not used&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-void* (* malloc_fnc)(size_t bytes);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-malloc style function to be called when allocation is needed&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-void* (* calloc_fnc)(size_t nElems, size_t elemSize);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-calloc style function to be called when allocation is needed&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-void (* free_fnc)(void* ptr);&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-free style function for releasing the allocated memory&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_TCP_Abort</span></strong>(
+    <a href="01123.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">hTCP</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">killSocket</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Due to the internal alignment restrictions the externally supplied calloc function is not currently used. Instead, a less efficient approach is taken: the malloc function is used and the resulted buffer is zeroed out.</p></div>
+TCP <a href="01077.html" target="topic">socket</a> should have been opened with <a href="03482.html" target="topic">TCPIP_TCP_ServerOpen</a>()/<a href="03443.html" target="topic">TCPIP_TCP_ClientOpen</a>(). hTCP - valid <a href="01077.html" target="topic">socket</a></p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hTCP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Handle to the <a href="01077.html" target="topic">socket</a> to disconnect.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+killSocket&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+if true, it kills a server <a href="01077.html" target="topic">socket</a>&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00957.html" target="topic">Manager Module</a> &gt; <a href="01531.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03436.html" target="topic">TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01096.html" target="topic">TCP Module</a> &gt; <a href="01474.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03436.html" target="topic">TCPIP_TCP_Abort Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +117,13 @@ Due to the internal alignment restrictions the externally supplied calloc functi
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03429.html" target="topic">Previous</a> | <a href="01531.html" target="topic">Up</a> | <a href="03443.html" target="topic">Next</a></div>
+<a href="03450.html" target="topic">Previous</a> | <a href="01474.html" target="topic">Up</a> | <a href="03475.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_EXTERNAL_CONFIG Topic Title: TCPIP_STACK_HEAP_EXTERNAL_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_Abort@TCP_SOCKET@bool Topic Title: TCPIP_TCP_Abort Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

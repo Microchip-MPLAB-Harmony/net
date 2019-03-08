@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Support</title>
+<title>HTTP_IO_RESULT Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00649.html" target="topic">Support</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00631.html" target="topic">HTTP Module</a> &gt; <a href="01273.html" target="topic">Library Interface</a> &gt; <a href="01266.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00649.html" target="topic">HTTP_IO_RESULT Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01254.html" target="topic">Previous</a> | <a href="00637.html" target="topic">Next</a></div>
+<a href="02192.html" target="topic">Previous</a> | <a href="01266.html" target="topic">Up</a> | <a href="00635.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Support Topic Title: Support)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HTTP_IO_RESULT Topic Title: HTTP_IO_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Support</div>
+HTTP_IO_RESULT Enumeration</div>
 </div>
 </div>
 
@@ -49,56 +49,43 @@ Support</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section provides support information for MPLAB Harmony.</p></div>
+Result states for execution callbacks</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">HTTP_IO_DONE</span></strong> = 0u,
+  <strong><span style="color: #000000">HTTP_IO_NEED_DATA</span></strong>,
+  <strong><span style="color: #000000">HTTP_IO_WAITING</span></strong>
+} HTTP_IO_RESULT;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00637.html" target="topic">Using the Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic contains general information that is useful to know to maximize using the MPLAB Harmony help.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00644.html" target="topic">Help Features</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Describes the features available in the Help files provided in MPLAB Harmony.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00650.html" target="topic">Microchip Website</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides general information on the Microchip website.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00646.html" target="topic">Microchip Forums</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on the Microchip Web Forums.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00641.html" target="topic">Customer Support</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information for obtaining support from Microchip.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00639.html" target="topic">Contact Microchip Technology</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Worldwide sales and service contact information for Microchip Technology Inc.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00643.html" target="topic">Glossary</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic contains a glossary of general MPLAB Harmony terms.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+HTTP_IO_DONE = 0u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Finished with procedure&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+HTTP_IO_NEED_DATA&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+More data needed to continue, call again later&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+HTTP_IO_WAITING&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Waiting for asynchronous process to complete, call again later&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -106,7 +93,7 @@ This topic contains a glossary of general MPLAB Harmony terms.&nbsp;</div></td><
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00649.html" target="topic">Support</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00631.html" target="topic">HTTP Module</a> &gt; <a href="01273.html" target="topic">Library Interface</a> &gt; <a href="01266.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00649.html" target="topic">HTTP_IO_RESULT Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,13 +101,13 @@ This topic contains a glossary of general MPLAB Harmony terms.&nbsp;</div></td><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01254.html" target="topic">Previous</a> | <a href="00637.html" target="topic">Next</a></div>
+<a href="02192.html" target="topic">Previous</a> | <a href="01266.html" target="topic">Up</a> | <a href="00635.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Support Topic Title: Support)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HTTP_IO_RESULT Topic Title: HTTP_IO_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

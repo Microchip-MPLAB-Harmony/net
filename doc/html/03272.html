@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SNMP_IsValidLength Function</title>
+<title>TCPIP_STACK_EVENT_HANDLER Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01597.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03272.html" target="topic">TCPIP_SNMP_IsValidLength Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00928.html" target="topic">Manager Module</a> &gt; <a href="01377.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03272.html" target="topic">TCPIP_STACK_EVENT_HANDLER Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03271.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="03276.html" target="topic">Next</a></div>
+<a href="02077.html" target="topic">Previous</a> | <a href="01377.html" target="topic">Up</a> | <a href="02885.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_IsValidLength@SNMP_ID@uint8_t@uint8_t Topic Title: TCPIP_SNMP_IsValidLength Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_EVENT_HANDLER Topic Title: TCPIP_STACK_EVENT_HANDLER Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SNMP_IsValidLength Function</div>
+TCPIP_STACK_EVENT_HANDLER Type</div>
 </div>
 </div>
 
@@ -49,21 +49,19 @@ TCPIP_SNMP_IsValidLength Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is used to validate the dynamic variable data length to the variable data type. It is called before the SET request is processed. This is a callback function called by module. User application must implement this function.</p></div>
+TCPIP event notification handler Pointer&nbsp;</p>
+<p class="Element10">
+Pointer to a function that may be called from within an ISR when a TCP/IP event is available.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_SNMP_IsValidLength</span></strong>(
-    <a href="01159.html" target="topic">SNMP_ID</a> <strong><span style="color: #000000">var</span></strong>, 
-    uint8_t <strong><span style="color: #000000">len</span></strong>, 
-    uint8_t <strong><span style="color: #000000">index</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TCPIP_STACK_EVENT_HANDLER</span></strong>)(<a href="02903.html" target="topic">TCPIP_NET_HANDLE</a> hNet, <a href="02058.html" target="topic">TCPIP_EVENT</a>, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* fParam);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCPIP_SNMP_ProcessSetVar is called.</p></div>
+None</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,14 +78,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-var&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Variable id whose value is to be set&nbsp;</div></td></tr><tr>
+network handle&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+tcpEvent&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Length value that is to be validated.&nbsp;</div></td></tr></table></div></div>
+ORed mask of events that occurred&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+fParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+user passed parameter&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -95,25 +98,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element631">
-<li class="Element601">true - if given var can be set to given len</li>
-<li class="Element601">false - if the given var cannot be set to the given len</li>
-</ul></p></div>
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will be called for only dynamic variables that are defined as ASCII_STRING and OCTET_STRING.</p></div>
+This function may be invoked from within an ISR. It should be kept as short as possible and it should not include blocking or polling code.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01143.html" target="topic">SNMP Module</a> &gt; <a href="01597.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03272.html" target="topic">TCPIP_SNMP_IsValidLength Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00928.html" target="topic">Manager Module</a> &gt; <a href="01377.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03272.html" target="topic">TCPIP_STACK_EVENT_HANDLER Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -121,13 +120,13 @@ This function will be called for only dynamic variables that are defined as ASCI
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03271.html" target="topic">Previous</a> | <a href="01597.html" target="topic">Up</a> | <a href="03276.html" target="topic">Next</a></div>
+<a href="02077.html" target="topic">Previous</a> | <a href="01377.html" target="topic">Up</a> | <a href="02885.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_IsValidLength@SNMP_ID@uint8_t@uint8_t Topic Title: TCPIP_SNMP_IsValidLength Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_EVENT_HANDLER Topic Title: TCPIP_STACK_EVENT_HANDLER Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HTTP Configuration</title>
+<title>Building the Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00165.html" target="topic">HTTP Configuration</a></div>
+<a href="01099.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00168.html" target="topic">Demonstrations</a> &gt; <a href="00164.html" target="topic">tcpip_client_server</a> &gt; <a href="00165.html" target="topic">Building the Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00169.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="03895.html" target="topic">Next</a></div>
+<a href="00164.html" target="topic">Previous</a> | <a href="00164.html" target="topic">Up</a> | <a href="00166.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING HTTP Configuration Topic Title: HTTP Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Client Server Build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HTTP Configuration</div>
+Building the Application</div>
 </div>
 </div>
 
@@ -49,17 +49,84 @@ HTTP Configuration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If an HTTP server is used with the Microchip TCP/IP Stack, it is possible to dynamically configure the Read and Write community names through the SNMP Configuration web page.&nbsp;</p>
+The following table lists the MPLAB X projects available for this demonstration. These projects are available inside &lt;install-dir&gt;/net/apps/tcpip_client_server/firmware.&nbsp;</p>
 <p class="Element10">
-Access the web page using <a href="http://www.mchpboard_e/mpfsupload" target="_blank"><img src="indicator_external_link.gif" border="0" alt="" title="">http://mchpboard_e/mpfsupload</a> or http://&lt;Board IP address&gt;(for IPv6 it should be http://[Ipv6 address]:80/index.html), and then access the SNMP Configuration web page through the navigation bar. Use &quot;admin&quot; for the username and &quot;microchip&quot; for the password. </p><p class="Element10" style="text-align: center;">
-<img src="SNMP HTTP Community Configuration Screen.png" border="0" alt="" title=""></p></div>
+To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>MPLAB X IDE Project</strong>&nbsp;</p>
+<p class="Element10">
+This table lists the name and location of the MPLAB X IDE project folder for the demonstration.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="11%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="7%">
+<div class="Element66">
+Target Device&nbsp;</div></td><td class="Element65" valign="top" width="19%">
+<div class="Element66">
+Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="63%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="11%">
+<div class="Element68">
+sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="19%">
+<div class="Element68">
+SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Demonstrates the TCP/IP Client Server on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="11%">
+<div class="Element68">
+sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
+<div class="Element68">
+ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="19%">
+<div class="Element68">
+SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="63%">
+<div class="Element68">
+Demonstrates the TCP/IP Client Server on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>IAR Embeded Workbench IDE Project</strong>&nbsp;</p>
+<p class="Element10">
+This table lists the name and location of the IAR IDE project folder for the demonstration.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="15%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="9%">
+<div class="Element66">
+Target Device&nbsp;</div></td><td class="Element65" valign="top" width="20%">
+<div class="Element66">
+Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="56%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="15%">
+<div class="Element68">
+sam_a5d2_xult_freertos.IAR&nbsp;</div></td><td class="Element67" valign="top" width="9%">
+<div class="Element68">
+ATSAMA5D27&nbsp;</div></td><td class="Element67" valign="top" width="20%">
+<div class="Element68">
+SAM A5D2 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="56%">
+<div class="Element68">
+Demonstrates the TCP/IP Client Server on development board with ATSAMA5D27 device. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="03775.html" target="topic">Third Party</a> &gt; <a href="00950.html" target="topic">iREASONING Networks MIB Browser</a> &gt; <a href="00165.html" target="topic">HTTP Configuration</a></div>
+<a href="01099.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00168.html" target="topic">Demonstrations</a> &gt; <a href="00164.html" target="topic">tcpip_client_server</a> &gt; <a href="00165.html" target="topic">Building the Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -67,13 +134,13 @@ Access the web page using <a href="http://www.mchpboard_e/mpfsupload" target="_b
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00169.html" target="topic">Previous</a> | <a href="00950.html" target="topic">Up</a> | <a href="03895.html" target="topic">Next</a></div>
+<a href="00164.html" target="topic">Previous</a> | <a href="00164.html" target="topic">Up</a> | <a href="00166.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: 3RDPARTY iREASONING HTTP Configuration Topic Title: HTTP Configuration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP Client Server Build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
