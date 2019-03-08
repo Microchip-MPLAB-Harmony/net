@@ -97,7 +97,6 @@ void _DRV_MIIM_Task(  void *pvParameters  )
     }
 }
 
-<<<<<<< HEAD
 
 void _SYS_FS_Tasks(  void *pvParameters  )
 {
@@ -108,18 +107,6 @@ void _SYS_FS_Tasks(  void *pvParameters  )
     }
 }
 
-=======
-
-void _SYS_FS_Tasks(  void *pvParameters  )
-{
-    while(1)
-    {
-        SYS_FS_Tasks();
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}
-
->>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 
 void _SYS_CMD_Tasks(  void *pvParameters  )
 {

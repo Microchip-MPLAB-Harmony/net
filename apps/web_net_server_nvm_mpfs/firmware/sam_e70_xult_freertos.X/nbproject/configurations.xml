@@ -98,10 +98,6 @@
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/zlib-1.2.7/zutil.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
-<<<<<<< HEAD
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha_hw.h</itemPath>
-=======
->>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
           </logicalFolder>
           <logicalFolder name="f1" displayName="driver" projectFiles="true">
             <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
@@ -542,19 +538,9 @@
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-<<<<<<< HEAD
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_rng_sam6334.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/md5.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha1_sam11105.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/sha256.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha256_sam11105.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/sha512.c</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_aes_sam6149.c</itemPath>
-=======
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/sha256.c</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/sha512.c</itemPath>
->>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/des3.c</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/rsa.c</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/ecc.c</itemPath>
@@ -616,6 +602,7 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_manager.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_announce.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
             </logicalFolder>
@@ -702,7 +689,7 @@
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
-              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_1.c</itemPath>
+              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_3.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
@@ -867,7 +854,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="104960"/>
+        <property key="heap-size" value="96960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

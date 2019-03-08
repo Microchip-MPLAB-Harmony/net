@@ -535,6 +535,14 @@ extern "C" {
 
 
 
+/*** announce Configuration ***/
+#define TCPIP_STACK_USE_ANNOUNCE
+#define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512
+#define TCPIP_ANNOUNCE_TASK_RATE    333
+#define TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST             			false
+
+
+
 /*** UDP Configuration ***/
 #define TCPIP_UDP_MAX_SOCKETS		                	10
 #define TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE		    	512
@@ -585,21 +593,12 @@ extern "C" {
 #define USE_FAST_MATH
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
-<<<<<<< HEAD
-#define HAVE_MICROCHIP_HARMONY3_HW_SHA1
 #define NO_AES
-#define HAVE_MICROCHIP_HARMONY3_HW_SHA256
-#define HAVE_MICROCHIP_HARMONY3_HW_RNG
-=======
-#define NO_AES
->>>>>>> 3031e44... E70/V71 demo regeneration for web server and SNMP demos
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3
 #define NO_RNG
 #define NO_RNG_TEST
-#define CRYPTO_AES_HW_6149
-#define CRYPTO_SHA_HW_11105
 
 
 

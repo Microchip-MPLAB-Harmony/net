@@ -93,6 +93,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // private stack manager interface
 #include "tcpip/src/tcpip_manager_control.h"
 
+#include "tcpip/src/tcpip_announce_manager.h"
 #include "tcpip/src/ndp_manager.h"
 #include "tcpip/src/ipv4_manager.h"
 #include "tcpip/src/ipv6_manager.h"
