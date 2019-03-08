@@ -52,7 +52,7 @@ The following table provides the list of new support for MAC drivers:
 - **Bug Fixes**
 
 The following table provides the list of bug fixes in this release:
-| Module | Description                            |
+| Module                | Description                                             |
 | ------ | ------ |
 | UDP                   | Updated the Disconnect to keep the remote port binding  |
 | TFTP                  | Fixed PUT command behavior during file upload           |
@@ -117,7 +117,7 @@ The current known issues are as follows:
     - There are 2 wolfSSL TCP demos in the crypto repo.
 * For projects using the mpfs_img2.c file this may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
 * EDBG programming of a hex file on the SAME54 XPRO board may fail.
-* There are some mandatory MISRA violations in some of the repo files:
+* There are some mandatory MISRA violations in some of the repo files. They will be fixed in the next release:
     - System: sys_debug.c, sys_command.c
     - TCP/IP: smtpc.c, ndp.c, custom_http_net_app.c, icmpv6.c,
 
