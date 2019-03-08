@@ -9,7 +9,7 @@
 The following table provides the list of the new applications including bare metal and FreeRTOS configurations:
 
 | Application                 | Platform                        | Description                                                          |
-| ------------ | ------------ |
+| ------------ | ------------ |  ------------ |
 | web_net_server_qspi_mpfs    | SAMA5D2                         | Web server with MPFS file system using the onboard QSPI Flash Memory |
 | web_net_server_sdcard_fatfs | SAMA5D2, SAME54, SAMV71, SAME70 | Web server with FAT FS file system on the external SD Card           |
 
@@ -19,7 +19,7 @@ The following table provides the list of the new applications including bare met
 The following table provides the list of the updated applications including bare metal and FreeRTOS configurations:
 
 | Application                 | Platform                        | Description                                                          |
-| ------------ | ------------ |
+| ------------ | ------------ | ------------ |
 | berkeley_tcp_client         | SAME54, SAMV71, SAME70          | TCP Client demo using BSD API                                        |
 | berkeley_tcp_server         | SAME54, SAMV71, SAME70          | TCP Server demo using BSD API                                        |
 | berkeley_udp_client         | SAME54, SAMV71, SAME70          | UDP Client demo using BSD API                                        |
@@ -79,6 +79,7 @@ In order to regenerate source code for any of the applications, you will also ne
 - Harmony csp repository, 3.2.0
 - Harmony core repository, 3.2.0
 - Harmony dev_packs repository, 3.2.0
+- Harmony crypto repository, 3.2.0
 - CMSIS-FreeRTOS repository, 10.0.1 if building a FreeRTOS project (from www.github.com/arm-software/cmsis-freertos)
 
 #### Development Kit Support
@@ -116,6 +117,10 @@ The current known issues are as follows:
     - There are 2 wolfSSL TCP demos in the crypto repo.
 * For projects using the mpfs_img2.c file this may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
 * EDBG programming of a hex file on the SAME54 XPRO board may fail.
+* There are some mandatory MISRA violations in some of the repo files:
+    - System: sys_debug.c, sys_command.c
+    - TCP/IP: smtpc.c, ndp.c, custom_http_net_app.c, icmpv6.c,
+
 
 
 ### RELEASE CONTENTS
