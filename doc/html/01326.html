@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Library</title>
+<title>Using Iperf</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00255.html" target="topic">Berkeley Module</a> &gt; <a href="01326.html" target="topic">Building the Library</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00759.html" target="topic">Iperf Module</a> &gt; <a href="01326.html" target="topic">Using Iperf</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00958.html" target="topic">Previous</a> | <a href="00255.html" target="topic">Up</a> | <a href="01332.html" target="topic">Next</a></div>
+<a href="01325.html" target="topic">Previous</a> | <a href="00759.html" target="topic">Up</a> | <a href="01327.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP BERKELEY Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPERF Using iperf Topic Title: Using Iperf)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Library</div>
+Using Iperf</div>
 </div>
 </div>
 
@@ -49,82 +49,141 @@ Building the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/tcpip</span>.</p><div class="Element15">
-Interface File(s)</div>
+Iperf is a networking tool that helps to measure networking bandwidth and performance. The Iperf module can act as both a client and server for testing. Iperf has the ability to test both UDP and TCP. In the case of UDP, you can specify the size of the UDP datagrams. For TCP, Iperf measures the throughput of the payload.&nbsp;</p>
 <p class="Element10">
-This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
+To run Iperf, you will need a personal computer that has an Iperf application installed. There is an open source version that is maintained, as well as many other variants across the Internet.&nbsp;</p>
+<p class="Element10">
+Iperf is meant to be run on the command line. On the MPLAB Harmony TCP/IP Stack device side, there is also a built-in command console that can accept your different Iperf settings from a system console, such as the UART.&nbsp;</p>
+<p class="Element10">
+Iperf measures performance data in a unidirectional format. Therefore, the side that the server is running on is considered the receiver, and provides the most accurate performance values.</p><div class="Element15">
+Command Synopsis</div>
+<div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="32%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="32%">
+<td class="Element67" valign="top" width="30%" style="border:none;">
 <div class="Element68">
-<span class="Element146">/tcpip.h</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
+<span class="Element146">iperf [ -s|-c &lt;IP addr&gt; ]</span><br><span class="Element146"> [ -u ]</span><br><span class="Element146"> [ -i &lt;sec&gt; ]</span><br><span class="Element146"> [ -b &lt;bandwidth&gt; ]</span><br><span class="Element146"> [ -t &lt;time&gt; ]</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
 <div class="Element68">
-Header file that includes all of the TCP/IP modules.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Required File(s)</div>
+&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%" style="border:none;">
+<div class="Element68">
+<span class="Element146">-s</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
+<div class="Element68">
+Runs the Iperf server. No IP address needs to be specified.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%" style="border:none;">
+<div class="Element68">
+<span class="Element146">-c &lt;IP addr&gt;</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
+<div class="Element68">
+Runs the Iperf client. The IP address is the IP address of the server.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%" style="border:none;">
+<div class="Element68">
+<span class="Element146">-u</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
+<div class="Element68">
+Sends UDP datagrams.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%" style="border:none;">
+<div class="Element68">
+<span class="Element146">-i &lt;sec&gt;</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
+<div class="Element68">
+Specified the time interval, in seconds, that the display will be updated.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%" style="border:none;">
+<div class="Element68">
+<span class="Element146">-b &lt;bandwidth&gt;</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
+<div class="Element68">
+Specifies the amount of data to try and <a href="00977.html" target="topic">send</a>. This option is only valid with UDP datagrams.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="30%" style="border:none;">
+<div class="Element68">
+<span class="Element146">-t &lt;time&gt;</span>&nbsp;</div></td><td class="Element67" valign="top" width="70%" style="border:none;">
+<div class="Element68">
+Amount of time, in seconds, to run the test.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
 <div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
 <tr>
 <td class="Element67" valign="top" width="10%" style="border:none;">
 <div class="Element68">
-<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
-<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
+The<span style="color: #FFFFFF">_</span><a href="01077.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>size of TCP/UDP (especially TCP) will affect the benchmark result. In addition, activated TCP/IP modules will also consume CPU and Ethernet load. The traffic load in your test network environment will also affect the benchmark test.&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
+To get a reasonable maximum benchmark/evaluation data for a device target, it is recommended to disable other modules, such as HTTP, client example, server example, etc., and find a uncongested network.</p><div class="Element15">
+Running the Demonstration</div>
+
+<ol class="Element630">
+<li value="1" class="Element600">First, make sure the Iperf module and the System Console are enabled in your project.</li>
+<li value="2" class="Element600">Then, rebuild and program your project into target board.</li>
+<li value="3" class="Element600">After powering on the development board and associating the connected network, start the server side Iperf application first. If you start Iperf as a server on the development board in the console, this implies that you are trying to measure the device Ethernet receiver performance. If you start the Iperf server on a personal computer, you will be measuring MCHP device Ethernet transmit performance.</li>
+</ol><div class="Element15">
+Iperf Running Example</div>
+<p class="Element10">
+The following tests show receiver and transmitter performance, respectively with the following settings </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element65" valign="top" width="48%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="48%">
+<td class="Element67" valign="top" width="10%" style="border:none;">
 <div class="Element68">
-<span class="Element146">/src/berkeley_api.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
-Berkeley API implementation file.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Optional File(s)</div>
-<p class="Element10">
-This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="24%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Module Dependencies</div>
-<p class="Element10">
-The Berkeley module depends on the following modules:</p>
+The data does NOT show the maximum throughput of the device under test as the settings are not optimized for that. Only the DHCP client, and the TCP and UDP modules are enabled in this example:</p>
 <ul class="Element630">
-<li class="Element600"><a href="00951.html" target="topic">TCP/IP Stack Library</a></li>
-<li class="Element600"><span class="Element146"><a href="03850.html" target="topic">UDP Module</a></span></li>
-<li class="Element600"><a href="01250.html" target="topic">TCP Module</a></li>
-</ul></div>
+<li class="Element600">TCP TX and RX Socket Size = 512</li>
+<li class="Element600">UDP TX and RX Socket Size = 512</li>
+<li class="Element600">Built by MPLAB XC32 C/C++ Compiler without any optimization</li>
+<li class="Element600">Personal Computer IP Address: 172.16.175.86</li>
+<li class="Element600">Device IP Address: 172.16.175.54</li>
+</ul><p class="Element68">
+&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<strong>UDP Test</strong>&nbsp;</p>
+<p class="Element10">
+Device under test as UDP server (receive):</p>
+<ul class="Element630">
+<li class="Element600">Command on the device: <span class="Element146">iperf -s -u -i 1</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 1.png" border="0" alt="" title=""></p>
+<ul class="Element630">
+<li class="Element600">Command on personal computer: <span class="Element146">iperf -c 172.16.175.54 -b 10M -i 1 -t 5</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 2.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+Personal computer as UDP server (device transmit)</p>
+<ul class="Element630">
+<li class="Element600">Command on personal computer: <span class="Element146">iperf -s -u -i 1</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 3.png" border="0" alt="" title=""></p>
+<ul class="Element630">
+<li class="Element600">Command on the device: <span class="Element146">iperf -c 172.16.175.86 -b 50M -i 1 -t 5</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 4.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+Device as TCP server (receiving):</p>
+<ul class="Element630">
+<li class="Element600">Command on the device under test: <span class="Element146">iperf -s -i 1</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 5.png" border="0" alt="" title=""></p>
+<ul class="Element630">
+<li class="Element600">Command on personal computer: <span class="Element146">iperf -c 172.16.175.54 -i 1 -t 5</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 6.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+Personal computer as TCP server (device transmit):</p>
+<ul class="Element630">
+<li class="Element600">Command on personal computer: <span class="Element146">iperf -s -i 1</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 7.png" border="0" alt="" title=""></p>
+<ul class="Element630">
+<li class="Element600">Command on the device: <span class="Element146">iperf -c 172.16.175.86 -x 10M -i 1 -t 5</span></li>
+</ul><p class="Element10">
+<img src="IPERF Figure 8.png" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00255.html" target="topic">Berkeley Module</a> &gt; <a href="01326.html" target="topic">Building the Library</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00759.html" target="topic">Iperf Module</a> &gt; <a href="01326.html" target="topic">Using Iperf</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +191,13 @@ The Berkeley module depends on the following modules:</p>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00958.html" target="topic">Previous</a> | <a href="00255.html" target="topic">Up</a> | <a href="01332.html" target="topic">Next</a></div>
+<a href="01325.html" target="topic">Previous</a> | <a href="00759.html" target="topic">Up</a> | <a href="01327.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP BERKELEY Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPERF Using iperf Topic Title: Using Iperf)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

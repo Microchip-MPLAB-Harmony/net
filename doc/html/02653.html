@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro</title>
+<title>TCPIP_MAC_LinkCheck Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01468.html" target="topic">Configuring the Library</a> &gt; <a href="02653.html" target="topic">TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00927.html" target="topic">MAC Driver Module</a> &gt; <a href="01364.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02653.html" target="topic">TCPIP_MAC_LinkCheck Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02627.html" target="topic">Previous</a> | <a href="01468.html" target="topic">Up</a> | <a href="02654.html" target="topic">Next</a></div>
+<a href="02610.html" target="topic">Previous</a> | <a href="01364.html" target="topic">Up</a> | <a href="02747.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_ROBUSTNESS_VARIABLE Topic Title: TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_LinkCheck@DRV_HANDLE Topic Title: TCPIP_MAC_LinkCheck Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro</div>
+TCPIP_MAC_LinkCheck Function</div>
 </div>
 </div>
 
@@ -49,17 +49,64 @@ TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The default Robustness Variable value The Robustness Variable allows tuning for the expected packet loss on a network. If a network is expected to be lossy, the Robustness Variable may be increased. IGMP is robust to (Robustness Variable - 1) packet losses. RFC 3376 IGMPv3: The Robustness Variable MUST NOT be zero, and SHOULD NOT be one. Default: 2 This is just a default value. The actual value is taken from a router query.</p></div>
+This is a function that returns the current status of the link.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_IGMP_ROBUSTNESS_VARIABLE</span></strong> 2</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_MAC_LinkCheck</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+<a href="02648.html" target="topic">TCPIP_MAC_Initialize</a> should have been called. <a href="02671.html" target="topic">TCPIP_MAC_Open</a> should have been called to obtain a valid handle.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle identifying the MAC driver client&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">true - if the link is up</li>
+<li class="Element601">false - if the link is down</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The stack will call this function periodically. Therefore this function is not required to initiate a new PHY transaction and to wait for the result. It can just initiate a new PHY transaction and return immediately the result of the previous transaction.</p></div>
+</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00755.html" target="topic">IGMP Module</a> &gt; <a href="01468.html" target="topic">Configuring the Library</a> &gt; <a href="02653.html" target="topic">TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00927.html" target="topic">MAC Driver Module</a> &gt; <a href="01364.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02653.html" target="topic">TCPIP_MAC_LinkCheck Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -67,13 +114,13 @@ C</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02627.html" target="topic">Previous</a> | <a href="01468.html" target="topic">Up</a> | <a href="02654.html" target="topic">Next</a></div>
+<a href="02610.html" target="topic">Previous</a> | <a href="01364.html" target="topic">Up</a> | <a href="02747.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_ROBUSTNESS_VARIABLE Topic Title: TCPIP_IGMP_ROBUSTNESS_VARIABLE Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_LinkCheck@DRV_HANDLE Topic Title: TCPIP_MAC_LinkCheck Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

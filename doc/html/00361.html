@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>DRV_ETHPHY_Deinitialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00625.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00361.html" target="topic">Using the Library</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00597.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00311.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00361.html" target="topic">DRV_ETHPHY_Deinitialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00355.html" target="topic">Previous</a> | <a href="00625.html" target="topic">Up</a> | <a href="00348.html" target="topic">Next</a></div>
+<a href="00377.html" target="topic">Previous</a> | <a href="00311.html" target="topic">Up</a> | <a href="00464.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Deinitialize@SYS_MODULE_OBJ Topic Title: DRV_ETHPHY_Deinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+DRV_ETHPHY_Deinitialize Function</div>
 </div>
 </div>
 
@@ -49,39 +49,52 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The user of this driver is the MPLAB Harmony TCP/IP stack. This Ethernet driver is not intended as a system wide driver that the application or other system modules may use. It is intended for the sole use of the MPLAB Harmony TCP/IP stack and implements the virtual MAC model required by the stack.&nbsp;</p>
-<p class="Element10">
-This topic describes the basic architecture and functionality of the Ethernet MAC driver and is meant for advanced users or TCP/IP stack driver developers.&nbsp;</p>
-<p class="Element10">
-<strong>Interface Header File</strong>: <span class="Element146"><a href="00526.html" target="topic">drv_gmac.h</a></span>&nbsp;</p>
-<p class="Element10">
-The interface to the Ethernet MAC library is defined in the <span class="Element146"><a href="00526.html" target="topic">drv_gmac.h</a></span> header file, which is included by the MPLAB Harmony TCP/IP stack.&nbsp;</p>
-<p class="Element10">
-Please refer to the <strong>What is MPLAB Harmony?</strong> section for how the library interacts with the framework.</p></div>
+This function deinitializes the specified instance of the Ethernet PHY driver module, disabling its operation (and any hardware) and invalidates all of the internal data.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">DRV_ETHPHY_Deinitialize</span></strong>(
+    SYS_MODULE_OBJ <strong><span style="color: #000000">object</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00348.html" target="topic">Abstraction Model</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This library provides a low-level abstraction of the Ethernet GMAC Driver Library on Microchip's devices with a convenient C language interface. This topic describes how that abstraction is modeled in software and introduces the library's interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00357.html" target="topic">Library Overview</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Refer to the <strong>Driver Library Overview</strong> section for information on how the driver operates in a system. Refer to the <a href="00956.html" target="topic">TCP/IP Stack MAC Driver Module</a> help for the interface that the Ethernet driver has to implement in a MPLAB Harmony system.<br><span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the Ethernet GMAC Driver Library.</span> &nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="00377.html" target="topic">DRV_ETHPHY_Initialize</a> function must have been called before calling this routine and a valid SYS_MODULE_OBJ must have been returned.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element631">
+<li class="Element601">Once the Initialize operation has been called, the Deinitialize operation must be called before the Initialize operation can be called again.</li>
+</ul></p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">SYS_MODULE_OBJ      object;     <i><span style="color: #008000">//  Returned from DRV_ETHPHY_Initialize</span></i>
+SYS_STATUS          status;
+
+DRV_ETHPHY_Deinitialize(object);
+
+status = <a href="00485.html" target="topic">DRV_ETHPHY_Status</a>(object);
+<strong><span style="color: #000080">if</span></strong> (SYS_MODULE_DEINITIALIZED != status)
+{
+    <i><span style="color: #008000">// Check again later if you need to know</span></i>
+    <i><span style="color: #008000">// when the driver is deinitialized.</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -89,7 +102,7 @@ Refer to the <strong>Driver Library Overview</strong> section for information on
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00625.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00361.html" target="topic">Using the Library</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00597.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00311.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00361.html" target="topic">DRV_ETHPHY_Deinitialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -97,13 +110,13 @@ Refer to the <strong>Driver Library Overview</strong> section for information on
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00355.html" target="topic">Previous</a> | <a href="00625.html" target="topic">Up</a> | <a href="00348.html" target="topic">Next</a></div>
+<a href="00377.html" target="topic">Previous</a> | <a href="00311.html" target="topic">Up</a> | <a href="00464.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Deinitialize@SYS_MODULE_OBJ Topic Title: DRV_ETHPHY_Deinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

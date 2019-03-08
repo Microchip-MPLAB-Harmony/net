@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_NET_ConnectionStringFind Function</title>
+<title>TCPIP_HTTP_PostExecute Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02398.html" target="topic">TCPIP_HTTP_NET_ConnectionStringFind Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00631.html" target="topic">HTTP Module</a> &gt; <a href="01273.html" target="topic">Library Interface</a> &gt; <a href="01270.html" target="topic">a) Functions</a> &gt; <a href="02398.html" target="topic">TCPIP_HTTP_PostExecute Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02397.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02399.html" target="topic">Next</a></div>
+<a href="02186.html" target="topic">Previous</a> | <a href="01270.html" target="topic">Up</a> | <a href="02402.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionStringFind@TCPIP_HTTP_NET_CONN_HANDLE@char*@uint16_t@uint16_t Topic Title: TCPIP_HTTP_NET_ConnectionStringFind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_PostExecute@HTTP_CONN_HANDLE Topic Title: TCPIP_HTTP_PostExecute Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_NET_ConnectionStringFind Function</div>
+TCPIP_HTTP_PostExecute Function</div>
 </div>
 </div>
 
@@ -49,22 +49,29 @@ TCPIP_HTTP_NET_ConnectionStringFind Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function searches for an ASCIIZ string in the RX buffer of the connection. It does the search by performing a peek operation in the RX buffer, (i.e., the RX data in the buffer is not consumed and it is available for further read operations). It works for both encrypted and unencrypted connections.</p></div>
+This function is implemented by the application developer. Its purpose is to parse the data received from POST forms and perform any application-specific tasks in response to these inputs. Any required authentication has already been validated before this function is called.&nbsp;</p>
+<p class="Element10">
+When this function is called, POST data will be waiting in the TCP buffer. The connection byteCount (see <a href="02125.html" target="topic">TCPIP_HTTP_CurrentConnectionByteCountGet</a> will indicate the number of bytes remaining to be read before the browser request is complete.&nbsp;</p>
+<p class="Element10">
+Since data is still in the TCP buffer, the application must call <a href="03438.html" target="topic">TCPIP_TCP_ArrayGet</a> in order to retrieve bytes. When this is done, connection byteCount MUST be updated to reflect how many bytes now remain. The functions <a href="03437.html" target="topic">TCPIP_TCP_ArrayFind</a> and <a href="03458.html" target="topic">TCPIP_TCP_Find</a> may be helpful to locate data in the TCP buffer.&nbsp;</p>
+<p class="Element10">
+In general, data submitted from web forms via POST is URL encoded. The <a href="02416.html" target="topic">TCPIP_HTTP_URLDecode</a> function can be used to decode this information back to a standard string if required. If data buffer space associated with this connection is required, the connection data buffer (see <a href="02129.html" target="topic">TCPIP_HTTP_CurrentConnectionDataBufferGet</a>()) may be overwritten here once the application is done with the values. Any data placed there will be available to future callbacks for this connection, including TCPIP_HTTP_PostExecute and any <a href="02402.html" target="topic">TCPIP_HTTP_Print_varname</a> dynamic substitutions.&nbsp;</p>
+<p class="Element10">
+Whenever a POST form is processed it is recommended to issue a redirect back to the browser, either to a status page or to the same form page that was posted. This prevents accidental duplicate submissions (by clicking refresh or back/forward) and avoids browser warnings about &quot;resubmitting form data&quot;. Redirects may be issued to the browser by setting the connection data buffer to the destination file or URL, and the connection httpStatus (<a href="02143.html" target="topic">TCPIP_HTTP_CurrentConnectionStatusSet</a>()) to HTTP_REDIRECT.&nbsp;</p>
+<p class="Element10">
+Finally, this function may set cookies. Set the connection data buffer to a series of name/value string pairs (in the same format in which parameters arrive), and then set the connection hasArgs (<a href="02134.html" target="topic">TCPIP_HTTP_CurrentConnectionHasArgsSet</a>) equal to the number of cookie name/value pairs. The cookies will be transmitted to the browser, and any future requests will have those values available in the connection data buffer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionStringFind</span></strong>(
-    <a href="02363.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">str</span></strong>, 
-    uint16_t <strong><span style="color: #000000">startOffs</span></strong>, 
-    uint16_t <strong><span style="color: #000000">searchLen</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00649.html" target="topic">HTTP_IO_RESULT</a> <strong><span style="color: #000000">TCPIP_HTTP_PostExecute</span></strong>(
+    <a href="00634.html" target="topic">HTTP_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-connHandle - a valid HTTP connection.</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,22 +90,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-HTTP connection handle&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-str&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-0 terminated ASCII string to search for&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-startOffs&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-offset in the RX buffer to start the search from&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-searchLen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-if !0 it is the length of buffer to search into (starting from startOffs); if 0, the whole buffer is searched&nbsp;</div></td></tr></table></div></div>
+HTTP connection handle&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -107,8 +99,9 @@ Returns</div>
 <div class="Element10">
 
 <ul class="Element630">
-<li class="Element600">If string was found - a zero-indexed position in the RX buffer of the string occurrence</li>
-<li class="Element600">0xFFFF - Search array not found</li>
+<li class="Element600">HTTP_IO_DONE - application is done processing</li>
+<li class="Element600">HTTP_IO_NEED_DATA - more data is needed to continue, and this function should be called again later</li>
+<li class="Element600">HTTP_IO_WAITING - the application is waiting for an asynchronous process to complete, and this function should be called again later</li>
 </ul></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -116,14 +109,16 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function currently performs the search by doing a whole buffer peek into one single operation. Note that the search will fail if there's more data in the TCP <a href="01231.html" target="topic">socket</a> than could be read at once.</p></div>
+This function is only called when the request method is POST, and is only used when HTTP_USE_POST is defined. This method may NOT write to the TCP buffer.&nbsp;</p>
+<p class="Element10">
+This function may service multiple HTTP requests simultaneously. Exercise caution when using global or static variables inside this routine. Use the connection callbackPos (<a href="02127.html" target="topic">TCPIP_HTTP_CurrentConnectionCallbackPosGet</a>) or connection data buffer for storage associated with individual requests.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00659.html" target="topic">HTTP Net Module</a> &gt; <a href="01440.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02398.html" target="topic">TCPIP_HTTP_NET_ConnectionStringFind Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00631.html" target="topic">HTTP Module</a> &gt; <a href="01273.html" target="topic">Library Interface</a> &gt; <a href="01270.html" target="topic">a) Functions</a> &gt; <a href="02398.html" target="topic">TCPIP_HTTP_PostExecute Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -131,13 +126,13 @@ This function currently performs the search by doing a whole buffer peek into on
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02397.html" target="topic">Previous</a> | <a href="01440.html" target="topic">Up</a> | <a href="02399.html" target="topic">Next</a></div>
+<a href="02186.html" target="topic">Previous</a> | <a href="01270.html" target="topic">Up</a> | <a href="02402.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionStringFind@TCPIP_HTTP_NET_CONN_HANDLE@char*@uint16_t@uint16_t Topic Title: TCPIP_HTTP_NET_ConnectionStringFind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_PostExecute@HTTP_CONN_HANDLE Topic Title: TCPIP_HTTP_PostExecute Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

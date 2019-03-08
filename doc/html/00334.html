@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00334.html" target="topic">Building the Library</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00937.html" target="topic">MIIM Driver Library</a> &gt; <a href="00334.html" target="topic">Building the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00516.html" target="topic">Previous</a> | <a href="00626.html" target="topic">Up</a> | <a href="00340.html" target="topic">Next</a></div>
+<a href="00538.html" target="topic">Previous</a> | <a href="00937.html" target="topic">Up</a> | <a href="00340.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV MIIM Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Building the Library</div>
 </div>
@@ -49,23 +49,23 @@ Building the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/driver/ethphy</span>.</p><div class="Element15">
+The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/driver/miim/</span><span style="color: #0000FF">.</span></p><div class="Element15">
 Interface File(s)</div>
 <p class="Element10">
 This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="41%">
+<td class="Element65" valign="top" width="33%">
 <div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="59%">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="67%">
 <div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="41%">
+<td class="Element67" valign="top" width="33%">
 <div class="Element68">
-<span class="Element146">/<a href="00372.html" target="topic">drv_ethphy.h</a></span>&nbsp;</div></td><td class="Element67" valign="top" width="59%">
+<span class="Element146">/<a href="00520.html" target="topic">drv_miim.h</a></span>&nbsp;</div></td><td class="Element67" valign="top" width="67%">
 <div class="Element68">
-Header file that exports the driver API.&nbsp;</div></td></tr></table></div></div>
+This is the MIIM Driver Library's interface header file.&nbsp;</div></td></tr></table></div></div>
 <div class="Element15">
 Required File(s)</div>
 <div class="Element63">
@@ -82,74 +82,41 @@ This table lists and describes the source and header files that must <i>always</
 <div class="TableDiv">
 <table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="48%">
+<td class="Element65" valign="top" width="32%">
 <div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
 <div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="48%">
+<td class="Element67" valign="top" width="32%">
 <div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
+<span class="Element146">/src/dynamic/drv_miim.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
 <div class="Element68">
-Basic PHY driver implementation file.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Optional File(s)</div>
+This file contains the source code for the dynamic implementation of the MIIM Driver.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<strong>Optional File(s)</strong>&nbsp;</p>
 <p class="Element10">
 This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="49%">
+<td class="Element65" valign="top" width="24%">
 <div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="51%">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
 <div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="49%">
+<td class="Element67" valign="top" width="24%">
 <div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy_smsc8700.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
 <div class="Element68">
-Microchip LAN8700 PHY implementation file.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="49%">
-<div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy_smsc8720.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
-<div class="Element68">
-Microchip LAN8720 PHY implementation file.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="49%">
-<div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy_smsc8740.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
-<div class="Element68">
-Microchip LAN8740 PHY implementation file.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="49%">
-<div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy_smsc9303.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
-<div class="Element68">
-Microchip LAN9303 PHY implementation file.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="49%">
-<div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy_ksz8041.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
-<div class="Element68">
-Microchip KSZ8041 PHY implementation file.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="49%">
-<div class="Element68">
-<span class="Element146">/src/dynamic/drv_extphy_ksz8061.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
-<div class="Element68">
-Microchip KSZ8061 PHY implementation file.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Module Dependencies</div>
-<p class="Element10">
-The Ethernet MAC Driver Library depends on the following modules:
-<ul class="Element631">
-<li class="Element601">MIIM <a href="00966.html" target="topic">MIIM Driver</a></li>
-<li class="Element601"><strong>Timer System Service Library</strong></li>
-<li class="Element601"><strong>Console System Service Library - </strong>for displaying diagnostic messages</li>
-</ul></p></div>
+No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00334.html" target="topic">Building the Library</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00937.html" target="topic">MIIM Driver Library</a> &gt; <a href="00334.html" target="topic">Building the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -157,13 +124,13 @@ The Ethernet MAC Driver Library depends on the following modules:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00516.html" target="topic">Previous</a> | <a href="00626.html" target="topic">Up</a> | <a href="00340.html" target="topic">Next</a></div>
+<a href="00538.html" target="topic">Previous</a> | <a href="00937.html" target="topic">Up</a> | <a href="00340.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV MIIM Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

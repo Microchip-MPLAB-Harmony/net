@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_LinkCheck Function</title>
+<title>TCPIP_MAC_Status Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02805.html" target="topic">TCPIP_MAC_LinkCheck Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00927.html" target="topic">MAC Driver Module</a> &gt; <a href="01364.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02805.html" target="topic">TCPIP_MAC_Status Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02762.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02899.html" target="topic">Next</a></div>
+<a href="02754.html" target="topic">Previous</a> | <a href="01364.html" target="topic">Up</a> | <a href="02815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_LinkCheck@DRV_HANDLE Topic Title: TCPIP_MAC_LinkCheck Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_Status@SYS_MODULE_OBJ Topic Title: TCPIP_MAC_Status Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_LinkCheck Function</div>
+TCPIP_MAC_Status Function</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ TCPIP_MAC_LinkCheck Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This is a function that returns the current status of the link.</p></div>
+This function provides the current status of the MAC driver module.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_MAC_LinkCheck</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">SYS_STATUS <strong><span style="color: #000000">TCPIP_MAC_Status</span></strong>(
+    SYS_MODULE_OBJ <strong><span style="color: #000000">object</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02800.html" target="topic">TCPIP_MAC_Initialize</a> should have been called. <a href="02823.html" target="topic">TCPIP_MAC_Open</a> should have been called to obtain a valid handle.</p></div>
+The <a href="02648.html" target="topic">TCPIP_MAC_Initialize</a> function must have been called before calling this function.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+object&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-handle identifying the MAC driver client&nbsp;</div></td></tr></table></div></div>
+Driver object handle, returned from <a href="02648.html" target="topic">TCPIP_MAC_Initialize</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -90,8 +90,9 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element631">
-<li class="Element601">true - if the link is up</li>
-<li class="Element601">false - if the link is down</li>
+<li class="Element601">SYS_STATUS_READY - Indicates that any previous module operation for the specified module has completed</li>
+<li class="Element601">SYS_STATUS_BUSY - Indicates that a previous module operation for the specified module has not yet completed</li>
+<li class="Element601">SYS_STATUS_ERROR - Indicates that the specified module is in an error state</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -99,14 +100,44 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The stack will call this function periodically. Therefore this function is not required to initiate a new PHY transaction and to wait for the result. It can just initiate a new PHY transaction and return immediately the result of the previous transaction.</p></div>
+Any value greater than SYS_STATUS_READY is also a normal running state in which the driver is ready to accept new operations.&nbsp;</p>
+<p class="Element10">
+SYS_STATUS_BUSY - Indicates that the driver is busy with a previous system level operation and cannot start another&nbsp;</p>
+<p class="Element10">
+SYS_STATUS_ERROR - Indicates that the driver is in an error state Any value less than SYS_STATUS_ERROR is also an error state.&nbsp;</p>
+<p class="Element10">
+SYS_MODULE_DEINITIALIZED - Indicates that the driver has been deinitialized&nbsp;</p>
+<p class="Element10">
+This operation can be used to determine when any of the driver's module level operations has completed.&nbsp;</p>
+<p class="Element10">
+If the status operation returns SYS_STATUS_BUSY, then a previous operation has not yet completed. Once the status operation returns SYS_STATUS_READY, any previous operations have completed.&nbsp;</p>
+<p class="Element10">
+The value of SYS_STATUS_ERROR is negative (-1). Any value less than that is also an error state.&nbsp;</p>
+<p class="Element10">
+This function will NEVER block waiting for hardware.&nbsp;</p>
+<p class="Element10">
+If the Status operation returns an error value, the error may be cleared by calling the reinitialize operation. If that fails, the deinitialize operation will need to be called, followed by the initialize operation to return to normal operations.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">SYS_MODULE_OBJ      object;     <i><span style="color: #008000">// Returned from TCPIP_MAC_Initialize</span></i>
+SYS_STATUS          status;
+
+status = TCPIP_MAC_Status(object);
+<strong><span style="color: #000080">if</span></strong> (SYS_STATUS_ERROR &gt;= status)
+{
+    <i><span style="color: #008000">// Handle error</span></i>
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00956.html" target="topic">MAC Driver Module</a> &gt; <a href="01518.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02805.html" target="topic">TCPIP_MAC_LinkCheck Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00927.html" target="topic">MAC Driver Module</a> &gt; <a href="01364.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02805.html" target="topic">TCPIP_MAC_Status Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,13 +145,13 @@ The stack will call this function periodically. Therefore this function is not r
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02762.html" target="topic">Previous</a> | <a href="01518.html" target="topic">Up</a> | <a href="02899.html" target="topic">Next</a></div>
+<a href="02754.html" target="topic">Previous</a> | <a href="01364.html" target="topic">Up</a> | <a href="02815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_LinkCheck@DRV_HANDLE Topic Title: TCPIP_MAC_LinkCheck Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_Status@SYS_MODULE_OBJ Topic Title: TCPIP_MAC_Status Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ETHPHY_RESET_FUNCTION Type</title>
+<title>DRV_ETHPHY_VendorSMIWriteStart Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00496.html" target="topic">DRV_ETHPHY_RESET_FUNCTION Type</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00597.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00311.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00496.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00017.html" target="topic">Previous</a> | <a href="00340.html" target="topic">Up</a> | <a href="00498.html" target="topic">Next</a></div>
+<a href="00495.html" target="topic">Previous</a> | <a href="00311.html" target="topic">Up</a> | <a href="00401.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_RESET_FUNCTION Topic Title: DRV_ETHPHY_RESET_FUNCTION Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_VendorSMIWriteStart@DRV_HANDLE@uint16_t@uint16_t@int Topic Title: DRV_ETHPHY_VendorSMIWriteStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ETHPHY_RESET_FUNCTION Type</div>
+DRV_ETHPHY_VendorSMIWriteStart Function</div>
 </div>
 </div>
 
@@ -49,42 +49,64 @@ DRV_ETHPHY_RESET_FUNCTION Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Pointer to Function: typedef void (* DRV_ETHPHY_RESET_FUNCTION) ( const struct <a href="00444.html" target="topic">DRV_ETHPHY_OBJECT_BASE_TYPE</a>* pBaseObj);&nbsp;</p>
-<p class="Element10">
-This type describes a pointer to a function that is called by the driver before starting the detection and initialization process to the PHY - as a result of the <a href="00505.html" target="topic">DRV_ETHPHY_Setup</a> call.</p></div>
+This function will start a SMI write transfer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">DRV_ETHPHY_RESET_FUNCTION</span></strong>)(<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00444.html" target="topic">DRV_ETHPHY_OBJECT_BASE_TYPE</a>* pBaseObj);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00469.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_VendorSMIWriteStart</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
+    uint16_t <strong><span style="color: #000000">rIx</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wData</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">phyAddress</span></strong>
+);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+
+<ul class="Element631">
+<li class="Element601">The <a href="00377.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
+<li class="Element601"><a href="00461.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
+<li class="Element601"><a href="00476.html" target="topic">DRV_ETHPHY_Setup</a> is in progress and configures the PHY</li>
+<li class="Element601">The vendor implementation of the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure is running and a SMI transfer is needed</li>
+</ul></p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+DRV_ETHPHY_RES_OK - if the vendor SMI write transfer is started&nbsp;</p>
+<p class="Element10">
+DRV_ETHPHY_RES_PENDING - the SMI bus was busy and the call needs to be retried&nbsp;</p>
+<p class="Element10">
+&lt; 0 - some error and the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure has to return error to be aborted by the <a href="00476.html" target="topic">DRV_ETHPHY_Setup</a></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The PHY driver will call this function as part of its detection and initialization procedure. It can be used for implementing extra steps that the user needs, before the driver starts talking to the PHY. For example, if a hard reset needs to be applied to the PHY.&nbsp;</p>
+The function is intended for implementing vendor SMI transfers within DRV_EXTPHY_MIIConfigure and DRV_EXTPHY_MDIXConfigure.&nbsp;</p>
 <p class="Element10">
-The function should be short and not block. It is meant just for short I/O operations, not for lengthy processing.</p></div>
+It has to be called from within the DRV_EXTPHY_MIIConfigure or DRV_EXTPHY_MDIXConfigure functions (which are called, in turn, by the <a href="00476.html" target="topic">DRV_ETHPHY_Setup</a> procedure) otherwise the call will fail.&nbsp;</p>
+<p class="Element10">
+The DRV_ETHPHY_RES_OK and DRV_ETHPHY_RES_PENDING significance is changed from the general driver API.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01403.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00626.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00496.html" target="topic">DRV_ETHPHY_RESET_FUNCTION Type</a></div>
+<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00597.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00311.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00496.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -92,13 +114,13 @@ The function should be short and not block. It is meant just for short I/O opera
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00017.html" target="topic">Previous</a> | <a href="00340.html" target="topic">Up</a> | <a href="00498.html" target="topic">Next</a></div>
+<a href="00495.html" target="topic">Previous</a> | <a href="00311.html" target="topic">Up</a> | <a href="00401.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_RESET_FUNCTION Topic Title: DRV_ETHPHY_RESET_FUNCTION Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_VendorSMIWriteStart@DRV_HANDLE@uint16_t@uint16_t@int Topic Title: DRV_ETHPHY_VendorSMIWriteStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

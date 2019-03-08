@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_TCP_SignalHandlerRegister Function</title>
+<title>TCPIP_UDP_RemoteBind Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03650.html" target="topic">TCPIP_TCP_SignalHandlerRegister Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03698.html" target="topic">UDP Module</a> &gt; <a href="01519.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03650.html" target="topic">TCPIP_UDP_RemoteBind Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03649.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03615.html" target="topic">Next</a></div>
+<a href="03627.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="03629.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SignalHandlerRegister@TCP_SOCKET@TCPIP_TCP_SIGNAL_TYPE@TCPIP_TCP_SIGNAL_FUNCTION@void* Topic Title: TCPIP_TCP_SignalHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_RemoteBind@UDP_SOCKET@IP_ADDRESS_TYPE@UDP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_RemoteBind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_TCP_SignalHandlerRegister Function</div>
+TCPIP_UDP_RemoteBind Function</div>
 </div>
 </div>
 
@@ -49,22 +49,22 @@ TCPIP_TCP_SignalHandlerRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function registers a TCP <a href="01231.html" target="topic">socket</a> signal handler. The TCP module will call the registered handler when a TCP signal (<a href="03637.html" target="topic">TCPIP_TCP_SIGNAL_TYPE</a>) occurs.</p></div>
+Sockets don't need specific remote binding, they should accept connections on any incoming interface. Therefore, the binding is done automatically by the stack. However, specific remote binding can be requested using this function. For a server <a href="01077.html" target="topic">socket</a> it can be used to restrict accepting connections from a specific remote host. For a client <a href="01077.html" target="topic">socket</a> it will just change the default binding done when the <a href="01077.html" target="topic">socket</a> was opened.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03636.html" target="topic">TCPIP_TCP_SIGNAL_HANDLE</a> <strong><span style="color: #000000">TCPIP_TCP_SignalHandlerRegister</span></strong>(
-    <a href="01277.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
-    <a href="03637.html" target="topic">TCPIP_TCP_SIGNAL_TYPE</a> <strong><span style="color: #000000">sigMask</span></strong>, 
-    <a href="03635.html" target="topic">TCPIP_TCP_SIGNAL_FUNCTION</a> <strong><span style="color: #000000">handler</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">hParam</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_UDP_RemoteBind</span></strong>(
+    <a href="03713.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>, 
+    IP_ADDRESS_TYPE <strong><span style="color: #000000">addType</span></strong>, 
+    <a href="03712.html" target="topic">UDP_PORT</a> <strong><span style="color: #000000">remotePort</span></strong>, 
+    IP_MULTI_ADDRESS* <strong><span style="color: #000000">remoteAddress</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCP valid <a href="01231.html" target="topic">socket</a>.</p></div>
+UDP <a href="01077.html" target="topic">socket</a> should have been opened with <a href="03652.html" target="topic">TCPIP_UDP_ServerOpen</a>/<a href="03628.html" target="topic">TCPIP_UDP_ClientOpen</a>. hUDP - valid <a href="01077.html" target="topic">socket</a></p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,24 +81,24 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The TCP <a href="01231.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+The <a href="01077.html" target="topic">socket</a> to bind.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-sigMask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-mask of signals to be reported&nbsp;</div></td></tr><tr>
+The type of address being used. Valid values are IP_ADDRESS_TYPE_ANY/IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-handler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+remotePort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-signal handler to be called when a TCP event occurs.&nbsp;</div></td></tr><tr>
+The remote port to bind to.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+remoteAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Parameter to be used in the handler call. This is user supplied and is not used by the TCP module.&nbsp;</div></td></tr></table></div></div>
+Remote address to use.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -106,29 +106,35 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Returns a valid handle if the call succeeds, or a null handle if the call failed (null handler, no such <a href="01231.html" target="topic">socket</a>, existent handler).</p></div>
+
+<ul class="Element631">
+<li class="Element601">true - Indicates success</li>
+<li class="Element601">false - Indicates failure</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Only one signal handler per <a href="01231.html" target="topic">socket</a> is supported. A new handler does not override the existent one. Instead <a href="03649.html" target="topic">TCPIP_TCP_SignalHandlerDeregister</a> has to be explicitly called.&nbsp;</p>
+If address type IP_ADDRESS_TYPE_ANY is used, the remoteAddress parameter won't be used and the <a href="01077.html" target="topic">socket</a> won't change the remote destination address. However, for the call to succeed, <a href="01077.html" target="topic">socket</a> must have been created with IP_ADDRESS_TYPE_ANY type and must not be currently bound to a IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6 type.&nbsp;</p>
 <p class="Element10">
-The handler has to be short and fast. It is meant for setting an event flag, not for lengthy processing!&nbsp;</p>
+If address type IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6 is used, then the <a href="01077.html" target="topic">socket</a> type will be changed accordingly, and the remoteAddress will be used, if provided. The <a href="01077.html" target="topic">socket</a> will be bound to this type of address. For the call to succeed the <a href="01077.html" target="topic">socket</a> must currently have the type IP_ADDRESS_TYPE_ANY or to match the addType parameter.&nbsp;</p>
 <p class="Element10">
-The hParam is passed by the client.&nbsp;</p>
+If the remoteAddress != 0 and addType != IP_ADDRESS_TYPE_ANY, the call will enforce UDP_OPTION_STRICT_ADDRESS on the <a href="01077.html" target="topic">socket</a>.&nbsp;</p>
 <p class="Element10">
-For multi-threaded systems the TCP/IP packet dispatch does not occur on the user thread. The signal handler will be called on a different thread context. It is essential that this handler is non blocking and really fast.&nbsp;</p>
+The remote port is always changed, even if remotePort == 0. It will enforce UDP_OPTION_STRICT_PORT on the <a href="01077.html" target="topic">socket</a>.&nbsp;</p>
 <p class="Element10">
-For multi-threaded systems, once set, it is not recommended to change the signal handler at run time. Synchronization between user threads and packet dispatch threads could be difficult. If really need to be changed, make sure that the old handler could still be called and it should be valid until the new one is taken into account. <a href="03649.html" target="topic">TCPIP_TCP_SignalHandlerDeregister</a> needs to be called before registering another handler.</p></div>
+In order to change dynamically the type of address, the <a href="01077.html" target="topic">socket</a> must have been created with a IP_ADDRESS_TYPE_ANY type and not currently bound to a different address type. <a href="03634.html" target="topic">TCPIP_UDP_Disconnect</a> could be issued to remove a previous IP type binding.&nbsp;</p>
+<p class="Element10">
+If the <a href="01077.html" target="topic">socket</a> is a server <a href="01077.html" target="topic">socket</a> and is bound to a remote port, the <a href="03634.html" target="topic">TCPIP_UDP_Disconnect</a> won't remove the port binding.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00951.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01250.html" target="topic">TCP Module</a> &gt; <a href="01628.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03650.html" target="topic">TCPIP_TCP_SignalHandlerRegister Function</a></div>
+<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03698.html" target="topic">UDP Module</a> &gt; <a href="01519.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03650.html" target="topic">TCPIP_UDP_RemoteBind Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -136,13 +142,13 @@ For multi-threaded systems, once set, it is not recommended to change the signal
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01504.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03649.html" target="topic">Previous</a> | <a href="01628.html" target="topic">Up</a> | <a href="03615.html" target="topic">Next</a></div>
+<a href="03627.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="03629.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_SignalHandlerRegister@TCP_SOCKET@TCPIP_TCP_SIGNAL_TYPE@TCPIP_TCP_SIGNAL_FUNCTION@void* Topic Title: TCPIP_TCP_SignalHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_RemoteBind@UDP_SOCKET@IP_ADDRESS_TYPE@UDP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_RemoteBind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
