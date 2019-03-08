@@ -102,6 +102,8 @@ The current known issues are as follows:
 * The ICD4 loads the reset line of the SAM V71 Xplained Ultra board. When running demo projects using the V71, the ICD4 flex cable should be removed after programming to run the application.
 * Interactive help using the Show User Manual Entry in the Right-click menu for configuration options provided by this module is not yet available from within the MPLAB Harmony Configurator (MHC).  Please see the *Configuring the Library* section in the help documentation in the doc folder for this Harmony 3 module instead.  Help is available in both CHM and PDF formats.
 
+* The SAME70 and SAMV71 TCPIP demos with SDCARD, won’t work with optimisation 0. Use optimization level 1.
+
 * SAMA5D2 projects known issues:
     - The SNMP protocol and corresponding demo applications is not be available.
     - IPv6 ULA generation is not available
