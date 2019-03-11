@@ -63,9 +63,9 @@ The MIB script language includes a total of five commands, each having a specifi
 <img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
 
-<ol class="Element631">
-<li value="1" class="Element601">Both the <span class="Element146">ASN.1</span> MIB file and the Microchip MIB script use the same <span class="Element146">.mib</span> file extension; however, the files have distinctly different purposes. The <span class="Element146">ASN.1</span> MIB file is used by the MIB browser (NMS) to properly display context for your application.</li>
-<li value="2" class="Element601">The Microchip MIB script is compiled using mib2bib to create a BIB file. The BIB file is later converted using MPFS2 to store the MIB data for your application in internal Flash or EEPROM.</li>
+<ol class="Element632">
+<li value="1" class="Element602">Both the <span class="Element146">ASN.1</span> MIB file and the Microchip MIB script use the same <span class="Element146">.mib</span> file extension; however, the files have distinctly different purposes. The <span class="Element146">ASN.1</span> MIB file is used by the MIB browser (NMS) to properly display context for your application.</li>
+<li value="2" class="Element602">The Microchip MIB script is compiled using mib2bib to create a BIB file. The BIB file is later converted using MPFS2 to store the MIB data for your application in internal Flash or EEPROM.</li>
 </ol>&nbsp;</div></td></tr></table></div></div>
 <div class="Element15">
 MIB Compiler</div>
@@ -77,13 +77,13 @@ The complete command line syntax for mib2bib is:&nbsp;</p>
 <span class="Element146"># java –jar mib2bib.jar [/?] [/h] [/q] &lt;MIBFile&gt; [/b=&lt;OutputBIBDir&gt;] [/I=&lt;OutputIncDir]</span>&nbsp;</p>
 <p class="Element10">
 where:
-<ul class="Element631">
-<li class="Element601"><span class="Element146">/?</span> - Displays command line help</li>
-<li class="Element601"><span class="Element146">/h</span> - Displays detail help for all script commands</li>
-<li class="Element601"><span class="Element146">/q</span> - Overwrites existing <span class="Element146">snmp.bib</span> and <span class="Element146">mib.h</span> files</li>
-<li class="Element601"><span class="Element146">&lt;MIBFile&gt; </span>- is the input MIB script file</li>
-<li class="Element601"><span class="Element146">&lt;OutputBIBDir&gt;</span> - is the output BIB directory where snmp.bib should be copied. If a directory is not specified, the current directory will be used.</li>
-<li class="Element601"><span class="Element146">&lt;OutputIncDir&gt;</span> - is the output Inc directory where mib.h should be copied. If a directory is not specified, the current directory will be used.</li>
+<ul class="Element632">
+<li class="Element602"><span class="Element146">/?</span> - Displays command line help</li>
+<li class="Element602"><span class="Element146">/h</span> - Displays detail help for all script commands</li>
+<li class="Element602"><span class="Element146">/q</span> - Overwrites existing <span class="Element146">snmp.bib</span> and <span class="Element146">mib.h</span> files</li>
+<li class="Element602"><span class="Element146">&lt;MIBFile&gt; </span>- is the input MIB script file</li>
+<li class="Element602"><span class="Element146">&lt;OutputBIBDir&gt;</span> - is the output BIB directory where snmp.bib should be copied. If a directory is not specified, the current directory will be used.</li>
+<li class="Element602"><span class="Element146">&lt;OutputIncDir&gt;</span> - is the output Inc directory where mib.h should be copied. If a directory is not specified, the current directory will be used.</li>
 </ul>For example, the command, <span class="Element146">Java –jar mib2bib.jar MySNMP.mib</span>, compiles the script, <span class="Element146">MySNMP.mib</span>, and generates the <span class="Element146">snmp.bib</span> and<span class="Element146"> mib.h</span> output files in the same directory.&nbsp;</p>
 <p class="Element10">
 Conversely, the command, <span class="Element146">mib2bib /q MySNMP.mib /b=WebPages</span>, compiles the <span class="Element146">MySNMP.mib</span> script file and overwrites the existing output files. It also specifies that the <span class="Element146">snmp.mib</span> file is located in the subdirectory, <span class="Element146">WebPages</span>. Because it is not specified, <span class="Element146">mib.h</span> is assumed to be in the current directory.&nbsp;</p>
@@ -91,10 +91,10 @@ Conversely, the command, <span class="Element146">mib2bib /q MySNMP.mib /b=WebPa
 If compilation is successful, mib2bib displays the statistics on the binary file, including the number of OIDs and the Agent ID, and the output file size.&nbsp;</p>
 <p class="Element10">
 The MIB compiler is a simple rule script compiler. While it can detect and report many types of parsing errors, it has these known limitations:
-<ul class="Element631">
-<li class="Element601">All command lines must be written in single line</li>
-<li class="Element601">All command parameters must immediately end with either a comma or a right parenthesis. For example, <span class="Element146">$DeclareVar(myOID, ASCII_STRING …)</span>, will fail because the ASCII_STRING keyword is not immediately followed by a comma.</li>
-<li class="Element601">All numerical data must be written in decimal</li>
+<ul class="Element632">
+<li class="Element602">All command lines must be written in single line</li>
+<li class="Element602">All command parameters must immediately end with either a comma or a right parenthesis. For example, <span class="Element146">$DeclareVar(myOID, ASCII_STRING …)</span>, will fail because the ASCII_STRING keyword is not immediately followed by a comma.</li>
+<li class="Element602">All numerical data must be written in decimal</li>
 </ul><strong>Example: Typical Output Display for a mib2bib Compilation</strong> </p><div class="Element13"><div class="Element12"><pre class="Element12">C:\microchip\harmony\net\utilities\mib2bib&gt;java -jar mib2bib.jar snmp.mib
 mib2bib  v3.0.0   &lt;Wednesday, Nov 14, 2018&gt;
 Copyright (c) 2018 Microchip Technology Inc.

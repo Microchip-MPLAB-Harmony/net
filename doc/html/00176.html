@@ -55,25 +55,24 @@ To view the web page hosted by the demonstration application, open a web browser
 <p class="Element10">
 <strong>For SAM E70/V71 Xplained Ultra, SAM E54 Xplained Pro Evaluation Kits</strong>&nbsp;</p>
 <p class="Element10">
-Please use the following procedure to run the demonstration:</p>
-<ol class="Element630">
-<li value="1" class="Element600">Configure the Development Board as given <a href="00175.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
-<li value="2" class="Element600">Make the demonstration setup as shown <a href="00288.html" target="topic">here</a>.</li>
-<li value="3" class="Element600">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element600">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
-<li value="5" class="Element600">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element600">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element600">Restart the demonstration by pressing the 'RESET' button on the board.</li>
-<li value="8" class="Element600">See that the initialization prints on the serial port terminal.</li>
-<li value="9" class="Element600">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
-<li value="10" class="Element600">An HTTP server is hosted by the demonstration application. Open<span style="color: #FFFFFF">_</span>a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, http://mchpboard_c), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00288.html" target="topic">here</a>.</li>
-</ol><p class="Element10">
-&nbsp;</p>
+Please use the following procedure to run the demonstration:
+<ol class="Element631">
+<li value="1" class="Element601">Configure the Development Board as given <a href="00175.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
+<li value="2" class="Element601">Make the demonstration setup as shown <a href="00288.html" target="topic">here</a>.</li>
+<li value="3" class="Element601">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element601">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
+<li value="5" class="Element601">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element601">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element601">Restart the demonstration by pressing the 'RESET' button on the board.</li>
+<li value="8" class="Element601">See that the initialization prints on the serial port terminal.</li>
+<li value="9" class="Element601">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+<li value="10" class="Element601">An HTTP server is hosted by the demonstration application. Open<span style="color: #FFFFFF">_</span>a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, http://mchpboard_c), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00288.html" target="topic">here</a>.</li>
+</ol>&nbsp;</p>
 <p class="Element10">
-The demonstration application features following:</p>
-<ul class="Element630">
-<li class="Element600"><i>Real-time Hardware Control and Dynamic Variables</i> - On the Overview page the LEDs can be clicked to toggle the LEDs on the Microchip hardware development board. The SWITCHes on the Microchip hardware development board can be pressed to toggle the Buttons on the web page. The dynamic variables can be updated in real-time on the HTTP server.</li>
-</ul><div class="Element63">
+The demonstration application features following:
+<ul class="Element631">
+<li class="Element601"><i>Real-time Hardware Control and Dynamic Variables</i> - On the Overview page the LEDs can be clicked to toggle the LEDs on the Microchip hardware development board. The SWITCHes on the Microchip hardware development board can be pressed to toggle the Buttons on the web page. The dynamic variables can be updated in real-time on the HTTP server.</li>
+</ul></p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
 <tr>
@@ -82,17 +81,18 @@ The demonstration application features following:</p>
 <img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
 For the LED and SWITCH functionality portion of the demonstration, configure the GPIOs connected to LEDs and Switches on Microchip hardware development board, through the Pin Configuration manager in MPLAB® Harmony Configurator (MHC).&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
 
-<ul class="Element630">
-<li class="Element600"><i>Form Processing</i> - Input can be handled from the client by using GET and POST methods (this functionality controls the on-board LEDs and is operational only on the Explorer 16 Development Board)</li>
-<li class="Element600"><i>Authentication</i> - Shows an example of the commonly used restricted access feature</li>
-<li class="Element600"><i>Cookies</i> - Shows an example of storing small text strings on the client side</li>
-<li class="Element600"><i>File Uploads</i> - Shows an example of a file upload using the POST method. The HTTP server can<span style="color: #FFFFFF">_</span>accept<span style="color: #FFFFFF">_</span>a user-defined MPFS/MPFS2 image file for web pages.</li>
-<li class="Element600"><i>Send E-mail</i> - Shows simple SMTP POST methods</li>
-<li class="Element600"><i>Dynamic DNS</i> - Exercises Dynamic DNS capabilities</li>
-<li class="Element600"><i>Network Configuration</i> - The MAC address, host name, and IP address of the evaluation kit can be viewed in the Network Configuration page and some configurations can be updated</li>
-<li class="Element600"><i>MPFS Upload</i> - A new set of web pages can be uploaded to the web server using this feature, which is accessed through <a href="#" onclick="openExternalLink('http://mchpboard_c/mpfsupload');"><img src="indicator_external_link.gif" border="0" alt="" title="">http://mchpboard_c/mpfsupload</a></li>
-</ul><div class="Element63">
+<ul class="Element631">
+<li class="Element601"><i>Form Processing</i> - Input can be handled from the client by using GET and POST methods (this functionality controls the on-board LEDs and is operational only on the Explorer 16 Development Board)</li>
+<li class="Element601"><i>Authentication</i> - Shows an example of the commonly used restricted access feature</li>
+<li class="Element601"><i>Cookies</i> - Shows an example of storing small text strings on the client side</li>
+<li class="Element601"><i>File Uploads</i> - Shows an example of a file upload using the POST method. The HTTP server can<span style="color: #FFFFFF">_</span>accept<span style="color: #FFFFFF">_</span>a user-defined MPFS/MPFS2 image file for web pages.</li>
+<li class="Element601"><i>Send E-mail</i> - Shows simple SMTP POST methods</li>
+<li class="Element601"><i>Dynamic DNS</i> - Exercises Dynamic DNS capabilities</li>
+<li class="Element601"><i>Network Configuration</i> - The MAC address, host name, and IP address of the evaluation kit can be viewed in the Network Configuration page and some configurations can be updated</li>
+<li class="Element601"><i>MPFS Upload</i> - A new set of web pages can be uploaded to the web server using this feature, which is accessed through <a href="#" onclick="openExternalLink('http://mchpboard_c/mpfsupload');"><img src="indicator_external_link.gif" border="0" alt="" title="">http://mchpboard_c/mpfsupload</a></li>
+</ul></p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
 <tr>
@@ -100,12 +100,11 @@ For the LED and SWITCH functionality portion of the demonstration, configure the
 <div class="Element68">
 <img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
-</p>
-<ol class="Element630">
-<li value="1" class="Element600">The location of the MPFS image is fixed at the beginning of the Flash page specified by DRV_MEMORY_DEVICE_START_ADDRESS. The size of the MPFS upload is limited to DRV_MEMORY_DEVICE_MEDIA_SIZE in the demonstration.</li>
-<li value="2" class="Element600">The HTTP File Upload functionality has to be enabled when the project is generated.</li>
-</ol><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
+
+<ol class="Element631">
+<li value="1" class="Element601">The location of the MPFS image is fixed at the beginning of the Flash page specified by DRV_MEMORY_DEVICE_START_ADDRESS. The size of the MPFS upload is limited to DRV_MEMORY_DEVICE_MEDIA_SIZE in the demonstration.</li>
+<li value="2" class="Element601">The HTTP File Upload functionality has to be enabled when the project is generated.</li>
+</ol>&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 <img src="webserver_welcome_page.png" border="0" alt="" title=""></p></div>
 </div>

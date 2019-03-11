@@ -106,12 +106,11 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If the recv function is successful, the <a href="01077.html" target="topic">socket</a> is valid and it has pending data:</p>
-<ul class="Element630">
-<li class="Element600">The supplied buffer is non NULL and has non zero length, the function will return the number of bytes copied to the application buffer.</li>
-<li class="Element600">The supplied buffer is NULL or has zero length then no data will be copied and the function will return the number of bytes pending in the <a href="01077.html" target="topic">socket</a> buffer.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+If the recv function is successful, the <a href="01077.html" target="topic">socket</a> is valid and it has pending data:
+<ul class="Element631">
+<li class="Element601">The supplied buffer is non NULL and has non zero length, the function will return the number of bytes copied to the application buffer.</li>
+<li class="Element601">The supplied buffer is NULL or has zero length then no data will be copied and the function will return the number of bytes pending in the <a href="01077.html" target="topic">socket</a> buffer.</li>
+</ul>&nbsp;</p>
 <p class="Element10">
 A return value of <a href="01080.html" target="topic">SOCKET_ERROR</a> (-1) indicates an error condition (and errno set accordingly). errno is set to EWOULDBLOCK if there is no data pending in the <a href="01077.html" target="topic">socket</a> buffer.&nbsp;</p>
 <p class="Element10">

@@ -52,11 +52,11 @@ TCPIP_ARP_EntryGet Function</div>
 If probe == false The function behaves identical to <a href="01609.html" target="topic">TCPIP_ARP_IsResolved</a>(): If the corresponding MAC address exists in the cache it is copied to the user supplied pHwAdd&nbsp;</p>
 <p class="Element10">
 If probe == true The function behaves identical to <a href="01630.html" target="topic">TCPIP_ARP_Resolve</a>():
-<ul class="Element631">
-<li class="Element601">If the corresponding MAC address does not exist in the cache</li>
+<ul class="Element632">
+<li class="Element602">If the corresponding MAC address does not exist in the cache</li>
 </ul>this function transmits and ARP request. Upon the address resolution it calls the registered handler (if available) with the supplied notification parameter (if != 0)
-<ul class="Element631">
-<li class="Element601">If the hardware address exists in the cache, the result is written to pHwAdd</li>
+<ul class="Element632">
+<li class="Element602">If the hardware address exists in the cache, the result is written to pHwAdd</li>
 </ul>and no network ARP request is sent</p></div>
 </div>
 <a name="43"></a><div class="Element99">
@@ -115,13 +115,13 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">ARP_RES_ENTRY_SOLVED - if the required entry is already solved</li>
-<li class="Element601">ARP_RES_ENTRY_QUEUED - if the required entry was already queued</li>
-<li class="Element601">ARP_RES_ENTRY_NEW - if the operation succeeded and a new entry was added (and queued for resolving)</li>
-<li class="Element601">ARP_RES_CACHE_FULL - if new entry could not be inserted, the cache was full</li>
-<li class="Element601">ARP_RES_BAD_ADDRESS - bad address specified</li>
-<li class="Element601">ARP_RES_NO_INTERFACE - no such interface</li>
+<ul class="Element632">
+<li class="Element602">ARP_RES_ENTRY_SOLVED - if the required entry is already solved</li>
+<li class="Element602">ARP_RES_ENTRY_QUEUED - if the required entry was already queued</li>
+<li class="Element602">ARP_RES_ENTRY_NEW - if the operation succeeded and a new entry was added (and queued for resolving)</li>
+<li class="Element602">ARP_RES_CACHE_FULL - if new entry could not be inserted, the cache was full</li>
+<li class="Element602">ARP_RES_BAD_ADDRESS - bad address specified</li>
+<li class="Element602">ARP_RES_NO_INTERFACE - no such interface</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">

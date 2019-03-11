@@ -49,13 +49,13 @@ TCPIP_IPV4_SelectSourceInterface Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Updates the pSrcAddress and returns the needed interface, if successful:</p>
-<ul class="Element630">
-<li class="Element600">if srcSet == 1 and netH != 0, the function will not change anything </li>
-<li class="Element600">if srcSet == 1 and netH == 0, the call will never fail it will use whatever value in pSrcAddress (even 0) and will try to come up with an appropriate interface</li>
-<li class="Element600">if srcSet == 0 and netH == 0, it will use the destination address</li>
-<li class="Element600">if srcSet == 0 and netH != 0, it will use the address of that interface</li>
-</ul></div>
+Updates the pSrcAddress and returns the needed interface, if successful:
+<ul class="Element631">
+<li class="Element601">if srcSet == 1 and netH != 0, the function will not change anything </li>
+<li class="Element601">if srcSet == 1 and netH == 0, the call will never fail it will use whatever value in pSrcAddress (even 0) and will try to come up with an appropriate interface</li>
+<li class="Element601">if srcSet == 0 and netH == 0, it will use the destination address</li>
+<li class="Element601">if srcSet == 0 and netH != 0, it will use the address of that interface</li>
+</ul></p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
@@ -111,11 +111,12 @@ boolean; true if address pointed by pSrcAddress is valid&nbsp;</div></td></tr></
 Returns</div>
 <div class="Element11">
 <div class="Element10">
+<p class="Element10">
 
-<ul class="Element630">
-<li class="Element600">A valid interface - if it succeeds and a valid source interface selected</li>
-<li class="Element600">0 - interface selection failed</li>
-</ul></div>
+<ul class="Element631">
+<li class="Element601">A valid interface - if it succeeds and a valid source interface selected</li>
+<li class="Element601">0 - interface selection failed</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>

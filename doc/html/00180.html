@@ -50,22 +50,21 @@ Running the Demonstration</div>
 <div class="Element10">
 <p class="Element10">
 <strong>For SAM A5D2 Xplained Ultra Evaluation Kits</strong>&nbsp;</p>
+<p class="Element10">
 
-<ol class="Element630">
-<li value="1" class="Element600">Build the demo by opening the project in the IAR Embedded Workbench</li>
-<li value="2" class="Element600">Copy the project output - harmony.bin - on the SD Card that is used to load the executable and run it on the SAM A5D2 board.
 <ol class="Element631">
-<li value="1" class="Element601">The boot loader on the SD card - boot.bin - should be configured to load the harmony.bin image instead of the standard uboot.bin</li>
+<li value="1" class="Element601">Build the demo by opening the project in the IAR Embedded Workbench</li>
+<li value="2" class="Element601">Copy the project output - harmony.bin - on the SD Card that is used to load the executable and run it on the SAM A5D2 board.
+<ol class="Element632">
+<li value="1" class="Element602">The boot loader on the SD card - boot.bin - should be configured to load the harmony.bin image instead of the standard uboot.bin</li>
 </ol></li>
-<li value="3" class="Element600">Configure the Development Board as given <a href="00973.html" target="topic">here</a>.</li>
-<li value="4" class="Element600">Make the demonstration setup as shown <a href="00288.html" target="topic">here</a>.</li>
-<li value="5" class="Element600">Connect the serial port on the board to a USB port on the computer using a serial cable.</li>
-<li value="6" class="Element600">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="7" class="Element600">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="8" class="Element600">Insert the SD Card into the SD Card slot on the SAM A5D2 board and press the reset button. At this moment the board should boot up and display messages at the console.</li>
-<li value="9" class="Element600">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal</li>
-</ol><p class="Element10">
-&nbsp;</p>
+<li value="3" class="Element601">Configure the Development Board as given <a href="00973.html" target="topic">here</a>.</li>
+<li value="4" class="Element601">Make the demonstration setup as shown <a href="00288.html" target="topic">here</a>.</li>
+<li value="5" class="Element601">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element601">Set the serial configuration to: baud rate 115200 baud, 8 data bits, no parity, and 1 stop bit in the terminal application.</li>
+<li value="7" class="Element601">Insert the SD Card into J19, SDMMC1, on the SAM A5D2 board and press the reset button. At this moment the board should boot up and display messages at the console.</li>
+<li value="8" class="Element601">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal</li>
+</ol>&nbsp;</p>
 <p class="Element10">
 To view the web page hosted by the demonstration application, open a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, http://192.168.1.125 or http://mchpboard_e), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00288.html" target="topic">here</a>.&nbsp;</p>
 <p class="Element10">

@@ -51,17 +51,17 @@ HTTP Net Features</div>
 <p class="Element10">
 The HTTP Net module is a HTTP server module that works using the Networking Presentation Layer of the MPLAB Harmony framework. This allows it to support both encrypted and plain text connections.&nbsp;</p>
 <p class="Element10">
-Some of the key features of the HTTP Net module include:</p>
-<ul class="Element630">
-<li class="Element600">The updated module implements HTTP 1.1 persistent connections by default, using the “Transfer-Encoding: chunked” HTTP header. It can be configured to operate with closing the connections like the previous HTTP server.</li>
-<li class="Element600">The application has to dynamically register its HTTP processing functions with the HTTP Net server using the <a href="02396.html" target="topic">TCPIP_HTTP_NET_UserHandlerRegister</a> call. The HTTP Net server no longer relies on well known function names.</li>
-<li class="Element600">The HTTP Net server supports either secure or plain text connections, but not both simultaneously. The specification of a secure or non-secure connection can be easily done by:
+Some of the key features of the HTTP Net module include:
 <ul class="Element631">
-<li class="Element601">Selecting the server listening port: 80 or 443</li>
-<li class="Element601">Using the module configuration flags</li>
+<li class="Element601">The updated module implements HTTP 1.1 persistent connections by default, using the “Transfer-Encoding: chunked” HTTP header. It can be configured to operate with closing the connections like the previous HTTP server.</li>
+<li class="Element601">The application has to dynamically register its HTTP processing functions with the HTTP Net server using the <a href="02396.html" target="topic">TCPIP_HTTP_NET_UserHandlerRegister</a> call. The HTTP Net server no longer relies on well known function names.</li>
+<li class="Element601">The HTTP Net server supports either secure or plain text connections, but not both simultaneously. The specification of a secure or non-secure connection can be easily done by:
+<ul class="Element632">
+<li class="Element602">Selecting the server listening port: 80 or 443</li>
+<li class="Element602">Using the module configuration flags</li>
 </ul></li>
-<li class="Element600">The HTTP Net module reports run-time events that could be caught by the user application using the “eventReport” registered function that carries a <a href="02260.html" target="topic">TCPIP_HTTP_NET_EVENT_TYPE</a> enumerated type</li>
-</ul></div>
+<li class="Element601">The HTTP Net module reports run-time events that could be caught by the user application using the “eventReport” registered function that carries a <a href="02260.html" target="topic">TCPIP_HTTP_NET_EVENT_TYPE</a> enumerated type</li>
+</ul></p></div>
 </div>
 <a name="546F70696373"></a><div class="Element14">
 Topics</div>

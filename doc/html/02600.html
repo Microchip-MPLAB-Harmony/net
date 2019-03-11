@@ -49,15 +49,14 @@ TCPIP_IPV6_UniqueLocalUnicastAddressAdd Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function starts the process of adding an ULA address to the specified interface. The segments of the generated address are as follows:</p>
-<ul class="Element630">
-<li class="Element600">FC00::/7 - ULA prefix</li>
-<li class="Element600">L - 1 bit set to 1, locally assigned</li>
-<li class="Element600">Global ID - 40 bit random generated identifier</li>
-<li class="Element600">subnet ID - 16 bit subnet identifier</li>
-<li class="Element600">Interface ID - 64 bit interface identifier generated as a EUI64 from the specified interface MAC</li>
-</ul><p class="Element10">
-&nbsp;</p>
+This function starts the process of adding an ULA address to the specified interface. The segments of the generated address are as follows:
+<ul class="Element631">
+<li class="Element601">FC00::/7 - ULA prefix</li>
+<li class="Element601">L - 1 bit set to 1, locally assigned</li>
+<li class="Element601">Global ID - 40 bit random generated identifier</li>
+<li class="Element601">subnet ID - 16 bit subnet identifier</li>
+<li class="Element601">Interface ID - 64 bit interface identifier generated as a EUI64 from the specified interface MAC</li>
+</ul>&nbsp;</p>
 <p class="Element10">
 The randomness of the &quot;Global ID&quot; prefix of the generated IPv6 address is obtained by using an NTP server. The supplied NTP server will be contacted to obtain an NTP time stamp. This time stamp together with the EUI64 identifier obtained from the interface MAC are passed through a 160 bits hash algorithm (SHA1) and the least significant 40 bits are used as the GlobalID of the interface.</p></div>
 </div>
@@ -103,13 +102,12 @@ The subnet ID to be used.&nbsp;</div></td></tr><tr>
 <div class="Element303">
 genFlags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Address generation flags:</p>
-<ul class="Element630">
-<li class="Element600">IPV6_ULA_FLAG_NTPV4 - if set, the NTP server will be contacted over an IPv4 connection. Otherwise, a default IPv6 connection will be attempted</li>
-<li class="Element600">IPV6_ULA_FLAG_GENERATE_ONLY - if set, the address will not be added to the list of the addresses for the specified interface</li>
-<li class="Element600">IPV6_ULA_FLAG_SKIP_DAD - if set, the DAD processing will be skipped</li>
-</ul><p class="Element307">
-&nbsp;</div></td></tr><tr>
+Address generation flags:
+<ul class="Element631">
+<li class="Element601">IPV6_ULA_FLAG_NTPV4 - if set, the NTP server will be contacted over an IPv4 connection. Otherwise, a default IPv6 connection will be attempted</li>
+<li class="Element601">IPV6_ULA_FLAG_GENERATE_ONLY - if set, the address will not be added to the list of the addresses for the specified interface</li>
+<li class="Element601">IPV6_ULA_FLAG_SKIP_DAD - if set, the DAD processing will be skipped</li>
+</ul>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 ntpAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
@@ -121,12 +119,13 @@ The NTP server address - it is an IPv4/IPv6 address as selected by the IPV6_ULA_
 Returns</div>
 <div class="Element11">
 <div class="Element10">
+<p class="Element10">
 
-<ul class="Element630">
-<li class="Element600">IPV6_ULA_RES_BUSY - address generation module is busy</li>
-<li class="Element600">IPV6_ULA_RES_IF_ERR - IPv6 interface is not up</li>
-<li class="Element600">IPV6_ULA_RES_OK - if the call succeeded and the generation process was started</li>
-</ul></div>
+<ul class="Element631">
+<li class="Element601">IPV6_ULA_RES_BUSY - address generation module is busy</li>
+<li class="Element601">IPV6_ULA_RES_IF_ERR - IPv6 interface is not up</li>
+<li class="Element601">IPV6_ULA_RES_OK - if the call succeeded and the generation process was started</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>

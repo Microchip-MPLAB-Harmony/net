@@ -124,13 +124,12 @@ maximum number of chunks that are created It depends on the <a href="02322.html"
 <div class="Element263">
 uint16_t maxRecurseLevel;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-The maximum depth of recursive calls for serving a web page:</p>
-<ul class="Element630">
-<li class="Element600">files without dynvars: 1</li>
-<li class="Element600">file including another file: + 1</li>
-<li class="Element600">file including a dynamic variable: + 1</li>
-</ul><p class="Element267">
-etc.&nbsp;</div></td></tr><tr>
+The maximum depth of recursive calls for serving a web page:
+<ul class="Element631">
+<li class="Element601">files without dynvars: 1</li>
+<li class="Element601">file including another file: + 1</li>
+<li class="Element601">file including a dynamic variable: + 1</li>
+</ul>etc.&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
 uint16_t configFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
@@ -165,13 +164,12 @@ how many retries to have for a dynamic variable dynamicPrint function before cal
 <div class="Element263">
 uint16_t connTimeout;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-persistent connection timeout, seconds If non 0 and a persistent connection is idle for more than this timeout, the server will close it. Maximum supported value is 32767 seconds HTTP specific allocation functions These functions are used for:</p>
-<ul class="Element630">
-<li class="Element600">the dynamic variable descriptor allocation</li>
-<li class="Element600">SSI commands</li>
-<li class="Element600">file upload buffer allocation</li>
-</ul><p class="Element267">
-&nbsp;</div></td></tr><tr>
+persistent connection timeout, seconds If non 0 and a persistent connection is idle for more than this timeout, the server will close it. Maximum supported value is 32767 seconds HTTP specific allocation functions These functions are used for:
+<ul class="Element631">
+<li class="Element601">the dynamic variable descriptor allocation</li>
+<li class="Element601">SSI commands</li>
+<li class="Element601">file upload buffer allocation</li>
+</ul>&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
 void* (* http_malloc_fnc)(size_t bytes);&nbsp;</div></td><td class="Element266" valign="top" width="65%">

@@ -70,9 +70,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">true if events acknowledged</li>
-<li class="Element601">false if no events to be acknowledged</li>
+<ul class="Element632">
+<li class="Element602">true if events acknowledged</li>
+<li class="Element602">false if no events to be acknowledged</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -81,28 +81,28 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">All events should be acknowledged, in order to be re-enabled.</li>
+<ul class="Element632">
+<li class="Element602">All events should be acknowledged, in order to be re-enabled.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Some events are fatal errors and should not be acknowledged ( TCPIP_MAC_EV_RX_BUSERR, TCPIP_MAC_EV_TX_BUSERR). Driver/stack re-initialization is needed under such circumstances.</li>
+<ul class="Element632">
+<li class="Element602">Some events are fatal errors and should not be acknowledged ( TCPIP_MAC_EV_RX_BUSERR, TCPIP_MAC_EV_TX_BUSERR). Driver/stack re-initialization is needed under such circumstances.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Some events are just system/application behavior and they are intended only as simple info (TCPIP_MAC_EV_RX_OVFLOW, TCPIP_MAC_EV_RX_BUFNA, TCPIP_MAC_EV_TX_ABORT, TCPIP_MAC_EV_RX_ACT).</li>
+<ul class="Element632">
+<li class="Element602">Some events are just system/application behavior and they are intended only as simple info (TCPIP_MAC_EV_RX_OVFLOW, TCPIP_MAC_EV_RX_BUFNA, TCPIP_MAC_EV_TX_ABORT, TCPIP_MAC_EV_RX_ACT).</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">The TCPIP_MAC_EV_RX_FWMARK and TCPIP_MAC_EV_RX_EWMARK events are part of the normal flow control operation (if auto flow control was enabled). They should be enabled alternatively, if needed.</li>
+<ul class="Element632">
+<li class="Element602">The TCPIP_MAC_EV_RX_FWMARK and TCPIP_MAC_EV_RX_EWMARK events are part of the normal flow control operation (if auto flow control was enabled). They should be enabled alternatively, if needed.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">The events are persistent. They shouldn't be re-enabled unless they have been processed and the condition that generated them was removed. Re-enabling them immediately without proper processing will have dramatic effects on system performance.</li>
+<ul class="Element632">
+<li class="Element602">The events are persistent. They shouldn't be re-enabled unless they have been processed and the condition that generated them was removed. Re-enabling them immediately without proper processing will have dramatic effects on system performance.</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">

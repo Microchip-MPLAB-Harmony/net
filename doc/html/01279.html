@@ -53,16 +53,15 @@ Parsing of the dynamic variables is done at run-time. The web pages could be cha
 <p class="Element10">
 The supported syntax is <span class="Element146">~var_name(param1, param2, …)~</span>. When parsing a string like this within a web page, the HTTP Net server will invoke the “dynamicPrint” function using a <a href="02168.html" target="topic">TCPIP_HTTP_DYN_VAR_DCPT</a> data structure that specifies the dynamic variable name, its number and type of parameters as well as each parameter value.&nbsp;</p>
 <p class="Element10">
-For example, the variable <span class="Element146">~myVariable(2,6)~</span> will generate the “dynamicPrint” call with the following parameters:</p>
-<ul class="Element630">
-<li class="Element600"><span class="Element146">varDcpt.dynName = &quot;myVariable&quot;;</span></li>
-<li class="Element600"><span class="Element146">varDcpt.nArgs = 2;</span></li>
-<li class="Element600"><span class="Element146">varDcpt.dynArgs-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32;</span></li>
-<li class="Element600"><span class="Element146">varDcpt.dynArgs-&gt;argInt32 = 2;</span></li>
-<li class="Element600"><span class="Element146">(varDcpt.dynArgs + 1)-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32;</span></li>
-<li class="Element600"><span class="Element146">(varDcpt.dynArgs + 1)-&gt;argInt32 = 6;</span></li>
-</ul><p class="Element10">
-String and int32_t variable types are currently supported.&nbsp;</p>
+For example, the variable <span class="Element146">~myVariable(2,6)~</span> will generate the “dynamicPrint” call with the following parameters:
+<ul class="Element631">
+<li class="Element601"><span class="Element146">varDcpt.dynName = &quot;myVariable&quot;;</span></li>
+<li class="Element601"><span class="Element146">varDcpt.nArgs = 2;</span></li>
+<li class="Element601"><span class="Element146">varDcpt.dynArgs-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32;</span></li>
+<li class="Element601"><span class="Element146">varDcpt.dynArgs-&gt;argInt32 = 2;</span></li>
+<li class="Element601"><span class="Element146">(varDcpt.dynArgs + 1)-&gt;argType = TCPIP_HTTP_DYN_ARG_TYPE_INT32;</span></li>
+<li class="Element601"><span class="Element146">(varDcpt.dynArgs + 1)-&gt;argInt32 = 6;</span></li>
+</ul>String and int32_t variable types are currently supported.&nbsp;</p>
 <p class="Element10">
 The application needs to return a <a href="02163.html" target="topic">TCPIP_HTTP_DYN_PRINT_RES</a> result specifying if it’s done with processing or it needs to be called again.&nbsp;</p>
 <p class="Element10">

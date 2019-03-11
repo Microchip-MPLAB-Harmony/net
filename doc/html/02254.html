@@ -131,12 +131,11 @@ The varDcpt variable descriptor is constant and should not be modified in any wa
 <p class="Element10">
 If the callback returned TCPIP_HTTP_DYN_PRINT_RES_DEFAULT, no further calls will be made to the callback function.&nbsp;</p>
 <p class="Element10">
-Returning TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN/TCPIP_HTTP_DYN_PRINT_RES_AGAIN is an alternative mechanism to manipulation the connection status with <a href="02215.html" target="topic">TCPIP_HTTP_NET_ConnectionCallbackPosSet</a>/<a href="02214.html" target="topic">TCPIP_HTTP_NET_ConnectionCallbackPosGet</a> functions (which mechanism is still valid).</p>
-<ul class="Element630">
-<li class="Element600">If the TCPIP_HTTP_NET_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN, the HTTP server will start sending the dynamic variable buffer (invoked by <a href="02252.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a>/<a href="02253.html" target="topic">TCPIP_HTTP_NET_DynamicWriteString</a>). Once sending is done, the HTTP server will again call TCPIP_HTTP_NET_DynPrint regardless of the value set with the callback position.</li>
-<li class="Element600">If the TCPIP_HTTP_NET_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_AGAIN, there will be no processing of dynamic variable data (potentially written to the connection) but the TCPIP_HTTP_NET_DynPrint will be invoked again. Returning TCPIP_HTTP_DYN_PRINT_RES_AGAIN is needed when <a href="02252.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a> failed or some condition is not satisfied and the TCPIP_HTTP_NET_DynPrint needs to be called again.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+Returning TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN/TCPIP_HTTP_DYN_PRINT_RES_AGAIN is an alternative mechanism to manipulation the connection status with <a href="02215.html" target="topic">TCPIP_HTTP_NET_ConnectionCallbackPosSet</a>/<a href="02214.html" target="topic">TCPIP_HTTP_NET_ConnectionCallbackPosGet</a> functions (which mechanism is still valid).
+<ul class="Element631">
+<li class="Element601">If the TCPIP_HTTP_NET_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_PROCESS_AGAIN, the HTTP server will start sending the dynamic variable buffer (invoked by <a href="02252.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a>/<a href="02253.html" target="topic">TCPIP_HTTP_NET_DynamicWriteString</a>). Once sending is done, the HTTP server will again call TCPIP_HTTP_NET_DynPrint regardless of the value set with the callback position.</li>
+<li class="Element601">If the TCPIP_HTTP_NET_DynPrint() returned TCPIP_HTTP_DYN_PRINT_RES_AGAIN, there will be no processing of dynamic variable data (potentially written to the connection) but the TCPIP_HTTP_NET_DynPrint will be invoked again. Returning TCPIP_HTTP_DYN_PRINT_RES_AGAIN is needed when <a href="02252.html" target="topic">TCPIP_HTTP_NET_DynamicWrite</a> failed or some condition is not satisfied and the TCPIP_HTTP_NET_DynPrint needs to be called again.</li>
+</ul>&nbsp;</p>
 <p class="Element10">
 The callback position mechanism will be evaluated after the TCPIP_HTTP_NET_DynPrint returns TCPIP_HTTP_DYN_PRINT_RES_DONE.</p></div>
 </div>

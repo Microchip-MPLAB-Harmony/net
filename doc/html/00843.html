@@ -53,13 +53,12 @@ Type: IPV6_EVENT_HANDLER&nbsp;</p>
 <p class="Element10">
 Once an IPv6 event occurs the IPv6 service will call the registered handler The handler has to be short and fast. It is meant for setting an event flag, not for lengthy processing!&nbsp;</p>
 <p class="Element10">
-evParam is a parameter that's associated to an IPv6 event</p>
-<ul class="Element630">
-<li class="Element600">For an address event (IPV6_EVENT_ADDRESS_ADDED, IPV6_EVENT_ADDRESS_REMOVED) it should typecast to (const IPV6_ADDR_STRUCT*)</li>
-<li class="Element600">For an IPV6_EVENT_ULA_ADDRESS_GENERATED ULA event it should typecast to (const IPV6_ADDR*)</li>
-<li class="Element600">For an IPV6_EVENT_ULA_ADDRESS_FAILED ULA event the evParam is an <a href="00913.html" target="topic">IPV6_ULA_RESULT</a> error code</li>
-</ul><p class="Element10">
-&nbsp;</p>
+evParam is a parameter that's associated to an IPv6 event
+<ul class="Element631">
+<li class="Element601">For an address event (IPV6_EVENT_ADDRESS_ADDED, IPV6_EVENT_ADDRESS_REMOVED) it should typecast to (const IPV6_ADDR_STRUCT*)</li>
+<li class="Element601">For an IPV6_EVENT_ULA_ADDRESS_GENERATED ULA event it should typecast to (const IPV6_ADDR*)</li>
+<li class="Element601">For an IPV6_EVENT_ULA_ADDRESS_FAILED ULA event the evParam is an <a href="00913.html" target="topic">IPV6_ULA_RESULT</a> error code</li>
+</ul>&nbsp;</p>
 <p class="Element10">
 The evParam is invalid outside of the IPV6_EVENT_HANDLER context call and should not be stored by the caller. Info that's needed has to be copied into caller's own context.&nbsp;</p>
 <p class="Element10">

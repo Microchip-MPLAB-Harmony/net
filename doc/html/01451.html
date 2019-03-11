@@ -50,9 +50,9 @@ MIB Files</div>
 <div class="Element10">
 <p class="Element10">
 SNMP describes the hierarchal storage of management objects (referred to with object IDs or OIDs) with MIB files. The Microchip SNMP server demonstration includes two MIB files:
-<ul class="Element631">
-<li class="Element601"><span class="Element146">mchip.mib</span> - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing information about the variables used in the demonstration</li>
-<li class="Element601"><span class="Element146">snmp.mib</span> - This is a custom-formatted file that can be parsed to create Web page and header resources that can be accessed with a MCHP device</li>
+<ul class="Element632">
+<li class="Element602"><span class="Element146">mchip.mib</span> - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing information about the variables used in the demonstration</li>
+<li class="Element602"><span class="Element146">snmp.mib</span> - This is a custom-formatted file that can be parsed to create Web page and header resources that can be accessed with a MCHP device</li>
 </ul>The TCP/IP Stack includes the mib2bib utility, which will compile the custom Microchip MIB script (<span class="Element146">snmp.mib</span>) to generate two files named snmp.bib and <span class="Element146">mib.h</span>. The snmp.bib file is a compressed record of management objects that will be stored with web pages and the<span class="Element146"> mib.h</span> file contains C defines for each OID. These files are included in the appropriate directories for the TCP/IP Demonstration Applications, but for a custom application the snmp.bib must be copied to the web page directory, <span class="Element146">mib.h</span> copied to the application directory and included in the project. Rebuild your project, and then rebuild and re-upload the web page. This will bundle the BIB file into the web page image, which will allow the SNMP agent to search for the required variable information with the MPFS file system.</p></div>
 </div>
 </div>
