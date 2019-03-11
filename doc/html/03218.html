@@ -53,15 +53,15 @@ Type: TCPIP_SNTP_EVENT_HANDLER&nbsp;</p>
 <p class="Element10">
 Prototype of a SNTP event handler. Clients can register a handler with the SNTP service. Once an SNTP event occurs the SNTP service will called the registered handler. The handler has to be short and fast. It is meant for setting an event flag, <i>not</i> for lengthy processing!&nbsp;</p>
 <p class="Element10">
-param - Parameter that is supplied by the SNTP module in the handler call according to the event</p>
-<ul class="Element630">
-<li class="Element600">if evType &lt; 0 (an error event - TCPIP_SNTP_EVENT_DNS_ERROR ... TCPIP_SNTP_EVENT_SYNC_ERROR): evParam represents the 32 bit system tick when the event occurred.</li>
-</ul><p class="Element10">
-&nbsp;</p>
+param - Parameter that is supplied by the SNTP module in the handler call according to the event
+<ul class="Element631">
+<li class="Element601">if evType &lt; 0 (an error event - TCPIP_SNTP_EVENT_DNS_ERROR ... TCPIP_SNTP_EVENT_SYNC_ERROR): evParam represents the 32 bit system tick when the event occurred.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
 
-<ul class="Element630">
-<li class="Element600">if evType == TCPIP_SNTP_EVENT_TSTAMP_OK: evParam represents a const pointer to a <a href="03219.html" target="topic">TCPIP_SNTP_EVENT_TIME_DATA</a> describing the timestamp received.</li>
-</ul></div>
+<ul class="Element631">
+<li class="Element601">if evType == TCPIP_SNTP_EVENT_TSTAMP_OK: evParam represents a const pointer to a <a href="03219.html" target="topic">TCPIP_SNTP_EVENT_TIME_DATA</a> describing the timestamp received.</li>
+</ul>&nbsp;</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>

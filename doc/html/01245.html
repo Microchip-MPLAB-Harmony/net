@@ -50,25 +50,25 @@ Introduction</div>
 <div class="Element10">
 <p class="Element10">
 A step-by-step analysis of the DNS Server is as follows:
-<ol class="Element631">
-<li value="1" class="Element601">DNS server can be enabled or disabled at run time.</li>
-<li value="2" class="Element601">If the TCP/IP commands module is built in, it contains a &quot;dnss&quot; command that could be used for interfacing with the DNSS module.</li>
-<li value="3" class="Element601">A client sends some query to the DNS Server of the TCP/IP stack for a name resolution.</li>
-<li value="4" class="Element601">The DNS Server of the TCP/IP Stack first checks the configuration value of replyBoardAddr.
 <ol class="Element632">
-<li value="1" class="Element602">This Boolean flag is passed to the DNSS module at initialization time.</li>
+<li value="1" class="Element602">DNS server can be enabled or disabled at run time.</li>
+<li value="2" class="Element602">If the TCP/IP commands module is built in, it contains a &quot;dnss&quot; command that could be used for interfacing with the DNSS module.</li>
+<li value="3" class="Element602">A client sends some query to the DNS Server of the TCP/IP stack for a name resolution.</li>
+<li value="4" class="Element602">The DNS Server of the TCP/IP Stack first checks the configuration value of replyBoardAddr.
+<ol class="Element633">
+<li value="1" class="Element603">This Boolean flag is passed to the DNSS module at initialization time.</li>
 </ol></li>
-<li value="5" class="Element601">If replyBoardAddr is true, the DNS server will reply to the client query with its own board address.</li>
-<li value="6" class="Element601"> </li>
-<li value="7" class="Element601">If replyBoardAddr is false, the DNSS will check its cache for an entry for that name.
-<ol class="Element632">
-<li value="1" class="Element602">If a valid entry is found, the reply is sent to the client requesting the info.</li>
-<li value="2" class="Element602">Otherwise no reply is provided.</li>
+<li value="5" class="Element602">If replyBoardAddr is true, the DNS server will reply to the client query with its own board address.</li>
+<li value="6" class="Element602"> </li>
+<li value="7" class="Element602">If replyBoardAddr is false, the DNSS will check its cache for an entry for that name.
+<ol class="Element633">
+<li value="1" class="Element603">If a valid entry is found, the reply is sent to the client requesting the info.</li>
+<li value="2" class="Element603">Otherwise no reply is provided.</li>
 </ol></li>
-<li value="8" class="Element601">To update the DNSS cache, new entries can be added either using the DNSS API or directly from the console, using the &quot;dnss&quot; command.</li>
-<li value="9" class="Element601">The dnsserv command is used to add, delete and display the DNS server details</li>
-<li value="10" class="Element601">Authoritative Name servers and Addition Name servers are not processed.</li>
-<li value="11" class="Element601">The client may store the answer to the DNS query in it's own cache for future use.</li>
+<li value="8" class="Element602">To update the DNSS cache, new entries can be added either using the DNSS API or directly from the console, using the &quot;dnss&quot; command.</li>
+<li value="9" class="Element602">The dnsserv command is used to add, delete and display the DNS server details</li>
+<li value="10" class="Element602">Authoritative Name servers and Addition Name servers are not processed.</li>
+<li value="11" class="Element602">The client may store the answer to the DNS query in it's own cache for future use.</li>
 </ol>&nbsp;</p>
 <p class="Element10">
 <img src="DNSS Figure 1.png" border="0" alt="" title="">&nbsp;</p></div>

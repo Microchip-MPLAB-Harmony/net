@@ -54,12 +54,12 @@ This is the MAC receive function.&nbsp;</p>
 Once a pending packet is available in the MAC driver internal RX queues this function will dequeue the packet and hand it over to the MAC driver's client - i.e., the stack - for further processing.&nbsp;</p>
 <p class="Element10">
 The flags for a RX packet have to be updated by the MAC driver: TCPIP_MAC_PKT_FLAG_RX has to be set. If the MAC supports it, it should set:
-<ul class="Element631">
-<li class="Element601">TCPIP_MAC_PKT_FLAG_UNICAST has to be set if that packet is a unicast packet</li>
-<li class="Element601">TCPIP_MAC_PKT_FLAG_BCAST has to be set if that packet is a broadcast packet</li>
-<li class="Element601">TCPIP_MAC_PKT_FLAG_MCAST has to be set if that packet is a multicast packet</li>
-<li class="Element601">TCPIP_MAC_PKT_FLAG_QUEUED has to be set</li>
-<li class="Element601">TCPIP_MAC_PKT_FLAG_SPLIT has to be set if the packet has multiple data segments</li>
+<ul class="Element632">
+<li class="Element602">TCPIP_MAC_PKT_FLAG_UNICAST has to be set if that packet is a unicast packet</li>
+<li class="Element602">TCPIP_MAC_PKT_FLAG_BCAST has to be set if that packet is a broadcast packet</li>
+<li class="Element602">TCPIP_MAC_PKT_FLAG_MCAST has to be set if that packet is a multicast packet</li>
+<li class="Element602">TCPIP_MAC_PKT_FLAG_QUEUED has to be set</li>
+<li class="Element602">TCPIP_MAC_PKT_FLAG_SPLIT has to be set if the packet has multiple data segments</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 Additional information about the packet is available by providing the pRes and ppPktStat fields.</p></div>
@@ -114,9 +114,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Valid pointer to an available RX packet</li>
-<li class="Element601">0 if no packet pending/available</li>
+<ul class="Element632">
+<li class="Element602">Valid pointer to an available RX packet</li>
+<li class="Element602">0 if no packet pending/available</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">

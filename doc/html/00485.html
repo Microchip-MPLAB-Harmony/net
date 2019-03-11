@@ -89,10 +89,10 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">SYS_STATUS_READY - Indicates that any previous module operation for the specified module has completed</li>
-<li class="Element601">SYS_STATUS_BUSY - Indicates that a previous module operation for the specified module has not yet completed</li>
-<li class="Element601">SYS_STATUS_ERROR - Indicates that the specified module is in an error state</li>
+<ul class="Element632">
+<li class="Element602">SYS_STATUS_READY - Indicates that any previous module operation for the specified module has completed</li>
+<li class="Element602">SYS_STATUS_BUSY - Indicates that a previous module operation for the specified module has not yet completed</li>
+<li class="Element602">SYS_STATUS_ERROR - Indicates that the specified module is in an error state</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -101,17 +101,17 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Any value greater than SYS_STATUS_READY is also a normal running state in which the driver is ready to accept new operations.</li>
-<li class="Element601">SYS_STATUS_BUSY - Indicates that the driver is busy with a previous system level operation and cannot start another</li>
-<li class="Element601">SYS_STATUS_ERROR - Indicates that the driver is in an error state</li>
-<li class="Element601">Any value less than SYS_STATUS_ERROR is also an error state.</li>
-<li class="Element601">SYS_MODULE_DEINITIALIZED - Indicates that the driver has been deinitialized</li>
-<li class="Element601">The this operation can be used to determine when any of the driver's module level operations has completed.</li>
-<li class="Element601">If the status operation returns SYS_STATUS_BUSY, the a previous operation has not yet completed. Once the status operation returns SYS_STATUS_READY, any previous operations have completed.</li>
-<li class="Element601">The value of SYS_STATUS_ERROR is negative (-1). Any value less than that is also an error state.</li>
-<li class="Element601">This function will NEVER block waiting for hardware.</li>
-<li class="Element601">If the Status operation returns an error value, the error may be cleared by calling the reinitialize operation. If that fails, the deinitialize operation will need to be called, followed by the initialize operation to return to normal operations.</li>
+<ul class="Element632">
+<li class="Element602">Any value greater than SYS_STATUS_READY is also a normal running state in which the driver is ready to accept new operations.</li>
+<li class="Element602">SYS_STATUS_BUSY - Indicates that the driver is busy with a previous system level operation and cannot start another</li>
+<li class="Element602">SYS_STATUS_ERROR - Indicates that the driver is in an error state</li>
+<li class="Element602">Any value less than SYS_STATUS_ERROR is also an error state.</li>
+<li class="Element602">SYS_MODULE_DEINITIALIZED - Indicates that the driver has been deinitialized</li>
+<li class="Element602">The this operation can be used to determine when any of the driver's module level operations has completed.</li>
+<li class="Element602">If the status operation returns SYS_STATUS_BUSY, the a previous operation has not yet completed. Once the status operation returns SYS_STATUS_READY, any previous operations have completed.</li>
+<li class="Element602">The value of SYS_STATUS_ERROR is negative (-1). Any value less than that is also an error state.</li>
+<li class="Element602">This function will NEVER block waiting for hardware.</li>
+<li class="Element602">If the Status operation returns an error value, the error may be cleared by calling the reinitialize operation. If that fails, the deinitialize operation will need to be called, followed by the initialize operation to return to normal operations.</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">

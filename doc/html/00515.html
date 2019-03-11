@@ -72,9 +72,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">TCPIP_MAC_RES_OK if success</li>
-<li class="Element601">a <a href="02755.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
+<ul class="Element632">
+<li class="Element602">TCPIP_MAC_RES_OK if success</li>
+<li class="Element602">a <a href="02755.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -83,11 +83,11 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Sets the appropriate bit in the ETHHT0/1 registers to allow packets sent to DestMACAddr to be received and enabled the Hash Table receive filter.</li>
-<li class="Element601">There is no way to individually remove destination MAC addresses from the hash table since it is possible to have a hash collision and therefore multiple MAC addresses relying on the same hash table bit.</li>
-<li class="Element601">A workaround is to have the stack store each enabled MAC address and to perform the comparison at run time.</li>
-<li class="Element601">A call to DRV_GMAC_RxFilterHashTableEntrySet() using a 00-00-00-00-00-00 destination MAC address, which will clear the entire hash table and disable the hash table filter. This will allow the receive of all packets, regardless of their destination</li>
+<ul class="Element632">
+<li class="Element602">Sets the appropriate bit in the ETHHT0/1 registers to allow packets sent to DestMACAddr to be received and enabled the Hash Table receive filter.</li>
+<li class="Element602">There is no way to individually remove destination MAC addresses from the hash table since it is possible to have a hash collision and therefore multiple MAC addresses relying on the same hash table bit.</li>
+<li class="Element602">A workaround is to have the stack store each enabled MAC address and to perform the comparison at run time.</li>
+<li class="Element602">A call to DRV_GMAC_RxFilterHashTableEntrySet() using a 00-00-00-00-00-00 destination MAC address, which will clear the entire hash table and disable the hash table filter. This will allow the receive of all packets, regardless of their destination</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">

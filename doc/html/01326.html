@@ -110,12 +110,13 @@ The<span style="color: #FFFFFF">_</span><a href="01077.html" target="topic">sock
 <p class="Element10">
 To get a reasonable maximum benchmark/evaluation data for a device target, it is recommended to disable other modules, such as HTTP, client example, server example, etc., and find a uncongested network.</p><div class="Element15">
 Running the Demonstration</div>
+<p class="Element10">
 
-<ol class="Element630">
-<li value="1" class="Element600">First, make sure the Iperf module and the System Console are enabled in your project.</li>
-<li value="2" class="Element600">Then, rebuild and program your project into target board.</li>
-<li value="3" class="Element600">After powering on the development board and associating the connected network, start the server side Iperf application first. If you start Iperf as a server on the development board in the console, this implies that you are trying to measure the device Ethernet receiver performance. If you start the Iperf server on a personal computer, you will be measuring MCHP device Ethernet transmit performance.</li>
-</ol><div class="Element15">
+<ol class="Element631">
+<li value="1" class="Element601">First, make sure the Iperf module and the System Console are enabled in your project.</li>
+<li value="2" class="Element601">Then, rebuild and program your project into target board.</li>
+<li value="3" class="Element601">After powering on the development board and associating the connected network, start the server side Iperf application first. If you start Iperf as a server on the development board in the console, this implies that you are trying to measure the device Ethernet receiver performance. If you start the Iperf server on a personal computer, you will be measuring MCHP device Ethernet transmit performance.</li>
+</ol></p><div class="Element15">
 Iperf Running Example</div>
 <p class="Element10">
 The following tests show receiver and transmitter performance, respectively with the following settings </p><div class="Element63">
@@ -126,57 +127,48 @@ The following tests show receiver and transmitter performance, respectively with
 <div class="Element68">
 <img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
-The data does NOT show the maximum throughput of the device under test as the settings are not optimized for that. Only the DHCP client, and the TCP and UDP modules are enabled in this example:</p>
-<ul class="Element630">
-<li class="Element600">TCP TX and RX Socket Size = 512</li>
-<li class="Element600">UDP TX and RX Socket Size = 512</li>
-<li class="Element600">Built by MPLAB XC32 C/C++ Compiler without any optimization</li>
-<li class="Element600">Personal Computer IP Address: 172.16.175.86</li>
-<li class="Element600">Device IP Address: 172.16.175.54</li>
-</ul><p class="Element68">
-&nbsp;</div></td></tr></table></div></div>
+The data does NOT show the maximum throughput of the device under test as the settings are not optimized for that. Only the DHCP client, and the TCP and UDP modules are enabled in this example:
+<ul class="Element631">
+<li class="Element601">TCP TX and RX Socket Size = 512</li>
+<li class="Element601">UDP TX and RX Socket Size = 512</li>
+<li class="Element601">Built by MPLAB XC32 C/C++ Compiler without any optimization</li>
+<li class="Element601">Personal Computer IP Address: 172.16.175.86</li>
+<li class="Element601">Device IP Address: 172.16.175.54</li>
+</ul>&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 <strong>UDP Test</strong>&nbsp;</p>
 <p class="Element10">
-Device under test as UDP server (receive):</p>
-<ul class="Element630">
-<li class="Element600">Command on the device: <span class="Element146">iperf -s -u -i 1</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 1.png" border="0" alt="" title=""></p>
-<ul class="Element630">
-<li class="Element600">Command on personal computer: <span class="Element146">iperf -c 172.16.175.54 -b 10M -i 1 -t 5</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 2.png" border="0" alt="" title="">&nbsp;</p>
+Device under test as UDP server (receive):
+<ul class="Element631">
+<li class="Element601">Command on the device: <span class="Element146">iperf -s -u -i 1</span></li>
+</ul><img src="IPERF Figure 1.png" border="0" alt="" title="">
+<ul class="Element631">
+<li class="Element601">Command on personal computer: <span class="Element146">iperf -c 172.16.175.54 -b 10M -i 1 -t 5</span></li>
+</ul><img src="IPERF Figure 2.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
-Personal computer as UDP server (device transmit)</p>
-<ul class="Element630">
-<li class="Element600">Command on personal computer: <span class="Element146">iperf -s -u -i 1</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 3.png" border="0" alt="" title=""></p>
-<ul class="Element630">
-<li class="Element600">Command on the device: <span class="Element146">iperf -c 172.16.175.86 -b 50M -i 1 -t 5</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 4.png" border="0" alt="" title="">&nbsp;</p>
+Personal computer as UDP server (device transmit)
+<ul class="Element631">
+<li class="Element601">Command on personal computer: <span class="Element146">iperf -s -u -i 1</span></li>
+</ul><img src="IPERF Figure 3.png" border="0" alt="" title="">
+<ul class="Element631">
+<li class="Element601">Command on the device: <span class="Element146">iperf -c 172.16.175.86 -b 50M -i 1 -t 5</span></li>
+</ul><img src="IPERF Figure 4.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
-Device as TCP server (receiving):</p>
-<ul class="Element630">
-<li class="Element600">Command on the device under test: <span class="Element146">iperf -s -i 1</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 5.png" border="0" alt="" title=""></p>
-<ul class="Element630">
-<li class="Element600">Command on personal computer: <span class="Element146">iperf -c 172.16.175.54 -i 1 -t 5</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 6.png" border="0" alt="" title="">&nbsp;</p>
+Device as TCP server (receiving):
+<ul class="Element631">
+<li class="Element601">Command on the device under test: <span class="Element146">iperf -s -i 1</span></li>
+</ul><img src="IPERF Figure 5.png" border="0" alt="" title="">
+<ul class="Element631">
+<li class="Element601">Command on personal computer: <span class="Element146">iperf -c 172.16.175.54 -i 1 -t 5</span></li>
+</ul><img src="IPERF Figure 6.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
-Personal computer as TCP server (device transmit):</p>
-<ul class="Element630">
-<li class="Element600">Command on personal computer: <span class="Element146">iperf -s -i 1</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 7.png" border="0" alt="" title=""></p>
-<ul class="Element630">
-<li class="Element600">Command on the device: <span class="Element146">iperf -c 172.16.175.86 -x 10M -i 1 -t 5</span></li>
-</ul><p class="Element10">
-<img src="IPERF Figure 8.png" border="0" alt="" title=""></p></div>
+Personal computer as TCP server (device transmit):
+<ul class="Element631">
+<li class="Element601">Command on personal computer: <span class="Element146">iperf -s -i 1</span></li>
+</ul><img src="IPERF Figure 7.png" border="0" alt="" title="">
+<ul class="Element631">
+<li class="Element601">Command on the device: <span class="Element146">iperf -c 172.16.175.86 -x 10M -i 1 -t 5</span></li>
+</ul><img src="IPERF Figure 8.png" border="0" alt="" title=""></p></div>
 </div>
 </div>
 <!-- End Page Content -->

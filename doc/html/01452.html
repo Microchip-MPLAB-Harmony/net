@@ -96,9 +96,9 @@ Comment out the <span class="Element146">#define SNMP_TRAP_DISABLED</span> macro
 Demonstrations</div>
 <p class="Element10">
 Two trap demonstrations APIs are included with the TCP/IP Stack. The task functions for these demonstrations are called in the main application function:
-<ul class="Element631">
-<li class="Element601">SNMPTrapDemo - This API demonstrates V1 or V2 trap formats (depending of the status of the SNMP_STACK_USE_V2_TRAP macro). The trap PDU will only have one demonstration variable binding on the varbind list.</li>
-<li class="Element601">SNMPV2TrapDemo - This API provides V2 format notifications with multiple (4) variable bindings. The user should modify or use this routine as a reference for sending V2 trap format notifications with multiple bindings on the varbind list.</li>
+<ul class="Element632">
+<li class="Element602">SNMPTrapDemo - This API demonstrates V1 or V2 trap formats (depending of the status of the SNMP_STACK_USE_V2_TRAP macro). The trap PDU will only have one demonstration variable binding on the varbind list.</li>
+<li class="Element602">SNMPV2TrapDemo - This API provides V2 format notifications with multiple (4) variable bindings. The user should modify or use this routine as a reference for sending V2 trap format notifications with multiple bindings on the varbind list.</li>
 </ul></p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
@@ -112,17 +112,17 @@ The user should only enable one SNMP demonstration API at a time. By default, th
 V1/V2 Formatted Traps with a Single Variable Binding</div>
 <p class="Element10">
 In the <a href="00995.html" target="topic">snmp_config.h</a> header file:
-<ul class="Element631">
-<li class="Element601">Uncomment <span class="Element146">#define SNMP_TRAP_DISABLED</span></li>
-<li class="Element601">Comment <span class="Element146">//#define SNMP_STACK_USE_V2_TRAP</span></li>
+<ul class="Element632">
+<li class="Element602">Uncomment <span class="Element146">#define SNMP_TRAP_DISABLED</span></li>
+<li class="Element602">Comment <span class="Element146">//#define SNMP_STACK_USE_V2_TRAP</span></li>
 </ul>For the Trap demonstration, two events are defined within the V2c agent:
-<ul class="Element631">
-<li class="Element601">If the Analog Potentiometer value is greater than 14, the agent will <a href="00977.html" target="topic">send</a> a Trap every 5 seconds to the configured 'IPv4TrapReceiverIP address'.</li>
-<li class="Element601">If Button 3 on the demonstration board is pressed, an organization-specific PUSH_BUTTON trap will be sent.</li>
+<ul class="Element632">
+<li class="Element602">If the Analog Potentiometer value is greater than 14, the agent will <a href="00977.html" target="topic">send</a> a Trap every 5 seconds to the configured 'IPv4TrapReceiverIP address'.</li>
+<li class="Element602">If Button 3 on the demonstration board is pressed, an organization-specific PUSH_BUTTON trap will be sent.</li>
 </ul>The current implementation of the V2c agent also generates a standard &quot;Authentication Failure Trap&quot;:
-<ul class="Element631">
-<li class="Element601">If a request is received to modify (Set) a private MIB variable, or</li>
-<li class="Element601">If the value of the variable is requested (Get) by a browser with the wrong community name</li>
+<ul class="Element632">
+<li class="Element602">If a request is received to modify (Set) a private MIB variable, or</li>
+<li class="Element602">If the value of the variable is requested (Get) by a browser with the wrong community name</li>
 </ul></p></div>
 </div>
 </div>

@@ -51,11 +51,11 @@ TCPIP_STACK_NetConfigSet Function</div>
 <p class="Element10">
 This function restores data from a previously dump buffer and updates the supplied interface configuration. All the data is recovered and constructed into the netConfigBuff (supposing this buffer is large enough). If this operation succeeded, the netConfigBuff can be safely cast to a (TCPIP_NETWORK_CONFIG*).&nbsp;</p>
 <p class="Element10">
-The structure of the netConfigBuff is as follows:</p>
-<ul class="Element630">
-<li class="Element600">A TCPIP_NETWORK_CONFIG structure is created at the very beginning of the buffer.</li>
-<li class="Element600">All of the necessary fields that are part of the TCPIP_NETWORK_CONFIG will be placed in the buffer itself.</li>
-</ul></div>
+The structure of the netConfigBuff is as follows:
+<ul class="Element631">
+<li class="Element601">A TCPIP_NETWORK_CONFIG structure is created at the very beginning of the buffer.</li>
+<li class="Element601">All of the necessary fields that are part of the TCPIP_NETWORK_CONFIG will be placed in the buffer itself.</li>
+</ul></p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
@@ -111,11 +111,12 @@ pointer to store the size needed for storage; can be NULL if not needed. If supp
 Returns</div>
 <div class="Element11">
 <div class="Element10">
+<p class="Element10">
 
-<ul class="Element630">
-<li class="Element600">valid TCPIP_NETWORK_CONFIG pointer (netConfigBuff) if netConfigBuff was successfully updated</li>
-<li class="Element600">0 if the netConfigBuff is not supplied or is not large enough</li>
-</ul></div>
+<ul class="Element631">
+<li class="Element601">valid TCPIP_NETWORK_CONFIG pointer (netConfigBuff) if netConfigBuff was successfully updated</li>
+<li class="Element601">0 if the netConfigBuff is not supplied or is not large enough</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>

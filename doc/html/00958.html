@@ -50,10 +50,10 @@ Introduction</div>
 <div class="Element10">
 <p class="Element10">
 The MPLAB Harmony Networking Presentation Layer is an abstracted middleware layer that provides an encrypted channel. There are three interfaces for the layer:
-<ul class="Element631">
-<li class="Element601"><strong>Client</strong> - this interface starts a network session and reads and writes clear text data</li>
-<li class="Element601"><strong>Provider</strong> - this interface encrypts the clear text into cipher text, and decrypts cipher text into clear text</li>
-<li class="Element601"><strong>Transport</strong> - this interface transmits and receives the cipher text</li>
+<ul class="Element632">
+<li class="Element602"><strong>Client</strong> - this interface starts a network session and reads and writes clear text data</li>
+<li class="Element602"><strong>Provider</strong> - this interface encrypts the clear text into cipher text, and decrypts cipher text into clear text</li>
+<li class="Element602"><strong>Transport</strong> - this interface transmits and receives the cipher text</li>
 </ul>The linkage to the provider interface is done through function pointers to isolate it from the rest of MPLAB Harmony. This allows for any provider to be used. Please note that Microchip <i>does not</i> supply a commercially licensed TLS provider. wolfSSL (formerly CyaSSL) is supported as a provider for evaluation purposes only.&nbsp;</p>
 <p class="Element10">
 The transport interface is abstracted to function pointers as well, to allow for any transport to be used. Currently, only the MPLAB Harmony TCP/IP Stack is used as a transport; however, other transports can be created, such as UART transport, which can be used instead.&nbsp;</p>

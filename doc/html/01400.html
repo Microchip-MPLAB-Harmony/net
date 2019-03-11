@@ -52,33 +52,33 @@ Introduction</div>
 The NDP (Neighbor Discovery Protocol) for IP version 6 is used by IPv6 nodes on the same link to discover each other's presence. RFC - 4861.&nbsp;</p>
 <p class="Element10">
 NDP module is responsible for:
-<ul class="Element631">
-<li class="Element601">Address Auto configuration of nodes</li>
-<li class="Element601">Discovery of other nodes in the link (It can be a Router Discovery or Neighbor Discovery)</li>
-<li class="Element601">Determining the link-layer<span style="color: #FFFFFF">_</span>address of other nodes</li>
-<li class="Element601">Duplicate address detection (DAD)</li>
-<li class="Element601">Finding available routers and Domain Name System (DNS) servers</li>
-<li class="Element601">Address Prefix discovery</li>
-<li class="Element601">Parameter Discovery (Such as Link MTU or Hop limit)</li>
+<ul class="Element632">
+<li class="Element602">Address Auto configuration of nodes</li>
+<li class="Element602">Discovery of other nodes in the link (It can be a Router Discovery or Neighbor Discovery)</li>
+<li class="Element602">Determining the link-layer<span style="color: #FFFFFF">_</span>address of other nodes</li>
+<li class="Element602">Duplicate address detection (DAD)</li>
+<li class="Element602">Finding available routers and Domain Name System (DNS) servers</li>
+<li class="Element602">Address Prefix discovery</li>
+<li class="Element602">Parameter Discovery (Such as Link MTU or Hop limit)</li>
 </ul></p><div class="Element15">
 Comparing with IPv4:</div>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">NDP is a substitute of ARP (Address Resolution protocol ). This new mechanism uses a mix of ICMPv6 and multicast addresses to discover the IPv6 node on same link.</li>
-<li class="Element601">NDP includes Neighbor Unreachability Detection (NUD) , thus improving the robustness of packet delivery.</li>
-<li class="Element601">Unlike IPv4 broadcast addresses, IPv6 address resolution multicasts are spread over 4 billion (2^32) multicast addresses, greatly reducing address resolution-related interrupts on nodes other than the target. Moreover, non-IPv6 machines should not be interrupted at all.</li>
-<li class="Element601">Neighbor Discovery defines five different ICMPv6 packet types.</li>
+<ul class="Element632">
+<li class="Element602">NDP is a substitute of ARP (Address Resolution protocol ). This new mechanism uses a mix of ICMPv6 and multicast addresses to discover the IPv6 node on same link.</li>
+<li class="Element602">NDP includes Neighbor Unreachability Detection (NUD) , thus improving the robustness of packet delivery.</li>
+<li class="Element602">Unlike IPv4 broadcast addresses, IPv6 address resolution multicasts are spread over 4 billion (2^32) multicast addresses, greatly reducing address resolution-related interrupts on nodes other than the target. Moreover, non-IPv6 machines should not be interrupted at all.</li>
+<li class="Element602">Neighbor Discovery defines five different ICMPv6 packet types.</li>
 </ul></p><div class="Element15">
 Five Different ICMPv6 Packet Types:</div>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601"><strong>Router Solicitation</strong> - Hosts inquire with Router Solicitation message to locate routers on the attached link</li>
-<li class="Element601"><strong>Router Advertisement</strong> - Router advertise their presence periodically to all the nodes or in response to the Router Solicitation message</li>
-<li class="Element601"><strong>Neighbor Solicitation</strong> - Neighbor solicitations are used by nodes to determine the Link Layer address of a neighbor, or to verify that a neighbor is still reachable via a cached Link Layer address</li>
-<li class="Element601"><strong>Neighbor Advertisement</strong> - Neighbor advertisements are used by nodes to respond to a Neighbor Solicitation message</li>
-<li class="Element601"><strong>Redirect</strong> - Routers may inform hosts of a better first hop router for a destination</li>
+<ul class="Element632">
+<li class="Element602"><strong>Router Solicitation</strong> - Hosts inquire with Router Solicitation message to locate routers on the attached link</li>
+<li class="Element602"><strong>Router Advertisement</strong> - Router advertise their presence periodically to all the nodes or in response to the Router Solicitation message</li>
+<li class="Element602"><strong>Neighbor Solicitation</strong> - Neighbor solicitations are used by nodes to determine the Link Layer address of a neighbor, or to verify that a neighbor is still reachable via a cached Link Layer address</li>
+<li class="Element602"><strong>Neighbor Advertisement</strong> - Neighbor advertisements are used by nodes to respond to a Neighbor Solicitation message</li>
+<li class="Element602"><strong>Redirect</strong> - Routers may inform hosts of a better first hop router for a destination</li>
 </ul></p></div>
 </div>
 </div>

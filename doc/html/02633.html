@@ -52,10 +52,10 @@ TCPIP_MAC_EventF Type</div>
 Event notification Function: typedef void (*TCPIP_MAC_EventF)(<a href="02613.html" target="topic">TCPIP_MAC_EVENT</a> event, const void* eventParam);&nbsp;</p>
 <p class="Element10">
 This function describes the MAC event notification handler. This is a handler specified by the user of the MAC (the TCP/IP stack). The stack can use the handler to be notified of MAC events. Whenever a notification occurs the passed events have to be eventually processed:
-<ul class="Element631">
-<li class="Element601">Stack should process the TCPIP_EV_RX_PKTPEND/TCPIP_EV_RX_DONE, TCPIP_EV_TX_DONE events</li>
-<li class="Element601">Process the specific (error) condition</li>
-<li class="Element601">Acknowledge the events by calling <a href="02632.html" target="topic">TCPIP_MAC_EventAcknowledge</a>() so that they can be re-enabled.</li>
+<ul class="Element632">
+<li class="Element602">Stack should process the TCPIP_EV_RX_PKTPEND/TCPIP_EV_RX_DONE, TCPIP_EV_TX_DONE events</li>
+<li class="Element602">Process the specific (error) condition</li>
+<li class="Element602">Acknowledge the events by calling <a href="02632.html" target="topic">TCPIP_MAC_EventAcknowledge</a>() so that they can be re-enabled.</li>
 </ul></p></div>
 </div>
 <a name="43"></a><div class="Element99">

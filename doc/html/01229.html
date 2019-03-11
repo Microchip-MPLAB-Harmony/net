@@ -50,23 +50,23 @@ Abstraction Model</div>
 <div class="Element10">
 <p class="Element10">
 DNS is part of the Application Layer. Following is a description of how the DNS Client works and how it should be used.
-<ol class="Element631">
-<li value="1" class="Element601">By default, the DNS client is enabled and included in the TCP/IP stackbuild.</li>
-<li value="2" class="Element601">The DNS Client module will use a UDP <a href="01077.html" target="topic">socket</a> on port number 53 to contact the DNS server.</li>
-<li value="3" class="Element601">The DNS client can be enabled/disabled dynamically at run time.</li>
-<li value="4" class="Element601">When the TCP/IP commands module is built in the stack, commands for manipulation of the DNS module are available:
 <ol class="Element632">
-<li value="1" class="Element602">The DNS module can be enabled using the command &quot;dns eth0 on&quot;.</li>
-<li value="2" class="Element602">The DNS client module can be disabled from the command prompt using &quot;dns eth0 off&quot;.</li>
-<li value="3" class="Element602">In the above examples the first Ethernet interface is used. Any valid network interface can be used.</li>
+<li value="1" class="Element602">By default, the DNS client is enabled and included in the TCP/IP stackbuild.</li>
+<li value="2" class="Element602">The DNS Client module will use a UDP <a href="01077.html" target="topic">socket</a> on port number 53 to contact the DNS server.</li>
+<li value="3" class="Element602">The DNS client can be enabled/disabled dynamically at run time.</li>
+<li value="4" class="Element602">When the TCP/IP commands module is built in the stack, commands for manipulation of the DNS module are available:
+<ol class="Element633">
+<li value="1" class="Element603">The DNS module can be enabled using the command &quot;dns eth0 on&quot;.</li>
+<li value="2" class="Element603">The DNS client module can be disabled from the command prompt using &quot;dns eth0 off&quot;.</li>
+<li value="3" class="Element603">In the above examples the first Ethernet interface is used. Any valid network interface can be used.</li>
 </ol></li>
-<li value="2" class="Element601">Applications or demonstrations such as berkeley_tcp_client, berkeley_udp_client, tcpip_tcp_client, and tcpip_udp_client, use the <a href="01977.html" target="topic">TCPIP_DNS_Resolve</a> function with Host name and Record type as arguments to resolve the domain host name. The DNS module supports the Record type of &quot;A&quot; for IPv4 addresses and &quot;AAAA&quot; for IPv6.</li>
-<li value="3" class="Element601">The resolved domain name and the mapped IPv4 or IPv6 address will be stored in a table with the expiration time, which is calculated from the DNS server response.</li>
-<li value="4" class="Element601">The server supplied IPv4 and IPv6 addresses will be cached internally (see the DNS_CLIENT_CACHE_PER_IPV4_ADDRESS and DNS_CLIENT_CACHE_PER_IPV6_ADDRESS parameters).</li>
-<li value="5" class="Element601">The <a href="01974.html" target="topic">TCPIP_DNS_IsResolved</a> function will return DNS_RES_OK if the domain name resolve is successful.</li>
-<li value="6" class="Element601">The TCPIP_DNS_GetNumberOfIPAddresses function can be used to obtain the number of the IPv4 or IPv6 addresses present in the DNS Resolver tables.</li>
-<li value="7" class="Element601">The DNS Resolver table (cache) stores the dcorresponding name, the IP address and the expiration time returned by the server.</li>
-<li value="8" class="Element601">The functions, TCPIP_DNS_GetIPv4Address and TCPIP_DNS_GetIPv6Address, can be used to obtain the IPv4 or Ipv6 addresses for a resolved name entry.</li>
+<li value="2" class="Element602">Applications or demonstrations such as berkeley_tcp_client, berkeley_udp_client, tcpip_tcp_client, and tcpip_udp_client, use the <a href="01977.html" target="topic">TCPIP_DNS_Resolve</a> function with Host name and Record type as arguments to resolve the domain host name. The DNS module supports the Record type of &quot;A&quot; for IPv4 addresses and &quot;AAAA&quot; for IPv6.</li>
+<li value="3" class="Element602">The resolved domain name and the mapped IPv4 or IPv6 address will be stored in a table with the expiration time, which is calculated from the DNS server response.</li>
+<li value="4" class="Element602">The server supplied IPv4 and IPv6 addresses will be cached internally (see the DNS_CLIENT_CACHE_PER_IPV4_ADDRESS and DNS_CLIENT_CACHE_PER_IPV6_ADDRESS parameters).</li>
+<li value="5" class="Element602">The <a href="01974.html" target="topic">TCPIP_DNS_IsResolved</a> function will return DNS_RES_OK if the domain name resolve is successful.</li>
+<li value="6" class="Element602">The TCPIP_DNS_GetNumberOfIPAddresses function can be used to obtain the number of the IPv4 or IPv6 addresses present in the DNS Resolver tables.</li>
+<li value="7" class="Element602">The DNS Resolver table (cache) stores the dcorresponding name, the IP address and the expiration time returned by the server.</li>
+<li value="8" class="Element602">The functions, TCPIP_DNS_GetIPv4Address and TCPIP_DNS_GetIPv6Address, can be used to obtain the IPv4 or Ipv6 addresses for a resolved name entry.</li>
 </ol>&nbsp;</p>
 <p class="Element10">
 &nbsp;</p><p class="Element10" style="text-align: center;">

@@ -50,11 +50,11 @@ TCPIP_SNMP_NextIndexGet Function</div>
 <div class="Element10">
 <p class="Element10">
 This is a callback function called by SNMP module. This function contents are modified by the application developer with the new MIB Record ID. This function can be called for individual MIB ID with index or for a complete MIB table without any instance.
-<ul class="Element631">
-<li class="Element601">If the SNMP Sequence MIB variable processing is performed with index or instance value,</li>
+<ul class="Element632">
+<li class="Element602">If the SNMP Sequence MIB variable processing is performed with index or instance value,</li>
 </ul>it is the responsibility of the agent to <a href="00977.html" target="topic">send</a> the next available index for that requested variable. This is a only one iteration process. The Manager will not <a href="00977.html" target="topic">send</a> any further requests for the received index value.
-<ul class="Element631">
-<li class="Element601">If SNMP request for a sequence variable starts with only OID without any instance, that is </li>
+<ul class="Element632">
+<li class="Element602">If SNMP request for a sequence variable starts with only OID without any instance, that is </li>
 </ul>a complete table is requested without any instance, it is the responsibility of the agent to <a href="00977.html" target="topic">send</a> the first available index of the table. The Manager will continue the request with the transferred instance until it receives the reply from agent.&nbsp;</p>
 <p class="Element10">
 This function will only be called for OID variable of type sequence. if the index value starts with <a href="01007.html" target="topic">SNMP_INDEX_INVALID</a> , then user need to <a href="00977.html" target="topic">send</a> the response with first available index value.</p></div>
@@ -103,9 +103,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">true - If a next index value exists for given variable at given index and index parameter contains next valid index.</li>
-<li class="Element601">false - If a next index value does not exist for a given variable</li>
+<ul class="Element632">
+<li class="Element602">true - If a next index value exists for given variable at given index and index parameter contains next valid index.</li>
+<li class="Element602">false - If a next index value does not exist for a given variable</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">

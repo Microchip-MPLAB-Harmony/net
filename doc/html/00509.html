@@ -70,9 +70,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">TCPIP_MAC_RES_OK if success</li>
-<li class="Element601">a <a href="02755.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
+<ul class="Element632">
+<li class="Element602">TCPIP_MAC_RES_OK if success</li>
+<li class="Element602">a <a href="02755.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -81,18 +81,18 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">The MAC driver supports internal queuing. A packet is rejected only if it's not properly formatted. Otherwise it will be scheduled for transmission and queued internally if needed.</li>
+<ul class="Element632">
+<li class="Element602">The MAC driver supports internal queuing. A packet is rejected only if it's not properly formatted. Otherwise it will be scheduled for transmission and queued internally if needed.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Once the packet is scheduled for transmission the MAC driver will set the TCPIP_MAC_PKT_FLAG_QUEUED flag so that the stack is aware that this packet is under processing and cannot be modified.</li>
+<ul class="Element632">
+<li class="Element602">Once the packet is scheduled for transmission the MAC driver will set the TCPIP_MAC_PKT_FLAG_QUEUED flag so that the stack is aware that this packet is under processing and cannot be modified.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">Once the packet is transmitted, the TCPIP_MAC_PKT_FLAG_QUEUED will be cleared, the proper packet acknowledgment result (ackRes) will be set and the packet acknowledgment function (ackFunc) will be called.</li>
+<ul class="Element632">
+<li class="Element602">Once the packet is transmitted, the TCPIP_MAC_PKT_FLAG_QUEUED will be cleared, the proper packet acknowledgment result (ackRes) will be set and the packet acknowledgment function (ackFunc) will be called.</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">

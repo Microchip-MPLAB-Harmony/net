@@ -95,9 +95,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">true - if successful</li>
-<li class="Element601">false - if unsuccessful: the requested interface could not be selected for DNS name resolving.</li>
+<ul class="Element632">
+<li class="Element602">true - if successful</li>
+<li class="Element602">false - if unsuccessful: the requested interface could not be selected for DNS name resolving.</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -106,11 +106,11 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 The interface selection for the name resolution tries to find a valid interface, i.e. an interface that is up and has a valid DNS server. The selection is done following these rules:
-<ul class="Element631">
-<li class="Element601">if a strict interface is set, only that interface is used for name resolution</li>
-<li class="Element601">else if there is a preferred interface, that one will be tried first</li>
-<li class="Element601">else the default interface is used</li>
-<li class="Element601">else any available interface will be used</li>
+<ul class="Element632">
+<li class="Element602">if a strict interface is set, only that interface is used for name resolution</li>
+<li class="Element602">else if there is a preferred interface, that one will be tried first</li>
+<li class="Element602">else the default interface is used</li>
+<li class="Element602">else any available interface will be used</li>
 </ul>Additionally, if a retry is attempted using the same selected interface, an alternate DNS server from that interface will be selected, if available.&nbsp;</p>
 <p class="Element10">
 Only one strict interface can exist at any time. Selecting a new strict interface will replace the old one.&nbsp;</p>

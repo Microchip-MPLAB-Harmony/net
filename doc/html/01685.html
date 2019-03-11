@@ -101,9 +101,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">true - if the call succeeds</li>
-<li class="Element601">false - if error (no such interface, etc.)</li>
+<ul class="Element632">
+<li class="Element602">true - if the call succeeds</li>
+<li class="Element602">false - if error (no such interface, etc.)</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -118,15 +118,15 @@ There is no corresponding deregister function. Simply call TCPIP_DHCP_HostNameCa
 If such a callback is not registered, then the NetBios name will be used for the DHCP host name.&nbsp;</p>
 <p class="Element10">
 The callback function has to return a character string that's compatible with the rules imposed for the host names:
-<ul class="Element631">
-<li class="Element601">Host names may contain only alphanumeric characters, minus signs (&quot;-&quot;), and periods (&quot;.&quot;)</li>
-<li class="Element601">They must begin with an alphabetic character and end with an alphanumeric character</li>
+<ul class="Element632">
+<li class="Element602">Host names may contain only alphanumeric characters, minus signs (&quot;-&quot;), and periods (&quot;.&quot;)</li>
+<li class="Element602">They must begin with an alphabetic character and end with an alphanumeric character</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 To enforce these rules the extra processing is performed internally (on either user supplied host name or NetBios name):
-<ul class="Element631">
-<li class="Element601">spaces, if present, will be stripped from the string</li>
-<li class="Element601">illegal characters will be replaced by TCPIP_DHCP_HOST_REPLACE_CHAR character (default is lower case 'x')</li>
+<ul class="Element632">
+<li class="Element602">spaces, if present, will be stripped from the string</li>
+<li class="Element602">illegal characters will be replaced by TCPIP_DHCP_HOST_REPLACE_CHAR character (default is lower case 'x')</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 If after processing the resulting string is null, the DHCP host name option is skipped.&nbsp;</p>
