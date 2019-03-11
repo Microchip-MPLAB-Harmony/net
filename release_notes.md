@@ -116,7 +116,7 @@ The current known issues are as follows:
 * SDMMC driver may block inside an internal routine while using the HTTP server and locks up th ewhole application. No workaround exists.
 * The operation over the secure connections using wolfSSL has not been added to the net repo for this release.
     - There are 2 wolfSSL TCP demos in the crypto repo.
-* For projects using the mpfs_img2.c file this may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
+* For projects using the mpfs_img2.c and mpfs_img2_net.c files, these may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
 * EDBG programming of a hex file on the SAME54 XPRO board may fail.
 * There are some mandatory MISRA violations in some of the repo files. They will be fixed in the next release:
     - System: sys_debug.c, sys_command.c

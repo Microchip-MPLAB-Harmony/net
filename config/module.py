@@ -252,9 +252,6 @@ def loadModule():
     netPresComponent.addCapability("libNetPres","net_pres",True)    
     netPresComponent.addDependency("NetPres_Crypto_Dependency", "LIB_CRYPTO", None, False, False)
     
-    ############################### Third Party wolfSSL Module #####################################
-    tlsComponent = Module.CreateComponent("lib_wolfssl", "wolfSSL Library", "//Third Party Libraries/wolfSSL/", "config\wolfssl.py")
-    
     ############################### TCP/IP STACK CONFIGURATOR #####################################
     #tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
 
