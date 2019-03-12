@@ -156,3 +156,159 @@ This table lists the contents of this release, including a brief description, an
 | net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card | Beta |
 
 
+## Net Release v3.1.0 (December, 2018)
+### ADDITIONS AND UPDATES FOR  3.1.0:
+
+
+- **Updated Applications**
+
+The following table provides the list of the updated applications:
+
+| Application                 | Platform                        | Description                                                          |
+| ------------ | ------------ | ------------ |
+| berkeley_tcp_client         | SAMV71, SAME70                  | TCP Client demo using BSD API                                        |
+| berkeley_tcp_server         | SAMV71, SAME70                  | TCP Server demo using BSD API                                        |
+| berkeley_udp_client         | SAMV71, SAME70                  | UDP Client demo using BSD API                                        |
+| berkeley_udp_relay          | SAMV71, SAME70                  | UDP Relay demo using BSD API                                         |
+| berkeley_udp_server         | SAMV71, SAME70                  | UDP Server demo using BSD API                                        |
+| snmpv3_nvm_mpfs             | SAMV71, SAME70                  | SNMPv3 demo with MPFS file system using NVM storage                  |
+| snmpv3_sdcard_fatfs         | SAMV71, SAME70                  | SNMPv3 demo with  FAT FS file system using external SD card          |
+| tcpip_client_server         | SAME70                          | Multi-threaded example with TCP and UDP server and client threads    |
+| tcpip_tcp_client            | SAMV71, SAME70                  | TCP Client demo using Harmony native API                             |
+| tcpip_tcp_client_server     | SAMV71, SAME70                  | TCP Client and Server demo using Harmony native API                  |
+| tcpip_tcp_server            | SAMV71, SAME70                  | TCP Server demo using Harmony native API                             |
+| tcpip_udp_client            | SAMV71, SAME70                  | UDP Client demo using Harmony native API                             |
+| tcpip_udp_client_server     | SAMV71, SAME70                  | UDP Client and Server demo using Harmony native API                  |
+| tcpip_udp_server            | SAMV71, SAME70                  | UDP Server demo using Harmony native API                             |
+| web_net_server_nvm_mpfs     | SAME70                          | Web server with MPFS file system using the NVM storage               |
+| web_server_nvm_mpfs         | SAMV71, SAME70                  | Old style web server with MPFS file system using the NVM storage     |
+| web_server_sdcard_fatfs     | SAMV71, SAME70                  | Old style web server with FAT FS file system on the external SD card |
+
+
+- **Updated Drivers**
+
+The following table provides the list of new support for MAC drivers:
+
+| Driver    | Platform      |
+| --------- | ------------- |
+| drv_gmac  | SAME70, SAMV71 |
+
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in this release:
+
+| Module                | Description                                             |
+| ------ | ------ |
+| UDP                   | Fixed comments in the UDP header for TCPIP_UDP_OptionSet() not providing 100% compatibility with the BSD setsockopt().    |
+| UDP                   | Provided better explanation for some of the UDP_MULTICAST_FLAGS flags.                                                    |
+| HTTP_NET              | Added HTTP_NET connection events: open, close, timeout                                                                    |
+| HTTP_NET              | Updated the HTTP app with the new SMTPC module changes. Old SMTP module is obsolete now.                                  |
+| HTTP_NET              | Added case-insensitive comparison for the HTTP headers. Added stricmp() helper.                                           |
+| HTTP_NET              | Added file open/close events.                                                                                             |
+| HTTP_NET              | Fixed the legacy mechanism of using callback position. Cleared the callbackPos counter only when the dynamic variable print is called first time. |
+| Telnet                | Better processing of the telnet options.                                                                                  |
+| Telnet                | Improved the telnet usage of the NET_PRES layer.                                                                          |
+| TCPIP Manager         | Updated the processing of the network interface flags to avoid the MAC Initialize flag to remain set if the network interface is stopped before completing initialization.|
+| TCPIP Manager         | Fixed the selection of the DNS client as default only if the module is enabled.                                           |
+| TCPIP Manager         | Fixed the tcpip_heap_external semaphore delete not checking that it was successfully created.                             |
+| mDNS                  | Fixed the use of the wrong field to detect an authoritative reply. The field "qr" was used instead of "aa" when deciding for an authoritative answer.|
+| IPv6                  | Fixed the routine converting a string to an IPv6 address.                                                                 |
+| TCPIP Commands        | Added missing Close() when MIIM operation failed.                                                                         |
+
+### TESTED WITH:
+
+#### Software Requirements
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+- MPLAB X IDE 5.10 or later
+- MPLAB XC32 C/C++ Compiler V2.15 or later
+- MPLAB Harmony Configurator 3.1.0
+- Harmony net repository, 3.1.0
+- Harmony bsp repository, 3.1.0
+- Harmony csp repository, 3.10.0
+- Harmony core repository, 3.1.0
+- Harmony dev_packs repository, 3.1.0
+- Harmony mhc repository, 3.1.0
+- Harmony mplabx_plugin repository, 3.1.0
+- CMSIS-FreeRTOS repository, 10.0.1 for building the FreeRTOS projects (from www.github.com/arm-software/cmsis-freertos)
+
+
+
+### KNOWN ISSUES
+
+The current known issues are as follows:
+
+* Adding TCP/IP components to the project must be done using the TCP/IP Configurators in order to 
+  load the dependencies properly. Adding the TCP/IP components from the "Available Components",
+  without using configurator, might cause build issues.
+* Similarly, remove the TCP/IP components by using the TCP/IP Configurator for the respective layer
+* Do not add the TCP/IP components to the project by using both the TCP/IP Configurator and manually adding from "Available Components".
+* Do not delete the TCP/IP Configurators from project graph.
+* When multiple modules depending on the "netPres" component are added to the project (like Berkeley, HTTP_NET, TELNET etc.),
+  multiple 'netPres' nodes will be shown on TCP/IP STACK group box.
+  But internally all these TCP/IP modules are using a single instance of the NET_PRES service.
+  So only one instance of NET_PRES is needed.
+* Interactive help using the "Show User Manual Entry" in the Right-click menu for configuration options provided
+  by this module is not yet available from within the MPLAB Harmony Configurator (MHC).
+  Please see the "Configuring the Library" section in the help documentation in the doc folder for this module instead.
+  Help is available in both CHM and PDF formats.
+
+* The web_net_server_nvm_mpfs demo does not currently support encrypted connections.
+  The wolfSSL third party package cannot be added to the application as an encryption provider.
+  This will be added in a future release.
+* The tcpip_client_server application does not currently have documentation. The commands to 
+  use this demonstration are provided in the run time help available as console commands.
+  This will be added in a future release.
+* When the File System service is used in a demonstration application, make sure to set 
+  "Maximum Simultaneous File Access" to a number above 10.
+  Especially the HTTP server needs to open multiple files simultaneously.
+* When the RTOS is enabled, make sure to include RTOS system API’s (like Time Delay functions)
+  in application task to give other tasks the chance to execute.
+  This can be achieved by enabling the "Use Task Delay" from Application Configuration -> RTOS Configuration.
+  
+
+### RELEASE CONTENTS
+
+This topic lists the contents of this release and identifies each module.
+
+#### Description
+
+This table lists the contents of this release, including a brief description, and the release type (Alpha, Beta, Production, or Vendor).
+
+
+| Folder                                | Description                                                          | Release Type |
+| --- | --- | --- |
+| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             | Beta |
+| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  | Beta |
+| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             | Beta |
+| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               | Beta |
+| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     | Beta |
+| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card | Beta |
+| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        | Beta |
+| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        | Beta |
+| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        | Beta |
+| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         | Beta |
+| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        | Beta |
+| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  | Beta |
+| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          | Beta |
+| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             | Beta |
+| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  | Beta |
+| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             | Beta |
+| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    | Beta |
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
