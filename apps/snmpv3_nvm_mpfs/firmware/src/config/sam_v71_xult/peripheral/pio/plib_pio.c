@@ -57,7 +57,7 @@
 void PIO_Initialize ( void )
 {
     /* Selected System IO pins are configured as GPIO */
-    MATRIX_REGS->CCFG_SYSIO |= 0x10;
+    MATRIX_REGS->CCFG_SYSIO |= 0x1010;
 
     /************************ PIO A Initialization ************************/
     /* PORTA PIO Disable and Peripheral Enable*/

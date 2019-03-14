@@ -71,9 +71,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // TCP/IP stack version
 #define TCPIP_STACK_VERSION_MAJOR         7
-#define TCPIP_STACK_VERSION_MINOR         31
+#define TCPIP_STACK_VERSION_MINOR         32
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "7.31 - H3"
+#define TCPIP_STACK_VERSION_STR           "7.32 - H3.2"
 
 
 // *****************************************************************************
@@ -663,8 +663,6 @@ typedef struct
 #include "tcpip/nbns.h"
 #include "tcpip/sntp.h"
 #include "tcpip/http.h"
-#include "tcpip/snmp.h"
-#include "tcpip/snmpv3.h"
 #include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"
 #include "tcpip/smtpc.h"

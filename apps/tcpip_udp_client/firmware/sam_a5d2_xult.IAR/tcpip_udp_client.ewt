@@ -2752,9 +2752,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\pio\plib_pio_pin.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\tc\plib_tc0.h</name>
             </file>
             <file>

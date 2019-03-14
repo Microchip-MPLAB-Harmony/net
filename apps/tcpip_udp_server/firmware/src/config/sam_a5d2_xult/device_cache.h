@@ -12,8 +12,8 @@
     invalidates etc. For the DCache and ICache.
 
   Remarks:
-    This header should not define any prototypes or data definitions, or 
-    include any files that do.  The file only provides macro definitions for 
+    This header should not define any prototypes or data definitions, or
+    include any files that do.  The file only provides macro definitions for
     build-time.
 
 *******************************************************************************/
@@ -70,19 +70,28 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 #define L1_ICACHE_IN_USE                               false
+#define L1_ICACHE_ENABLE()
+#define L1_ICACHE_DISABLE()
 #define L1_ICACHE_INVALIDATE_ALL()
 
 #define L1_DCACHE_IN_USE                               false
+#define L1_DCACHE_ENABLE()
+#define L1_DCACHE_DISABLE()
 #define L1_DCACHE_CLEAN_ALL()
+#define L1_DCACHE_INVALIDATE_ALL()
 #define L1_DCACHE_CLEAN_INVALIDATE_ALL()
 
 #define L2_DCACHE_IN_USE                               false
 #define L2_DCACHE_CLEAN_ALL()
 #define L2_DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-// 
-#define DCACHE_CLEAN_BY_ADDR(addr,sz)  
+//
+#define DCACHE_CLEAN_BY_ADDR(addr,sz)
 #define DCACHE_INVALIDATE_BY_ADDR(addr,sz)
-// 
+#define DCACHE_CLEAN_INVALIDATE_BY_ADDR(addr,sz)
+#define DCACHE_CLEAN_ALL()
+#define DCACHE_INVALIDATE_ALL()
+#define DCACHE_CLEAN_INVALIDATE_ALL()
+//
 #define DATA_CACHE_ENABLED                             false
 
 //DOM-IGNORE-BEGIN

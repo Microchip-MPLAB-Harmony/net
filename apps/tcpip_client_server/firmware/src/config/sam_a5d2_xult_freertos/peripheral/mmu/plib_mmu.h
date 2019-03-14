@@ -73,6 +73,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 */
 void MMU_Initialize(void);
 
+void icache_InvalidateAll(void);
+void icache_Enable(void);
+void icache_Disable(void);
 
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -81,7 +84,3 @@ void MMU_Initialize(void);
 #endif
 
 #endif // _PLIB_MMU_H
-
-/*******************************************************************************
- End of File
-*/

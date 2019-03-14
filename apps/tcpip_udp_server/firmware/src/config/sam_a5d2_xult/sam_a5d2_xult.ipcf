@@ -15,6 +15,17 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </includePath>
+    <asmIncludePath>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library\tcpip\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library\tcpip\src\common</path>
+        <path>$PROJ_DIR$\..\..\firmware\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+    </asmIncludePath>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</path>
@@ -232,7 +243,6 @@
             <path>\peripheral\matrix\plib_matrix.h</path>
             <path>\peripheral\clk\plib_clk.h</path>
             <path>\peripheral\pio\plib_pio.h</path>
-            <path>\peripheral\pio\plib_pio_pin.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
             <path>\driver\miim\drv_miim.h</path>
             <path>\driver\miim\config\drv_miim_config.h</path>
@@ -246,9 +256,9 @@
             <path>\system\console\src\sys_console_local.h</path>
             <path>\system\console\src\sys_console_uart.h</path>
             <path>\system\console\src\sys_console_uart_definitions.h</path>
-            <path>\system\console\sys_debug.h</path>
             <path>\system\console\src\sys_debug_local.h</path>
             <path>\system\console\sys_command.h</path>
+            <path>\system\console\sys_debug.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_gcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>

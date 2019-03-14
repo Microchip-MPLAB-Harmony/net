@@ -76,35 +76,36 @@ static void Console_UART_DisableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
 {
     bool interruptStatus;
     const SYS_CONSOLE_UART_INTERRUPT_SOURCES* intInfo = pConsoleUartData->interruptSources;
+    const SYS_CONSOLE_UART_MULTI_INT_SRC* multiVector = &intInfo->intSources.multi;
 
     if (intInfo->isSingleIntSrc == true)
     {
         /* Disable USART interrupt */
-        SYS_INT_SourceDisable(intInfo->intSources.usartInterrupt);
+        pConsoleUartData->usartInterruptStatus = SYS_INT_SourceDisable(intInfo->intSources.usartInterrupt);
     }
     else
     {
         interruptStatus = SYS_INT_Disable();
 
         /* Disable USART interrupt sources */
-        if(intInfo->intSources.multi.usartTxReadyInt != -1)
+        if(multiVector->usartTxReadyInt != -1)
         {
-            SYS_INT_SourceDisable(intInfo->intSources.multi.usartTxReadyInt);
+            pConsoleUartData->usartTxReadyIntStatus = SYS_INT_SourceDisable(multiVector->usartTxReadyInt);
         }
 
-        if(intInfo->intSources.multi.usartTxCompleteInt != -1)
+        if(multiVector->usartTxCompleteInt != -1)
         {
-            SYS_INT_SourceDisable(intInfo->intSources.multi.usartTxCompleteInt);
+            pConsoleUartData->usartTxCompleteIntStatus = SYS_INT_SourceDisable(multiVector->usartTxCompleteInt);
         }
 
-        if(intInfo->intSources.multi.usartRxCompleteInt != -1)
+        if(multiVector->usartRxCompleteInt != -1)
         {
-            SYS_INT_SourceDisable(intInfo->intSources.multi.usartRxCompleteInt);
+            pConsoleUartData->usartRxCompleteIntStatus = SYS_INT_SourceDisable(multiVector->usartRxCompleteInt);
         }
 
-        if(intInfo->intSources.multi.usartErrorInt != -1)
+        if(multiVector->usartErrorInt != -1)
         {
-            SYS_INT_SourceDisable(intInfo->intSources.multi.usartErrorInt);
+            pConsoleUartData->usartErrorIntStatus = SYS_INT_SourceDisable(multiVector->usartErrorInt);
         }
 
         SYS_INT_Restore(interruptStatus);
@@ -115,35 +116,36 @@ static void Console_UART_EnableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
 {
     bool interruptStatus;
     const SYS_CONSOLE_UART_INTERRUPT_SOURCES* intInfo = pConsoleUartData->interruptSources;
+    const SYS_CONSOLE_UART_MULTI_INT_SRC* multiVector = &intInfo->intSources.multi;
 
     if (intInfo->isSingleIntSrc == true)
     {
         /* Enable USART interrupt */
-        SYS_INT_SourceEnable(intInfo->intSources.usartInterrupt);
+        SYS_INT_SourceRestore(intInfo->intSources.usartInterrupt, pConsoleUartData->usartInterruptStatus);
     }
     else
     {
         interruptStatus = SYS_INT_Disable();
         /* Enable USART interrupt sources */
 
-        if(intInfo->intSources.multi.usartTxReadyInt != -1)
+        if(multiVector->usartTxReadyInt != -1)
         {
-            SYS_INT_SourceEnable(intInfo->intSources.multi.usartTxReadyInt);
+            SYS_INT_SourceRestore(multiVector->usartTxReadyInt, pConsoleUartData->usartTxReadyIntStatus);
         }
 
-        if(intInfo->intSources.multi.usartTxCompleteInt != -1)
+        if(multiVector->usartTxCompleteInt != -1)
         {
-            SYS_INT_SourceEnable(intInfo->intSources.multi.usartTxCompleteInt);
+            SYS_INT_SourceRestore(multiVector->usartTxCompleteInt, pConsoleUartData->usartTxCompleteIntStatus);
         }
 
-        if(intInfo->intSources.multi.usartRxCompleteInt != -1)
+        if(multiVector->usartRxCompleteInt != -1)
         {
-            SYS_INT_SourceEnable(intInfo->intSources.multi.usartRxCompleteInt);
+            SYS_INT_SourceRestore(multiVector->usartRxCompleteInt, pConsoleUartData->usartRxCompleteIntStatus);
         }
 
-        if(intInfo->intSources.multi.usartErrorInt != -1)
+        if(multiVector->usartErrorInt != -1)
         {
-            SYS_INT_SourceEnable(intInfo->intSources.multi.usartErrorInt);
+            SYS_INT_SourceRestore(multiVector->usartErrorInt, pConsoleUartData->usartErrorIntStatus);
         }
 
         SYS_INT_Restore(interruptStatus);
@@ -232,8 +234,8 @@ ssize_t Console_UART_Read(uint32_t index, int fd, void* buf, size_t count)
     {
         /* Read is not busy. Submit read request now itself */
         pConsoleUartData->readQueue.curQElement = qElement;
-        Console_UART_ReadSubmit(pConsoleUartData, pConsoleUartData->readQueue.curQElement);
         pConsoleUartData->rdState = CONSOLE_UART_READ_STATE_BUSY;
+        Console_UART_ReadSubmit(pConsoleUartData, pConsoleUartData->readQueue.curQElement);
     }
     else
     {
@@ -277,8 +279,8 @@ ssize_t Console_UART_Write(uint32_t index, int fd, const void* buf, size_t count
     {
         /* Write is not busy. Submit write request now itself. */
         pConsoleUartData->writeQueue.curQElement = qElement;
-        Console_UART_WriteSubmit(pConsoleUartData, pConsoleUartData->writeQueue.curQElement);
         pConsoleUartData->wrState = CONSOLE_UART_WRITE_STATE_BUSY;
+        Console_UART_WriteSubmit(pConsoleUartData, pConsoleUartData->writeQueue.curQElement);
     }
     else
     {
@@ -342,7 +344,7 @@ static void Console_UART_ReadTasks(CONSOLE_UART_DATA* pConsoleUartData)
         case CONSOLE_UART_READ_STATE_IDLE:
             break;
         case CONSOLE_UART_READ_STATE_BUSY:
-            if ((pConsoleUartData->readStatus == CONSOLE_UART_READ_DONE) || \
+            if ((pConsoleUartData->readStatus == CONSOLE_UART_READ_DONE) ||
                     (pConsoleUartData->readStatus == CONSOLE_UART_READ_ERROR))
             {
                 /* Give a callback to the client (console/application) */
@@ -488,7 +490,7 @@ SYS_CONSOLE_STATUS Console_UART_Status(uint32_t index)
         return SYS_CONSOLE_STATUS_ERROR;
     }
 
-    if ((pConsoleUartData->wrState == CONSOLE_UART_WRITE_STATE_BUSY) || \
+    if ((pConsoleUartData->wrState == CONSOLE_UART_WRITE_STATE_BUSY) ||
             (pConsoleUartData->rdState == CONSOLE_UART_READ_STATE_BUSY))
     {
         status = SYS_CONSOLE_STATUS_BUSY;

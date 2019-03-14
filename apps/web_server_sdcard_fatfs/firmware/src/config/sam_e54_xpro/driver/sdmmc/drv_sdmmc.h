@@ -216,8 +216,8 @@ typedef enum
     If the event is DRV_SDMMC_EVENT_COMMAND_COMPLETE, it means that the
     write or a read operation was completed successfully.
 
-    If the event is DRV_SDMMC_EVENT_COMMAND_ERROR, it means that the scheduled
-    operation was not completed successfully.
+    If the event is DRV_SDMMC_EVENT_COMMAND_ERROR, it means that the operation
+    was not completed successfully.
 
     The context parameter contains the handle to the client context, provided
     at the time the event handling function was  registered using the
@@ -244,7 +244,6 @@ typedef SYS_MEDIA_EVENT_HANDLER DRV_SDMMC_EVENT_HANDLER;
 
   Summary:
     Initializes the SD Card driver.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine initializes the SD Card driver, making it ready for clients to
@@ -285,10 +284,6 @@ typedef SYS_MEDIA_EVENT_HANDLER DRV_SDMMC_EVENT_HANDLER;
 
     This routine will NEVER block for hardware access. The system must use
     DRV_SDMMC_Status to find out when the driver is in the ready state.
-
-    Build configuration options may be used to statically override options in the
-    "init" structure and will take precedence over initialization data passed
-    using this routine.
 */
 
 SYS_MODULE_OBJ DRV_SDMMC_Initialize
@@ -305,7 +300,6 @@ SYS_MODULE_OBJ DRV_SDMMC_Initialize
 
   Summary:
     Provides the current status of the SD Card driver module.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine provides the current status of the SD Card driver module.
@@ -327,18 +321,7 @@ SYS_MODULE_OBJ DRV_SDMMC_Initialize
                                 also a normal running state in which the driver
                                 is ready to accept new operations.
 
-    SYS_STATUS_BUSY           - Indicates that the driver is busy with a
-                                previous system level operation and cannot start
-                                another
-
-    SYS_STATUS_ERROR          - Indicates that the driver is in an error state
-
-                                Note:  Any value less than SYS_STATUS_ERROR is
-                                also an error state.
-
-    SYS_MODULE_DEINITIALIZED  - Indicates that the driver has been deinitialized
-
-                                Note:  This value is less than SYS_STATUS_ERROR
+    SYS_STATUS_UNINITIALIZED  - Driver is not initialized.
 
   Example:
     <code>
@@ -370,7 +353,6 @@ SYS_STATUS DRV_SDMMC_Status
 
   Summary:
     Maintains the driver's state machine.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine is used to maintain the driver's internal state machine.
@@ -400,11 +382,7 @@ SYS_STATUS DRV_SDMMC_Status
 
   Remarks:
     This routine is normally not called directly by an application. It is
-    called by the system's Tasks routine (SYS_Tasks) or by the appropriate raw
-    ISR.
-
-    This routine may execute in an ISR context and will never block or access any
-    resources that may cause it to block.
+    called by the system's Tasks routine (SYS_Tasks).
 */
 
 void DRV_SDMMC_Tasks
@@ -427,7 +405,6 @@ void DRV_SDMMC_Tasks
 
   Summary:
     Opens the specified SD Card driver instance and returns a handle to it.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine opens the specified SD Card driver instance and provides a
@@ -465,7 +442,6 @@ void DRV_SDMMC_Tasks
 
   Remarks:
     The handle returned is valid until the DRV_SDMMC_Close routine is called.
-    This routine will NEVER block waiting for hardware.
 */
 
 DRV_HANDLE DRV_SDMMC_Open
@@ -483,7 +459,6 @@ DRV_HANDLE DRV_SDMMC_Open
 
   Summary:
     Closes an opened-instance of the SD Card driver.
-    <p><b>Implementation:</b> Dynamic</p>
 
   Description:
     This routine closes an opened-instance of the SD Card driver, invalidating
@@ -519,10 +494,6 @@ DRV_HANDLE DRV_SDMMC_Open
     requests from the queue and issue a DRV_SDMMC_EVENT_COMMAND_ERROR event,
     (if an event handler is registered by the client) before the client is
     closed.
-
-    Note:
-    Usually there is no need for the driver client to verify that the Close
-    operation has completed.
 */
 
 void DRV_SDMMC_Close
@@ -650,7 +621,7 @@ void DRV_SDMMC_AsyncRead
     following circumstances:
     - if the driver handle is invalid
     - if the source buffer pointer is NULL
-    - if the number of blocks to be write is zero or more than the actual number
+    - if the number of blocks to write is zero or more than the actual number
       of blocks available
     - if a buffer object could not be allocated to the request
 
@@ -764,7 +735,7 @@ void DRV_SDMMC_AsyncWrite
   Description:
     This routine gets the current status of the command. The application must use
     this routine where the status of a scheduled command needs to be polled on. The
-    function may return DRV_SDMMC_COMMAND_HANDLE_INVALID in a case where the command
+    function may return DRV_SDMMC_COMMAND_ERROR_UNKNOWN in a case where the command
     handle has expired. A command handle expires when the internal buffer object
     is re-assigned to another read or write request. It is recommended that this
     function be called regularly in order to track the command status correctly.
@@ -783,7 +754,7 @@ void DRV_SDMMC_AsyncWrite
 
   Returns:
     A DRV_SDMMC_COMMAND_STATUS value describing the current status of the command.
-    Returns DRV_SDMMC_COMMAND_HANDLE_INVALID if the client handle or the command
+    Returns DRV_SDMMC_COMMAND_ERROR_UNKNOWN if the client handle or the command
     handle is not valid.
 
   Example:
@@ -1014,6 +985,7 @@ void DRV_SDMMC_EventHandlerSet
     <code>
 
     // drvSDMMCHandle is the handle returned
+    // by the DRV_SDMMC_Open function.
 
     bool isSDMMCAttached;
     isSDMMCAttached = DRV_SDMMC_isAttached(drvSDMMCHandle);

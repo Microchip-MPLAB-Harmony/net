@@ -65,7 +65,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-#if defined (__PIC32C__)
+#if defined (__PIC32C__) || defined(__SAMA5D2__)
     //*****************************************************************************
     /* MII Clock Selection
 
@@ -369,7 +369,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         PLIB_ETH_MIIMClockSet(ethphyId, ix + 1);  // program the clock*/
     }
 
-#endif  //defined (__PIC32C__)
+#endif  //defined (__PIC32C__) || defined(__SAMA5D2__)
 #endif //#ifndef _DRV_MIIM_MAPPING_H
 
 /*******************************************************************************

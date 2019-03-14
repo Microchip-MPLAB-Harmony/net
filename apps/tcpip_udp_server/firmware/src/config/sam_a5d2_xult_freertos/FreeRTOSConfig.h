@@ -42,7 +42,7 @@
  * See http://www.freertos.org/a00110.html.
  *----------------------------------------------------------*/
 #define configUSE_PREEMPTION                    1
-#define configUSE_PORT_OPTIMISED_TASK_SELECTION 0
+#define configUSE_PORT_OPTIMISED_TASK_SELECTION 1
 #define configUSE_TICKLESS_IDLE                 0
 #define configCPU_CLOCK_HZ                      ( 498000000UL )
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
@@ -50,7 +50,7 @@
 #define configMINIMAL_STACK_SIZE                ( 128 )
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
 #define configSUPPORT_STATIC_ALLOCATION         0
-#define configTOTAL_HEAP_SIZE                   ( ( size_t ) 60960 )
+#define configTOTAL_HEAP_SIZE                   ( ( size_t ) 40960 )
 #define configMAX_TASK_NAME_LEN                 ( 16 )
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1
@@ -62,9 +62,10 @@
 #define configUSE_QUEUE_SETS                    0
 #define configUSE_TIME_SLICING                  0
 #define configUSE_NEWLIB_REENTRANT              0
+#define configUSE_TASK_FPU_SUPPORT              0
 
 /* Hook function related definitions. */
-#define configUSE_IDLE_HOOK                     0
+#define configUSE_IDLE_HOOK                     1
 #define configUSE_TICK_HOOK                     0
 #define configCHECK_FOR_STACK_OVERFLOW          2
 #define configUSE_MALLOC_FAILED_HOOK            1
@@ -90,12 +91,10 @@
 
 
 /* Interrupt nesting behaviour configuration. */
-
 /* The priority at which the tick interrupt runs.  This should probably be kept at lowest priority. */
 #define configKERNEL_INTERRUPT_PRIORITY         (7<<5)
-
 /* The maximum interrupt priority from which FreeRTOS.org API functions can be called.
-Only API functions that end in ...FromISR() can be used within interrupts. */
+ * Only API functions that end in ...FromISR() can be used within interrupts. */
 #define configMAX_SYSCALL_INTERRUPT_PRIORITY    (1<<5)
 
 /* Optional functions - most linkers will remove unused functions anyway. */
@@ -110,18 +109,19 @@ Only API functions that end in ...FromISR() can be used within interrupts. */
 #define INCLUDE_uxTaskGetStackHighWaterMark     0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
 #define INCLUDE_eTaskGetState                   0
+#define INCLUDE_xEventGroupSetBitFromISR        0
 #define INCLUDE_xTimerPendFunctionCall          0
 #define INCLUDE_xTaskAbortDelay                 0
 #define INCLUDE_xTaskGetHandle                  0
 
-/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
-standard names. */
-
-#define xPortPendSVHandler PendSV_Handler
-#define vPortSVCHandler SVCall_Handler
-
+#ifdef __ICCARM__
+void vConfigureTickInterrupt(void);
+#endif //__ICCARM__
 #define configSETUP_TICK_INTERRUPT vConfigureTickInterrupt
 #define configEOI_ADDRESS 0xfc020038L
+#ifdef __ICCARM__
+void vClear_Tick_Interrupt(void);
+#endif //__ICCARM__
 #define configCLEAR_TICK_INTERRUPT vClear_Tick_Interrupt
 
 #endif /* FREERTOS_H */

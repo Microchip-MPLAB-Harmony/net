@@ -20,6 +20,7 @@
  * and any derivatives exclusively with Microchip products. It is your 
  * responsibility to comply with third party license terms applicable to your
  * use of third party software (including open source software) that may
+ * accompany Microchip software.
  *
  * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
  * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
@@ -44,13 +45,13 @@
  * MPFS2 Image Data
  **************************************/ 
 
-<#if __PROCESSOR?matches("ATSAMA5.*")>
+#if defined( __ICCARM__ )   // IAR compiler build
     #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL
     const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {
-<#else>
+#else
     const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))
     NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {
-</#if>      
+#endif      
 	0x4d,0x50,0x46,0x53,0x02,0x01,0x18,0x00,0x4a,0xce,0xea,0x81,0xf0,0x94,0x2a,0xba, /* MPFS....J....... */ \
 	0xf0,0xd6,0x4a,0x4f,0x6a,0xa6,0xa8,0x7f,0x4a,0x2d,0x0a,0xa3,0x46,0xce,0x2a,0xcf, /* ..JOj...J-..F... */ \
 	0x08,0xcf,0x3e,0x67,0x2a,0x6c,0xcc,0x83,0x0a,0x85,0xea,0x8a,0xea,0x92,0x0a,0x4f, /* ..>g.l.........O */ \

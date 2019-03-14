@@ -15,6 +15,17 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </includePath>
+    <asmIncludePath>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library\tcpip\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\library\tcpip\src\common</path>
+        <path>$PROJ_DIR$\..\..\firmware\src</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\ATSAMA5D27_DFP</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+    </asmIncludePath>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</path>
@@ -215,6 +226,7 @@
             <path>\system\system_module.h</path>
             <path>\system\int\sys_int.h</path>
             <path>\system\int\sys_int_mapping.h</path>
+            <path>\system\cache\sys_cache.h</path>
             <path>\osal\osal.h</path>
             <path>\osal\osal_definitions.h</path>
             <path>\osal\osal_impl_basic.h</path>
@@ -230,9 +242,9 @@
             <path>\definitions.h</path>
             <path>\peripheral\mmu\plib_mmu.h</path>
             <path>\peripheral\matrix\plib_matrix.h</path>
+            <path>\peripheral\l2cc\plib_l2cc.h</path>
             <path>\peripheral\clk\plib_clk.h</path>
             <path>\peripheral\pio\plib_pio.h</path>
-            <path>\peripheral\pio\plib_pio_pin.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
             <path>\driver\miim\drv_miim.h</path>
             <path>\driver\miim\config\drv_miim_config.h</path>
@@ -246,9 +258,9 @@
             <path>\system\console\src\sys_console_local.h</path>
             <path>\system\console\src\sys_console_uart.h</path>
             <path>\system\console\src\sys_console_uart_definitions.h</path>
-            <path>\system\console\sys_debug.h</path>
             <path>\system\console\src\sys_debug_local.h</path>
             <path>\system\console\sys_command.h</path>
+            <path>\system\console\sys_debug.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_gcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>
@@ -284,6 +296,7 @@
             <path>\library\tcpip\src\tcpip_packet.c</path>
             <path>\system\sys_time_h2_adapter.c</path>
             <path>\system\int\src\sys_int.c</path>
+            <path>\system\cache\sys_cache.c</path>
             <path>\..\..\app.c</path>
             <path>\tasks.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac.c</path>
@@ -295,6 +308,7 @@
             <path>\stdio\iar_monitor.c</path>
             <path>\peripheral\mmu\plib_mmu.c</path>
             <path>\peripheral\matrix\plib_matrix.c</path>
+            <path>\peripheral\l2cc\plib_l2cc.c</path>
             <path>\peripheral\clk\plib_clk.c</path>
             <path>\peripheral\pio\plib_pio.c</path>
             <path>\peripheral\aic\plib_aic.c</path>

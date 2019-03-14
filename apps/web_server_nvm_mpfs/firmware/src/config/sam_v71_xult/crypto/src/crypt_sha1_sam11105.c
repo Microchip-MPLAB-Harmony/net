@@ -63,6 +63,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "crypt_sha1_hw.h"
 #include "crypt_sha_sam11105.h"
 
+struct icm_descriptor actIcmDescriptor __attribute__((aligned (64)));
+uint8_t  actBuffer[SHA_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
+uint32_t actDigest[SHA_DIGEST_SIZE/4] __attribute__((aligned (128)));
 
 int CRYPT_SHA1_InitSha(Sha* sha, void* heap, int devId)
 {
@@ -98,12 +101,13 @@ static int32_t CRYPT_SHA1_Process(Sha *sha, const uint8_t *input, word32 length)
     /* Transfer size = (tran_size + 1) * 512bits */
     sha->icm_descriptor.tran_size =  (length >> 6) - 1;
 
-    SCB_CleanDCache_by_Addr((uint32_t *)(&(sha->icm_descriptor)), sizeof(struct icm_descriptor));
+	memcpy(&actIcmDescriptor, &(sha->icm_descriptor), sizeof(sha->icm_descriptor));
+    SCB_CleanDCache_by_Addr((uint32_t*) (&actIcmDescriptor), sizeof(sha->icm_descriptor));
     SCB_CleanDCache_by_Addr((uint32_t *)input, length);
     SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha->digest), SHA_DIGEST_SIZE);
 
     /* ICM can set up FIPS default starting digest */
-    ICM_REGS->ICM_DSCR = (uint32_t)&sha->icm_descriptor;
+    ICM_REGS->ICM_DSCR = (uint32_t)&(actIcmDescriptor);
 
 
     /* configured so initial hash digest is auto-loaded */
@@ -113,7 +117,7 @@ static int32_t CRYPT_SHA1_Process(Sha *sha, const uint8_t *input, word32 length)
                  | ICM_CFG_UIHASH_Msk;
 
     /* digest must be 128 aligned */
-	ICM_REGS->ICM_HASH = (uint32_t)(&(sha->digest));
+    ICM_REGS->ICM_HASH = (uint32_t)(&(actDigest));
     ICM_REGS->ICM_UIHVAL[0] = sha->digest[0];
     ICM_REGS->ICM_UIHVAL[1] = sha->digest[1];
     ICM_REGS->ICM_UIHVAL[2] = sha->digest[2];
@@ -132,8 +136,8 @@ static int32_t CRYPT_SHA1_Process(Sha *sha, const uint8_t *input, word32 length)
     ICM_REGS->ICM_CTRL = ICM_CTRL_DISABLE(1);
     ICM_REGS->ICM_CTRL = ICM_CTRL_SWRST(1);
 
-    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha->digest), SHA_DIGEST_SIZE);
-
+    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(actDigest), SHA_DIGEST_SIZE);
+	memcpy(sha->digest, &actDigest, sizeof(sha->digest));
     return 0;
 }
 
@@ -153,7 +157,8 @@ int CRYPT_SHA1_Update(Sha* sha, const byte* data, word32 len)
     if (left && len >= fill)
     {
         memcpy((void *)(sha->buffer + left), data, fill);
-        result = CRYPT_SHA1_Process(sha, sha->buffer, SHA_BLOCK_SIZE);
+        memcpy(&actBuffer, &(sha->buffer), sizeof(sha->buffer));
+        result = CRYPT_SHA1_Process(sha, actBuffer, SHA_BLOCK_SIZE);
         data += fill;
         len -= fill;
         left = 0;
@@ -161,9 +166,22 @@ int CRYPT_SHA1_Update(Sha* sha, const byte* data, word32 len)
 
     if (len >= SHA_BLOCK_SIZE)
     {
+        if ((((uint32_t)data) & 63) != 0)
+        {
+            // Data is not aligned!
+            while (len > SHA_BLOCK_SIZE)
+            {
+                memcpy(&actBuffer, data, SHA_BLOCK_SIZE);
+                result = CRYPT_SHA1_Process(sha, actBuffer, SHA_BLOCK_SIZE);
+                data+=64;
+                len -=64;                
+            }
+        }
+        else {
         result = CRYPT_SHA1_Process(sha, data, len & 0xFFFFFFC0);
         data += (len & 0xFFFFFFC0);
         len &= 0x3F;
+		}
     }
 
     if( len > 0 )
@@ -206,14 +224,18 @@ int CRYPT_SHA1_Final(Sha* sha, byte* hash)
     last = sha->total_len & 0x3F;
     padn = (last < SHA_PAD_SIZE) ? (SHA_PAD_SIZE - last) : (120 - last);
 
-    wc_ShaUpdate(sha, sha_padding, padn);
+    CRYPT_SHA1_Update(sha, sha_padding, padn);
 
-    wc_ShaUpdate(sha, msg_len, 8);
+    CRYPT_SHA1_Update(sha, msg_len, 8);
 
     memcpy(hash, sha->digest, SHA_DIGEST_SIZE);
 
-    return wc_InitSha(sha);
+    return CRYPT_SHA1_InitSha(sha, NULL, 0);
 }
 
+int CRYPT_SHA1_FinalRaw(Sha* sha, byte* hash)
+{
+    return CRYPT_SHA1_Final(sha, hash);
+}
 
 #endif /* NO_SHA */

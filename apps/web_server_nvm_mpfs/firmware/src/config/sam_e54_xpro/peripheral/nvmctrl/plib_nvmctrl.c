@@ -50,9 +50,9 @@
 #include <string.h>
 #include "plib_nvmctrl.h"
 
-uint16_t nvm_error;
-uint16_t nvm_status;
-uint16_t smart_eep_status;
+static volatile uint16_t nvm_error;
+static uint16_t nvm_status;
+static uint16_t smart_eep_status;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -84,7 +84,10 @@ uint8_t NVMCTRL_QuadWordWrite(uint32_t *data, const uint32_t address)
     int8_t wr_status = -1;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
-    
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* If the address is not a quad word address, return error */
     if((address & 0x03) != 0)
     {
@@ -113,7 +116,10 @@ uint8_t NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address)
     int8_t wr_status = -1;
     uint32_t * paddress = (uint32_t *)address;
     uint32_t wr_mode = (NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk); 
-    
+
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* If the address is not a double word address, return error */
     if((address & 0x01) != 0)
     {
@@ -144,6 +150,9 @@ bool NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
     uint32_t i = 0;
     uint32_t * paddress = (uint32_t *)address;
 
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits */
     for (i = 0; i < (NVMCTRL_FLASH_PAGESIZE/4); i++)
     {
@@ -162,6 +171,9 @@ bool NVMCTRL_PageWrite( uint32_t *data, const uint32_t address )
 
 bool NVMCTRL_BlockErase( uint32_t address )
 {
+    /* Clear global error flag */
+    nvm_error = 0;
+
     /* Set address and command */
     NVMCTRL_REGS->NVMCTRL_ADDR = address;
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_EB | NVMCTRL_CTRLB_CMDEX_KEY;
@@ -171,8 +183,8 @@ bool NVMCTRL_BlockErase( uint32_t address )
 
 uint16_t NVMCTRL_ErrorGet( void )
 {
-    nvm_error = NVMCTRL_REGS->NVMCTRL_INTFLAG;
-    
+    nvm_error |= NVMCTRL_REGS->NVMCTRL_INTFLAG;
+
     return nvm_error;
 }
 
@@ -239,6 +251,9 @@ void NVMCTRL_SmartEepromSectorReallocate(void)
 
 void NVMCTRL_SmartEepromFlushPageBuffer(void)
 {
+    /* Clear global error flag */
+    nvm_error = 0;
+
     NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_SEEFLUSH | NVMCTRL_CTRLB_CMDEX_KEY;
 }
 
