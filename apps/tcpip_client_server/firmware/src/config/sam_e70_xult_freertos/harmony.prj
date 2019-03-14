@@ -99,8 +99,8 @@
           <Name dnOrder="1">drv_ethphy.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/driver/ethphy/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">571672FC6AEB78F03B479BE8A23A505C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">571672FC6AEB78F03B479BE8A23A505C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E5FDF7DDBE57F27397F9E55C6D59BDB0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E5FDF7DDBE57F27397F9E55C6D59BDB0</UserChecksum>
         </File>
         <File dnOrder="12">
           <Type dnOrder="0">SOURCE</Type>
@@ -195,8 +195,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">103037FCDFD599B6863DD5FED9B3A1E6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">103037FCDFD599B6863DD5FED9B3A1E6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F22A2AF84289F4F185376952F8B4D002</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F22A2AF84289F4F185376952F8B4D002</UserChecksum>
         </File>
         <File dnOrder="24">
           <Type dnOrder="0">SOURCE</Type>
@@ -259,8 +259,8 @@
           <Name dnOrder="1">plib_clk.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">88E623DA228A860203AC79D8AC5A37E0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">88E623DA228A860203AC79D8AC5A37E0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">2A6C5B224016FD32828924861221A6D6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2A6C5B224016FD32828924861221A6D6</UserChecksum>
         </File>
         <File dnOrder="32">
           <Type dnOrder="0">SOURCE</Type>
@@ -411,24 +411,24 @@
           <Name dnOrder="1">tcpip_commands.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7C41904362C6DE65DAD83D60A0DC14AD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7C41904362C6DE65DAD83D60A0DC14AD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">23EC7EBBE4EA8C25EE9FD6ED0EE70A37</GeneratedChecksum>
+          <UserChecksum dnOrder="5">23EC7EBBE4EA8C25EE9FD6ED0EE70A37</UserChecksum>
         </File>
         <File dnOrder="51">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">tcpip_heap_alloc.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2FA7A26DBAE1E78C9F340D0070CB7495</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2FA7A26DBAE1E78C9F340D0070CB7495</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F32AB907E6453FD371E787121B7EE526</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F32AB907E6453FD371E787121B7EE526</UserChecksum>
         </File>
         <File dnOrder="52">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">tcpip_heap_internal.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0DF7ADD3C41B364B1F9CE638304637DC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0DF7ADD3C41B364B1F9CE638304637DC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A918252C10392FFF4FB8C21AC8C1012C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A918252C10392FFF4FB8C21AC8C1012C</UserChecksum>
         </File>
         <File dnOrder="53">
           <Type dnOrder="0">SOURCE</Type>
@@ -459,8 +459,8 @@
           <Name dnOrder="1">tcpip_packet.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4E33E6B7B4E0BF3555AE008C91683F2A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4E33E6B7B4E0BF3555AE008C91683F2A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6A781DB8A2BF76C1D0017C3DA249C7B2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6A781DB8A2BF76C1D0017C3DA249C7B2</UserChecksum>
         </File>
         <File dnOrder="57">
           <Type dnOrder="0">SOURCE</Type>
@@ -995,8 +995,8 @@
           <Name dnOrder="1">drv_miim_mapping.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/driver/miim/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3C8C716F6E22E973C8644CB1C1E04218</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3C8C716F6E22E973C8644CB1C1E04218</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AA558A259B358C8D3090BFC0ABF55743</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AA558A259B358C8D3090BFC0ABF55743</UserChecksum>
         </File>
         <File dnOrder="124">
           <Type dnOrder="0">HEADER</Type>
@@ -1451,8 +1451,8 @@
           <Name dnOrder="1">osal_definitions.h</Name>
           <LogicalPath dnOrder="2">/osal/</LogicalPath>
           <PhysicalPath dnOrder="3">/osal/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FBF1B45173D656DEB995858DC4D32C87</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FBF1B45173D656DEB995858DC4D32C87</UserChecksum>
+          <GeneratedChecksum dnOrder="4">167A43EFF8A31441EBF85AC77958A30B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">167A43EFF8A31441EBF85AC77958A30B</UserChecksum>
         </File>
         <File dnOrder="181">
           <Type dnOrder="0">HEADER</Type>
@@ -1475,8 +1475,8 @@
           <Name dnOrder="1">plib_clk.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/peripheral/clk/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">3176DF5386ABD348A93A3A6169F52E8B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">3176DF5386ABD348A93A3A6169F52E8B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">115B0136EFE9ED871D67D3B10CBEBDC8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">115B0136EFE9ED871D67D3B10CBEBDC8</UserChecksum>
         </File>
         <File dnOrder="184">
           <Type dnOrder="0">HEADER</Type>
@@ -2259,8 +2259,8 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ECBE73246282EC07A1EC6DB84AE3A470</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ECBE73246282EC07A1EC6DB84AE3A470</UserChecksum>
+          <GeneratedChecksum dnOrder="4">05E9A0D057500FDF32C8D711811FF003</GeneratedChecksum>
+          <UserChecksum dnOrder="5">05E9A0D057500FDF32C8D711811FF003</UserChecksum>
         </File>
         <File dnOrder="282">
           <Type dnOrder="0">HEADER</Type>
@@ -2423,7 +2423,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME70_DFP\3.0.3\same70b\atdf\ATSAME70Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;gfx;net;usb;"/>
     </Settings>
   </Configurator>

@@ -123,8 +123,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DB0934CE5F3AED7EAB620402FB3B54F3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DB0934CE5F3AED7EAB620402FB3B54F3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C235239F1EBD975576E4F3E4F791BE26</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C235239F1EBD975576E4F3E4F791BE26</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">SOURCE</Type>
@@ -187,8 +187,8 @@
           <Name dnOrder="1">plib_clock.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5E81934ED4324C66BFB41BB03D249F6D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5E81934ED4324C66BFB41BB03D249F6D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D490D2AC3FACB335180BECE74ED7F089</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D490D2AC3FACB335180BECE74ED7F089</UserChecksum>
         </File>
         <File dnOrder="23">
           <Type dnOrder="0">SOURCE</Type>
@@ -1315,8 +1315,8 @@
           <Name dnOrder="1">osal_definitions.h</Name>
           <LogicalPath dnOrder="2">/osal/</LogicalPath>
           <PhysicalPath dnOrder="3">/osal/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0C6AF7550A40F9EDF5A15DB9444D7D8E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0C6AF7550A40F9EDF5A15DB9444D7D8E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0AC88C49E4585B606FD5AC6804F0C340</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0AC88C49E4585B606FD5AC6804F0C340</UserChecksum>
         </File>
         <File dnOrder="164">
           <Type dnOrder="0">HEADER</Type>
@@ -1371,8 +1371,8 @@
           <Name dnOrder="1">plib_clock.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/peripheral/clock/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/clock/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">89D93D4ABD8E81C4C5891B22B5CE2C7B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">89D93D4ABD8E81C4C5891B22B5CE2C7B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0416F129713FDF989ACC1FC57065125C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0416F129713FDF989ACC1FC57065125C</UserChecksum>
         </File>
         <File dnOrder="171">
           <Type dnOrder="0">HEADER</Type>
@@ -2075,8 +2075,8 @@
           <Name dnOrder="1">toolchain_specifics.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4F420CFA2C818361711422A469F6B262</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4F420CFA2C818361711422A469F6B262</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6AFF17EB43477034115ED7E02FBB7E69</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6AFF17EB43477034115ED7E02FBB7E69</UserChecksum>
         </File>
         <File dnOrder="259">
           <Type dnOrder="0">HEADER</Type>

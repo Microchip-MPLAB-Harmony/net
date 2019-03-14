@@ -123,7 +123,7 @@ static uint8_t gNumOfFSClients = 0;
   Remarks:
     None
 */
-uint8_t COHERENT_ALIGNED gSYSFSMediaBlockBuffer[SYS_FS_MEDIA_MANAGER_BUFFER_SIZE] = {0};
+uint8_t CACHE_ALIGN gSYSFSMediaBlockBuffer[SYS_FS_MEDIA_MANAGER_BUFFER_SIZE] = {0};
 
 // *****************************************************************************
 /* Media Mount Table
@@ -156,7 +156,7 @@ extern const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[];
 */
 PARTITION VolToPart[SYS_FS_VOLUME_NUMBER];
 
-uint8_t gSYSFSMediaBuffer[SYS_FS_MEDIA_MAX_BLOCK_SIZE] COHERENT_ALIGNED;
+uint8_t CACHE_ALIGN gSYSFSMediaBuffer[SYS_FS_MEDIA_MAX_BLOCK_SIZE];
 
 /* Following structure holds the variables for media manager, including the task states */
 SYS_FS_MEDIA_MANAGER_OBJ gSYSFSMediaManagerObj =

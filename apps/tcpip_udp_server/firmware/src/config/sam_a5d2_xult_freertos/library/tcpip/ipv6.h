@@ -1322,22 +1322,23 @@ void TCPIP_IPV6_MulticastListenerRemove(TCPIP_NET_HANDLE netH, IPV6_ADDR * addre
     netH -        The interface to add the address to.
     subnetID -    The subnet ID to be used.
     genFlags -    Address generation flags:
-                  * IPV6_ULA_FLAG_NTPV4 - if set, the ntpAddress is an IPv4 
-				    address and the NTP server will be contacted over an IPv4 
-					connection. Otherwise, a default IPv6 connection will be 
-					attempted
+                  * IPV6_ULA_FLAG_NTPV4 - if set, the NTP server will be contacted over an IPv4 connection.
+                    Otherwise, a default IPv6 connection will be attempted
                   * IPV6_ULA_FLAG_GENERATE_ONLY - if set, the address will not 
 				    be added to the list of the addresses for the specified interface
                   * IPV6_ULA_FLAG_SKIP_DAD - if set, the DAD processing will be skipped
     ntpAddress -  The NTP server address - it is an IPv4/IPv6 address as
                   selected by the IPV6_ULA_FLAG_NTPV4 flag (the IP address
                   could be obtained with an DNS call into the stack)
+                  Not currently used!
   Return:
 	- IPV6_ULA_RES_BUSY - address generation module is busy
 	- IPV6_ULA_RES_IF_ERR - IPv6 interface is not up
     - IPV6_ULA_RES_OK - if the call succeeded and the generation process was
 						started
   Remarks:
+    ULA generation needs to be enabled in the stack at build time.
+
     Only one address generation at a time is supported for now. Before
     attempting a new address generation the previous operation has to be
     completed, otherwise the call will fail.
@@ -1347,7 +1348,10 @@ void TCPIP_IPV6_MulticastListenerRemove(TCPIP_NET_HANDLE netH, IPV6_ADDR * addre
     
     The caller will be notified by the outcome of the operation by the
     stack using the standard IPv6 notification handler (registered by
-    TCPIP_IPV6_HandlerRegister call).                                                                                                                        
+    TCPIP_IPV6_HandlerRegister call).
+
+    The ntpAddress parameter is not currently used!
+    The NTP timestamp will be obtained using the default NTP server address
 */
 IPV6_ULA_RESULT    TCPIP_IPV6_UniqueLocalUnicastAddressAdd (TCPIP_NET_HANDLE netH, 
          uint16_t subnetID, IPV6_ULA_FLAGS genFlags, IP_MULTI_ADDRESS* ntpAddress);

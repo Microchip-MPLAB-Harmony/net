@@ -104,54 +104,6 @@ void vApplicationIRQHandler( void )
     pxISRFunction();
 }
 
-void vAssertCalled( const char * pcFile, unsigned long ulLine )
-{
-    volatile unsigned long ul = 0;
-
-    taskENTER_CRITICAL();
-    {
-        /* Set ul to a non-zero value using the debugger to step out of this
-        function. */
-        while( ul == 0 )
-        {
-            portNOP();
-        }
-    }
-    taskEXIT_CRITICAL();
-}
-
-void vApplicationIdleHook( void )
-{
-    volatile size_t xFreeHeapSpace;
-
-    /* This is just a trivial example of an idle hook.  It is called on each
-    cycle of the idle task.  It must *NOT* attempt to block.  In this case the
-    idle task just queries the amount of FreeRTOS heap that remains.  See the
-    memory management section on the http://www.FreeRTOS.org web site for memory
-    management options.  If there is a lot of heap memory free then the
-    configTOTAL_HEAP_SIZE value in FreeRTOSConfig.h can be reduced to free up
-    RAM. */
-    xFreeHeapSpace = xPortGetFreeHeapSize();
-
-    /* Remove compiler warning about xFreeHeapSpace being set but never used. */
-    ( void ) xFreeHeapSpace;
-}
-
-void vApplicationTickHook( void )
-{
-#ifdef CONFIG_FREERTOS_FULL
-        /* The full demo includes a software timer demo/test that requires
-        prodding periodically from the tick interrupt. */
-        vTimerPeriodicISRTests();
-
-        /* Call the periodic queue overwrite from ISR demo. */
-        vQueueOverwritePeriodicISRDemo();
-
-        /* Call the periodic event group from ISR demo. */
-        vPeriodicEventGroupsProcessing();
-#endif
-}
-
 void vClear_Tick_Interrupt(void)
 {
     PIT_ClearInterrupt();

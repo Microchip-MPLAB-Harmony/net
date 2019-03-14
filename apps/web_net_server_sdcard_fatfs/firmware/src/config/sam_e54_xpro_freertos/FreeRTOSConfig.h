@@ -47,7 +47,7 @@
 #define configCPU_CLOCK_HZ                      ( 120000000UL )
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES                    ( 5UL )
-#define configMINIMAL_STACK_SIZE                ( 128 )
+#define configMINIMAL_STACK_SIZE                ( 1024 )
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
 #define configSUPPORT_STATIC_ALLOCATION         0
 #define configTOTAL_HEAP_SIZE                   ( ( size_t ) 40960 )
@@ -113,11 +113,6 @@
 #define INCLUDE_xTimerPendFunctionCall          0
 #define INCLUDE_xTaskAbortDelay                 0
 #define INCLUDE_xTaskGetHandle                  0
-
-/* Definitions that map the FreeRTOS port interrupt handlers to their CMSIS
- * standard names. */
-#define xPortPendSVHandler PendSV_Handler
-#define vPortSVCHandler SVCall_Handler
 
 
 #endif /* FREERTOS_H */

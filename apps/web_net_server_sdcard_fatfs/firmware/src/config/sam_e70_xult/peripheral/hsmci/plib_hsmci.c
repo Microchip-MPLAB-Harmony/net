@@ -165,7 +165,14 @@ bool HSMCI_IsCmdLineBusy ( void )
 
 bool HSMCI_IsDatLineBusy ( void )
 {
-    return (!(HSMCI_REGS->HSMCI_SR & HSMCI_SR_TXRDY_Msk));
+    if ((!(HSMCI_REGS->HSMCI_SR & HSMCI_SR_XFRDONE_Msk)) || (!(HSMCI_REGS->HSMCI_SR & HSMCI_SR_TXRDY_Msk)))
+    {
+        return true;
+    }
+    else
+    {
+        return false;
+    }
 }
 
 void HSMCI_BusWidthSet ( HSMCI_BUS_WIDTH busWidth )

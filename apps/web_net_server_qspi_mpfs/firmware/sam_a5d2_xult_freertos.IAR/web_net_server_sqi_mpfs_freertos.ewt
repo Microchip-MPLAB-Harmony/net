@@ -3313,6 +3313,9 @@
                 <name>$PROJ_DIR$\..\src\mpfs_img2_net.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\nbns.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\src\net_pres.c</name>
             </file>
             <file>

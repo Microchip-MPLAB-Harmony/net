@@ -64,5 +64,6 @@ typedef struct
 int CRYPT_SHA1_InitSha(crypt_sha_hw_descriptor* sha, void* heap, int devId);
 int CRYPT_SHA1_Update(crypt_sha_hw_descriptor* sha, const byte* data, word32 len);
 int CRYPT_SHA1_Final(crypt_sha_hw_descriptor* sha, byte* hash);
+int CRYPT_SHA1_FinalRaw(crypt_sha_hw_descriptor* sha, byte* hash);
 
 #endif

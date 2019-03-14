@@ -20,6 +20,7 @@
  * and any derivatives exclusively with Microchip products. It is your 
  * responsibility to comply with third party license terms applicable to your
  * use of third party software (including open source software) that may
+ * accompany Microchip software.
  *
  * THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
  * EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
@@ -44,7 +45,7 @@
  * MPFS2 Image Data
  **************************************/ 
 
-#if defined( __ICCARM__ )
+#if defined( __ICCARM__ )   // IAR compiler build
     #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL
     const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {
 #else

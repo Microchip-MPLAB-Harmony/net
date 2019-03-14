@@ -468,7 +468,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetMpfsImg2SourceFile.setProjectPath("")
 	tcpipHttpNetMpfsImg2SourceFile.setType("SOURCE")
 	tcpipHttpNetMpfsImg2SourceFile.setMarkup(True)
-	tcpipHttpNetMpfsImg2SourceFile.setEnabled(True)
+	tcpipHttpNetMpfsImg2SourceFile.setEnabled(False)
 	tcpipHttpNetMpfsImg2SourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL"])	
 	
 	

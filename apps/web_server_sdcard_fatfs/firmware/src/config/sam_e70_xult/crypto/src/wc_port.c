@@ -1550,6 +1550,14 @@ struct tm* rtpsys_gmtime(const time_t* timer)       /* has a gmtime() but hangs 
 
 #endif /* HAVE_RTP_SYS */
 
+#if defined(MICROCHIP_MPLAB_HARMONY_3)
+        #include <system/time/sys_time.h>
+            word32 LowResTimer(void)
+        {
+            return (word32) (SYS_TIME_CounterGet() /
+                             SYS_TIME_FrequencyGet());
+        }
+#endif
 
 #if defined(MICROCHIP_TCPIP_V5) || defined(MICROCHIP_TCPIP)
 

@@ -550,8 +550,8 @@
                 </logicalFolder>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/arp.c</itemPath>
