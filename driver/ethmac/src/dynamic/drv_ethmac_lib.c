@@ -87,7 +87,7 @@ static int _EnetDescriptorsCount(DRV_ETHMAC_DCPT_LIST* pList, bool isHwCtrl);
 static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIST* pBusyList, DRV_ETHMAC_DCPT_LIST* pNewList, int rxAck)
 {
     DRV_ETHMAC_DCPT_NODE   *head, *tail, *pN;
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
     tail=pBusyList->tail;
     head=DRV_ETHMAC_LIB_ListRemoveHead(pNewList);
@@ -99,7 +99,7 @@ static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_
         DRV_ETHMAC_LIB_ListAddTail(pBusyList, pN);
         if(rxAck && !pN->hwDcpt.hdr.rx_nack)
         {
-            PLIB_ETH_RxBufferCountDecrement(ethId);
+            DRV_ETH_RxBufferCountDecrement(ethId);
         }
     }
 
@@ -113,23 +113,23 @@ static void _EthAppendBusyList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_
     tail->hwDcpt.hdr.EOWN=1;    // ready to go!
     if(rxAck && !tail->hwDcpt.hdr.rx_nack)
     {
-        PLIB_ETH_RxBufferCountDecrement(ethId);
+        DRV_ETH_RxBufferCountDecrement(ethId);
     }
 
 } //_EthAppendBusyList
 
 
-static void _EthMacReset(ETH_MODULE_ID ethId)
+static void _EthMacReset(DRV_ETHERNET_REGISTERS* ethId)
 {
-    PLIB_ETH_MIIResetEnable(ethId);
-    PLIB_ETH_MIIResetDisable(ethId);
+    DRV_ETH_MIIResetEnable(ethId);
+    DRV_ETH_MIIResetDisable(ethId);
 }
 
 
-static void _EthMacInit(ETH_MODULE_ID ethId)
+static void _EthMacInit(DRV_ETHERNET_REGISTERS* ethId)
 {
     _EthMacReset(ethId);
-    PLIB_ETH_MaxFrameLengthSet(ethId,0x600);
+    DRV_ETH_MaxFrameLengthSet(ethId,0x600);
 }
 
 
@@ -138,20 +138,20 @@ static void _EthMacInit(ETH_MODULE_ID ethId)
  *****************************************************************************/
 void DRV_ETHMAC_LibInit(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
-    PLIB_ETH_Disable(ethId);
-    PLIB_ETH_TxRTSDisable(ethId);
-    PLIB_ETH_RxDisable(ethId);
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
+    DRV_ETH_Disable(ethId);
+    DRV_ETH_TxRTSDisable(ethId);
+    DRV_ETH_RxDisable(ethId);
 
-    while( PLIB_ETH_EthernetIsBusy(ethId) )
+    while( DRV_ETH_EthernetIsBusy(ethId) )
     {
         //Do Nothing.
     }
-    PLIB_ETH_Enable(ethId);
+    DRV_ETH_Enable(ethId);
 
-    while(PLIB_ETH_RxPacketCountGet(ethId) > 0 )
+    while(DRV_ETH_RxPacketCountGet(ethId) > 0 )
     {
-        PLIB_ETH_RxBufferCountDecrement(ethId);
+        DRV_ETH_RxBufferCountDecrement(ethId);
     }
 
     // initialize the Ethernet TX/RX lists
@@ -161,9 +161,9 @@ void DRV_ETHMAC_LibInit(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
     pMacD->mData._EnetRxBusyPtr = DRV_ETHMAC_LIB_ListInit(&pMacD->mData._EnetRxBusyList);
 
 
-    PLIB_ETH_InterruptClear(ethId,ETH_ALL_INTERRUPT_SOURCES);
-    PLIB_ETH_TxPacketDescAddrSet(ethId,(uint8_t *)NULL);
-    PLIB_ETH_RxPacketDescAddrSet(ethId,(uint8_t *)NULL);
+    DRV_ETH_EventsClear(ethId, DRV_ETH_EV_ALL);
+    DRV_ETH_TxPacketDescAddrSet(ethId,(uint8_t *)NULL);
+    DRV_ETH_RxPacketDescAddrSet(ethId,(uint8_t *)NULL);
 
     // leave filtering and ETHIEN as they were
 
@@ -177,33 +177,33 @@ void DRV_ETHMAC_LibInit(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 void DRV_ETHMAC_LibClose(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_CLOSE_FLAGS cFlags)
 {
     // disable Rx, Tx, Eth controller itself
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
     if(cFlags&DRV_ETHMAC_CLOSE_GRACEFUL)
     {
-        PLIB_ETH_TxRTSDisable(ethId);
-        while (PLIB_ETH_TransmitIsBusy(ethId))
+        DRV_ETH_TxRTSDisable(ethId);
+        while (DRV_ETH_TransmitIsBusy(ethId))
         {
             //Do Nothing
         }
-        while (PLIB_ETH_ReceiveIsBusy(ethId))
+        while (DRV_ETH_ReceiveIsBusy(ethId))
         {
             //Do Nothing
         }
     }
 
-    PLIB_ETH_TxRTSDisable(ethId);
-    PLIB_ETH_RxDisable(ethId);
+    DRV_ETH_TxRTSDisable(ethId);
+    DRV_ETH_RxDisable(ethId);
 
     _EthMacReset(ethId);
 
-    PLIB_ETH_Disable(ethId);
-    while( PLIB_ETH_EthernetIsBusy(ethId) )
+    DRV_ETH_Disable(ethId);
+    while( DRV_ETH_EthernetIsBusy(ethId) )
     {
         //Do Nothing.
     }
 
-    PLIB_ETH_InterruptClear(ethId,ETH_ALL_INTERRUPT_SOURCES);
+    DRV_ETH_EventsClear(ethId, DRV_ETH_EV_ALL);
 
 }
 
@@ -214,7 +214,7 @@ void DRV_ETHMAC_LibClose(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_CLOSE_FLAGS
 void DRV_ETHMAC_LibMACOpen(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_ETH_OPEN_FLAGS oFlags, TCPIP_ETH_PAUSE_TYPE pauseType)
 {
     unsigned int    cfg1;
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
     cfg1=_EMACxCFG1_RXENABLE_MASK|((oFlags&TCPIP_ETH_OPEN_MAC_LOOPBACK)?_EMACxCFG1_LOOPBACK_MASK:0);
 
@@ -236,19 +236,19 @@ void DRV_ETHMAC_LibMACOpen(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_ETH_OPEN_FLAGS
             ((oFlags&TCPIP_ETH_OPEN_HUGE_PKTS)?_EMACxCFG2_HUGEFRM_MASK:0)|_EMACxCFG2_LENGTHCK_MASK|
             ((oFlags&TCPIP_ETH_OPEN_HDUPLEX)?0:_EMACxCFG2_FULLDPLX_MASK);
 
-    PLIB_ETH_BackToBackIPGSet(ethId,(oFlags&TCPIP_ETH_OPEN_HDUPLEX)?0x12:0x15);
+    DRV_ETH_BackToBackIPGSet(ethId,(oFlags&TCPIP_ETH_OPEN_HDUPLEX)?0x12:0x15);
 
-    PLIB_ETH_NonBackToBackIPG1Set(ethId,0x0C);
-    PLIB_ETH_NonBackToBackIPG2Set(ethId,0x12);
+    DRV_ETH_NonBackToBackIPG1Set(ethId,0x0C);
+    DRV_ETH_NonBackToBackIPG2Set(ethId,0x12);
 
-    PLIB_ETH_CollisionWindowSet(ethId,0x37);
-    PLIB_ETH_ReTxMaxSet(ethId,0x0F);
+    DRV_ETH_CollisionWindowSet(ethId,0x37);
+    DRV_ETH_ReTxMaxSet(ethId,0x0F);
 
     if(oFlags&TCPIP_ETH_OPEN_RMII)
     {
-        PLIB_ETH_RMIIResetEnable(ethId);
-        PLIB_ETH_RMIIResetDisable(ethId);
-        PLIB_ETH_RMIISpeedSet(ethId,(oFlags&TCPIP_ETH_OPEN_100)?ETH_RMII_100Mps:ETH_RMII_10Mbps);
+        DRV_ETH_RMIIResetEnable(ethId);
+        DRV_ETH_RMIIResetDisable(ethId);
+        DRV_ETH_RMIISpeedSet(ethId,(oFlags&TCPIP_ETH_OPEN_100)?DRV_ETH_RMII_100Mps:DRV_ETH_RMII_10Mbps);
     }
 }
 
@@ -467,7 +467,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
     void*       pBuff;
     DRV_ETHMAC_DCPT_NODE   *pEDcpt;
     DRV_ETHMAC_RESULT     res;
-    ETH_MODULE_ID   ethId;
+    DRV_ETHERNET_REGISTERS* ethId;
     DRV_ETHMAC_DCPT_LIST*   pNewList;
     uint8_t newList [(DRV_ETHMAC_DCPT_LIST_ALIGN -1) + sizeof(DRV_ETHMAC_DCPT_LIST)];
 
@@ -479,7 +479,7 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
     pNewList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(newList));
 
     res=DRV_ETHMAC_RES_OK;
-    ethId = pMacD->mData.macConfig.ethModuleId;
+    ethId = pMacD->mData.pEthReg;
 
     for(pBuff=*ppBuff; pBuff!=0 && nBuffs; pBuff=*(++ppBuff), nBuffs--)
     {
@@ -528,11 +528,11 @@ DRV_ETHMAC_RESULT DRV_ETHMAC_LibRxBuffersAppend(DRV_ETHMAC_INSTANCE_DCPT* pMacD,
     if(!DRV_ETHMAC_LIB_ListIsEmpty(pNewList))
     {
         _EthAppendBusyList(pMacD, pMacD->mData._EnetRxBusyPtr, pNewList, 1);
-        if ( NULL == PLIB_ETH_RxPacketDescAddrGet(ethId) )
+        if ( NULL == DRV_ETH_RxPacketDescAddrGet(ethId) )
         {   // 1st time transmission!
-            PLIB_ETH_RxPacketDescAddrSet(ethId, (uint8_t *)KVA_TO_PA(&pMacD->mData._EnetRxBusyPtr->head->hwDcpt) );
+            DRV_ETH_RxPacketDescAddrSet(ethId, (uint8_t *)KVA_TO_PA(&pMacD->mData._EnetRxBusyPtr->head->hwDcpt) );
         }
-        PLIB_ETH_RxEnable(ethId);  // and we're running!
+        DRV_ETH_RxEnable(ethId);  // and we're running!
     }
 
     return DRV_ETHMAC_RES_OK;
@@ -618,7 +618,7 @@ static DRV_ETHMAC_RESULT _EthTxSchedBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, cons
  *****************************************************************************/
 static void _EthTxSchedList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIST* pList)
 {
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
     if(!DRV_ETHMAC_LIB_ListIsEmpty(pList))
     {
@@ -626,11 +626,11 @@ static void _EthTxSchedList(DRV_ETHMAC_INSTANCE_DCPT* pMacD, DRV_ETHMAC_DCPT_LIS
         (pList->tail)->hwDcpt.hdr.EOP=1;
         _EthAppendBusyList(pMacD, pMacD->mData._EnetTxBusyPtr, pList, 0);
 
-        if ( NULL == PLIB_ETH_TxPacketDescAddrGet(ethId) )
+        if ( NULL == DRV_ETH_TxPacketDescAddrGet(ethId) )
         {   // 1st time transmission!
-            PLIB_ETH_TxPacketDescAddrSet(ethId,(uint8_t *)KVA_TO_PA(&pMacD->mData._EnetTxBusyPtr->head->hwDcpt) );
+            DRV_ETH_TxPacketDescAddrSet(ethId,(uint8_t *)KVA_TO_PA(&pMacD->mData._EnetTxBusyPtr->head->hwDcpt) );
         }
-        PLIB_ETH_TxRTSEnable(ethId);
+        DRV_ETH_TxRTSEnable(ethId);
 
     }
 
@@ -900,14 +900,13 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
 {
     DRV_ETHMAC_RESULT     res;
     DRV_ETHMAC_DCPT_NODE*  pEDcpt;
-    ETH_MODULE_ID   ethId;
+    DRV_ETHERNET_REGISTERS* ethId;
     DRV_ETHMAC_DCPT_LIST*   pAckList;
     DRV_ETHMAC_DCPT_LIST*   pStickyList;
     uint8_t ackList [(DRV_ETHMAC_DCPT_LIST_ALIGN -1) + sizeof(DRV_ETHMAC_DCPT_LIST)];
     uint8_t stickyList [(DRV_ETHMAC_DCPT_LIST_ALIGN -1)+ sizeof(DRV_ETHMAC_DCPT_LIST)];
     
-    ethId = pMacD->mData.macConfig.ethModuleId;
-
+    ethId = pMacD->mData.pEthReg;
 
     pAckList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(ackList));
     pStickyList = DRV_ETHMAC_LIB_ListInit(_EthAlignAdjust(stickyList));
@@ -930,7 +929,7 @@ static DRV_ETHMAC_RESULT _EthRxAckBuffer(DRV_ETHMAC_INSTANCE_DCPT* pMacD, const 
             pEDcpt->hwDcpt.pEDBuff = 0; // corresponding buffer is not owned
             if(!pEDcpt->hwDcpt.hdr.rx_nack)
             {
-                PLIB_ETH_RxBufferCountDecrement(ethId);
+                DRV_ETH_RxBufferCountDecrement(ethId);
             }
         }
     }

@@ -92,8 +92,8 @@ typedef struct
 {
     TCPIP_MAC_EVENT             _TcpEnabledEvents;          // group enabled notification events
     volatile TCPIP_MAC_EVENT    _TcpPendingEvents;          // group notification events that are set, waiting to be re-acknowledged
-    PLIB_ETH_EVENTS             _EthEnabledEvents;          // copy in PLIB_ETH_EVENTS space
-    volatile PLIB_ETH_EVENTS    _EthPendingEvents;          // copy in PLIB_ETH_EVENTS space
+    DRV_ETH_EVENTS             _EthEnabledEvents;          // copy in DRV_ETH_EVENTS space
+    volatile DRV_ETH_EVENTS    _EthPendingEvents;          // copy in DRV_ETH_EVENTS space
     TCPIP_MAC_EventF            _TcpNotifyFnc;              // group notification handler
     const void*                 _TcpNotifyParam;            // notification parameter
 }DRV_ETHMAC_EVENT_DCPT;   // event descriptor per group
@@ -184,6 +184,7 @@ typedef struct
     }                   _macFlags;          // corresponding MAC flags
 
     TCPIP_MODULE_MAC_PIC32INT_CONFIG    macConfig;  // configuration parameters
+    DRV_ETHERNET_REGISTERS*             pEthReg;    // pointer to Ethernet registers describing the peripheral
 
     DRV_ETHMAC_SGL_LIST _TxQueue;           // current TX queue; stores TX queued packets 
 
@@ -265,7 +266,7 @@ typedef struct
 
 
 
-typedef uint16_t (*DRV_ETHMAC_HW_REG_FUNC)(ETH_MODULE_ID ethId);
+typedef uint16_t (*DRV_ETHMAC_HW_REG_FUNC)(DRV_ETHERNET_REGISTERS* ethId);
 
 // *****************************************************************************
 /* PIC32 MAC Hardware statistics register access structure
@@ -280,7 +281,7 @@ typedef uint16_t (*DRV_ETHMAC_HW_REG_FUNC)(ETH_MODULE_ID ethId);
 
 typedef struct
 {
-    char                    regName[8];     // hardware name
+    char                    regName[8 + 1]; // hardware name + \0
     DRV_ETHMAC_HW_REG_FUNC  regFunc;        // register access function
 } DRV_ETHMAC_HW_REG_DCPT;
 

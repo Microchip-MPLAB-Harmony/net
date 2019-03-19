@@ -57,9 +57,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system_config.h"
 #include "system/debug/sys_debug.h"
 #include "tcpip/tcpip_ethernet.h"
-#include "peripheral/eth/plib_eth.h"
 #include "driver/ethmac/src/dynamic/_eth_dcpt_lists.h"
+#include "driver/ethmac/src/dynamic/drv_eth_pic32_lib.h"
 #include "driver/ethmac/src/drv_ethmac_local.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
