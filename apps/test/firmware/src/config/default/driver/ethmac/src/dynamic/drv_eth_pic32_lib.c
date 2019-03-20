@@ -315,13 +315,336 @@ void DRV_ETH_EventsClear(DRV_ETHERNET_REGISTERS* eth, DRV_ETH_EVENTS evmask)
 }
 
 
+//niyas: todo ////////////////////////////////////
+bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* eth)
+{
+    return (bool)(eth->ETHCON1.ON) ;	
+}
+
+//niyas: todo ////////////////////////////////////
+void DRV_ETH_MIIMNoPreEnable(DRV_ETHERNET_REGISTERS* eth)
+{    	
+	eth->EMACxMCFGSET = _EMACxMCFG_NOPRE_MASK;	
+}
+
+//niyas: todo ////////////////////////////////////
+void DRV_ETH_MIIMNoPreDisable(DRV_ETHERNET_REGISTERS* eth)
+{	
+	eth->EMACxMCFG.NOPRE=0;	
+}
+
+//******************************************************************************
+/* Function :  DRV_ETH_MIIMScanIncrEnable
+
+  Summary:
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMScanIncrEnable(DRV_ETHERNET_REGISTERS* eth)
+{    	
+	eth->EMACxMCFGSET = _EMACxMCFG_SCANINC_MASK;		
+}
 
 
+//******************************************************************************
+/* Function :  DRV_ETH_MIIMScanIncrDisable
+
+  Summary:
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMScanIncrDisable(DRV_ETHERNET_REGISTERS* eth)
+{		
+	eth->EMACxMCFG.SCANINC=0;	
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMIsBusy_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMIsBusy
+
+  Description:
+    //niyas todo
+*/
+
+bool DRV_ETH_MIIMIsBusy(DRV_ETHERNET_REGISTERS* eth)
+{		
+	return (bool) (eth->EMACxMIND.MIIMBUSY);
+}
+
+//******************************************************************************
+/* Function :  ETH_PHYAddressGet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_PHYAddressGet
+
+  Description:
+    //niyas todo
+*/
+
+uint8_t DRV_ETH_PHYAddressGet( DRV_ETHERNET_REGISTERS* eth )
+{	
+	return (uint8_t)(eth->EMACxMADR.PHYADDR);
+}
 
 
+//******************************************************************************
+/* Function :  ETH_PHYAddressSet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_PHYAddressSet
+	This function performs atomic register access.
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_PHYAddressSet(DRV_ETHERNET_REGISTERS* eth, uint8_t phyAddr )
+{	
+	eth->EMACxMADR.PHYADDR = phyAddr;
+}
 
 
+//******************************************************************************
+/* Function :  ETH_RegisterAddressGet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_RegisterAddressGet
+
+  Description:
+    //niyas todo
+*/
+
+uint8_t DRV_ETH_RegisterAddressGet(DRV_ETHERNET_REGISTERS* eth)
+{	
+	return (uint8_t)(eth->EMACxMADR.REGADDR);							 								 
+}
 
 
+//******************************************************************************
+/* Function :  ETH_RegisterAddressSet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_RegisterAddressSet
+	This function performs atomic register access.
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_RegisterAddressSet(DRV_ETHERNET_REGISTERS* eth, uint8_t regAddr)
+{	
+	eth->EMACxMADR.REGADDR = regAddr;
+}
 
 
+//******************************************************************************
+/* Function :  ETH_RegisterAddressSet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_RegisterAddressSet
+	This function performs atomic register access.
+
+  Description:
+    //niyas todo
+*/                                    
+void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* eth)
+{
+    eth->EMACxMINDSET = _EMACxMIND_NOTVALID_MASK;
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMScanModeEnable_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMScanModeEnable
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMScanModeEnable(DRV_ETHERNET_REGISTERS* eth)
+{		
+	eth->EMACxMCMDSET = _EMACxMCMD_SCAN_MASK;
+}
+
+
+//******************************************************************************
+/* Function :  ETH_MIIMScanModeDisable_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMScanModeDisable
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMScanModeDisable(DRV_ETHERNET_REGISTERS* eth)
+{	
+	eth->EMACxMCMDCLR = _EMACxMCMD_SCAN_MASK;
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMWriteDataSet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMWriteDataSet
+	This function performs atomic register access.
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* eth, uint16_t writeData )
+{
+	eth->EMACxMWTD.MWTD =writeData ;  				 
+                     
+#if defined(__PIC32MZ__)
+    __asm__ __volatile__ ("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;"); // there's 2 clock cycles till busy is set for a write op
+#else                     
+    __asm__ __volatile__ ("nop; nop;"); // there's 2 clock cycles till busy is set for a write op
+#endif
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMWriteStart_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMWriteStart
+	This function performs atomic register access. 
+
+  Description:
+   //niyas todo
+*/
+
+void DRV_ETH_MIIMWriteStart(DRV_ETHERNET_REGISTERS* eth)
+{	
+	eth->EMACxMCMDCLR=_EMACxMCMD_READ_MASK;
+}
+
+
+//******************************************************************************
+/* Function :  ETH_ExistsMIIMReadWrite_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_ExistsMIIMReadWrite
+
+  Description:
+    //niyas todo
+*/
+bool DRV_ETH_ExistsMIIMReadWrite(DRV_ETHERNET_REGISTERS* eth )
+{
+    return true;
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMReadStart_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMReadStart
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* eth)
+{		
+	eth->EMACxMCMDSET=_EMACxMCMD_READ_MASK;
+	
+#if defined(__PIC32MZ__)
+    __asm__ __volatile__ ("nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop; nop;");   // there's 4 clock cycles till busy is set for a read op
+#else
+    __asm__ __volatile__ ("nop; nop; nop; nop;");   // there's 4 clock cycles till busy is set for a read op
+#endif
+    
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMReadDataGet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMReadDataGet
+
+  Description:
+     //niyas todo
+*/
+
+uint16_t DRV_ETH_MIIMReadDataGet(DRV_ETHERNET_REGISTERS* eth)
+{    	
+	return (uint16_t)(eth->EMACxMRDD.MRDD);								 
+}
+
+//******************************************************************************
+/* Function :  ETH_DataNotValid_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_DataNotValid
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+bool DRV_ETH_DataNotValid(DRV_ETHERNET_REGISTERS* eth)
+{		
+	return (bool) (eth->EMACxMIND.NOTVALID);
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMResetEnable_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMResetEnable
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMResetEnable(DRV_ETHERNET_REGISTERS* eth)
+{		
+	eth->EMACxMCFGSET = _EMACxMCFG_RESETMGMT_MASK; 
+}
+
+
+//******************************************************************************
+/* Function :  ETH_MIIMResetDisable_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMResetDisable
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* eth)
+{	
+	eth->EMACxMCFGCLR = _EMACxMCFG_RESETMGMT_MASK; 
+}
+
+//******************************************************************************
+/* Function :  ETH_MIIMClockSet_Default
+
+  Summary:
+    Implements Default variant of PLIB_ETH_MIIMClockSet
+	This function performs atomic register access. 
+
+  Description:
+    //niyas todo
+*/
+
+void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* eth , ETH_MIIM_CLK MIIMClock )
+{
+	eth->EMACxMCFG.CLKSEL = MIIMClock ;
+}

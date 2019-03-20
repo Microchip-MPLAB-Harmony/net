@@ -456,7 +456,34 @@ typedef enum
 } DRV_ETH_EVENTS;
 
 
+//*****************************************************************************
+/* MII Clock Selection
 
+  Summary:
+    Lists the possible speed selection for the Reduced Media Independent 
+    Interface (RMII).
+
+  Description:
+    This enumeration lists the possible speed selection for RMII.
+    The body contains only two states: RMII_10Mbps or RMII_100Mbps.
+
+  Remarks:
+    This enumeration is processor specific and is defined in the processor-
+    specific header files (see processor.h).
+*/
+typedef enum {
+
+    ETH_MIIM_SYSCLK_DIV_BY_4   /*DOM-IGNORE-BEGIN*/ = 0x00 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_RSVD   /*DOM-IGNORE-BEGIN*/ = 0x01 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_6   /*DOM-IGNORE-BEGIN*/ = 0x02 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_8   /*DOM-IGNORE-BEGIN*/ = 0x03 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_10  /*DOM-IGNORE-BEGIN*/ = 0x04 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_14  /*DOM-IGNORE-BEGIN*/ = 0x05 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_20  /*DOM-IGNORE-BEGIN*/ = 0x06 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_28  /*DOM-IGNORE-BEGIN*/ = 0x07 /*DOM-IGNORE-END*/ ,
+    ETH_MIIM_SYSCLK_DIV_BY_40  /*DOM-IGNORE-BEGIN*/ = 0x08 /*DOM-IGNORE-END*/
+
+} ETH_MIIM_CLK;
 // *****************************************************************************
 // *****************************************************************************
 // Section: Driver Library Interface Routines
@@ -2005,10 +2032,56 @@ void DRV_ETH_EventsClr( DRV_ETHERNET_REGISTERS* pEthReg, DRV_ETH_EVENTS eEvents 
 DRV_ETH_EVENTS DRV_ETH_EventsGet ( DRV_ETHERNET_REGISTERS* pEthReg );
 
 
+//******************************************************************************
+/* Function: //niyas:todo comments
+    bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* pEthReg)
 
+  Summary:
+    Gets the Ethernet receive logic busy status.
 
+  Description:
+    This function gets the Ethernet receive logic busy status.
 
+  Precondition:
+    None.
 
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    - true  - Receive logic is receiving data
+    - false - Receive logic is idle
+
+  Example:
+
+  Remarks:
+    None
+*/
+
+bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
+
+void DRV_ETH_MIIMNoPreEnable(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
+
+void DRV_ETH_MIIMNoPreDisable(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
+void DRV_ETH_MIIMScanIncrEnable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
+void DRV_ETH_MIIMScanIncrDisable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
+bool DRV_ETH_MIIMIsBusy(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
+uint8_t DRV_ETH_PHYAddressGet( DRV_ETHERNET_REGISTERS* pEthReg);//niyas
+void DRV_ETH_PHYAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t phyAddr);//niyas
+uint8_t DRV_ETH_RegisterAddressGet(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
+void DRV_ETH_RegisterAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t regAddr);//niyas    
+void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+void DRV_ETH_MIIMScanModeEnable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+void DRV_ETH_MIIMScanModeDisable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* pEthReg, uint16_t writeData);//niyas  
+void DRV_ETH_MIIMWriteStart(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+bool DRV_ETH_ExistsMIIMReadWrite(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+uint16_t DRV_ETH_MIIMReadDataGet(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
+bool DRV_ETH_DataNotValid(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
+void DRV_ETH_MIIMResetEnable(DRV_ETHERNET_REGISTERS* eth); //niyas
+void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* eth); //niyas
+void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* eth , ETH_MIIM_CLK MIIMClock ); //niyas
 
 #ifdef __cplusplus
 }
