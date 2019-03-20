@@ -2033,7 +2033,7 @@ DRV_ETH_EVENTS DRV_ETH_EventsGet ( DRV_ETHERNET_REGISTERS* pEthReg );
 
 
 //******************************************************************************
-/* Function: //niyas:todo comments
+/* Function: 
     bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* pEthReg)
 
   Summary:
@@ -2058,30 +2058,522 @@ DRV_ETH_EVENTS DRV_ETH_EventsGet ( DRV_ETHERNET_REGISTERS* pEthReg );
     None
 */
 
-bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
+//******************************************************************************
+/* Function:
+    bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* pEthReg)
 
-void DRV_ETH_MIIMNoPreEnable(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
+  Summary:
+    Gets the Ethernet module enable status.
 
-void DRV_ETH_MIIMNoPreDisable(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
-void DRV_ETH_MIIMScanIncrEnable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
-void DRV_ETH_MIIMScanIncrDisable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
-bool DRV_ETH_MIIMIsBusy(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
-uint8_t DRV_ETH_PHYAddressGet( DRV_ETHERNET_REGISTERS* pEthReg);//niyas
-void DRV_ETH_PHYAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t phyAddr);//niyas
-uint8_t DRV_ETH_RegisterAddressGet(DRV_ETHERNET_REGISTERS* pEthReg);//niyas
-void DRV_ETH_RegisterAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t regAddr);//niyas    
-void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-void DRV_ETH_MIIMScanModeEnable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-void DRV_ETH_MIIMScanModeDisable(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* pEthReg, uint16_t writeData);//niyas  
-void DRV_ETH_MIIMWriteStart(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-bool DRV_ETH_ExistsMIIMReadWrite(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-uint16_t DRV_ETH_MIIMReadDataGet(DRV_ETHERNET_REGISTERS* pEthReg);//niyas  
-bool DRV_ETH_DataNotValid(DRV_ETHERNET_REGISTERS* pEthReg); //niyas
-void DRV_ETH_MIIMResetEnable(DRV_ETHERNET_REGISTERS* eth); //niyas
-void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* eth); //niyas
-void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* eth , ETH_MIIM_CLK MIIMClock ); //niyas
+  Description:
+    This function returns the Ethernet module enable status.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    - true  - Ethernet module is enabled
+    - false - Ethernet module is disabled
+
+  Example:
+
+  Remarks:
+*/
+bool DRV_ETH_IsEnabled(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMNoPreEnable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Enables EMAC MIIM No Preamble (suppresses preamble).
+
+  Description:
+    This function enables EMAC MIIM No Preamble (suppresses preamble). The MII 
+    Management will perform read/write cycles without the 32-bit preamble field.
+    Some PHYs support suppressed preamble.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMNoPreEnable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMNoPreDisable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Disables EMAC No Preamble (allows preamble).
+
+  Description:
+    This function disables EMAC No preamble (allows preamble). Normal read/write 
+    cycles are performed.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMNoPreDisable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMScanIncrEnable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Enables EMAC MIIM Scan Increment.
+
+  Description:
+    This function enables EMAC MIIM Scan Increment. The MII Management module will 
+    perform read cycles across a range of PHYs. The read cycles will start from 
+    address 1 through the value set in the PHY address register.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+    The read cycles will start at PHY address 1 and continue through the value
+    set for as the PHY address register.
+
+*/
+void DRV_ETH_MIIMScanIncrEnable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMScanIncrDisable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Disables the EMAC MIIM Scan Increment.
+
+  Description:
+    This function disables the EMAC MIIM Scan Increment. Allows continuous reads 
+    of the same PHY.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMScanIncrDisable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    bool DRV_ETH_MIIMIsBusy(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Gets the MII management busy status.
+
+  Description:
+    This function returns the MII management busy status.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    - true  - The MII Management module is currently performing an MII Management 
+              read or write cycle
+    - false - The MII Management is free
+
+  Example:
+
+  Remarks:
+*/
+bool DRV_ETH_MIIMIsBusy(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_PHYAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t phyAddr)
+
+  Summary:
+    Sets the EMAC MIIM PHY address.
+
+  Description:
+    This function sets the EMAC MIIM PHY address. This field represents the 5-bit 
+    PHY Address field of Management cycles. Up to 31 PHYs can be addressed (0 is reserved).
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+    phyAddr - A 5-bit address of the PHY
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_PHYAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t phyAddr);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_RegisterAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t regAddr)
+
+  Summary:
+    Sets EMAC MIIM register address.
+
+  Description:
+    This function sets the EMAC MIIM register address. Up to 32 registers may 
+    be accessed.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+    regAddr - The (5-bit) address of the MII Registers.
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_RegisterAddressSet(DRV_ETHERNET_REGISTERS* pEthReg, uint8_t regAddr);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Clears the EMAC MIND register data valid indicator
+
+  Description:
+    This function clears the EMAC MIND register data valid indicator. 
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Remarks:
+*/
+void DRV_ETH_ClearDataValid(DRV_ETHERNET_REGISTERS* pEthReg);
+
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMScanModeEnable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Enables MIIM scan mode.
+
+  Description:
+    This function enables MIIM scan mode. The MII Management module will perform 
+    read cycles continuously. (Useful for monitoring the Link Fail.)
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMScanModeEnable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMScanModeDisable(DRV_ETHERNET_REGISTERS* pEthReg)
+  Summary:
+    Disables MIIM scan mode.
+
+  Description:
+    This function disables MIIM scan mode. Scan is disabled for Normal operation.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMScanModeDisable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* pEthReg, uint16_t writeData)
+
+  Summary:
+    Sets the EMAC MIIM write data before initiating an MII write cycle.
+
+  Description:
+    This function sets the EMAC MIIM write data before initiating write cycle.
+
+  Precondition:
+    Prior to a call to this routine, the PHY and Register addresses
+    should be set using DRV_ETH_MIIPHYAddressSet and DRV_ETH_MIIRegisterAddressSet.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+    writeData - MII write data
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMWriteDataSet(DRV_ETHERNET_REGISTERS* pEthReg, uint16_t writeData);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMWriteStart(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Initiates an MII management write command.
+
+  Description:
+    This function initiates an MII management read command. The MII Management module 
+    will perform a write cycle.
+
+  Precondition:
+    The PHY address and MII register address must be configured before a write
+    using DRV_ETH_MIIPHYAddressSet(MY_ETH_INSTANCE, phyAddr)   and
+    DRV_ETH_MIIRegisterAddressSet(MY_ETH_INSTANCE, regAddr)
+
+    Data to be written must be first loaded into the MII write register using
+    DRV_ETH_MIIMWriteDataSet(MY_ETH_INSTANCE, writeData)
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMWriteStart(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Initiates an MII management read command.
+
+  Description:
+    This function initiates an MII read command. The MII Management module will 
+    perform a single read cycle. To get data, use DRV_ETH_MIIMReadDataGet.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMReadStart(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    uint16_t DRV_ETH_MIIMReadDataGet(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Gets EMAC MIIM management read data after a MII read cycle has completed.
+
+  Description:
+    This function gets EMAC MIIM management read data after a MII read cycle
+    has completed.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    - readData - MII read data
+
+  Example:
+
+  Remarks:
+*/
+uint16_t DRV_ETH_MIIMReadDataGet(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    bool DRV_ETH_DataNotValid(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Gets the MII management read data not valid status.
+
+  Description:
+    This function gets the MII management read data not valid status.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    - true  - The MII Management read cycle has not completed and the read data
+              is not yet valid
+    - false - The MII Management read cycle is complete and the read data is valid
+
+  Example:
+
+  Remarks:
+*/
+bool DRV_ETH_DataNotValid(DRV_ETHERNET_REGISTERS* pEthReg); 
+
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMResetEnable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Enables EMAC Reset Media Independent Interface (MII) Management.
+
+  Description:
+    This function enables EMAC Reset MII Management and holds the MII Management 
+    module in reset while enabled.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+    MII Management held in Reset after This function is called. Disable ResetMIIanagement 
+    to return to normal operation.
+
+*/
+void DRV_ETH_MIIMResetEnable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* pEthReg)
+
+  Summary:
+    Disables EMAC Reset MII Management.
+
+  Description:
+    This function disables EMAC Reset MII Management.
+    EMAC will resume normal operation.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+*/
+void DRV_ETH_MIIMResetDisable(DRV_ETHERNET_REGISTERS* pEthReg);
+
+//******************************************************************************
+/* Function:
+    void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* pEthReg, ETH_MIIM_CLK MIIMClock)
+
+  Summary:
+    Sets the EMAC MIM clock selection.
+
+  Description:
+    This function sets the EMAC MIIM clock selection.
+
+  Precondition:
+    None.
+
+  Parameters:
+    pEthReg - pointer to the Ethernet registers
+    MIIMClock - of type ETH_MIIM_CLK - the system clock divisor for MII
+
+  Returns:
+    None.
+
+  Example:
+
+  Remarks:
+    This field is used by the clock divide logic in creating the MII Management 
+    Clock (MDC), which the IEEE 802.3 Specification defines to be no faster than 
+    2.5 MHz. Some PHYs support clock rates up to 12.5 MHz.
+
+*/
+void DRV_ETH_MIIMClockSet(DRV_ETHERNET_REGISTERS* pEthReg , ETH_MIIM_CLK MIIMClock );
 
 #ifdef __cplusplus
 }
