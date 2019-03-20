@@ -218,26 +218,25 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 };
 </#if>
 
-<#if (drvGmac.TCPIP_USE_ETH_MAC)?has_content && (drvGmac.TCPIP_USE_ETH_MAC)  == true>
-<#if (drvGmac.DRV_GMAC_PHY_TYPE)?has_content>
-<#if (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8061">
+
+<#if ((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) || ((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content)>
+<#if (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8061")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8061"))>
 <#assign emac_phy_type = drvExtPhyKsz8061.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8081">
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8081")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8081"))>
 <#assign emac_phy_type = drvExtPhyKsz8081.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8081.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8081.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "KSZ8091">
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8091")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8091"))>
 <#assign emac_phy_type = drvExtPhyKsz8091.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (drvGmac.DRV_GMAC_PHY_TYPE)  == "LAN8740">
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN8740")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN8740"))>
 <#assign emac_phy_type = drvExtPhyLan8740.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_RESET_CALLBACK>
 </#if>
-
 
 /*** ETH PHY Initialization Data ***/
 <#if use_phy_reset_callback == true>
@@ -272,6 +271,7 @@ const DRV_ETHPHY_INIT tcpipPhyInitData =
 };
 </#if>
 
+<#if ((drvGmac.TCPIP_USE_ETH_MAC)?has_content && (drvGmac.TCPIP_USE_ETH_MAC  == true))>
 /*** GMAC MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 { 
@@ -364,7 +364,7 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 </#if>
     .pPhyInit               = &tcpipPhyInitData,
 };
-<#elseif (drvPic32mEthmacComponent.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmacComponent.TCPIP_USE_ETH_MAC)  == true>
+<#elseif ((drvPic32mEthmac.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmac.TCPIP_USE_ETH_MAC  == true))>
 /*** ETH MAC Initialization Data ***/
 const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 { 
@@ -375,12 +375,12 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .nRxInitBuffers         = TCPIP_EMAC_RX_INIT_BUFFERS,
     .rxLowThreshold         = TCPIP_EMAC_RX_LOW_THRESHOLD,
     .rxLowFill              = TCPIP_EMAC_RX_LOW_FILL,
-    .linkInitDelay          = TCPIP_EMAC_PHY_LINK_INIT_DELAY,
+    .linkInitDelay          = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
     .ethFlags               = TCPIP_EMAC_ETH_OPEN_FLAGS,
     .ethModuleId            = TCPIP_INTMAC_MODULE_ID,
-<#if TCPIP_EMAC_PHY_TYPE == "SMSC_LAN9303">
+<#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
-<#elseif TCPIP_EMAC_PHY_TYPE == "KSZ8863">
+<#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
     .pPhyBase		    = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
 <#else>
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,

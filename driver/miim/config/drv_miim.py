@@ -19,7 +19,7 @@ def instantiateComponent(drvMiimComponent):
 	if Peripheral.moduleExists("GMAC"):
 		drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
 	else:
-		drvMiimModuleId.setDefaultValue("ETH_ID_0")
+		drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS")
 	#drvMiimModuleId.setDependencies(drvMiimMenuVisibleSingle, ["TCPIP_INTMAC_MODULE_ID"])	
 
 	# Number of Driver Instances
