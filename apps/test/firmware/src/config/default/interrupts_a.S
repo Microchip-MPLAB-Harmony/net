@@ -73,64 +73,64 @@ IntVectorCORE_TIMER_Handler:
     .end   IntVectorCORE_TIMER_Handler
 
 
-    .extern  UART1_FAULT_Handler
+    .extern  UART2_FAULT_Handler
 
-    .section   .vector_112,code, keep
-    .equ     __vector_dispatch_112, IntVectorUART1_FAULT_Handler
-    .global  __vector_dispatch_112
+    .section   .vector_145,code, keep
+    .equ     __vector_dispatch_145, IntVectorUART2_FAULT_Handler
+    .global  __vector_dispatch_145
     .set     nomicromips
     .set     noreorder
     .set     nomips16
     .set     noat
-    .ent  IntVectorUART1_FAULT_Handler
+    .ent  IntVectorUART2_FAULT_Handler
 
-IntVectorUART1_FAULT_Handler:
+IntVectorUART2_FAULT_Handler:
     portSAVE_CONTEXT
-    la    s6,  UART1_FAULT_Handler
+    la    s6,  UART2_FAULT_Handler
     jalr  s6
     nop
     portRESTORE_CONTEXT
-    .end   IntVectorUART1_FAULT_Handler
+    .end   IntVectorUART2_FAULT_Handler
 
 
-    .extern  UART1_RX_Handler
+    .extern  UART2_RX_Handler
 
-    .section   .vector_113,code, keep
-    .equ     __vector_dispatch_113, IntVectorUART1_RX_Handler
-    .global  __vector_dispatch_113
+    .section   .vector_146,code, keep
+    .equ     __vector_dispatch_146, IntVectorUART2_RX_Handler
+    .global  __vector_dispatch_146
     .set     nomicromips
     .set     noreorder
     .set     nomips16
     .set     noat
-    .ent  IntVectorUART1_RX_Handler
+    .ent  IntVectorUART2_RX_Handler
 
-IntVectorUART1_RX_Handler:
+IntVectorUART2_RX_Handler:
     portSAVE_CONTEXT
-    la    s6,  UART1_RX_Handler
+    la    s6,  UART2_RX_Handler
     jalr  s6
     nop
     portRESTORE_CONTEXT
-    .end   IntVectorUART1_RX_Handler
+    .end   IntVectorUART2_RX_Handler
 
 
-    .extern  UART1_TX_Handler
+    .extern  UART2_TX_Handler
 
-    .section   .vector_114,code, keep
-    .equ     __vector_dispatch_114, IntVectorUART1_TX_Handler
-    .global  __vector_dispatch_114
+    .section   .vector_147,code, keep
+    .equ     __vector_dispatch_147, IntVectorUART2_TX_Handler
+    .global  __vector_dispatch_147
     .set     nomicromips
     .set     noreorder
     .set     nomips16
     .set     noat
-    .ent  IntVectorUART1_TX_Handler
+    .ent  IntVectorUART2_TX_Handler
 
-IntVectorUART1_TX_Handler:
+IntVectorUART2_TX_Handler:
     portSAVE_CONTEXT
-    la    s6,  UART1_TX_Handler
+    la    s6,  UART2_TX_Handler
     jalr  s6
     nop
     portRESTORE_CONTEXT
-    .end   IntVectorUART1_TX_Handler
+    .end   IntVectorUART2_TX_Handler
 
 
     .extern  ETHERNET_Handler

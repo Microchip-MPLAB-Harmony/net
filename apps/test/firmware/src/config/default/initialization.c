@@ -172,6 +172,13 @@ const TCPIP_UDP_MODULE_CONFIG tcpipUDPInitData =
     .sktTxBuffSize  = TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE, 
 };
 
+/*** TCP Sockets Initialization Data ***/
+const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
+{
+    .nSockets       = TCPIP_TCP_MAX_SOCKETS,
+    .sktTxBuffSize  = TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE, 
+    .sktRxBuffSize  = TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE,
+};
 
 
 
@@ -189,6 +196,11 @@ const TCPIP_DHCP_MODULE_CONFIG tcpipDHCPInitData =
 };
 
 
+/*** ICMP Server Initialization Data ***/
+const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData = 
+{
+    0
+};
 
 
 
@@ -239,6 +251,16 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 
 
 
+/*** DNS Client Initialization Data ***/
+const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
+{
+    .deleteOldLease         = TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES,
+    .cacheEntries           = TCPIP_DNS_CLIENT_CACHE_ENTRIES,
+    .entrySolvedTmo         = TCPIP_DNS_CLIENT_CACHE_ENTRY_TMO,    
+    .nIPv4Entries  = TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS,
+    .ipAddressType       = TCPIP_DNS_CLIENT_ADDRESS_TYPE,
+    .nIPv6Entries  = TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS,
+};
 
 
 
@@ -279,10 +301,13 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
     {TCPIP_MODULE_IPV4,             0},
 
+    {TCPIP_MODULE_ICMP,             0},                             // TCPIP_MODULE_ICMP
 
     {TCPIP_MODULE_ARP,              &tcpipARPInitData},             // TCPIP_MODULE_ARP
     {TCPIP_MODULE_UDP,              &tcpipUDPInitData},             // TCPIP_MODULE_UDP
+    {TCPIP_MODULE_TCP,              &tcpipTCPInitData},             // TCPIP_MODULE_TCP
     {TCPIP_MODULE_DHCP_CLIENT,      &tcpipDHCPInitData},            // TCPIP_MODULE_DHCP_CLIENT
+    {TCPIP_MODULE_DNS_CLIENT,       &tcpipDNSClientInitData},       // TCPIP_MODULE_DNS_CLIENT
 
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 
@@ -361,11 +386,11 @@ extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
 
 const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
 {
-    .read = (SYS_CONSOLE_UART_PLIB_READ)UART1_Read,
-    .write = (SYS_CONSOLE_UART_PLIB_WRITE)UART1_Write,
-    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)UART1_ReadCallbackRegister,
-    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)UART1_WriteCallbackRegister,
-    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)UART1_ErrorGet,
+    .read = (SYS_CONSOLE_UART_PLIB_READ)UART2_Read,
+    .write = (SYS_CONSOLE_UART_PLIB_WRITE)UART2_Write,
+    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)UART2_ReadCallbackRegister,
+    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)UART2_WriteCallbackRegister,
+    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)UART2_ErrorGet,
 };
 
 
@@ -375,10 +400,10 @@ const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
     .isSingleIntSrc                        = false,
 
     /* Peripheral interrupt lines */
-    .intSources.multi.usartTxCompleteInt   = _UART1_TX_VECTOR,
+    .intSources.multi.usartTxCompleteInt   = _UART2_TX_VECTOR,
     .intSources.multi.usartTxReadyInt      = -1,
-    .intSources.multi.usartRxCompleteInt   = _UART1_RX_VECTOR,
-    .intSources.multi.usartErrorInt        = _UART1_FAULT_VECTOR,
+    .intSources.multi.usartRxCompleteInt   = _UART2_RX_VECTOR,
+    .intSources.multi.usartErrorInt        = _UART2_FAULT_VECTOR,
 };
 
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
@@ -441,8 +466,9 @@ void SYS_Initialize ( void* data )
 
 
     CORETIMER_Initialize();
-	UART1_Initialize();
+	UART2_Initialize();
 
+	BSP_Initialize();
 
 
     /* Initialize the MIIM Driver */

@@ -1,23 +1,18 @@
 /*******************************************************************************
- System Tasks File
+  Board Support Package Implementation
+
+  Company:
+    Microchip Technology Inc.
 
   File Name:
-    tasks.c
+    bsp.c
 
   Summary:
-    This file contains source code necessary to maintain system's polled tasks.
+    Board Support Package implementation.
 
   Description:
-    This file contains source code necessary to maintain system's polled tasks.
-    It implements the "SYS_Tasks" function that calls the individual "Tasks"
-    functions for all polled MPLAB Harmony modules in the system.
-
-  Remarks:
-    This file requires access to the systemObjects global data structure that
-    contains the object handles to all MPLAB Harmony module objects executing
-    polled in the system.  These handles are passed into the individual module
-    "Tasks" functions to identify the instance of the module to maintain.
- *******************************************************************************/
+    This file contains routines that implement the board support package
+*******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -41,7 +36,7 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
+*******************************************************************************/
 // DOM-IGNORE-END
 
 // *****************************************************************************
@@ -50,54 +45,39 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "configuration.h"
-#include "definitions.h"
-
+#include "bsp.h"
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: System "Tasks" Routine
+// *****************************************************************************
+// Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-/*******************************************************************************
-  Function:
-    void SYS_Tasks ( void )
+// *****************************************************************************
+/* Function:
+    void BSP_Initialize(void)
+
+  Summary:
+    Performs the necessary actions to initialize a board
+
+  Description:
+    This function initializes the LED, Switch and other ports on the board.
+    This function must be called by the user before using any APIs present in
+    this BSP.
 
   Remarks:
-    See prototype in system/common/sys_module.h.
+    Refer to bsp.h for usage information.
 */
 
-void SYS_Tasks ( void )
+void BSP_Initialize(void )
 {
-    /* Maintain system services */
-    SYS_CMD_Tasks();
 
-
-
-    /* Maintain Device Drivers */
-    DRV_MIIM_Tasks(sysObj.drvMiim);
-
-
-
-
-    /* Maintain Middleware & Other Libraries */
-    
-TCPIP_STACK_Task(sysObj.tcpip);
-
-
-
-
-    /* Maintain the application's state machine. */
-        /* Call Application task APP. */
-    APP_Tasks();
 
 
 
 }
 
-
 /*******************************************************************************
  End of File
- */
-
+*/

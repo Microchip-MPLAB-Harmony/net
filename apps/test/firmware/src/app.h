@@ -32,16 +32,8 @@
 #include <stddef.h>
 #include <stdlib.h>
 #include "configuration.h"
-#include "FreeRTOS.h"
-#include "task.h"
-
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-extern "C" {
-
-#endif
-// DOM-IGNORE-END
+#include "definitions.h" 
+#include "tcpip/tcpip.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,7 +42,7 @@ extern "C" {
 // *****************************************************************************
 
 // *****************************************************************************
-/* Application states
+/* Application States
 
   Summary:
     Application states enumeration
@@ -62,11 +54,22 @@ extern "C" {
 
 typedef enum
 {
-    /* Application's state machine's initial state. */
-    APP_STATE_INIT=0,
-    APP_STATE_SERVICE_TASKS,
-    /* TODO: Define states used by the application state machine. */
+    /* In this state, the application waits for the initialization of the TCP/IP stack
+     * to complete. */
+    APP_TCPIP_WAIT_INIT,
 
+    /* In this state, the application waits for a IP Address */
+    APP_TCPIP_WAIT_FOR_IP,
+
+    APP_TCPIP_OPENING_SERVER,
+
+    APP_TCPIP_WAIT_FOR_CONNECTION,
+
+    APP_TCPIP_SERVING_CONNECTION,
+
+    APP_TCPIP_CLOSING_CONNECTION,
+
+    APP_TCPIP_ERROR,
 } APP_STATES;
 
 
@@ -88,9 +91,10 @@ typedef struct
     /* The application's current state */
     APP_STATES state;
 
-    /* TODO: Define any additional data used by the application. */
+    TCP_SOCKET              socket;
 
 } APP_DATA;
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -100,6 +104,7 @@ typedef struct
 /* These routines are called by drivers when certain events occur.
 */
 
+	
 // *****************************************************************************
 // *****************************************************************************
 // Section: Application Initialization and State Machine Functions
@@ -114,8 +119,8 @@ typedef struct
      MPLAB Harmony application initialization routine.
 
   Description:
-    This function initializes the Harmony application.  It places the
-    application in its initial state and prepares it to run so that its
+    This function initializes the Harmony application.  It places the 
+    application in its initial state and prepares it to run so that its 
     APP_Tasks function can be called.
 
   Precondition:
@@ -170,7 +175,7 @@ void APP_Initialize ( void );
     This routine must be called from SYS_Tasks() routine.
  */
 
-void APP_Tasks( void );
+void APP_Tasks ( void );
 
 
 

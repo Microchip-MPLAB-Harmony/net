@@ -903,7 +903,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
 #if (DRV_ETHPHY_USE_DRV_MIIM)
     DRV_MIIM_SETUP  miimSetup;
 #if defined (__PIC32MZ__)
-   //niyas:todo miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
+   miimSetup.hostClockFreq = 100000000;//niyas:todo SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
 #elif defined (__PIC32C__) || defined(__SAMA5D2__)
     miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
 #else
