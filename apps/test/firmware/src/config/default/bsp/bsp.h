@@ -1,23 +1,19 @@
 /*******************************************************************************
- System Tasks File
+  Board Support Package Header File.
+
+  Company:
+    Microchip Technology Inc.
 
   File Name:
-    tasks.c
+    bsp.h
 
   Summary:
-    This file contains source code necessary to maintain system's polled tasks.
+    Board Support Package Header File 
 
   Description:
-    This file contains source code necessary to maintain system's polled tasks.
-    It implements the "SYS_Tasks" function that calls the individual "Tasks"
-    functions for all polled MPLAB Harmony modules in the system.
-
-  Remarks:
-    This file requires access to the systemObjects global data structure that
-    contains the object handles to all MPLAB Harmony module objects executing
-    polled in the system.  These handles are passed into the individual module
-    "Tasks" functions to identify the instance of the module to maintain.
- *******************************************************************************/
+    This file contains constants, macros, type definitions and function
+    declarations 
+*******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -41,8 +37,11 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
+*******************************************************************************/
 // DOM-IGNORE-END
+
+#ifndef _BSP_H
+#define _BSP_H
 
 // *****************************************************************************
 // *****************************************************************************
@@ -50,54 +49,63 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "configuration.h"
-#include "definitions.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdint.h>
+#include <stdbool.h>
+#include "device.h"
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: BSP Macros
+// *****************************************************************************
+// *****************************************************************************
 
 
+
+
+
 // *****************************************************************************
 // *****************************************************************************
-// Section: System "Tasks" Routine
+// Section: Interface Routines
 // *****************************************************************************
 // *****************************************************************************
 
-/*******************************************************************************
-  Function:
-    void SYS_Tasks ( void )
+// *****************************************************************************
+/* Function:
+    void BSP_Initialize(void)
+
+  Summary:
+    Performs the necessary actions to initialize a board
+
+  Description:
+    This function initializes the LED and Switch ports on the board.  This
+    function must be called by the user before using any APIs present on this
+    BSP.
+
+  Precondition:
+    None.
+
+  Parameters:
+    None
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+    //Initialize the BSP
+    BSP_Initialize();
+    </code>
 
   Remarks:
-    See prototype in system/common/sys_module.h.
+    None
 */
 
-void SYS_Tasks ( void )
-{
-    /* Maintain system services */
-    SYS_CMD_Tasks();
+void BSP_Initialize(void);
 
-
-
-    /* Maintain Device Drivers */
-    DRV_MIIM_Tasks(sysObj.drvMiim);
-
-
-
-
-    /* Maintain Middleware & Other Libraries */
-    
-TCPIP_STACK_Task(sysObj.tcpip);
-
-
-
-
-    /* Maintain the application's state machine. */
-        /* Call Application task APP. */
-    APP_Tasks();
-
-
-
-}
-
+#endif // _BSP_H
 
 /*******************************************************************************
  End of File
- */
-
+*/

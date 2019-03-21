@@ -60,37 +60,35 @@
 
 
 void CORE_TIMER_InterruptHandler( void );
-void UART1_FAULT_InterruptHandler( void );
-void UART1_RX_InterruptHandler( void );
-void UART1_TX_InterruptHandler( void );
+void UART2_FAULT_InterruptHandler( void );
+void UART2_RX_InterruptHandler( void );
+void UART2_TX_InterruptHandler( void );
 void ETHERNET_InterruptHandler( void );
 
 
 
 /* All the handlers are defined here.  Each will call its PLIB-specific function. */
-void CORE_TIMER_Handler (void)
+void __ISR(_CORE_TIMER_VECTOR, ipl1AUTO) CORE_TIMER_Handler (void)
 {
     CORE_TIMER_InterruptHandler();
 }
 
-
-
-void UART1_FAULT_Handler (void)
+void __ISR(_UART2_FAULT_VECTOR, ipl1AUTO) UART2_FAULT_Handler (void)
 {
-    UART1_FAULT_InterruptHandler();
+    UART2_FAULT_InterruptHandler();
 }
 
-void UART1_RX_Handler (void)
+void __ISR(_UART2_RX_VECTOR, ipl1AUTO) UART2_RX_Handler (void)
 {
-    UART1_RX_InterruptHandler();
+    UART2_RX_InterruptHandler();
 }
 
-void UART1_TX_Handler (void)
+void __ISR(_UART2_TX_VECTOR, ipl1AUTO) UART2_TX_Handler (void)
 {
-    UART1_TX_InterruptHandler();
+    UART2_TX_InterruptHandler();
 }
 
-void ETHERNET_Handler (void)
+void __ISR(_ETHERNET_VECTOR, ipl1AUTO) ETHERNET_Handler (void)
 {
     ETHERNET_InterruptHandler();
 }
