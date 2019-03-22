@@ -392,6 +392,18 @@ extern "C" {
 
 
 
+/*** iperf Configuration ***/
+#define TCPIP_STACK_USE_IPERF
+#define TCPIP_IPERF_TX_BUFFER_SIZE		8096
+#define TCPIP_IPERF_RX_BUFFER_SIZE  	8096
+#define TCPIP_IPERF_TX_WAIT_TMO     	100
+#define TCPIP_IPERF_TX_QUEUE_LIMIT  	2
+#define TCPIP_IPERF_TIMING_ERROR_MARGIN 0
+#define TCPIP_IPERF_MAX_INSTANCES       1
+#define TCPIP_IPERF_TX_BW_LIMIT  		1
+
+
+
 /*** IPv4 Configuration ***/
 
 
@@ -508,6 +520,7 @@ extern "C" {
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
+#define TCPIP_INTMAC_PERIPHERAL_CLK  				120000000
 
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				1

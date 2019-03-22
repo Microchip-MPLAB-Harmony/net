@@ -75,6 +75,15 @@
 #define LED1_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 18)
 #define LED1_PIN                  PORT_PIN_PC18
 
+/*** Macros for DEBUG_LED pin ***/
+#define DEBUG_LED_Set()               (PORT_REGS->GROUP[2].PORT_OUTSET = 1 << 21)
+#define DEBUG_LED_Clear()             (PORT_REGS->GROUP[2].PORT_OUTCLR = 1 << 21)
+#define DEBUG_LED_Toggle()            (PORT_REGS->GROUP[2].PORT_OUTTGL = 1 << 21)
+#define DEBUG_LED_Get()               (((PORT_REGS->GROUP[2].PORT_IN >> 21)) & 0x01)
+#define DEBUG_LED_OutputEnable()      (PORT_REGS->GROUP[2].PORT_DIRSET = 1 << 21)
+#define DEBUG_LED_InputEnable()       (PORT_REGS->GROUP[2].PORT_DIRCLR = 1 << 21)
+#define DEBUG_LED_PIN                  PORT_PIN_PC21
+
 /*** Macros for SWITCH pin ***/
 #define SWITCH_Set()               (PORT_REGS->GROUP[1].PORT_OUTSET = 1 << 31)
 #define SWITCH_Clear()             (PORT_REGS->GROUP[1].PORT_OUTCLR = 1 << 31)

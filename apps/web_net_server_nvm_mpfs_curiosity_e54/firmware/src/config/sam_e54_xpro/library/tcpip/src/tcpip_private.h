@@ -110,6 +110,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/udp_manager.h"
 #include "tcpip/src/sntp_manager.h"
 #include "tcpip/src/lldp_manager.h"
+#include "tcpip/src/iperf_manager.h"
 #include "tcpip/src/smtpc_manager.h"
 #include "tcpip/src/tcpip_packet.h"
 #include "tcpip/src/tcpip_helpers_private.h"

@@ -666,6 +666,7 @@ typedef struct
 #include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"
 #include "tcpip/smtpc.h"
+#include "tcpip/iperf.h"
 #include "tcpip/tcpip_commands.h"
 
 #endif  // __TCPIP_H__
