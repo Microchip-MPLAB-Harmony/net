@@ -903,7 +903,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
 #if (DRV_ETHPHY_USE_DRV_MIIM)
     DRV_MIIM_SETUP  miimSetup;
 #if defined (__PIC32MZ__)
-    miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
+   //niyas:todo miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
 #elif defined (__PIC32C__) || defined(__SAMA5D2__)
     miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
 #else
@@ -1013,6 +1013,7 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 0);
 }
 
+    
 static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // try to detect the PHY and reset it
@@ -1036,9 +1037,8 @@ static void _DRV_ETHPHY_SetupPhaseDetect(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     {
         case 1:
             bmcon.w = hClientObj->smiData;
-
             if(bmcon.RESET)
-            {   // that is suspicious...but give it a chance to clear itself
+            {   // that is suspicios...but give it a chance to clear itself
                 if(SYS_TMR_TickCountGet() < hClientObj->operTStamp)
                 {   // not yet tmo
                     _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 0);

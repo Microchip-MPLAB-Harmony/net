@@ -211,8 +211,8 @@
           <Name dnOrder="1">drv_ethphy.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/driver/ethphy/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E5FDF7DDBE57F27397F9E55C6D59BDB0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">19D4EAB2FB70F7095456185CF49359DA</UserChecksum>
+          <GeneratedChecksum dnOrder="4">92B47D141CF1649CCB4406053EF1AE95</GeneratedChecksum>
+          <UserChecksum dnOrder="5">92B47D141CF1649CCB4406053EF1AE95</UserChecksum>
         </File>
         <File dnOrder="26">
           <Type dnOrder="0">SOURCE</Type>
@@ -484,7 +484,7 @@
           <LogicalPath dnOrder="2">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">66BE1259930F556EB417C7B7BF91E967</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A69D3FA10F9C7F3684B3E4571064B2A9</UserChecksum>
+          <UserChecksum dnOrder="5">66BE1259930F556EB417C7B7BF91E967</UserChecksum>
         </File>
         <File dnOrder="60">
           <Type dnOrder="0">SOURCE</Type>
@@ -683,8 +683,8 @@
           <Name dnOrder="1">plib_sercom2_usart.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7CB58520BF734EEDCC1F251D3938882A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7CB58520BF734EEDCC1F251D3938882A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BA01CB0B790D7C2882EEB3D4D6B6A178</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BA01CB0B790D7C2882EEB3D4D6B6A178</UserChecksum>
         </File>
         <File dnOrder="85">
           <Type dnOrder="0">SOURCE</Type>
@@ -1779,8 +1779,8 @@
           <Name dnOrder="1">drv_miim_mapping.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/driver/miim/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">AA558A259B358C8D3090BFC0ABF55743</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AA558A259B358C8D3090BFC0ABF55743</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BFC3A3373F7D318D8FF046C7402DB7A6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BFC3A3373F7D318D8FF046C7402DB7A6</UserChecksum>
         </File>
         <File dnOrder="222">
           <Type dnOrder="0">HEADER</Type>
@@ -3347,8 +3347,8 @@
           <Name dnOrder="1">tcpip_mac.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro/library/tcpip/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">63EA6DCE63A47CE95D4D8A246856C344</GeneratedChecksum>
-          <UserChecksum dnOrder="5">63EA6DCE63A47CE95D4D8A246856C344</UserChecksum>
+          <GeneratedChecksum dnOrder="4">AF44F7C97436BA110F1020906CA7562C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AF44F7C97436BA110F1020906CA7562C</UserChecksum>
         </File>
         <File dnOrder="418">
           <Type dnOrder="0">HEADER</Type>
