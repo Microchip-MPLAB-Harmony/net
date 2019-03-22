@@ -197,6 +197,7 @@ extern "C" {
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			_ETH_BASE_ADDRESS
+#define TCPIP_INTMAC_PERIPHERAL_CLK  				100000000
 
 #define DRV_ETHMAC_INSTANCES_NUMBER				1
 #define DRV_ETHMAC_CLIENTS_NUMBER				1
@@ -205,7 +206,6 @@ extern "C" {
 #define DRV_ETHMAC_INTERRUPT_SOURCE				_ETHERNET_VECTOR
 
 #define DRV_ETHMAC_INTERRUPT_MODE        			true
-
 
 #define TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE        	true
 #define TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES         3072

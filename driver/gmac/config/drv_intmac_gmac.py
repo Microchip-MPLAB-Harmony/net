@@ -8,6 +8,16 @@ def instantiateComponent(drvGmacComponent):
     
     gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="GMAC"]')
     gmac_periphID = str(gmac_node.getAttribute("id"))
+
+    # GMAC device name
+    tcpipGmacDevName = drvGmacComponent.createStringSymbol("TCPIP_INTMAC_DEVICE", None)
+    if(gmac_periphID == "11046"): # SAME70, SAMV71
+        tcpipGmacDevName.setDefaultValue("SAME7x_V7x")   
+    elif (gmac_periphID == "U2005"): # SAME54
+        tcpipGmacDevName.setDefaultValue("SAME5x")  
+    elif (gmac_periphID == "44152"): # SAMA5D2
+        tcpipGmacDevName.setDefaultValue("SAMA5D2")  
+        
     
     # Enable GMAC clock
     Database.setSymbolValue("core", "GMAC_CLOCK_ENABLE", True, 2)

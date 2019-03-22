@@ -17,26 +17,10 @@ def instantiateComponent(drvPic32mEthmacComponent):
     drvEthmac.setDescription("Use Internal Ethernet MAC Driver?")
     drvEthmac.setDefaultValue(True)
     
-# config TCPIP_EMAC_USE_MII_PINS
-    # bool
-    # depends on TCPIP_USE_ETH_MAC
-    # default y if FMIIEN = "ON" && FETHIO = "ON"
-
-# config TCPIP_EMAC_USE_RMII_PINS
-    # bool
-    # depends on TCPIP_USE_ETH_MAC
-    # default y if FMIIEN = "OFF" && FETHIO = "ON"
-
-# config TCPIP_EMAC_USE_ALT_MII_PINS
-    # bool
-    # depends on TCPIP_USE_ETH_MAC
-    # default y if FMIIEN = "ON" && FETHIO = "OFF"
-
-# config TCPIP_EMAC_USE_ALT_RMII_PINS
-    # bool
-    # depends on TCPIP_USE_ETH_MAC
-    # default y if FMIIEN = "OFF" && FETHIO = "OFF"    
-
+    # Enable RMII mode
+    Database.setSymbolValue("core", "CONFIG_FMIIEN", "OFF", 1)
+    # Enable Default Pins for Ethernet MAC
+    Database.setSymbolValue("core", "CONFIG_FETHIO", "ON", 1)    
 
     # Number of Tx Descriptors to be created
     tcpipEthmacTxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_TX_DESCRIPTORS", None)
