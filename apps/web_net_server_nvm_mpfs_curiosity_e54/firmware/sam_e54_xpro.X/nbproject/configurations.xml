@@ -297,7 +297,7 @@
             </logicalFolder>
             <logicalFolder name="f3" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
-                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom2_usart.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom1_usart.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
               </logicalFolder>
             </logicalFolder>
@@ -574,6 +574,7 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/iperf.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
@@ -619,7 +620,7 @@
             </logicalFolder>
             <logicalFolder name="f3" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
-                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom2_usart.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom1_usart.c</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f2" displayName="tc" projectFiles="true">

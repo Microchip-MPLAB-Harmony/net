@@ -617,11 +617,11 @@ extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
 
 const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
 {
-    .read = (SYS_CONSOLE_UART_PLIB_READ)SERCOM2_USART_Read,
-    .write = (SYS_CONSOLE_UART_PLIB_WRITE)SERCOM2_USART_Write,
-    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)SERCOM2_USART_ReadCallbackRegister,
-    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)SERCOM2_USART_WriteCallbackRegister,
-    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)SERCOM2_USART_ErrorGet,
+    .read = (SYS_CONSOLE_UART_PLIB_READ)SERCOM1_USART_Read,
+    .write = (SYS_CONSOLE_UART_PLIB_WRITE)SERCOM1_USART_Write,
+    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)SERCOM1_USART_ReadCallbackRegister,
+    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)SERCOM1_USART_WriteCallbackRegister,
+    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)SERCOM1_USART_ErrorGet,
 };
 
 
@@ -631,10 +631,10 @@ const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
     .isSingleIntSrc                        = false,
 
     /* Peripheral interrupt lines */
-    .intSources.multi.usartTxCompleteInt   = SERCOM2_1_IRQn,
-    .intSources.multi.usartTxReadyInt      = SERCOM2_0_IRQn,
-    .intSources.multi.usartRxCompleteInt   = SERCOM2_2_IRQn,
-    .intSources.multi.usartErrorInt        = SERCOM2_OTHER_IRQn,
+    .intSources.multi.usartTxCompleteInt   = SERCOM1_1_IRQn,
+    .intSources.multi.usartTxReadyInt      = SERCOM1_0_IRQn,
+    .intSources.multi.usartRxCompleteInt   = SERCOM1_2_IRQn,
+    .intSources.multi.usartErrorInt        = SERCOM1_OTHER_IRQn,
 };
 
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
@@ -695,7 +695,7 @@ void SYS_Initialize ( void* data )
     TC0_TimerInitialize();
 
 	BSP_Initialize();
-    SERCOM2_USART_Initialize();
+    SERCOM1_USART_Initialize();
 
     EVSYS_Initialize();
 
