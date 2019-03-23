@@ -54,9 +54,9 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         # Enable Ethernet MAC
         tcpipAutoConfigEthmac = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_EMAC", None)
-        tcpipAutoConfigEthmac.setLabel("EMAC")
+        tcpipAutoConfigEthmac.setLabel("ETHMAC")
         tcpipAutoConfigEthmac.setVisible(True)
-        tcpipAutoConfigEthmac.setDescription("Enable EMAC")
+        tcpipAutoConfigEthmac.setDescription("Enable ETHMAC")
         tcpipAutoConfigEthmac.setDependencies(tcpipAutoConfigETHMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_EMAC"])  
         
     # Enable MIIM_Driver
