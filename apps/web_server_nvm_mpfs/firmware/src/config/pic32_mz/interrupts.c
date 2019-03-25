@@ -63,6 +63,7 @@ void CORE_TIMER_InterruptHandler( void );
 void UART2_FAULT_InterruptHandler( void );
 void UART2_RX_InterruptHandler( void );
 void UART2_TX_InterruptHandler( void );
+void ETHERNET_InterruptHandler( void );
 void NVM_InterruptHandler( void );
 
 
@@ -95,19 +96,12 @@ void __ISR(_FLASH_CONTROL_VECTOR, ipl1AUTO) FLASH_CONTROL_Handler (void)
 
 void __ISR(_ETHERNET_VECTOR, ipl5AUTO) _IntHandler_ETHMAC(void)
 {
-    DRV_ETHMAC_Tasks_ISR((SYS_MODULE_OBJ)0);
+    ETHERNET_InterruptHandler();
 }
 
-///* This function is used by ETHMAC driver */
-//bool SYS_INT_SourceRestore(INT_SOURCE src, int level)
-//{
-//    if(level)
-//    {
-//        SYS_INT_SourceEnable(src);
-//    }
-//
-//    return level;
-//}
+
+
+
 /*******************************************************************************
  End of File
 */

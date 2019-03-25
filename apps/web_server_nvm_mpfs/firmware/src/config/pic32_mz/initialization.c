@@ -145,7 +145,7 @@ const DRV_MEMORY_INIT drvMemory0InitData =
     .memoryDevice               = &drvMemory0DeviceAPI,
     .isMemDevInterruptEnabled   = true,
     .isFsEnabled                = true,
-    .deviceMediaType            = (uint8_t)SYS_FS_MEDIA_TYPE_SPIFLASH,
+    .deviceMediaType            = (uint8_t)SYS_FS_MEDIA_TYPE_NVM,
     .ewBuffer                   = &gDrvMemory0EraseBuffer[0],
     .clientObjPool              = (uintptr_t)&gDrvMemory0ClientObject[0],
     .bufferObj                  = (uintptr_t)&gDrvMemory0BufferObject[0],
@@ -389,6 +389,13 @@ const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
 { 
     0
 };
+
+
+
+
+/*** ETH PHY Initialization Data ***/
+
+
 
 const DRV_ETHPHY_INIT tcpipPhyInitData =
 {

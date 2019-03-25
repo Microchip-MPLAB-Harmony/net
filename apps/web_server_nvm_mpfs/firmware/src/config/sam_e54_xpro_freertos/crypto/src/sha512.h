@@ -42,14 +42,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
 //DOM-IGNORE-END
 
 #ifndef WOLF_CRYPT_SHA512_H
@@ -86,7 +78,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         #define CYASSL_SHA384
     #endif
 	/* for fips @wc_fips */
-    #include "crypto/src/sha512.h"
 #endif
 
 #ifdef __cplusplus
@@ -97,6 +88,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if !defined(HAVE_FIPS) || \
     (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
 
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+    #include "crypto/src/crypt_sha_sam6156.h" 
+#endif
 #ifdef WOLFSSL_ASYNC_CRYPT
     #include "crypto/src/async.h"
 #endif
@@ -139,6 +133,9 @@ enum {
 
 #ifdef WOLFSSL_IMX6_CAAM
     #include "crypto/src/port/caam/wolfcaam_sha.h"
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+    #include "crypto/src/crypt_sha_hw.h"
+    #define wc_Sha512 crypt_sha_hw_descriptor
 #else
 /* wc_Sha512 digest */
 typedef struct wc_Sha512 {
@@ -169,6 +166,7 @@ typedef struct wc_Sha512 {
 #ifdef WOLFSSL_SHA512
 
 WOLFSSL_API int wc_InitSha512(wc_Sha512*);
+WOLFSSL_API int wc_InitHmacSha512(wc_Sha512*);
 WOLFSSL_API int wc_InitSha512_ex(wc_Sha512*, void*, int);
 WOLFSSL_API int wc_Sha512Update(wc_Sha512*, const byte*, word32);
 WOLFSSL_API int wc_Sha512FinalRaw(wc_Sha512*, byte*);
@@ -210,6 +208,7 @@ typedef wc_Sha512 wc_Sha384;
 #endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha384(wc_Sha384*);
+WOLFSSL_API int wc_InitHmacSha384(wc_Sha384*);
 WOLFSSL_API int wc_InitSha384_ex(wc_Sha384*, void*, int);
 WOLFSSL_API int wc_Sha384Update(wc_Sha384*, const byte*, word32);
 WOLFSSL_API int wc_Sha384FinalRaw(wc_Sha384*, byte*);

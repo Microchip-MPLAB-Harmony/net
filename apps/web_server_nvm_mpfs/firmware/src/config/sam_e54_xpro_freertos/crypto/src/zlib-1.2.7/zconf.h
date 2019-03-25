@@ -421,7 +421,8 @@ typedef uLong FAR uLongf;
 
 #ifdef STDC
 #  ifndef Z_SOLO
-#    include <sys/types.h>      /* for off_t */
+//#    include <sys/types.h>      /* for off_t */
+#      include "toolchain_specifics.h"
 #  endif
 #endif
 

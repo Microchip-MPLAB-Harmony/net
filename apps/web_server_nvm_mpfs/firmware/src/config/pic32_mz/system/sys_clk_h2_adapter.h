@@ -63,7 +63,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdbool.h>
 #include "system/system.h"
 #include "toolchain_specifics.h"
-
+#include "configuration.h"
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
