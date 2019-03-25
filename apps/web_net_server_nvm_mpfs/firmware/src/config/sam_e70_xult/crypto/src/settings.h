@@ -86,6 +86,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 /* Uncomment next line if using PIC32MZ Crypto Engine */
 /* #define WOLFSSL_MICROCHIP_PIC32MZ */
 
+/* Uncomment next line if using SAMA5D2 Crypto Engine */
+#define WOLFSSL_MICROCHIP_SAMA5D2 
+
 /* Uncomment next line if using FreeRTOS */
 /* #define FREERTOS */
 

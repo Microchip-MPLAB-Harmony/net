@@ -29,17 +29,17 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dh.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha_sam6156.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_sam6149.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/error-crypt.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ge_operations.h</itemPath>
@@ -734,7 +734,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.15</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

@@ -10,6 +10,7 @@
             <itemPath>../src/config/sam_v71_xult/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+            <itemPath>../src/config/sam_v71_xult/crypto/src/crypt_sha_sam6156.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/crypto/crypto.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/crypto/src/aes.h</itemPath>
             <itemPath>../src/config/sam_v71_xult/crypto/src/arc4.h</itemPath>
@@ -648,6 +649,7 @@
       </logicalFolder>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
+      <itemPath>../src/mpfs_img2_net.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
