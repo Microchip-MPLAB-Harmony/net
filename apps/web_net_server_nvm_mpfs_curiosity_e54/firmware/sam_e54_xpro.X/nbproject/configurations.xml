@@ -27,17 +27,18 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/dh.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha1_hw.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam6156.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_hw.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_hw.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_sam6149.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha256_hw.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/error-crypt.h</itemPath>
-            <itemPath>../src/config/sam_e54_xpro/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ge_operations.h</itemPath>
@@ -278,6 +279,9 @@
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f9" displayName="cmcc" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="evsys" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/evsys/plib_evsys.h</itemPath>
@@ -603,6 +607,9 @@
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="f9" displayName="cmcc" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.c</itemPath>
+            </logicalFolder>
             <logicalFolder name="f4" displayName="evsys" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/evsys/plib_evsys.c</itemPath>
             </logicalFolder>
@@ -692,12 +699,12 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.15</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
+        <pack name="SAME54_DFP" vendor="Atmel" version="1.0.94"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
       </packs>
       <compileType>
         <linkerTool>

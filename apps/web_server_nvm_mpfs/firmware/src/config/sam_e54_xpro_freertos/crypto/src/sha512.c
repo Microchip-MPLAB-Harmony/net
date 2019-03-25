@@ -40,18 +40,7 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
-
-
-
-
-
-
-
-
-
 //DOM-IGNORE-END
-
-
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -75,8 +64,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "crypto/src/sha512.h"
 #include "crypto/src/error-crypt.h"
-
-#include "crypto/src/cpuid.h"
 
 /* deprecated USE_SLOW_SHA2 (replaced with USE_SLOW_SHA512) */
 #if defined(USE_SLOW_SHA2) && !defined(USE_SLOW_SHA512)
@@ -166,6 +153,63 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             /* Not supported in FIPS */
         }
     #endif /* WOLFSSL_SHA384 || HAVE_AESGCM */
+
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512)
+WOLFSSL_API int wc_InitSha512(wc_Sha512* sha)
+{
+    sha->sha_descriptor.algo = SHA_512_ALGO;
+    return CRYPT_SHA512_InitSha(sha, NULL, 0);
+}
+
+WOLFSSL_API int wc_Sha512Update(wc_Sha512* sha, const byte* data, word32 len)
+{
+    return CRYPT_SHA_Update(sha, data, len);
+}
+
+WOLFSSL_API int wc_Sha512Final(Sha512* sha, unsigned char* digest)
+{
+    return CRYPT_SHA_Final(sha, (byte*)digest);
+}
+
+WOLFSSL_API void wc_Sha512Free(Sha512* sha)
+{
+    CRYPT_SHA_Free(sha);
+}
+
+WOLFSSL_API int wc_InitHmacSha512(wc_Sha512* sha)
+{
+    return CRYPT_HMAC_SHA512_InitSha(sha, NULL, 0);
+}
+#endif /* defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) */
+
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+WOLFSSL_API int wc_InitSha384(wc_Sha512* sha)
+{
+    return CRYPT_SHA384_InitSha(sha, NULL, 0);
+}
+
+WOLFSSL_API int wc_Sha384Update(wc_Sha512* sha, const byte* data, word32 len)
+{
+    return CRYPT_SHA_Update(sha, data, len);
+}
+
+WOLFSSL_API int wc_Sha384Final(Sha512* sha, unsigned char* digest)
+{
+    return CRYPT_SHA_Final(sha, (byte*)digest);
+}
+
+WOLFSSL_API void wc_Sha384Free(Sha512* sha)
+{
+    CRYPT_SHA_Free(sha);
+}
+
+WOLFSSL_API int wc_InitHmacSha384(wc_Sha512* sha)
+{
+    return CRYPT_HMAC_SHA384_InitSha(sha, NULL, 0);
+}
+
+#endif /* defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384) */
 
 #else /* else build without fips, or for FIPS v2 */
 
@@ -2723,6 +2767,31 @@ static int Transform_Sha512_AVX2_RORX_Len(wc_Sha512* sha512, word32 len)
 #if defined(WOLFSSL_IMX6_CAAM) && !defined(NO_IMX6_CAAM_HASH)
     /* functions defined in wolfcrypt/src/port/caam/caam_sha.c */
 
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+WOLFSSL_API int wc_InitSha384(wc_Sha384* sha)
+{
+    return CRYPT_SHA384_InitSha(sha, NULL, 0);
+}
+
+WOLFSSL_API int wc_Sha384Update(wc_Sha384* sha, const byte* data, word32 len)
+{
+    return CRYPT_SHA_Update(sha, data, len);
+}
+
+WOLFSSL_API int wc_Sha384Final(Sha384* sha, unsigned char* digest)
+{
+    return CRYPT_SHA_Final(sha, (byte*)digest);
+}
+
+WOLFSSL_API void wc_Sha384Free(Sha512* sha)
+{
+    CRYPT_SHA_Free(sha);
+}
+
+WOLFSSL_API int wc_InitHmacSha384(wc_Sha384* sha)
+{
+    return CRYPT_HMAC_SHA384_InitSha(sha, NULL, 0);
+}
 #else
 
 static int InitSha384(wc_Sha384* sha384)

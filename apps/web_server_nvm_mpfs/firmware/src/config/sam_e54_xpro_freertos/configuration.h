@@ -595,6 +595,7 @@ extern "C" {
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3
+#define NO_AES_CBC
 #define NO_RNG
 #define NO_RNG_TEST
 

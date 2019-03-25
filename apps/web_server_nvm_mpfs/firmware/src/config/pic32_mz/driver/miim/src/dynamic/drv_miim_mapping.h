@@ -68,7 +68,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-
 #if defined (__PIC32C__) || defined(__SAMA5D2__)
     //*****************************************************************************
     /* MII Clock Selection
@@ -231,6 +230,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     } 
     
 #else    
+
    static const short _MIIMClockDivisorTable[]=
     {
         4, 6, 8, 10, 14, 20, 28, 40, 
@@ -241,11 +241,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
    
     static  __inline__ DRV_MIIM_RESULT __attribute__((always_inline))_DRV_MIIM_ETH_ENABLE(uintptr_t ethphyId)
     {
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
         DRV_MIIM_RESULT res = DRV_MIIM_RES_OK;
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        if(!DRV_ETH_IsEnabled(ethReg)) 
+
+        if(!DRV_ETH_IsEnabled(ethId)) 
         { 
-            DRV_ETH_Enable(ethReg);  
+            DRV_ETH_Enable(ethId);  
             res = DRV_MIIM_RES_INIT_WARNING;
         } 
         return res;
@@ -254,34 +255,37 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_MII_RELEASE_RESET(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_MIIResetDisable(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_MIIResetDisable(ethId);
+
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SETUP_PERAMBLE(uintptr_t ethphyId, const DRV_MIIM_SETUP* pSetUp)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
         if((pSetUp->setupFlags & DRV_MIIM_SETUP_FLAG_PREAMBLE_SUPPRESSED) != 0)
         {
-            DRV_ETH_MIIMNoPreEnable(ethReg);
+            DRV_ETH_MIIMNoPreEnable(ethId);            
         }
         else
         {
-            DRV_ETH_MIIMNoPreDisable(ethReg);
+            DRV_ETH_MIIMNoPreDisable(ethId);
         }
+
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SCAN_INCREMENT(uintptr_t ethphyId, const DRV_MIIM_SETUP* pSetUp)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
         if((pSetUp->setupFlags & DRV_MIIM_SETUP_FLAG_SCAN_ADDRESS_INCREMENT) != 0)
         {
-            DRV_ETH_MIIMScanIncrEnable(ethReg);
+            DRV_ETH_MIIMScanIncrEnable(ethId);
         }
         else
         {
-            DRV_ETH_MIIMScanIncrDisable(ethReg);
+            DRV_ETH_MIIMScanIncrDisable(ethId);
         }
+
     }
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_MNGMNT_PORT_ENABLE(uintptr_t ethphyId)
@@ -296,74 +300,75 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     
     static  __inline__ bool __attribute__((always_inline))_DRV_MIIM_IS_BUSY(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        return DRV_ETH_MIIMIsBusy(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        return DRV_ETH_MIIMIsBusy(ethId);
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_PHYADDR_SET(uintptr_t ethphyId,DRV_MIIM_OP_DCPT* pOpDcpt)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_PHYAddressSet(ethReg, pOpDcpt->phyAdd);
-        DRV_ETH_RegisterAddressSet(ethReg,pOpDcpt->regIx);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_PHYAddressSet(ethId, pOpDcpt->phyAdd);
+        DRV_ETH_RegisterAddressSet(ethId,pOpDcpt->regIx);
     }
                                     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_CLEAR_DATA_VALID(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_ClearDataValid(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_ClearDataValid(ethId);
     }
    
     static  __inline__ DRV_MIIM_TXFER_STAT __attribute__((always_inline))_DRV_MIIM_OP_SCAN_ENABLE(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_ClearDataValid(ethReg);
-        DRV_ETH_MIIMScanModeEnable(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_ClearDataValid(ethId);
+        DRV_ETH_MIIMScanModeEnable(ethId);
         return DRV_MIIM_TXFER_SCAN_STALE;
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_OP_WRITE_DATA(uintptr_t ethphyId,DRV_MIIM_OP_DCPT* pOpDcpt)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_MIIMWriteDataSet(ethReg, pOpDcpt->opData);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_MIIMWriteDataSet(ethId, pOpDcpt->opData);
     }
     
 
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_WRITE_START(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_MIIMWriteStart(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_MIIMWriteStart(ethId);
     }
     
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_OP_READ_START(uintptr_t ethphyId,DRV_MIIM_OP_DCPT* pOpDcpt)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_MIIMReadStart(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_MIIMReadStart(ethId);
     }
 
     static  __inline__ uint16_t __attribute__((always_inline))_DRV_MIIM_OP_READ_DATA_GET(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        return DRV_ETH_MIIMReadDataGet(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        return DRV_ETH_MIIMReadDataGet(ethId);
     }
     
     static  __inline__ bool __attribute__((always_inline))_DRV_MIIM_IS_DATA_VALID(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        return !DRV_ETH_DataNotValid(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        return !DRV_ETH_DataNotValid(ethId);
     }
       
     static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SCAN_DIABLE(uintptr_t ethphyId)
     {
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_MIIMScanModeDisable(ethReg);
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
+        DRV_ETH_MIIMScanModeDisable(ethId);
     }
     
     static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(uintptr_t ethphyId, uint32_t hostClock, uint32_t maxMIIMClock )
     {
+
+        DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
         int  ix;
-        DRV_ETHERNET_REGISTERS * ethReg = ((DRV_ETHERNET_REGISTERS *)(ethphyId));
-        DRV_ETH_MIIMResetEnable(ethReg); // Issue MIIM reset
-        DRV_ETH_MIIMResetDisable(ethReg); // Clear MIIM reset
+        DRV_ETH_MIIMResetEnable(ethId); // Issue MIIM reset
+        DRV_ETH_MIIMResetDisable(ethId); // Clear MIIM reset
 
         for(ix = 0; ix < sizeof(_MIIMClockDivisorTable) / sizeof(*_MIIMClockDivisorTable); ix++)
         {
@@ -378,7 +383,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             ix--;   // max divider; best we can do
         }
 
-        DRV_ETH_MIIMClockSet(ethReg, ix + 1);  // program the clock*/
+        DRV_ETH_MIIMClockSet(ethId, ix + 1);  // program the clock*/
+
     }
 
 #endif  //defined (__PIC32C__) || defined(__SAMA5D2__)

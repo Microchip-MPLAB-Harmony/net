@@ -89,8 +89,7 @@ typedef struct __attribute__((__packed__))
 {
     uint8_t v[6];
 } TCPIP_MAC_ADDR;
-//@HS_CHANGE
-#define TCPIP_MODULE_PIC32C_GMAC_NUMBER_OF_QUEUES				6
+
 // *****************************************************************************
 /*  MAC Ethernet Header
 
@@ -171,7 +170,7 @@ typedef enum
 }TCPIP_MODULE_MAC_ID;
 
 // *****************************************************************************
-
+#if defined (__PIC32C__) || defined(__SAMA5D2__)
 /**
  * Configuration Structure for Queues in GMAC.
  */
@@ -206,7 +205,7 @@ typedef struct
 {
 	TCPIP_MAC_ADDR                  macAddress;
 	/* Configuration for each GMAC queues*/
-	TCPIP_MODULE_GMAC_QUEUE_CONFIG  gmac_queue_config[TCPIP_MODULE_PIC32C_GMAC_NUMBER_OF_QUEUES];    
+	TCPIP_MODULE_GMAC_QUEUE_CONFIG  gmac_queue_config[DRV_GMAC_NUMBER_OF_QUEUES];    
 
     /*  Delay to wait after the lomk is coming up (milliseconds) */
     /*  for insuring that the PHY is ready to transmit data. */
@@ -225,7 +224,7 @@ typedef struct
     const struct DRV_ETHPHY_INIT*   pPhyInit;   
    
 }TCPIP_MODULE_MAC_PIC32C_CONFIG;
-
+#elif defined (__PIC32MZ__)
 /*  MAC Initialization Data
 
   Summary:
@@ -296,7 +295,7 @@ typedef struct
     const struct DRV_ETHPHY_INIT*   pPhyInit;   
     
 }TCPIP_MODULE_MAC_PIC32INT_CONFIG;
-
+#endif
 typedef struct
 {
     void*   reserved;
