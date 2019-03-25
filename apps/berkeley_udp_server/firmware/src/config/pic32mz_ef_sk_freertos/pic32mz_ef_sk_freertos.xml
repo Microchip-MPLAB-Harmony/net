@@ -2100,24 +2100,34 @@
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="1" id="FREERTOS_HEAP_3_C">
+        <File dnOrder="1" id="FREERTOS_HEAP_2_C">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Combo dnOrder="2" id="FREERTOS_MEMORY_MANAGEMENT_CHOICE">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="Heap_3"/>
-          </Values>
-        </Combo>
-        <Integer dnOrder="3" id="FREERTOS_TOTAL_HEAP_SIZE">
+        <File dnOrder="2" id="FREERTOS_HEAP_3_C">
           <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
+            <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
+        </File>
+        <Combo dnOrder="3" id="FREERTOS_MEMORY_MANAGEMENT_CHOICE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="Heap_2"/>
+          </Values>
+        </Combo>
+        <Integer dnOrder="4" id="FREERTOS_TOTAL_HEAP_SIZE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
+            <User dnOrder="0" value="48000"/>
+          </Values>
         </Integer>
       </Symbols>
     </UniqueComponent>
@@ -2450,75 +2460,80 @@
             </Boolean>
           </Attributes>
         </Menu>
-        <File dnOrder="6" id="SYS_COMMAND_SOURCE">
+        <Integer dnOrder="6" id="SYS_COMMAND_RTOS_STACK_SIZE">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="1024"/>
+          </Values>
+        </Integer>
+        <File dnOrder="7" id="SYS_COMMAND_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="7" id="SYS_COMMAND_SYS_RTOS_TASK">
+        <File dnOrder="8" id="SYS_COMMAND_SYS_RTOS_TASK">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <String dnOrder="8" id="SYS_CONSOLE_DEVICE">
+        <String dnOrder="9" id="SYS_CONSOLE_DEVICE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sys_console" priority="2" value="UART2"/>
             </Dynamic>
           </Values>
         </String>
-        <String dnOrder="9" id="SYS_CONSOLE_DEVICE_SET">
+        <String dnOrder="10" id="SYS_CONSOLE_DEVICE_SET">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="sys_console" priority="2" value="UART"/>
             </Dynamic>
           </Values>
         </String>
-        <Boolean dnOrder="10" id="SYS_DEBUG_ENABLE">
+        <Boolean dnOrder="11" id="SYS_DEBUG_ENABLE">
           <Values dnOrder="0">
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <File dnOrder="11" id="SYS_DEBUG_HEADER">
+        <File dnOrder="12" id="SYS_DEBUG_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Combo dnOrder="12" id="SYS_DEBUG_LEVEL">
+        <Combo dnOrder="13" id="SYS_DEBUG_LEVEL">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Combo>
-        <File dnOrder="13" id="SYS_DEBUG_LOCAL">
+        <File dnOrder="14" id="SYS_DEBUG_LOCAL">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Integer dnOrder="14" id="SYS_DEBUG_PRINT_BUFFER_SIZE">
+        <Integer dnOrder="15" id="SYS_DEBUG_PRINT_BUFFER_SIZE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </Integer>
-        <File dnOrder="15" id="SYS_DEBUG_SOURCE">
+        <File dnOrder="16" id="SYS_DEBUG_SOURCE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Boolean dnOrder="16" id="SYS_DEBUG_USE_CONSOLE">
+        <Boolean dnOrder="17" id="SYS_DEBUG_USE_CONSOLE">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -2682,28 +2697,21 @@
                         </Dynamic>
                       </Values>
                     </String>
-                    <String dnOrder="5" id="TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0">
-                      <Values dnOrder="0">
-                        <Dynamic dnOrder="0">
-                          <Value dnOrder="0" id="tcpipNetConfig_0" priority="1" value=""/>
-                        </Dynamic>
-                      </Values>
-                    </String>
-                    <String dnOrder="6" id="TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0">
+                    <String dnOrder="5" id="TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0">
                       <Values dnOrder="0">
                         <Dynamic dnOrder="0">
                           <Value dnOrder="0" id="tcpipNetConfig_0" priority="1" value="DRV_ETHMAC_PIC32MACObject"/>
                         </Dynamic>
                       </Values>
                     </String>
-                    <Boolean dnOrder="7" id="TCPIP_STACK_NETWORK_CONFIG_IDX0">
+                    <Boolean dnOrder="6" id="TCPIP_STACK_NETWORK_CONFIG_IDX0">
                       <Values dnOrder="0">
                         <Dynamic dnOrder="0">
                           <Value dnOrder="0" id="tcpipNetConfig_0" priority="1" value="true"/>
                         </Dynamic>
                       </Values>
                     </Boolean>
-                    <Integer dnOrder="8" id="TCPIP_STACK_NETWORK_CONFIG_NUMBER">
+                    <Integer dnOrder="7" id="TCPIP_STACK_NETWORK_CONFIG_NUMBER">
                       <Values dnOrder="0">
                         <Dynamic dnOrder="0">
                           <Value dnOrder="0" id="tcpipNetConfig_0" priority="1" value="0"/>
@@ -2874,8 +2882,39 @@
         <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
-    <ComponentGraph dnOrder="2" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="1" id="NETWORK LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="2"/>
+    <ComponentGraph dnOrder="3" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="4" id="APPLICATION LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipBerkeleyApi" x="600" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipDhcp" x="320" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipDns" x="460" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_apps_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="5" id="DRIVER LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="400" y="20"/>
+        <ElementPosition dnOrder="1" id="drvMiim" x="520" y="20"/>
+        <ElementPosition dnOrder="2" id="drvPic32mEthmac" x="280" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="6" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="BSP_PIC32MZ_EF_Starter_Kit" x="22" y="69"/>
         <ElementPosition dnOrder="1" id="FreeRTOS" x="26" y="177"/>
@@ -2888,37 +2927,6 @@
         <ElementPosition dnOrder="8" id="sys_console" x="211" y="284"/>
         <ElementPosition dnOrder="9" id="sys_time" x="355" y="133"/>
         <ElementPosition dnOrder="10" id="uart2" x="49" y="306"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="NETWORK LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="APPLICATION LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipBerkeleyApi" x="600" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipDhcp" x="320" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipDns" x="460" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_apps_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="5" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="6" id="DRIVER LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="400" y="20"/>
-        <ElementPosition dnOrder="1" id="drvMiim" x="520" y="20"/>
-        <ElementPosition dnOrder="2" id="drvPic32mEthmac" x="280" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
     <ComponentGraph dnOrder="7" id="TCP/IP STACK">
