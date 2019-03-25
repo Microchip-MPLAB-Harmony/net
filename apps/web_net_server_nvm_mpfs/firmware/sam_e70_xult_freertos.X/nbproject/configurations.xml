@@ -29,17 +29,17 @@
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/dh.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha_sam6156.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_aes_hw.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_aes_sam6149.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_aes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/error-crypt.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/crypto/src/ge_operations.h</itemPath>
@@ -341,19 +341,19 @@
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/sam_e70_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/system.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/system_common.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_e70_xult_freertos/system/system_media.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult_freertos/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/sam_e70_xult_freertos/system_config.h</itemPath>
-          <itemPath>../src/config/sam_e70_xult_freertos/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/user.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/configuration.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult_freertos/system_config.h</itemPath>
+          <itemPath>../src/config/sam_e70_xult_freertos/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/device_cache.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/sam_e70_xult_freertos/definitions.h</itemPath>
@@ -586,6 +586,7 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/arp.c</itemPath>
@@ -594,6 +595,7 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv6.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv4.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/smtpc.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/hash_fnv.c</itemPath>
@@ -602,6 +604,7 @@
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_manager.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/sntp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_announce.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
@@ -729,7 +732,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.15</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>

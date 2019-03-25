@@ -40,13 +40,34 @@
 // Section: Type Definitions
 // *****************************************************************************
 // *****************************************************************************
+#if defined (__PIC32C__) || defined(__SAMA5D2__)        
+/* This section is highly customizable based on application's specific needs. */
 #define APP_SWITCH_1StateGet()      SWITCH_Get()
-
+#define APP_SWITCH_2StateGet()      SWITCH_Get()
+#define APP_SWITCH_3StateGet()      SWITCH_Get()
+#elif defined (__PIC32MZ__)
+/* This section is highly customizable based on application's specific needs. */
+#define APP_SWITCH_1StateGet()      SWITCH1_Get()
+#define APP_SWITCH_2StateGet()      SWITCH2_Get()
+#define APP_SWITCH_3StateGet()      SWITCH2_Get()
+#endif
 
 #define APP_LED_1StateSet()         LED1_Set()
 #define APP_LED_1StateGet()         LED1_Get()
 #define APP_LED_1StateClear()       LED1_Clear()
 #define APP_LED_1StateToggle()      LED1_Toggle()
+
+#if defined(__PIC32MZ__)
+#define APP_LED_2StateSet()         LED2_Set()
+#define APP_LED_2StateGet()         LED2_Get()
+#define APP_LED_2StateClear()       LED2_Clear()
+#define APP_LED_2StateToggle()      LED2_Toggle()
+
+#define APP_LED_3StateSet()         LED3_Set()
+#define APP_LED_3StateGet()         LED3_Get()
+#define APP_LED_3StateClear()       LED3_Clear()
+#define APP_LED_3StateToggle()      LED3_Toggle()
+#endif
 
 // *****************************************************************************
 /* Application States
