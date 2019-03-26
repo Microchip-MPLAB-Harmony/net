@@ -546,6 +546,7 @@ extern "C" {
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
+#define TCPIP_INTMAC_PERIPHERAL_CLK  				150000000
 
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				6
@@ -639,6 +640,7 @@ extern "C" {
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3
+#define NO_AES_CBC
 #define NO_RNG
 #define NO_RNG_TEST
 

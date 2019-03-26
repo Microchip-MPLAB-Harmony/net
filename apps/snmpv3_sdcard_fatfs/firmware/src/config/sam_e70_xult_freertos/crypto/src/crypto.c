@@ -41,22 +41,7 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-
 //DOM-IGNORE-END
-
-
 
 
 /* Implements Microchip CRYPTO API layer */
@@ -224,6 +209,42 @@ int CRYPT_SHA256_Finalize(CRYPT_SHA256_CTX* sha256, unsigned char* digest)
     return wc_Sha256Final((Sha256*)sha256, digest);
 }
 #endif // NO_SHA256
+#ifdef WOLFSSL_SHA224
+
+/* Initialize SHA-224 */
+int CRYPT_SHA224_Initialize(CRYPT_SHA256_CTX* sha224)
+{
+    typedef char sha_test[sizeof(CRYPT_SHA256_CTX) >= sizeof(Sha224) ? 1 : -1];
+    (void)sizeof(sha_test);
+
+    if (sha224 == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_InitSha224((Sha256*)sha224);
+}
+
+
+/* Add data to SHA-224 */
+int CRYPT_SHA224_DataAdd(CRYPT_SHA256_CTX* sha224, const unsigned char* input,
+                         unsigned int sz)
+{
+    if (sha224 == NULL || input == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_Sha224Update((Sha256*)sha224, input, sz);
+}
+
+
+/* Get SHA-224 Final into digest */
+int CRYPT_SHA224_Finalize(CRYPT_SHA256_CTX* sha224, unsigned char* digest)
+{
+    if (sha224 == NULL || digest == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_Sha224Final((Sha256*)sha224, digest);
+}
+
+#endif  // WOLFSSL_SHA224
 #ifdef WOLFSSL_SHA384
 
 /* Initialize SHA-384 */
@@ -383,6 +404,7 @@ int CRYPT_RNG_Initialize(CRYPT_RNG_CTX* rng)
 	return same70_InitRng();
 #else
     return wc_InitRng((WC_RNG*)rng);
+    return wc_InitRng((WC_RNG*)rng);
 #endif
 }
 
@@ -487,7 +509,7 @@ int CRYPT_AES_IvSet(CRYPT_AES_CTX* aes, const unsigned char* iv)
 }
 
 
-/* AES CBC Encrypt */
+#ifdef HAVE_AES_CBC
 int CRYPT_AES_CBC_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
                           const unsigned char* in, unsigned int inSz)
 {
@@ -507,6 +529,7 @@ int CRYPT_AES_CBC_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
 
     return wc_AesCbcDecrypt((Aes*)aes, out, in, inSz);
 }
+#endif /* HAVE_AES_CBC */
 
 #ifdef WOLFSSL_AES_COUNTER
 
