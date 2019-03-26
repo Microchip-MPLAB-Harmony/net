@@ -350,19 +350,19 @@
               <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_common.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_module.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_media.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/pic32mz_ef_sk_freertos/system_config.h</itemPath>
-          <itemPath>../src/config/pic32mz_ef_sk_freertos/system_definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/user.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/configuration.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/system_config.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/system_definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/FreeRTOSConfig.h</itemPath>
@@ -537,7 +537,10 @@
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmpv6.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv6.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/http.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/smtpc.c</itemPath>
@@ -713,7 +716,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/pic32mz_ef_sk_freertos/library;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_freertos;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;"/>
+                  value="../src/config/pic32mz_ef_sk_freertos/library;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_freertos;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -980,7 +983,6 @@
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
-        <property key="firmware.download.all" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="hwtoolclock.instructionspeed" value="4"/>
         <property key="hwtoolclock.units" value="mips"/>

@@ -276,7 +276,7 @@
               <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
@@ -297,7 +297,7 @@
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
             <logicalFolder name="f5" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/console/sys_console.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_local.h</itemPath>
@@ -339,19 +339,19 @@
               <itemPath>../src/config/pic32mz_ef_sk/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_reset_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/system.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/system_common.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/system_module.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/system_media.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/pic32mz_ef_sk/system_config.h</itemPath>
-          <itemPath>../src/config/pic32mz_ef_sk/system_definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/user.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/configuration.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk/system_config.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk/system_definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/definitions.h</itemPath>
         </logicalFolder>
@@ -487,12 +487,15 @@
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/icmpv6.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/ndp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/ipv6.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/smtpc.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
@@ -518,7 +521,7 @@
               <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f4" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
@@ -541,7 +544,7 @@
           <logicalFolder name="f6" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/pic32mz_ef_sk/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f4" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.c</itemPath>
