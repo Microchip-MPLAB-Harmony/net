@@ -40,19 +40,7 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
-
-
-
-
-
-
-
-
-
 //DOM-IGNORE-END
-
-
-
 
 /* code submitted by raphael.huck@efixo.com */
 
@@ -78,8 +66,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "crypto/src/sha256.h"
 #include "crypto/src/error-crypt.h"
-
-#include "crypto/src/cpuid.h"
 
 /* fips wrapper calls, user can call direct */
 #if defined(HAVE_FIPS) && \
@@ -426,9 +412,10 @@ static int InitSha256(wc_Sha256* sha256)
 #elif defined(WOLFSSL_PIC32MZ_HASH)
     #include <wolfssl/wolfcrypt/port/pic32/pic32mz-crypt.h>
 
-#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256)
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA224)
 #include "crypt_sha256_hw.h"
 
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256)
     int wc_InitSha256_ex(wc_Sha256* sha, void* heap, int devId)
     {
         return CRYPT_SHA256_InitSha(sha, heap, devId);
@@ -448,7 +435,36 @@ static int InitSha256(wc_Sha256* sha256)
     {
         return CRYPT_SHA256_FinalRaw(sha, hash);
     }
+
+#endif
     
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA224)
+    int wc_InitSha224(Sha256* sha)
+    {
+        return CRYPT_SHA224_InitSha(sha, NULL, 0);
+    }
+
+    int wc_Sha224Update(Sha256* sha, const byte* data, word32 len)
+    {
+        return CRYPT_SHA_Update(sha, data, len);
+    }
+
+    int wc_Sha224Final(Sha256* sha, unsigned char* digest)
+    {
+        return CRYPT_SHA_Final(sha, (byte*)digest);
+    }
+
+    void wc_Sha224Free(Sha256* sha)
+    {
+        CRYPT_SHA_Free(sha);
+    }
+
+    int wc_InitHmacSha224(wc_Sha256* sha)
+    {
+        return CRYPT_HMAC_SHA224_InitSha(sha, NULL, 0);
+    }
+#endif
+
 #elif defined(STM32_HASH_SHA2)
 
     /* Supports CubeMX HAL or Standard Peripheral Library */
