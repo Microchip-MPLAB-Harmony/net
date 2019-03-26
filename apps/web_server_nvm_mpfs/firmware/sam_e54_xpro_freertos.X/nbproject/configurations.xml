@@ -8,7 +8,10 @@
         <logicalFolder name="f1"
                        displayName="sam_e54_xpro_freertos"
                        projectFiles="true">
-          <logicalFolder name="f6" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_e54_xpro_freertos/bsp/bsp.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/crypto.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/aes.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/arc4.h</itemPath>
@@ -139,7 +142,7 @@
             <itemPath>../src/config/sam_e54_xpro_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
+          <logicalFolder name="f6" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
@@ -260,7 +263,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
@@ -493,7 +496,10 @@
         <logicalFolder name="f1"
                        displayName="sam_e54_xpro_freertos"
                        projectFiles="true">
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_e54_xpro_freertos/bsp/bsp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/crypto.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/aes.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/arc4.c</itemPath>
@@ -622,7 +628,7 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f6" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/src/net_pres.c</itemPath>
@@ -661,7 +667,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="stdio" projectFiles="true">
+          <logicalFolder name="f7" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro_freertos/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
@@ -728,9 +734,9 @@
       <logicalFolder name="f2" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_e54_xpro_freertos/osal/osal_freertos.c</itemPath>
       </logicalFolder>
-      <itemPath>../src/mpfs_img2.c</itemPath>
       <itemPath>../src/http_print.c</itemPath>
       <itemPath>../src/custom_http_app.c</itemPath>
+      <itemPath>../src/mpfs_img2.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>

@@ -204,7 +204,7 @@ int CRYPT_SHA256_Update(crypt_sha256_hw_descriptor* sha256, const byte* data, wo
         if ((((uint32_t)data) & 63) != 0)
         {
             // Data is not aligned!
-            while (len > SHA256_BLOCK_SIZE)
+            while (len >= SHA256_BLOCK_SIZE)
             {
                 memcpy(&actBuffer, data, SHA256_BLOCK_SIZE);
                 result = CRYPT_SHA256_Process(sha256, actBuffer, SHA256_BLOCK_SIZE);
