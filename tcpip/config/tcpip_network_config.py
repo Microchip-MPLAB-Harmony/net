@@ -206,18 +206,15 @@ def tcpipNetHostNameUpdate(symbol, event):
     
 def tcpipNetMacAddrUpdate(symbol, event):   
     print("Start tcpipNetMacAddrUpdate")
-    #print(symbol.getID())
-    #print(event["id"])
-    #tcpipMacAddrIndex = int(symbol.getID().strip("TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX"))
-        
-    #print(tcpipMacAddrIndex)
     tcpipInterfaceName = event["value"]
     symbol.clearValue()
     if(tcpipInterfaceName == "GMAC"):
         symbol.setValue("00:04:25:1C:A0:02",1)
     else:
-        symbol.setValue("",1)
-    
+		if(tcpipInterfaceName == "ETHMAC"):
+			if "DA" in Variables.get("__PROCESSOR"):
+				symbol.setValue("c4:de:39:75:d8:80",1)
+
     print("END tcpipNetMacAddrUpdate")  
 
 def tcpipNetIpAddrUpdate(symbol, event):    

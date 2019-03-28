@@ -148,19 +148,16 @@ static void _DRV_ETHMAC_LinkStateNegComplete(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 static void _DRV_ETHMAC_LinkStateNegResult(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
 
 
-static uint16_t     _DRV_ETHMAC_GetFrmTxOk(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmRxOk(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmPktCount(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmRxOvflow(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetFrmFcsError(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetAlignError(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetSCollisionCount(ETH_MODULE_ID ethId);
-static uint16_t     _DRV_ETHMAC_GetMCollisionCount(ETH_MODULE_ID ethId);
+static uint16_t     _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetFrmRxOk(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetFrmPktCount(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetFrmRxOvflow(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetFrmFcsError(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetAlignError(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetSCollisionCount(DRV_ETHERNET_REGISTERS* ethId);
+static uint16_t     _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId);
 
-static ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
-
-// external function reference
-extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
+static DRV_ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
 
 /******************************************************************************
  * PIC32 MAC object implementation
@@ -224,17 +221,17 @@ static const DRV_ETHMAC_HW_REG_DCPT macPIC32INTHwRegDcpt[] =
     {"MCOLFRM ",    _DRV_ETHMAC_GetMCollisionCount},
 };
 
-// correspondence between a TCPIP_MAC_RX_FILTER_TYPE and a ETH_RX_FILTERS
-static const ETH_RX_FILTERS _DRV_ETHMAC_FiltConvTbl[] = 
+// correspondence between a TCPIP_MAC_RX_FILTER_TYPE and a DRV_ETH_RX_FILTERS
+static const DRV_ETH_RX_FILTERS _DRV_ETHMAC_FiltConvTbl[] = 
 {
-    ETH_FILT_BCAST_ACCEPT,          // TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT
-    ETH_FILT_MCAST_ACCEPT,          // TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT
-    ETH_FILT_ME_UCAST_ACCEPT,       // TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT
-    ETH_FILT_NOTME_UCAST_ACCEPT,    // TCPIP_MAC_RX_FILTER_TYPE_UCAST_OTHER_ACCEPT
-    ETH_FILT_RUNT_REJECT,           // TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT
-    ETH_FILT_RUNT_ACCEPT,           // TCPIP_MAC_RX_FILTER_TYPE_RUNT_ACCEPT
-    ETH_FILT_CRC_ERR_REJECT,        // TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT
-    ETH_FILT_CRC_ERR_ACCEPT,        // TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT
+    DRV_ETH_FILT_BCAST_ACCEPT,          // TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT
+    DRV_ETH_FILT_MCAST_ACCEPT,          // TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT
+    DRV_ETH_FILT_ME_UCAST_ACCEPT,       // TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT
+    DRV_ETH_FILT_NOTME_UCAST_ACCEPT,    // TCPIP_MAC_RX_FILTER_TYPE_UCAST_OTHER_ACCEPT
+    DRV_ETH_FILT_RUNT_REJECT,           // TCPIP_MAC_RX_FILTER_TYPE_RUNT_REJECT
+    DRV_ETH_FILT_RUNT_ACCEPT,           // TCPIP_MAC_RX_FILTER_TYPE_RUNT_ACCEPT
+    DRV_ETH_FILT_CRC_ERR_REJECT,        // TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT
+    DRV_ETH_FILT_CRC_ERR_ACCEPT,        // TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_ACCEPT
 };
 
 
@@ -426,8 +423,8 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 
     TCPIP_MAC_RES   initRes;
     int		        macIx, phyIx;
-    ETH_MODULE_ID   ethId;
-    ETH_RX_FILTERS ethRxFilt;
+    DRV_ETHERNET_REGISTERS*   ethId;
+    DRV_ETH_RX_FILTERS ethRxFilt;
     DRV_ETHMAC_INSTANCE_DCPT* pMacD;
     SYS_MODULE_OBJ hPhySysObject;
     DRV_HANDLE     hPhyClient;
@@ -511,6 +508,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     {
         pMacD->mData.macConfig.rxBuffSize = ((pMacD->mData.macConfig.rxBuffSize + 15) / 16) * 16;   // adjust RX size
     }
+    pMacD->mData.pEthReg = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
 
 #if (TCPIP_EMAC_RX_FRAGMENTS == 1)
     // there's only one descriptor
@@ -528,7 +526,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     }
     
     initRes = TCPIP_MAC_RES_OK;
-    ethId = pMacD->mData.macConfig.ethModuleId;
+    ethId = pMacD->mData.pEthReg;
 
 	while(1)
 	{
@@ -540,7 +538,7 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
         SYS_INT_SourceDisable(pMacD->mData._macIntSrc);      // stop Eth ints
 		DRV_ETHMAC_LibInit(pMacD);
         SYS_INT_SourceStatusClear(pMacD->mData._macIntSrc); // clear any pending interrupt flag
-        PLIB_ETH_MACSetMaxFrame(ethId, _TCPIP_EMAC_MAX_FRAME);
+        DRV_ETH_MaxFrameLengthSet(ethId, _TCPIP_EMAC_MAX_FRAME);
 
         pPhyBase =  pMacD->mData.macConfig.pPhyBase;
 
@@ -579,9 +577,9 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 		// and continue the initialization
 
         // Set the RX filters
-        PLIB_ETH_RxFiltersClr(ethId, ETH_FILT_ALL_FILTERS);
+        DRV_ETH_RxFiltersClr(ethId, DRV_ETH_FILT_ALL_FILTERS);
         ethRxFilt = _DRV_ETHMAC_MacToEthFilter(TCPIP_EMAC_RX_FILTERS);
-        PLIB_ETH_RxFiltersSet(ethId, ethRxFilt);
+        DRV_ETH_RxFiltersSet(ethId, ethRxFilt);
 
 #if (TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE) 
         // sanity check for water marks
@@ -599,21 +597,21 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 
         // enable the AutoFC
         uint32_t ptValue = (TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES + _TCPIP_EMAC_QUANTA_PAUSE_BYTES - 1) / _TCPIP_EMAC_QUANTA_PAUSE_BYTES;
-        PLIB_ETH_PauseTimerSet(ethId, (uint16_t)ptValue);
+        DRV_ETH_PauseTimerSet(ethId, (uint16_t)ptValue);
 
-        PLIB_ETH_RxFullWmarkSet(ethId, aaFullWMPkts);
-        PLIB_ETH_RxEmptyWmarkSet(ethId, aaEmptyWMPkts);
+        DRV_ETH_RxFullWmarkSet(ethId, aaFullWMPkts);
+        DRV_ETH_RxEmptyWmarkSet(ethId, aaEmptyWMPkts);
 
-        PLIB_ETH_TxPauseEnable(ethId);
-        PLIB_ETH_RxPauseEnable(ethId);
-        PLIB_ETH_AutoFlowControlEnable(ethId);
+        DRV_ETH_TxPauseEnable(ethId);
+        DRV_ETH_RxPauseEnable(ethId);
+        DRV_ETH_AutoFlowControlEnable(ethId);
 #endif  // (TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE) 
         
 		// set the MAC address
         memcpy(alignMacAddress.addr, macControl->ifPhyAddress.v, sizeof(alignMacAddress.addr));
         if(memcmp(alignMacAddress.addr, useFactMACAddr, sizeof(useFactMACAddr)) !=0 && memcmp(alignMacAddress.addr, unsetMACAddr, sizeof(unsetMACAddr)) !=0 )
         {   // use the supplied address
-            PLIB_ETH_MACSetAddress(ethId, alignMacAddress.addr);
+            DRV_ETH_MACSetAddress(ethId, alignMacAddress.addr);
         }
         // else use the factory programmed address existent in the MAC
 				
@@ -1289,7 +1287,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet(DRV_HANDLE hMac, cons
       int                       i, j;
       TCPIP_MAC_ADDR            destAddr;
       uint8_t                   nullMACAddr[6] =   {0x00, 0x00, 0x00, 0x00, 0x00, 0x00};
-      ETH_MODULE_ID ethId = ((DRV_ETHMAC_INSTANCE_DCPT*)hMac)->mData.macConfig.ethModuleId;
+      DRV_ETHERNET_REGISTERS*   ethId = ((DRV_ETHMAC_INSTANCE_DCPT*)hMac)->mData.pEthReg;
 
       typedef union
       {
@@ -1337,8 +1335,8 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet(DRV_HANDLE hMac, cons
       if( DestMACAddr == 0 || memcmp(DestMACAddr->v, nullMACAddr, sizeof(nullMACAddr))==0 )
       {
           // Disable the Hash Table receive filter and clear the hash table
-          PLIB_ETH_RxFiltersClr(ethId, ETH_FILT_HTBL_ACCEPT);
-          PLIB_ETH_RxFiltersHTSet(ethId, 0ull);
+          DRV_ETH_RxFiltersClr(ethId, DRV_ETH_FILT_HTBL_ACCEPT);
+          DRV_ETH_RxFiltersHTSet(ethId, 0ull);
           return TCPIP_MAC_RES_OK;
       }
 
@@ -1379,7 +1377,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet(DRV_HANDLE hMac, cons
       *pHTSet = 1 << hVal;
       
       // Enable that the Hash Table receive filter
-      PLIB_ETH_RxFiltersSet(ethId, ETH_FILT_HTBL_ACCEPT);
+      DRV_ETH_RxFiltersSet(ethId, DRV_ETH_FILT_HTBL_ACCEPT);
 
       return TCPIP_MAC_RES_OK;
       
@@ -1438,7 +1436,7 @@ static int _DRV_ETHMAC_AddRxBuffers(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int nBuffs,
         if(setRxSize)
         {
             pMacD->mData.macConfig.rxBuffSize = (pRxPkt->pDSeg->segSize / 16) * 16;   // set actual RX size
-            PLIB_ETH_RxSetBufferSize(pMacD->mData.macConfig.ethModuleId, pMacD->mData.macConfig.rxBuffSize);
+            DRV_ETH_RxSetBufferSize(pMacD->mData.pEthReg, pMacD->mData.macConfig.rxBuffSize);
             setRxSize = false;  // just once
         }
 
@@ -1563,7 +1561,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACRegisterStatisticsGet(DRV_HANDLE hMac, TCPIP_MA
         for(ix = 0; ix < regLim; ix++, pRegEntries++, pHwRegDcpt++)
         {
             strncpy(pRegEntries->registerName, pHwRegDcpt->regName, sizeof(pRegEntries->registerName));
-            pRegEntries->registerValue = (*pHwRegDcpt->regFunc)(pMacD->mData.macConfig.ethModuleId); 
+            pRegEntries->registerValue = (*pHwRegDcpt->regFunc)(pMacD->mData.pEthReg); 
         }
     }
 
@@ -1578,7 +1576,7 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAME
     { 
         if(pMacParams)
         {
-            PLIB_ETH_MACGetAddress(pMacD->mData.macConfig.ethModuleId, pMacParams->ifPhyAddress.v); 
+            DRV_ETH_MACGetAddress(pMacD->mData.pEthReg, pMacParams->ifPhyAddress.v); 
             pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX); 
             pMacParams->macType = TCPIP_MAC_TYPE_ETH;
             pMacParams->linkMtu = _TCPIP_EMAC_LINK_MTU;
@@ -1964,9 +1962,9 @@ static void     _MACTxLocalAckCallback(void* pPktBuff, int buffIx, void* fParam)
  *                    and an Ethernet one!
  *                    By this translation the CONN_LOST/CONN_ESTABLISHED event is lost!
  ******************************************************************************/
-/*static __inline__*/static  PLIB_ETH_EVENTS /*__attribute__((always_inline))*/ _XtlEventsTcp2Eth(TCPIP_MAC_EVENT tcpEv)
+/*static __inline__*/static  DRV_ETH_EVENTS /*__attribute__((always_inline))*/ _XtlEventsTcp2Eth(TCPIP_MAC_EVENT tcpEv)
 {
-    PLIB_ETH_EVENTS  eEvents;
+    DRV_ETH_EVENTS  eEvents;
 
     eEvents =  (tcpEv&(TCPIP_MAC_EV_TX_BUSERR))<<4;
     eEvents |= (tcpEv&(TCPIP_MAC_EV_TX_ABORT))>>7;
@@ -2000,7 +1998,7 @@ static void     _MACTxLocalAckCallback(void* pPktBuff, int buffIx, void* fParam)
  *                    and an Ethernet one!
  *                    By this translation a CONN_LOST/CONN_ESTABLISHED event cannot be generated!
  ******************************************************************************/
-/*static __inline__*/static  TCPIP_MAC_EVENT /*__attribute__((always_inline))*/ _XtlEventsEth2Tcp(PLIB_ETH_EVENTS eEvents)
+/*static __inline__*/static  TCPIP_MAC_EVENT /*__attribute__((always_inline))*/ _XtlEventsEth2Tcp(DRV_ETH_EVENTS eEvents)
 {
     TCPIP_MAC_EVENT tcpEv;
 
@@ -2182,11 +2180,11 @@ bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask,
 {
     DRV_ETHMAC_INSTANCE_DCPT*     pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)hMac;
     DRV_ETHMAC_EVENT_DCPT*  pDcpt = &pMacD->mData._pic32_ev_group_dcpt; 
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
     if(enable)
     {
-        PLIB_ETH_EVENTS  ethSetEvents;
+        DRV_ETH_EVENTS  ethSetEvents;
         ethSetEvents = _XtlEventsTcp2Eth(macEvMask);
 
         if(pDcpt->_TcpEnabledEvents != 0)
@@ -2200,15 +2198,15 @@ bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask,
         if(pDcpt->_TcpEnabledEvents != 0)
         {
             ethSetEvents &= ~pDcpt->_EthPendingEvents;     // keep just the new un-ack events
-            PLIB_ETH_EventsClr(ethId, ethSetEvents );   // clear the old pending ones
-            PLIB_ETH_EventsEnableSet(ethId, ethSetEvents );                 // enable the new un-ack ones!
+            DRV_ETH_EventsClr(ethId, ethSetEvents );   // clear the old pending ones
+            DRV_ETH_EventsEnableSet(ethId, ethSetEvents );                 // enable the new un-ack ones!
 
             SYS_INT_SourceEnable(pMacD->mData._macIntSrc);       // enable
         }
     }
     else
     {   // disable some events
-        PLIB_ETH_EVENTS  ethClrEvents;
+        DRV_ETH_EVENTS  ethClrEvents;
         int         ethILev = 0;
 
         macEvMask &= pDcpt->_TcpEnabledEvents;                  // keep just the enabled ones
@@ -2225,8 +2223,8 @@ bool DRV_ETHMAC_PIC32MACEventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask,
         pDcpt->_TcpPendingEvents &= ~macEvMask;     // remove them from un-ack list
         pDcpt->_EthPendingEvents &= ~ethClrEvents;
 
-        PLIB_ETH_EventsEnableClr(ethId, ethClrEvents);   // no longer enabled
-        PLIB_ETH_EventsClr(ethId, ethClrEvents);         // clear the pending ones
+        DRV_ETH_EventsEnableClr(ethId, ethClrEvents);   // no longer enabled
+        DRV_ETH_EventsClr(ethId, ethClrEvents);         // clear the pending ones
 
         if(pDcpt->_TcpEnabledEvents != 0)
         {
@@ -2290,11 +2288,11 @@ bool DRV_ETHMAC_PIC32MACEventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAck
     int                   ethILev;
     DRV_ETHMAC_INSTANCE_DCPT*     pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)hMac;
     DRV_ETHMAC_EVENT_DCPT*  pDcpt = &pMacD->mData._pic32_ev_group_dcpt; 
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
     if(pDcpt->_TcpEnabledEvents != 0)
     {   // already have some active     
-        PLIB_ETH_EVENTS  ethAckEv;
+        DRV_ETH_EVENTS  ethAckEv;
 
         ethAckEv=_XtlEventsTcp2Eth(tcpAckEv);
 
@@ -2304,8 +2302,8 @@ bool DRV_ETHMAC_PIC32MACEventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAck
 
         pDcpt->_EthPendingEvents &= ~ethAckEv;         // no longer pending
 
-        PLIB_ETH_EventsClr(ethId, ethAckEv);                 // clear the old pending ones
-        PLIB_ETH_EventsEnableSet(ethId, ethAckEv);           // re-enable the ack ones
+        DRV_ETH_EventsClr(ethId, ethAckEv);                 // clear the old pending ones
+        DRV_ETH_EventsEnableSet(ethId, ethAckEv);           // re-enable the ack ones
         
 
         SYS_INT_SourceRestore(pMacD->mData._macIntSrc, ethILev);   // re-enable
@@ -2368,10 +2366,10 @@ TCPIP_MAC_EVENT DRV_ETHMAC_PIC32MACEventPendingGet(DRV_HANDLE hMac)
  * local functions
  ****************************************/
 
-static ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter)
+static DRV_ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter)
 {
     int ix;
-    ETH_RX_FILTERS rxFilter = 0;
+    DRV_ETH_RX_FILTERS rxFilter = 0;
 
     for(ix = 0; ix < 16; ix++)
     {
@@ -2385,6 +2383,10 @@ static ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFil
 }
 
 
+void ETHERNET_InterruptHandler(void)
+{
+	DRV_ETHMAC_Tasks_ISR((SYS_MODULE_OBJ)0);
+}
 
 /****************************************************************************
  * Function:        DRV_ETHMAC_Tasks_ISR
@@ -2403,13 +2405,13 @@ static ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFil
  ******************************************************************************/
 void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 {
-    PLIB_ETH_EVENTS          currEthEvents, currGroupEvents;
+    DRV_ETH_EVENTS          currEthEvents, currGroupEvents;
     DRV_ETHMAC_EVENT_DCPT* pDcpt;
     //DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)p;
     DRV_ETHMAC_INSTANCE_DCPT* pMacD = &_pic32_emb_mac_dcpt[macIndex];
-    ETH_MODULE_ID   ethId = pMacD->mData.macConfig.ethModuleId;
+    DRV_ETHERNET_REGISTERS* ethId = pMacD->mData.pEthReg;
 
-    currEthEvents = PLIB_ETH_EventsGet(ethId);
+    currEthEvents = DRV_ETH_EventsGet(ethId);
 
 
     // process interrupts
@@ -2417,7 +2419,7 @@ void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
     currGroupEvents = currEthEvents & pDcpt->_EthEnabledEvents;     //  keep just the relevant ones
 
 #if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    bool isTxInterrupt = (currGroupEvents & ETH_EV_TXDONE) != 0;
+    bool isTxInterrupt = (currGroupEvents & DRV_ETH_EV_TXDONE) != 0;
 #endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
     if(currGroupEvents)
@@ -2428,14 +2430,14 @@ void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 #if defined(ETH_PIC32_INT_MAC_ISR_TX)
         if(isTxInterrupt)
         {
-            PLIB_ETH_EventsEnableClr(ethId, currGroupEvents & ~ETH_EV_TXDONE);   // don't disable TX_DONE
-            PLIB_ETH_EventsClr(ethId, currGroupEvents | ETH_EV_TXDONE);          // always ack TX_DONE
+            DRV_ETH_EventsEnableClr(ethId, currGroupEvents & ~DRV_ETH_EV_TXDONE);   // don't disable TX_DONE
+            DRV_ETH_EventsClr(ethId, currGroupEvents | DRV_ETH_EV_TXDONE);          // always ack TX_DONE
         }
         else
 #endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
         {
-            PLIB_ETH_EventsEnableClr(ethId, currGroupEvents);         // these will get reported; disable them until ack is received back
-            PLIB_ETH_EventsClr(ethId, currGroupEvents);               // acknowledge the ETHC
+            DRV_ETH_EventsEnableClr(ethId, currGroupEvents);         // these will get reported; disable them until ack is received back
+            DRV_ETH_EventsClr(ethId, currGroupEvents);               // acknowledge the ETHC
         }
 
 
@@ -2498,44 +2500,44 @@ static void	_MACTxLocalAckCallback(void* pBuff, int buffIx, void* fParam)
 #endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
 
-static uint16_t _DRV_ETHMAC_GetFrmTxOk(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_FramesTxdOkCountGet(ethId);
+    return DRV_ETH_FramesTxdOkCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmRxOk(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetFrmRxOk(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_FramesRxdOkCountGet(ethId);
+    return DRV_ETH_FramesRxdOkCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmPktCount(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetFrmPktCount(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_RxPacketCountGet(ethId);
+    return DRV_ETH_RxPacketCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmRxOvflow(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetFrmRxOvflow(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_RxOverflowCountGet(ethId);
+    return DRV_ETH_RxOverflowCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetFrmFcsError(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetFrmFcsError(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_FCSErrorCountGet(ethId);
+    return DRV_ETH_FCSErrorCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetAlignError(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetAlignError(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_AlignErrorCountGet(ethId);
+    return DRV_ETH_AlignErrorCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetSCollisionCount(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetSCollisionCount(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_SingleCollisionCountGet(ethId);
+    return DRV_ETH_SingleCollisionCountGet(ethId);
 }
 
-static uint16_t _DRV_ETHMAC_GetMCollisionCount(ETH_MODULE_ID ethId)
+static uint16_t _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId)
 {
-    return PLIB_ETH_MultipleCollisionCountGet(ethId);
+    return DRV_ETH_MultipleCollisionCountGet(ethId);
 }
 
 

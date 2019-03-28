@@ -2,7 +2,9 @@
 <#if (drvGmac.TCPIP_USE_ETH_MAC)?has_content && (drvGmac.TCPIP_USE_ETH_MAC) == true>
 #include "driver/gmac/drv_gmac.h"
 </#if>
+<#if (drvPic32mEthmac.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmac.TCPIP_USE_ETH_MAC) == true>
+#include "driver/ethmac/drv_ethmac.h"
+</#if>
 <#if (drvMiim.DRV_MIIM_USE_DRIVER)?has_content && (drvMiim.DRV_MIIM_USE_DRIVER) == true>
 #include "driver/miim/drv_miim.h"
 </#if>
-
