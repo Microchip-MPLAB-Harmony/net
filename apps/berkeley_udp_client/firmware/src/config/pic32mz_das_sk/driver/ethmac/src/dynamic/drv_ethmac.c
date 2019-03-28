@@ -159,8 +159,6 @@ static uint16_t     _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId
 
 static DRV_ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
 
-// external function reference
-//niyas:todo extern bool SYS_INT_SourceRestore(INT_SOURCE src, int level);
 
 /******************************************************************************
  * PIC32 MAC object implementation
@@ -511,8 +509,6 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
     {
         pMacD->mData.macConfig.rxBuffSize = ((pMacD->mData.macConfig.rxBuffSize + 15) / 16) * 16;   // adjust RX size
     }
-    // TODO aa: or pEthReg = (DRV_ETHERNET_REGISTERS*)pMacD->mData.macConfig.ethModuleId;
-    // but this is Eth plib...
     pMacD->mData.pEthReg = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
 
 #if (TCPIP_EMAC_RX_FRAGMENTS == 1)
