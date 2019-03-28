@@ -54,10 +54,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
-
-//#include "system/clk/sys_clk.h"
-#include "system/sys_clk_h2_adapter.h"
-//#include "system/tmr/sys_tmr.h"
 #include "system/sys_time_h2_adapter.h"
 #include "system/console/sys_debug.h"
 #include "system/console/sys_console.h"
@@ -902,13 +898,9 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
     }
 #if (DRV_ETHPHY_USE_DRV_MIIM)
     DRV_MIIM_SETUP  miimSetup;
-#if defined (__PIC32MZ__)
-    miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
-#elif defined (__PIC32C__) || defined(__SAMA5D2__)
-    miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
-#else
-    miimSetup.hostClockFreq = SYS_CLK_SystemFrequencyGet();
-#endif
+
+	miimSetup.hostClockFreq = (uint32_t)TCPIP_INTMAC_PERIPHERAL_CLK;
+
 
     miimSetup.maxBusFreq = (*pPhyObj->smiClockGet)(gDrvEthBaseObj, handle);
     miimSetup.setupFlags = DRV_MIIM_SETUP_FLAG_NONE;

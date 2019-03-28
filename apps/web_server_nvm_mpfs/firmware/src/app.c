@@ -127,6 +127,7 @@ void APP_Tasks ( void )
                 SYS_CONSOLE_PRINT("SYS_Initialize: The %s File System is mounted\r\n", SYS_FS_MPFS_STRING);
                 appData.state = APP_TCPIP_WAIT_INIT;
             }
+            //appData.state = APP_TCPIP_WAIT_INIT;
             break;
 
         case APP_TCPIP_WAIT_INIT:

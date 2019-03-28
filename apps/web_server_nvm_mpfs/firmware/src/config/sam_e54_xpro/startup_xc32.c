@@ -140,9 +140,6 @@ void __attribute__((optimize("-O1"), section(".text.Reset_Handler"), long_call))
     FPU_Enable();
 #endif
 
-	TCM_Configure(2);
-    /* Disable TCM  */
-    TCM_Disable();
 
     /* Initialize data after TCM is enabled.
      * Data initialization from the XC32 .dinit template */

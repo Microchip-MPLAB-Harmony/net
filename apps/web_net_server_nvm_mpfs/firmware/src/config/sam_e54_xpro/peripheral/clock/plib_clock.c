@@ -108,6 +108,16 @@ static void GCLK0_Initialize(void)
     }
 }
 
+static void GCLK2_Initialize(void)
+{
+    GCLK_REGS->GCLK_GENCTRL[2] = GCLK_GENCTRL_DIV(48) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
+
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL_GCLK2) == GCLK_SYNCBUSY_GENCTRL_GCLK2)
+    {
+        /* wait for the Generator 2 synchronization */
+    }
+}
+
 void CLOCK_Initialize (void)
 {
     /* NVM Wait States */
@@ -154,5 +164,6 @@ void CLOCK_Initialize (void)
 
     /* Configure the APBB Bridge Clocks */
     MCLK_REGS->MCLK_APBBMASK = 0x18256;
+
 
 }

@@ -211,7 +211,7 @@ typedef enum
 /* TCPIP event notification handler Pointer
 
   Function:
-    void* <FunctionName> ( TCPIP_NET_HANDLE hNet, TCPIP_EVENT tcpEvent, void* fParam )
+    void <FunctionName> ( TCPIP_NET_HANDLE hNet, TCPIP_EVENT tcpEvent, void* fParam )
 
   Summary:
     Pointer to a function(handler) that will get called to process an event.
@@ -355,7 +355,7 @@ typedef const void* TCPIP_MODULE_SIGNAL_HANDLE;
 /* TCPIP module signal function
 
   Function:
-    void* <FunctionName> ( TCPIP_MODULE_SIGNAL_HANDLE sigHandle, TCPIP_STACK_MODULE moduleId, 
+    void <FunctionName> ( TCPIP_MODULE_SIGNAL_HANDLE sigHandle, TCPIP_STACK_MODULE moduleId, 
 	                       TCPIP_MODULE_SIGNAL signal )
 
   Summary:

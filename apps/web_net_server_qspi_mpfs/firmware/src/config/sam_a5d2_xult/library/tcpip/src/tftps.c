@@ -63,7 +63,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // *****************************************************************************
 
 #define mMIN(a, b)  ((a<b)?a:b)
+// TODO HS: Temporary workaround for SYS_FS Jira MH3-5235
+#define SYS_FS_MH3_5235_WORKAROUND 1 
 
+#ifdef SYS_FS_MH3_5235_WORKAROUND
+__attribute__ ((aligned (32))) uint8_t wrBuffer[512];
+__attribute__ ((aligned (32))) uint8_t rdBuffer[512];
+#endif
 
 static TFTPS_CB            gTftpClientCB[TCPIP_TFTPS_CLIENT_NUMBER];
 static TCPIP_TFTPS_DCPT    gTftpsDcpt;
@@ -947,8 +953,38 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                 p = rxBuf + TFTP_DATA_OFFSET;
                 /* Calculate the amount of data in the packet. */
                 wCnt = wCnt - TCPIP_TFTP_HEADER_MINSIZE;
+#ifdef SYS_FS_MH3_5235_WORKAROUND                 
+                /// copy the content to the byte aligned buffer.
+                memcpy(rdBuffer,p,wCnt);
+                SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);
+                for(maxRecvByte=(bytes_received-TCPIP_TFTP_HEADER_MINSIZE);maxRecvByte>0;)
+                {
+                    if(wCnt != 0)
+                    {                        
+                        if(SYS_FS_FileWrite(tftp_con->file_desc,rdBuffer,wCnt) == SYS_FS_HANDLE_INVALID)
+                        {                                              
+                            break;
+                        }
+                        if(wCnt <= maxRecvByte)
+                        {
+                            maxRecvByte -= wCnt;
+                        }
+                        memset(rdBuffer,0,sizeof(rdBuffer));
+                        if(maxRecvByte > 0)
+                        {
+                            wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rdBuffer,mMIN(maxRecvByte, sizeof(rdBuffer)));
+                        }
+                        tftp_con->callbackPos = SYS_FS_FileTell(tftp_con->file_desc);
+                        // send the error packet if SYS_FS_FileTell returns -1
+                        if(tftp_con->callbackPos == -1)
+                        {
+                            _TFTPS_Error(tftp_con->cSkt,TFTP_ALLOCATION_ERROR,"Error: No space available for the new data");
+                        }
+                    }
+                }
+#else
                 SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);                
-                for(maxRecvByte=(bytes_received-TFTP_DATA_OFFSET);maxRecvByte>0;)
+                for(maxRecvByte=(bytes_received-5);maxRecvByte>0;)
                 {
                     if(wCnt != 0)
                     {                        
@@ -975,6 +1011,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                     }
                 }
 
+#endif                
                 /* If all the bytes of data was copied then send an ACK.  We know
                  * that the other side will send at least one more data packet,
                  * and that all data in the current packet was accepted. 
@@ -1428,12 +1465,11 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
     TCPIP_UINT16_VAL tOpcode,blockNum;
     uint8_t         rxBuf[TCPIP_TFTPS_MIN_UDP_RX_BUFFER_SIZE+1];
     UDP_SOCKET_INFO sktInfo;
-    TCPIP_TFTPS_RESULT retval = TFTPS_RES_OK;
     
     // check the length 
     if(bytes_received > sizeof(rxBuf))
     {
-        bytes_received = sizeof(rxBuf);
+        bytes_received =  sizeof(rxBuf);
     }
         
     memset(rxBuf,0,sizeof(rxBuf));
@@ -1447,12 +1483,13 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
     switch(tOpcode.Val)
     {
         case TFTPS_ACK_OPCODE:
-            /* If the current block number is greater than the block number
-             * of the ACK packet we are receiving, then this is an old
-             * packet and we have already processed it - we do not want to
-             * exit, error or acknowledge the packet (because we have
-             * already processed it) so we will get the next packet
-             */
+
+        /* If the current block number is greater than the block number
+         * of the ACK packet we are receiving, then this is an old
+         * packet and we have already processed it - we do not want to
+         * exit, error or acknowledge the packet (because we have 
+         * already processed it) so we will get the next packet
+         */
             blockNum.Val = _TFTPS_Get16(rxBuf,TFTP_DATA_BLOCKNUM_OFFSET);
             if((tftp_con->block_number > blockNum.Val)
                 && (tftp_con->tid == sktInfo.remotePort))
@@ -1463,7 +1500,8 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
                 TCPIP_UDP_Discard(tftp_con->cSkt);
                 break;
             }
-             // release the TFTP socket for the read type and transfer is completed
+
+             // release the TFTP socket for the read type and transfer is completed 
             if((tftp_con->type == TFTPS_READ_TYPE) && (tftp_con->status == TFTPS_TRANSFER_COMPLETE))
             {
                 // send event notification after file transfer completion
@@ -1472,6 +1510,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
                 _TFTPS_ReleaseDataSocket(tftp_con);
                 break;
             }
+            
             /* Make sure the block number and TID are correct. */
             if((tftp_con->block_number == blockNum.Val)
                          && (tftp_con->tid == sktInfo.remotePort))
@@ -1481,7 +1520,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
 
             else
             {
-                retval = TFTPS_RES_ILLIGAL_OPERN;
+                return TFTPS_RES_ILLIGAL_OPERN;
             }
             
             break;
@@ -1490,24 +1529,22 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
             tftp_con->errCode = _TFTPS_Get16(rxBuf,TFTP_ERROR_VAL_OFFSET);
             if(tftp_con->errCode <= TFTP_BAD_TFTP_ERROR)
             {
-                retval = TFTPS_RES_CLIENT_ERROR;
+                return TFTPS_RES_CLIENT_ERROR;
             }
             else
             {
-                retval = TFTPS_RES_ILLIGAL_OPERN;
+                return TFTPS_RES_ILLIGAL_OPERN;
             }
-            break;
-
         case TFTPS_RRQ_OPCODE:
         case TFTPS_WRQ_OPCODE:
         case TFTPS_DATA_OPCODE:
         default:
             _TFTPS_Error(tftp_con->cSkt,TFTP_ILLIGAL_OPERATION_ERROR, "Error: Illegal TFTP Operation");
-            retval = TFTPS_RES_ILLIGAL_OPERN;
-            break;
+            return TFTPS_RES_ILLIGAL_OPERN;
     }
-    return retval;
-}
+    
+    return TFTPS_RES_OK;
+}  /* TFTPS_Process_Ack */
    
 /************************************************************************
 *   Function                                                             
@@ -1530,6 +1567,9 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
     uint8_t             *wrPtr;
     uint32_t             wCnt=0;
     uint32_t             maxReadByte=0;
+#ifdef SYS_FS_MH3_5235_WORKAROUND	    
+    uint16_t             bufferSize=sizeof(wrBuffer);
+#endif    
     
     /* If we received something, setup the tid and process the ACK. */
    if (bytes_received)
@@ -1554,9 +1594,37 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
     _TFTPS_Put16(wrPtr,TFTP_OPCODE_OFFSET, TFTPS_DATA_OPCODE);
     _TFTPS_Put16(wrPtr,TFTP_DATA_BLOCKNUM_OFFSET, tftp_con->block_number);   
     wrPtr=wrPtr+TFTP_DATA_OFFSET;
+#ifdef SYS_FS_MH3_5235_WORKAROUND	    
+    // To support the different block size, might be less than the wrBuffer buffer size 
+    if(tftp_con->options.blksize<bufferSize)
+    {
+        maxReadByte = tftp_con->options.blksize;
+    }
+    else
+    {
+        maxReadByte = bufferSize;
+    }
+    for(wCnt=0;wCnt<tftp_con->options.blksize;)
+    {
+        /*  Read data from the file into the the TFTP CB send buffer. */     
+        num_bytes = SYS_FS_FileRead(tftp_con->file_desc, wrBuffer,maxReadByte);
+        memcpy(wrPtr,wrBuffer,num_bytes);
+        wCnt = wCnt+num_bytes;
+        wrPtr = wrPtr+num_bytes;
+        memset(wrBuffer,0,bufferSize);
+        // the number of bytes is less than the size of the wrBuffer
+        if(num_bytes < maxReadByte)
+        {
+            break;
+        }
+        // if the block size is more than the wrBuffer size, set the maxReadByte to a new value.
+        maxReadByte = tftp_con->options.blksize - maxReadByte;
+    }
+#else
     maxReadByte = tftp_con->options.blksize;
 /*  Read data from the file into the the TFTP CB send buffer. */     
 	wCnt = SYS_FS_FileRead(tftp_con->file_desc, wrPtr,maxReadByte);
+#endif
     
     /* If this is the last packet update the status. */
     if (wCnt < tftp_con->options.blksize)

@@ -233,7 +233,7 @@ typedef struct CRYPT_SHA_CTX
 {
     /* This structure should be large enough to hold the internal representation, the size 
        is checked during initialization*/
-    int holder[110] __attribute__((aligned (128)));
+    int holder[110] __attribute__((aligned (8)));
 } CRYPT_SHA_CTX;
 
 //******************************************************************************
@@ -404,7 +404,7 @@ enum {
 typedef struct CRYPT_SHA256_CTX {
     /* This structure should be large enough to hold the internal representation, the size 
        is checked during initialization*/
-    int holder[110] __attribute__((aligned (128)));
+    int holder[110] __attribute__((aligned (8)));
 } CRYPT_SHA256_CTX;
 
 //******************************************************************************
@@ -568,6 +568,129 @@ int CRYPT_SHA256_Finalize(CRYPT_SHA256_CTX*, unsigned char*);
 
 enum {
     CRYPT_SHA256_DIGEST_SIZE = 32 
+};
+
+//******************************************************************************
+/* Function:
+    int CRYPT_SHA224_Initialize(CRYPT_SHA256_CTX* sha224)
+
+  Summary:
+    Initializes the internal structures necessary for SHA224 hash calculations.
+
+  Description:
+    This function initializes the internal structures necessary for SHA224 
+    hash calculations.
+
+  Precondition:
+	None.
+	
+  Parameters:
+    sha224		- Pointer to context which saves state between calls.
+
+  Returns:
+    - BAD_FUNC_ARG 	- An invalid pointer was passed to the function.
+    - 0 		- An invalid pointer was not passed to the function.
+
+  Example:
+    <code>
+	CRYPT_SHA256_CTX sha;
+	uint8_t shaSum[SHA224_DIGEST_SIZE];
+	
+    CRYPT_SHA224_Initialize(&sha);
+	CRYPT_SHA224_DataAdd(&sha, buffer, sizeof(buffer));
+	CRYPT_SHA224_Finalize(&sha, shaSum);
+    </code>
+
+  Remarks:
+	All SHA hashes have to start at a particular value before adding new data
+	to it. This function sets the necessary values for the structure.
+*/
+
+int CRYPT_SHA224_Initialize(CRYPT_SHA256_CTX*);
+
+//******************************************************************************
+/* Function:
+    int CRYPT_SHA224_DataAdd(CRYPT_SHA256_CTX* sha224, const unsigned char* input, unsigned int sz)
+
+  Summary:
+    Updates the hash with the data provided. 
+
+  Description:
+    This function updates the hash with the data provided.
+
+  Precondition:
+	The SHA224 context must be initialized prior to the first call of this function.
+	The context must not be modified by code outside of this function.
+	
+  Parameters:
+    sha224          - Pointer to CRYPT_SHA256_CTX structure which holds the hash values.
+    input			- Pointer to the data to use to update the hash.
+    sz				- Size of the data (in bytes) of the data to use to update the hash.
+
+  Returns:
+    - BAD_FUNC_ARG 	- An invalid pointer was passed to the function, either in sha224 or input.
+	- 0 			- An invalid pointer was not passed to the function.
+
+  Example:
+    <code>
+	CRYPT_SHA256_CTX sha224;
+	uint8_t buffer[1024];
+	uint8_t shaSum[SHA224_DIGEST_SIZE];
+	
+    CRYPT_SHA224_Initialize(&sha224);
+	CRYPT_SHA224_DataAdd(&sha224, buffer, sizeof(buffer));
+	CRYPT_SHA224_Finalize(&sha224, shaSum);
+    </code>
+
+  Remarks:
+	In order to preserve the validity of the SHA224 hash, nothing must modify the
+	context holding variable between calls to CRYPT_SHA224_DataAdd.
+*/
+
+int CRYPT_SHA224_DataAdd(CRYPT_SHA256_CTX*, const unsigned char*, unsigned int);
+
+//******************************************************************************
+/* Function:
+    int CRYPT_SHA224_Finalize(CRYPT_SHA256_CTX* sha224, unsigned char* digest)
+
+  Summary:
+    Finalizes the hash and puts the result into digest.
+
+  Description:
+    This function finalizes the hash and puts the result into digest.
+
+  Precondition:
+	The SHA224 context must be initialized prior to calling this function.
+	The context must not be modified by code outside of this function.
+	
+  Parameters:
+    sha224          - Pointer to CRYPT_SHA256_CTX structure which holds the hash values.
+	digest			- Pointer to byte array to store hash result.
+
+  Returns:
+    - BAD_FUNC_ARG 	- An invalid pointer was passed to the function, either in sha or digest.
+	- 0 			- An invalid pointer was not passed to the function.
+
+  Example:
+    <code>
+	CRYPT_SHA256_CTX sha224;
+	uint8_t buffer[1024];
+	uint8_t shaSum[SHA224_DIGEST_SIZE];
+	
+    CRYPT_SHA224_Initialize(&sha224);
+	CRYPT_SHA224_DataAdd(&sha224, buffer, sizeof(buffer));
+	CRYPT_SHA224_Finalize(&sha224, shaSum);
+    </code>
+
+  Remarks:
+	In order to preserve the validity of the SHA224 hash, nothing must modify the
+	context holding variable between calls to CRYPT_SHA224_DataAdd and CRYPT_SHA224_Finalize.
+*/
+
+int CRYPT_SHA224_Finalize(CRYPT_SHA256_CTX*, unsigned char*);
+
+enum {
+    CRYPT_SHA224_DIGEST_SIZE = 28 
 };
 
 
@@ -1642,13 +1765,128 @@ int CRYPT_AES_CBC_Decrypt(CRYPT_AES_CTX*, unsigned char*,
 
 int CRYPT_AES_CTR_Encrypt(CRYPT_AES_CTX*, unsigned char*,
                           const unsigned char*, unsigned int);
+//******************************************************************************
+/* Function:
+    int CRYPT_AES_GCM_SetKey(CRYPT_AES_CTX* aes, const unsigned char* key, unsigned int len);
+
+  Summary:
+    Sets the key for AES-GCM processing.
+
+  Description:
+    This function sets the key, that AES will later perform.
+
+  Precondition:
+	None.
+	
+  Parameters:
+    aes		- Pointer to context which saves state between calls.
+    key		- Pointer to buffer holding the key itself.
+    len	- Length of key in bytes.
+
+  Returns:
+	- BAD_FUNC_ARG 	- An invalid pointer was passed to the function.
+	- 0				- An invalid pointer was not passed to the function.
+
+  Example:
+    <code>
+    CRYPT_AES_CTX mcAes;
+    int           ret;
+
+    strncpy((char*)key, "1234567890abcdefghijklmnopqrstuv", 32);
+
+    ret = CRYPT_AES_GCM_SetKey(&mcAes, key, 16);
+    </code>
+
+  Remarks:
+*/
 
 int CRYPT_AES_GCM_SetKey(CRYPT_AES_CTX* aes, const unsigned char* key, unsigned int len);
+
+
+//******************************************************************************
+/* Function:
+    int CRYPT_AES_GCM_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                           const unsigned char* in, unsigned int sz,
+						   const unsigned char* iv, unsigned int ivSz,
+						   unsigned char* authTag, unsigned int authTagSz,
+                           const unsigned char* authIn, unsigned int authInSz);
+
+  Summary:
+	Performs AES encryption using Galois/Counter Mode (GCM).
+
+  Description:
+	This function encrypts a block of data using the AES algorithm in Galois/Counter 
+	Mode (GCM). mode.
+
+  Precondition:
+	Key must be set earlier with a call to
+	CRYPT_AES_GCM_SetKey.
+	
+  Parameters:
+    aes		- Pointer to context which saves state between calls.
+    out		- Pointer to buffer to store the results of the encryption pass.
+    in		- Pointer to buffer holding the data to be encrypted.
+    sz	    - Size of the input data, in bytes.
+	iv		- Pointer to the initialization vector
+	ivSz	- Size of the initialization vector
+	authTag - Pointer to the buffer to store the authentication tag
+	authTagSz - Size of the authentication tag
+	authIn  - Pointer to the additional authentication data.
+	authInSz - Size of the additional autentication data.
+	
+  Returns:
+	- BAD_FUNC_ARG 	- An invalid pointer was passed to the function.
+	- 0				- An invalid pointer was not passed to the function.
+
+  Remarks:
+	The output buffer must be equal in size to the input buffer.
+*/
+
 int CRYPT_AES_GCM_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
                                    const unsigned char* in, unsigned int sz,
                                    const unsigned char* iv, unsigned int ivSz,
                                    unsigned char* authTag, unsigned int authTagSz,
                                    const unsigned char* authIn, unsigned int authInSz);
+								   
+//******************************************************************************
+/* Function:
+	int CRYPT_AES_GCM_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   const unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz);
+  Summary:
+	Performs AES decryption using Galois/Counter Mode (GCM).
+
+  Description:
+	This function decrypts a block of data using the AES algorithm in Galois/Counter 
+	Mode (GCM) mode.
+
+  Precondition:
+	Key must be set earlier with a call to
+	CRYPT_AES_GCM_SetKey.
+	
+  Parameters:
+    aes		- Pointer to context which saves state between calls.
+    out		- Pointer to buffer to store the results of the encryption pass.
+    in		- Pointer to buffer holding the data to be encrypted.
+    sz	    - Size of the input data, in bytes.
+	iv		- Pointer to the initialization vector
+	ivSz	- Size of the initialization vector
+	authTag - Pointer to the buffer to store the authentication tag
+	authTagSz - Size of the authentication tag
+	authIn  - Pointer to the additional authentication data.
+	authInSz - Size of the additional autentication data.
+	
+  Returns:
+	- BAD_FUNC_ARG 	- An invalid pointer was passed to the function.
+	- AES_GCM_AUTH_E - The authTag is incorrect.
+	- 0				- An invalid pointer was not passed to the function.
+
+  Remarks:
+	The output buffer must be equal in size to the input buffer.
+*/								   
+								   
 int CRYPT_AES_GCM_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
                                    const unsigned char* in, unsigned int sz,
                                    const unsigned char* iv, unsigned int ivSz,

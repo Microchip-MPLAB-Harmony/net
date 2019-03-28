@@ -5360,6 +5360,8 @@
               <Value dnOrder="4" id="drv_memory_0" priority="1" value="true"/>
               <Value dnOrder="5" id="drv_memory_0" priority="1" value="true"/>
               <Value dnOrder="6" id="drv_memory_0" priority="1" value="true"/>
+              <Value dnOrder="7" id="drv_memory_0" priority="1" value="true"/>
+              <Value dnOrder="8" id="drv_memory_0" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -5748,21 +5750,14 @@
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="15" id="OSAL_IMPL_BASIC_H">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <Combo dnOrder="16" id="SELECT_RTOS">
+        <Combo dnOrder="15" id="SELECT_RTOS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="HarmonyCore" priority="1" value="FreeRTOS"/>
             </Dynamic>
           </Values>
         </Combo>
-        <File dnOrder="17" id="SYSTEM_MEDIA">
+        <File dnOrder="16" id="SYSTEM_MEDIA">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
@@ -5886,6 +5881,18 @@
           </Attributes>
         </Boolean>
       </Symbols>
+      <Attachments dnOrder="1">
+        <DirectCapability dnOrder="0" id="lib_crypto">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0">netPres_0</Value>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0">NetPres_Crypto_Dependency</Value>
+            </String>
+          </Attributes>
+        </DirectCapability>
+      </Attachments>
     </UniqueComponent>
     <GeneratorComponent dnOrder="9" id="netPres">
       <Symbols dnOrder="0">
@@ -5922,6 +5929,18 @@
               </Values>
             </Boolean>
           </Symbols>
+          <Attachments dnOrder="1">
+            <DirectDependency dnOrder="0" id="NetPres_Crypto_Dependency">
+              <Attributes dnOrder="0">
+                <String dnOrder="0" id="targetComponentID">
+                  <Value dnOrder="0">lib_crypto</Value>
+                </String>
+                <String dnOrder="1" id="targetAttachmentID">
+                  <Value dnOrder="0">lib_crypto</Value>
+                </String>
+              </Attributes>
+            </DirectDependency>
+          </Attachments>
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
@@ -6081,20 +6100,6 @@
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Menu dnOrder="3" id="SYS_FS_RTOS_MENU">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Menu>
-        <File dnOrder="4" id="sysFSSystemRtosTaskFile">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
       </Symbols>
       <Attachments dnOrder="1">
         <DirectCapability dnOrder="0" id="sys_fs">
@@ -6388,7 +6393,17 @@
             <UniqueComponent dnOrder="1" id="tcpipAnnounce"/>
             <UniqueComponent dnOrder="2" id="tcpipDhcp"/>
             <UniqueComponent dnOrder="3" id="tcpipDns"/>
-            <UniqueComponent dnOrder="4" id="tcpipHttpNet"/>
+            <UniqueComponent dnOrder="4" id="tcpipHttpNet">
+              <Symbols dnOrder="0">
+                <Boolean dnOrder="0" id="TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL">
+                  <Values dnOrder="0">
+                    <Dynamic dnOrder="0">
+                      <Value dnOrder="0" id="tcpipHttpNet" priority="2" value="true"/>
+                    </Dynamic>
+                  </Values>
+                </Boolean>
+              </Symbols>
+            </UniqueComponent>
             <UniqueComponent dnOrder="5" id="tcpipNbns"/>
             <UniqueComponent dnOrder="6" id="tcpipSmtpc"/>
             <UniqueComponent dnOrder="7" id="tcpipSntp"/>
@@ -6536,20 +6551,6 @@
                     <User dnOrder="0" value="64960"/>
                   </Values>
                 </Integer>
-                <Menu dnOrder="1" id="TCPIP_STACK_RTOS_MENU">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="visible">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </Menu>
-                <File dnOrder="2" id="TCPIP_SYS_RTOS_TASK">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="enabled">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </File>
               </Symbols>
             </UniqueComponent>
             <UniqueComponent dnOrder="4" id="tcpipSysFsWrapper">
@@ -6565,9 +6566,9 @@
             </UniqueComponent>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvGmac:libdrvGmac" targetComponentID="DRIVER LAYER"/>
-            <Attachment dnOrder="1" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
-            <Attachment dnOrder="2" id="TcpipFsWarapper_SysFS_Dependency" namespace="tcpipSysFsWrapper" targetAttachmentID="TCP/IP STACK:tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="0" id="TcpipFsWarapper_SysFS_Dependency" namespace="tcpipSysFsWrapper" targetAttachmentID="TCP/IP STACK:tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="1" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvGmac:libdrvGmac" targetComponentID="DRIVER LAYER"/>
+            <Attachment dnOrder="2" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
@@ -6575,7 +6576,7 @@
             <UniqueComponent dnOrder="0" id="drvExtPhyKsz8061"/>
             <UniqueComponent dnOrder="1" id="drvGmac">
               <Symbols dnOrder="0">
-                <String dnOrder="0" id="DRV_GMAC_PHY_TYPE">
+                <String dnOrder="0" id="DRV_INTMAC_PHY_TYPE">
                   <Values dnOrder="0">
                     <Dynamic dnOrder="0">
                       <Value dnOrder="0" id="drvGmac" priority="2" value="KSZ8061"/>
@@ -6584,24 +6585,7 @@
                 </String>
               </Symbols>
             </UniqueComponent>
-            <UniqueComponent dnOrder="2" id="drvMiim">
-              <Symbols dnOrder="0">
-                <Menu dnOrder="0" id="DRV_MIIM_RTOS_MENU">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="visible">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </Menu>
-                <File dnOrder="1" id="DRV_SDHC_SYS_RTOS_TASK">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="enabled">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </File>
-              </Symbols>
-            </UniqueComponent>
+            <UniqueComponent dnOrder="2" id="drvMiim"/>
             <UniqueComponent dnOrder="3" id="tcpip_driver_config">
               <Symbols dnOrder="0">
                 <Boolean dnOrder="0" id="TCPIP_AUTOCONFIG_ENABLE_GMAC">
@@ -6702,8 +6686,8 @@
         </GroupComponent>
       </Children>
       <Attachments dnOrder="1">
-        <Attachment dnOrder="0" id="tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
-        <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console"/>
+        <Attachment dnOrder="0" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console"/>
+        <Attachment dnOrder="1" id="tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
       </Attachments>
     </GroupComponent>
     <UniqueComponent dnOrder="15" id="usart1">
@@ -6736,15 +6720,7 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="TCP/IP STACK">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
-        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="374" y="120"/>
-        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="216" y="121"/>
-        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
-        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
     <ComponentGraph dnOrder="1" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipAnnounce" x="600" y="20"/>
@@ -6757,41 +6733,53 @@
         <ElementPosition dnOrder="7" id="tcpip_apps_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="TRANSPORT LAYER">
+    <ComponentGraph dnOrder="2" id="TCP/IP STACK">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
+        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="374" y="120"/>
+        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="216" y="121"/>
+        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
+        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="__ROOTVIEW">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="BSP_SAM_V71_Xplained_Ultra" x="330" y="120"/>
-        <ElementPosition dnOrder="1" id="FreeRTOS" x="30" y="240"/>
-        <ElementPosition dnOrder="2" id="HarmonyCore" x="478" y="16"/>
-        <ElementPosition dnOrder="3" id="TCP/IP STACK" x="643" y="192"/>
-        <ElementPosition dnOrder="4" id="cmsis" x="340" y="20"/>
-        <ElementPosition dnOrder="5" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="6" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="7" id="drv_memory" x="192" y="327"/>
-        <ElementPosition dnOrder="8" id="efc" x="33" y="412"/>
-        <ElementPosition dnOrder="9" id="lib_crypto" x="0" y="162"/>
-        <ElementPosition dnOrder="10" id="netPres" x="305" y="169"/>
-        <ElementPosition dnOrder="11" id="sys_console" x="486" y="159"/>
-        <ElementPosition dnOrder="12" id="sys_fs" x="447" y="310"/>
-        <ElementPosition dnOrder="13" id="sys_time" x="171" y="50"/>
-        <ElementPosition dnOrder="14" id="tc0" x="29" y="50"/>
-        <ElementPosition dnOrder="15" id="usart1" x="22" y="313"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="4"/>
-    <ComponentGraph dnOrder="5" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="3" id="BASIC CONFIGURATION">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
         <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
         <ElementPosition dnOrder="3" id="tcpipSysFsWrapper" x="30" y="160"/>
         <ElementPosition dnOrder="4" id="tcpip_basic_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="4" id="NETWORK LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipIPv6" x="30" y="60"/>
+        <ElementPosition dnOrder="3" id="tcpipIcmp" x="580" y="20"/>
+        <ElementPosition dnOrder="4" id="tcpipIcmpv6" x="430" y="100"/>
+        <ElementPosition dnOrder="5" id="tcpipNdp" x="170" y="60"/>
+        <ElementPosition dnOrder="6" id="tcpip_network_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="5" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="BSP_SAM_V71_Xplained_Ultra" x="453" y="109"/>
+        <ElementPosition dnOrder="1" id="FreeRTOS" x="703" y="113"/>
+        <ElementPosition dnOrder="2" id="HarmonyCore" x="478" y="16"/>
+        <ElementPosition dnOrder="3" id="TCP/IP STACK" x="658" y="244"/>
+        <ElementPosition dnOrder="4" id="cmsis" x="340" y="20"/>
+        <ElementPosition dnOrder="5" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="6" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="7" id="drv_memory" x="225" y="269"/>
+        <ElementPosition dnOrder="8" id="efc" x="30" y="307"/>
+        <ElementPosition dnOrder="9" id="lib_crypto" x="660" y="28"/>
+        <ElementPosition dnOrder="10" id="netPres" x="986" y="10"/>
+        <ElementPosition dnOrder="11" id="sys_console" x="417" y="159"/>
+        <ElementPosition dnOrder="12" id="sys_fs" x="447" y="310"/>
+        <ElementPosition dnOrder="13" id="sys_time" x="294" y="47"/>
+        <ElementPosition dnOrder="14" id="tc0" x="20" y="85"/>
+        <ElementPosition dnOrder="15" id="usart1" x="40" y="173"/>
       </ElementPositions>
     </ComponentGraph>
     <ComponentGraph dnOrder="6" id="DRIVER LAYER">
@@ -6802,15 +6790,11 @@
         <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="NETWORK LAYER">
+    <ComponentGraph dnOrder="7" id="TRANSPORT LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipIPv6" x="30" y="60"/>
-        <ElementPosition dnOrder="3" id="tcpipIcmp" x="580" y="20"/>
-        <ElementPosition dnOrder="4" id="tcpipIcmpv6" x="430" y="100"/>
-        <ElementPosition dnOrder="5" id="tcpipNdp" x="170" y="60"/>
-        <ElementPosition dnOrder="6" id="tcpip_network_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>

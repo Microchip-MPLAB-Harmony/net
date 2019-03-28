@@ -73,7 +73,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_STACK_VERSION_MAJOR         7
 #define TCPIP_STACK_VERSION_MINOR         32
 #define TCPIP_STACK_VERSION_PATCH         0
-#define TCPIP_STACK_VERSION_STR           "7.32 - H3.3"
+#define TCPIP_STACK_VERSION_STR           "7.32 - H3.2"
 
 
 // *****************************************************************************
