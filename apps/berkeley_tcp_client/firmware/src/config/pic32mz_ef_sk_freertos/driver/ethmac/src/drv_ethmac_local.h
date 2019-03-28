@@ -65,7 +65,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/tcpip_mac_object.h"
 
 
-//niyas: todo #include "peripheral/int/plib_int.h"
 
 #include "driver/ethphy/drv_ethphy.h"
 #include "driver/ethmac/drv_ethmac.h"
