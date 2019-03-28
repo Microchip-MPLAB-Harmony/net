@@ -1134,7 +1134,7 @@ static TCPIP_HTTP_NET_IO_RESULT HTTPPostEmail(TCPIP_HTTP_NET_CONN_HANDLE connHan
                 xtch3 = (int)APP_LED_3StateGet() + '0';
                 postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "LEDs:,%c,%c,%c\r\n", xtch1, xtch2, xtch3 );
                 // add a potentiometer read: a random string
-                postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%lu\r\n", SYS_RANDOM_PseudoGet());
+                postEmail.attachLen += sprintf(postEmail.mailAttachment + postEmail.attachLen, "Pot:,%u\r\n", (unsigned int)SYS_RANDOM_PseudoGet());
             }
 
             // prepare the message itself

@@ -46,13 +46,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if TCPIP_INTMAC_PHY_CONFIG_RMII>
                                                     DRV_ETHPHY_CFG_RMII | \
 </#if>
-<#if TCPIP_INTMAC_PHY_CONFIG_ALTERNATE>
+<#if TCPIP_INTMAC_PHY_CONFIG_ALTERNATE?has_content && TCPIP_INTMAC_PHY_CONFIG_ALTERNATE == true>
                                                     DRV_ETHPHY_CFG_ALTERNATE | \
 </#if>
-<#if TCPIP_INTMAC_PHY_CONFIG_AUTO>
+<#if TCPIP_INTMAC_PHY_CONFIG_AUTO?has_content && TCPIP_INTMAC_PHY_CONFIG_AUTO == true>
                                                     DRV_ETHPHY_CFG_AUTO | \
 </#if>
-                                                    0
+                                                    0 
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
 #define TCPIP_INTMAC_PHY_ADDRESS                    ${TCPIP_INTMAC_PHY_ADDRESS}

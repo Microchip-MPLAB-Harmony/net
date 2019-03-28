@@ -275,17 +275,24 @@ def instantiateComponent(tcpipSnmpv3Component):
 		
 	# file SNMPV3_DES_H "$HARMONY_VERSION_PATH/framework/crypto/src/des3.h" to "$PROJECT_HEADER_FILES/framework/crypto/src/des3.h"
 	# H3_ToDo : include this file from Crypto Module
-
-	# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_AES_PRIV") 
-	# library TCPIP_SNMPV3_A "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_pic32mc.a"
-	# endif
-	tcpipSnmpV3AesLibraryFile = tcpipSnmpv3Component.createLibrarySymbol(None, None)
-	tcpipSnmpV3AesLibraryFile.setSourcePath("tcpip/src/crypto/aes_pic32mc.a")
-	tcpipSnmpV3AesLibraryFile.setOutputName("aes_pic32mc.a")
-	tcpipSnmpV3AesLibraryFile.setDestPath("library/tcpip/src/crypto/")
-	tcpipSnmpV3AesLibraryFile.setEnabled(True)
-	tcpipSnmpV3AesLibraryFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
-	
+	if "SAM" in Variables.get("__PROCESSOR") :
+		# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_AES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_AES_PRIV") 
+		# library TCPIP_SNMPV3_A "$HARMONY_VERSION_PATH/framework/tcpip/src/crypto/aes_pic32mc.a"
+		# endif
+		tcpipSnmpV3AesLibraryFile = tcpipSnmpv3Component.createLibrarySymbol(None, None)
+		tcpipSnmpV3AesLibraryFile.setSourcePath("tcpip/src/crypto/aes_pic32mc.a")
+		tcpipSnmpV3AesLibraryFile.setOutputName("aes_pic32mc.a")
+		tcpipSnmpV3AesLibraryFile.setDestPath("library/tcpip/src/crypto/")
+		tcpipSnmpV3AesLibraryFile.setEnabled(True)
+		tcpipSnmpV3AesLibraryFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
+	elif "PIC32M" in Variables.get("__PROCESSOR"):
+		tcpipSnmpV3AesLibraryFile = tcpipSnmpv3Component.createLibrarySymbol(None, None)
+		tcpipSnmpV3AesLibraryFile.setSourcePath("tcpip/src/crypto/aes_pic32mx.a")
+		tcpipSnmpV3AesLibraryFile.setOutputName("aes_pic32mx.a")
+		tcpipSnmpV3AesLibraryFile.setDestPath("library/tcpip/src/crypto/")
+		tcpipSnmpV3AesLibraryFile.setEnabled(True)
+		tcpipSnmpV3AesLibraryFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
+		
 	# ifblock (TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX0 = "SNMPV3_DES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX1 = "SNMPV3_DES_PRIV" || TCPIP_SNMPV3_STACK_PRIV_PROTOCOL_IDX2 = "SNMPV3_DES_PRIV") 
 	# file SNMPV3_DES_C "$HARMONY_VERSION_PATH/framework/crypto/src/des3.c" to "$PROJECT_SOURCE_FILES/framework/crypto/src/des3.c"
 	# endif
