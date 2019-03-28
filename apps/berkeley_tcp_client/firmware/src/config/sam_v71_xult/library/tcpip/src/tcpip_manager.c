@@ -281,6 +281,8 @@ static void _TCPIPStackSignalTmo(void);
 
 static bool _TCPIPStackCreateTimer(void);
 
+static void _TCPIP_SelectDefaultNet(TCPIP_NET_IF* pDownIf);
+
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
 static void _TCPIPCopyMacAliasIf(TCPIP_NET_IF* pAliasIf, TCPIP_NET_IF* pPriIf);
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
@@ -743,7 +745,12 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             break;
         }
 
-        tcpipDefIf.defaultNet = 0;          // delete the old default
+        // delete the old defaults
+        tcpipDefIf.defaultNet = 0;
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+        tcpipDefIf.defaultMcastNet = 0;
+#endif
+
         // initialize the signal handlers
         memset(TCPIP_STACK_MODULE_SIGNAL_TBL, 0x0, sizeof(TCPIP_STACK_MODULE_SIGNAL_TBL));
         stackAsyncSignalCount = 0;
@@ -791,14 +798,6 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             }
 
             // interface success
-            // set the default interfaces
-            if(tcpipDefIf.defaultNet == 0)
-            {
-                tcpipDefIf.defaultNet = pIf;    // set as the 1st valid interface
-#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
-                tcpipDefIf.defaultMcastNet = pIf;    // set as the 1st valid interface
-#endif
-            }
         }
 
         // start the aliases, if any
@@ -1086,8 +1085,6 @@ bool TCPIP_STACK_NetUp(TCPIP_NET_HANDLE netH, const TCPIP_NETWORK_CONFIG* pUsrCo
 
 bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
 {
-    int netIx;
-    TCPIP_NET_IF *pIf, *pNewIf;
     TCPIP_NET_IF* pDownIf = _TCPIPStackHandleToNet(netH);
 
     if(pDownIf)
@@ -1097,10 +1094,9 @@ bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
             // kill interface
             // if this is primary, kill all its aliases
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            bool priIsDown = false;
             if(_TCPIPStackNetIsPrimary(pDownIf))
             {
-                priIsDown = true;
+                TCPIP_NET_IF *pIf;
                 for(pIf = _TCPIPStackNetGetAlias(pDownIf); pIf != 0; pIf = _TCPIPStackNetGetAlias(pIf)) 
                 {
                     TCPIP_STACK_BringNetDown(&tcpip_stack_ctrl_data, pIf, TCPIP_STACK_ACTION_IF_DOWN, TCPIP_MAC_POWER_DOWN);
@@ -1108,33 +1104,7 @@ bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
             }
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
             TCPIP_STACK_BringNetDown(&tcpip_stack_ctrl_data, pDownIf, TCPIP_STACK_ACTION_IF_DOWN, TCPIP_MAC_POWER_DOWN);
-
-
-#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            if(tcpipDefIf.defaultNet == 0 || tcpipDefIf.defaultNet == pDownIf || 
-                        (priIsDown && _TCPIPStackNetGetPrimary(tcpipDefIf.defaultNet) == _TCPIPStackNetGetPrimary(pDownIf)))
-#else
-            if(tcpipDefIf.defaultNet == 0 || tcpipDefIf.defaultNet == pDownIf)
-#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            {   // since this interface is going down change the default interface
-                pNewIf = 0;
-                for(netIx = 0, pIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pIf++)
-                {
-                    if(pIf->Flags.bInterfaceEnabled && pIf != pDownIf)
-                    {   // select this one
-                        pNewIf = pIf;
-                        break;
-                    }
-                }
-                tcpipDefIf.defaultNet = pNewIf;
-#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
-                if(tcpipDefIf.defaultMcastNet == pDownIf)
-                {
-                    tcpipDefIf.defaultMcastNet = pNewIf;
-                }
-#endif
-            }
-
+            _TCPIP_SelectDefaultNet(pDownIf);
         }
         return true;
     }
@@ -1375,6 +1345,9 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
     }
     TCPIP_Commands_ExecTimeUpdate();
 #endif // defined(TCPIP_STACK_TIME_MEASUREMENT)
+
+    // assign a default interface, if needed
+    _TCPIP_SelectDefaultNet(0);
 
     // check stack signals
     eventPending = TCPIP_STACK_CheckEventsPending();
@@ -1919,6 +1892,90 @@ bool TCPIP_STACK_NetDefaultSet(TCPIP_NET_HANDLE netH)
     }
 
     return false;
+}
+
+// selects a default interface if needed
+// the default interface could become 0 
+// when a network interface is going down, for example
+// if pDownIf != 0 specifies a going down interface
+static void _TCPIP_SelectDefaultNet(TCPIP_NET_IF* pDownIf)
+{
+    int netIx;
+    TCPIP_NET_IF *pIf, *pNewIf;
+    bool searchDefault = false;
+
+    if(tcpipDefIf.defaultNet == 0)
+    {   // need search
+        searchDefault = true;
+    }
+    else if(tcpipDefIf.defaultNet == pDownIf)
+    {   // interface is going down; replace
+        tcpipDefIf.defaultNet = 0;
+        searchDefault = true;
+    }
+    else if(pDownIf != 0)
+    {
+#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+        if((_TCPIPStackNetGetPrimary(tcpipDefIf.defaultNet) == _TCPIPStackNetGetPrimary(pDownIf)))
+        {
+            tcpipDefIf.defaultNet = 0;
+            searchDefault = true;
+        }
+#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    }
+
+    // repeat for the multicast interface
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+    if(tcpipDefIf.defaultMcastNet == 0)
+    {   // need search
+        searchDefault = true;
+    }
+    else if(tcpipDefIf.defaultMcastNet == pDownIf)
+    {   // interface is going down; replace
+        tcpipDefIf.defaultMcastNet = 0;
+        searchDefault = true;
+    }
+    else if(pDownIf != 0)
+    {
+#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+        if((_TCPIPStackNetGetPrimary(tcpipDefIf.defaultMcastNet) == _TCPIPStackNetGetPrimary(pDownIf)))
+        {
+            tcpipDefIf.defaultMcastNet = 0;
+            searchDefault = true;
+        }
+#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    }
+#endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+
+
+    if(searchDefault)
+    {
+        pNewIf = 0;
+        for(netIx = 0, pIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pIf++)
+        {
+            if(pIf->Flags.bInterfaceEnabled)
+            {   // select this one
+                pNewIf = pIf;
+                break;
+            }
+        }
+
+        if(pNewIf != 0)
+        {   // favor a primary interface
+            pNewIf = _TCPIPStackNetGetPrimary(pNewIf); 
+        }
+        if(tcpipDefIf.defaultNet == 0)
+        {
+            tcpipDefIf.defaultNet = pNewIf;
+        }
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+        if(tcpipDefIf.defaultMcastNet == 0)
+        {
+            tcpipDefIf.defaultMcastNet = pNewIf;
+        }
+#endif
+    }
+
 }
 
 TCPIP_NET_HANDLE TCPIP_STACK_NetMulticastGet(void)
@@ -3937,7 +3994,7 @@ static void _TCPIPSignalEntryNotify(TCPIP_MODULE_SIGNAL_ENTRY* pSigEntry, TCPIP_
 
     if((userF = pSigEntry->userSignalF) != 0)
     {
-        (*userF)(pSigEntry, (pSigEntry - TCPIP_STACK_MODULE_SIGNAL_TBL) / sizeof(*pSigEntry), signal, sigParam);
+        (*userF)(pSigEntry, pSigEntry - TCPIP_STACK_MODULE_SIGNAL_TBL, signal, sigParam);
     }
 }
 

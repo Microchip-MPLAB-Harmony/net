@@ -8,7 +8,10 @@
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f6" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f6" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_v71_xult_freertos/bsp/bsp.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/crypto.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/aes.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/arc4.h</itemPath>
@@ -26,17 +29,17 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/curve25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dh.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha_sam6156.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_sam6149.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/error-crypt.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/cpuid.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fe_operations.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ge_operations.h</itemPath>
@@ -476,7 +479,10 @@
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
                        projectFiles="true">
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+          <logicalFolder name="f7" displayName="bsp" projectFiles="true">
+            <itemPath>../src/config/sam_v71_xult_freertos/bsp/bsp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypto.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/aes.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/arc4.c</itemPath>
@@ -728,11 +734,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.15</languageToolchainVersion>
+        <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="3.0.8"/>
+        <pack name="SAMV71_DFP" vendor="Atmel" version="2.4.162"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
       </packs>
       <compileType>

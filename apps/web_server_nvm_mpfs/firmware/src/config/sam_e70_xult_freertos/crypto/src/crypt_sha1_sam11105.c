@@ -169,7 +169,7 @@ int CRYPT_SHA1_Update(Sha* sha, const byte* data, word32 len)
         if ((((uint32_t)data) & 63) != 0)
         {
             // Data is not aligned!
-            while (len > SHA_BLOCK_SIZE)
+            while (len >= SHA_BLOCK_SIZE)
             {
                 memcpy(&actBuffer, data, SHA_BLOCK_SIZE);
                 result = CRYPT_SHA1_Process(sha, actBuffer, SHA_BLOCK_SIZE);

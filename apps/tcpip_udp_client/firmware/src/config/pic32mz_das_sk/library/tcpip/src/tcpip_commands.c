@@ -369,7 +369,7 @@ static const void*          miimCmdIoParam = 0;
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
     {"netinfo",     _Command_NetInfo,              ": Get network information"},
-    {"defnet",      _Command_DefaultInterfaceSet,  ": Set default network interface"},
+    {"defnet",      _Command_DefaultInterfaceSet,  ": Set/Get default interface"},
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
     {"dhcp",        _CommandDhcpOptions,           ": DHCP client commands"},
@@ -758,33 +758,59 @@ static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
 
 static int _Command_DefaultInterfaceSet (SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    TCPIP_NET_HANDLE netH;
+    bool res;
+    int nameSize;
+    TCPIP_NET_HANDLE netH = 0;
+    int defaultOp = 0;      // 0 - nop, error; 1 set; 2 get
+    char nameBuff[20];
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    if (argc != 2)
+    while(argc >= 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: defnet <interface>\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: defnet PIC32INT\r\n");
-        return false;
+        if(strcmp(argv[1], "set") == 0)
+        {
+            if(argc < 3)
+            {
+                break;
+            }
+
+            netH = TCPIP_STACK_NetHandleGet(argv[2]);
+            if (netH == 0)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
+                return false;
+            }
+            defaultOp = 1;
+        }
+        else if(strcmp(argv[1], "get") == 0)
+        {
+            defaultOp = 2;
+        }
+
+        break;
     }
 
-    netH = TCPIP_STACK_NetHandleGet(argv[1]);
-    if (netH == 0)
+    switch(defaultOp)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
-        return false;
+        case 1:
+            res = TCPIP_STACK_NetDefaultSet(netH);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Default interface set %s\r\n", res ? "successful" : "failed!");
+            break;
+
+        case 2:
+            netH = TCPIP_STACK_NetDefaultGet();
+            nameSize = TCPIP_STACK_NetAliasNameGet(netH, nameBuff, sizeof(nameBuff));
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Default interface is: %s\r\n", nameSize ? nameBuff : "None");
+            break;
+
+        default:
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: defnet set/get <interface>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: defnet set eth0\r\n");
+            break;
     }
 
-    if(TCPIP_STACK_NetDefaultSet(netH))
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Default interface set successful\r\n");
-    }
-    else
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation not accepted\r\n");
-    }
 
-    return true;
+    return false;
 }
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)

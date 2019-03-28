@@ -3937,7 +3937,7 @@ static void _TCPIPSignalEntryNotify(TCPIP_MODULE_SIGNAL_ENTRY* pSigEntry, TCPIP_
 
     if((userF = pSigEntry->userSignalF) != 0)
     {
-        (*userF)(pSigEntry, (pSigEntry - TCPIP_STACK_MODULE_SIGNAL_TBL) / sizeof(*pSigEntry), signal, sigParam);
+        (*userF)(pSigEntry, pSigEntry - TCPIP_STACK_MODULE_SIGNAL_TBL, signal, sigParam);
     }
 }
 

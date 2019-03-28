@@ -260,7 +260,7 @@ extern "C" {
 
 #define TCPIP_INTMAC_PHY_CONFIG_FLAGS               \
                                                     DRV_ETHPHY_CFG_RMII | \
-                                                    0
+                                                    0 
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            500
 #define TCPIP_INTMAC_PHY_ADDRESS                    0
@@ -373,6 +373,7 @@ extern "C" {
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
+#define TCPIP_INTMAC_PERIPHERAL_CLK  				120000000
 
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				1
