@@ -170,7 +170,7 @@ typedef enum
 }TCPIP_MODULE_MAC_ID;
 
 // *****************************************************************************
-
+#if defined (__PIC32C__) || defined(__SAMA5D2__)
 /**
  * Configuration Structure for Queues in GMAC.
  */
@@ -224,7 +224,7 @@ typedef struct
     const struct DRV_ETHPHY_INIT*   pPhyInit;   
    
 }TCPIP_MODULE_MAC_PIC32C_CONFIG;
-
+#elif defined (__PIC32MZ__)
 /*  MAC Initialization Data
 
   Summary:
@@ -295,7 +295,7 @@ typedef struct
     const struct DRV_ETHPHY_INIT*   pPhyInit;   
     
 }TCPIP_MODULE_MAC_PIC32INT_CONFIG;
-
+#endif
 typedef struct
 {
     void*   reserved;
