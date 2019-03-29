@@ -221,7 +221,7 @@ void APP_Tasks( void );
 /* This section is highly customizable based on application's specific needs. */
 #define APP_SWITCH_1StateGet()      SWITCH1_Get()
 #define APP_SWITCH_2StateGet()      SWITCH2_Get()
-#define APP_SWITCH_3StateGet()      SWITCH3_Get()
+#define APP_SWITCH_3StateGet()      SWITCH2_Get()
 #endif
 
 #define APP_LED_1StateSet()         LED1_Set()
