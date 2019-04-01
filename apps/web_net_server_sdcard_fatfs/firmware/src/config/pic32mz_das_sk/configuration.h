@@ -218,12 +218,6 @@ extern "C" {
 
 
 
-/*** NBNS Configuration ***/
-#define TCPIP_STACK_USE_NBNS
-#define TCPIP_NBNS_TASK_TICK_RATE   110
-
-
-
 /*** HTTP NET Configuration ***/
 #define TCPIP_STACK_USE_HTTP_NET_SERVER
 #define TCPIP_HTTP_NET_MAX_HEADER_LEN		    		15
@@ -268,6 +262,12 @@ extern "C" {
 #define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		0
 #define TCPIP_HTTP_NET_MALLOC_FUNC                     0
 #define TCPIP_HTTP_NET_FREE_FUNC                        0
+
+
+
+/*** NBNS Configuration ***/
+#define TCPIP_STACK_USE_NBNS
+#define TCPIP_NBNS_TASK_TICK_RATE   110
 
 
 /*** TCPIP MAC Configuration ***/
@@ -390,7 +390,7 @@ extern "C" {
 #define TCPIP_IF_ETHMAC
 
 #define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				"MCHPBOARD_E"
-#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"00:04:25:1C:A0:05"
+#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"c4:de:39:75:d8:80"
 
 #define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			"192.168.100.10"
 #define TCPIP_NETWORK_DEFAULT_IP_MASK_IDX0			"255.255.255.0"

@@ -42,15 +42,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
-
 #ifndef WOLF_CRYPT_RANDOM_H
 #define WOLF_CRYPT_RANDOM_H
 
@@ -223,7 +214,7 @@ WOLFSSL_API int  wc_RNG_GenerateBlock(WC_RNG*, byte*, word32 sz);
 WOLFSSL_API int  wc_RNG_GenerateByte(WC_RNG*, byte*);
 WOLFSSL_API int  wc_FreeRng(WC_RNG*);
 #else
-#include <wolfssl/wolfcrypt/error-crypt.h>
+#include <crypto/src/error-crypt.h>
 #define wc_InitRng(rng) NOT_COMPILED_IN
 #define wc_InitRng_ex(rng, h, d) NOT_COMPILED_IN
 #define wc_InitRngNonce(rng, n, s) NOT_COMPILED_IN

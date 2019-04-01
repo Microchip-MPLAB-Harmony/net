@@ -620,7 +620,7 @@
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos/crypto</LogicalPath>
           <PhysicalPath dnOrder="3">/crypto/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">32223E89E3757EFAF76B505F67E991DF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">32223E89E3757EFAF76B505F67E991DF</UserChecksum>
+          <UserChecksum dnOrder="5">8A0DA8960F87940ECE8DDB7D4A864947</UserChecksum>
         </File>
         <File dnOrder="77">
           <Type dnOrder="0">SOURCE</Type>
@@ -3411,8 +3411,8 @@
           <Name dnOrder="1">user.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="426">
           <Type dnOrder="0">HEADER</Type>
@@ -3558,7 +3558,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\0.1\PIC32MZEF\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

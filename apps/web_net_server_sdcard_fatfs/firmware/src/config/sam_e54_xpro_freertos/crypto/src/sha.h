@@ -172,6 +172,7 @@ typedef struct wc_Sha {
 #endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha(wc_Sha*);
+WOLFSSL_API int wc_InitHmacSha(wc_Sha*);
 WOLFSSL_API int wc_InitSha_ex(wc_Sha* sha, void* heap, int devId);
 WOLFSSL_API int wc_ShaUpdate(wc_Sha*, const byte*, word32);
 WOLFSSL_API int wc_ShaFinalRaw(wc_Sha*, byte*);

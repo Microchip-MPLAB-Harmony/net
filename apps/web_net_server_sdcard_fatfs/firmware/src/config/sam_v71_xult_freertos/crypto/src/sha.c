@@ -158,7 +158,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     {
         return CRYPT_SHA1_Final(sha, hash);
     }
-    
+
     int wc_ShaFinalRaw(wc_Sha* sha, byte* hash)
     {
         return CRYPT_SHA1_FinalRaw(sha, hash);
@@ -673,8 +673,7 @@ int wc_ShaFinal(wc_Sha* sha, byte* hash)
 }
 
 #endif /* USE_SHA_SOFTWARE_IMPL */
-
-
+    
 int wc_InitSha(wc_Sha* sha)
 {
     return wc_InitSha_ex(sha, NULL, INVALID_DEVID);

@@ -150,6 +150,9 @@ extern "C" {
 #define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
+#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
+#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
+
 
 
 /*** MIIM Driver Configuration ***/
@@ -175,7 +178,7 @@ extern "C" {
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-
+#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN
 
 /* SDMMC Driver Instance 0 RTOS Configurations*/
 #define DRV_SDMMC_STACK_SIZE_IDX0                         1024
@@ -385,7 +388,7 @@ extern "C" {
 
 #define TCPIP_INTMAC_PHY_CONFIG_FLAGS               \
                                                     DRV_ETHPHY_CFG_RMII | \
-                                                    0
+                                                    0 
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            500
 #define TCPIP_INTMAC_PHY_ADDRESS                    0
@@ -549,6 +552,7 @@ extern "C" {
                                                     0
 
 #define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
+#define TCPIP_INTMAC_PERIPHERAL_CLK  				120000000
 
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				1
@@ -624,6 +628,7 @@ extern "C" {
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3
+#define NO_AES_CBC
 #define NO_RNG
 #define NO_RNG_TEST
 
