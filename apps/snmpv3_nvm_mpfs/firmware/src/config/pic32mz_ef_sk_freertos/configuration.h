@@ -568,8 +568,8 @@ extern "C" {
 
 
 #define TCPIP_INTMAC_PHY_CONFIG_FLAGS     			\
-                                                    DRV_ETHPHY_CFG_RMII | \
-                                                    0                                                    
+                                                    DRV_ETHPHY_CFG_AUTO | \
+													0                                                    
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY  			500
 #define TCPIP_INTMAC_PHY_ADDRESS		    			0
