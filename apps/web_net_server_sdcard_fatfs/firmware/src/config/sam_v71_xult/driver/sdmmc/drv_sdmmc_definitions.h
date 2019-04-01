@@ -75,7 +75,9 @@ typedef enum
     /* Data transfer completed successfully */
     DRV_SDMMC_XFER_STATUS_DATA_COMPLETED     = 0x02,
 
-    DRV_SDMMC_XFER_STATUS_CARD_REMOVED       = 0x04
+    DRV_SDMMC_XFER_STATUS_CARD_INSERTED      = 0x04,
+
+    DRV_SDMMC_XFER_STATUS_CARD_REMOVED       = 0x08
 
 }DRV_SDMMC_XFER_STATUS;
 
@@ -98,6 +100,16 @@ typedef enum
     DRV_SDMMC_SPEED_MODE_HIGH
 
 } DRV_SDMMC_SPEED_MODE;
+
+typedef enum
+{
+    /* Use SDCD line to detect card insertion/removal */
+    DRV_SDMMC_CD_METHOD_USE_SDCD = 0,
+
+    /* Use command/response method to detect card insertion/removal */
+    DRV_SDMMC_CD_METHOD_POLLING
+
+}DRV_SDMMC_CD_METHOD;
 
 typedef enum
 {
@@ -140,6 +152,10 @@ typedef bool (*DRV_SDMMC_PLIB_IS_DATA_LINE_BUSY)(void);
 typedef void (*DRV_SDMMC_PLIB_RESET_ERROR)(DRV_SDMMC_RESET_TYPE resetType);
 typedef void (*DRV_SDMMC_PLIB_SEND_COMMAND)( uint8_t opCode, uint32_t argument, uint8_t respType, DRV_SDMMC_DataTransferFlags flags );
 typedef void (*DRV_SDMMC_PLIB_READ_RESPONSE)(DRV_SDMMC_READ_RESPONSE_REG respReg, uint32_t* response );
+typedef void (*DRV_SDMMC_PLIB_CARD_DETECT_ENABLE)(void);
+typedef void (*DRV_SDMMC_PLIB_CARD_DETECT_DISABLE)(void);
+typedef void (*DRV_SDMMC_PLIB_WRITE_PROTECT_ENABLE)(void);
+typedef void (*DRV_SDMMC_PLIB_WRITE_PROTECT_DISABLE)(void);
 typedef void (*DRV_SDMMC_PLIB_SET_BLOCK_COUNT)(uint16_t numBlocks);
 typedef void (*DRV_SDMMC_PLIB_SET_BLOCK_SIZE)(uint16_t blockSize );
 typedef void (*DRV_SDMMC_PLIB_SET_BUS_WIDTH)(DRV_SDMMC_BUS_WIDTH busWidth);
@@ -214,6 +230,12 @@ typedef struct _DRV_SDMMC_INIT
 
     /* Pointer to the buffer pool */
     uintptr_t                   bufferObjPool;
+
+    /* Card detection method */
+    DRV_SDMMC_CD_METHOD         cardDetectionMethod;
+
+    /* Rate at which card insertion/removal is checked if polling method is selected */
+    uint32_t                    cardDetectionPollingIntervalMs;
 
     /* Whether SD Card detection is enabled or not */
     bool                        isCardDetectEnabled;

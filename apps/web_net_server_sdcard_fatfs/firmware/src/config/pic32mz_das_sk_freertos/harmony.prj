@@ -3,7 +3,7 @@
   <Configurator>
     <Name dnOrder="0" value="pic32mz_das_sk_freertos"/>
     <Processor dnOrder="1" value="PIC32MZ2064DAS169"/>
-    <Harmony dnOrder="2" path="../../../.."/>
+    <Harmony dnOrder="2" path="../../.."/>
     <Manifest dnOrder="3">
       <Files dnOrder="0">
         <File dnOrder="0">
