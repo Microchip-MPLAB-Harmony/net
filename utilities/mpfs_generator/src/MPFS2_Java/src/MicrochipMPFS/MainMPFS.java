@@ -255,8 +255,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Dec,10 2018"+"<br>";
-        String version = "Version MPFS 3.01";
+        aboutStr = "<html>"+"Date Apr,2 2019"+"<br>";
+        String version = "Version MPFS 3.3.0";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
@@ -1660,7 +1660,7 @@ public class MainMPFS extends javax.swing.JFrame {
             txtProjectImageName.setText("mpfs_img2");
             saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
             radC18C32.setText("PIC32 Image");
-            advSetting.setNoCompressionFileStr("*.inc, snmp.bib,*.bin");
+            advSetting.setNoCompressionFileStr("*.inc, snmp.bib,*.bin,*.htm, *.html");
             advSetting.setDynamicFileStr("*.htm, *.html, *.cgi, *.xml");
             saveXmlNodeValue(eXmlNodeAttribute.DYNAMIC_FILES,advSetting.getDynamicFileStr(),0,true);
             saveXmlNodeValue(eXmlNodeAttribute.NO_COMPRESS_FILE_LIST,advSetting.getNoCompressionFileStr(),0,true);
@@ -2080,7 +2080,7 @@ public class MainMPFS extends javax.swing.JFrame {
             byte version = 2;
             int reserveBlock = 64;
             String htmlTypes = "*.htm, *.html, *.xml, *.cgi";
-            String noGZipTypes = "*.inc, snmp.bib,*.bin";
+            String noGZipTypes = "*.inc, snmp.bib,*.bin,*.htm,*.html";
 
             // Process each command line argument
             for(int i =0; i < (args.length - 3); i++)
