@@ -189,7 +189,7 @@ public class AdvanceSettings extends javax.swing.JDialog {
         txtDoNotCompress.setText(NoCompStr);
         if(mainMpfs.radUnifiedStackuse.isSelected())
         {
-           NoCompStr = "*.inc, snmp.bib,*.bin";
+           NoCompStr = "*.inc, snmp.bib,*.bin,,*.htm,*.html";
            txtDoNotCompress.setText(NoCompStr);
         }        
     }

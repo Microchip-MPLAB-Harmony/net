@@ -296,7 +296,7 @@ public class xmlInterface {
         noCompressFiles.setAttribute("Type","String");
        // noCompressFiles.setAttribute("Scope","User");
         value = doc.createElement("Value");
-        value.appendChild(doc.createTextNode("*.inc, snmp.bib,*.bin"));
+        value.appendChild(doc.createTextNode("*.inc, snmp.bib,*.bin,,*.htm,*.html"));
         noCompressFiles.appendChild(value);
         rootElement.appendChild(noCompressFiles);
 
