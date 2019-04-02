@@ -40,18 +40,8 @@ BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
 FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*****************************************************************************/
-
-
-
-
-
-
-
-
-
+**************************************************************************/
 //DOM-IGNORE-END
-
 
 
 
@@ -156,7 +146,7 @@ enum {
     #include "wolfssl/wolfcrypt/port/caam/wolfcaam_sha.h"
 #elif defined(WOLFSSL_AFALG_HASH)
     #include "wolfssl/wolfcrypt/port/af_alg/afalg_hash.h"
-#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256)
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA256) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA224)
     #include "crypto/src/crypt_sha256_hw.h"
     #define wc_Sha256 crypt_sha256_hw_descriptor
 #else
@@ -209,6 +199,7 @@ typedef struct wc_Sha256 {
 #endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha256(wc_Sha256*);
+WOLFSSL_API int wc_InitHmacSha256(wc_Sha256*);
 WOLFSSL_API int wc_InitSha256_ex(wc_Sha256*, void*, int);
 WOLFSSL_API int wc_Sha256Update(wc_Sha256*, const byte*, word32);
 WOLFSSL_API int wc_Sha256FinalRaw(wc_Sha256*, byte*);
@@ -248,6 +239,7 @@ typedef wc_Sha256 wc_Sha224;
 #endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha224(wc_Sha224*);
+WOLFSSL_API int wc_InitHmacSha224(wc_Sha224*);
 WOLFSSL_API int wc_InitSha224_ex(wc_Sha224*, void*, int);
 WOLFSSL_API int wc_Sha224Update(wc_Sha224*, const byte*, word32);
 WOLFSSL_API int wc_Sha224Final(wc_Sha224*, byte*);
