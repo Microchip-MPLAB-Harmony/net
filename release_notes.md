@@ -1,4 +1,183 @@
 # Microchip MPLAB Harmony 3 Release Notes
+## Net Release v3.3.0 (April, 2019)
+### ADDITIONS AND UPDATES FOR  3.3.0:
+
+- **New part support** -This release introduces initial support for [PIC32MZEF](https://www.microchip.com/design-centers/32-bit/pic-32-bit-mcus/pic32mz-ef-family) and [PIC32MZDA](https://www.microchip.com/design-centers/32-bit/pic-32-bit-mcus/pic32mz-da-family) families of 32-bit microcontrollers.
+
+- **Updated Applications**
+
+The following table provides the list of the updated applications including bare metal and FreeRTOS configurations:
+
+| Application                 | Platform                        | Description                                                          |
+| ------------ | ------------ | ------------ |
+| berkeley_tcp_client         | PIC32MZEF, PIC32MZDA            | TCP Client demo using BSD API                                        |
+| berkeley_tcp_server         | PIC32MZEF, PIC32MZDA            | TCP Server demo using BSD API                                        |
+| berkeley_udp_client         | PIC32MZEF, PIC32MZDA            | UDP Client demo using BSD API                                        |
+| berkeley_udp_relay          | PIC32MZEF, PIC32MZDA            | UDP Relay demo using BSD API                                         |
+| berkeley_udp_server         | PIC32MZEF, PIC32MZDA            | UDP Server demo using BSD API                                        |
+| snmpv3_nvm_mpfs             | PIC32MZEF                       | SNMPv3 demo with MPFS file system using NVM storage                  |
+| snmpv3_sdcard_fatfs         | PIC32MZEF                       | SNMPv3 demo with  FAT FS file system using external SD card          |
+| tcpip_client_server         | PIC32MZEF, PIC32MZDA            | Multi-threaded example with TCP and UDP server and client threads    |
+| tcpip_tcp_client            | PIC32MZEF, PIC32MZDA            | TCP Client demo using Harmony native API                             |
+| tcpip_tcp_client_server     | PIC32MZEF, PIC32MZDA            | TCP Client and Server demo using Harmony native API                  |
+| tcpip_tcp_server            | PIC32MZEF, PIC32MZDA            | TCP Server demo using Harmony native API                             |
+| tcpip_udp_client            | PIC32MZEF, PIC32MZDA            | UDP Client demo using Harmony native API                             |
+| tcpip_udp_client_server     | PIC32MZEF, PIC32MZDA            | UDP Client and Server demo using Harmony native API                  |
+| tcpip_udp_server            | PIC32MZEF, PIC32MZDA            | UDP Server demo using Harmony native API                             |
+| web_net_server_nvm_mpfs     | PIC32MZEF, PIC32MZDA            | Web server with MPFS file system using the NVM storage               |
+| web_server_nvm_mpfs         | PIC32MZEF                       | Old style web server with MPFS file system using the NVM storage     |
+| web_net_server_sdcard_fatfs | PIC32MZEF, PIC32MZDA            | Web server with FAT FS file system on the external SD Card           |
+
+
+- **Updated Drivers**
+
+The following table provides the list of new support for MAC drivers:
+
+| Driver                | Platform |
+| --------- | --------- |
+| drv_ethmac.c, drv_ethmac_lib.c   | PIC32MZEF, PIC32MZDA |
+
+
+- **Updated Utililties**
+
+The following table provides the list of updated utilities for the TCP/IP stack :
+
+| Module                | Description                                             |
+| ------ | ------ |
+| mpfs2.jar             | The tool has been updated to disable the default compression of html files. The new http_net web server module parses the web pages at run time. |
+
+- **Bug Fixes**
+
+The following table provides the list of bug fixes in this release:
+
+| Module                | Description                                             |
+| ------ | ------ |
+| TCP/IP Manager        | Created function to update the default interface at run time after an interface is changed or brought down |
+
+
+### TESTED WITH:
+
+#### Software Dependencies
+
+Before using MPLAB Harmony Net, ensure that the following are installed:
+
+- [MPLAB X IDE v5.15](https://www.microchip.com/mplab/mplab-x-ide) or later
+- [MPLAB XC32 C/C++ Compiler v2.15](https://www.microchip.com/mplab/compilers) or later
+- [IAR Embedded Workbench for ARM - version 8.32.1] (https://www.iar.com/iar-embedded-workbench/) or later for SAMA5D2 projects
+- Harmony net repository, 3.3.0
+
+In order to regenerate source code for any of the applications, you will also need the following to be installed:
+
+- MPLAB Harmony Configurator (MHC) v.3.2.0
+- Harmony mplabx_plugin repository, 3.2.0
+- Harmony bsp repository, 3.2.1
+- Harmony csp repository, 3.2.1
+- Harmony core repository, 3.2.1
+- Harmony dev_packs repository, 3.2.1
+- Harmony crypto repository, 3.2.0
+- CMSIS-FreeRTOS repository, 10.0.1 if building a FreeRTOS project (from www.github.com/arm-software/cmsis-freertos)
+
+#### Development Kit Support
+
+This release supports applications for the following development kits
+
+| Development Kits |
+| --- |
+| [PIC32MZEF Embedded Connectivity with FPU Starter Kit](https://www.microchip.com/DevelopmentTools/ProductDetails/DM320007-C) |
+| [PIC32MZ Embedded Graphics with Stacked DRAM (DA) Starter Kit](https://www.microchip.com/developmenttools/ProductDetails/DM320010-C) |
+| [SAM A5D2 Xplained Ultra Evaluation Kit](https://www.microchip.com/Developmenttools/ProductDetails/ATSAMA5D2C-XULT) |
+| [SAM E54 Xplained Pro Evaluation Kit](https://www.microchip.com/developmenttools/ProductDetails/ATSAME54-XPRO) |
+| [SAM E70 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAME70-XULT) |
+| [SAM V71 Xplained Ultra Evaluation Kit](https://www.microchip.com/DevelopmentTools/ProductDetails.aspx?PartNO=ATSAMV71-XULT) |
+
+### KNOWN ISSUES
+
+The current known issues are as follows:
+
+* For projects using the mpfs_img2.c and mpfs_img2_net.c files, these may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
+* The SAME70 XULT board has some issues and detection of the PHY board may fail. This issue is under investigation.
+    - For now the SAME70 projects are present in the repo just for reference and not for actual running demos.
+    - For now the SAME70 projects are generated using the LAN8740 PHY.
+* The ICD4 loads the reset line of the SAM V71 Xplained Ultra board. When running demo projects using the V71, the ICD4 flex cable should be removed after programming to run the application.
+* Interactive help using the Show User Manual Entry in the Right-click menu for configuration options provided by this module is not yet available from within the MPLAB Harmony Configurator (MHC).  Please see the *Configuring the Library* section in the help documentation in the doc folder for this Harmony 3 module instead.  Help is available in both CHM and PDF formats.
+
+* The SAME70 and SAMV71 TCPIP demos with SDCARD, won’t work with optimisation 0. Use optimization level 1.
+
+* SAMA5D2 projects known issues:
+    - The SNMP protocol and corresponding demo applications is not be available.
+    - IPv6 ULA generation is not available
+    - ZCLL module is not supported
+    - Crypto library is not supported
+    - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
+
+* SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
+* The operation over the secure connections using wolfSSL has not been added to the net repo for this release.
+    - There are 2 wolfSSL TCP demos in the crypto repo.
+    - The web_net_server_nvm_mpfs demo does not currently support encrypted connections.
+    - The wolfSSL third party package cannot be added to the application as an encryption provider.
+* EDBG programming of a hex file on the SAME54 XPRO board may fail.
+* There are some mandatory MISRA violations in some of the repo files. They will be fixed in the next release:
+    - System: sys_debug.c, sys_command.c
+    - TCP/IP: smtpc.c, ndp.c, custom_http_net_app.c, icmpv6.c,
+* Adding TCP/IP components to the project must be done using the TCP/IP Configurators in order to 
+  load the dependencies properly. Adding the TCP/IP components from the "Available Components",
+  without using configurator, might cause build issues.
+* Similarly, remove the TCP/IP components by using the TCP/IP Configurator for the respective layer
+* Do not add the TCP/IP components to the project by using both the TCP/IP Configurator and manually adding from "Available Components".
+* Do not delete the TCP/IP Configurators from project graph.
+* When multiple modules depending on the "netPres" component are added to the project (like Berkeley, HTTP_NET, TELNET etc.),
+  multiple 'netPres' nodes will be shown on TCP/IP STACK group box.
+  But internally all these TCP/IP modules are using a single instance of the NET_PRES service.
+  So only one instance of NET_PRES is needed.
+* Interactive help using the "Show User Manual Entry" in the Right-click menu for configuration options provided
+  by this module is not yet available from within the MPLAB Harmony Configurator (MHC).
+  Please see the "Configuring the Library" section in the help documentation in the doc folder for this module instead.
+  Help is available in both CHM and PDF formats.
+
+* The tcpip_client_server application does not currently have complete documentation. The commands to 
+  use this demonstration are provided in the run time help available as console commands.
+  This will be added in a future release.
+* When the File System service is used in a demonstration application, make sure to set 
+  "Maximum Simultaneous File Access" to a number above 10.
+  Especially the HTTP server needs to open multiple files simultaneously.
+* When the RTOS is enabled, make sure to include RTOS system API’s (like Time Delay functions)
+  in application task to give other tasks the chance to execute.
+  This can be achieved by enabling the "Use Task Delay" from Application Configuration -> RTOS Configuration.
+  
+
+
+### RELEASE CONTENTS
+
+This topic lists the contents of this release and identifies each module.
+
+#### Description
+
+This table lists the contents of this release, including a brief description, and the release type (Alpha, Beta, Production, or Vendor).
+
+
+| Folder                                | Description                                                          | Release Type |
+| --- | --- | --- |
+| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        | Beta |
+| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        | Beta |
+| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        | Beta |
+| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         | Beta |
+| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        | Beta |
+| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  | Beta |
+| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          | Beta |
+| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    | Beta |
+| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             | Beta |
+| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  | Beta |
+| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             | Beta |
+| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             | Beta |
+| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  | Beta |
+| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             | Beta |
+| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               | Beta |
+| net/apps/web_net_server_qspi_mpfs     | Web server with MPFS file system on the onboard QSPI Flash Memory    | Beta |
+| net/apps/web_net_server_sdcard_fatfs  | Web server with FAT FS file system on the external SD card           | Beta |
+| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     | Beta |
+| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card | Beta |
+
+
 ## Net Release v3.2.0 (March, 2019)
 ### ADDITIONS AND UPDATES FOR  3.2.0:
 
@@ -113,7 +292,7 @@ The current known issues are as follows:
     - Crypto library is not supported
     - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
 
-* SDMMC driver may block inside an internal routine while using the HTTP server and locks up th ewhole application. No workaround exists.
+* SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
 * The operation over the secure connections using wolfSSL has not been added to the net repo for this release.
     - There are 2 wolfSSL TCP demos in the crypto repo.
 * For projects using the mpfs_img2.c and mpfs_img2_net.c files, these may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
