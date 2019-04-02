@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>nbns.h</title>
+<title>IPV6_NEXT_HEADER_TYPE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00946.html" target="topic">NBNS Module</a> &gt; <a href="01389.html" target="topic">Files</a> &gt; <a href="00947.html" target="topic">nbns.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00896.html" target="topic">IPv6 Module</a> &gt; <a href="01557.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00947.html" target="topic">IPV6_NEXT_HEADER_TYPE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01389.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="00948.html" target="topic">Next</a></div>
+<a href="00923.html" target="topic">Previous</a> | <a href="01557.html" target="topic">Up</a> | <a href="00961.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nbns.h Topic Title: nbns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_NEXT_HEADER_TYPE Topic Title: IPV6_NEXT_HEADER_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-nbns.h</div>
+IPV6_NEXT_HEADER_TYPE Enumeration</div>
 </div>
 </div>
 
@@ -46,81 +46,117 @@ nbns.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+Enumeration: IPV6_NEXT_HEADER_TYPE&nbsp;</p>
+<p class="Element10">
+Identifies the type of the next header immediately follows IPv6 header.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">IPV6_PROT_HOP_BY_HOP_OPTIONS_HEADER</span></strong> = (0u),
+  <strong><span style="color: #000000">IPV6_PROT_ICMP</span></strong> = (1u),
+  <strong><span style="color: #000000">IPV6_PROT_TCP</span></strong> = (6u),
+  <strong><span style="color: #000000">IPV6_PROT_UDP</span></strong> = (17u),
+  <strong><span style="color: #000000">IPV6_PROT_IPV6</span></strong> = (41u),
+  <strong><span style="color: #000000">IPV6_PROT_ROUTING_HEADER</span></strong> = (43u),
+  <strong><span style="color: #000000">IPV6_PROT_FRAGMENTATION_HEADER</span></strong> = (44u),
+  <strong><span style="color: #000000">IPV6_PROT_ENCAPSULATING_SECURITY_PAYLOAD_HEADER</span></strong> = (50u),
+  <strong><span style="color: #000000">IPV6_PROT_AUTHENTICATION_HEADER</span></strong> = (51u),
+  <strong><span style="color: #000000">IPV6_PROT_ICMPV6</span></strong> = (58u),
+  <strong><span style="color: #000000">IPV6_PROT_NONE</span></strong> = (59u),
+  <strong><span style="color: #000000">IPV6_PROT_DESTINATION_OPTIONS_HEADER</span></strong> = (60u)
+} IPV6_NEXT_HEADER_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-nbns.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-NetBIOS Name Service (NBNS) Server public API&nbsp;</p>
-<p class="Element10">
-The NetBIOS Name Service protocol associates host names with IP addresses, similarly to DNS, but on the same IP subnet. Practically, this allows the assignment of human-name hostnames to access boards on the same subnet.</p></div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02900.html" target="topic">TCPIP_NBNS_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_HOP_BY_HOP_OPTIONS_HEADER = (0u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Hop-by-Hop Opt. Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ICMP = (1u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ICMPv4 Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_TCP = (6u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+TCP protocol Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_UDP = (17u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+UDP protocol Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_IPV6 = (41u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Protocol&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ROUTING_HEADER = (43u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Routing Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_FRAGMENTATION_HEADER = (44u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+IPv6 Fragmentation Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ENCAPSULATING_SECURITY_PAYLOAD_HEADER = (50u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Encapsulating Security Payload Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_AUTHENTICATION_HEADER = (51u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Authentication Header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_ICMPV6 = (58u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+ICMPv6 Protocol&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_NONE = (59u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No next header&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+IPV6_PROT_DESTINATION_OPTIONS_HEADER = (60u)&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Destination Options Header&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02898.html" target="topic">TCPIP_NBNS_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Placeholder for NBNS configuration upgrades.&nbsp;</div></td></tr></table></div></div>
-</div>
+<p class="Element10">
+None</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00946.html" target="topic">NBNS Module</a> &gt; <a href="01389.html" target="topic">Files</a> &gt; <a href="00947.html" target="topic">nbns.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00896.html" target="topic">IPv6 Module</a> &gt; <a href="01557.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00947.html" target="topic">IPV6_NEXT_HEADER_TYPE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +164,13 @@ Placeholder for NBNS configuration upgrades.&nbsp;</div></td></tr></table></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01389.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="00948.html" target="topic">Next</a></div>
+<a href="00923.html" target="topic">Previous</a> | <a href="01557.html" target="topic">Up</a> | <a href="00961.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: nbns.h Topic Title: nbns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_NEXT_HEADER_TYPE Topic Title: IPV6_NEXT_HEADER_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

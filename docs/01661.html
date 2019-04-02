@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_DHCP_CLIENT_ENABLED Macro</title>
+<title>MIB Files</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00290.html" target="topic">DHCP Client Module</a> &gt; <a href="01196.html" target="topic">Configuring the Library</a> &gt; <a href="01661.html" target="topic">TCPIP_DHCP_CLIENT_ENABLED Macro</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01199.html" target="topic">SNMP Module</a> &gt; <a href="01657.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01661.html" target="topic">MIB Files</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01196.html" target="topic">Previous</a> | <a href="01196.html" target="topic">Up</a> | <a href="01684.html" target="topic">Next</a></div>
+<a href="01659.html" target="topic">Previous</a> | <a href="01657.html" target="topic">Up</a> | <a href="01660.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCP_CLIENT_ENABLED Topic Title: TCPIP_DHCP_CLIENT_ENABLED Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server MIB Files Topic Title: MIB Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_DHCP_CLIENT_ENABLED Macro</div>
+MIB Files</div>
 </div>
 </div>
 
@@ -49,24 +49,18 @@ TCPIP_DHCP_CLIENT_ENABLED Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Default value for the enable/disable the DHCP client at stack start-up.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_DHCP_CLIENT_ENABLED</span></strong> 1</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-the interface initialization setting in TCPIP_NETWORK_CONFIG takes precedence!</p></div>
+SNMP describes the hierarchal storage of management objects (referred to with object IDs or OIDs) with MIB files. The Microchip SNMP server demonstration includes two MIB files:
+<ul class="Element632">
+<li class="Element602"><span class="Element146">mchip.mib</span> - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing information about the variables used in the demonstration</li>
+<li class="Element602"><span class="Element146">snmp.mib</span> - This is a custom-formatted file that can be parsed to create Web page and header resources that can be accessed with a MCHP device</li>
+</ul>The TCP/IP Stack includes the mib2bib utility, which will compile the custom Microchip MIB script (<span class="Element146">snmp.mib</span>) to generate two files named snmp.bib and <span class="Element146">mib.h</span>. The snmp.bib file is a compressed record of management objects that will be stored with web pages and the<span class="Element146"> mib.h</span> file contains C defines for each OID. These files are included in the appropriate directories for the TCP/IP Demonstration Applications, but for a custom application the snmp.bib must be copied to the web page directory, <span class="Element146">mib.h</span> copied to the application directory and included in the project. Rebuild your project, and then rebuild and re-upload the web page. This will bundle the BIB file into the web page image, which will allow the SNMP agent to search for the required variable information with the MPFS file system.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00290.html" target="topic">DHCP Client Module</a> &gt; <a href="01196.html" target="topic">Configuring the Library</a> &gt; <a href="01661.html" target="topic">TCPIP_DHCP_CLIENT_ENABLED Macro</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01199.html" target="topic">SNMP Module</a> &gt; <a href="01657.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01661.html" target="topic">MIB Files</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -74,13 +68,13 @@ the interface initialization setting in TCPIP_NETWORK_CONFIG takes precedence!</
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01196.html" target="topic">Previous</a> | <a href="01196.html" target="topic">Up</a> | <a href="01684.html" target="topic">Next</a></div>
+<a href="01659.html" target="topic">Previous</a> | <a href="01657.html" target="topic">Up</a> | <a href="01660.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCP_CLIENT_ENABLED Topic Title: TCPIP_DHCP_CLIENT_ENABLED Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server MIB Files Topic Title: MIB Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

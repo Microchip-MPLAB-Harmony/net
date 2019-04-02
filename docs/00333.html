@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Abstraction Model</title>
+<title>dhcp_config.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00937.html" target="topic">MIIM Driver Library</a> &gt; <a href="00342.html" target="topic">Using the Library</a> &gt; <a href="00333.html" target="topic">Abstraction Model</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00331.html" target="topic">DHCP Client Module</a> &gt; <a href="01408.html" target="topic">Files</a> &gt; <a href="00333.html" target="topic">dhcp_config.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00342.html" target="topic">Previous</a> | <a href="00342.html" target="topic">Up</a> | <a href="00341.html" target="topic">Next</a></div>
+<a href="00332.html" target="topic">Previous</a> | <a href="01408.html" target="topic">Up</a> | <a href="03897.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV MIIM Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dhcp_config.h Topic Title: dhcp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Abstraction Model</div>
+dhcp_config.h</div>
 </div>
 </div>
 
@@ -46,22 +46,86 @@ Abstraction Model</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The MIIM driver clients access PHY registers using the MIIM Driver API. The driver abstracts out the hardware details of the MIIM interface and provides a PHY register access mechanism to the application. The MIIM Driver provides read, write, and scan access to the PHY registers, together with driver and operation status APIs. The driver schedules operations requested by multiple clients and performs them sequentially, informing the clients about the operations outcome.&nbsp;</p>
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-The user can poll for a certain operation status or can register callbacks to be notified of the completion of a scheduled operation.&nbsp;</p>
+dhcp_config.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-A scheduled operation can be aborted, if not yet started.&nbsp;</p>
+Dynamic Host Configuration Protocol (DCHP) Configuration file&nbsp;</p>
 <p class="Element10">
-&nbsp;</p><div class="Element63">
+This file contains the DCHP module configuration options&nbsp;</p>
+<p class="Element10">
+This file is not part of the project, it is a configuration template file only.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element77" valign="top" width="100%" style="border:none;">
-<div class="Element78">
-<span style="color: #000000"><strong>MIIM Driver Abstraction Model</strong></span><br><img src="MIIM_abstraction.png" border="0" alt="" title="">&nbsp;</div></td></tr></table></div></div>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01870.html" target="topic">TCPIP_DHCP_BOOT_FILE_NAME_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+size of the storage for the Boot file name should always be &lt;= 128 default value is 128&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01871.html" target="topic">TCPIP_DHCP_CLIENT_ENABLED</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default value for the enable/disable the DHCP client at stack start-up.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01894.html" target="topic">TCPIP_DHCP_HOST_NAME_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum size of a host name to be advertised to the DHCP server default value is 20&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01933.html" target="topic">TCPIP_DHCP_STORE_BOOT_FILE_NAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable the usage of the Boot file name received from the DHCP server&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01935.html" target="topic">TCPIP_DHCP_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The DHCP task processing rate: number of milliseconds to generate an DHCP tick. Used by the DHCP state machine The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03610.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01936.html" target="topic">TCPIP_DHCP_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines how long to wait before a DHCP lease is acquired when the DHCP module is enabled, seconds&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -69,7 +133,7 @@ A scheduled operation can be aborted, if not yet started.&nbsp;</p>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00937.html" target="topic">MIIM Driver Library</a> &gt; <a href="00342.html" target="topic">Using the Library</a> &gt; <a href="00333.html" target="topic">Abstraction Model</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00331.html" target="topic">DHCP Client Module</a> &gt; <a href="01408.html" target="topic">Files</a> &gt; <a href="00333.html" target="topic">dhcp_config.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -77,13 +141,13 @@ A scheduled operation can be aborted, if not yet started.&nbsp;</p>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00342.html" target="topic">Previous</a> | <a href="00342.html" target="topic">Up</a> | <a href="00341.html" target="topic">Next</a></div>
+<a href="00332.html" target="topic">Previous</a> | <a href="01408.html" target="topic">Up</a> | <a href="03897.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV MIIM Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: dhcp_config.h Topic Title: dhcp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

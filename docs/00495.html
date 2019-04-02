@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ETHPHY_VendorSMIReadStart Function</title>
+<title>DRV_ETHPHY_OBJECT_BASE Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00597.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00311.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00495.html" target="topic">DRV_ETHPHY_VendorSMIReadStart Function</a></div>
+<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00495.html" target="topic">DRV_ETHPHY_OBJECT_BASE Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00494.html" target="topic">Previous</a> | <a href="00311.html" target="topic">Up</a> | <a href="00496.html" target="topic">Next</a></div>
+<a href="00490.html" target="topic">Previous</a> | <a href="00366.html" target="topic">Up</a> | <a href="00571.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_VendorSMIReadStart@DRV_HANDLE@uint16_t@int Topic Title: DRV_ETHPHY_VendorSMIReadStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_OBJECT_BASE Topic Title: DRV_ETHPHY_OBJECT_BASE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ETHPHY_VendorSMIReadStart Function</div>
+DRV_ETHPHY_OBJECT_BASE Structure</div>
 </div>
 </div>
 
@@ -49,63 +49,64 @@ DRV_ETHPHY_VendorSMIReadStart Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will start a SMI read transfer.</p></div>
+Ethernet PHY Driver Base Object&nbsp;</p>
+<p class="Element10">
+This data structure identifies the required interface of the Ethernet PHY driver. Any dynamic PHY driver has to export this interface.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00469.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_VendorSMIReadStart</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
-    uint16_t <strong><span style="color: #000000">rIx</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">phyAddress</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element632">
-<li class="Element602">The <a href="00377.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
-<li class="Element602"><a href="00461.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
-<li class="Element602"><a href="00476.html" target="topic">DRV_ETHPHY_Setup</a> is in progress and configures the PHY</li>
-<li class="Element602">The vendor implementation of the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure is running and a SMI transfer is needed</li>
-</ul></p></div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-DRV_ETHPHY_RES_OK - the vendor transaction is started <a href="00494.html" target="topic">DRV_ETHPHY_VendorSMIReadResultGet</a>() needs to be called for the transaction to complete and to retrieve the result&nbsp;</p>
-<p class="Element10">
-DRV_ETHPHY_RES_PENDING - the SMI bus is busy and the call needs to be retried&nbsp;</p>
-<p class="Element10">
-&lt; 0 - some error and the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure has to return error to be aborted by the <a href="00476.html" target="topic">DRV_ETHPHY_Setup</a></p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">DRV_ETHPHY_OBJECT_BASE_TYPE</span></strong> {
+  SYS_MODULE_OBJ (* <strong><span style="color: #000000"><a href="00457.html" target="topic">DRV_ETHPHY_Initialize</a></span></strong>)(<strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX index, <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> init);
+  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000"><a href="00544.html" target="topic">DRV_ETHPHY_Reinitialize</a></span></strong>)(SYS_MODULE_OBJ object, <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> init);
+  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000"><a href="00441.html" target="topic">DRV_ETHPHY_Deinitialize</a></span></strong>)(SYS_MODULE_OBJ object);
+  SYS_STATUS (* <strong><span style="color: #000000"><a href="00565.html" target="topic">DRV_ETHPHY_Status</a></span></strong>)(SYS_MODULE_OBJ object);
+  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000"><a href="00566.html" target="topic">DRV_ETHPHY_Tasks</a></span></strong>)(SYS_MODULE_OBJ object);
+  DRV_HANDLE (* <strong><span style="color: #000000"><a href="00541.html" target="topic">DRV_ETHPHY_Open</a></span></strong>)(<strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX drvIndex, <strong><span style="color: #000080">const</span></strong> DRV_IO_INTENT intent);
+  <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000"><a href="00433.html" target="topic">DRV_ETHPHY_Close</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00424.html" target="topic">DRV_ETHPHY_CLIENT_STATUS</a> (* <strong><span style="color: #000000"><a href="00432.html" target="topic">DRV_ETHPHY_ClientStatus</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00430.html" target="topic">DRV_ETHPHY_ClientOperationResult</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00429.html" target="topic">DRV_ETHPHY_ClientOperationAbort</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00558.html" target="topic">DRV_ETHPHY_SMIRead</a></span></strong>)(DRV_HANDLE handle, <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">int</span></strong> rIx, uint16_t* pSmiRes, <strong><span style="color: #000080">int</span></strong> phyAdd);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00564.html" target="topic">DRV_ETHPHY_SMIWrite</a></span></strong>)(DRV_HANDLE handle, <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">int</span></strong> rIx, uint16_t wData, <strong><span style="color: #000080">int</span></strong> phyAdd, <strong><span style="color: #000080">bool</span></strong> waitComplete);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00560.html" target="topic">DRV_ETHPHY_SMIScanStart</a></span></strong>)(DRV_HANDLE handle, <strong><span style="color: #000080">unsigned</span></strong> <strong><span style="color: #000080">int</span></strong> rIx);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00562.html" target="topic">DRV_ETHPHY_SMIScanStop</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00561.html" target="topic">DRV_ETHPHY_SMIScanStatusGet</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00559.html" target="topic">DRV_ETHPHY_SMIScanDataGet</a></span></strong>)(DRV_HANDLE handle, uint16_t* pScanRes);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00563.html" target="topic">DRV_ETHPHY_SMIStatus</a></span></strong>)(DRV_HANDLE handle);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00557.html" target="topic">DRV_ETHPHY_SMIClockSet</a></span></strong>)(DRV_HANDLE handle, uint32_t hostClock, uint32_t maxSMIClock);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00543.html" target="topic">DRV_ETHPHY_PhyAddressGet</a></span></strong>)(DRV_HANDLE handle, <a href="00459.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a> portIndex, <strong><span style="color: #000080">int</span></strong>* pPhyAddress);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00556.html" target="topic">DRV_ETHPHY_Setup</a></span></strong>)(DRV_HANDLE handle, <a href="00550.html" target="topic">DRV_ETHPHY_SETUP</a>* pSetUp, TCPIP_ETH_OPEN_FLAGS* pSetupFlags);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00548.html" target="topic">DRV_ETHPHY_RestartNegotiation</a></span></strong>)(DRV_HANDLE handle, <a href="00459.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a> portIndex);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00442.html" target="topic">DRV_ETHPHY_HWConfigFlagsGet</a></span></strong>)(DRV_HANDLE handle, <a href="00435.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a>* pFlags);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00488.html" target="topic">DRV_ETHPHY_NegotiationIsComplete</a></span></strong>)(DRV_HANDLE handle, <a href="00459.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a> portIndex, <strong><span style="color: #000080">bool</span></strong> waitComplete);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00489.html" target="topic">DRV_ETHPHY_NegotiationResultGet</a></span></strong>)(DRV_HANDLE handle, <a href="00459.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a> portIndex, <a href="00484.html" target="topic">DRV_ETHPHY_NEGOTIATION_RESULT</a>* pNegResult);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00481.html" target="topic">DRV_ETHPHY_LinkStatusGet</a></span></strong>)(DRV_HANDLE handle, <a href="00459.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a> portIndex, <a href="00471.html" target="topic">DRV_ETHPHY_LINK_STATUS</a>* pLinkStat, <strong><span style="color: #000080">bool</span></strong> refresh);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00545.html" target="topic">DRV_ETHPHY_Reset</a></span></strong>)(DRV_HANDLE handle, <strong><span style="color: #000080">bool</span></strong> waitComplete);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00572.html" target="topic">DRV_ETHPHY_VendorDataGet</a></span></strong>)(DRV_HANDLE handle, uint32_t* pVendorData);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00573.html" target="topic">DRV_ETHPHY_VendorDataSet</a></span></strong>)(DRV_HANDLE handle, uint32_t vendorData);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00575.html" target="topic">DRV_ETHPHY_VendorSMIReadStart</a></span></strong>)(DRV_HANDLE handle, uint16_t rIx, <strong><span style="color: #000080">int</span></strong> phyAddress);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00574.html" target="topic">DRV_ETHPHY_VendorSMIReadResultGet</a></span></strong>)(DRV_HANDLE handle, uint16_t* pSmiRes);
+  <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> (* <strong><span style="color: #000000"><a href="00576.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart</a></span></strong>)(DRV_HANDLE handle, uint16_t rIx, uint16_t wData, <strong><span style="color: #000080">int</span></strong> phyAddress);
+} DRV_ETHPHY_OBJECT_BASE;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The function is intended for implementing vendor SMI transfers within DRV_EXTPHY_MIIConfigure and DRV_EXTPHY_MDIXConfigure.&nbsp;</p>
+The PHY driver consists of 2 modules:
+<ul class="Element632">
+<li class="Element602">the main/base PHY driver which uses standard IEEE PHY registers</li>
+<li class="Element602">the vendor specific functionality</li>
+</ul>This object provides the base functionality. Every dynamic PHY driver has to expose this basic functionality as part of its interface.&nbsp;</p>
 <p class="Element10">
-It has to be called from within the DRV_EXTPHY_MIIConfigure or DRV_EXTPHY_MDIXConfigure functions (which are called, in turn, by the <a href="00476.html" target="topic">DRV_ETHPHY_Setup</a> procedure) otherwise the call will fail.&nbsp;</p>
-<p class="Element10">
-The DRV_ETHPHY_RES_OK and DRV_ETHPHY_RES_PENDING significance is changed from the general driver API.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
-</div>
+See above the description of each function that's part of the base PHY driver.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00597.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00311.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00495.html" target="topic">DRV_ETHPHY_VendorSMIReadStart Function</a></div>
+<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00495.html" target="topic">DRV_ETHPHY_OBJECT_BASE Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +114,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00494.html" target="topic">Previous</a> | <a href="00311.html" target="topic">Up</a> | <a href="00496.html" target="topic">Next</a></div>
+<a href="00490.html" target="topic">Previous</a> | <a href="00366.html" target="topic">Up</a> | <a href="00571.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_VendorSMIReadStart@DRV_HANDLE@uint16_t@int Topic Title: DRV_ETHPHY_VendorSMIReadStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_OBJECT_BASE Topic Title: DRV_ETHPHY_OBJECT_BASE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

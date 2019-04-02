@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type</title>
+<title>Building the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00143.html" target="topic">Announce Module</a> &gt; <a href="01157.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01562.html" target="topic">TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01562.html" target="topic">Building the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01550.html" target="topic">Previous</a> | <a href="01157.html" target="topic">Up</a> | <a href="01564.html" target="topic">Next</a></div>
+<a href="02253.html" target="topic">Previous</a> | <a href="01008.html" target="topic">Up</a> | <a href="01574.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ANNOUNCE_MESSAGE_CALLBACK Topic Title: TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type</div>
+Building the Library</div>
 </div>
 </div>
 
@@ -49,32 +49,14 @@ TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Type: TCPIP_ANNOUNCE_MESSAGE_CALLBACK&nbsp;</p>
-<p class="Element10">
-Prototype of an announce callback function that can be registered by the user.&nbsp;</p>
-<p class="Element10">
-This callback will be called by the announce module when sending a broadcast message.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TCPIP_ANNOUNCE_MESSAGE_CALLBACK</span></strong>)(<a href="02903.html" target="topic">TCPIP_NET_HANDLE</a> hNet, <a href="03713.html" target="topic">UDP_SOCKET</a> s);</pre></div></div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The callback function could use regular UDP calls to add its own data to the message.&nbsp;</p>
-<p class="Element10">
-The UDP <a href="01077.html" target="topic">socket</a> TX buffer has limited space and the standard announce message is in the buffer. The amount of data that can be pushed is limited by the <a href="01561.html" target="topic">TCPIP_ANNOUNCE_MAX_PAYLOAD</a> symbol.&nbsp;</p>
-<p class="Element10">
-If the UDP <a href="01077.html" target="topic">socket</a> TX buffer was not sufficient for storing the internal announce message, then the user part will be skipped.</p></div>
+The MAC Driver module is part of the core functionality of the TCP/IP Stack Library. Please refer to the <a href="01615.html" target="topic">Building the Library</a> topic in the TCP/IP Stack Library section for build information.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00143.html" target="topic">Announce Module</a> &gt; <a href="01157.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01562.html" target="topic">TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01562.html" target="topic">Building the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -82,13 +64,13 @@ If the UDP <a href="01077.html" target="topic">socket</a> TX buffer was not suff
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01550.html" target="topic">Previous</a> | <a href="01157.html" target="topic">Up</a> | <a href="01564.html" target="topic">Next</a></div>
+<a href="02253.html" target="topic">Previous</a> | <a href="01008.html" target="topic">Up</a> | <a href="01574.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ANNOUNCE_MESSAGE_CALLBACK Topic Title: TCPIP_ANNOUNCE_MESSAGE_CALLBACK Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

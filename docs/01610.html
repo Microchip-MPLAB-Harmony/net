@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ARP_MODULE_CONFIG Structure</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00222.html" target="topic">ARP Module</a> &gt; <a href="01168.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01610.html" target="topic">TCPIP_ARP_MODULE_CONFIG Structure</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01030.html" target="topic">NDP Module</a> &gt; <a href="01610.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01631.html" target="topic">Previous</a> | <a href="01168.html" target="topic">Up</a> | <a href="01164.html" target="topic">Next</a></div>
+<a href="01030.html" target="topic">Previous</a> | <a href="01030.html" target="topic">Up</a> | <a href="01614.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_MODULE_CONFIG Topic Title: TCPIP_ARP_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP NDP Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ARP_MODULE_CONFIG Structure</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,93 +49,44 @@ TCPIP_ARP_MODULE_CONFIG Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This is type TCPIP_ARP_MODULE_CONFIG.</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  size_t <strong><span style="color: #000000">cacheEntries</span></strong>;
-  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">deleteOld</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">entrySolvedTmo</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">entryPendingTmo</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">entryRetryTmo</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">permQuota</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">purgeThres</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">purgeQuanta</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">retries</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">gratProbeCount</span></strong>;
-} TCPIP_ARP_MODULE_CONFIG;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-size_t cacheEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-cache entries for this interface&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-bool deleteOld;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-delete old cache if still in place, else don't reinitialize it&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int entrySolvedTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-solved entry removed after this tmo if not referenced - seconds&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int entryPendingTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-timeout for a pending to be solved entry in the cache, in seconds&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int entryRetryTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-timeout for resending an ARP request for a pending entry - seconds 1 sec &lt; tmo &lt; entryPendingTmo&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int permQuota;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-max percentage of permanent entries allowed in the cache -&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int purgeThres;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-purge threshold -&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int purgeQuanta;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no of entries to delete once the threshold is reached&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int retries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no of retries for resolving an entry&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int gratProbeCount;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no of retries done for a gratuitous ARP request&nbsp;</div></td></tr></table></div></div>
-</div>
+The NDP (Neighbor Discovery Protocol) for IP version 6 is used by IPv6 nodes on the same link to discover each other's presence. RFC - 4861.&nbsp;</p>
+<p class="Element10">
+NDP module is responsible for:
+<ul class="Element632">
+<li class="Element602">Address Auto configuration of nodes</li>
+<li class="Element602">Discovery of other nodes in the link (It can be a Router Discovery or Neighbor Discovery)</li>
+<li class="Element602">Determining the link-layer<span style="color: #FFFFFF">_</span>address of other nodes</li>
+<li class="Element602">Duplicate address detection (DAD)</li>
+<li class="Element602">Finding available routers and Domain Name System (DNS) servers</li>
+<li class="Element602">Address Prefix discovery</li>
+<li class="Element602">Parameter Discovery (Such as Link MTU or Hop limit)</li>
+</ul></p><div class="Element15">
+Comparing with IPv4:</div>
+<p class="Element10">
+
+<ul class="Element632">
+<li class="Element602">NDP is a substitute of ARP (Address Resolution protocol ). This new mechanism uses a mix of ICMPv6 and multicast addresses to discover the IPv6 node on same link.</li>
+<li class="Element602">NDP includes Neighbor Unreachability Detection (NUD) , thus improving the robustness of packet delivery.</li>
+<li class="Element602">Unlike IPv4 broadcast addresses, IPv6 address resolution multicasts are spread over 4 billion (2^32) multicast addresses, greatly reducing address resolution-related interrupts on nodes other than the target. Moreover, non-IPv6 machines should not be interrupted at all.</li>
+<li class="Element602">Neighbor Discovery defines five different ICMPv6 packet types.</li>
+</ul></p><div class="Element15">
+Five Different ICMPv6 Packet Types:</div>
+<p class="Element10">
+
+<ul class="Element632">
+<li class="Element602"><strong>Router Solicitation</strong> - Hosts inquire with Router Solicitation message to locate routers on the attached link</li>
+<li class="Element602"><strong>Router Advertisement</strong> - Router advertise their presence periodically to all the nodes or in response to the Router Solicitation message</li>
+<li class="Element602"><strong>Neighbor Solicitation</strong> - Neighbor solicitations are used by nodes to determine the Link Layer address of a neighbor, or to verify that a neighbor is still reachable via a cached Link Layer address</li>
+<li class="Element602"><strong>Neighbor Advertisement</strong> - Neighbor advertisements are used by nodes to respond to a Neighbor Solicitation message</li>
+<li class="Element602"><strong>Redirect</strong> - Routers may inform hosts of a better first hop router for a destination</li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00222.html" target="topic">ARP Module</a> &gt; <a href="01168.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01610.html" target="topic">TCPIP_ARP_MODULE_CONFIG Structure</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01030.html" target="topic">NDP Module</a> &gt; <a href="01610.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -143,13 +94,13 @@ no of retries done for a gratuitous ARP request&nbsp;</div></td></tr></table></d
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01631.html" target="topic">Previous</a> | <a href="01168.html" target="topic">Up</a> | <a href="01164.html" target="topic">Next</a></div>
+<a href="01030.html" target="topic">Previous</a> | <a href="01030.html" target="topic">Up</a> | <a href="01614.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_MODULE_CONFIG Topic Title: TCPIP_ARP_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP NDP Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

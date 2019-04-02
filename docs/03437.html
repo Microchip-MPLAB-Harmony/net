@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_TCP_ArrayFind Function</title>
+<title>TCPIP_SNTP_HandlerRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01096.html" target="topic">TCP Module</a> &gt; <a href="01474.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03437.html" target="topic">TCPIP_TCP_ArrayFind Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01247.html" target="topic">SNTP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03437.html" target="topic">TCPIP_SNTP_HandlerRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03439.html" target="topic">Previous</a> | <a href="01474.html" target="topic">Up</a> | <a href="03458.html" target="topic">Next</a></div>
+<a href="03436.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03468.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayFind@TCP_SOCKET@uint8_t*@uint16_t@uint16_t@uint16_t@bool Topic Title: TCPIP_TCP_ArrayFind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNTP_HandlerRegister@TCPIP_SNTP_EVENT_HANDLER Topic Title: TCPIP_SNTP_HandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_TCP_ArrayFind Function</div>
+TCPIP_SNTP_HandlerRegister Function</div>
 </div>
 </div>
 
@@ -49,26 +49,19 @@ TCPIP_TCP_ArrayFind Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function finds the first occurrence of an array of bytes in the TCP RX buffer. It can be used by an application to abstract searches out of their own application code. For increased efficiency, the function is capable of limiting the scope of search to a specific range of bytes. It can also perform a case-insensitive search if required.&nbsp;</p>
-<p class="Element10">
-For example, if the buffer contains &quot;I love PIC MCUs!&quot; and the search array is &quot;love&quot; with a length of 4, a value of 2 will be returned.</p></div>
+This function registers a SNTP event handler. The SNTP module will call the registered handler when a SNTP event (<a href="03417.html" target="topic">TCPIP_SNTP_EVENT</a>) occurs.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_TCP_ArrayFind</span></strong>(
-    <a href="01123.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">hTCP</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">cFindArray</span></strong>, 
-    uint16_t <strong><span style="color: #000000">wLen</span></strong>, 
-    uint16_t <strong><span style="color: #000000">wStart</span></strong>, 
-    uint16_t <strong><span style="color: #000000">wSearchLen</span></strong>, 
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">bTextCompare</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03435.html" target="topic">TCPIP_SNTP_HANDLE</a> <strong><span style="color: #000000">TCPIP_SNTP_HandlerRegister</span></strong>(
+    <a href="03428.html" target="topic">TCPIP_SNTP_EVENT_HANDLER</a> <strong><span style="color: #000000">handler</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCP is initialized.</p></div>
+The SNTP module must be initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -85,49 +78,33 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hTCP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+handler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The <a href="01077.html" target="topic">socket</a> to search within.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-cFindArray&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The array of bytes to find in the buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wLen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Length of cFindArray.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wStart&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Zero-indexed starting position within the buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-wSearchLen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Length from wStart to search in the buffer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-bTextCompare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-true for case-insensitive text search, false for binary search&nbsp;</div></td></tr></table></div></div>
+Handler to be called when a SNTP event occurs.&nbsp;</div></td></tr></table></div></div>
 </div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Returns a valid handle if the call succeeds, or a null handle if the call failed (an event handler already registered, for example).</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-For better performance of this function, try to search for characters that are expected to exist or limit the scope of the search as much as possible. The HTTP module, for example, uses this function to parse headers. However, it searches for newlines, then the separating colon, then reads the header name to an internal buffer for comparison. This has proven to be significantly faster than searching for full header name strings outright.</p></div>
+The handler has to be short and fast. It is meant for setting an event flag, not for lengthy processing!&nbsp;</p>
+<p class="Element10">
+Currently only one event handler is supported. To register a new one, use <a href="03436.html" target="topic">TCPIP_SNTP_HandlerDeRegister</a> first</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01096.html" target="topic">TCP Module</a> &gt; <a href="01474.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03437.html" target="topic">TCPIP_TCP_ArrayFind Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01247.html" target="topic">SNTP Module</a> &gt; <a href="01673.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="03437.html" target="topic">TCPIP_SNTP_HandlerRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -135,13 +112,13 @@ For better performance of this function, try to search for characters that are e
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03439.html" target="topic">Previous</a> | <a href="01474.html" target="topic">Up</a> | <a href="03458.html" target="topic">Next</a></div>
+<a href="03436.html" target="topic">Previous</a> | <a href="01673.html" target="topic">Up</a> | <a href="03468.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayFind@TCP_SOCKET@uint8_t*@uint16_t@uint16_t@uint16_t@bool Topic Title: TCPIP_TCP_ArrayFind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNTP_HandlerRegister@TCPIP_SNTP_EVENT_HANDLER Topic Title: TCPIP_SNTP_HandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
