@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>berkeley_api_config.h</title>
+<title>Running the Demonstration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00226.html" target="topic">Berkeley Module</a> &gt; <a href="01175.html" target="topic">Files</a> &gt; <a href="00228.html" target="topic">berkeley_api_config.h</a></div>
+<a href="01309.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00225.html" target="topic">snmpv3_nvm_mpfs</a> &gt; <a href="00228.html" target="topic">Running the Demonstration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00227.html" target="topic">Previous</a> | <a href="01175.html" target="topic">Up</a> | <a href="00630.html" target="topic">Next</a></div>
+<a href="00227.html" target="topic">Previous</a> | <a href="00225.html" target="topic">Up</a> | <a href="00229.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: berkeley_api_config.h Topic Title: berkeley_api_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP SNMPv3 NVM MPFS pic32_esk_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-berkeley_api_config.h</div>
+Running the Demonstration</div>
 </div>
 </div>
 
@@ -46,66 +46,126 @@ berkeley_api_config.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
-</div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
-<div class="Element11">
-<div class="Element10">
+<strong>For SAM E70/V71 Xplained Ultra, SAM E54 Xplained Pro Evaluation Kits</strong>
+<ol class="Element631">
+<li value="1" class="Element601">Configure the Development Board as given <a href="00227.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
+<li value="2" class="Element601">Make the demonstration setup as shown <a href="00329.html" target="topic">here</a>.</li>
+<li value="3" class="Element601">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element601">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
+<li value="5" class="Element601">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element601">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element601">Restart the demonstration by pressing the 'RESET' button on the board.</li>
+<li value="8" class="Element601">See that the initialization prints on the serial port terminal.</li>
+<li value="9" class="Element601">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+</ol>&nbsp;</p>
 <p class="Element10">
-berkeley_api_config.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
+<strong>For PIC32MZ Starter Kits</strong>
+<ol class="Element631">
+<li value="1" class="Element601">Configure the Development Board as given <a href="00227.html" target="topic">here</a>.</li>
+<li value="2" class="Element601">Make the demonstration setup as shown <a href="00329.html" target="topic">here</a>.</li>
+<li value="3" class="Element601">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element601">A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.</li>
+<li value="5" class="Element601">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element601">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element601">See that the initialization prints on the serial port terminal.</li>
+<li value="8" class="Element601">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+</ol>&nbsp;</p>
 <p class="Element10">
-Berkeley Sockets API Configuration file&nbsp;</p>
+
+<ul class="Element631">
+<li class="Element601">The SNMP and SNMPv3 server is hosted by the demonstration application.</li>
+<li class="Element601">Run tcpip_discoverer to get the IPv4 and IPv6 address for the board.</li>
+<li class="Element601">Open a SNMP manager (iREASONING SNMP manager is recommended)</li>
+<li class="Element601">Follow the steps given in <a href="#" onclick="openExternalLink('iReasoning MIB Browser');"><img src="indicator_external_link.gif" border="0" alt="" title="">iREASONING Networks MIB Browser</a> section in the Third-Party help for complete details on using and configuring the application demonstration using the iREASONING SNMP Manager.</li>
+</ul>&nbsp;</p>
+<div class="Element15">
+SNMP MIB Browser</div>
 <p class="Element10">
-This file contains the Berkeley API module configuration options&nbsp;</p>
+Several SNMP MIB browsers are available. Users can also install a customized MIB browser specific to their application.&nbsp;</p>
 <p class="Element10">
-This file is not part of the project, it is a configuration template file only.</p></div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+SNMP Get, GetNext, GetBulk, Set request and response are working as expected for SNMP v1/v2/v3 versions.
+<ul class="Element631">
+<li class="Element601">For SNMP v2c , the Agent is configured with three Read communities (&quot;public&quot;, &quot;read&quot;, &quot; &quot;) and three Write communities (&quot;private&quot;,&quot;write&quot;,&quot;public&quot;).</li>
+<li class="Element601">For SNMP v3, the Agent is configured as per the following table:</li>
+</ul></p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00013.html" target="topic">_BERKELEYAPI_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _BERKELEYAPI_CONFIG_H_.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00929.html" target="topic">MAX_BSD_SOCKETS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Berkeley API max number of sockets simultaneous supported&nbsp;</div></td></tr></table></div></div>
-</div>
+<td class="Element65" valign="top" width="39%">
+<div class="Element66">
+Type&nbsp;</div></td><td class="Element65" valign="top" width="22%">
+<div class="Element66">
+USER 1&nbsp;</div></td><td class="Element65" valign="top" width="22%">
+<div class="Element66">
+USER 2&nbsp;</div></td><td class="Element65" valign="top" width="18%">
+<div class="Element66">
+USER 3&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="39%">
+<div class="Element68">
+USM User&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+microchip&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+SnmpAdmin&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+root&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="39%">
+<div class="Element68">
+Security Level&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+auth, priv&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+auth, no priv&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+no auth, no priv&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="39%">
+<div class="Element68">
+Auth Algorithm&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+MD5&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+SHA1&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="39%">
+<div class="Element68">
+Auth Password&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+auth12345&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+ChandlerUS&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="39%">
+<div class="Element68">
+Privacy Algorithm&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+AES&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="39%">
+<div class="Element68">
+Privacy Password&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+priv12345&nbsp;</div></td><td class="Element67" valign="top" width="22%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="18%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The Microchip SNMP Stack supports both TRAP version 1 and TRAP version 2. This demonstration trap output is a multi-varbind SNMPv3 TRAP version 2. Users may be required to configure the Trap receiver as per the SNMP browser selection.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00226.html" target="topic">Berkeley Module</a> &gt; <a href="01175.html" target="topic">Files</a> &gt; <a href="00228.html" target="topic">berkeley_api_config.h</a></div>
+<a href="01309.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00225.html" target="topic">snmpv3_nvm_mpfs</a> &gt; <a href="00228.html" target="topic">Running the Demonstration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +173,13 @@ Berkeley API max number of sockets simultaneous supported&nbsp;</div></td></tr><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00227.html" target="topic">Previous</a> | <a href="01175.html" target="topic">Up</a> | <a href="00630.html" target="topic">Next</a></div>
+<a href="00227.html" target="topic">Previous</a> | <a href="00225.html" target="topic">Up</a> | <a href="00229.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: berkeley_api_config.h Topic Title: berkeley_api_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP SNMPv3 NVM MPFS pic32_esk_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

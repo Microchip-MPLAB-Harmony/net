@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00986.html" target="topic">SMTPC Module</a> &gt; <a href="01430.html" target="topic">Configuring the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00336.html" target="topic">DHCPv6 Module</a> &gt; <a href="01430.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01436.html" target="topic">Previous</a> | <a href="00986.html" target="topic">Up</a> | <a href="00067.html" target="topic">Next</a></div>
+<a href="01433.html" target="topic">Previous</a> | <a href="00336.html" target="topic">Up</a> | <a href="01977.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Configuring the Library</div>
 </div>
@@ -49,11 +49,11 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The configuration of the SMPT TCP/IP Stack Library is based on the file <span class="Element146"><a href="00988.html" target="topic">smtpc_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
+The configuration of the DHCPv6 TCP/IP Stack is based on the file <span class="Element146"><a href="00338.html" target="topic">dhcpv6_config.h</a></span> with the actual symbols generated in the configuration.h.&nbsp;</p>
 <p class="Element10">
-This header file contains the configuration selection for the SMTPC TCP/IP Stack Library. Based on the selections made, the SMTPC TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the SMTPC TCP/IP Stack Library.&nbsp;</p>
+This header file contains the configuration parameters for the DHCPv6 TCP/IP Stack. Based on the selections made, the DHCPv6 TCP/IP Stack will adjust its behavior.&nbsp;</p>
 <p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01099.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01309.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
 </div>
 <a name="4D6163726F73"></a><div class="Element14">
 Macros</div>
@@ -74,121 +74,205 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="00067.html" target="topic">_SMTPC_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01977.html" target="topic">TCPIP_DHCPV6_CLIENT_DUID_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro _SMTPC_CONFIG_H_.&nbsp;</div></td></tr><tr>
+Default DUID type to be used by the client&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02978.html" target="topic">TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01993.html" target="topic">TCPIP_DHCPV6_CLIENT_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-size of a buffer that can hold an email address: user@domain.smth&nbsp;</div></td></tr><tr>
+Clients <a href="01007.html" target="topic">listen</a> for DHCP messages on UDP port:&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02979.html" target="topic">TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02008.html" target="topic">TCPIP_DHCPV6_DNS_SERVERS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-size of a buffer that can hold the 2* username and password&nbsp;</div></td></tr><tr>
+number of DNS servers to store from a DHCP server reply&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02980.html" target="topic">TCPIP_SMTPC_CLIENT_MESSAGE_DATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02009.html" target="topic">TCPIP_DHCPV6_DOMAIN_SEARCH_LIST_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-default string that identifies the SMTPC client mail date Currently there is no date/time service available The mail server will update with the current date Keep the current data/time format that's accepted by the SMTP servers&nbsp;</div></td></tr><tr>
+space for the Domain Search List option - multiple of 16&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02985.html" target="topic">TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02016.html" target="topic">TCPIP_DHCPV6_FORCED_SERVER_PREFERENCE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The retry interval because of a SMTPC temporary error, in seconds. These include temporary errors related to: DNS, <a href="01077.html" target="topic">socket</a> connection, TLS.&nbsp;</div></td></tr><tr>
+preference value that forces the server selection 8 bit value!&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02986.html" target="topic">TCPIP_SMTPC_MAIL_CONNECTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02026.html" target="topic">TCPIP_DHCPV6_IA_FREE_DESCRIPTORS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-number of mail connections (sockets) to be created each mail message requires a mail connection adjust based on the number of simultaneous mail messages in transit&nbsp;</div></td></tr><tr>
+maximum number of free IA descriptors per client&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03018.html" target="topic">TCPIP_SMTPC_MAIL_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02042.html" target="topic">TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_PREF_LTIME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-How many times to retry sending a mail message Retries occur only for server reported transient errors or for internal temporary errors (DNS, <a href="01077.html" target="topic">socket</a> errors, etc.)&nbsp;</div></td></tr><tr>
+default lifetimes for the solicited addresses&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03098.html" target="topic">TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02043.html" target="topic">TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_VALID_LTIME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-size of an email line when sending the email body as plain text SMTP lines are recommended to be 78 chars long and MUST not exceed 998 characters! This implementation limits the line size to TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE (usually 256 or 512). So any mail line longer that this size will have inserted an artificial end of line sequence (CRLF) after this many characters.&nbsp;</div></td></tr><tr>
+This is macro TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_VALID_LTIME.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03099.html" target="topic">TCPIP_SMTPC_SERVER_DATA_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02069.html" target="topic">TCPIP_DHCPV6_IANA_DEFAULT_T1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-server acknowledgment of the mail data: body, attachments et all; seconds Should be adjusted according to the server responsivity RFC specifies it as 10 min Default is 1 minute, which should normally be enough&nbsp;</div></td></tr><tr>
+default values for IANA T1, T2&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03100.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02070.html" target="topic">TCPIP_DHCPV6_IANA_DEFAULT_T2</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-size of the RX buffer for processing the server replies Usually the server replies are not very long so a 512 bytes buffer will normally do&nbsp;</div></td></tr><tr>
+This is macro TCPIP_DHCPV6_IANA_DEFAULT_T2.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03102.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02071.html" target="topic">TCPIP_DHCPV6_IANA_DESCRIPTORS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-general server response timeout, seconds Should be adjusted according to the server responsivity RFC specifies it as 5 min Default is 1 minute, which should normally be enough&nbsp;</div></td></tr><tr>
+maximum number of IANA descriptors per client&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03103.html" target="topic">TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02072.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The retry interval because of a server transient error, in seconds. RFC specifies it should be at least 30 min!&nbsp;</div></td></tr><tr>
+default addresses for IANA in a solicit message&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03104.html" target="topic">TCPIP_SMTPC_SKT_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02073.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_DEFAULT_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Define the size of the RX buffer for the SMTPC <a href="01077.html" target="topic">socket</a> Use 0 for default TCP <a href="01077.html" target="topic">socket</a> value The SMTPC RX does not need high throughput so the default value is usually fine.&nbsp;</div></td></tr><tr>
+default values for the IANA Solicit addresses irrelevant if <a href="02072.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_ADDRESSES_NO</a> == 0 should be a value for each <a href="02072.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03105.html" target="topic">TCPIP_SMTPC_SKT_TX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02074.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_T1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Define the size of the TX buffer for the SMTPC <a href="01077.html" target="topic">socket</a> Use 0 for default TCP <a href="01077.html" target="topic">socket</a> value The SMTPC TX does not need high throughput so the default value is usually fine. For transferring large files increase this value as needed.&nbsp;</div></td></tr><tr>
+default values for IANA T1, T2 in a solicit message&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03107.html" target="topic">TCPIP_SMTPC_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02075.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_T2</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-SMTPC task rate, milliseconds The default value is 55 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03400.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+This is macro TCPIP_DHCPV6_IANA_SOLICIT_T2.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03108.html" target="topic">TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02076.html" target="topic">TCPIP_DHCPV6_IATA_DEFAULT_T1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-the timeout for the TLS handshake to complete, seconds when a secure connection is established to the mail server Adjust based on the processing speed, key size, etc.&nbsp;</div></td></tr><tr>
+default values for IATA T1, T2 If 0, the timeout will be infinite (0xffffffff)&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03109.html" target="topic">TCPIP_SMTPC_USE_MAIL_COMMAND</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02077.html" target="topic">TCPIP_DHCPV6_IATA_DEFAULT_T2</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Use the sample tcpip console &quot;mail&quot; command for sending email from the console&nbsp;</div></td></tr></table></div></div>
+This is macro TCPIP_DHCPV6_IATA_DEFAULT_T2.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02078.html" target="topic">TCPIP_DHCPV6_IATA_DESCRIPTORS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of IATA descriptors per client&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02079.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default addresses for IATA in a solicit message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02080.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_DEFAULT_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default values for the IANA Solicit addresses irrelevant if <a href="02079.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_ADDRESSES_NO</a> == 0 should be a value for each <a href="02079.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02081.html" target="topic">TCPIP_DHCPV6_MESSAGE_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default value of the buffer to assemble messages, etc.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02082.html" target="topic">TCPIP_DHCPV6_MESSAGE_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default number of buffers&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02083.html" target="topic">TCPIP_DHCPV6_MIN_UDP_TX_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+minimum size of a UDP buffer&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02102.html" target="topic">TCPIP_DHCPV6_SERVER_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Servers and relay agents <a href="01007.html" target="topic">listen</a> for DHCP messages on UDP port:&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02112.html" target="topic">TCPIP_DHCPV6_SKIP_DAD_PROCESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+defining this symbol will skip the DAD processing for DHCPv6 generated addresses&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02113.html" target="topic">TCPIP_DHCPV6_STATUS_CODE_MESSAGE_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+number of character to reserve for a server status code associated message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02115.html" target="topic">TCPIP_DHCPV6_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The DHCPv6 task processing rate: number of milliseconds to generate an DHCPv6 tick. Used by the DHCPv6 state machine The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03610.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03616.html" target="topic">TCPIP_STACK_USE_DHCPV6_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable IPv6 DHCP client functionality&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00014.html" target="topic">_DCHPV6_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro _DCHPV6_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -196,7 +280,7 @@ Use the sample tcpip console &quot;mail&quot; command for sending email from the
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00986.html" target="topic">SMTPC Module</a> &gt; <a href="01430.html" target="topic">Configuring the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00336.html" target="topic">DHCPv6 Module</a> &gt; <a href="01430.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -204,13 +288,13 @@ Use the sample tcpip console &quot;mail&quot; command for sending email from the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01436.html" target="topic">Previous</a> | <a href="00986.html" target="topic">Up</a> | <a href="00067.html" target="topic">Next</a></div>
+<a href="01433.html" target="topic">Previous</a> | <a href="00336.html" target="topic">Up</a> | <a href="01977.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

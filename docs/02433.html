@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ICMP_EchoRequestSend Function</title>
+<title>TCPIP_HTTP_NET_ConnectionGetExecute Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00679.html" target="topic">ICMP Module</a> &gt; <a href="01299.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02433.html" target="topic">TCPIP_ICMP_EchoRequestSend Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01496.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02433.html" target="topic">TCPIP_HTTP_NET_ConnectionGetExecute Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02423.html" target="topic">Previous</a> | <a href="01299.html" target="topic">Up</a> | <a href="02437.html" target="topic">Next</a></div>
+<a href="02432.html" target="topic">Previous</a> | <a href="01496.html" target="topic">Up</a> | <a href="02436.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequestSend@TCPIP_NET_HANDLE@IPV4_ADDR *@uint16_t@uint16_t Topic Title: TCPIP_ICMP_EchoRequestSend Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionGetExecute@TCPIP_HTTP_NET_CONN_HANDLE@TCPIP_HTTP_NET_USER_CALLBACK* Topic Title: TCPIP_HTTP_NET_ConnectionGetExecute Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ICMP_EchoRequestSend Function</div>
+TCPIP_HTTP_NET_ConnectionGetExecute Function</div>
 </div>
 </div>
 
@@ -49,22 +49,51 @@ TCPIP_ICMP_EchoRequestSend Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function allows a stack client to <a href="00977.html" target="topic">send</a> an ICMP query message to a remote host. The supplied sequence number and identifier will be used in the query message. The user will be notified by the result of the query using a notification handle registered by using the <a href="02423.html" target="topic">TCPIP_ICMP_CallbackRegister</a> function.</p></div>
+This function is implemented by the application developer. Its purpose is to parse the data received from URL parameters (GET method forms) and cookies and perform any application-specific tasks in response to these inputs. Any required authentication has already been validated.&nbsp;</p>
+<p class="Element10">
+When this function is called, the connection data buffer (see <a href="02426.html" target="topic">TCPIP_HTTP_NET_ConnectionDataBufferGet</a>) contains sequential name/value pairs of strings representing the data received. In this format, <a href="02414.html" target="topic">TCPIP_HTTP_NET_ArgGet</a> can be used to search for specific variables in the input. If data buffer space associated with this connection is required, connection data buffer may be overwritten here once the application is done with the values. Any data placed there will be available to future callbacks for this connection, including <a href="02442.html" target="topic">TCPIP_HTTP_NET_ConnectionPostExecute</a> and any TCPIP_HTTP_NET_Print_varname dynamic substitutions.&nbsp;</p>
+<p class="Element10">
+This function may also issue redirections by setting the connection data buffer to the destination file name or URL, and the connection httpStatus (<a href="02453.html" target="topic">TCPIP_HTTP_NET_ConnectionStatusSet</a>()) to TCPIP_HTTP_NET_STAT_REDIRECT.&nbsp;</p>
+<p class="Element10">
+Finally, this function may set cookies. Set connection data buffer to a series of name/value string pairs (in the same format in which parameters arrive) and then set the connection hasArgs (<a href="02436.html" target="topic">TCPIP_HTTP_NET_ConnectionHasArgsSet</a>) equal to the number of cookie name/value pairs. The cookies will be transmitted to the browser, and any future requests will have those values available in the connection data buffer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00682.html" target="topic">ICMP_ECHO_RESULT</a> <strong><span style="color: #000000">TCPIP_ICMP_EchoRequestSend</span></strong>(
-    <a href="02903.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
-    IPV4_ADDR * <strong><span style="color: #000000">targetAddr</span></strong>, 
-    uint16_t <strong><span style="color: #000000">sequenceNumber</span></strong>, 
-    uint16_t <strong><span style="color: #000000">identifier</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02523.html" target="topic">TCPIP_HTTP_NET_IO_RESULT</a> <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionGetExecute</span></strong>(
+    <a href="02419.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <a href="02603.html" target="topic">TCPIP_HTTP_NET_USER_CALLBACK</a>* <strong><span style="color: #000000">pCBack</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The TCP/IP Stack must be initialized and up and running.</p></div>
+None.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+HTTP connection handle&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pCBack&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+user <a href="02603.html" target="topic">TCPIP_HTTP_NET_USER_CALLBACK</a> pointer&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -73,8 +102,9 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element631">
-<li class="Element601">ICMP_ECHO_OK - Indicates the query request was successfully sent</li>
-<li class="Element601"><a href="00682.html" target="topic">ICMP_ECHO_RESULT</a> - The query request was unsuccessfully sent, which results in an error code (interface not ready for transmission, allocation error, etc.)</li>
+<li class="Element601">TCPIP_HTTP_NET_IO_RES_DONE - application is done processing</li>
+<li class="Element601">TCPIP_HTTP_NET_IO_RES_NEED_DATA - this value may not be returned because more data will not become available</li>
+<li class="Element601">TCPIP_HTTP_NET_IO_RES_WAITING - the application is waiting for an asynchronous process to complete, and this function should be called again later</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -82,35 +112,18 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function does not allow the user to specify a data buffer to be sent as part of the request. The preferred function to use is <a href="02431.html" target="topic">TCPIP_ICMP_EchoRequest</a>.&nbsp;</p>
+This function is only called if variables are received via URL parameters or Cookie arguments.&nbsp;</p>
 <p class="Element10">
-This function will eventually be obsoleted.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  IPV4_ADDR remoteAddress = 0xc0a00101;
-  uint16_t mySequenceNumber = 1;
-  uint16_t myId = 0x1234;
-
-  <strong><span style="color: #000080">if</span></strong>(TCPIP_ICMP_EchoRequestSend(0, &amp;remoteAddress, mySequenceNumber, myId) == ICMP_ECHO_OK )
-  {
-      <i><span style="color: #008000">// successfully sent the ICMP request</span></i>
-      <i><span style="color: #008000">//</span></i>
-  }
-  <strong><span style="color: #000080">else</span></strong>
-  {
-      <i><span style="color: #008000">// process the error</span></i>
-  }</pre></div></div>
-</div>
+This function may NOT write to the network transport buffer.&nbsp;</p>
+<p class="Element10">
+This function may service multiple HTTP requests simultaneously. Exercise caution when using global or static variables inside this routine. Use the connection callbackPos (<a href="02424.html" target="topic">TCPIP_HTTP_NET_ConnectionCallbackPosGet</a>) or the connection data buffer for storage associated with individual requests.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00679.html" target="topic">ICMP Module</a> &gt; <a href="01299.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02433.html" target="topic">TCPIP_ICMP_EchoRequestSend Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01496.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02433.html" target="topic">TCPIP_HTTP_NET_ConnectionGetExecute Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +131,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02423.html" target="topic">Previous</a> | <a href="01299.html" target="topic">Up</a> | <a href="02437.html" target="topic">Next</a></div>
+<a href="02432.html" target="topic">Previous</a> | <a href="01496.html" target="topic">Up</a> | <a href="02436.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequestSend@TCPIP_NET_HANDLE@IPV4_ADDR *@uint16_t@uint16_t Topic Title: TCPIP_ICMP_EchoRequestSend Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionGetExecute@TCPIP_HTTP_NET_CONN_HANDLE@TCPIP_HTTP_NET_USER_CALLBACK* Topic Title: TCPIP_HTTP_NET_ConnectionGetExecute Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>iperf_config.h</title>
+<title>icmp.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00759.html" target="topic">Iperf Module</a> &gt; <a href="01324.html" target="topic">Files</a> &gt; <a href="00761.html" target="topic">iperf_config.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00760.html" target="topic">ICMP Module</a> &gt; <a href="01506.html" target="topic">Files</a> &gt; <a href="00761.html" target="topic">icmp.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01324.html" target="topic">Previous</a> | <a href="01324.html" target="topic">Up</a> | <a href="00760.html" target="topic">Next</a></div>
+<a href="01506.html" target="topic">Previous</a> | <a href="01506.html" target="topic">Up</a> | <a href="00762.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: iperf_config.h Topic Title: iperf_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: icmp.h Topic Title: icmp.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-iperf_config.h</div>
+icmp.h</div>
 </div>
 </div>
 
@@ -56,18 +56,106 @@ File Name</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-iperf_config.h</p></div>
+icmp.h</p></div>
 </div>
 <a name="4465736372697074696F6E"></a><div class="Element14">
 Description</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Iperf Configuration file&nbsp;</p>
+ICMP Module Definitions for the Microchip TCP/IP Stack&nbsp;</p>
 <p class="Element10">
-This file contains the Iperf configuration options&nbsp;</p>
-<p class="Element10">
-This file is not part of the project, it is a configuration template file only.</p></div>
+The Internet Control Message Protocol is used to <a href="01187.html" target="topic">send</a> error and status messages and requests. The ICMP module implements the Echo Reply message type (commonly referred to as a ping) which can be used to determine if a specified host is reachable across an IP network from a device running the TCP/IP stack. An ICMP server is also supported to respond to pings from other devices.</p></div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00763.html" target="topic">ICMP_ECHO_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+result of an ICMP Echo Request call&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02637.html" target="topic">TCPIP_ICMP_ECHO_REQUEST_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+A result code for an Echo Request callback (as a result of an ICMP <a href="02641.html" target="topic">TCPIP_ICMP_EchoRequest</a> call)&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02632.html" target="topic">TCPIP_ICMP_CallbackDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deregisters the ICMP callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02633.html" target="topic">TCPIP_ICMP_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Registers a callback to allow the application layer to process incoming ICMPv4 packets&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02641.html" target="topic">TCPIP_ICMP_EchoRequest</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sends an ICMP echo request containing user supplied data&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02642.html" target="topic">TCPIP_ICMP_EchoRequestCancel</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Cancels a previously sent ICMP echo request&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02643.html" target="topic">TCPIP_ICMP_EchoRequestSend</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sends an ICMP echo request to a remote node.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02647.html" target="topic">TCPIP_ICMP_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 <a name="4D6163726F73"></a><div class="Element14">
 Macros</div>
@@ -88,58 +176,78 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="00025.html" target="topic">_IPERF_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00003.html" target="topic">__ICMP_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro _IPERF_CONFIG_H_.&nbsp;</div></td></tr><tr>
+This is macro __ICMP_H.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02512.html" target="topic">TCPIP_IPERF_MAX_INSTANCES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02636.html" target="topic">_tag_TCPIP_ICMP_ECHO_REQUEST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-maximum number of simultaneously running iperf instances&nbsp;</div></td></tr><tr>
+Contains the data needed for an ICMP request operation&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02513.html" target="topic">TCPIP_IPERF_RX_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02636.html" target="topic">TCPIP_ICMP_ECHO_REQUEST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Default size of the Iperf RX buffer The default value is 4KB. The performance of a <a href="01077.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers&nbsp;</div></td></tr><tr>
+Contains the data needed for an ICMP request operation&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02514.html" target="topic">TCPIP_IPERF_TIMING_ERROR_MARGIN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02644.html" target="topic">TCPIP_ICMP_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-iperf timing error, ms. Accounts for timing uncertainty The higher the value, the more relaxed is the iperf timing Lower limit is 0&nbsp;</div></td></tr><tr>
+Placeholder for ICMP module configuration.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="5479706573"></a><div class="Element14">
+Types</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02515.html" target="topic">TCPIP_IPERF_TX_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00771.html" target="topic">ICMP_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Default size of the Iperf TX buffer The default value is 4KB. The performance of a <a href="01077.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers&nbsp;</div></td></tr><tr>
+a handle that a client can use after the event handler has been registered&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02516.html" target="topic">TCPIP_IPERF_TX_BW_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02646.html" target="topic">TCPIP_ICMP_REQUEST_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Default TCP Tx Bandwidth&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02517.html" target="topic">TCPIP_IPERF_TX_QUEUE_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-for Iperf UDP client, the limit to set to avoid memory allocation overflow on slow connections&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02518.html" target="topic">TCPIP_IPERF_TX_WAIT_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-timeout to wait for TX channel to be ready to transmit a new packet; ms depends on the channel bandwidth&nbsp;</div></td></tr></table></div></div>
+This is type TCPIP_ICMP_REQUEST_HANDLE.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -147,7 +255,7 @@ timeout to wait for TX channel to be ready to transmit a new packet; ms depends 
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00759.html" target="topic">Iperf Module</a> &gt; <a href="01324.html" target="topic">Files</a> &gt; <a href="00761.html" target="topic">iperf_config.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00760.html" target="topic">ICMP Module</a> &gt; <a href="01506.html" target="topic">Files</a> &gt; <a href="00761.html" target="topic">icmp.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -155,13 +263,13 @@ timeout to wait for TX channel to be ready to transmit a new packet; ms depends 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01324.html" target="topic">Previous</a> | <a href="01324.html" target="topic">Up</a> | <a href="00760.html" target="topic">Next</a></div>
+<a href="01506.html" target="topic">Previous</a> | <a href="01506.html" target="topic">Up</a> | <a href="00762.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: iperf_config.h Topic Title: iperf_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: icmp.h Topic Title: icmp.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

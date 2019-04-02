@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_MIIM_OperationAbort Function</title>
+<title>DRV_ETHPHY_SMIStatus Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00937.html" target="topic">MIIM Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; <a href="00338.html" target="topic">a) Functions</a> &gt; <a href="00563.html" target="topic">DRV_MIIM_OperationAbort Function</a></div>
+<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a> &gt; c) SMI/MIIM Functions &gt; <a href="00563.html" target="topic">DRV_ETHPHY_SMIStatus Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00557.html" target="topic">Previous</a> | <a href="00338.html" target="topic">Up</a> | <a href="00564.html" target="topic">Next</a></div>
+<a href="00559.html" target="topic">Previous</a> | <a href="00366.html" target="topic">Up</a> | <a href="00564.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_OperationAbort@DRV_HANDLE@DRV_MIIM_OPERATION_HANDLE Topic Title: DRV_MIIM_OperationAbort Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_SMIStatus@DRV_HANDLE Topic Title: DRV_ETHPHY_SMIStatus Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_MIIM_OperationAbort Function</div>
+DRV_ETHPHY_SMIStatus Function</div>
 </div>
 </div>
 
@@ -49,13 +49,12 @@ DRV_MIIM_OperationAbort Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Aborts a current client operation initiated by the MIIM driver.</p></div>
+This function checks if the SMI/MIIM interface is busy with a transaction.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">DRV_MIIM_RESULT <strong><span style="color: #000000">DRV_MIIM_OperationAbort</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
-    <a href="00562.html" target="topic">DRV_MIIM_OPERATION_HANDLE</a> <strong><span style="color: #000000">opHandle</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_SMIStatus</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -64,9 +63,9 @@ Preconditions</div>
 <p class="Element10">
 
 <ul class="Element632">
-<li class="Element602">The <a href="00535.html" target="topic">DRV_MIIM_Initialize</a> routine must have been called.</li>
-<li class="Element602"><a href="00557.html" target="topic">DRV_MIIM_Open</a> must have been called to obtain a valid opened device handle.</li>
-<li class="Element602">A driver operation was started</li>
+<li class="Element602">The <a href="00457.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
+<li class="Element602"><a href="00541.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
+<li class="Element602"><a href="00556.html" target="topic">DRV_ETHPHY_Setup</a> must have been called to properly configure the PHY</li>
 </ul></p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -74,7 +73,15 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-DRV_MIIM_RES_OK for success; operation has been aborted&nbsp;</p>
+
+<ul class="Element632">
+<li class="Element602">DRV_ETHPHY_RES_BUSY - if the SMI/MIIM interface is busy</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element632">
+<li class="Element602">DRV_ETHPHY_RES_OK - if the SMI/MIIM is not busy</li>
+</ul>&nbsp;</p>
 <p class="Element10">
 &lt; 0 - an error has occurred and the operation could not be completed</p></div>
 </div>
@@ -83,7 +90,9 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This operation will stop/abort a scan operation started by <a href="00570.html" target="topic">DRV_MIIM_Scan</a>.</p></div>
+This function is info only and returns the momentary status of the SMI bus. Even if the bus is free there is no guarantee it will be free later on especially if the driver is on going some operation.&nbsp;</p>
+<p class="Element10">
+This operation is not supported when the PHY driver uses the MIIM driver for MIIM bus accesses. Use the DRV_MIIM for accessing the MIIM bus.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
@@ -97,7 +106,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01249.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00937.html" target="topic">MIIM Driver Library</a> &gt; <a href="00340.html" target="topic">Library Interface</a> &gt; <a href="00338.html" target="topic">a) Functions</a> &gt; <a href="00563.html" target="topic">DRV_MIIM_OperationAbort Function</a></div>
+<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a> &gt; c) SMI/MIIM Functions &gt; <a href="00563.html" target="topic">DRV_ETHPHY_SMIStatus Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -105,13 +114,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00557.html" target="topic">Previous</a> | <a href="00338.html" target="topic">Up</a> | <a href="00564.html" target="topic">Next</a></div>
+<a href="00559.html" target="topic">Previous</a> | <a href="00366.html" target="topic">Up</a> | <a href="00564.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_OperationAbort@DRV_HANDLE@DRV_MIIM_OPERATION_HANDLE Topic Title: DRV_MIIM_OperationAbort Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_SMIStatus@DRV_HANDLE Topic Title: DRV_ETHPHY_SMIStatus Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

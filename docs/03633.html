@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_UDP_Discard Function</title>
+<title>TCPIP_STACK_USE_SMTPC Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03698.html" target="topic">UDP Module</a> &gt; <a href="01519.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03633.html" target="topic">TCPIP_UDP_Discard Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01579.html" target="topic">Configuring the Library</a> &gt; <a href="03633.html" target="topic">TCPIP_STACK_USE_SMTPC Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03651.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="03712.html" target="topic">Next</a></div>
+<a href="03632.html" target="topic">Previous</a> | <a href="01579.html" target="topic">Up</a> | <a href="03634.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_Discard@UDP_SOCKET Topic Title: TCPIP_UDP_Discard Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_USE_SMTPC Topic Title: TCPIP_STACK_USE_SMTPC Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_UDP_Discard Function</div>
+TCPIP_STACK_USE_SMTPC Macro</div>
 </div>
 </div>
 
@@ -49,68 +49,17 @@ TCPIP_UDP_Discard Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function discards any remaining received data in the UDP <a href="01077.html" target="topic">socket</a>.</p></div>
+Simple Mail Transfer Protocol for sending email with encryption support</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_UDP_Discard</span></strong>(
-    <a href="03713.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-UDP <a href="01077.html" target="topic">socket</a> should have been opened with <a href="03652.html" target="topic">TCPIP_UDP_ServerOpen</a>/<a href="03628.html" target="topic">TCPIP_UDP_ClientOpen</a>. hUDP - valid <a href="01077.html" target="topic">socket</a></p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-<a href="01077.html" target="topic">socket</a> handle&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Number of discarded bytes, if any.</p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-The UDP <a href="01077.html" target="topic">socket</a> queues incoming RX packets in an internal queue.&nbsp;</p>
-<p class="Element10">
-This call will discard the remaining bytes (if any) in the current RX packet and will advance the RX packet to be processed to the next queued packet.&nbsp;</p>
-<p class="Element10">
-This function should be normally called after retrieving the available bytes with <a href="03624.html" target="topic">TCPIP_UDP_ArrayGet</a>.&nbsp;</p>
-<p class="Element10">
-When data available, calling it repeatedly will discard one pending RX packet at a time.&nbsp;</p>
-<p class="Element10">
-Note that a call to TCPIP_UDP_Discard is not needed if all bytes are retrieved with <a href="03624.html" target="topic">TCPIP_UDP_ArrayGet</a> and then <a href="03637.html" target="topic">TCPIP_UDP_GetIsReady</a> is called.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_STACK_USE_SMTPC</span></strong> </pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03698.html" target="topic">UDP Module</a> &gt; <a href="01519.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03633.html" target="topic">TCPIP_UDP_Discard Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01579.html" target="topic">Configuring the Library</a> &gt; <a href="03633.html" target="topic">TCPIP_STACK_USE_SMTPC Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +67,13 @@ Note that a call to TCPIP_UDP_Discard is not needed if all bytes are retrieved w
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03651.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="03712.html" target="topic">Next</a></div>
+<a href="03632.html" target="topic">Previous</a> | <a href="01579.html" target="topic">Up</a> | <a href="03634.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_Discard@UDP_SOCKET Topic Title: TCPIP_UDP_Discard Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_USE_SMTPC Topic Title: TCPIP_STACK_USE_SMTPC Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

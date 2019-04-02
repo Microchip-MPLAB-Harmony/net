@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_UDP_OptionsSet Function</title>
+<title>TCPIP_TCP_ArrayFind Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03698.html" target="topic">UDP Module</a> &gt; <a href="01519.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03647.html" target="topic">TCPIP_UDP_OptionsSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01306.html" target="topic">TCP Module</a> &gt; <a href="01684.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03647.html" target="topic">TCPIP_TCP_ArrayFind Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03646.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="03667.html" target="topic">Next</a></div>
+<a href="03649.html" target="topic">Previous</a> | <a href="01684.html" target="topic">Up</a> | <a href="03668.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_OptionsSet@UDP_SOCKET@UDP_SOCKET_OPTION@void* Topic Title: TCPIP_UDP_OptionsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayFind@TCP_SOCKET@uint8_t*@uint16_t@uint16_t@uint16_t@bool Topic Title: TCPIP_TCP_ArrayFind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_UDP_OptionsSet Function</div>
+TCPIP_TCP_ArrayFind Function</div>
 </div>
 </div>
 
@@ -49,21 +49,26 @@ TCPIP_UDP_OptionsSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Various options can be set at the <a href="01077.html" target="topic">socket</a> level.</p></div>
+This function finds the first occurrence of an array of bytes in the TCP RX buffer. It can be used by an application to abstract searches out of their own application code. For increased efficiency, the function is capable of limiting the scope of search to a specific range of bytes. It can also perform a case-insensitive search if required.&nbsp;</p>
+<p class="Element10">
+For example, if the buffer contains &quot;I love PIC MCUs!&quot; and the search array is &quot;love&quot; with a length of 4, a value of 2 will be returned.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_UDP_OptionsSet</span></strong>(
-    <a href="03713.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>, 
-    <a href="03729.html" target="topic">UDP_SOCKET_OPTION</a> <strong><span style="color: #000000">option</span></strong>, 
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">optParam</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_TCP_ArrayFind</span></strong>(
+    <a href="01333.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">hTCP</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">cFindArray</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wLen</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wStart</span></strong>, 
+    uint16_t <strong><span style="color: #000000">wSearchLen</span></strong>, 
+    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">bTextCompare</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-UDP <a href="01077.html" target="topic">socket</a> should have been opened with <a href="03652.html" target="topic">TCPIP_UDP_ServerOpen</a>()/<a href="03628.html" target="topic">TCPIP_UDP_ClientOpen</a>()(). hUDP - valid <a href="01077.html" target="topic">socket</a></p></div>
+TCP is initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,64 +85,49 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+hTCP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-<a href="01077.html" target="topic">socket</a> to set options for&nbsp;</div></td></tr><tr>
+The <a href="01287.html" target="topic">socket</a> to search within.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-option&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+cFindArray&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-specific option to be set&nbsp;</div></td></tr><tr>
+The array of bytes to find in the buffer.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-optParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+wLen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-the option value; this is option dependent:
-<ul class="Element632">
-<li class="Element602">UDP_OPTION_STRICT_PORT - boolean enable/disable</li>
-<li class="Element602">UDP_OPTION_STRICT_NET - boolean enable/disable</li>
-<li class="Element602">UDP_OPTION_STRICT_ADDRESS - boolean enable/disable</li>
-<li class="Element602">UDP_OPTION_BROADCAST - <a href="03714.html" target="topic">UDP_SOCKET_BCAST_TYPE</a></li>
-<li class="Element602">UDP_OPTION_BUFFER_POOL - boolean enable/disable &nbsp;</div></td></tr></table></div></div>
+Length of cFindArray.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+wStart&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Zero-indexed starting position within the buffer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+wSearchLen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Length from wStart to search in the buffer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+bTextCompare&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+true for case-insensitive text search, false for binary search&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">true - Indicates success</li>
-<li class="Element603">false - Indicates failure</li>
-</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Changing the UDP_OPTION_BUFFER_POOL will discard the data in the current <a href="01077.html" target="topic">socket</a> buffer </li>
-<li class="Element602">UDP_OPTION_TX_BUFF - 16-bit value in bytes of the TX buffer &nbsp;</p>
-<p class="Element10">
-the UDP_OPTION_TX_BUFF will discard the data in the current <a href="01077.html" target="topic">socket</a> buffer </li>
-<li class="Element602">UDP_OPTION_TX_QUEUE_LIMIT - 8-bit value of the TX queue limit</li>
-<li class="Element602">UDP_OPTION_RX_QUEUE_LIMIT - 8-bit value of the RX queue limit</li>
-<li class="Element602">UDP_OPTION_RX_AUTO_ADVANCE - boolean enable/disable</li>
-<li class="Element602">UDP_OPTION_TX_TTL - 8-bit value of TTL</li>
-<li class="Element602">UDP_OPTION_MULTICAST - pointer to a <a href="03709.html" target="topic">UDP_OPTION_MULTICAST_DATA</a> structure</li>
-<li class="Element602">UDP_OPTION_TOS - 8-bit value of the TOS</li>
-<li class="Element602">UDP_OPTION_DF - boolean - true: no fragmentation allowed; false: fragmentation allowed</li>
-</ul>&nbsp;</p>
-<p class="Element10">
-This function provides the run-time functionality required to implement some of the standard BSD <a href="01077.html" target="topic">socket</a> options API.</p></div>
+For better performance of this function, try to search for characters that are expected to exist or limit the scope of the search as much as possible. The HTTP module, for example, uses this function to parse headers. However, it searches for newlines, then the separating colon, then reads the header name to an internal buffer for comparison. This has proven to be significantly faster than searching for full header name strings outright.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03698.html" target="topic">UDP Module</a> &gt; <a href="01519.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03647.html" target="topic">TCPIP_UDP_OptionsSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01306.html" target="topic">TCP Module</a> &gt; <a href="01684.html" target="topic">Library Interface</a> &gt; c) Receive Data Transfer Functions &gt; <a href="03647.html" target="topic">TCPIP_TCP_ArrayFind Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -145,13 +135,13 @@ This function provides the run-time functionality required to implement some of 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03646.html" target="topic">Previous</a> | <a href="01519.html" target="topic">Up</a> | <a href="03667.html" target="topic">Next</a></div>
+<a href="03649.html" target="topic">Previous</a> | <a href="01684.html" target="topic">Up</a> | <a href="03668.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_OptionsSet@UDP_SOCKET@UDP_SOCKET_OPTION@void* Topic Title: TCPIP_UDP_OptionsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ArrayFind@TCP_SOCKET@uint8_t*@uint16_t@uint16_t@uint16_t@bool Topic Title: TCPIP_TCP_ArrayFind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

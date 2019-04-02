@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>ARP Module</title>
+<title>web_server_sdcard_fatfs</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00222.html" target="topic">ARP Module</a></div>
+<a href="01309.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00222.html" target="topic">web_server_sdcard_fatfs</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00303.html" target="topic">Previous</a> | <a href="00922.html" target="topic">Up</a> | <a href="01167.html" target="topic">Next</a></div>
+<a href="00217.html" target="topic">Previous</a> | <a href="00209.html" target="topic">Up</a> | <a href="00262.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ARP TCP/IP Stack Library Topic Title: ARP Module)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP SD Card FAT FS Topic Title: web_server_sdcard_fatfs)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-ARP Module</div>
+web_server_sdcard_fatfs</div>
 </div>
 </div>
 
@@ -46,6 +46,22 @@ ARP Module</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
+<a name="4465736372697074696F6E"></a><div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The Web Server SD Card FAT File System configuration demonstrates creating an HTTP web server on a Microchip evaluation board with SD Card FAT File System.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+This demonstration uses the <strong>deprecated</strong> HTTP module which is maintained for backward compatibility only.It will be eventually removed from the TCP/IP Stack.<br>New designs should use the HTTP_NET module.<br>See the <a href="00257.html" target="topic">Web net server demonstration</a>.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
 <a name="546F70696373"></a><div class="Element14">
 Topics</div>
 <div class="Element11">
@@ -61,34 +77,19 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01167.html" target="topic">Introduction</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00262.html" target="topic">Building the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-<strong>TCP/IP Stack Library Address Resolution Protocol (ARP) Module for Microchip Devices</strong><br>This library provides the API of the ARP Module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP Stack<span style="color: #0000FF">.</span>&nbsp;</div></td></tr><tr>
+This section identifies the MPLAB X IDE projects for this demonstration application. This lists the name, location, hardware development board and available configurations for the Web Server SD Card FAT FS Demonstration.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01170.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00223.html" target="topic">Configuring the Hardware</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This topic describes the basic architecture of the ARP TCP/IP Stack Library and provides information and examples on its use.&nbsp;</div></td></tr><tr>
+This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01162.html" target="topic">Configuring the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00224.html" target="topic">Running the Demonstration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The configuration of the TCP/IP Stack ARP is based on the file<span class="Element146"> <a href="00225.html" target="topic">arp_config.h</a> with the actual symbols generated in the configuration.h.</span><br>This header file contains the configuration selection for the TCP/IP Stack ARP. Based on the selections made, the TCP/IP Stack ARP may support the selected features. These configuration settings will apply to the single instance of the TCP/IP Stack ARP.<br>This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01099.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01160.html" target="topic">Building the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section lists the files that are available in the ARP module of the TCP/IP Stack Library&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01168.html" target="topic">Library Interface</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes the Application Programming Interface (API) functions of the ARP module.<br>Refer to each section for a detailed description.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01164.html" target="topic">Files</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section lists the source and header files used by the library.&nbsp;</div></td></tr></table></div></div>
+This section provides instructions on how to build and run the TCP/IP SD Card FAT FS Web Server demonstration.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -96,7 +97,7 @@ This section lists the source and header files used by the library.&nbsp;</div><
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00222.html" target="topic">ARP Module</a></div>
+<a href="01309.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00222.html" target="topic">web_server_sdcard_fatfs</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +105,13 @@ This section lists the source and header files used by the library.&nbsp;</div><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00303.html" target="topic">Previous</a> | <a href="00922.html" target="topic">Up</a> | <a href="01167.html" target="topic">Next</a></div>
+<a href="00217.html" target="topic">Previous</a> | <a href="00209.html" target="topic">Up</a> | <a href="00262.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ARP TCP/IP Stack Library Topic Title: ARP Module)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP SD Card FAT FS Topic Title: web_server_sdcard_fatfs)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

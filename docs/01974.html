@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_DNS_IsResolved Function</title>
+<title>TCPIP_DHCPS_RemovePoolEntries Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00299.html" target="topic">DNS Module</a> &gt; <a href="01236.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01974.html" target="topic">TCPIP_DNS_IsResolved Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00330.html" target="topic">DHCP Server Module</a> &gt; <a href="01423.html" target="topic">Library Interface</a> &gt; a) Configuration Functions &gt; <a href="01974.html" target="topic">TCPIP_DHCPS_RemovePoolEntries Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01973.html" target="topic">Previous</a> | <a href="01236.html" target="topic">Up</a> | <a href="01975.html" target="topic">Next</a></div>
+<a href="01951.html" target="topic">Previous</a> | <a href="01423.html" target="topic">Up</a> | <a href="01953.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_IsResolved@char*@IP_MULTI_ADDRESS*@IP_ADDRESS_TYPE Topic Title: TCPIP_DNS_IsResolved Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_RemovePoolEntries@TCPIP_NET_HANDLE@TCPIP_DHCPS_POOL_ENTRY_TYPE Topic Title: TCPIP_DHCPS_RemovePoolEntries Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_DNS_IsResolved Function</div>
+TCPIP_DHCPS_RemovePoolEntries Function</div>
 </div>
 </div>
 
@@ -49,21 +49,20 @@ TCPIP_DNS_IsResolved Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Call this function to determine if the DNS resolution of an address has been completed. If so, the resolved address will be provided in hostIP.</p></div>
+This function is used to remove the DHCP server entries from the pool as per <a href="01971.html" target="topic">TCPIP_DHCPS_POOL_ENTRY_TYPE</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01983.html" target="topic">TCPIP_DNS_RESULT</a> <strong><span style="color: #000000">TCPIP_DNS_IsResolved</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">hostName</span></strong>, 
-    IP_MULTI_ADDRESS* <strong><span style="color: #000000">hostIP</span></strong>, 
-    IP_ADDRESS_TYPE <strong><span style="color: #000000">type</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_DHCPS_RemovePoolEntries</span></strong>(
+    <a href="03113.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    <a href="01971.html" target="topic">TCPIP_DHCPS_POOL_ENTRY_TYPE</a> <strong><span style="color: #000000">type</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="01977.html" target="topic">TCPIP_DNS_Resolve</a> has been called.</p></div>
+the DHCP Server module should have been initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,36 +79,40 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hostName&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A pointer to the null terminated string specifying the host for which to resolve an IP.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hostIP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to an IP_MULTI_ADDRESS structure in which to store the resolved IPv4/IPv6 address if resolution is complete. Could be NULL if not needed.&nbsp;</div></td></tr><tr>
+Interface handle to use&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 type&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-type of address needed: IP_ADDRESS_TYPE_IPV4/IP_ADDRESS_TYPE_IPV6/IP_ADDRESS_TYPE_ANY&nbsp;</div></td></tr></table></div></div>
+type of entries to remove: DHCP_SERVER_POOL_ENTRY_ALL, DHCP_SERVER_POOL_ENTRY_IN_USE&nbsp;</div></td></tr></table></div></div>
 </div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element632">
+<li class="Element602">true - If successful</li>
+<li class="Element602">false - If unsuccessful</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The function will set either an IPv6 or an IPv4 address to the hostIP address, depending on what's available.&nbsp;</p>
-<p class="Element10">
-If type IP_ADDRESS_TYPE_ANY is specified the hostIP will be updated with the first available solved address: either IPv6 or IPv4!</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00922.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00299.html" target="topic">DNS Module</a> &gt; <a href="01236.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01974.html" target="topic">TCPIP_DNS_IsResolved Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00330.html" target="topic">DHCP Server Module</a> &gt; <a href="01423.html" target="topic">Library Interface</a> &gt; a) Configuration Functions &gt; <a href="01974.html" target="topic">TCPIP_DHCPS_RemovePoolEntries Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +120,13 @@ If type IP_ADDRESS_TYPE_ANY is specified the hostIP will be updated with the fir
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01350.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01973.html" target="topic">Previous</a> | <a href="01236.html" target="topic">Up</a> | <a href="01975.html" target="topic">Next</a></div>
+<a href="01951.html" target="topic">Previous</a> | <a href="01423.html" target="topic">Up</a> | <a href="01953.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_IsResolved@char*@IP_MULTI_ADDRESS*@IP_ADDRESS_TYPE Topic Title: TCPIP_DNS_IsResolved Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DHCPS_RemovePoolEntries@TCPIP_NET_HANDLE@TCPIP_DHCPS_POOL_ENTRY_TYPE Topic Title: TCPIP_DHCPS_RemovePoolEntries Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
