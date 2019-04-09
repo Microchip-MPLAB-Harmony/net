@@ -239,6 +239,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPH
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
             {
+                DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
                 lan9303OperationsHandles[x] = 0;              
             }
         }
@@ -248,8 +249,14 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPH
     if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
         DRV_MIIM_RESULT res;
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] == 0)
+        {
         lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_1 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+        }
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] == 0)
+        {
         lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_2 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+        }
         __BMSTATbits_t b1, b2;
         b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
         b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
@@ -267,7 +274,10 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303LinkStatusGet( DRV_HANDLE handle, DRV_ETHPH
         }
         return DRV_ETHPHY_RES_PENDING;        
     }
+    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] == 0)
+    {
     lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + portIndex - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+    }
     __BMSTATbits_t b1;
     b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + portIndex - 1];
     if (b1.LINK_STAT)
@@ -366,6 +376,7 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303NegotiationIsComplete( DRV_HANDLE handle, D
             }
             else if (mmiRes != DRV_MIIM_RES_PENDING)
             {
+                DRV_MIIM_OperationAbort(hClientObj->miimHandle, lan9303OperationsHandles[x]);
                 lan9303OperationsHandles[x] = 0;                
             }
         }
@@ -373,8 +384,14 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303NegotiationIsComplete( DRV_HANDLE handle, D
     if (portIndex == DRV_ETHPHY_INF_IDX_ALL_EXTERNAL)
     {
         DRV_MIIM_RESULT res;
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] == 0)
+        {
         lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_1 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+        }
+        if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] == 0)
+        {
         lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + DRV_ETHPHY_INF_IDX_PORT_2 - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+        }
         __BMSTATbits_t b1, b2;
         b1.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_1 - 1]);
         b2.w = (lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + DRV_ETHPHY_INF_IDX_PORT_2 - 1]);
@@ -395,7 +412,10 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Smsc9303NegotiationIsComplete( DRV_HANDLE handle, D
         return DRV_ETHPHY_RES_OK;
     }
     DRV_MIIM_RESULT res;
+    if (lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] == 0)
+    {
     lan9303OperationsHandles[LAND9303_LINK_STATUS_INDEX + portIndex - 1] = DRV_MIIM_Read(hClientObj->miimHandle, PHY_REG_BMSTAT, hClientObj->smiPhyAddress + portIndex - 1, DRV_MIIM_OPERATION_FLAG_NONE, &res);
+    }
     __BMSTATbits_t b1;
     b1.w = lan9303OperationResults[LAND9303_LINK_STATUS_INDEX + portIndex - 1];
     if (b1.LINK_STAT)
