@@ -53,6 +53,10 @@ The following table provides the list of bug fixes in this release:
 | Module                | Description                                             |
 | ------ | ------ |
 | TCP/IP Manager        | Created function to update the default interface at run time after an interface is changed or brought down |
+| TCP/IP Packet logger  | Improvements to the packet logger. Now is part of the main source code.                                           |
+| HTTP_NET              | Fixed an error in the upload state machine that was discarding the MPFS signature from the incoming stream |
+| drv_extphy_smsc9303   | Added patch to eliminate leaks based on the customer suggestion.                                           |
+
 
 
 ### TESTED WITH:
@@ -74,7 +78,7 @@ In order to regenerate source code for any of the applications, you will also ne
 - Harmony csp repository, 3.2.1
 - Harmony core repository, 3.2.1
 - Harmony dev_packs repository, 3.2.1
-- Harmony crypto repository, 3.2.0
+- Harmony crypto repository, 3.2.1
 - CMSIS-FreeRTOS repository, 10.0.1 if building a FreeRTOS project (from www.github.com/arm-software/cmsis-freertos)
 
 #### Development Kit Support
@@ -97,9 +101,12 @@ The current known issues are as follows:
 * For projects using the mpfs_img2.c and mpfs_img2_net.c files, these may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
 * The SAME70 XULT board has some issues and detection of the PHY board may fail. This issue is under investigation.
     - For now the SAME70 projects are present in the repo just for reference and not for actual running demos.
-    - For now the SAME70 projects are generated using the LAN8740 PHY.
+    - For now the SAME70 projects are generated using the LAN8740 PHY instead of KSZ8061 which is the default PHY for this board.
 * The ICD4 loads the reset line of the SAM V71 Xplained Ultra board. When running demo projects using the V71, the ICD4 flex cable should be removed after programming to run the application.
 * Interactive help using the Show User Manual Entry in the Right-click menu for configuration options provided by this module is not yet available from within the MPLAB Harmony Configurator (MHC).  Please see the *Configuring the Library* section in the help documentation in the doc folder for this Harmony 3 module instead.  Help is available in both CHM and PDF formats.
+* The SAM E70/V71/E54/A5D2 processors do not have a built in factory pre-programmed MAC address.
+    - The XULT boards use the AT24MAC402 serial EEPROM for having an unique MAC address per board.
+    - Currently the demo applications do not use the AT24MAC402 EEPROM for reading the MAC address. This will be added in a future release.
 
 * The SAME70 and SAMV71 TCPIP demos with SDCARD, won’t work with optimisation 0. Use optimization level 1.
 
