@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_Helper_StringToIPv6Address Function</title>
+<title>TCPIP_Helper_StringToIPAddress Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01587.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02325.html" target="topic">TCPIP_Helper_StringToIPv6Address Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02325.html" target="topic">TCPIP_Helper_StringToIPAddress Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02324.html" target="topic">Previous</a> | <a href="01587.html" target="topic">Up</a> | <a href="02326.html" target="topic">Next</a></div>
+<a href="02324.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02326.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_StringToIPv6Address@char *@IPV6_ADDR * Topic Title: TCPIP_Helper_StringToIPv6Address Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_StringToIPAddress@char*@IPV4_ADDR* Topic Title: TCPIP_Helper_StringToIPAddress Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_Helper_StringToIPv6Address Function</div>
+TCPIP_Helper_StringToIPAddress Function</div>
 </div>
 </div>
 
@@ -49,20 +49,20 @@ TCPIP_Helper_StringToIPv6Address Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function parses the text representation of an IPv6 address to an IPV6_ADDR struct. The output result is big-endian.</p></div>
+This function parses a dotted-quad decimal IP address string into an IPV4_ADDR struct. The output result is big-endian.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_Helper_StringToIPv6Address</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">str</span></strong>, 
-    IPV6_ADDR * <strong><span style="color: #000000">addr</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_Helper_StringToIPAddress</span></strong>(
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">str</span></strong>, 
+    IPV4_ADDR* <strong><span style="color: #000000">IPAddress</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,8 +81,24 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 str&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Pointer to an RFC3513, Section 2.2 text representation of an IPv6 address&nbsp;</div></td></tr></table></div></div>
+Pointer to a dotted-quad IP address string&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+IPAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Pointer to IPV4_ADDR in which to store the result&nbsp;</div></td></tr></table></div></div>
 </div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element632">
+<li class="Element602">true - an IP address was successfully decoded</li>
+<li class="Element602">false - no IP address could be found, or the format was incorrect</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -91,19 +107,12 @@ Remarks</div>
 <p class="Element10">
 None.</p></div>
 </div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-1111:2222:3333:4444:5555:6666:AAAA:FFFF 1111:2222::FFFF 1111:2222:3333:4444:5555:6666:192.168.1.20 addr - Pointer to IPV6_ADDR in which to store the result</p></div>
-</div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01587.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02325.html" target="topic">TCPIP_Helper_StringToIPv6Address Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02325.html" target="topic">TCPIP_Helper_StringToIPAddress Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -111,13 +120,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02324.html" target="topic">Previous</a> | <a href="01587.html" target="topic">Up</a> | <a href="02326.html" target="topic">Next</a></div>
+<a href="02324.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02326.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_StringToIPv6Address@char *@IPV6_ADDR * Topic Title: TCPIP_Helper_StringToIPv6Address Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_StringToIPAddress@char*@IPV4_ADDR* Topic Title: TCPIP_Helper_StringToIPAddress Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

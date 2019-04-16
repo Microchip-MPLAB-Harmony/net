@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Core Functionality</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01576.html" target="topic">Using the Library</a> &gt; <a href="01571.html" target="topic">How the Library Works</a> &gt; <a href="01565.html" target="topic">Core Functionality</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01565.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01571.html" target="topic">Previous</a> | <a href="01571.html" target="topic">Up</a> | <a href="01564.html" target="topic">Next</a></div>
+<a href="01566.html" target="topic">Previous</a> | <a href="01008.html" target="topic">Up</a> | <a href="02251.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Core Functionality</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -48,40 +48,169 @@ Core Functionality</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10" style="text-align: center;">
-<strong>MAC Connection Flow Diagram</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="TCPIP MAC mac_flow.png" border="0" alt="" title=""></p><p class="Element10">
-The MAC driver is used internally by the TCP/IP Stack Manager and its API is not normally exposed outside the stack. There is little need to interface directly with the MAC from the application level. The TCP/IP Stack provides all the data interface functions to the application by exposing the<span style="color: #FFFFFF">_</span><a href="01287.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>API (TCP and UDP) and also low level IPv4 and IPv6 API. However, the functionality of the MAC driver is important for having a thorough understanding of how the TCP/IP Stack works or for integrating the MPLAB Harmony MAC driver into a third-party TCP/IP Stack.&nbsp;</p>
 <p class="Element10">
-The MAC driver needs to be initialized by a call to <a href="02858.html" target="topic">TCPIP_MAC_Initialize</a>() with both stack and module specific initialization data. The stack initialization data contains absolutely necessary data for the MAC driver to operate (memory allocation functions, packet allocation functions, event notification functions, etc.) Note that the module initialization data could be different from one MAC module to another and, if missing, normally the MAC driver should use some default values specified in the <span class="Element146"><a href="02819.html" target="topic">tcpip_mac_config.h</a></span> file.&nbsp;</p>
+The configuration of the MAC TCP/IP Stack is based on the file <span class="Element146"><a href="02820.html" target="topic">tcpip_mac_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
 <p class="Element10">
-Once the initialization process succeeds, a MAC client handle is obtained by using <a href="02881.html" target="topic">TCPIP_MAC_Open</a>.&nbsp;</p>
+This header file contains the configuration selection for the MAC TCP/IP Stack. Based on the selections made, the MAC TCP/IP Stack may support the selected features. These configuration settings will apply to all instances of the MAC TCP/IP Stack.&nbsp;</p>
 <p class="Element10">
-Other parameters can be set, like the active events and receive filters by calling <a href="02844.html" target="topic">TCPIP_MAC_EventMaskSet</a>, <a href="03004.html" target="topic">TCPIP_MAC_RxFilterHashTableEntrySet</a>, etc.&nbsp;</p>
-<p class="Element10">
-By default the MAC driver operates in interrupts and the events are reported to the TCP/IP stack by using the event notification function that’s passed in at the MAC driver initialization. However, by using the <a href="02845.html" target="topic">TCPIP_MAC_EventPendingGet</a> function, it is possible to use the MAC driver in a polling manner.&nbsp;</p>
-<p class="Element10">
-To <a href="01187.html" target="topic">send</a> a packet, a MAC driver client has to obtain a <a href="02882.html" target="topic">TCPIP_MAC_PACKET</a> data structure, either statically or dynamically. Note that the Harmony TCP/IP Stack uses dynamic packet allocation and has a packet allocation module that the Stack Manager calls for this purpose. The packet has to be properly formatted with all the required fields before being passed to the MAC driver for transmission. The MAC driver will perform a minimum sanity check and will try to transmit the packet over the network. Once the corresponding interrupt signals to the driver that the packet was (successfully/non-successfully) transmitted the MAC driver will call the packet acknowledge function. This will indicate to the owner of the packet (the module that created/allocated the packet) that the packet is no longer in use and it can be reused, discarded, etc.&nbsp;</p>
-<p class="Element10">
-The receive process is configured as part of the MAC driver initialization procedure. Usually the MAC driver needs some buffers for storing the received network traffic. How exactly this is done is driver specific and not part of this specification. The Harmony Ethernet MAC driver, for example, allocates multiple receive buffers at initialization and uses those for the whole duration of the driver life. Other implementations may choose to free the receive buffers once they are processed and allocate new ones, as needed.&nbsp;</p>
-<p class="Element10">
-The receive process is initiated by the hardware indicating through an interrupt that a packet is pending. This will trigger a notification event to the MAC client (the TCP/IP stack) and the actual packet receive function can be called. Alternatively the MAC client can call the <a href="02845.html" target="topic">TCPIP_MAC_EventPendingGet</a> function which can be used in a polling manner.&nbsp;</p>
-<p class="Element10">
-To actually receive the packet the TCP/IP stack should call the <a href="02920.html" target="topic">TCPIP_MAC_PacketRx</a> function. This function, besides returning a pointer to the newly received packet will provide additional info about the packet status. Also, some MAC drivers have the possibility to mark the packet being received as being unicast, multicast or broadcast.&nbsp;</p>
-<p class="Element10">
-Once a packet is obtained, the stack has to dispatch it accordingly, based on the info contained within the packet (ARP, IPv4, IPv6, etc.). Note that in the Harmony TCP/IP stack it’s the Stack Manager that performs the receiving and dispatching function of the packets. The recipient of the packet will be called to process the incoming packet and may forward the packet for further processing (TCP, UDP, ICMP). Note that during all this processing time this packet can no longer be used by the MAC driver for storing newly receive data. Therefore once the final recipient of the received packet has processed the data it has to call the packet acknowledge function, so that the packet can be returned to its owner, the MAC driver in this case. If the MAC driver reuses the packet (as the Harmony Ethernet MAC driver does) or simply discards it is driver implementation specific.&nbsp;</p>
-<p class="Element10">
-Once the data transfer of packets over the network is no longer needed the <a href="02818.html" target="topic">TCPIP_MAC_Close</a> function can be called and also <a href="02822.html" target="topic">TCPIP_MAC_Deinitialize</a>. This is part of the normal procedure that the Harmony stack uses for shutting down and restarting a network interface dynamically.&nbsp;</p>
-<p class="Element10">
-For detailed information about the MAC layer<span style="color: #FFFFFF">_</span>requirements and functionality, please consult the IEEE 802.3 specifications.</p></div>
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01310.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02251.html" target="topic">TCPIP_EMAC_ETH_OPEN_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Flags to use for the Ethernet connection A TCPIP_ETH_OPEN_FLAGS value. Set to TCPIP_ETH_OPEN_DEFAULT unless very good reason to use different value&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02257.html" target="topic">TCPIP_EMAC_PHY_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The PHY address, as configured on the board. By default all the PHYs respond to address 0&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02258.html" target="topic">TCPIP_EMAC_PHY_CONFIG_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Flags to configure the MAC -&gt;PHY connection a <a href="00435.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a> This depends on the actual connection (MII/RMII, default/alternate I/O) The DRV_ETHPHY_CFG_AUTO value will use the configuration fuses setting&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02259.html" target="topic">TCPIP_EMAC_PHY_LINK_INIT_DELAY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The value of the delay for the link initialization, ms This insures that the PHY is ready to transmit after it is reset A usual value is &gt; 500 ms up to 2000 ms. The longer the delay, the less chance that the PHY drops packets when the link is established Adjust to your needs.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02260.html" target="topic">TCPIP_EMAC_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Size of a RX packet buffer. Should be multiple of 16. This is the size of all receive packet buffers processed by the ETHC. The size should be enough to accommodate any network received packet. If the packets are larger, they will have to take multiple RX buffers and the packet manipulation is less efficient. #define TCPIP_EMAC_RX_BUFF_SIZE 512 Together with <a href="02261.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a> it has impact on <a href="03481.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02261.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of MAC dedicated RX packet buffers. These buffers are always owned by the MAC. Note that the MAC driver allocates these buffers for storing the incoming network packets. The bigger the storage capacity, the higher data throughput can be obtained. Note that these packet buffers are allocated from the private TCP/IP heap that is specified by the <a href="03481.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02262.html" target="topic">TCPIP_EMAC_RX_DESCRIPTORS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of the RX descriptors to be created. If not using the run time replenish mechanism (see below) it should match the number of dedicated buffers: <a href="02261.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a>; Otherwise it should be bigger than the sum of dedicated + non-dedicated buffers: TCPIP_EMAC_RX_DESCRIPTORS &gt; <a href="02261.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a> + replenish_buffers&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02264.html" target="topic">TCPIP_EMAC_RX_FRAGMENTS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC maximum number of supported RX fragments. Based on the values of <a href="02256.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> and <a href="02260.html" target="topic">TCPIP_EMAC_RX_BUFF_SIZE</a> an incoming frame may span multiple RX buffers (fragments). Note that excessive fragmentation leads to performance degradation. The default and recommended value should be 1. #define TCPIP_EMAC_RX_FRAGMENTS 1 Alternatively you can use the calculation of the number of fragments based on the selected RX sizes:&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02265.html" target="topic">TCPIP_EMAC_RX_INIT_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of non-dedicated buffers for the MAC initialization Buffers allocated at the MAC driver initialization.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02266.html" target="topic">TCPIP_EMAC_RX_LOW_FILL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of RX buffers to allocate when below threshold condition is detected. If 0, the MAC driver will allocate (scheduled buffers - rxThres) If !0, the MAC driver will allocate exactly TCPIP_EMAC_RX_LOW_FILL buffers&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02267.html" target="topic">TCPIP_EMAC_RX_LOW_THRESHOLD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Minumum threshold for the buffer replenish process. Whenever the number of RX scheduled buffers is &lt;= than this threshold the MAC driver will allocate new non-dedicated buffers (meaning that they will be released to the TCP/IP heap once they are processed). Setting this value to 0 disables the buffer replenishing process.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02268.html" target="topic">TCPIP_EMAC_TX_DESCRIPTORS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Number of the TX descriptors to be created. Because a TCP packet can span at most 3 buffers, the value should always be &gt;= 4 The amount of memory needed per descriptor is not high (around 24 bytes) so when high MAC TX performance is needed make sure that this number is &gt;= 8.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02263.html" target="topic">TCPIP_EMAC_RX_FILTERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC RX Filters These filters define the packets that are accepted and rejected by the MAC driver Adjust to your needs The default value allows the processing of unicast, multicast and broadcast packets that have a valid CRC&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02255.html" target="topic">TCPIP_EMAC_LINK_MTU</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Link Maximum Transmission Unit (MTU) This symbol defines the largest network protocol data unit that can be transmitted over this link in a single frame. It relates to the <a href="02256.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> value - see above. The default value for an Ethernet link should be 1500. The minimum value for an Eternet link should be 576. If need to change this, make sure that the <a href="02256.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> &gt;= TCPIP_EMAC_LINK_MTU + 18 where the value 18 represents the Ethernet frame header: 12 bytes - destination + source address 2 bytes - frame type 4 bytes - FCS&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02256.html" target="topic">TCPIP_EMAC_MAX_FRAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum MAC supported RX/TX frame size. The default value is 1536 (allows for VLAN tagged frames, although the VLAN tagged frames are discarded on RX). On RX: any incoming ETH frame that's longer than this size will be discarded. On TX: any frame that's longer than this size will be aborted by the MAC.<br>Normally there's no need to touch this value unless you know exactly the maximum size of the frames you want to process on your network.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02250.html" target="topic">TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This symbol enables/disables the auto flow control When in full-duplex mode and the auto flow control is enabled, the MAC will <a href="01188.html" target="topic">send</a> pause frames whenever the number of pending RX packets reached the full watermark. Once this number drops to the empty watermark, a pause frame with pause value of 0 is transmitted, resuming the normal traffic Use 1 to enable, 0 to disable Default should be enabled&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02252.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+An 8 bit value representing the empty water mark, in number of packets When the auto flow control is active and the number of pending received packets falls reaching this threshold the auto flow control pause frames will stop Always <a href="02253.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK</a> &gt; TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK Used only when auto flow control is enabled Default value could be 0: resume normal traffic when there is no pending RX packet&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02253.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+An 8 bit value representing the full water mark, in number of packets When the number of pending received packets reaches this threshold the auto flow control kicks in A good rule to use for avoiding any packet overflow is to have enough receive room for at least 2 maximum packets, i.e. fullWMMark = (rxScheduledBuffers x rxBuffSize) / <a href="02256.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> - (2 x <a href="02256.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> ) / rxBuffSize; Always TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK &gt; <a href="02252.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK</a> Used only when auto flow control is enabled Adjust to your own value #define TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK 2 Default value should use the calculation of the watermark based on the selected RX... <a href="02253.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02254.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Pause Time Value for the Auto Flow Control, in bytes This represents the number of bytes to request the pause for when the auto flow control kicks in. It is normally thought of in terms of RX packets: pauseBytes / rxBuffSize = pausePackets Using bytes instead of packets allows better granularity The value should be a multiple of 64 bytes The range is : 64 bytes &lt;= TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES &lt;= (4 MB - 64) bytes (0x3fffc0) An usual value is 2 full packets. For example 2 * 1536 bytes Used only when flow control is enabled&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01576.html" target="topic">Using the Library</a> &gt; <a href="01571.html" target="topic">How the Library Works</a> &gt; <a href="01565.html" target="topic">Core Functionality</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01565.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -89,13 +218,13 @@ For detailed information about the MAC layer<span style="color: #FFFFFF">_</span
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01571.html" target="topic">Previous</a> | <a href="01571.html" target="topic">Up</a> | <a href="01564.html" target="topic">Next</a></div>
+<a href="01566.html" target="topic">Previous</a> | <a href="01008.html" target="topic">Up</a> | <a href="02251.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

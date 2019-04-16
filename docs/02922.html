@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_PARAMETERS Structure</title>
+<title>TCPIP_MAC_PacketTx Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01574.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02922.html" target="topic">TCPIP_MAC_PARAMETERS Structure</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01575.html" target="topic">Library Interface</a> &gt; e) Data Transfer Functions &gt; <a href="02922.html" target="topic">TCPIP_MAC_PacketTx Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02854.html" target="topic">Previous</a> | <a href="01574.html" target="topic">Up</a> | <a href="02949.html" target="topic">Next</a></div>
+<a href="02921.html" target="topic">Previous</a> | <a href="01575.html" target="topic">Up</a> | <a href="02953.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PARAMETERS Topic Title: TCPIP_MAC_PARAMETERS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PacketTx@DRV_HANDLE@TCPIP_MAC_PACKET * Topic Title: TCPIP_MAC_PacketTx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_PARAMETERS Structure</div>
+TCPIP_MAC_PacketTx Function</div>
 </div>
 </div>
 
@@ -49,66 +49,84 @@ TCPIP_MAC_PARAMETERS Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MAC Run time parameters&nbsp;</p>
-<p class="Element10">
-This is the data structure that the MAC user (TCP/IP stack) passes on to the MAC driver after the MAC initialization time to retrieve the settings resulted.</p></div>
+This is the MAC transmit function. Using this function a packet is submitted to the MAC driver for transmission.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  TCPIP_MAC_ADDR <strong><span style="color: #000000">ifPhyAddress</span></strong>;
-  <a href="02958.html" target="topic">TCPIP_MAC_PROCESS_FLAGS</a> <strong><span style="color: #000000">processFlags</span></strong>;
-  <a href="03031.html" target="topic">TCPIP_MAC_TYPE</a> <strong><span style="color: #000000">macType</span></strong>;
-  <a href="02859.html" target="topic">TCPIP_MAC_LINK_MTU</a> <strong><span style="color: #000000">linkMtu</span></strong>;
-} TCPIP_MAC_PARAMETERS;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02966.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">TCPIP_MAC_PacketTx</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="02883.html" target="topic">TCPIP_MAC_PACKET</a> * <strong><span style="color: #000000">ptrPacket</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_ADDR ifPhyAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Physical address of the interface. MAC sets this field as part of the initialization process.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_PROCESS_FLAGS processFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-MAC process flags. The stack will use this value to call into the MAC process function after receiving a MAC event.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_TYPE macType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-MAC type: ETH, Wi-Fi, etc.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_LINK_MTU linkMtu;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-MAC link MTU size&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="02859.html" target="topic">TCPIP_MAC_Initialize</a> should have been called. <a href="02882.html" target="topic">TCPIP_MAC_Open</a> should have been called to obtain a valid handle.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+MAC client handle obtained by a call to <a href="02882.html" target="topic">TCPIP_MAC_Open</a>.<br>&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+ptrPacket&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+pointer to a <a href="02883.html" target="topic">TCPIP_MAC_PACKET</a> that's completely formatted and ready to be transmitted over the network&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element633">
+<li class="Element603">TCPIP_MAC_RES_OK - if all processing went on OK</li>
+<li class="Element603"><a href="02966.html" target="topic">TCPIP_MAC_RES</a> error code - if processing failed for some reason</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+A success code returned from this function signals only that the packet was successfully scheduled for transmission over the interface and not that the packet was actually transmitted. An event will be triggered when the packet is transmitted.&nbsp;</p>
+<p class="Element10">
+The MAC driver has to support internal queuing. Since the <a href="02883.html" target="topic">TCPIP_MAC_PACKET</a> data structure contains internal queuing members the MAC can queue the packet at no expense. Therefore a packet is to be rejected only if it's not properly formatted. Otherwise it has to be scheduled for transmission in an internal MAC queue.&nbsp;</p>
+<p class="Element10">
+Once the packet is scheduled for transmission the MAC driver has to set the TCPIP_MAC_PKT_FLAG_QUEUED flag so that the stack is aware that this packet is under processing and cannot be modified.&nbsp;</p>
+<p class="Element10">
+Once the packet is transmitted, the TCPIP_MAC_PKT_FLAG_QUEUED has to be cleared, the proper packet acknowledgment result (ackRes) has to be set and the packet acknowledgment function (ackFunc) has to be called. It is implementation dependent if all these steps are implemented as part of the ackFunc itself or as discrete steps.&nbsp;</p>
+<p class="Element10">
+On 32-bit machines, the 1st segment payload of a packet is allocated so that it is always 32-bit aligned and its size is 32 bits multiple. The segLoadOffset adds to the payload address and insures that the network layer data is 32-bit aligned.&nbsp;</p>
+<p class="Element10">
+PIC32 MAC driver specific : the driver checks that the segLoadOffset &gt;= 2. See notes for the segLoadOffset member.&nbsp;</p>
+<p class="Element10">
+The packet is not required to contain the Frame Check Sequence (FCS/CRC32) field. The MAC driver/controller will insert that field itself, if it's required.&nbsp;</p>
+<p class="Element10">
+The MAC driver is required to support the transmission of multiple chained packets.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01574.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02922.html" target="topic">TCPIP_MAC_PARAMETERS Structure</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01575.html" target="topic">Library Interface</a> &gt; e) Data Transfer Functions &gt; <a href="02922.html" target="topic">TCPIP_MAC_PacketTx Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +134,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02854.html" target="topic">Previous</a> | <a href="01574.html" target="topic">Up</a> | <a href="02949.html" target="topic">Next</a></div>
+<a href="02921.html" target="topic">Previous</a> | <a href="01575.html" target="topic">Up</a> | <a href="02953.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PARAMETERS Topic Title: TCPIP_MAC_PARAMETERS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PacketTx@DRV_HANDLE@TCPIP_MAC_PACKET * Topic Title: TCPIP_MAC_PacketTx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

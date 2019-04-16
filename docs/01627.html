@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>Building the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01190.html" target="topic">SMTP Module</a> &gt; <a href="01627.html" target="topic">Configuring the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01191.html" target="topic">SMTP Module</a> &gt; <a href="01627.html" target="topic">Building the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01635.html" target="topic">Previous</a> | <a href="01190.html" target="topic">Up</a> | <a href="03164.html" target="topic">Next</a></div>
+<a href="03173.html" target="topic">Previous</a> | <a href="01191.html" target="topic">Up</a> | <a href="01633.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+Building the Library</div>
 </div>
 </div>
 
@@ -49,63 +49,82 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The configuration of the SMPT TCP/IP Stack Library is based on the file <span class="Element146"><a href="01192.html" target="topic">smtp_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
+The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/tcpip</span>.</p><div class="Element15">
+Interface File(s)</div>
 <p class="Element10">
-This header file contains the configuration selection for the SMTP TCP/IP Stack Library. Based on the selections made, the SMTP TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the SMTP TCP/IP Stack Library.&nbsp;</p>
-<p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01309.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element65" valign="top" width="32%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
+<div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03164.html" target="topic">TCPIP_SMTP_MAX_WRITE_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-the max size of data to be written in a discrete string/array email operation: <a href="03168.html" target="topic">TCPIP_SMTP_StringPut</a>/<a href="03143.html" target="topic">TCPIP_SMTP_ArrayPut</a>. Excess characters will be discarded. Note that the higher this value, the greater the size of the underlying TCP <a href="01287.html" target="topic">socket</a> TX buffer Adjust as needed. Normally should not exceed 512 characters.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03167.html" target="topic">TCPIP_SMTP_SERVER_REPLY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-How long to wait before assuming the connection has been dropped (default 8 seconds)&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03169.html" target="topic">TCPIP_SMTP_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTP task rate, milliseconds The default value is 55 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03610.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03172.html" target="topic">TCPIP_SMTP_WRITE_READY_SPACE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-the minimum amount of data to ask from the transport/encryption layer when querying the write space&nbsp;</div></td></tr></table></div></div>
-</div>
+<td class="Element67" valign="top" width="32%">
+<div class="Element68">
+<span class="Element146">/tcpip.h</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
+<div class="Element68">
+Header file that includes all of the TCP/IP modules.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Required File(s)</div>
+<div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="48%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="48%">
+<div class="Element68">
+<span class="Element146">/src/smtp.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
+<div class="Element68">
+SMTP implementation file.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Optional File(s)</div>
+<p class="Element10">
+This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="24%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="24%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
+<div class="Element68">
+No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Module Dependencies</div>
+<p class="Element10">
+The SMTP module depends on the following modules:
+<ul class="Element633">
+<li class="Element603"><a href="01003.html" target="topic">TCP/IP Stack Library</a></li>
+<li class="Element603"><a href="00340.html" target="topic">DNS Module</a></li>
+<li class="Element603"><a href="01307.html" target="topic">TCP Module</a></li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01190.html" target="topic">SMTP Module</a> &gt; <a href="01627.html" target="topic">Configuring the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01191.html" target="topic">SMTP Module</a> &gt; <a href="01627.html" target="topic">Building the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +132,13 @@ the minimum amount of data to ask from the transport/encryption layer when query
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01635.html" target="topic">Previous</a> | <a href="01190.html" target="topic">Up</a> | <a href="03164.html" target="topic">Next</a></div>
+<a href="03173.html" target="topic">Previous</a> | <a href="01191.html" target="topic">Up</a> | <a href="01633.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

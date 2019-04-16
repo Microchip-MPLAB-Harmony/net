@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ARP_HandlerRegister Function</title>
+<title>TCPIP_ARP_HandlerDeRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00263.html" target="topic">ARP Module</a> &gt; <a href="01378.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01818.html" target="topic">TCPIP_ARP_HandlerRegister Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00263.html" target="topic">ARP Module</a> &gt; <a href="01379.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01818.html" target="topic">TCPIP_ARP_HandlerDeRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01817.html" target="topic">Previous</a> | <a href="01378.html" target="topic">Up</a> | <a href="01800.html" target="topic">Next</a></div>
+<a href="01379.html" target="topic">Previous</a> | <a href="01379.html" target="topic">Up</a> | <a href="01819.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_HandlerRegister@TCPIP_NET_HANDLE@TCPIP_ARP_EVENT_HANDLER@void* Topic Title: TCPIP_ARP_HandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_HandlerDeRegister@TCPIP_ARP_HANDLE Topic Title: TCPIP_ARP_HandlerDeRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ARP_HandlerRegister Function</div>
+TCPIP_ARP_HandlerDeRegister Function</div>
 </div>
 </div>
 
@@ -49,14 +49,12 @@ TCPIP_ARP_HandlerRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will register a notification handler with the ARP module.</p></div>
+Deregisters a previously registered ARP handler</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01816.html" target="topic">TCPIP_ARP_HANDLE</a> <strong><span style="color: #000000">TCPIP_ARP_HandlerRegister</span></strong>(
-    <a href="03113.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
-    <a href="01806.html" target="topic">TCPIP_ARP_EVENT_HANDLER</a> <strong><span style="color: #000000">handler</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">hParam</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_ARP_HandlerDeRegister</span></strong>(
+    <a href="01817.html" target="topic">TCPIP_ARP_HANDLE</a> <strong><span style="color: #000000">hArp</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -80,19 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+hArp&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Specifies interface to register on. Use hNet == 0 to register on all interfaces available.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-handler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Handler to be called for event.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The hParam is passed by the client and will be used by the ARP when the notification is made. It is used for per-thread content or if more modules, for example, share the same handler and need a way to differentiate the callback.&nbsp;</div></td></tr></table></div></div>
+ARP Handle&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -100,10 +88,10 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="01816.html" target="topic">TCPIP_ARP_HANDLE</a>
-<ul class="Element632">
-<li class="Element602">On Success - Returns a valid handle</li>
-<li class="Element602">On Failure - Null handle</li>
+Boolean
+<ul class="Element633">
+<li class="Element603">On Success - true</li>
+<li class="Element603">On Failure - false (If no such handler registered)</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -118,7 +106,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00263.html" target="topic">ARP Module</a> &gt; <a href="01378.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01818.html" target="topic">TCPIP_ARP_HandlerRegister Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00263.html" target="topic">ARP Module</a> &gt; <a href="01379.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="01818.html" target="topic">TCPIP_ARP_HandlerDeRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -126,13 +114,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01817.html" target="topic">Previous</a> | <a href="01378.html" target="topic">Up</a> | <a href="01800.html" target="topic">Next</a></div>
+<a href="01379.html" target="topic">Previous</a> | <a href="01379.html" target="topic">Up</a> | <a href="01819.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_HandlerRegister@TCPIP_NET_HANDLE@TCPIP_ARP_EVENT_HANDLER@void* Topic Title: TCPIP_ARP_HandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_HandlerDeRegister@TCPIP_ARP_HANDLE Topic Title: TCPIP_ARP_HandlerDeRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

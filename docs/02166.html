@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_DNS_EVENT_HANDLER Type</title>
+<title>TCPIP_DNS_EntryQuery Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00340.html" target="topic">DNS Module</a> &gt; <a href="01446.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02166.html" target="topic">TCPIP_DNS_EVENT_HANDLER Type</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00340.html" target="topic">DNS Module</a> &gt; <a href="01447.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="02166.html" target="topic">TCPIP_DNS_EntryQuery Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02207.html" target="topic">Previous</a> | <a href="01446.html" target="topic">Up</a> | <a href="02167.html" target="topic">Next</a></div>
+<a href="02148.html" target="topic">Previous</a> | <a href="01447.html" target="topic">Up</a> | <a href="02177.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_EVENT_HANDLER Topic Title: TCPIP_DNS_EVENT_HANDLER Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_EntryQuery@TCPIP_DNS_ENTRY_QUERY *@int Topic Title: TCPIP_DNS_EntryQuery Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_DNS_EVENT_HANDLER Type</div>
+TCPIP_DNS_EntryQuery Function</div>
 </div>
 </div>
 
@@ -49,13 +49,21 @@ TCPIP_DNS_EVENT_HANDLER Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Type: TCPIP_DNS_EVENT_HANDLER&nbsp;</p>
-<p class="Element10">
-The format of a notification handler registered with the DNS module. Once an DNS event occurs the DNS service will be called for the registered handler.</p></div>
+This function is used to query the DNS client for a specified entry. The entry to be queried is selected by its index.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">TCPIP_DNS_EVENT_HANDLER</span></strong>)(<a href="03113.html" target="topic">TCPIP_NET_HANDLE</a> hNet, <a href="02167.html" target="topic">TCPIP_DNS_EVENT_TYPE</a> evType, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* name, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* param);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02194.html" target="topic">TCPIP_DNS_RESULT</a> <strong><span style="color: #000000">TCPIP_DNS_EntryQuery</span></strong>(
+    <a href="02153.html" target="topic">TCPIP_DNS_ENTRY_QUERY</a> * <strong><span style="color: #000000">pDnsQuery</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">queryIndex</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The DNS client module must be initialized.</p></div>
+</div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
 <div class="Element11">
@@ -71,39 +79,47 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pDnsQuery&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-the interface on which the DNS event occurred&nbsp;</div></td></tr><tr>
+address to store the the query result&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-evType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+queryIndex&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-the DNS reported event&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-name&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-the host name associated with the event&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-param&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-additional user parameter - see <a href="02181.html" target="topic">TCPIP_DNS_HandlerRegister</a>&nbsp;</div></td></tr></table></div></div>
+entry index to be selected; should start with 0&nbsp;</div></td></tr></table></div></div>
 </div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element633">
+<li class="Element603">TCPIP_DNS_RES_OK - valid address for this index, successful</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+Errors:
+<ul class="Element633">
+<li class="Element603">TCPIP_DNS_RES_NO_SERVICE - DNS resolver non existent/uninitialized.</li>
+<li class="Element603">TCPIP_DNS_RES_INVALID_HOSTNAME - invalid string, len, pDnsQuery provided</li>
+<li class="Element603">TCPIP_DNS_RES_EMPTY_IX_ENTRY - no name associated with this entry</li>
+<li class="Element603">TCPIP_DNS_RES_NO_IX_ENTRY - invalid query index</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If pNetIf == 0, the notification is called for events on any interface.</p></div>
+None</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00340.html" target="topic">DNS Module</a> &gt; <a href="01446.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02166.html" target="topic">TCPIP_DNS_EVENT_HANDLER Type</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00340.html" target="topic">DNS Module</a> &gt; <a href="01447.html" target="topic">Library Interface</a> &gt; a) General Functions &gt; <a href="02166.html" target="topic">TCPIP_DNS_EntryQuery Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -111,13 +127,13 @@ If pNetIf == 0, the notification is called for events on any interface.</p></div
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02207.html" target="topic">Previous</a> | <a href="01446.html" target="topic">Up</a> | <a href="02167.html" target="topic">Next</a></div>
+<a href="02148.html" target="topic">Previous</a> | <a href="01447.html" target="topic">Up</a> | <a href="02177.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_EVENT_HANDLER Topic Title: TCPIP_DNS_EVENT_HANDLER Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_EntryQuery@TCPIP_DNS_ENTRY_QUERY *@int Topic Title: TCPIP_DNS_EntryQuery Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

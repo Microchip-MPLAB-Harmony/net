@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Cookies</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a> &gt; <a href="01481.html" target="topic">HTTP Features</a> &gt; <a href="01475.html" target="topic">Cookies</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01475.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01471.html" target="topic">Previous</a> | <a href="01481.html" target="topic">Up</a> | <a href="01473.html" target="topic">Next</a></div>
+<a href="01474.html" target="topic">Previous</a> | <a href="00712.html" target="topic">Up</a> | <a href="03613.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Cookies Topic Title: Cookies)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Cookies</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,40 +49,196 @@ Cookies</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Cookies were added to the protocol description to solve this problem. This feature allows a web server to store small bits of text in a user's browser. These values will be returned to the server with every request, allowing the server to associate session variables with a request. Cookies are typically used for more advanced authentication systems.&nbsp;</p>
+The configuration of the <span style="color: #000000">HTTP </span>TCP/IP Stack is based on the file <span class="Element146"><a href="00714.html" target="topic">http_config.h</a></span> with the actual symbols generated in the configuration.h.&nbsp;</p>
 <p class="Element10">
-Best practice is generally to store the bulk of the data on the server, and store only a unique identifier with the browser. This cuts down on data overhead and ensures that the user cannot modify the values stored with the session. However, logic must be implemented in the server to expire old sessions and allocate memory for new ones. If sensitive data is being stored, it is also important that the identifier be random enough so as to prevent stealing or spoofing another user's cookies.</p><div class="Element15">
-Retrieving Cookies</div>
+This header file contains the configuration selection for the HTTP TCP/IP Stack. Based on the selections made, the <span style="color: #000000">HTTP </span>TCP/IP Stack may support the selected features.&nbsp;</p>
 <p class="Element10">
-In the HTTP server, cookies are retrieved automatically. They are stored in the connection internal data buffer just as any other GET form argument or URL parameter would be. The proper place to parse these values is therefore in the <a href="02396.html" target="topic">TCPIP_HTTP_GetExecute</a> callback using the <a href="02331.html" target="topic">TCPIP_HTTP_ArgGet</a>.&nbsp;</p>
-<p class="Element10">
-This model consumes some of the limited space available for URL parameters. Ensure that cookies do not consume more space than is available (as defined by HTTP_MAX_DATA_LEN) and that they will fit after any data that may be submitted via a GET form. If enough space is not available, the cookies will be truncated.</p><div class="Element15">
-Setting Cookies</div>
-<p class="Element10">
-Cookies can be set in <a href="02396.html" target="topic">TCPIP_HTTP_GetExecute</a> or <a href="02608.html" target="topic">TCPIP_HTTP_PostExecute</a>. To set a cookie, store the name/value pairs in the connection internal buffer data as a series of null-terminated strings. Then, call <a href="02344.html" target="topic">TCPIP_HTTP_CurrentConnectionHasArgsSet</a> with a parameter equal to the number of name/value pairs to be set. For example, the following code sets a cookie indicating a user's preference for a type of cookie: </p><div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">void</span></strong> TCPIP_HTTP_GetExecute(<strong><span style="color: #000080">void</span></strong>)
-{
-...
-<i><span style="color: #008000">// Set a cookie</span></i>
-uint8_t* connData = TCPIP_HTTP_CurrentConnectionDataBufferGet(connHandle);
-uint16_t httpBuffSize  = TCPIP_HTTP_CurrentConnectionDataBufferSizeGet(connHandle);
-<strong><span style="color: #000080">if</span></strong>(strlen(“flavor”) + strlen(“oatmeal raisin) + 2 &lt;= httpBuffSize)
-{
-  strcpy((<strong><span style="color: #000080">char</span></strong>*)connData, &quot;flavor&quot;);
-  strcpy((<strong><span style="color: #000080">char</span></strong>*)connData + strlen(&quot;flavor&quot;) + 1, &quot;oatmeal raisin&quot;);</pre></div></div>
-<div class="Element13"><div class="Element12"><pre class="Element12">  TCPIP_HTTP_CurrentConnectionHasArgsSet(connHandle, 1);</pre></div></div>
-<div class="Element13"><div class="Element12"><pre class="Element12">}
-
-...
-}</pre></div></div>
-<p class="Element10">
-After this, all future requests from this browser will include the parameter &quot;flavor&quot; in the connection data along with the associated value of &quot;oatmeal raisin&quot;.</p></div>
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01310.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03613.html" target="topic">TCPIP_STACK_USE_BASE64_DECODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Authentication requires Base64 decoding Enable basic authentication support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00021.html" target="topic">_HTTP_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro _HTTP_CONFIG_H_.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02333.html" target="topic">TCPIP_HTTP_CACHE_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Max lifetime (sec) of static responses as string&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02334.html" target="topic">TCPIP_HTTP_CONFIG_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the HTTP module configuration flags Use 0 for default See <a href="00734.html" target="topic">HTTP_MODULE_FLAGS</a> definition for possible values&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02363.html" target="topic">TCPIP_HTTP_DEFAULT_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Indicate what HTTP file to serve when no specific one is requested&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02364.html" target="topic">TCPIP_HTTP_DEFAULT_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+For buffer overrun protection. Set to longest length of above two strings.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02392.html" target="topic">TCPIP_HTTP_FILE_UPLOAD_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Configure MPFS over HTTP updating Comment this line to disable updating via HTTP&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02393.html" target="topic">TCPIP_HTTP_FILE_UPLOAD_NAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro TCPIP_HTTP_FILE_UPLOAD_NAME.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02399.html" target="topic">TCPIP_HTTP_MAX_CONNECTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maximum numbers of simultaneous supported HTTP connections.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02400.html" target="topic">TCPIP_HTTP_MAX_DATA_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the maximum data length for reading cookie and GET/POST arguments (bytes)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02401.html" target="topic">TCPIP_HTTP_MAX_HEADER_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Set to length of longest string above&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02402.html" target="topic">TCPIP_HTTP_MIN_CALLBACK_FREE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the minimum number of bytes free in the TX FIFO before executing callbacks&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02608.html" target="topic">TCPIP_HTTP_NO_AUTH_WITHOUT_SSL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Uncomment to require secure connection before requesting a password&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02614.html" target="topic">TCPIP_HTTP_SKT_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the size of the RX buffer for the HTTP <a href="01288.html" target="topic">socket</a> Use 0 for default TCP <a href="01288.html" target="topic">socket</a> value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a <a href="01288.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02615.html" target="topic">TCPIP_HTTP_SKT_TX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the size of the TX buffer for the HTTP <a href="01288.html" target="topic">socket</a> Use 0 for default TCP <a href="01288.html" target="topic">socket</a> value The default recommended value for high throughput is &gt; 2MSS (3 KB). The performance of a <a href="01288.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02625.html" target="topic">TCPIP_HTTP_TASK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The HTTP task rate, ms The default value is 33 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03611.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02626.html" target="topic">TCPIP_HTTP_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Max time (sec) to await more data before timing out and disconnecting the <a href="01288.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02628.html" target="topic">TCPIP_HTTP_USE_AUTHENTICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable basic authentication support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02629.html" target="topic">TCPIP_HTTP_USE_COOKIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enable cookie support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02630.html" target="topic">TCPIP_HTTP_USE_POST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define which HTTP modules to use If not using a specific module, comment it to save resources Enable POST support&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02632.html" target="topic">TCPIP_HTTPS_DEFAULT_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Indicate what HTTPS file to serve when no specific one is requested&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02396.html" target="topic">TCPIP_HTTP_FREE_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+HTTP corresponding deallocation function, free style This is the function the HTTP will call for freeing the allocated memory Use standard C library 'free' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02398.html" target="topic">TCPIP_HTTP_MALLOC_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+HTTP allocation function, malloc style This is the function the HTTP will call to allocate memory needed for file uploads. Use standard C library 'malloc' or 0 as a default If it's 0, HTTP will use the allocation functions passed in at the stack initialization&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a> &gt; <a href="01481.html" target="topic">HTTP Features</a> &gt; <a href="01475.html" target="topic">Cookies</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01475.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -90,13 +246,13 @@ After this, all future requests from this browser will include the parameter &qu
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01471.html" target="topic">Previous</a> | <a href="01481.html" target="topic">Up</a> | <a href="01473.html" target="topic">Next</a></div>
+<a href="01474.html" target="topic">Previous</a> | <a href="00712.html" target="topic">Up</a> | <a href="03613.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Cookies Topic Title: Cookies)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
