@@ -114,7 +114,7 @@ The current known issues are as follows:
     - The SNMP protocol and corresponding demo applications is not be available.
     - IPv6 ULA generation is not available
     - ZCLL module is not supported
-    - Crypto library is not supported
+    - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer has not yet been fully tested for these projects. This will be done in a next release when wolfSSL support is added to the TCP/IP stack.  
     - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
 
 * SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
