@@ -59,8 +59,6 @@ def instantiateComponent(netPresComponent, index):
 	netPresInstnEncryptEnable.setLabel("Support Encryption?")
 	netPresInstnEncryptEnable.setVisible(True)
 	netPresInstnEncryptEnable.setDefaultValue(False)
-	if "ATSAMA5" in Variables.get("__PROCESSOR"):
-		netPresInstnEncryptEnable.setReadOnly( True )
 
 
 # H3_ToDo	
