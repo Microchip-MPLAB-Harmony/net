@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01388.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00272.html" target="topic">bind Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01389.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00272.html" target="topic">bind Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,10 +26,10 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00172.html" target="topic">Previous</a> | <a href="01388.html" target="topic">Up</a> | <a href="00273.html" target="topic">Next</a></div>
+<a href="00172.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="00273.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: bind@SOCKET@struct sockaddr*@int Topic Title: bind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
@@ -49,13 +49,13 @@ bind Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The bind function assigns a name to an unnamed <a href="01287.html" target="topic">socket</a>. The name represents the local address of the communication endpoint. For sockets of type <a href="01264.html" target="topic">SOCK_STREAM</a>, the name of the remote endpoint is assigned when a <a href="00274.html" target="topic">connect</a> or accept function is executed.</p></div>
+The bind function assigns a name to an unnamed <a href="01288.html" target="topic">socket</a>. The name represents the local address of the communication endpoint. For sockets of type <a href="01265.html" target="topic">SOCK_STREAM</a>, the name of the remote endpoint is assigned when a <a href="00274.html" target="topic">connect</a> or accept function is executed.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
 <div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">bind</span></strong>(
-    <a href="01286.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="01265.html" target="topic">sockaddr</a>* <strong><span style="color: #000000">name</span></strong>, 
+    <a href="01287.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="01266.html" target="topic">sockaddr</a>* <strong><span style="color: #000000">name</span></strong>, 
     <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">namelen</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
@@ -63,7 +63,7 @@ Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="01287.html" target="topic">socket</a> function should be called.</p></div>
+The <a href="01288.html" target="topic">socket</a> function should be called.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,17 +82,17 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Socket descriptor returned from a previous call to <a href="01287.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+Socket descriptor returned from a previous call to <a href="01288.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 name&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-pointer to the <a href="01265.html" target="topic">sockaddr</a> structure containing the local address of the <a href="01287.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+pointer to the <a href="01266.html" target="topic">sockaddr</a> structure containing the local address of the <a href="01288.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 namelen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-length of the <a href="01265.html" target="topic">sockaddr</a> structure&nbsp;</div></td></tr></table></div></div>
+length of the <a href="01266.html" target="topic">sockaddr</a> structure&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -100,7 +100,7 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-If bind is successful, a value of 0 is returned. A return value of <a href="01290.html" target="topic">SOCKET_ERROR</a> indicates an error (and errno is set accordingly).</p></div>
+If bind is successful, a value of 0 is returned. A return value of <a href="01291.html" target="topic">SOCKET_ERROR</a> indicates an error (and errno is set accordingly).</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -114,7 +114,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01388.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00272.html" target="topic">bind Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01389.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="00272.html" target="topic">bind Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,10 +122,10 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00172.html" target="topic">Previous</a> | <a href="01388.html" target="topic">Up</a> | <a href="00273.html" target="topic">Next</a></div>
+<a href="00172.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="00273.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: bind@SOCKET@struct sockaddr*@int Topic Title: bind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>

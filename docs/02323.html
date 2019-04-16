@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_Helper_SecurePortSet Function</title>
+<title>TCPIP_Helper_SecurePortGetByIndex Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01587.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02323.html" target="topic">TCPIP_Helper_SecurePortSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02323.html" target="topic">TCPIP_Helper_SecurePortGetByIndex Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02322.html" target="topic">Previous</a> | <a href="01587.html" target="topic">Up</a> | <a href="02324.html" target="topic">Next</a></div>
+<a href="02322.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02324.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_SecurePortSet@uint16_t@bool@bool Topic Title: TCPIP_Helper_SecurePortSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_SecurePortGetByIndex@int@bool@int* Topic Title: TCPIP_Helper_SecurePortGetByIndex Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_Helper_SecurePortSet Function</div>
+TCPIP_Helper_SecurePortGetByIndex Function</div>
 </div>
 </div>
 
@@ -49,14 +49,14 @@ TCPIP_Helper_SecurePortSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the internal data for deciding if the required port is a secure port or not. A secure port is one that requires secure connections. The TCP/IP internally maintained table with the ports that require secure connections is manipulated with this function. This table can be queried using the <a href="02327.html" target="topic">TCPIP_Helper_TCPSecurePortGet</a>() function.</p></div>
+This function returns the secure TCP/UDP port situated at the internal port table requested index. It also returns the number of indexes currently in the table.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_Helper_SecurePortSet</span></strong>(
-    uint16_t <strong><span style="color: #000000">port</span></strong>, 
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_Helper_SecurePortGetByIndex</span></strong>(
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">index</span></strong>, 
     <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">streamSocket</span></strong>, 
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">isSecure</span></strong>
+    <strong><span style="color: #000080">int</span></strong>* <strong><span style="color: #000000">pnIndexes</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -80,9 +80,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+index&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The TCP/UDP port to set&nbsp;</div></td></tr><tr>
+The port index to query. 0 should always be a valid index&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 streamSocket&nbsp;</div></td><td class="Element306" valign="top" width="65%">
@@ -90,9 +90,9 @@ streamSocket&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 if true, a stream/TCP port is queried else a datagram/UDP port is queried&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-isSecure&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pnIndexes&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-if true, the port is set as requiring secure connection if false, the port is set as not requiring a secure connection and it will be removed from the secure ports table&nbsp;</div></td></tr></table></div></div>
+pointer to store the number of indexes that the table currntly has. Could be NULL if not needed.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -101,24 +101,17 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element631">
-<li class="Element601">true - the port status successfuly changed</li>
-<li class="Element601">false - the port status could not be changed (no more slots in the table, port not found, etc.)</li>
+<ul class="Element632">
+<li class="Element602">a port number corresponding to the required index</li>
+<li class="Element602">0 if the corresponding slot is free or the port is not associated with the requested stream/datagram flag.</li>
 </ul></p></div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Currently there is no protection for multiple threads accessing and modifying the entries in the secure port table. It is thus recommended that the updates to the table occur just once at initialization time and after that all threads perform read-only accesses.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01587.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02323.html" target="topic">TCPIP_Helper_SecurePortSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02323.html" target="topic">TCPIP_Helper_SecurePortGetByIndex Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -126,13 +119,13 @@ Currently there is no protection for multiple threads accessing and modifying th
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02322.html" target="topic">Previous</a> | <a href="01587.html" target="topic">Up</a> | <a href="02324.html" target="topic">Next</a></div>
+<a href="02322.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02324.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_SecurePortSet@uint16_t@bool@bool Topic Title: TCPIP_Helper_SecurePortSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_SecurePortGetByIndex@int@bool@int* Topic Title: TCPIP_Helper_SecurePortGetByIndex Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

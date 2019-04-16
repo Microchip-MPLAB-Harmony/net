@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_SEGMENT_FLAGS Enumeration</title>
+<title>TCPIP_MAC_RxFilterHashTableEntrySet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01574.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03005.html" target="topic">TCPIP_MAC_SEGMENT_FLAGS Enumeration</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01575.html" target="topic">Library Interface</a> &gt; d) Filter Functions &gt; <a href="03005.html" target="topic">TCPIP_MAC_RxFilterHashTableEntrySet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02958.html" target="topic">Previous</a> | <a href="01574.html" target="topic">Up</a> | <a href="02997.html" target="topic">Next</a></div>
+<a href="02845.html" target="topic">Previous</a> | <a href="01575.html" target="topic">Up</a> | <a href="02921.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_SEGMENT_FLAGS Topic Title: TCPIP_MAC_SEGMENT_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_RxFilterHashTableEntrySet@DRV_HANDLE@TCPIP_MAC_ADDR* Topic Title: TCPIP_MAC_RxFilterHashTableEntrySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_SEGMENT_FLAGS Enumeration</div>
+TCPIP_MAC_RxFilterHashTableEntrySet Function</div>
 </div>
 </div>
 
@@ -49,72 +49,76 @@ TCPIP_MAC_SEGMENT_FLAGS Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MAC Segment Flags&nbsp;</p>
+This function sets the MAC hash table filtering to allow packets sent to DestMACAddr to be received. It calculates a CRC-32 using polynomial 0x4C11DB7 over the 6 byte MAC address and then, using bits 28:23 of the CRC, will set the appropriate bits in the hash table filter registers.&nbsp;</p>
 <p class="Element10">
-This enumeration contains the definitions of MAC segment flags: segment allocation flags and general purpose flags.</p></div>
+The function will enable/disable the Hash Table receive filter if needed.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCPIP_MAC_SEG_FLAG_STATIC</span></strong> = 0x0001,
-  <strong><span style="color: #000000">TCPIP_MAC_SEG_FLAG_TX</span></strong> = 0x0002,
-  <strong><span style="color: #000000">TCPIP_MAC_SEG_FLAG_RX_STICKY</span></strong> = 0x0004,
-  <strong><span style="color: #000000">TCPIP_MAC_SEG_FLAG_USER_PAYLOAD</span></strong> = 0x0008,
-  <strong><span style="color: #000000">TCPIP_MAC_SEG_FLAG_USER</span></strong> = 0x0100
-} TCPIP_MAC_SEGMENT_FLAGS;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02966.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">TCPIP_MAC_RxFilterHashTableEntrySet</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> TCPIP_MAC_ADDR* <strong><span style="color: #000000">DestMACAddr</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_SEG_FLAG_STATIC = 0x0001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Segment can not be dynamically deallocated. Set when the segment is allocated&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_SEG_FLAG_TX = 0x0002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-If set, it's a TX segment; otherwise, is a RX packet.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_SEG_FLAG_RX_STICKY = 0x0004&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-a MAC RX dedicated/sticky segment; otherwise, a non-dedicated/float segment&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_SEG_FLAG_USER_PAYLOAD = 0x0008&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Segment carrying user payload Higher level protocols (TCP, UDP, etc.) may use it&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_MAC_SEG_FLAG_USER = 0x0100&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-User available segment flags.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+<a href="02859.html" target="topic">TCPIP_MAC_Initialize</a> should have been called. <a href="02882.html" target="topic">TCPIP_MAC_Open</a> should have been called to obtain a valid handle.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+handle identifying the MAC driver client&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+DestMACAddr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+destination MAC address (6 bytes) to allow through the Hash Table Filter. If DestMACAddr is set to 00-00-00-00-00-00, then the hash table will be cleared of all entries and the filter will be disabled.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element633">
+<li class="Element603">TCPIP_MAC_RES_OK - if all processing went on OK.</li>
+<li class="Element603"><a href="02966.html" target="topic">TCPIP_MAC_RES</a> error code - if function failed for some reason.</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-16 bits only segment flags are supported.</p></div>
+There is no way to individually remove destination MAC addresses from the hash table since it is possible to have a hash collision and therefore multiple MAC addresses relying on the same hash table bit.&nbsp;</p>
+<p class="Element10">
+A workaround is to have the stack store each enabled MAC address and to perform the comparison at run time.&nbsp;</p>
+<p class="Element10">
+A call to TCPIP_MAC_RxFilterHashTableEntrySet() using a 00-00-00-00-00-00 destination MAC address, which will clear the entire hash table and disable the hash table filter. This will allow the receive of all packets, regardless of their destination.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01574.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03005.html" target="topic">TCPIP_MAC_SEGMENT_FLAGS Enumeration</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01575.html" target="topic">Library Interface</a> &gt; d) Filter Functions &gt; <a href="03005.html" target="topic">TCPIP_MAC_RxFilterHashTableEntrySet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +126,13 @@ Remarks</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02958.html" target="topic">Previous</a> | <a href="01574.html" target="topic">Up</a> | <a href="02997.html" target="topic">Next</a></div>
+<a href="02845.html" target="topic">Previous</a> | <a href="01575.html" target="topic">Up</a> | <a href="02921.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_SEGMENT_FLAGS Topic Title: TCPIP_MAC_SEGMENT_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_RxFilterHashTableEntrySet@DRV_HANDLE@TCPIP_MAC_ADDR* Topic Title: TCPIP_MAC_RxFilterHashTableEntrySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00645.html" target="topic">DRV_MIIM_Read Function</a></div>
+<a href="01460.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00645.html" target="topic">DRV_MIIM_Read Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00644.html" target="topic">Previous</a> | <a href="00393.html" target="topic">Up</a> | <a href="00646.html" target="topic">Next</a></div>
@@ -66,9 +66,9 @@ Preconditions</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">The <a href="00615.html" target="topic">DRV_MIIM_Initialize</a> routine must have been called.</li>
-<li class="Element602"><a href="00637.html" target="topic">DRV_MIIM_Open</a> must have been called to obtain a valid opened device handle.</li>
+<ul class="Element633">
+<li class="Element603">The <a href="00615.html" target="topic">DRV_MIIM_Initialize</a> routine must have been called.</li>
+<li class="Element603"><a href="00637.html" target="topic">DRV_MIIM_Open</a> must have been called to obtain a valid opened device handle.</li>
 </ul></p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -86,16 +86,16 @@ Remarks</div>
 If operation was scheduled successfully, the result will be DRV_MIIM_RES_PENDING. Otherwise an error code will be returned.&nbsp;</p>
 <p class="Element10">
 Upon the operation completion:
-<ul class="Element632">
-<li class="Element602">If the operation is to be discarded (DRV_MIIM_OPERATION_FLAG_DISCARD is set) there will be no notification to the client. The operation associated resources will be released.</li>
+<ul class="Element633">
+<li class="Element603">If the operation is to be discarded (DRV_MIIM_OPERATION_FLAG_DISCARD is set) there will be no notification to the client. The operation associated resources will be released.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">If the operation is not to be discarded, then:
 <ul class="Element633">
-<li class="Element603">if the client has registered an operation notification callback (<a href="00646.html" target="topic">DRV_MIIM_RegisterCallback</a>) then the callback will be called. After that the operation associated resources will be released.</li>
-<li class="Element603">if there is no notification callback the MIIM driver will wait for the client to poll and read the operation result using <a href="00644.html" target="topic">DRV_MIIM_OperationResult</a>(). Only then the operation will be released.</li>
+<li class="Element603">If the operation is not to be discarded, then:
+<ul class="Element634">
+<li class="Element604">if the client has registered an operation notification callback (<a href="00646.html" target="topic">DRV_MIIM_RegisterCallback</a>) then the callback will be called. After that the operation associated resources will be released.</li>
+<li class="Element604">if there is no notification callback the MIIM driver will wait for the client to poll and read the operation result using <a href="00644.html" target="topic">DRV_MIIM_OperationResult</a>(). Only then the operation will be released.</li>
 </ul></li>
 </ul>&nbsp;</p>
 <p class="Element10">
@@ -113,7 +113,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00645.html" target="topic">DRV_MIIM_Read Function</a></div>
+<a href="01460.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00645.html" target="topic">DRV_MIIM_Read Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -121,7 +121,7 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00644.html" target="topic">Previous</a> | <a href="00393.html" target="topic">Up</a> | <a href="00646.html" target="topic">Next</a></div>

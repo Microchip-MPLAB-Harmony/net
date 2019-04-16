@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00662.html" target="topic">DRV_MIIM_Status Function</a></div>
+<a href="01460.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00662.html" target="topic">DRV_MIIM_Status Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00655.html" target="topic">Previous</a> | <a href="00393.html" target="topic">Up</a> | <a href="00663.html" target="topic">Next</a></div>
@@ -89,10 +89,10 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">SYS_STATUS_READY - Indicates that any previous module operation for the specified module has completed</li>
-<li class="Element602">SYS_STATUS_BUSY - Indicates that a previous module operation for the specified module has not yet completed</li>
-<li class="Element602">SYS_STATUS_ERROR - Indicates that the specified module is in an error state</li>
+<ul class="Element633">
+<li class="Element603">SYS_STATUS_READY - Indicates that any previous module operation for the specified module has completed</li>
+<li class="Element603">SYS_STATUS_BUSY - Indicates that a previous module operation for the specified module has not yet completed</li>
+<li class="Element603">SYS_STATUS_ERROR - Indicates that the specified module is in an error state</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -101,16 +101,16 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">Any value greater than SYS_STATUS_READY is also a normal running state in which the driver is ready to accept new operations.</li>
-<li class="Element602">SYS_STATUS_BUSY - Indicates that the driver is busy with a previous system level operation and cannot start another</li>
-<li class="Element602">SYS_STATUS_ERROR - Indicates that the driver is in an error state</li>
-<li class="Element602">Any value less than SYS_STATUS_ERROR is also an error state.</li>
-<li class="Element602">SYS_MODULE_DEINITIALIZED - Indicates that the driver has been deinitialized</li>
-<li class="Element602">If the status operation returns SYS_STATUS_BUSY, the a previous system level operation has not yet completed. Once the status operation returns SYS_STATUS_READY, any previous operations have completed.</li>
-<li class="Element602">The value of SYS_STATUS_ERROR is negative (-1). Any value less than that is also an error state.</li>
-<li class="Element602">This function will NEVER block waiting for hardware.</li>
-<li class="Element602">If the Status operation returns an error value, the error may be cleared by calling the reinitialize operation. If that fails, the deinitialize operation will need to be called, followed by the initialize operation to return to normal operations.</li>
+<ul class="Element633">
+<li class="Element603">Any value greater than SYS_STATUS_READY is also a normal running state in which the driver is ready to accept new operations.</li>
+<li class="Element603">SYS_STATUS_BUSY - Indicates that the driver is busy with a previous system level operation and cannot start another</li>
+<li class="Element603">SYS_STATUS_ERROR - Indicates that the driver is in an error state</li>
+<li class="Element603">Any value less than SYS_STATUS_ERROR is also an error state.</li>
+<li class="Element603">SYS_MODULE_DEINITIALIZED - Indicates that the driver has been deinitialized</li>
+<li class="Element603">If the status operation returns SYS_STATUS_BUSY, the a previous system level operation has not yet completed. Once the status operation returns SYS_STATUS_READY, any previous operations have completed.</li>
+<li class="Element603">The value of SYS_STATUS_ERROR is negative (-1). Any value less than that is also an error state.</li>
+<li class="Element603">This function will NEVER block waiting for hardware.</li>
+<li class="Element603">If the Status operation returns an error value, the error may be cleared by calling the reinitialize operation. If that fails, the deinitialize operation will need to be called, followed by the initialize operation to return to normal operations.</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
@@ -132,7 +132,7 @@ status = DRV_MIIM_Status(object);
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00662.html" target="topic">DRV_MIIM_Status Function</a></div>
+<a href="01460.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01018.html" target="topic">MIIM Driver Library</a> &gt; <a href="00395.html" target="topic">Library Interface</a> &gt; <a href="00393.html" target="topic">a) Functions</a> &gt; <a href="00662.html" target="topic">DRV_MIIM_Status Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,7 +140,7 @@ status = DRV_MIIM_Status(object);
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00655.html" target="topic">Previous</a> | <a href="00393.html" target="topic">Up</a> | <a href="00663.html" target="topic">Next</a></div>

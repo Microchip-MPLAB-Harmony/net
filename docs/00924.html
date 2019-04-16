@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01547.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00924.html" target="topic">IPV6_EVENT_HANDLER Type</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01548.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00924.html" target="topic">IPV6_EVENT_HANDLER Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,10 +26,10 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02729.html" target="topic">Previous</a> | <a href="01547.html" target="topic">Up</a> | <a href="02741.html" target="topic">Next</a></div>
+<a href="02730.html" target="topic">Previous</a> | <a href="01548.html" target="topic">Up</a> | <a href="02742.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_EVENT_HANDLER Topic Title: IPV6_EVENT_HANDLER Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
@@ -54,10 +54,10 @@ Type: IPV6_EVENT_HANDLER&nbsp;</p>
 Once an IPv6 event occurs the IPv6 service will call the registered handler The handler has to be short and fast. It is meant for setting an event flag, not for lengthy processing!&nbsp;</p>
 <p class="Element10">
 evParam is a parameter that's associated to an IPv6 event
-<ul class="Element631">
-<li class="Element601">For an address event (IPV6_EVENT_ADDRESS_ADDED, IPV6_EVENT_ADDRESS_REMOVED) it should typecast to (const IPV6_ADDR_STRUCT*)</li>
-<li class="Element601">For an IPV6_EVENT_ULA_ADDRESS_GENERATED ULA event it should typecast to (const IPV6_ADDR*)</li>
-<li class="Element601">For an IPV6_EVENT_ULA_ADDRESS_FAILED ULA event the evParam is an <a href="00994.html" target="topic">IPV6_ULA_RESULT</a> error code</li>
+<ul class="Element632">
+<li class="Element602">For an address event (IPV6_EVENT_ADDRESS_ADDED, IPV6_EVENT_ADDRESS_REMOVED) it should typecast to (const IPV6_ADDR_STRUCT*)</li>
+<li class="Element602">For an IPV6_EVENT_ULA_ADDRESS_GENERATED ULA event it should typecast to (const IPV6_ADDR*)</li>
+<li class="Element602">For an IPV6_EVENT_ULA_ADDRESS_FAILED ULA event the evParam is an <a href="00994.html" target="topic">IPV6_ULA_RESULT</a> error code</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 The evParam is invalid outside of the IPV6_EVENT_HANDLER context call and should not be stored by the caller. Info that's needed has to be copied into caller's own context.&nbsp;</p>
@@ -66,7 +66,7 @@ usrParam is a user-supplied parameter</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">IPV6_EVENT_HANDLER</span></strong>)(<a href="03113.html" target="topic">TCPIP_NET_HANDLE</a> hNet, <a href="00925.html" target="topic">IPV6_EVENT_TYPE</a> evType, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* evParam, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* usrParam);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">IPV6_EVENT_HANDLER</span></strong>)(<a href="03114.html" target="topic">TCPIP_NET_HANDLE</a> hNet, <a href="00925.html" target="topic">IPV6_EVENT_TYPE</a> evType, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* evParam, <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* usrParam);</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
@@ -79,7 +79,7 @@ For address related events the passed (const IPV6_ADDR_STRUCT*) parameter is inv
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01547.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00924.html" target="topic">IPV6_EVENT_HANDLER Type</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01548.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="00924.html" target="topic">IPV6_EVENT_HANDLER Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -87,10 +87,10 @@ For address related events the passed (const IPV6_ADDR_STRUCT*) parameter is inv
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02729.html" target="topic">Previous</a> | <a href="01547.html" target="topic">Up</a> | <a href="02741.html" target="topic">Next</a></div>
+<a href="02730.html" target="topic">Previous</a> | <a href="01548.html" target="topic">Up</a> | <a href="02742.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: IPV6_EVENT_HANDLER Topic Title: IPV6_EVENT_HANDLER Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>

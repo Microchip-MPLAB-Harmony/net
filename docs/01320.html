@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCP_OPTION_KEEP_ALIVE_DATA Structure</title>
+<title>TCP_NODELAY Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01306.html" target="topic">TCP Module</a> &gt; <a href="01684.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01320.html" target="topic">TCP_OPTION_KEEP_ALIVE_DATA Structure</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01389.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01320.html" target="topic">TCP_NODELAY Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01328.html" target="topic">Previous</a> | <a href="01684.html" target="topic">Up</a> | <a href="03680.html" target="topic">Next</a></div>
+<a href="01292.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="01004.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_OPTION_KEEP_ALIVE_DATA Topic Title: TCP_OPTION_KEEP_ALIVE_DATA Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_NODELAY Topic Title: TCP_NODELAY Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCP_OPTION_KEEP_ALIVE_DATA Structure</div>
+TCP_NODELAY Macro</div>
 </div>
 </div>
 
@@ -49,53 +49,17 @@ TCP_OPTION_KEEP_ALIVE_DATA Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Structure: TCP_OPTION_KEEP_ALIVE_DATA&nbsp;</p>
-<p class="Element10">
-This structure defines <a href="01287.html" target="topic">socket</a> keep alive options.</p></div>
+Indicates if TCP is to buffer packets - Not yet supported</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">keepAliveEnable</span></strong>;
-  uint16_t <strong><span style="color: #000000">keepAliveTmo</span></strong>;
-  uint8_t <strong><span style="color: #000000">keepAliveUnackLim</span></strong>;
-} TCP_OPTION_KEEP_ALIVE_DATA;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-bool keepAliveEnable;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Enable/disable keep alive option; disabled by default for any <a href="01287.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t keepAliveTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-keep alive timeout in milliseconds ignored when keep alive is disabled if 0, the default build time value is used&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint8_t keepAliveUnackLim;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-limit of keep alives to be sent the <a href="01287.html" target="topic">socket</a> will reset the communication channel if no reply received after so many retries ignored when keep alive is disabled if 0, the default build time value is used&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCP_NODELAY</span></strong> 1 <i><span style="color: #008000">//Indicates if TCP is to buffer packets - Not yet supported</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01306.html" target="topic">TCP Module</a> &gt; <a href="01684.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01320.html" target="topic">TCP_OPTION_KEEP_ALIVE_DATA Structure</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01389.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01320.html" target="topic">TCP_NODELAY Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +67,13 @@ limit of keep alives to be sent the <a href="01287.html" target="topic">socket</
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01328.html" target="topic">Previous</a> | <a href="01684.html" target="topic">Up</a> | <a href="03680.html" target="topic">Next</a></div>
+<a href="01292.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="01004.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_OPTION_KEEP_ALIVE_DATA Topic Title: TCP_OPTION_KEEP_ALIVE_DATA Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_NODELAY Topic Title: TCP_NODELAY Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00677.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00353.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00407.html" target="topic">DRV_ETHMAC_PIC32MACEventPendingGet Function</a></div>
+<a href="01460.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00677.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00353.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00407.html" target="topic">DRV_ETHMAC_PIC32MACEventPendingGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00406.html" target="topic">Previous</a> | <a href="00353.html" target="topic">Up</a> | <a href="00422.html" target="topic">Next</a></div>
@@ -53,7 +53,7 @@ This function returns the currently pending Ethernet MAC events. Multiple events
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02823.html" target="topic">TCPIP_MAC_EVENT</a> <strong><span style="color: #000000">DRV_ETHMAC_PIC32MACEventPendingGet</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02824.html" target="topic">TCPIP_MAC_EVENT</a> <strong><span style="color: #000000">DRV_ETHMAC_PIC32MACEventPendingGet</span></strong>(
     DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
@@ -76,30 +76,30 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">This is the preferred method to get the current pending MAC events. The stack maintains a proper image of the events from their occurrence to their acknowledgment.</li>
+<ul class="Element633">
+<li class="Element603">This is the preferred method to get the current pending MAC events. The stack maintains a proper image of the events from their occurrence to their acknowledgment.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">Even with a notification handler in place it's better to use this function to get the current pending events rather than using the events passed by the notification handler which could be stale.</li>
+<ul class="Element633">
+<li class="Element603">Even with a notification handler in place it's better to use this function to get the current pending events rather than using the events passed by the notification handler which could be stale.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">The events are persistent. They shouldn't be re-enabled unless they have been processed and the condition that generated them was removed. Re-enabling them immediately without proper processing will have dramatic effects on system performance.</li>
+<ul class="Element633">
+<li class="Element603">The events are persistent. They shouldn't be re-enabled unless they have been processed and the condition that generated them was removed. Re-enabling them immediately without proper processing will have dramatic effects on system performance.</li>
 </ul>&nbsp;</p>
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">The returned value is just a momentary value. The pending events can change any time.</li>
+<ul class="Element633">
+<li class="Element603">The returned value is just a momentary value. The pending events can change any time.</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><a href="02823.html" target="topic">TCPIP_MAC_EVENT</a> currEvents = DRV_ETHMAC_PIC32MACEventPendingGet( hMac);</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="02824.html" target="topic">TCPIP_MAC_EVENT</a> currEvents = DRV_ETHMAC_PIC32MACEventPendingGet( hMac);</pre></div></div>
 </div>
 </div>
 </div>
@@ -107,7 +107,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00677.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00353.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00407.html" target="topic">DRV_ETHMAC_PIC32MACEventPendingGet Function</a></div>
+<a href="01460.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00677.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00353.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00407.html" target="topic">DRV_ETHMAC_PIC32MACEventPendingGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -115,7 +115,7 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00406.html" target="topic">Previous</a> | <a href="00353.html" target="topic">Up</a> | <a href="00422.html" target="topic">Next</a></div>
