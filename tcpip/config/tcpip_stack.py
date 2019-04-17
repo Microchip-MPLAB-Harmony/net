@@ -1622,6 +1622,19 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackInclPath.setKey("extra-include-directories")
     tcpipStackInclPath.setValue("../src/config/"+configName+ "/library;../src/config/"+configName+ "/library/tcpip/src;../src/config/"+configName+ "/library/tcpip/src/common")
     tcpipStackInclPath.setAppend(True, ";")
+	
+	# set TCP/IP pre build step
+    #tcpipStackPreBuildStepEnable = tcpipStackComponent.createSettingSymbol("TCPIP_PRE_BUILD_STEP_ENABLED", None)
+    #tcpipStackPreBuildStepEnable.setCategory("makeCustomizationType")
+    #tcpipStackPreBuildStepEnable.setKey("makeCustomizationPreStepEnabled")
+    #tcpipStackPreBuildStepEnable.setValue(True)
+
+	# set TCP/IP pre build step
+    tcpipStackPreBuildStepPath = tcpipStackComponent.createSettingSymbol("TCPIP_PRE_BUILD_STEP_PATH", None)
+    tcpipStackPreBuildStepPath.setCategory("makeCustomizationType")
+    tcpipStackPreBuildStepPath.setKey("makeCustomizationPreStep")
+    tcpipStackPreBuildStepPath.setValue("java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /z"+ "snmp.bib" +"..\src\web_pages"+ "../src"+ "mpfs_net_img.c")
+	
 #########################################################################################
 #### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
     tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)

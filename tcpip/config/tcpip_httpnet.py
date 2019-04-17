@@ -471,6 +471,16 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetPrintSourceFile.setMarkup(True)
 	tcpipHttpNetPrintSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
 	
+	# template HTTP_NET_PRINT_H "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/http_net_print.h.ftl" to "$PROJECT_SOURCE_FILES/app/http_net_print.h"
+	tcpipHttpNetPrintHeaderFile = tcpipHttpNetComponent.createFileSymbol(None, None)
+	tcpipHttpNetPrintHeaderFile.setSourcePath("tcpip/config/custom_app/http_net_print.h.ftl")
+	tcpipHttpNetPrintHeaderFile.setOutputName("http_net_print.h")
+	tcpipHttpNetPrintHeaderFile.setDestPath("../../")
+	tcpipHttpNetPrintHeaderFile.setProjectPath("")
+	tcpipHttpNetPrintHeaderFile.setType("HEADER")
+	tcpipHttpNetPrintHeaderFile.setMarkup(True)
+	tcpipHttpNetPrintHeaderFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
+	
 	# template HTTP_NET_CUSTOM_APP_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/custom_http_net_app.c.ftl" to "$PROJECT_SOURCE_FILES/app/custom_http_net_app.c"
 	tcpipHttpNetCstmAppSourceFile = tcpipHttpNetComponent.createFileSymbol(None, None)
 	tcpipHttpNetCstmAppSourceFile.setSourcePath("tcpip/config/custom_app/custom_http_net_app.c.ftl")
@@ -486,7 +496,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	# endif
 	tcpipHttpNetMpfsImg2SourceFile = tcpipHttpNetComponent.createFileSymbol(None, None)
 	tcpipHttpNetMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2_net.c.ftl")
-	tcpipHttpNetMpfsImg2SourceFile.setOutputName("mpfs_img2_net.c")
+	tcpipHttpNetMpfsImg2SourceFile.setOutputName("mpfs_net_img.c")
 	tcpipHttpNetMpfsImg2SourceFile.setDestPath("../../")
 	tcpipHttpNetMpfsImg2SourceFile.setProjectPath("")
 	tcpipHttpNetMpfsImg2SourceFile.setType("SOURCE")
@@ -494,6 +504,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetMpfsImg2SourceFile.setEnabled(False)
 	tcpipHttpNetMpfsImg2SourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL"])	
 	
+	execfile(Module.getPath() + "/tcpip/config/webpage_recursive.py")	
 	
 # make Http Net Server option visible
 def tcpipHttpNetSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):	
