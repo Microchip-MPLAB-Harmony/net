@@ -39,6 +39,8 @@ import java.io.*;
 import java.nio.file.Files;
 import java.util.zip.*;
 import java.text.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MPFS2Lib //: MPFS2Writer
@@ -49,6 +51,7 @@ public class MPFS2Lib //: MPFS2Writer
     public String SourcePath;
     private Collection<String> dynamicTypes;
     private Collection<String> nonGZipTypes;
+    private Collection<String> nonGzipSSIFiles;
     private DynVar dynVarParser;
     public List<String> log;
     public List<MPFSFileRecord> files;
@@ -78,7 +81,32 @@ public class MPFS2Lib //: MPFS2Writer
         C32,
         MDD,
     }
-
+    
+     // The parameters accepted by the if command 
+   
+    //public String  SSIInclude = "<!-- *#include *(virtual|file)=[\'\"]([^\'\"]+)[\'\"] *-->";
+    public String  SSIWithThreeArgument = "<!-- *#(include|echo|exec|set|config|fileSize|if|elif|else|endif) *(virtual|file|var|cgi|cmd|timefmt|sizefmt|errmsg)=[\'\"]([^\'\"]+)[\'\"] *(value)=[\'\"]([^\'\"]+)[\'\"] *-->";
+    public String  SSIWithTwoArgument = "<!-- *#(include|echo|exec|set|config|fileSize|if|elif|else|endif) *(virtual|file|var|cgi|cmd|timefmt|sizefmt|errmsg)=[\'\"]([^\'\"]+)[\'\"] *-->";
+    private Pattern parser_three_args = Pattern.compile(SSIWithThreeArgument);
+    private Pattern parser_two_args = Pattern.compile(SSIWithTwoArgument);
+    
+    public void SSI_CommandParse(String strLine)
+    {
+        int count=0;
+        String fileName="";
+        Matcher matches_three_args = parser_three_args.matcher(strLine);
+        Matcher matches_two_args = parser_two_args.matcher(strLine);
+        if(matches_three_args.find())
+        {
+            fileName = matches_three_args.group(count);
+            SSICommandProcessing(fileName);
+        }
+        if(matches_two_args.find())
+        {
+            fileName = matches_two_args.group(count);
+            SSICommandProcessing(fileName);
+        }
+     }
     /**
   * Recursively walk a directory tree and return a List of all
   * Files found; the List is sorted using File.compareTo().
@@ -154,6 +182,7 @@ public class MPFS2Lib //: MPFS2Writer
         //this.SourcePath = sourcePath;
         this.dynamicTypes = new ArrayList<String>();
         this.nonGZipTypes = new ArrayList<String>();
+        this.nonGzipSSIFiles = new ArrayList<String>();
         this.log = new ArrayList<String>();
         this.files = new LinkedList<MPFSFileRecord>();        
         this.dynVarParser = new MicrochipMPFS.DynVar(localPath,ifUnifiedStackIsUsed);
@@ -179,6 +208,45 @@ public class MPFS2Lib //: MPFS2Writer
                 this.dynamicTypes.add(s_trimmed);
             }
         }
+    }
+    
+    public void SSICommandProcessing(String ssiCommandFile)
+    {
+        //String[] str = ssiCommandFile.split("\\s+|#|=|\"");
+        String[] str = ssiCommandFile.split("\\s+");
+        String s = str[0].replace("<!--#"," ").trim();
+        
+        
+        // command : include
+        if((s.compareTo("include") == 0) || (s.compareTo("fsize") == 0))
+        {
+            String[] var_fileName=str[1].split("=");
+            if((var_fileName[0].compareTo("file") == 0) || (var_fileName[0].compareTo("vertual") == 0))
+            {                
+                String s_trimmed = var_fileName[1].replace('"',' ').trim();
+                              
+                if(nonGzipSSIFiles.contains(s_trimmed) != true)
+                {
+                    nonGzipSSIFiles.add(s_trimmed);
+                }
+            }
+        }
+        else if(s.compareTo("exec") == 0)
+        {
+            System.out.println("command Name Name is: "+s);
+        }
+        else if(s.compareTo("echo") == 0)
+        {
+            System.out.println("command Name Name is: "+s);
+        }
+        else if(s.compareTo("config") == 0)
+        {
+            System.out.println("command Name Name is: "+s);
+        }
+        else if(s.compareTo("config") == 0)
+        {
+            System.out.println("command Name Name is: "+s);
+        }      
     }
 
     /// <summary>
@@ -238,12 +306,20 @@ public class MPFS2Lib //: MPFS2Writer
         // Read the data in
         try{
         FileInputStream inputFile = new FileInputStream(localName);
-
         DataInputStream in = new DataInputStream(inputFile);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
-
+        
+        FileInputStream inputFile_ssi = new FileInputStream(localName);        
+        DataInputStream in_ssi = new DataInputStream(inputFile_ssi);
+        BufferedReader br_ssi = new BufferedReader(new InputStreamReader(in_ssi));
+        
+        String ssiString="";
         int byteCnt=0;
-
+      
+        while((ssiString = br_ssi.readLine())!= null)
+        {
+            SSI_CommandParse(ssiString);
+        }
         while((byteRead = br.read(buf))!= -1)
         {
             if(byteRead == 0) {break;}
@@ -275,7 +351,7 @@ public class MPFS2Lib //: MPFS2Writer
 
         // GZip the file if possible
         int gzipRatio = 0;
-        if (idxFile == null && !this.FileMatches(localName, this.nonGZipTypes))
+        if (idxFile == null && !this.FileMatches(localName, this.nonGZipTypes) && !nonGzipSSIFiles.contains(imageName))
         {
             inputFile = new FileInputStream(localName);
            /*ZipOutputStream zipout = new ZipOutputStream(new FileOutputStream("output.zip"));
@@ -443,13 +519,29 @@ public class MPFS2Lib //: MPFS2Writer
            {
                if(f.getParent().compareTo(parentPath) != 0)
                {
-                log.add(f.getParent() + " :");
+                    log.add(f.getParent() + " :");
                }
                tempImagePath = f.getPath();
-               imagePath = tempImagePath.replace(dataPath,"").replace("\\","/");
+               
+               if( dataPath.contains(File.separator) == false)
+               {
+                   if(File.separator.contains("/") == false)
+                   {
+                        dataPath = dataPath.replace("/",File.separator);
+                   }
+                   else
+                   {
+                        dataPath = dataPath.replace("\\",File.separator);
+                   }
+               }
+               
+               imagePath = tempImagePath.replace(dataPath,"").replace(File.separator,"/");
+               
                imagePath = imagePath.substring(1);
+               
                //imagePath = imagePath+"/";
                //AddFile(f.getPath(),imagePath+f.getName(),f);
+               
                AddFile(f.getPath(),imagePath,f);
                parentPath = f.getParent();
            }
@@ -518,14 +610,7 @@ public class MPFS2Lib //: MPFS2Writer
                     //WriteImage(mpfs2C18Wr);
                     w = new MPFS2C18Writer(LocalPath + LocalFile);
                     WriteImage(w);
-                    break;
-                case ASM30:
-                    w = new MPFS2ASM30Writer(LocalPath + LocalFile);
-                    WriteImage(w);
-                    break;
-                case MDD:
-                    MDDWriter(LocalPath);
-                    break;
+                    break;                
                 default:
                     w = new MPFS2BINWriter(LocalPath + LocalFile);
                     WriteImage(w);
@@ -592,82 +677,6 @@ public class MPFS2Lib //: MPFS2Writer
                 w.Write(file.data[i]);
             }
         }
-//        if(ifUnifiedStackIsUsed)
-//        {
-//            int counter = 0;
-//            int loopCntr = 0;
-//            int numFileRecrds = 0;
-//            List<FileRecord> FileRcrdList = new ArrayList<FileRecord>();
-////Dynamic record list.
-//            for(MPFSFileRecord file : files)
-//            {
-//                counter=0;
-//                loopCntr=0;
-//                if(file.dynVarCntr >0)
-//                {
-//                  FileRcrdList.add(new FileRecord((short)file.nameHash,
-//                              (int)file.fileRecordOffset,(int)file.dynVarCntr));
-//                  numFileRecrds++;
-//                  w.Write((byte)(file.fileRecordLength));
-//                  w.Write((byte)(file.fileRecordLength>>8));
-//                  w.Write((byte)(file.fileRecordLength>>16));
-//                  w.Write((byte)(file.fileRecordLength>>24));
-//
-//                  flags = 0;
-//                  if (file.hasIndex)
-//                  {
-//                      flags |= MPFS2_FLAG_HASINDEX;
-//                  }
-//                  if (file.isZipped)
-//                  {
-//                      flags |= MPFS2_FLAG_ISZIPPED;
-//                  }
-//
-//                  w.Write((byte)(flags));
-//                  w.Write((byte)(flags>>8));
-//
-//                  loopCntr=0;
-//                  while(loopCntr!=file.dynVarCntr)
-//                  {
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(0+counter)));
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(1+counter)));
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(2+counter)));
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(3+counter)));
-//
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(4+counter)));
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(5+counter)));
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(6+counter)));
-//                    w.Write((byte)(file.dynVarOffsetAndIndexID.get(7+counter)));
-//
-//                    counter+=8;
-//                    loopCntr+=1;
-//                  }
-//                }
-//            }
-//// File record List
-//            w.Write((byte)(numFileRecrds));
-//            w.Write((byte)(numFileRecrds>>8));
-//            w.Write((byte)(numFileRecrds>>16));
-//            w.Write((byte)(numFileRecrds>>24));
-//
-//            //FileRcrdList.ForEach(delegate(FileRecord FR)
-//            List<FileRecord> tempfileRecrdList = FileRcrdList;
-//            Collections.sort(tempfileRecrdList);
-//
-//            for(FileRecord FR : FileRcrdList)    
-//            {
-//              w.Write((byte)(FR.nameHash));
-//              w.Write((byte)(FR.nameHash>>8));
-//              w.Write((byte)(FR.fileRecordOffset));
-//              w.Write((byte)(FR.fileRecordOffset>>8));
-//              w.Write((byte)(FR.fileRecordOffset>>16));
-//              w.Write((byte)(FR.fileRecordOffset>>24));
-//              w.Write((byte)(FR.dynVarCntr));
-//              w.Write((byte)(FR.dynVarCntr>>8));
-//              w.Write((byte)(FR.dynVarCntr>>16));
-//              w.Write((byte)(FR.dynVarCntr>>24));
-//            }
-//        }
         w.Close();
         generatedImageName = w.imageName;
 
@@ -755,7 +764,7 @@ public class MPFS2Lib //: MPFS2Writer
                 "Company:\r\n" +
                 "   Microchip Technology Inc. \r\n\r\n" +
                 "File Name:\r\n" +
-                "   mpfs_img2.c\r\n\r\n" +
+                "   mpfs_net_img.c\r\n\r\n" +
                 "Description: \r\n" +
                 "   Defines an MPFS2 image to be stored in program memory.\r\n" +
                 "Processor:   PIC32\r\n" +
@@ -797,67 +806,15 @@ public class MPFS2Lib //: MPFS2Writer
                 "/**************************************\r\n" +
                 " * MPFS2 Image Data\r\n" +
                 " **************************************/ \r\n\r\n" +
+                "#if defined( __ICCARM__ )   // IAR compiler build \r\n"+
+                "    #define DRV_MEMORY_DEVICE_MEDIA_SIZE         1024UL \r\n"+
+                "    const uint8_t NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024 ] = {\r\n"+
+                "#else\r\n"+
                 "    const uint8_t __attribute__((space(prog),address(DRV_MEMORY_DEVICE_START_ADDRESS))) __attribute__((keep))\r\n"+
-                "    NVM_MEDIA_DATA[DRV_MEMORY_DEVICE_MEDIA_SIZE*1024] = {"
+                "    NVM_MEDIA_DATA[ DRV_MEMORY_DEVICE_MEDIA_SIZE * 1024] = {\r\n"+
+                "#endif"        
             );
-        }
-        else
-        {
-            fout.write(
-                "/***************************************************************\r\n" +
-                " * File Name:   MPFSImg2.c\r\n" +
-                " * Description: Defines an MPFS2 image to be stored in program memory.\r\n" +
-                " * Processor:   PIC18,PIC32\r\n" +
-                " * Compiler:    Microchip C18, C32\r\n" +
-                " *\r\n" +
-                " * NOT FOR HAND MODIFICATION\r\n" +
-                " * This file is automatically generated by the MPFS2 Utility\r\n" +
-                " * ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS2 GENERATOR\r\n" +
-                " * Generated " + sdf.format(date) + " " + "\r\n" +
-                " *\r\n" +
-                " * Software License Agreement\r\n" +
-                " *\r\n" +
-                " * Copyright (C) 2012 Microchip Technology Inc.  All rights\r\n" +
-                " * reserved.\r\n" +
-                " *\r\n" +
-                " * Microchip licenses to you the right to use, modify, copy, and \r\n " +
-                " * distribute: \r\n" +
-                " * (i)  the Software when embedded on a Microchip microcontroller or \r\n" +
-                " *      digital signal controller product (\"Device\") which is \r\n" +
-                " *      integrated into Licensee's product; or \r\n" +
-                " * (ii) ONLY the Software driver source files ENC28J60.c, ENC28J60.h,\r\n" +
-                " *		ENCX24J600.c and ENCX24J600.h ported to a non-Microchip device\r\n" +
-                " *		used in conjunction with a Microchip ethernet controller for\r\n" +
-                " *		the sole purpose of interfacing with the ethernet controller.\r\n" +
-                " *\r\n" +
-                " * You should refer to the license agreement accompanying this \r\n" +
-                " * Software for additional information regarding your rights and \r\n" +
-                " * obligations.\r\n" +
-                " *\r\n" +
-                " * THE SOFTWARE AND DOCUMENTATION ARE PROVIDED \"AS IS\" WITHOUT\r\n" +
-                " * WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT\r\n" +
-                " * LIMITATION, ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR A \r\n" +
-                " * PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL\r\n" +
-                " * MICROCHIP BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR\r\n" +
-                " * CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF\r\n" +
-                " * PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS\r\n" +
-                " * BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE \r\n" +
-                " * THEREOF), ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER \r\n" +
-                " * SIMILAR COSTS, WHETHER ASSERTED ON THE BASIS OF CONTRACT, TORT\r\n" +
-                " * (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.\r\n" +
-                " *\r\n"+
-                " ***************************************************************/\r\n" +
-                "\r\n#define __MPFSIMG2_C\r\n\r\n" +
-                "#include \"TCPIPConfig.h\"\r\n" +
-                "#if !defined(MPFS_USE_EEPROM) && !defined(MPFS_USE_SPI_FLASH)\r\n\r\n" +
-                "#include \"TCPIP Stack/TCPIP.h\"\r\n" +
-                "#if defined(STACK_USE_MPFS2)\r\n\r\n" +
-                "\r\n" +
-                "/**************************************\r\n" +
-                " * MPFS2 Image Data\r\n" +
-                " **************************************/"
-            );
-        }
+        }        
         }catch (IOException e){}
     }
 
@@ -908,9 +865,13 @@ public class MPFS2Lib //: MPFS2Writer
                 fout.write("\r\n#define DATACHUNK"+tempStr);
             }
         }
-        if (ImageLength % 16 == 0)
+        if ((ImageLength % 16 == 0) && (ImageLength != 0))
         {
             fout.write(" \\\r\n\t");
+        }
+        else if(ImageLength == 0)
+        {
+            fout.write("\r\n\t");
         }
         ASCIILine += Character.toString(ASCIIdata);
         tempStr = String.format("%02x", data);
@@ -955,19 +916,7 @@ public class MPFS2Lib //: MPFS2Writer
                 "// The entire data array is defined as a single variable to \r\n" +
                 "// ensure that the linker does not reorder the data chunks in Flash when compiler \r\n" +
                 "// optimizations are turned on.\r\n" );
-               
-                 //fout.write("\tconst uint8_t MPFS_IMAGE_DATA[] = {");
-//                 for (int i = 0; i < ImageLength; i += 1024)
-//                 {
-//                     tempStr = "DATACHUNK" + String.format( "%06x",(i/1024));
-//                     fout.write(tempStr);
-//                     if ((i + 1024) < ImageLength)
-//                     {
-//                        fout.write(", ");
-//                     }
-//                 }
-                 //fout.write("};\r\n\r\n");
-                 //fout.write("\tconst uint32_t MPFS_IMAGE_SIZE = sizeof(MPFS_IMAGE_DATA);\r\n\r\n");
+
                  fout.write("struct MEDIA_STORAGE_PARTITION_INFO\r\n");
                  fout.write("{\r\n");
                  fout.write("\tconst char*     partName;           // name that identifies the partition\r\n");
@@ -988,51 +937,7 @@ public class MPFS2Lib //: MPFS2Writer
              
             );
        }
-       else
-       {
-            if (ImageLength != 0)
-            {
-                 fout.write("/**************************************\r\n" +
-                 " * MPFS2 C linkable symbols\r\n" +
-                 " **************************************/\r\n" +
-                 "// For C18, these are split into seperate arrays because it speeds up compilation a lot.  \r\n" +
-                 "// For other compilers, the entire data array must be defined as a single variable to \r\n" +
-                 "// ensure that the linker does not reorder the data chunks in Flash when compiler \r\n" +
-                 "// optimizations are turned on.\r\n" +
-                 "#if defined(__18CXX)\r\n" +
-                 "\tROM BYTE MPFS_Start[] = {DATACHUNK000000};\r\n");
-
-                 for (int i = 1024; i < ImageLength; i += 1024)
-                 {
-                     tempStr = String.format("%06x",(i/1024));
-                     tempStr = tempStr+"[] = {DATACHUNK";
-                     tempStr = tempStr+String.format("%06x",(i/1024));
-                     tempStr = "\tROM BYTE MPFS_"+ tempStr+"};\r\n" ;
-                     fout.write(tempStr);
-                 }
-
-                 fout.write("#else\r\n" +
-                            "\tROM BYTE MPFS_Start[] = {");
-                 for (int i = 0; i < ImageLength; i += 1024)
-                 {
-                     tempStr = "DATACHUNK" + String.format( "%06x",(i/1024));
-                     fout.write(tempStr);
-                     if ((i + 1024) < ImageLength)
-                     {
-                        fout.write(", ");
-                     }
-                 }
-                 fout.write("};\r\n" +
-                            "#endif\r\n\r\n\r\n");
-            }
-            fout.write(
-            "/**************************************************************\r\n" +
-            " * End of MPFS\r\n" +
-            " **************************************************************/\r\n" +
-            "#endif // #if defined(STACK_USE_MPFS2)\r\n" +
-            "#endif // #if !defined(MPFS_USE_EEPROM) && !defined(MPFS_USE_SPI_FLASH)\r\n"
-            );
-       }
+       
        
        fout.flush();
        fout.close();
@@ -1099,336 +1004,10 @@ public class MPFS2Lib //: MPFS2Writer
         }
     }
   }
-  /*
-   * ASM file generator
-   */
-public class MPFS2ASM30Writer extends MPFS2Writer
-{
-public FileOutputStream file_output;
-public DataOutputStream data_out;
-public BufferedWriter fout;
+ 
 
-public MPFS2ASM30Writer(String filename)
-{
-    Date date = new Date();
-    SimpleDateFormat sdf = new SimpleDateFormat("E MMM dd yyyy hh:mm:ss");
-    if (!filename.endsWith(".s"))
-    {
-        filename += ".s";
-    }
 
-    try{
-    // Create an output stream to the file.
-    file_output = new FileOutputStream (filename);
-    // Wrap the FileOutputStream with a DataOutputStream
-    data_out = new DataOutputStream (file_output);
-    fout = new BufferedWriter(new OutputStreamWriter(data_out));
 
-    imageName = filename;
-    if(ifUnifiedStackIsUsed)
-    {
-        fout.write(
-            "/***************************************************************\r\n" +
-            "; File Name:   mpfs_img2.s\r\n" +
-            "; Description: Defines an MPFS2 image to be stored in program memory.\r\n" +
-            ";              Defined in ASM30 assembly for optimal storage size.\r\n" +
-            "; Processor:   PIC24E, PIC24F, PIC24H, dsPIC30F, dsPIC33F, dsPIC33E" +
-            "; Compiler:    Microchip C30 and XC30" +
-            ";\r\n" +
-            "; NOT FOR HAND MODIFICATION\r\n" +
-            "; This file is automatically generated by the MPFS2 Utility\r\n" +
-            "; ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS2 GENERATOR\r\n" +
-            "; Generated " + sdf.format(date) + " " + "\r\n" +
-            "; \r\n" +
-            "; Software License Agreement\r\n" +
-            "; \r\n" +
-            "; Copyright (C) 2012 Microchip Technology Inc.  All rights\r\n" +
-            "; reserved.\r\n" +
-            "; \r\n" +
-            "; Microchip licenses to you the right to use, modify, copy, and distribute\r\n " +
-            "; software only embedded on a Microchip microcontroller or digital signal \r\n" +
-            "; controller that is integrated into your product or third party product\r\n" +
-            "; (pursuant to the sublicense terms in the accompanying license agreement)\r\n\r\n" +
-            "; You should refer to the license agreement accompanying this \r\n" +
-            "; Software for additional information regarding your rights and \r\n" +
-            "; obligations.\r\n" +
-            "; \r\n" +
-            "; THE SOFTWARE AND DOCUMENTATION ARE PROVIDED \"AS IS\" WITHOUT\r\n" +
-            "; WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT\r\n" +
-            "; LIMITATION, ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR A \r\n" +
-            "; PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL\r\n" +
-            "; MICROCHIP BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR\r\n" +
-            "; CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF\r\n" +
-            "; PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS\r\n" +
-            "; BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE \r\n" +
-            "; THEREOF), ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER \r\n" +
-            "; SIMILAR COSTS, WHETHER ASSERTED ON THE BASIS OF CONTRACT, TORT\r\n" +
-            "; (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.\r\n" +
-            "; \r\n"+
-             ";**************************************************************\r\n\r\n" +
-            ".equ VALID_ID,0\r\n" +
-            ".ifdecl __dsPIC30F\r\n" +
-            "    .include \"p30fxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __dsPIC33F\r\n" +
-            "    .include \"p33fxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __dsPIC33E\r\n" +
-            "    .include \"p33exxxx.inc\"\r\n" +
-            ".endif\r\n" +
-                    ".ifdecl __PIC24E\r\n" +
-            "    .include \"p24exxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __PIC24H\r\n" +
-            "    .include \"p24hxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __PIC24F\r\n" +
-            "    .include \"p24fxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".if VALID_ID <> 1\r\n" +
-            "    .error \"Processor ID not specified in generic include files.  New ASM30 assembler needs to be downloaded?\"\r\n" +
-            ".endif\r\n" +
-            "	.text\r\n" +
-            "	.section	MPFSData,code\r\n\r\n" +
-            "	goto END_OF_MPFS	; Prevent accidental execution of constant data.\r\n" +
-            "	.global BEGIN_MPFS\r\n" +
-            "BEGIN_MPFS:"
-        );
-    }
-    else
-    {
-        fout.write(
-            ";**************************************************************\r\n" +
-            "; File Name:   MPFSImg2.s\r\n" +
-            "; Description: Defines an MPFS2 image to be stored in program memory.\r\n" +
-            ";              Defined in ASM30 assembly for optimal storage size.\r\n" +
-            "; Processor:   PIC24E, PIC24F, PIC24H, dsPIC30F, dsPIC33F, dsPIC33E" +
-            "; Compiler:    Microchip C30" +
-            ";\r\n" +
-            "; NOT FOR HAND MODIFICATION\r\n" +
-            "; This file is automatically generated by the MPFS2 Utility\r\n" +
-            "; ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS2 GENERATOR\r\n" +
-            "; Generated " + sdf.format(date) + " " + "\r\n" +
-            "; \r\n" +
-            "; Software License Agreement\r\n" +
-            "; \r\n" +
-            "; Copyright (C) 2012 Microchip Technology Inc.  All rights\r\n" +
-            "; reserved.\r\n" +
-            "; \r\n" +
-            "; Microchip licenses to you the right to use, modify, copy, and \r\n " +
-            "; distribute: \r\n" +
-            "; (i)  the Software when embedded on a Microchip microcontroller or \r\n" +
-            ";      digital signal controller product (\"Device\") which is \r\n" +
-            ";      integrated into Licensee's product; or \r\n" +
-            "; (ii) ONLY the Software driver source files ENC28J60.c, ENC28J60.h,\r\n" +
-            ";		ENCX24J600.c and ENCX24J600.h ported to a non-Microchip device\r\n" +
-            ";		used in conjunction with a Microchip ethernet controller for\r\n" +
-            ";		the sole purpose of interfacing with the ethernet controller.\r\n" +
-            ";\r\n" +
-            "; You should refer to the license agreement accompanying this \r\n" +
-            "; Software for additional information regarding your rights and \r\n" +
-            "; obligations.\r\n" +
-            "; \r\n" +
-            "; THE SOFTWARE AND DOCUMENTATION ARE PROVIDED \"AS IS\" WITHOUT\r\n" +
-            "; WARRANTY OF ANY KIND, EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT\r\n" +
-            "; LIMITATION, ANY WARRANTY OF MERCHANTABILITY, FITNESS FOR A \r\n" +
-            "; PARTICULAR PURPOSE, TITLE AND NON-INFRINGEMENT. IN NO EVENT SHALL\r\n" +
-            "; MICROCHIP BE LIABLE FOR ANY INCIDENTAL, SPECIAL, INDIRECT OR\r\n" +
-            "; CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF\r\n" +
-            "; PROCUREMENT OF SUBSTITUTE GOODS, TECHNOLOGY OR SERVICES, ANY CLAIMS\r\n" +
-            "; BY THIRD PARTIES (INCLUDING BUT NOT LIMITED TO ANY DEFENSE \r\n" +
-            "; THEREOF), ANY CLAIMS FOR INDEMNITY OR CONTRIBUTION, OR OTHER \r\n" +
-            "; SIMILAR COSTS, WHETHER ASSERTED ON THE BASIS OF CONTRACT, TORT\r\n" +
-            "; (INCLUDING NEGLIGENCE), BREACH OF WARRANTY, OR OTHERWISE.\r\n" +
-            "; \r\n"+
-            ";**************************************************************\r\n\r\n" +
-            ".equ VALID_ID,0\r\n" +
-            ".ifdecl __dsPIC30F\r\n" +
-            "    .include \"p30fxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __dsPIC33F\r\n" +
-            "    .include \"p33fxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __dsPIC33E\r\n" +
-            "    .include \"p33exxxx.inc\"\r\n" +
-            ".endif\r\n" +
-                    ".ifdecl __PIC24E\r\n" +
-            "    .include \"p24exxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __PIC24H\r\n" +
-            "    .include \"p24hxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".ifdecl __PIC24F\r\n" +
-            "    .include \"p24fxxxx.inc\"\r\n" +
-            ".endif\r\n" +
-            ".if VALID_ID <> 1\r\n" +
-            "    .error \"Processor ID not specified in generic include files.  New ASM30 assembler needs to be downloaded?\"\r\n" +
-            ".endif\r\n" +
-            "	.text\r\n" +
-            "	.section	MPFSData,code\r\n\r\n" +
-            "	goto END_OF_MPFS	; Prevent accidental execution of constant data.\r\n" +
-            "	.global BEGIN_MPFS\r\n" +
-            "BEGIN_MPFS:"
-        );
-    }
-    }catch (IOException e) {
-        System.out.println ("IO exception = " + e );
-        log.add("ERROR: " + e.getMessage());
-    }
-}
-
-public void Write(byte data)
-{
-    try{
-    String tempStr;
-    if (ImageLength % 12 == 0)
-    {
-        fout.write("\r\n\t.pbyte\t");
-    }
-    tempStr = String.format("%02x", data);
-    fout.write("0x" + tempStr);
-    ImageLength++;
-    if(ImageLength % 12 != 0)
-    {
-        fout.write(",");
-    }
-    }catch (IOException e) {
-        System.out.println ("IO exception = " + e );
-        log.add("ERROR: " + e.getMessage());
-    }
-}
-
-public void Close()
-{
-    try{
-    if (ImageLength % 12 == 0)
-    {
-        fout.write(",");
-    }
-    fout.write(
-        "0x00\r\n" +
-        "END_OF_MPFS:\r\n\r\n" +
-        "	.section	.const,psv\r\n" +
-        "	.global	_MPFS_Start\r\n" +
-        "_MPFS_Start:\r\n" +
-        "	.long	paddr(BEGIN_MPFS)\r\n\r\n" +
-        "	.section	MPFSHelpers,code\r\n\r\n" +
-        "	.global _ReadProgramMemory\r\n" +
-        "_ReadProgramMemory:\r\n" +
-        "	push		_TBLPAG\r\n" +
-        "	mov			w1,_TBLPAG\r\n" +
-        "	mov			w0,w5\r\n" +
-        "	tblrdl		[w5],w0\r\n" +
-        "	tblrdh		[w5],w1\r\n" +
-        "	pop			_TBLPAG\r\n" +
-        "	return\r\n"
-    );
-    fout.flush();
-    fout.close();
-    } catch (IOException e) {
-        System.out.println ("IO exception = " + e );
-        log.add("ERROR: " + e.getMessage());
-    }
- }
-}
-private class FilesRecordWriter 
-{
-public FileOutputStream file_output;
-public DataOutputStream data_out;
-public BufferedWriter fout;
-public int ImageLength = 0;
-    public FilesRecordWriter()
-    {
-        ImageLength=0;
-    }
-    public FilesRecordWriter(String dataPath)
-    {
-       String filename = "FileRcrd.bin";
-
-      // String newPath = dataPath+File.separator+filename;
-       String newPath = dataPath+filename;
-       try{
-        // Create an output stream to the file.
-        file_output = new FileOutputStream (newPath);
-       }catch(IOException e)
-       {
-         log.add("ERROR: " + e.getMessage());
-       }
-    }
-
-    public void Write(byte data)
-    {
-        try{
-        //fout.write(data);
-        file_output.write(data);
-        ImageLength++;
-        }catch(IOException e)
-        {
-          log.add("ERROR: " + e.getMessage());
-        }
-    }
-
-    public void Close()
-    {
-        try{
-         file_output.flush();
-         file_output.close();
-        }catch(IOException e)
-        {
-          log.add("ERROR: " + e.getMessage());
-        }
-    }
-}
-
-private class DynamicVarRecordWriter 
-{
-public FileOutputStream file_output;
-public DataOutputStream data_out;
-public BufferedWriter fout;
-public int dynRecordLength = 0;
-    public DynamicVarRecordWriter()
-    {
-        dynRecordLength = 0;
-    }
-    public DynamicVarRecordWriter(String dataPath)
-    {
-
-        String filename = "DynRcrd.bin";
-
-         //Create a new subfolder under the current active folder
-       String newPath = dataPath+filename;
-       try{
-        // Create an output stream to the file.
-        file_output = new FileOutputStream (newPath);
-       }catch(IOException e)
-       {
-        log.add("ERROR: " + e.getMessage());
-       }
-    }
-    //public override void Write(byte data)
-    public void Write(byte data)
-    {
-     try{
-         dynRecordLength++;
-      file_output.write(data);
-     }catch(IOException e)
-     {
-      log.add("ERROR: " + e.getMessage());
-     }
-    }
-
-    //public override void Close()
-     public void Close()
-     {
-       try{
-           file_output.flush();
-           file_output.close();
-       }catch(IOException e)
-       {
-        log.add("ERROR: " + e.getMessage());
-       }
-     }
-}
 public int getnumberOfDynamicRecordFiles()
 {
     int numFileRecrds = 0;
@@ -1443,99 +1022,7 @@ public int getnumberOfDynamicRecordFiles()
 }
 
 		//public bool MDDWriter(String localPath)
-public void MDDWriter(String localPath)
-{
-    FilesRecordWriter FileRecrd /*Files with dynamic variables Record*/;
-    DynamicVarRecordWriter DynVarRecrd /*Dynamic Variables Record of each file*/;
 
-    int counter = 0;
-    int loopCntr = 0;
-    int numFileRecrds = 0;
-    if(!localPath.endsWith("\\"))
-    { 
-        localPath += File.separator;
-    }
-    FileRecrd = new FilesRecordWriter();
-    DynVarRecrd = new DynamicVarRecordWriter();
-    DynVarRecrd = new DynamicVarRecordWriter(localPath);
-    int flags;
-    List<FileRecord> FileRcrdList = new ArrayList<FileRecord>();
-//FileRcrdList.
-    for(MPFSFileRecord file : files)
-    {
-      counter=0;
-      loopCntr=0;
-      if(file.dynVarCntr >0)
-      {
-        FileRcrdList.add(new FileRecord((short)file.nameHash,
-                    (int)file.fileRecordOffset,(int)file.dynVarCntr));
-        numFileRecrds++;
-        DynVarRecrd.Write((byte)(file.fileRecordLength));
-        DynVarRecrd.Write((byte)(file.fileRecordLength>>8));
-        DynVarRecrd.Write((byte)(file.fileRecordLength>>16));
-        DynVarRecrd.Write((byte)(file.fileRecordLength>>24));
-
-        flags = 0;
-        if (file.hasIndex)
-        {
-            flags |= MPFS2_FLAG_HASINDEX;
-        }
-        if (file.isZipped)
-        {
-            flags |= MPFS2_FLAG_ISZIPPED;
-        }
-
-        DynVarRecrd.Write((byte)(flags));
-        DynVarRecrd.Write((byte)(flags>>8));
-
-        loopCntr=0;
-        while(loopCntr!=file.dynVarCntr)
-        {
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(0+counter)));
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(1+counter)));
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(2+counter)));
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(3+counter)));
-
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(4+counter)));
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(5+counter)));
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(6+counter)));
-          DynVarRecrd.Write((byte)(file.dynVarOffsetAndIndexID.get(7+counter)));
-
-          counter+=8;
-          loopCntr+=1;
-        }
-      }
-    }
-
-    FileRecrd = new FilesRecordWriter(localPath);
-    FileRecrd.Write((byte)(numFileRecrds));
-    FileRecrd.Write((byte)(numFileRecrds>>8));
-    FileRecrd.Write((byte)(numFileRecrds>>16));
-    FileRecrd.Write((byte)(numFileRecrds>>24));
-
-    //FileRcrdList.ForEach(delegate(FileRecord FR)
-    List<FileRecord> tempfileRecrdList = FileRcrdList;
-    Collections.sort(tempfileRecrdList);
-    
-    for(FileRecord FR : FileRcrdList)    
-    {
-      FileRecrd.Write((byte)(FR.nameHash));
-      FileRecrd.Write((byte)(FR.nameHash>>8));
-      FileRecrd.Write((byte)(FR.fileRecordOffset));
-      FileRecrd.Write((byte)(FR.fileRecordOffset>>8));
-      FileRecrd.Write((byte)(FR.fileRecordOffset>>16));
-      FileRecrd.Write((byte)(FR.fileRecordOffset>>24));
-      FileRecrd.Write((byte)(FR.dynVarCntr));
-      FileRecrd.Write((byte)(FR.dynVarCntr>>8));
-      FileRecrd.Write((byte)(FR.dynVarCntr>>16));
-      FileRecrd.Write((byte)(FR.dynVarCntr>>24));
-    }
-  
-    log.add("\r\nGENERATED MPFS2 IMAGE: " + FileRecrd.ImageLength + " bytes");
-    FileRecrd.Close();
-    DynVarRecrd.Close();
-
-}
 public class MPFSClassicBuilder //extends MPFSBuilder
 {
     public int ReserveBlock;
@@ -1706,6 +1193,7 @@ public class MPFSClassicBuilder //extends MPFSBuilder
         File[] filelist = dir.listFiles();
 
         log.add(dataPath + " :");
+        System.out.print("\r\ndataPath: " + dataPath);
         for(File f : filelist)
         {
             if(f.isHidden()||f.isDirectory())
@@ -1714,6 +1202,9 @@ public class MPFSClassicBuilder //extends MPFSBuilder
             }
             else if(f.isFile())
             {
+                
+                System.out.print("\r\nimagePath: " + imagePath);
+                System.out.print("\r\npath and File Name: " + imagePath+f.getName());
                 this.AddFile(f.getPath(), imagePath+f.getName());
             }
         }
