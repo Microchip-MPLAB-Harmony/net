@@ -557,7 +557,7 @@ typedef struct
 {
     TCPIP_SMTPC_MESSAGE_STATUS  messageStat;    // the current status of the mail message
     TCPIP_SMTPC_MESSAGE_WARNING messageWarn;    // the current warnings encountered during the message transmission
-    int                         messageRetries; // the current number of retries for this message
+    int                         messageRetries; // the current number of retries left for this message
     NET_PRES_SKT_HANDLE_T       messageSkt;     // the socket associated with this message
 }TCPIP_SMTPC_MESSAGE_QUERY;
 
@@ -700,8 +700,9 @@ typedef struct
     uint32_t    tlsHandshakeTmo;    // secure connection establishment timeout, seconds
                                     // usually few seconds
 
-    int         nMailRetries;       // how many times to retry sending a mail message
+    int         nMailRetries;       // how many times to retry sending a failed mail message
                                     // Retries occur only for server reported transient errors
+                                    // Could be 0 if only one mail send is to be attempted, without retries
     uint32_t    serverRetryTmo;     // The retry interval because of a server transient error, in seconds.
                                     // RFC specifies it should be at least 30 min!    
     uint32_t    smtpcRetryTmo;      // The retry interval because of a SMTPC temporary error, in seconds.

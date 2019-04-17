@@ -159,7 +159,6 @@ static uint16_t     _DRV_ETHMAC_GetMCollisionCount(DRV_ETHERNET_REGISTERS* ethId
 
 static DRV_ETH_RX_FILTERS _DRV_ETHMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
 
-
 /******************************************************************************
  * PIC32 MAC object implementation
  ******************************************************************************/

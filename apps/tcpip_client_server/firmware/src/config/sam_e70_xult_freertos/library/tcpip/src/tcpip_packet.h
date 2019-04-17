@@ -104,19 +104,9 @@ typedef enum
     //
     //
     TCPIP_PKT_LOG_TYPE_HANDLER_ALL  = 0x1000,             // forward to the external handler all logs,
-                                                          // regardless of the discard mask
+                                                          // regardless of the log mask
 
 }TCPIP_PKT_LOG_TYPE;
-
-
-// operations with log module masks
-typedef enum
-{
-    TCPIP_PKT_LOG_MASK_OR,          // mask |= value; default operation
-    TCPIP_PKT_LOG_MASK_AND,         // mask &= value
-    TCPIP_PKT_LOG_MASK_NOR,         // mask |= ~value
-    TCPIP_PKT_LOG_MASK_NAND,        // mask &= ~value
-}TCPIP_PKT_LOG_MASK_OP;
 
 
 typedef enum
@@ -178,9 +168,9 @@ typedef struct
     int16_t                 nPersistent;        // non deletable ones
     int16_t                 nFailed;            // failed to log because all the slots were taken...
     uint32_t                persistMask;        // current persistent mask
-    uint32_t                discardMask;        // current discard mask
+    uint32_t                logModuleMask;      // current module logging mask
     uint32_t                netLogMask;         // current mask of networks the logging is enabled on
-    uint32_t                sktDiscardMask;     // current mask of sockets to be discarded
+    uint32_t                sktLogMask;         // current mask of sockets to be logged
     TCPIP_PKT_LOG_TYPE      logType;            // current log type
     TCPIP_PKT_LOG_HANDLER   logHandler;         // current log handler
 
@@ -356,59 +346,59 @@ bool    TCPIP_PKT_FlightLogGetEntry(int entryIx, TCPIP_PKT_LOG_ENTRY* pLEntry);
 // registers a log handler
 // there is only one handler in the system, no protection
 // call with 0 to deregister
-// if logAll is true, then the log type and the discard mask are ignored
-// and all packets are reported as they are reported
+// if logAll is true, then the log type and the log mask are ignored
+// and all packets will be reported as they are received
 // returns true if success, false otherwise
 bool    TCPIP_PKT_FlightLogRegister(TCPIP_PKT_LOG_HANDLER logHandler, bool logAll);
 
 
-// applies/removes the persistence attribute/mask to all logs based on the module mask
-// any log that has recorded modules according to this mask
-// will have its persistent flag set/cleared
-// The mask is constructed as the moduleLog: i.e. 1 << moduleId
-// The persistence mask will be updated
+// updates the persistence attribute to all existent logs based on the new resulting persistence mask
+// any log that has persistent records will have its persistent flag set/cleared
+// according to the resulting mask
+// The persistMask will be updated: persistMask = (persistMask & andModuleMask) | orModuleMask
+// The andModuleMask and orModuleMask are constructed using the moduleId (like the moduleLog) i.e. 1 << moduleId
 // If clrNonPersist is true, the log entries that are made non persistent will be discarded
 // The module mask should be limited only to the basic modules: <= TCPIP_MODULE_LAYER3
+// Default value: at start up the persistMask is cleared i.e. no log is persistent.
 // Note: the call will search and apply the new attribute in all stored log entries
 // so it can be expensive!
-// Note: the persistent mask takes precedence over the discard one
-//
-void    TCPIP_PKT_FlightLogSetPersistMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_OP persistOp, bool clrNonPersist);
+// Note: the persistent mask takes precedence over the logging one
+void    TCPIP_PKT_FlightLogUpdatePersistMask(uint32_t andModuleMask, uint32_t orModuleMask, bool clrNonPersist);
 
-// applies the discard attribute/mask to all logs based on the module mask
-// any completed log that has recorded modules according to this mask
+// updates the mask of the logged modules in the logging service
+// any completed log that has recorded modules not matching the resulting log mask
 // will be discarded
 // By default the completed logs are kept until replaced by a new log
 // (unless the log is persistent)
-// The mask is constructed as the moduleLog: i.e. 1 << moduleId
-// The discard mask will be updated
-// If clrPersist is true, the matching log entries will be discarded even if they are persistent
+// The andModuleMask and orModuleMask are constructed using the moduleId (like the moduleLog) i.e. 1 << moduleId
+// The logModuleMask will be updated: logModuleMask = (logModuleMask & andModuleMask) | orModuleMask
+// If clrPersist is true, the non matching log entries will be discarded even if they are persistent
 // Else only non persistent entries will be deleted.
 // The module mask should be limited only to the basic modules: <= TCPIP_MODULE_LAYER3
+// Default value: at start up the logModuleMask is cleared i.e. no module is logged.
 // Note: the call will search and discard logs in all stored log entries
 // so it can be expensive!
-// Note: the persistent mask takes precedence over the discard one
-void    TCPIP_PKT_FlightLogSetDiscardMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_OP discardOp, bool clrPersist);
+// Note: the persistent mask takes precedence over the logging one
+void    TCPIP_PKT_FlightLogUpdateModuleMask(uint32_t andModuleMask, uint32_t orModuleMask, bool clrPersist);
 
-// applies the mask of logging interfaces to the logging service
-// The mask is constructed as the 1 << netIx
+// updates the mask of logged interfaces in the logging service
+// The andNetMask and orNetMask are constructed as the 1 << netIx
 // where the network index is the number of that specific interface
-// The netLogMask mask will be updated
+// The netLogMask mask will be updated:  netLogMask = (netLogMask & andNetMask) | orNetMask
 // If clrPersist is true, the matching log entries will be discarded even if they are persistent
 // Else only non persistent entries will be deleted.
-// When the stack starts the logger will be enabled 
-// on a specific interface as directed by
+// Default value: at start up the logger will be enabled on a specific interface as directed by
 // TCPIP_NETWORK_CONFIG_FLAGS::TCPIP_NETWORK_CONFIG_PKT_LOG_ON flag
-void    TCPIP_PKT_FlightLogSetNetMask(uint32_t netMask, TCPIP_PKT_LOG_MASK_OP netOp, bool clrPersist);
+void    TCPIP_PKT_FlightLogUpdateNetMask(uint32_t andNetMask, uint32_t orNetMask, bool clrPersist);
 
-// applies the mask of discarding sockets to the logging service
-// The mask is constructed as the 1 << sktIx
+// updates the mask of logged sockets in the logging service
+// The andSktMask and orSktMask are constructed as the 1 << sktIx
 // where the socket index is the number of that specific socket
-// The sktDiscardMask mask will be updated
+// The sktLogMask mask will be updated:  sktLogMask = (sktLogMask & andSktMask ) | orSktMask;
 // If clrPersist is true, the matching log entries will be discarded even if they are persistent
 // Else only non persistent entries will be deleted.
-// When the stack starts the sktDiscardMask is cleared.
-void    TCPIP_PKT_FlightLogSetSocketDiscardMask(uint32_t sktMask, TCPIP_PKT_LOG_MASK_OP netOp, bool clrPersist);
+// Default value: at start up the sktLogMask is cleared i.e. no sockets are logged.
+void    TCPIP_PKT_FlightLogUpdateSocketMask(uint32_t andSktMask, uint32_t orSktMask, bool clrPersist);
 
 // applies the attributes to all logs
 // - 
@@ -435,7 +425,7 @@ void    TCPIP_PKT_FlightLogSetSocketDiscardMask(uint32_t sktMask, TCPIP_PKT_LOG_
 //      - The RX_ONLY and TX_ONLY  are global.
 //        They are applied before TCPIP_PKT_LOG_TYPE_SKT_ONLY;
 //
-//        These filters are applied before the PERSIST and DISCARD.
+//        These filters are applied before the PERSIST and MODULE masks.
 //
 //      - Setting a type to RX or TX only will search and discard logs in all stored log entries
 //        so it can be expensive!

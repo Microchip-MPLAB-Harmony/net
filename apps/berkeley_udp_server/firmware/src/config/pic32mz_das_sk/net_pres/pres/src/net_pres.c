@@ -888,6 +888,11 @@ bool NET_PRES_SocketEncryptSocket(NET_PRES_SKT_HANDLE_T handle)
     {
         return false;
     }
+    if(pSkt->provObject->fpInit == 0 || pSkt->provObject->fpOpen == 0 || pSkt->provObject->fpIsInited == 0)
+    {   // cannot start negotiation
+        return false;
+    }
+
     pSkt->socketType ^= NET_PRES_SKT_UNENCRYPTED | NET_PRES_SKT_ENCRYPTED;
     pSkt->status = NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
     return true;
