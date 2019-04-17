@@ -35,11 +35,14 @@
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_aes_hwInt.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha1_hw.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha224_hw.h</itemPath>
+            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_aes_u2238.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/dsa.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ecc.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ed25519.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/error-crypt.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/fe_operations.h</itemPath>
+            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pic32mz-crypt.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/fips_test.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ge_operations.h</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hash.h</itemPath>
@@ -449,6 +452,7 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+      <itemPath ex="false">../src/http_net_print.h</itemPath>
       <itemPath ex="false">../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -503,6 +507,7 @@
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/random.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ripemd.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha.c</itemPath>
+            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha256.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha3.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/signature.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/srp.c</itemPath>
@@ -512,6 +517,8 @@
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_port.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfevent.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfmath.c</itemPath>
+            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/des3.c</itemPath>
+            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md5.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/adler32.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/crc32.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/deflate.c</itemPath>
@@ -520,10 +527,7 @@
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md5.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha256.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha512.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/des3.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/rsa.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ecc.c</itemPath>
             <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ecc_fp.c</itemPath>
@@ -671,9 +675,62 @@
           <itemPath ex="false">../src/config/sam_e54_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
+        <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
+          <itemPath ex="false">../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/dyndns/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath ex="false">../src/web_pages/email/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/email/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/email/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/email/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="protect" projectFiles="true">
+          <itemPath ex="false">../src/web_pages/protect/config.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/config.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/config.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/config.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/index.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath ex="false">../src/web_pages/protect/reboot.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath ex="false">../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath ex="false">../src/web_pages/snmp/snmpconfig.htm</itemPath>
+        </logicalFolder>
+        <itemPath ex="false">../src/web_pages/auth.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/cookies.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/dynvars.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/footer.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/forms.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/harmony.gif</itemPath>
+        <itemPath ex="false">../src/web_pages/header.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/index.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/leds.cgi</itemPath>
+        <itemPath ex="false">../src/web_pages/mchp.css</itemPath>
+        <itemPath ex="false">../src/web_pages/mchp.gif</itemPath>
+        <itemPath ex="false">../src/web_pages/mchp.js</itemPath>
+        <itemPath ex="false">../src/web_pages/ssi.htm</itemPath>
+        <itemPath ex="false">../src/web_pages/status.xml</itemPath>
+        <itemPath ex="false">../src/web_pages/upload.htm</itemPath>
+      </logicalFolder>
       <itemPath ex="false">../src/http_net_print.c</itemPath>
       <itemPath ex="false">../src/custom_http_net_app.c</itemPath>
-      <itemPath ex="false">../src/mpfs_img2_net.c</itemPath>
+      <itemPath ex="false">../src/mpfs_net_img.c</itemPath>
       <itemPath ex="false">../src/app.c</itemPath>
       <itemPath ex="false">../src/main.c</itemPath>
     </logicalFolder>
@@ -719,8 +776,8 @@
         </subordinates>
       </compileType>
       <makeCustomizationType>
-        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStepEnabled>true</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStep>java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /z "snmp.bib" "..\src\web_pages" "../src" "mpfs_net_img.c"</makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
@@ -857,6 +914,36 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2.000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="voltagevalue" value=""/>
+      </EdbgTool>
     </conf>
   </confs>
 </configurationDescriptor>
