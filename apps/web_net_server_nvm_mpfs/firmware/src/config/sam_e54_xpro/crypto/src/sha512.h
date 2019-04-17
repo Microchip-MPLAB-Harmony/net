@@ -88,7 +88,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if !defined(HAVE_FIPS) || \
     (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
 
-#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+#if defined(CRYPTO_SHA_HW_6156)
     #include "crypto/src/crypt_sha_sam6156.h" 
 #endif
 #ifdef WOLFSSL_ASYNC_CRYPT
@@ -133,7 +133,7 @@ enum {
 
 #ifdef WOLFSSL_IMX6_CAAM
     #include "crypto/src/port/caam/wolfcaam_sha.h"
-#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+#elif (defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)) && !defined(WOLFSSL_PIC32MZ_HASH)
     #include "crypto/src/crypt_sha_hw.h"
     #define wc_Sha512 crypt_sha_hw_descriptor
 #else
