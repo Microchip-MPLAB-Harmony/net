@@ -531,7 +531,6 @@
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
-      <property key="makeCustomizationPreStep" value="java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /zsnmp.bib..\src\web_pages../srcmpfs_net_img.c"/>
       </makeCustomizationType>
       <AtmelIceTool>
         <property key="AutoSelectMemRanges" value="auto"/>
