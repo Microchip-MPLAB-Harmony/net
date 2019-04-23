@@ -50,6 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "system/console/sys_command.h"
 #include "driver/miim/drv_miim.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -3552,13 +3553,14 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat/disconnect\r\n");
         return false;
     }
 
+    httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
+
     if(strcmp(argv[1], "info") == 0)
     {
-        httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections - active: %d, open: %d\r\n", httpActiveConn, httpOpenConn);
 
         for(connIx = 0; connIx < httpOpenConn; connIx++)
@@ -3586,6 +3588,17 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
+    }
+    else if(strcmp(argv[1], "disconnect") == 0)
+    {
+        for(connIx = 0; connIx < httpOpenConn; connIx++)
+        {
+            TCPIP_HTTP_NET_CONN_HANDLE connHandle = TCPIP_HTTP_NET_ConnectionHandleGet(connIx);
+            NET_PRES_SKT_HANDLE_T skt_h = TCPIP_HTTP_NET_ConnectionSocketGet(connHandle);
+            NET_PRES_SocketDisconnect(skt_h);
+        }
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP disconnected %d connections, active: %d\r\n", httpOpenConn, httpActiveConn);
     }
     else
     {
