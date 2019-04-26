@@ -21,9 +21,10 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-
-		
 def instantiateComponent(tcpipHttpNetComponent):
+	import re
+	import os
+	import sys
 	configName = Variables.get("__CONFIGURATION_NAME")			
 	# Enable HTTP NET Server
 	tcpipHttpNetSrv = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_STACK_USE_HTTP_NET_SERVER", None)
@@ -407,7 +408,39 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetCustTemplate.setDescription("Include HTTP NET Custom Template")
 	tcpipHttpNetCustTemplate.setDefaultValue(True)
 	#tcpipHttpNetCustTemplate.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+	
+	
+	# Message to provide the source web page path which will be used for the webpage.py
+	tcpipHttpNetWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
+	tcpipHttpNetWebPageDirPath.setLabel("Provide Source Webpage directory path")
+	tcpipHttpNetWebPageDirPath.setVisible(True)
+	tcpipHttpNetWebPageDirPath.setDescription("Configure Webpage directory path")
+	tcpipHttpNetWebPageDirPath.setDefaultValue(Module.getPath() + "web_pages")
+	tcpipHttpNetWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
+	
+	# Message to show the destination path where webpage files are copied
+	#tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
+	#tcpipHttpNetDestWebPageDirPath.setLabel("Display Destination Webpage directory path")
+	#tcpipHttpNetDestWebPageDirPath.setVisible(True)
+	#tcpipHttpNetDestWebPageDirPath.setReadOnly(True)
+	#tcpipHttpNetDestWebPageDirPath.setDescription("Destination Webpage directory path")	
+	#tcpipHttpNetDestWebPageDirPath.setDefaultValue(Module.getPath() + "apps"+os.path.sep+"<project>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
+	#tcpipHttpNetDestWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
 
+	tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createKeyValueSetSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH",tcpipHttpNetCustTemplate)
+	tcpipHttpNetDestWebPageDirPath.setVisible(True)
+	tcpipHttpNetDestWebPageDirPath.addKey("DESTINATION PATH", "0", Module.getPath() + "apps"+os.path.sep+"<project>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
+	tcpipHttpNetDestWebPageDirPath.setDisplayMode("Description")
+	tcpipHttpNetDestWebPageDirPath.setOutputMode("Key")
+	tcpipHttpNetDestWebPageDirPath.setDefaultValue(0)
+	tcpipHttpNetDestWebPageDirPath.setReadOnly(True)
+	tcpipHttpNetDestWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
+
+	# Message that Number of webpage files accepted
+	tcpipHttpNetWebPageFileCount = tcpipHttpNetComponent.createCommentSymbol("TCPIP_WEBPAGE_FILES_COUNT_COMMENT", tcpipHttpNetCustTemplate)
+	tcpipHttpNetWebPageFileCount.setVisible(True)
+	tcpipHttpNetWebPageFileCount.setLabel("*** Maximum 100 Number of webpage files supported. ***")
+	
 	# Include HTTP NET Custom Template SL
 	tcpipHttpNetCustTemplateSl = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL", None)
 	tcpipHttpNetCustTemplateSl.setVisible(False)
@@ -458,7 +491,10 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetSourceFile.setType("SOURCE")
 	tcpipHttpNetSourceFile.setEnabled(True)
 	tcpipHttpNetSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-
+	tcpipHttpNetSourceFile.setRelative(False)
+	print("project path: " + tcpipHttpNetSourceFile.getProjectPath())
+	
+	
 	# ifblock TCPIP_HTTP_NET_CUSTOM_TEMPLATE
 
 	# template HTTP_NET_PRINT_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/http_net_print.c.ftl" to "$PROJECT_SOURCE_FILES/app/http_net_print.c"
@@ -504,7 +540,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetMpfsImg2SourceFile.setEnabled(False)
 	tcpipHttpNetMpfsImg2SourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL"])	
 	
-	execfile(Module.getPath() + "/tcpip/config/webpage_recursive.py")	
+	execfile(Module.getPath() + "/tcpip/config/webpage.py")
 	
 # make Http Net Server option visible
 def tcpipHttpNetSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):	
@@ -608,6 +644,17 @@ def tcpipHttpNetSsiAttrVisible(tcpipDependentSymbol, tcpipIPSymbol):
 	else:
 		tcpipDependentSymbol.setVisible(False)	
 
+# make Http Net Module custom http net Attribute options visible
+def tcpipHttpNetWebServerPathVisible(tcpipDependentSymbol, tcpipIPSymbol):	
+	tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
+	tcpipHttpNetCustomHTTPNetProcess = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CUSTOM_TEMPLATE")
+
+	if(tcpipHttpNet and tcpipHttpNetCustomHTTPNetProcess):
+		tcpipDependentSymbol.setVisible(True)
+	else:
+		tcpipDependentSymbol.setVisible(False)
+		
+		
 		
 def tcpipHttpNetMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
