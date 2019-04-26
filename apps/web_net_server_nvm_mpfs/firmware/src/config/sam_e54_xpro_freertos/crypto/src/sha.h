@@ -128,7 +128,7 @@ enum {
 
 #elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA1) && !defined(WOLFSSL_PIC32MZ_HASH)
     #include "crypto/src/crypt_sha1_hw.h"
-    #define wc_Sha crypt_sha_hw_descriptor
+    #define wc_Sha crypt_sha1_hw_descriptor
     
 #else
 /* Sha digest */
