@@ -25,7 +25,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	import re
 	import os
 	import sys
-	configName = Variables.get("__CONFIGURATION_NAME")			
+	configName = Variables.get("__CONFIGURATION_NAME")
 	# Enable HTTP NET Server
 	tcpipHttpNetSrv = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_STACK_USE_HTTP_NET_SERVER", None)
 	tcpipHttpNetSrv.setLabel("HTTP NET Server")
@@ -126,7 +126,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetBase64Decode.setVisible(True)
 	tcpipHttpNetBase64Decode.setDescription("Use Base 64 Decode")
 	tcpipHttpNetBase64Decode.setDefaultValue(False) 
-	
+
 
 	# Enable Basic Authentication Support
 	tcpipHttpNetAuth = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_USE_AUTHENTICATION", None)
@@ -408,8 +408,8 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetCustTemplate.setDescription("Include HTTP NET Custom Template")
 	tcpipHttpNetCustTemplate.setDefaultValue(True)
 	#tcpipHttpNetCustTemplate.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-	
-	
+
+
 	# Message to provide the source web page path which will be used for the webpage.py
 	tcpipHttpNetWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
 	tcpipHttpNetWebPageDirPath.setLabel("Provide Source Webpage directory path")
@@ -417,15 +417,6 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetWebPageDirPath.setDescription("Configure Webpage directory path")
 	tcpipHttpNetWebPageDirPath.setDefaultValue(Module.getPath() + "web_pages")
 	tcpipHttpNetWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
-	
-	# Message to show the destination path where webpage files are copied
-	#tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
-	#tcpipHttpNetDestWebPageDirPath.setLabel("Display Destination Webpage directory path")
-	#tcpipHttpNetDestWebPageDirPath.setVisible(True)
-	#tcpipHttpNetDestWebPageDirPath.setReadOnly(True)
-	#tcpipHttpNetDestWebPageDirPath.setDescription("Destination Webpage directory path")	
-	#tcpipHttpNetDestWebPageDirPath.setDefaultValue(Module.getPath() + "apps"+os.path.sep+"<project>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
-	#tcpipHttpNetDestWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
 
 	tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createKeyValueSetSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH",tcpipHttpNetCustTemplate)
 	tcpipHttpNetDestWebPageDirPath.setVisible(True)
@@ -479,7 +470,6 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetHeaderFtl.setMarkup(True)
 	tcpipHttpNetHeaderFtl.setType("STRING")
 
-	
 
 	# Add http_net.c file
 	tcpipHttpNetSourceFile = tcpipHttpNetComponent.createFileSymbol(None, None)
@@ -491,10 +481,8 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetSourceFile.setType("SOURCE")
 	tcpipHttpNetSourceFile.setEnabled(True)
 	tcpipHttpNetSourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
-	tcpipHttpNetSourceFile.setRelative(False)
-	print("project path: " + tcpipHttpNetSourceFile.getProjectPath())
-	
-	
+
+
 	# ifblock TCPIP_HTTP_NET_CUSTOM_TEMPLATE
 
 	# template HTTP_NET_PRINT_C "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/http_net_print.c.ftl" to "$PROJECT_SOURCE_FILES/app/http_net_print.c"
@@ -539,22 +527,22 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetMpfsImg2SourceFile.setMarkup(True)
 	tcpipHttpNetMpfsImg2SourceFile.setEnabled(False)
 	tcpipHttpNetMpfsImg2SourceFile.setDependencies(tcpipHttpNetGenSourceFile, ["TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL"])	
-	
+
 	execfile(Module.getPath() + "/tcpip/config/webpage.py")
-	
+
 # make Http Net Server option visible
 def tcpipHttpNetSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):	
 	tcpipHttp = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
 	tcpipTcp = Database.getSymbolValue("tcpipTcp","TCPIP_USE_TCP")
 
 	if(tcpipTcp):
-		tcpipDependentSymbol.setVisible(True)		
-		if(tcpipHttp):			
+		tcpipDependentSymbol.setVisible(True)
+		if(tcpipHttp):
 			tcpipDependentSymbol.setReadOnly(True)
 		else:			
 			tcpipDependentSymbol.setReadOnly(False)
 	else:
-		tcpipDependentSymbol.setVisible(False)		
+		tcpipDependentSymbol.setVisible(False)
 
 # # make Http Net Module file upload name option visible
 # def tcpipHttpNetFileUploadVisible(tcpipDependentSymbol, tcpipIPSymbol):	
@@ -565,12 +553,12 @@ def tcpipHttpNetSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):
 		# tcpipDependentSymbol.setVisible(True)
 	# else:
 		# tcpipDependentSymbol.setVisible(False)
-		
+
 # make Http Net Module file upload name option visible
-def tcpipHttpNetFileUploadVisible(symbol, event):	
-	if (event["value"] == True):			
+def tcpipHttpNetFileUploadVisible(symbol, event):
+	if (event["value"] == True):
 		symbol.setVisible(True)
-	else:		
+	else:
 		symbol.setVisible(False)
 
 # make Http Net Server Config Flag Secure options visible
@@ -579,34 +567,34 @@ def tcpipHttpNetSrvConfigFlagSecureOnEnable(tcpipDependentSymbol, tcpipIPSymbol)
 	tcpipHttpNetSrvConfigFlagSecureOff = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_OFF")
 	tcpipHttpNetSrvConfigFlagSecureDefault = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT")
 
-	#if(tcpipHttpNet):		
+	#if(tcpipHttpNet):
 	if(tcpipHttpNetSrvConfigFlagSecureOff or tcpipHttpNetSrvConfigFlagSecureDefault):
 		tcpipDependentSymbol.setVisible(False)
 		print("SecureOn disable")
 	else:
 		tcpipDependentSymbol.setVisible(True)
-		print("SecureOn enable")	
+		print("SecureOn enable")
 	# else:
-		# tcpipDependentSymbol.setVisible(False)	
+		# tcpipDependentSymbol.setVisible(False)
 		# print("SecureOn disable")	
-	
+
 
 def tcpipHttpNetSrvConfigFlagSecureOffEnable(tcpipDependentSymbol, tcpipIPSymbol):	
 	#tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
 	tcpipHttpNetSrvConfigFlagSecureOn = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_ON")
 	tcpipHttpNetSrvConfigFlagSecureDefault = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CONFIG_FLAG_SECURE_DEFAULT")
 	
-	#if(tcpipHttpNet):		
+	#if(tcpipHttpNet):
 	if(tcpipHttpNetSrvConfigFlagSecureOn or tcpipHttpNetSrvConfigFlagSecureDefault):
 		tcpipDependentSymbol.setVisible(False)
 		print("SecureOff disable")
 	else:
 		tcpipDependentSymbol.setVisible(True)
-		print("SecureOff enable")	
+		print("SecureOff enable")
 	# else:
-		# tcpipDependentSymbol.setVisible(False)	
-		# print("SecureOff disable")	
-	
+		# tcpipDependentSymbol.setVisible(False)
+		# print("SecureOff disable")
+
 
 def tcpipHttpNetSrvConfigFlagSecureDefaultEnable(tcpipDependentSymbol, tcpipIPSymbol):	
 	#tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
@@ -619,13 +607,13 @@ def tcpipHttpNetSrvConfigFlagSecureDefaultEnable(tcpipDependentSymbol, tcpipIPSy
 		print("Securedefault disable")
 	else:
 		tcpipDependentSymbol.setVisible(True)
-		print("Securedefault enable")	
+		print("Securedefault enable")
 	# else:
-		# tcpipDependentSymbol.setVisible(False)	
+		# tcpipDependentSymbol.setVisible(False)
 		# print("Securedefault disable")
 
 # make Http Net Module Dynamic Variable options visible
-def tcpipHttpNetDynVarVisible(tcpipDependentSymbol, tcpipIPSymbol):	
+def tcpipHttpNetDynVarVisible(tcpipDependentSymbol, tcpipIPSymbol):
 	tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
 	tcpipHttpNetDynVarProcess = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_DYNVAR_PROCESS")
 
@@ -642,10 +630,10 @@ def tcpipHttpNetSsiAttrVisible(tcpipDependentSymbol, tcpipIPSymbol):
 	if(tcpipHttpNet and tcpipHttpNetSsiProcess):
 		tcpipDependentSymbol.setVisible(True)
 	else:
-		tcpipDependentSymbol.setVisible(False)	
+		tcpipDependentSymbol.setVisible(False)
 
 # make Http Net Module custom http net Attribute options visible
-def tcpipHttpNetWebServerPathVisible(tcpipDependentSymbol, tcpipIPSymbol):	
+def tcpipHttpNetWebServerPathVisible(tcpipDependentSymbol, tcpipIPSymbol):
 	tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
 	tcpipHttpNetCustomHTTPNetProcess = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CUSTOM_TEMPLATE")
 
@@ -653,12 +641,12 @@ def tcpipHttpNetWebServerPathVisible(tcpipDependentSymbol, tcpipIPSymbol):
 		tcpipDependentSymbol.setVisible(True)
 	else:
 		tcpipDependentSymbol.setVisible(False)
-		
-		
-		
+
+
+
 def tcpipHttpNetMenuVisibleSingle(symbol, event):
 	if (event["value"] == True):
-		print("TFTPC Menu Visible.")		
+		print("TFTPC Menu Visible.")
 		symbol.setVisible(True)
 	else:
 		print("TFTPC Menu Invisible.")
@@ -666,11 +654,11 @@ def tcpipHttpNetMenuVisibleSingle(symbol, event):
 
 def tcpipHttpNetBase64DecodeOpt(symbol, event):
 	symbol.clearValue()
-	if (event["value"] == True):		
+	if (event["value"] == True):
 		symbol.setValue(True,2)
 	else:
 		symbol.setValue(False,2)
-		
+
 def tcpipHttpNetGenSourceFile(sourceFile, event):
 	sourceFile.setEnabled(event["value"])
 
@@ -683,4 +671,5 @@ def tcpipHttpNetCustomSlSet(symbol, event):
 		symbol.setValue(True,2)
 	else:
 		symbol.setValue(False,2)
-		
+
+
