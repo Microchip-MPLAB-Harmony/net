@@ -90,10 +90,10 @@ static const DRV_MIIM_INIT drvMiimInitData =
 // <editor-fold defaultstate="collapsed" desc="DRV_SDMMC Instance 0 Initialization Data">
 
 /* SDMMC Client Objects Pool */
-static DRV_SDMMC_CLIENT_OBJ drvSDMMC0ClientObjPool[DRV_SDMMC_CLIENTS_NUMBER_IDX0];
+static DRV_SDMMC_CLIENT_OBJ drvSDMMC0ClientObjPool[DRV_SDMMC_CLIENTS_NUMBER_IDX0] = {0};
 
 /* SDMMC Transfer Objects Pool */
-static DRV_SDMMC_BUFFER_OBJ drvSDMMC0BufferObjPool[DRV_SDMMC_QUEUE_SIZE_IDX0];
+static DRV_SDMMC_BUFFER_OBJ drvSDMMC0BufferObjPool[DRV_SDMMC_QUEUE_SIZE_IDX0] = {0};
 
 
 const DRV_SDMMC_PLIB_API drvSDMMC0PlibAPI = {
@@ -125,8 +125,7 @@ const DRV_SDMMC_INIT drvSDMMC0InitData =
     .bufferObjPoolSize              = DRV_SDMMC_QUEUE_SIZE_IDX0,
     .clientObjPool                  = (uintptr_t)&drvSDMMC0ClientObjPool[0],
     .numClients                     = DRV_SDMMC_CLIENTS_NUMBER_IDX0,
-    .cardDetectionMethod            = DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
-    .cardDetectionPollingIntervalMs = 100,
+    .isCardDetectEnabled            = false,
     .isWriteProtectCheckEnabled     = false,
     .speedMode                      = (DRV_SDMMC_SPEED_MODE)DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
     .busWidth                       = (DRV_SDMMC_BUS_WIDTH)DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
@@ -311,18 +310,28 @@ const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
     .sktRxBuffSize  = TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE,
 };
 
-/*** HTTP Server Initialization Data ***/
-const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
-{
-    .nConnections   = TCPIP_HTTP_MAX_CONNECTIONS,
-    .dataLen		= TCPIP_HTTP_MAX_DATA_LEN,
-    .sktTxBuffSize	= TCPIP_HTTP_SKT_TX_BUFF_SIZE,
-    .sktRxBuffSize	= TCPIP_HTTP_SKT_RX_BUFF_SIZE,
-    .configFlags	= TCPIP_HTTP_CONFIG_FLAGS,
-    .http_malloc_fnc    = TCPIP_HTTP_MALLOC_FUNC,
-    .http_free_fnc      = TCPIP_HTTP_FREE_FUNC,
-};
 
+/*** HTTP_NET Server Initialization Data ***/
+const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
+{
+    .nConnections   = TCPIP_HTTP_NET_MAX_CONNECTIONS,
+    .dataLen		= TCPIP_HTTP_NET_MAX_DATA_LEN,
+    .sktTxBuffSize	= TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize	= TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE,
+    .listenPort	    = TCPIP_HTTP_NET_LISTEN_PORT,
+    .nDescriptors   = TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER,
+    .nChunks        = TCPIP_HTTP_NET_CHUNKS_NUMBER, 
+    .maxRecurseLevel= TCPIP_HTTP_NET_MAX_RECURSE_LEVEL,    
+    .configFlags	= TCPIP_HTTP_NET_CONFIG_FLAGS,
+    .nFileBuffers   = TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER,
+    .fileBufferSize = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE,
+    .chunkPoolRetries = TCPIP_HTTP_NET_CHUNK_RETRIES,
+    .fileBufferRetries = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES,
+    .dynVarRetries  = TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES,
+    .connTimeout        = TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
+    .http_malloc_fnc    = TCPIP_HTTP_NET_MALLOC_FUNC,
+    .http_free_fnc      = TCPIP_HTTP_NET_FREE_FUNC,
+};
 
 /*** SNTP Client Initialization Data ***/
 const TCPIP_SNTP_MODULE_CONFIG tcpipSNTPInitData =
@@ -604,7 +613,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_NBNS,             &tcpipNBNSInitData},            // TCPIP_MODULE_NBNS
     {TCPIP_MODULE_SNTP,             &tcpipSNTPInitData},            // TCPIP_MODULE_SNTP
 
-    {TCPIP_MODULE_HTTP_SERVER,      &tcpipHTTPInitData},            // TCPIP_MODULE_HTTP_SERVER
+    {TCPIP_MODULE_HTTP_NET_SERVER,  &tcpipHTTPNetInitData},         // TCPIP_MODULE_HTTP_NET_SERVER
     {TCPIP_MODULE_SNMP_SERVER,      &tcpipSNMPInitData},            // TCPIP_MODULE_SNMP_SERVER
     {TCPIP_MODULE_SMTPC, &tcpipSMTPCInitData},                                  // TCPIP_MODULE_SMTPC,
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER

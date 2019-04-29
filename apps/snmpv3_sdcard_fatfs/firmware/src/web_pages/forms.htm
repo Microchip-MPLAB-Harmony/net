@@ -1,4 +1,4 @@
-~inc:header.inc~
+<!--#include file="header.htm" -->
 <div id="content">
 
 <h1>Processing Forms</h1>
@@ -13,8 +13,10 @@ you to do just that.  Forms can be submitted in one of two methods (<i>GET</i> a
 data following the question mark (?) in your browser's address bar.  For Microchip's
 embedded server, this data is limited to around 80 bytes.  However, this sort of
 submission is generally easier to process. Data sent via GET is automatically
-decoded, and stored in the current HTTP connection data buffer.  Your application will
-handle the data in the <code>TCPIP_HTTP_GetExecute</code> callback. <code>TCPIP_HTTP_ArgGet</code>
+decoded, and stored in the current HTTP connection data buffer. Your application will
+handle the data in the <code>getExecute</code> callback that was registered
+with the HTTP module at stack start up.
+<code>TCPIP_HTTP_NET_ArgGet</code>
 function provides an easy method to retrieve submitted values for processing.</p>
 
 <p>As an example, this GET form controls several LEDs on the demo board &#40;in the current Harmony release, this part is only working on Explorer 16 board&#41;:</p>
@@ -34,11 +36,11 @@ sent.  This allows the data to be virtually unlimited in length, as long as your
 application can process it in chunks.  However, your application must manage
 the receipt of data, so it is generally more complicated.</p>
 
-</div>
 
+</div>
 <script type="text/javascript">
 <!--
 document.getElementById('hello').innerHTML = "~hellomsg~";
 -->
 </script>
-~inc:footer.inc~
+<!--#include file="footer.htm" -->

@@ -150,9 +150,6 @@ extern "C" {
 #define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
-
 
 
 /*** MIIM Driver Configuration ***/
@@ -178,7 +175,7 @@ extern "C" {
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN
+
 
 /* SDMMC Driver Instance 0 RTOS Configurations*/
 #define DRV_SDMMC_STACK_SIZE_IDX0                         1024
@@ -267,6 +264,53 @@ extern "C" {
 /*** NBNS Configuration ***/
 #define TCPIP_STACK_USE_NBNS
 #define TCPIP_NBNS_TASK_TICK_RATE   110
+
+
+
+/*** HTTP NET Configuration ***/
+#define TCPIP_STACK_USE_HTTP_NET_SERVER
+#define TCPIP_HTTP_NET_MAX_HEADER_LEN		    		15
+#define TCPIP_HTTP_NET_CACHE_LEN		        		"600"
+#define TCPIP_HTTP_NET_TIMEOUT		            		45
+#define TCPIP_HTTP_NET_MAX_CONNECTIONS		    		4
+#define TCPIP_HTTP_NET_DEFAULT_FILE		        		"index.htm"
+#define TCPIP_HTTP_NET_FILENAME_MAX_LEN			        25
+#define TCPIP_HTTP_NET_USE_POST
+#define TCPIP_HTTP_NET_USE_COOKIES
+#define TCPIP_HTTP_NET_USE_AUTHENTICATION
+#define TCPIP_HTTP_NET_MAX_DATA_LEN		        		100
+#define TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE		    		1024
+#define TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE		    		1024
+#define TCPIP_HTTP_NET_LISTEN_PORT		    		    80
+#define TCPIP_HTTP_NET_CONFIG_FLAGS                       \
+                                                        TCPIP_HTTP_NET_MODULE_FLAG_SECURE_DEFAULT |\
+                                                        TCPIP_HTTP_NET_MODULE_FLAG_DEFAULT
+#define TCPIP_HTTP_NET_TASK_RATE					    33
+#define TCPIP_HTTP_NET_RESPONSE_BUFFER_SIZE				300
+#define TCPIP_HTTP_NET_COOKIE_BUFFER_SIZE				200
+#define TCPIP_HTTP_NET_FIND_PEEK_BUFF_SIZE				512
+#define TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE         512
+#define TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER      4
+#define TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES      10
+#define TCPIP_HTTP_NET_CHUNKS_NUMBER                    10
+#define TCPIP_HTTP_NET_CHUNK_RETRIES                    10
+#define TCPIP_HTTP_NET_MAX_RECURSE_LEVEL				3
+#define TCPIP_HTTP_NET_DYNVAR_PROCESS           1
+#define TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER		10
+#define TCPIP_HTTP_NET_DYNVAR_MAX_LEN					50
+#define TCPIP_HTTP_NET_DYNVAR_ARG_MAX_NUMBER			4
+#define TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES			10
+#define TCPIP_HTTP_NET_SSI_PROCESS           1
+#define TCPIP_HTTP_NET_SSI_ATTRIBUTES_MAX_NUMBER        4
+#define TCPIP_HTTP_NET_SSI_STATIC_ATTTRIB_NUMBER        2
+#define TCPIP_HTTP_NET_SSI_CMD_MAX_LEN                  100
+#define TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER             13
+#define TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH     10
+#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   10
+#define TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE       "SSI Echo - Not Found: "
+#define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		0
+#define TCPIP_HTTP_NET_MALLOC_FUNC                     0
+#define TCPIP_HTTP_NET_FREE_FUNC                        0
 
 
 
@@ -408,29 +452,6 @@ extern "C" {
 #define TCPIP_IPV6_ULA_NTP_VALID_WINDOW 				1000
 #define TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT 				60
 #define TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE 			1514
-
-
-/*** HTTP Configuration ***/
-#define TCPIP_STACK_USE_HTTP_SERVER
-#define TCPIP_HTTP_MAX_HEADER_LEN		    		15
-#define TCPIP_HTTP_CACHE_LEN		        		"600"
-#define TCPIP_HTTP_TIMEOUT		            		45
-#define TCPIP_HTTP_MAX_CONNECTIONS		    		4
-#define TCPIP_HTTP_DEFAULT_FILE		        		"index.htm"
-#define TCPIP_HTTPS_DEFAULT_FILE	        		"index.htm"
-#define TCPIP_HTTP_DEFAULT_LEN		        		10
-#define TCPIP_HTTP_MAX_DATA_LEN		        		100
-#define TCPIP_HTTP_MIN_CALLBACK_FREE				16
-#define TCPIP_HTTP_SKT_TX_BUFF_SIZE		    		0
-#define TCPIP_HTTP_SKT_RX_BUFF_SIZE		    		0
-#define TCPIP_HTTP_CONFIG_FLAGS		        		1
-#define TCPIP_HTTP_USE_POST
-#define TCPIP_HTTP_USE_COOKIES
-#define TCPIP_HTTP_USE_BASE64_DECODE
-#define TCPIP_HTTP_USE_AUTHENTICATION
-#define TCPIP_HTTP_TASK_RATE					33
-#define TCPIP_HTTP_MALLOC_FUNC                     0
-#define TCPIP_HTTP_FREE_FUNC                        0
 
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE 1
@@ -617,7 +638,6 @@ extern "C" {
 /*** Crypto Library Configuration ***/
 #define WC_NO_HARDEN
 #define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
 #define WOLFSSL_IGNORE_FILE_WARN
 
@@ -634,6 +654,7 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_AES
+#define WOLFSSL_SHA512
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3

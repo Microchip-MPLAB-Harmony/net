@@ -211,7 +211,9 @@ typedef struct
     SYS_MODULE_OBJ  drvMemory0;
     SYS_MODULE_OBJ  netPres;
 
+
     SYS_MODULE_OBJ  tcpip;
+
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
