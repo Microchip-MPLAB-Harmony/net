@@ -1,466 +1,475 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<configurationDescriptor version="66">
+<configurationDescriptor version="65">
   <logicalFolder name="root" displayName="root" projectFiles="true">
     <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e54_xpro" projectFiles="true">
           <logicalFolder name="f4" displayName="bsp" projectFiles="true">
-            <itemPath ex="false">../src/config/sam_e54_xpro/bsp/bsp.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f7" displayName="crypto" projectFiles="true">
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/crypto.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/aes.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/arc4.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/asn.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/asn_public.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/async.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/camellia.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/certs_test.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/chacha.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/chacha20_poly1305.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/cmac.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/coding.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/compress.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_rng_hw.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/curve25519.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/des3.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/dh.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam6156.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha_hw.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_aes_hw.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_aes_sam6149.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_aes_hwInt.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha1_hw.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypt_sha256_hw.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/dsa.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ecc.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ed25519.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/error-crypt.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/fe_operations.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/fips_test.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ge_operations.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hash.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hc128.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hmac.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/idea.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/integer.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/logging.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md2.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md4.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md5.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/mem_track.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/memory.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/misc.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/mpi_class.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/mpi_superclass.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pkcs11.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pkcs12.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pkcs7.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/poly1305.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pwdbased.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/rabbit.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/random.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ripemd.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/rsa.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/selftest.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/settings.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha256.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha3.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha512.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/signature.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sniffer.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sniffer_error.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/srp.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ssl.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/tfm.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/types.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/version.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/visibility.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_encrypt.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_pkcs11.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_port.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfevent.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfio.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfmath.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/crc32.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/deflate.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffast.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffixed.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inflate.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inftrees.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/trees.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zconf.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zutil.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zlib.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/crypto.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/aes.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/arc4.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/asn.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/asn_public.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/async.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/camellia.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/certs_test.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha20_poly1305.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/cmac.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/coding.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/compress.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_rng_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/curve25519.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/des3.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/dh.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam11105.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_sam6156.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_sam6149.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha224_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_aes_u2238.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha384_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_sha512_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_tdes_hw.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_tdes_sam6150.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypt_tdes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/dsa.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ed25519.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/error-crypt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/fe_operations.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pic32mz-crypt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/fips_test.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ge_operations.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/hash.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/hc128.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/hmac.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/idea.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/integer.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/logging.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md2.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md4.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md5.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/mem_track.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/memory.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/misc.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/mpi_class.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/mpi_superclass.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs11.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs12.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs7.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/poly1305.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pwdbased.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/rabbit.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/random.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ripemd.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/rsa.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/selftest.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/settings.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha256.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha3.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha512.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/signature.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sniffer.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sniffer_error.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/srp.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ssl.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/tfm.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/types.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/version.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/visibility.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_encrypt.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_pkcs11.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_port.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfevent.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfio.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfmath.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/crc32.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/deflate.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffast.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffixed.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inflate.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inftrees.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/trees.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zconf.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zutil.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zlib.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f2" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_extphy_ksz8091.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_extphy_ksz8091.h</itemPath>
                 </logicalFolder>
-                <itemPath ex="false">../src/config/sam_e54_xpro/driver/ethphy/src/drv_ethphy_local.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/driver/ethphy/src/drv_ethphy_local.h</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/ethphy/drv_ethphy.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac_lib.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac_lib.h</itemPath>
                 </logicalFolder>
-                <itemPath ex="false">../src/config/sam_e54_xpro/driver/gmac/src/drv_gmac_local.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/drv_gmac_local.h</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/gmac/drv_gmac.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/gmac/drv_gmac.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="memory" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/src/drv_memory_local.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/drv_memory.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/drv_memory_definitions.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/drv_memory_nvmctrl.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/src/drv_memory_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/drv_memory.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/drv_memory_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/drv_memory_nvmctrl.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/driver/miim/config/drv_miim_config.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/driver/miim/config/drv_miim_config.h</itemPath>
               </logicalFolder>
               <logicalFolder name="f2" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
-                <itemPath ex="false">../src/config/sam_e54_xpro/driver/miim/src/drv_miim_local.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/driver/miim/src/drv_miim_local.h</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/miim/drv_miim.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/miim/drv_miim.h</itemPath>
             </logicalFolder>
-            <itemPath ex="false">../src/config/sam_e54_xpro/driver/driver.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/driver/driver_common.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/driver/driver.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/driver/driver_common.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f6" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/helpers.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                 </logicalFolder>
                 <logicalFolder name="f2" displayName="crypto" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_cbc.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_cfb.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ctr.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ecb.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ecb_pic32.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ofb.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_cbc.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_cfb.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ctr.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ecb.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ecb_pic32.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/crypto/aes_ofb.h</itemPath>
                 </logicalFolder>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ndp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ndp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ipv4_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ipv4_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ipv6_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/icmp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/icmpv6_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/arp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/arp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/udp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/udp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcps_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcps_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/zero_conf_helper.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/zero_conf_link_local_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/zero_conf_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dns_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dns_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dnss_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dnss_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ftp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ftp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/nbns_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ddns_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/telnet_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/smtp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/sntp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/http_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/http_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/http_net_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/http_net_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/snmp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/snmp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/snmpv3_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/smtpc_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/smtpc_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/igmp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/igmp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tftpc_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tftpc_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tftps_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tftps_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/iperf_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/link_list.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/oahash.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_helpers_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager_control.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_module_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_types.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/berkeley_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcpv6_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcpv6_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/lldp_manager.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/lldp_private.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/lldp_tlv.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcps_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcps_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/zero_conf_helper.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/zero_conf_link_local_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/zero_conf_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dnss_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dnss_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ftp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ddns_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/telnet_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/sntp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_net_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_net_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmpv3_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/igmp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/igmp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tftpc_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tftps_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tftps_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/iperf_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/link_list.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/oahash.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_helpers_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager_control.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_module_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_types.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/berkeley_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcpv6_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcpv6_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/lldp_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/lldp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/lldp_tlv.h</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_common_ports.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_mac.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_mac_object.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_manager.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_heap.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_helpers.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/ndp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/ipv4.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/ipv6.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/icmpv6.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/dhcpv6.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/arp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/udp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/berkeley_api.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/dhcp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/dhcps.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/zero_conf_link_local.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/zero_conf_multicast_dns.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/dns.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/dnss.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/ftp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/icmp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/nbns.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/ddns.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/telnet.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/smtp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/sntp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/http.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/http_net.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/snmp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/snmpv3.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_announce.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/lldp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/smtpc.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/igmp.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tftpc.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tftps.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_reboot.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/iperf.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_commands.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/tcpip_ethernet.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_common_ports.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_mac.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_mac_object.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_manager.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_heap.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_helpers.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/ndp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/ipv4.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/ipv6.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/icmpv6.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/dhcpv6.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/arp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/udp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/berkeley_api.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/dhcp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/dhcps.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/zero_conf_link_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/zero_conf_multicast_dns.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/dns.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/dnss.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/icmp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/nbns.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/ddns.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/telnet.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/smtp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/sntp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/http.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/http_net.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/snmp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/snmpv3.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_announce.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/lldp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/smtpc.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/igmp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tftpc.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tftps.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_reboot.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/iperf.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_commands.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/src/net_pres_local.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres_local.h</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_certstore.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_socketapi.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_transportapi.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_transportapi.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/clock/plib_clock.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f9" displayName="cmcc" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="evsys" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/evsys/plib_evsys.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/evsys/plib_evsys.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f8" displayName="mpu" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/mpu/plib_mpu.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/mpu/plib_mpu_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/mpu/plib_mpu.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/mpu/plib_mpu_local.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f7" displayName="nvic" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvic/plib_nvic.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/nvic/plib_nvic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="port" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/port/plib_port.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/port/plib_port.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom2_usart.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom2_usart.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom_usart_common.h</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f2" displayName="tc" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/tc/plib_tc_common.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/tc/plib_tc0.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/tc/plib_tc_common.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/tc/plib_tc0.h</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f4" displayName="cache" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/cache/sys_cache.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="console" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_debug_local.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/sys_command.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/sys_command.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <logicalFolder name="f1" displayName="file_system" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/fat_fs/src/file_system/ff.h</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/fat_fs/src/file_system/ffconf.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/file_system/ff.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/file_system/ffconf.h</itemPath>
                 </logicalFolder>
                 <logicalFolder name="f2" displayName="hardware_access" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/fat_fs/src/hardware_access/diskio.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/hardware_access/diskio.h</itemPath>
                 </logicalFolder>
               </logicalFolder>
               <logicalFolder name="f2" displayName="mpfs" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/mpfs/mpfs.h</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/mpfs/src/mpfs_local.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/system/fs/mpfs/mpfs.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/system/fs/mpfs/src/mpfs_local.h</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/sys_fs.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/src/sys_fs_local.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/sys_fs_media_manager.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/src/sys_fs_media_manager_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/fs/sys_fs.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/fs/src/sys_fs_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/fs/sys_fs_media_manager.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/fs/src/sys_fs_media_manager_local.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/int/sys_int.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/int/sys_int_mapping.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/int/sys_int.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/int/sys_int_mapping.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="ports" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/ports/sys_ports.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/ports/sys_ports_mapping.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/ports/sys_ports.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/ports/sys_ports_mapping.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/time/sys_time.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/time/sys_time_definitions.h</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/time/src/sys_time_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/time/sys_time.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/system.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/system_common.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/system_module.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/system_media.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/sys_reset_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/system.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/system_common.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/system_module.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/system_media.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
-          <itemPath ex="false">../src/config/sam_e54_xpro/user.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/configuration.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/system_config.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/system_definitions.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/device_cache.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/toolchain_specifics.h</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/definitions.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/user.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/configuration.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/system_config.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/system_definitions.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/device_cache.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/toolchain_specifics.h</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f3" displayName="osal" projectFiles="true">
-        <itemPath ex="false">../src/config/sam_e54_xpro/osal/osal.h</itemPath>
-        <itemPath ex="false">../src/config/sam_e54_xpro/osal/osal_definitions.h</itemPath>
-        <itemPath ex="false">../src/config/sam_e54_xpro/osal/osal_impl_basic.h</itemPath>
+        <itemPath>../src/config/sam_e54_xpro/osal/osal.h</itemPath>
+        <itemPath>../src/config/sam_e54_xpro/osal/osal_definitions.h</itemPath>
+        <itemPath>../src/config/sam_e54_xpro/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAME54P20A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/ac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/adc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/aes.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/can.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/ccl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/cmcc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/dac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/dmac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/dsu.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/eic.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/evsys.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/freqm.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/gclk.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/gmac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/hmatrixb.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/i2s.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/icm.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/mclk.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/nvmctrl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/osc32kctrl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/oscctrl.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/pac.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/pcc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/pdec.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/pm.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/port.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/pukcc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/qspi.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/ramecc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/rstc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/rtc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/sdhc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/sercom.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/supc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/tc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/tcc.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/trng.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/usb.h</itemPath>
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/component/wdt.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/ac.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/adc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/aes.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/can.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/ccl.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/cmcc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/dac.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/dmac.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/dsu.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/eic.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/evsys.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/freqm.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/gclk.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/gmac.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/hmatrixb.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/i2s.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/icm.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/mclk.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/nvmctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/osc32kctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/oscctrl.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/pac.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/pcc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/pdec.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/pm.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/port.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/pukcc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/qspi.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/ramecc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/rstc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/rtc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/sdhc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/sercom.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/supc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/tc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/tcc.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/trng.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/usb.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/component/wdt.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f2" displayName="pio" projectFiles="true">
-            <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/pio/same54p20a.h</itemPath>
+            <itemPath>../src/packs/ATSAME54P20A_DFP/pio/same54p20a.h</itemPath>
           </logicalFolder>
-          <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/device.h</itemPath>
-          <itemPath ex="false">../src/packs/ATSAME54P20A_DFP/atsame54p20a.h</itemPath>
+          <itemPath>../src/packs/ATSAME54P20A_DFP/device.h</itemPath>
+          <itemPath>../src/packs/ATSAME54P20A_DFP/atsame54p20a.h</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f2" displayName="DSP" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath ex="false">../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath ex="false">../src/mib.h</itemPath>
-      <itemPath ex="false">../src/app.h</itemPath>
+      <itemPath>../src/mib.h</itemPath>
+      <itemPath>../src/http_net_print.h</itemPath>
+      <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
-      <itemPath ex="false">Makefile</itemPath>
+      <itemPath>Makefile</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
     </logicalFolder>
@@ -468,99 +477,99 @@
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e54_xpro" projectFiles="true">
           <logicalFolder name="f5" displayName="bsp" projectFiles="true">
-            <itemPath ex="false">../src/config/sam_e54_xpro/bsp/bsp.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/bsp/bsp.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f8" displayName="crypto" projectFiles="true">
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/crypto.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/aes.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/arc4.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/asm.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/asn.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/async.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/camellia.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/chacha.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/chacha20_poly1305.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/cmac.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/coding.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/compress.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/curve25519.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/dh.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/dsa.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ed25519.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/error.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/fe_low_mem.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/fe_operations.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ge_low_mem.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ge_operations.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hash.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hc128.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/hmac.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/idea.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/integer.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/logging.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md2.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md4.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/memory.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/misc.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pkcs12.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pkcs7.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/poly1305.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/pwdbased.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/rabbit.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/random.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ripemd.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha3.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/signature.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/srp.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/tfm.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_encrypt.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_pkcs11.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wc_port.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfevent.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/wolfmath.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/adler32.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/crc32.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/deflate.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inflate.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/trees.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zutil.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/md5.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha256.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/sha512.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/des3.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/rsa.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ecc.c</itemPath>
-            <itemPath ex="false">../src/config/sam_e54_xpro/crypto/src/ecc_fp.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/crypto.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/aes.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/arc4.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/asm.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/asn.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/async.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/camellia.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/chacha20_poly1305.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/cmac.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/coding.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/compress.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/curve25519.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/dh.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/dsa.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ed25519.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/error.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/fe_low_mem.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/fe_operations.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ge_low_mem.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ge_operations.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/hash.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/hc128.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/hmac.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/idea.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/integer.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/logging.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md2.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md4.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/memory.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/misc.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs12.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pkcs7.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/poly1305.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/pwdbased.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/rabbit.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/random.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ripemd.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha256.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha3.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/signature.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/sha512.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/srp.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/tfm.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_encrypt.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_pkcs11.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wc_port.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfevent.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/wolfmath.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/md5.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/adler32.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/crc32.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/deflate.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inflate.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/trees.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zutil.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/inffast.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc_fp.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="driver" projectFiles="true">
             <logicalFolder name="f2" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_extphy_ksz8091.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/ethphy/src/dynamic/drv_extphy_ksz8091.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f3" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac_lib_samE5x.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac_lib_samE5x.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f1" displayName="memory" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/src/drv_memory.c</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/src/drv_memory_file_system.c</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/driver/memory/src/drv_memory_nvmctrl.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/src/drv_memory.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/src/drv_memory_file_system.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/memory/src/drv_memory_nvmctrl.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/driver/miim/src/dynamic/drv_miim.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/driver/miim/src/dynamic/drv_miim.c</itemPath>
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
@@ -569,124 +578,157 @@
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.c</itemPath>
-                  <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/helpers.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.c</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/snmp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dns.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/icmp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/icmpv6.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ndp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ipv6.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/http.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/smtpc.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_internal.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/oahash.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_helpers.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/sntp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/snmpv3.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/library/tcpip/src/snmpv3_usm.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/oahash.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_helpers.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/sntp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmpv3.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/snmpv3_usm.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f6" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/src/net_pres.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/clock/plib_clock.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f9" displayName="cmcc" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="evsys" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/evsys/plib_evsys.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/evsys/plib_evsys.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f8" displayName="mpu" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/mpu/plib_mpu.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/mpu/plib_mpu.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f7" displayName="nvic" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvic/plib_nvic.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/nvic/plib_nvic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="nvmctrl" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="port" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/port/plib_port.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/port/plib_port.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="sercom" projectFiles="true">
               <logicalFolder name="f1" displayName="usart" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom2_usart.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/peripheral/sercom/usart/plib_sercom2_usart.c</itemPath>
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f2" displayName="tc" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/peripheral/tc/plib_tc0.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/peripheral/tc/plib_tc0.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f7" displayName="stdio" projectFiles="true">
-            <itemPath ex="false">../src/config/sam_e54_xpro/stdio/xc32_monitor.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/cache/sys_cache.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_debug.c</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/console/src/sys_command.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_command.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/fat_fs/src/ff.c</itemPath>
-                <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/fat_fs/src/diskio.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/ff.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/diskio.c</itemPath>
               </logicalFolder>
               <logicalFolder name="f2" displayName="mpfs" projectFiles="true">
-                <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/mpfs/src/mpfs.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/system/fs/mpfs/src/mpfs.c</itemPath>
               </logicalFolder>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/src/sys_fs.c</itemPath>
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/fs/src/sys_fs_media_manager.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/fs/src/sys_fs.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/fs/src/sys_fs_media_manager.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/int/src/sys_int.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
-              <itemPath ex="false">../src/config/sam_e54_xpro/system/time/src/sys_time.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/time/src/sys_time.c</itemPath>
             </logicalFolder>
-            <itemPath ex="false">../src/config/sam_e54_xpro/system/sys_time_h2_adapter.c</itemPath>
+            <itemPath>../src/config/sam_e54_xpro/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
-          <itemPath ex="false">../src/config/sam_e54_xpro/tasks.c</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/initialization.c</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/interrupts.c</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/exceptions.c</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/startup_xc32.c</itemPath>
-          <itemPath ex="false">../src/config/sam_e54_xpro/libc_syscalls.c</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/tasks.c</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/initialization.c</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/interrupts.c</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/exceptions.c</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/startup_xc32.c</itemPath>
+          <itemPath>../src/config/sam_e54_xpro/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath ex="false">../src/custom_snmp_app.c</itemPath>
-      <itemPath ex="false">../src/mpfs_img2.c</itemPath>
-      <itemPath ex="false">../src/http_print.c</itemPath>
-      <itemPath ex="false">../src/custom_http_app.c</itemPath>
-      <itemPath ex="false">../src/app.c</itemPath>
-      <itemPath ex="false">../src/main.c</itemPath>
+      <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
+        <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="protect" projectFiles="true">
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+        </logicalFolder>
+        <itemPath>../src/web_pages/auth.htm</itemPath>
+        <itemPath>../src/web_pages/cookies.htm</itemPath>
+        <itemPath>../src/web_pages/dynvars.htm</itemPath>
+        <itemPath>../src/web_pages/footer.htm</itemPath>
+        <itemPath>../src/web_pages/forms.htm</itemPath>
+        <itemPath>../src/web_pages/harmony.gif</itemPath>
+        <itemPath>../src/web_pages/header.htm</itemPath>
+        <itemPath>../src/web_pages/index.htm</itemPath>
+        <itemPath>../src/web_pages/leds.cgi</itemPath>
+        <itemPath>../src/web_pages/mchp.css</itemPath>
+        <itemPath>../src/web_pages/mchp.gif</itemPath>
+        <itemPath>../src/web_pages/mchp.js</itemPath>
+        <itemPath>../src/web_pages/snmp.bib</itemPath>
+        <itemPath>../src/web_pages/ssi.htm</itemPath>
+        <itemPath>../src/web_pages/status.xml</itemPath>
+        <itemPath>../src/web_pages/upload.htm</itemPath>
+      </logicalFolder>
+      <itemPath>../src/custom_snmp_app.c</itemPath>
+      <itemPath>../src/mpfs_net_img.c</itemPath>
+      <itemPath>../src/http_net_print.c</itemPath>
+      <itemPath>../src/custom_http_net_app.c</itemPath>
+      <itemPath>../src/app.c</itemPath>
+      <itemPath>../src/main.c</itemPath>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -706,8 +748,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.20"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -726,8 +768,8 @@
         </subordinates>
       </compileType>
       <makeCustomizationType>
-        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStepEnabled>true</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStep>java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /z "snmp.bib" "../src/web_pages" "../src" "mpfs_net_img.c"</makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
@@ -828,7 +870,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="74960"/>
+        <property key="heap-size" value="110960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -888,6 +930,32 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2.000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-fffff"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+      </EdbgTool>
       <ICD4Tool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>

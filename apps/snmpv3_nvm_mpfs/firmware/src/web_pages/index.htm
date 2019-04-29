@@ -1,4 +1,4 @@
-~inc:header.inc~
+<!--#include file="header.htm" -->
 <div id="content">
 
 <div id="status">
@@ -42,6 +42,7 @@ web server, including:</p>
 
 <ul>
 <li><b>Dynamic Variable Substitution</b> - display real-time data</li>
+<li><b>Server Side Includes</b> - process real-time SSI commands</li>
 <li><b>Processing Forms</b> - handle input from the client</li>
 <li><b>Authentication</b> - require a user name and password</li>
 <li><b>Cookies</b> - store session state information for richer applications</li>
@@ -98,4 +99,4 @@ setTimeout("newAJAXCommand('status.xml', updateStatus, true)",500);
 document.getElementById('hello').innerHTML = "~hellomsg~";
 //-->
 </script>
-~inc:footer.inc~
+<!--#include file="footer.htm" -->

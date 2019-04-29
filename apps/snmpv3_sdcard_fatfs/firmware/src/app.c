@@ -51,7 +51,9 @@
 // *****************************************************************************
 
 #include "definitions.h"
-
+#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
+#include "http_net_print.h"
+#endif
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global Data Definitions
@@ -184,6 +186,10 @@ void APP_Tasks ( void )
 #endif  // defined(TCPIP_STACK_USE_NBNS)
 
                 }
+#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
+                // register the application HTTP processing
+                HTTP_APP_Initialize();
+#endif // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
                 appData.state = APP_TCPIP_TRANSACT;
 
             }
