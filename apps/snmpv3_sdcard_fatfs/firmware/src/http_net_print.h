@@ -37,7 +37,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _HTTP_NET_PRINT_H
 #define _HTTP_NET_PRINT_H
 
-<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 /****************************************************************************
 Section:
     Dynamic Variables Function Prototypes
@@ -114,7 +113,6 @@ TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute(TCPIP_HTTP_NET_CONN
  ****************************************************************************/
 TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack);
 
-<#if ((TCPIP_HTTP_NET_USE_AUTHENTICATION?has_content) && (TCPIP_HTTP_NET_USE_AUTHENTICATION  == true))>
 /*****************************************************************************
   Function:
     uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, uint8_t *cFile, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack)
@@ -135,7 +133,6 @@ uint8_t TCPIP_HTTP_NET_ConnectionFileAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE con
  ****************************************************************************/
  uint8_t TCPIP_HTTP_NET_ConnectionUserAuthenticate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char *cUser, const char *cPass, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack);
  #endif
- </#if>
  
  // processing the HTTP buffer acknowledgment
 void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const void *buffer, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack);
@@ -203,6 +200,5 @@ void HTTP_APP_Initialize(void);
 // dynamic variables processing
 HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void);
 
-</#if>
 
 #endif /* _HTTP_NET_PRINT_H */

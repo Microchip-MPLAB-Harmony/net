@@ -239,11 +239,11 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpMibHeaderFile.setOverwrite(True)
 	tcpipSnmpMibHeaderFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_SNMP_CUSTOM_TEMPLATE"])
 # ifblock (USE_SYS_FS) && (SYS_FS_MPFS) && (!TCPIP_STACK_USE_HTTP_SERVER)
-# template SNMP_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2.c"
+# template SNMP_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2_net.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_net_img.c"
 # endif
 	tcpipSnmpMpfsImg2SourceFile = tcpipSnmpComponent.createFileSymbol(None, None)
-	tcpipSnmpMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2.c.ftl")
-	tcpipSnmpMpfsImg2SourceFile.setOutputName("mpfs_img2.c")
+	tcpipSnmpMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2_net.c.ftl")
+	tcpipSnmpMpfsImg2SourceFile.setOutputName("mpfs_net_img.c")
 	tcpipSnmpMpfsImg2SourceFile.setDestPath("../../")
 	tcpipSnmpMpfsImg2SourceFile.setProjectPath("")
 	tcpipSnmpMpfsImg2SourceFile.setType("SOURCE")

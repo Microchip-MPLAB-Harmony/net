@@ -72,26 +72,27 @@ public class DynVar {
        "responsibility to comply with third party license terms applicable to your\r\n"+
        "use of third party software (including open source software) that may\r\n"+
        "accompany Microchip software.\r\n"+
-
+       "\r\n" +     
        "THIS SOFTWARE IS SUPPLIED BY MICROCHIP \"AS IS\". NO WARRANTIES, WHETHER\r\n"+
        "EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED\r\n"+
        "WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR\r\n"+
        "PURPOSE.\r\n"+
-
+       "\r\n" +    
        "IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,\r\n"+
        "INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND\r\n"+
        "WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS\r\n"+
        "BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE\r\n"+
        "FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN\r\n"+
        "ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,\r\n"+
-       "THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.\r\n"+
+       "THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.\r\n"+   
        "*****************************************************************************/\r\n"+
-        "#ifndef _HTTP_NET_PRINT_H\r\n"+
-        "#define _HTTP_NET_PRINT_H\r\n"+
+       "\r\n" +       
+       "#ifndef _HTTP_NET_PRINT_H\r\n"+
+       "#define _HTTP_NET_PRINT_H\r\n"+
        "\r\n/****************************************************************************\r\n"+
        "Section:\r\n"+
            "\tDynamic Variables Function Prototypes\r\n"+
-
+       "\r\n" +       
        "Remarks:\r\n"+
            "\tThere are no predefined functions that do the dynamic variables processing.\r\n"+
            "\tThe only interface between the application and the HTTP module is done using\r\n"+
@@ -101,17 +102,17 @@ public class DynVar {
            "\tIt is up to the application to detect what dynamic variable is processed by\r\n"+
            "\texamining the TCPIP_HTTP_DYN_VAR_DCPT *parameter that's passed to the function\r\n"+
            "\tand take appropriate action.\r\n"+
-
+           "\r\n" +  
            "\tThe mpfs generator does not generate a list of dynamic variables functions anymore.\r\n"+
            "\tAll the dynamic variable processing happens at run time!\r\n"+
            "\tWeb pages could be changed at run time and the web server will work just fine\r\n"+
            "\t(providing that the application properly processes the dynamic variables).\r\n"+
-
-           "\n\r\tThese are just functions  belonging to the application.\r\n"+
+           "\r\n" +  
+           "\tThese are just functions  belonging to the application.\r\n"+
            "\tThey can have any name the application uses to.\r\n"+
-        "****************************************************************************/\r\n";
+        "****************************************************************************/\r\n\r\n";
     String HTTPPRINT_NET_H_MIDDLE =
-        "/*****************************************************************************\r\n"+
+        "\r\n/*****************************************************************************\r\n"+
         "  Function:\r\n"+
         "    TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionGetExecute(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack)\r\n"+
         "\r\n"+    
@@ -128,7 +129,6 @@ public class DynVar {
         "    See documentation in the TCP/IP Stack APIs or http_net.h for details.\r\n"+
         "****************************************************************************/\r\n"+
         "TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_ConnectionPostExecute(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
-        "\r\n"+    
         "\r\n"+    
         "/*****************************************************************************\r\n"+
         "  Function:\r\n"+
@@ -162,7 +162,6 @@ public class DynVar {
         "// return true if the processing is done by you and HTTP need take no further action\r\n"+
         "bool TCPIP_HTTP_NET_SSINotification(TCPIP_HTTP_NET_CONN_HANDLE connHandle, TCPIP_HTTP_SSI_NOTIFY_DCPT *pSSINotifyDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK *pCBack);\r\n"+
         "\r\n"+ 
-        "\r\n"+ 
         "/****************************************************************************\r\n"+
         "  Section:\r\n"+
         "    Application Dynamic Variables processing functions.\r\n"+
@@ -174,7 +173,7 @@ public class DynVar {
         "    coming HTTP_APP_DynVarTbl[].\r\n"+
         "    Note that this is just an example.\r\n"+
         "    The application could opt for any type of proccessing it needs to do at run time.\r\n"+
-
+        "\r\n" +    
         "    See http_net.h for details regarding each of these functions.\r\n"+
         "****************************************************************************/\r\n\r\n"+
 
@@ -211,12 +210,12 @@ public class DynVar {
         "    There is no default processing for a web page!\r\n"+
         "\r\n"+    
         "    See http_net.h for details regarding each of these functions.\r\n"+
-        "*****************************************************************************/\r\n"+
+        "****************************************************************************/\r\n"+
         "void HTTP_APP_Initialize(void);\r\n"+
         "\r\n"+    
         "// helper to get one of the application's dynamic buffer that are used in the\r\n"+
         "// dynamic variables processing\r\n"+
-        "HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void);\r\n";
+        "HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void);\r\n\r\n\r\n";
     String HTTPPRINT_NET_H_FOOTER =
         "#endif /* _HTTP_NET_PRINT_H */\r\n";
 
@@ -232,7 +231,7 @@ public class DynVar {
         "* ALL MODIFICATIONS WILL BE OVERWRITTEN BY THE MPFS GENERATOR\r\n" +
         "*\r\n"+        
         "*********************************************************************/\r\n\r\n" +
-        "/*********************************************************************\r\n" +
+        "/*****************************************************************************\r\n" +
         " Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries.\r\n\r\n" +
         " Microchip Technology Inc. and its subsidiaries.\r\n\r\n" +
         " Subject to your compliance with these terms, you may use Microchip software\r\n" +
@@ -252,10 +251,10 @@ public class DynVar {
         " FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN\r\n" +
         " ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,\r\n" +
         " THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.\r\n" +
-        " *********************************************************************/\r\n\r\n" +
+        " *****************************************************************************/\r\n\r\n" +
         "#include \"configuration.h\"\r\n" +
         "#include \"definitions.h\" \r\n" +
-        "#include \"tcpip/tcpip.h\"\r\n\r\n"+
+        "#include \"tcpip/tcpip.h\"\r\n"+
         "#include \"http_net_print.h\"\r\n";
         
     String HTTPPRINT_NET_C_MIDDLE =
@@ -273,15 +272,15 @@ public class DynVar {
         "\r\n"+    
         "    See http_net.h for details regarding each of these functions.\r\n"+
         "****************************************************************************/\r\n"+
-        "\r\n\r\n"+
+        "\r\n"+
         "// table with the processed dynamic variables in this demo\r\n"+
         "static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] = \r\n" +
         "{\r\n"+
-        "    // varName                      varFnc\r\n";    
+        " // varName                      varFnc\r\n";    
               
     String HTTPPRINT_NET_C_FOOTER =
         "};\r\n"+
-        "\r\n\r\n"+
+        "\r\n"+
             
         "// Function that processes the dynamic variables\r\n"+
         "// It uses the HTTP_APP_DynVarTbl[] for detecting which variable is currently processed\r\n"+
@@ -330,7 +329,7 @@ public class DynVar {
         "        }\r\n"+
         "    }\r\n"+
         "    return 0;\r\n"+
-        "}\r\n"+
+        "}\r\n\r\n"+
         "/****************************************************************************\r\n"+
         "  Section:\r\n"+
         "    Application initialization and HTTP registration.\r\n"+
@@ -340,7 +339,7 @@ public class DynVar {
         "    There is no default processing for a web page!\r\n"+
         "\r\n"+    
         "    See http_net.h for details regarding each of these functions.\r\n"+
-        "*****************************************************************************/\r\n"+
+        "****************************************************************************/\r\n"+
         "void HTTP_APP_Initialize(void)\r\n"+
         "{\r\n"+
         "    int ix;\r\n"+
@@ -354,8 +353,8 @@ public class DynVar {
         "\r\n"+    
         "    TCPIP_HTTP_NET_USER_CALLBACK appHttpCBack =\r\n"+
         "    {\r\n"+
-        "        .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the"+ "\""+"GET"+"\""+" command\r\n"+
-        "        .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the"+ "\""+"POST"+"\""+" command\r\n"+
+        "        .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "+ "\""+"GET"+"\""+" command\r\n"+
+        "        .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "+ "\""+"POST"+"\""+" command\r\n"+
         "        .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication\r\n"+
         "        .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication\r\n"+
         "\r\n"+    
@@ -365,13 +364,19 @@ public class DynVar {
         "\r\n"+    
         "        .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback\r\n"+
         "    };\r\n"+
-
+        "\r\n" +    
         "    TCPIP_HTTP_NET_USER_HANDLE httpH = TCPIP_HTTP_NET_UserHandlerRegister(&appHttpCBack);\r\n"+
         "    if(httpH == 0)\r\n"+
         "    {\r\n"+
-        "        SYS_CONSOLE_MESSAGE("+ "\"" + "APP: Failed to register the HTTP callback!\r\n" + "\""+ ");\r\n"+
+        "        SYS_CONSOLE_MESSAGE("+ "\"" + "APP: Failed to register the HTTP callback! \\r\\n" + "\""+ ");\r\n"+
         "    }\r\n"+
-        "}\r\n";
+        "}\r\n\r\n" +
+        "//This following registered function is called  for the dynamic variable \"myVariable\".\n" +
+        "TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_myVariable(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)\n" +
+        "{\n" +
+        "    TCPIP_HTTP_NET_DynamicWriteString(vDcpt,\"~\", true);\n" +
+        "    return TCPIP_HTTP_DYN_PRINT_RES_DONE;\n" +
+        "}";
 
 
 /*
@@ -503,7 +508,7 @@ public class DynVar {
         boolean isChanged = false;
         File httpFileIdx = null;
         String temp_str;
-
+/*
         for(DynamicVariable dv : vars)
         {
             if ((dv.getWasUsed() && dv.getCount() == 0) ||
@@ -517,7 +522,7 @@ public class DynVar {
         {
             return false;
         }
-
+*/
         // Write out http_net_print.idx        
         httpFileIdx = new File(projectDir +"http_net_print.idx");
        
@@ -594,10 +599,11 @@ public class DynVar {
                 fout_header.write(temp_str);
                 temp_str = "TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt";
                 fout_header.write(temp_str);
-                
+                fout_header.write(");\r\n");
                 // update http_net_print.c file with varName and var function
-                temp_str = "{" + "\""+ m.group(1) + "\"" + "," + "\t\t\t\t\t" + "TCPIP_HTTP_Print_" + m.group(1)+ "}";
+                temp_str = "{" + "\""+ m.group(1) + "\"" + "," + "\t\t\t\t\t" + "TCPIP_HTTP_Print_" + m.group(1);
                 fout_source.write(temp_str);
+                fout_source.write("},\r\n");
 //                if(m.group(3) != null)
 //                {
 //                    if(tcpipHttpNetVersionused)
@@ -639,7 +645,7 @@ public class DynVar {
 //                        fout_source.write("void");
 //                     }
 //                }
-                fout_source.write(");\r\n");
+//               fout_source.write(");\r\n");
             }
         }
 

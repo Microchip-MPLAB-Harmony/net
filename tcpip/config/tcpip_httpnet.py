@@ -412,13 +412,14 @@ def instantiateComponent(tcpipHttpNetComponent):
 
 	# Message to provide the source web page path which will be used for the webpage.py
 	tcpipHttpNetWebPageDirPath = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEBPAGE_DIRECTORY_PATH", tcpipHttpNetCustTemplate)
-	tcpipHttpNetWebPageDirPath.setLabel("Provide Source Webpage directory path")
+	tcpipHttpNetWebPageDirPath.setLabel("Web pages source directory path")
 	tcpipHttpNetWebPageDirPath.setVisible(True)
 	tcpipHttpNetWebPageDirPath.setDescription("Configure Webpage directory path")
 	tcpipHttpNetWebPageDirPath.setDefaultValue(Module.getPath() + "web_pages")
 	tcpipHttpNetWebPageDirPath.setDependencies(tcpipHttpNetWebServerPathVisible, ["TCPIP_STACK_USE_HTTP_NET_SERVER" , "TCPIP_HTTP_NET_CUSTOM_TEMPLATE"])
 
 	tcpipHttpNetDestWebPageDirPath = tcpipHttpNetComponent.createKeyValueSetSymbol("TCPIP_HTTP_NET_DEST_WEBPAGE_DIRECTORY_PATH",tcpipHttpNetCustTemplate)
+	tcpipHttpNetDestWebPageDirPath.setLabel("Web pages destination directory path")
 	tcpipHttpNetDestWebPageDirPath.setVisible(True)
 	tcpipHttpNetDestWebPageDirPath.addKey("DESTINATION PATH", "0", Module.getPath() + "apps"+os.path.sep+"<project>"+os.path.sep+"firmware"+os.path.sep+"src"+os.path.sep+"web_pages")
 	tcpipHttpNetDestWebPageDirPath.setDisplayMode("Description")
@@ -430,7 +431,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	# Message that Number of webpage files accepted
 	tcpipHttpNetWebPageFileCount = tcpipHttpNetComponent.createCommentSymbol("TCPIP_WEBPAGE_FILES_COUNT_COMMENT", tcpipHttpNetCustTemplate)
 	tcpipHttpNetWebPageFileCount.setVisible(True)
-	tcpipHttpNetWebPageFileCount.setLabel("*** Maximum 100 Number of webpage files supported. ***")
+	tcpipHttpNetWebPageFileCount.setLabel("*** Maximum 100 web page files currently supported ***")
 	
 	# Include HTTP NET Custom Template SL
 	tcpipHttpNetCustTemplateSl = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_CUSTOM_TEMPLATE_SL", None)
