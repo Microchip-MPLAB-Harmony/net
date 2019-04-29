@@ -39,7 +39,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/tcpip.h"
 #include "http_net_print.h"
 
-<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 
 /****************************************************************************
   Section:
@@ -170,28 +169,14 @@ void HTTP_APP_Initialize(void)
     {
         .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
         .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
-<#if ((TCPIP_HTTP_NET_USE_AUTHENTICATION?has_content) && (TCPIP_HTTP_NET_USE_AUTHENTICATION  == true))>
         .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
         .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
-<#else>
-        .fileAuthenticate = 0,
-        .userAuthenticate = 0,
-</#if>
 
-<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
         .dynamicPrint = TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
         .dynamicAck = TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
-<#else>
-        .dynamicPrint = 0,
-        .dynamicAck = 0,
-</#if>
         .eventReport = TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
 
-<#if ((TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (TCPIP_HTTP_NET_SSI_PROCESS  == true)) >
         .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
-<#else>
-        .ssiNotify = 0,
-</#if>
     };
 
     TCPIP_HTTP_NET_USER_HANDLE httpH = TCPIP_HTTP_NET_UserHandlerRegister(&appHttpCBack);
@@ -207,4 +192,3 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_myVariable(TCPIP_HTTP_NET_CONN_HANDLE 
     TCPIP_HTTP_NET_DynamicWriteString(vDcpt,"~", true);
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
-</#if>

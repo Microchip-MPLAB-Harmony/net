@@ -249,8 +249,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Apr,17 2019"+"<br>";
-        String version = "Version MPFS 3.3.1";
+        aboutStr = "<html>"+"Date Apr,29 2019"+"<br>";
+        String version = "Version MPFS 3.3.2";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
@@ -868,10 +868,10 @@ public class MainMPFS extends javax.swing.JFrame {
         // Show a warning if index has changed
         if (builder.indexUpdated)
         {
-            JOptionPane.showMessageDialog(null,"The dynamic variables in your web pages have changed!\n\n" +
+            JOptionPane.showMessageDialog(null,"The dynamic variables or file in your web pages have changed!\n\n" +
                             "Remember to recompile your MPLAB project before continuing\n" +
                             "to ensure that the project is in sync.",
-                            "MPFS2 Warning", JOptionPane.INFORMATION_MESSAGE);
+                            "MPFS Warning", JOptionPane.INFORMATION_MESSAGE);
         }// This is just an upload
         }
         else
