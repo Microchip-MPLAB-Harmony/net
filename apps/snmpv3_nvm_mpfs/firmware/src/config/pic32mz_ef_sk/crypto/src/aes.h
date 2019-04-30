@@ -152,7 +152,7 @@ enum {
 #endif
 
 typedef struct Aes {
-#if defined(HAVE_MICROCHIP_HARMONY3_HW_AES)
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_AES)  && !defined(WOLFSSL_MICROCHIP_PIC32MZ)
     crypt_aes_hw_descriptor hwDesc;
 #else
     /* AESNI needs key first, rounds 2nd, not sure why yet */

@@ -760,7 +760,7 @@ static int _InitRng(WC_RNG* rng, byte* nonce, word32 nonceSz,
         return 0;
 #endif
 
-#ifdef HAVE_MICROCHIP_HARMONY3_HW_RNG
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG) && !defined(WOLFSSL_PIC32MZ_RNG)
     ret = CRYPT_RNG_HwInit();
 #endif
 
@@ -938,7 +938,7 @@ int wc_RNG_GenerateBlock(WC_RNG* rng, byte* output, word32 sz)
 #endif /* HAVE_HASHDRBG */
 #endif /* CUSTOM_RAND_GENERATE_BLOCK */
 
-#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG) && !defined(WOLFSSL_PIC32MZ_RNG)
     ret = CRYPT_RNG_GenerateBlock(output, sz);
 #endif
 
@@ -1555,12 +1555,12 @@ int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
 
     return 0;
 }
-#elif defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_RNG) && !defined(WOLFSSL_PIC32MZ_RNG)
     int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)
     {
         return CRYPT_RNG_GenerateSeed(output, sz);
     }
-#elif defined(MICROCHIP_MPLAB_HARMONY_3)
+#elif defined(MICROCHIP_MPLAB_HARMONY_3) && !defined(WOLFSSL_PIC32MZ_RNG)
     #include "system/time/sys_time.h"
     #define PIC32_SEED_COUNT SYS_TIME_CounterGet
     int wc_GenerateSeed(OS_Seed* os, byte* output, word32 sz)

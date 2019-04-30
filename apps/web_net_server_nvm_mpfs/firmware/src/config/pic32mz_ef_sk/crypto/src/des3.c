@@ -41,17 +41,7 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
 //DOM-IGNORE-END
-
-
 
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -156,11 +146,73 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
             Des3Free(des3); */
     }
 
+
+    
 #else /* else build without fips, or for FIPS v2 */
 
 
 #if defined(WOLFSSL_TI_CRYPT)
     #include <wolfcrypt/src/port/ti/ti-des3.c>
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_TDES) && !defined(WOLFSSL_PIC32MZ_CRYPT)
+    #include "crypto/src/crypt_tdes_hwInt.h"
+
+WOLFSSL_API int  wc_Des_SetKey(Des* des, const byte* key, const byte* iv, int dir)
+{
+    return CRYPT_DES_SetKey(des, key, iv, dir);
+}
+WOLFSSL_API void wc_Des_SetIV(Des* des, const byte* iv)
+{
+    CRYPT_DES_SetIV(des, iv);
+  
+}
+WOLFSSL_API int  wc_Des_CbcEncrypt(Des* des, byte* out,
+                                   const byte* in, word32 sz)
+{
+  return CRYPT_DES_CbcEncrypt(des, out, in, sz);
+}
+WOLFSSL_API int  wc_Des_CbcDecrypt(Des* des, byte* out,
+                                   const byte* in, word32 sz)
+{
+  return CRYPT_DES_CbcDecrypt(des, out, in, sz);
+}
+WOLFSSL_API int  wc_Des_EcbEncrypt(Des* des, byte* out,
+                                   const byte* in, word32 sz)
+{
+  return CRYPT_DES_EcbEncrypt(des, out, in, sz);
+}
+WOLFSSL_API int wc_Des3_EcbEncrypt(Des3* des, byte* out,
+                                   const byte* in, word32 sz)
+{
+  return CRYPT_DES3_EcbEncrypt(des, out, in, sz);
+}
+
+WOLFSSL_API int  wc_Des3_SetKey(Des3* des, const byte* key,
+                                const byte* iv,int dir)
+{
+  return CRYPT_DES3_SetKey(des, key, iv, dir);
+}
+WOLFSSL_API int  wc_Des3_SetIV(Des3* des, const byte* iv)
+{
+  return CRYPT_DES3_SetIV(des, iv);
+}
+WOLFSSL_API int  wc_Des3_CbcEncrypt(Des3* des, byte* out,
+                                    const byte* in,word32 sz)
+{
+  return CRYPT_DES3_CbcEncrypt(des, out, in, sz);
+}
+WOLFSSL_API int  wc_Des3_CbcDecrypt(Des3* des, byte* out,
+                                    const byte* in,word32 sz)
+{
+  return CRYPT_DES3_CbcDecrypt(des, out, in, sz);
+}
+WOLFSSL_API int  wc_Des3Init(Des3* des, void* mem, int heap)
+{
+  return CRYPT_DES3_Init(des, mem, heap);
+}
+WOLFSSL_API void wc_Des3Free(Des3* des)
+{
+  CRYPT_DES3_Free(des);
+}
 #else
 
 
@@ -1158,6 +1210,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
                 PIC32_ENCRYPTION, PIC32_ALGO_TDES, PIC32_CRYPTOALGO_TECB);
         }
     #endif /* WOLFSSL_DES_ECB */
+
 
 #else
     #define NEED_SOFT_DES
