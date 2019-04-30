@@ -96,7 +96,7 @@ extern "C" {
 #define SYS_FS_VOLUME_NUMBER              1
 
 #define SYS_FS_AUTOMOUNT_ENABLE           false
-#define SYS_FS_MAX_FILES                  20
+#define SYS_FS_MAX_FILES                  25
 #define SYS_FS_MAX_FILE_SYSTEM_TYPE       1
 #define SYS_FS_MEDIA_MAX_BLOCK_SIZE       512
 #define SYS_FS_MEDIA_MANAGER_BUFFER_SIZE  2048
@@ -129,7 +129,7 @@ extern "C" {
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                1024
+#define SYS_CMD_RTOS_STACK_SIZE                256
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
@@ -215,11 +215,6 @@ extern "C" {
 #define TCPIP_STACK_USE_ICMP_SERVER
 #define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
-/*** ICMPv4 Client Configuration ***/
-#define TCPIP_STACK_USE_ICMP_CLIENT
-#define TCPIP_ICMP_CLIENT_USER_NOTIFICATION   true
-#define TCPIP_ICMP_ECHO_REQUEST_TIMEOUT       500
-#define TCPIP_ICMP_TASK_TICK_RATE             33
 
 
 /*** HTTP NET Configuration ***/
@@ -390,7 +385,7 @@ extern "C" {
 #define TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT 			10
 #define TCPIP_IPV6_TASK_PROCESS_RATE 					1000
 #define TCPIP_IPV6_INIT_TASK_PROCESS_RATE 				32
-#define TCPIP_IPV6_ULA_GENERATE_ENABLE 					false
+#define TCPIP_IPV6_ULA_GENERATE_ENABLE 					true
 #define TCPIP_IPV6_ULA_NTP_ACCESS_TMO 					12000
 #define TCPIP_IPV6_ULA_NTP_VALID_WINDOW 				1000
 #define TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT 				60
@@ -624,7 +619,6 @@ extern "C" {
 /*** Crypto Library Configuration ***/
 #define WC_NO_HARDEN
 #define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
 #define WOLFSSL_IGNORE_FILE_WARN
 
@@ -641,6 +635,7 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_AES
+#define WOLFSSL_SHA512
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3

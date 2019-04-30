@@ -44,12 +44,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _CRYPTO_SHA256_HW_H_
 #define _CRYPTO_SHA256_HW_H_
 
-#include "configuration.h"
-#include "sha256.h"
 
 #if defined(CRYPTO_SHA_HW_11105)
 #include "crypt_sha_sam11105.h"
+#elif defined(CRYPTO_SHA_HW_6156)
+#include "crypt_sha_sam6156.h"
 #endif
+
+#include "configuration.h"
+#include "types.h"
+
 
 typedef struct 
 {
@@ -57,6 +61,11 @@ typedef struct
     struct icm_descriptor icm_descriptor __attribute__((aligned (64)));
     uint8_t  buffer[SHA256_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
     uint32_t digest[SHA256_DIGEST_SIZE/4] __attribute__((aligned (128)));
+    uint64_t total_len;   /* number of bytes to be processed  */
+#elif defined(CRYPTO_SHA_HW_6156)
+    CRYPT_SHA_SAM6156_shaDescriptor sha_descriptor;
+    uint8_t  buffer[SHA256_BLOCK_SIZE];
+    uint32_t digest[SHA256_DIGEST_SIZE/4];
     uint64_t total_len;   /* number of bytes to be processed  */
 #endif
 }crypt_sha256_hw_descriptor;
