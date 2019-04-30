@@ -130,7 +130,7 @@ extern "C" {
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_PRINT_BUFFER_SIZE          2048
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
@@ -150,9 +150,6 @@ extern "C" {
 #define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
-
 
 
 /*** MIIM Driver Configuration ***/
@@ -178,7 +175,7 @@ extern "C" {
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING
+
 
 /* SDMMC Driver Instance 0 RTOS Configurations*/
 #define DRV_SDMMC_STACK_SIZE_IDX0                         1024
@@ -270,7 +267,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_SSI_CMD_MAX_LEN                  100
 #define TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER             13
 #define TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH     10
-#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   10
+#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   20
 #define TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE       "SSI Echo - Not Found: "
 #define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		0
 #define TCPIP_HTTP_NET_MALLOC_FUNC                     0
@@ -633,7 +630,6 @@ extern "C" {
 /*** Crypto Library Configuration ***/
 #define WC_NO_HARDEN
 #define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
 #define WOLFSSL_IGNORE_FILE_WARN
 
@@ -650,6 +646,7 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_AES
+#define WOLFSSL_SHA512
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3
