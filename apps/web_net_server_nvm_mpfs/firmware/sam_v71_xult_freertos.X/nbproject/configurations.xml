@@ -36,11 +36,19 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_hwInt.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha1_hw.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha224_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_aes_u2238.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha384_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha512_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_tdes_hw.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_tdes_sam6150.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_tdes_hwInt.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/dsa.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ed25519.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/error-crypt.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fe_operations.h</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/pic32mz-crypt.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/fips_test.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ge_operations.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/hash.h</itemPath>
@@ -466,6 +474,7 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+      <itemPath>../src/http_net_print.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
@@ -522,8 +531,10 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/random.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ripemd.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha256.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha3.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/signature.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha512.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/srp.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/tfm.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_encrypt.c</itemPath>
@@ -531,6 +542,8 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wc_port.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfevent.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/wolfmath.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md5.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/adler32.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/crc32.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/deflate.c</itemPath>
@@ -539,10 +552,7 @@
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/md5.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha256.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/sha512.c</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/crypt_sha224_sam11105.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/rsa.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc.c</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/crypto/src/ecc_fp.c</itemPath>
@@ -683,7 +693,7 @@
           <itemPath>../src/config/sam_v71_xult_freertos/freertos_hooks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="FreeRTOS" projectFiles="true">
+      <logicalFolder name="f4" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
           <logicalFolder name="f1" displayName="portable" projectFiles="true">
             <logicalFolder name="f2" displayName="GCC" projectFiles="true">
@@ -706,12 +716,52 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="osal" projectFiles="true">
+      <logicalFolder name="f3" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_v71_xult_freertos/osal/osal_freertos.c</itemPath>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
+        <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="protect" projectFiles="true">
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+        </logicalFolder>
+        <itemPath>../src/web_pages/auth.htm</itemPath>
+        <itemPath>../src/web_pages/cookies.htm</itemPath>
+        <itemPath>../src/web_pages/dynvars.htm</itemPath>
+        <itemPath>../src/web_pages/footer.htm</itemPath>
+        <itemPath>../src/web_pages/forms.htm</itemPath>
+        <itemPath>../src/web_pages/harmony.gif</itemPath>
+        <itemPath>../src/web_pages/header.htm</itemPath>
+        <itemPath>../src/web_pages/index.htm</itemPath>
+        <itemPath>../src/web_pages/leds.cgi</itemPath>
+        <itemPath>../src/web_pages/mchp.css</itemPath>
+        <itemPath>../src/web_pages/mchp.gif</itemPath>
+        <itemPath>../src/web_pages/mchp.js</itemPath>
+        <itemPath>../src/web_pages/snmp.bib</itemPath>
+        <itemPath>../src/web_pages/ssi.htm</itemPath>
+        <itemPath>../src/web_pages/status.xml</itemPath>
+        <itemPath>../src/web_pages/upload.htm</itemPath>
       </logicalFolder>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
-      <itemPath>../src/mpfs_img2_net.c</itemPath>
+      <itemPath>../src/mpfs_net_img.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
@@ -738,8 +788,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="3.0.8"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="3.0.8"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -757,8 +807,8 @@
         </subordinates>
       </compileType>
       <makeCustomizationType>
-        <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStepEnabled>true</makeCustomizationPreStepEnabled>
+        <makeCustomizationPreStep>java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /z "snmp.bib" "../src/web_pages" "../src" "mpfs_net_img.c"</makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
         <makeCustomizationPostStep></makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>

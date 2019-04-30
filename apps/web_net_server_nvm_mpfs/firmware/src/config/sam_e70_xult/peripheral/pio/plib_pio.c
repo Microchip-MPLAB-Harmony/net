@@ -44,7 +44,6 @@
 #include "plib_pio.h"
 
 
-
 /******************************************************************************
   Function:
     PIO_Initialize ( void )
@@ -254,7 +253,6 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask)
 {
     ((pio_registers_t*)port)->PIO_OER = mask;
 }
-
 
 
 
