@@ -748,7 +748,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">6CB1F91CE619A13C4D9C1A6EE579470A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E69DBA790FFFA7D4FDC622F3F5CF1011</UserChecksum>
+          <UserChecksum dnOrder="5">6CB1F91CE619A13C4D9C1A6EE579470A</UserChecksum>
         </File>
         <File dnOrder="93">
           <Type dnOrder="0">SOURCE</Type>
@@ -1731,8 +1731,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">22DE0DC3F664555672BA0604EE3C8A9D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">22DE0DC3F664555672BA0604EE3C8A9D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F794DC39DDD315CD6519BFC4E8FCE7A0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F794DC39DDD315CD6519BFC4E8FCE7A0</UserChecksum>
         </File>
         <File dnOrder="216">
           <Type dnOrder="0">HEADER</Type>
@@ -4354,7 +4354,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\2.0.3\atdf\ATSAME54P20A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

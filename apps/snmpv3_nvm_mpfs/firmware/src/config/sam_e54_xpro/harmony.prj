@@ -700,7 +700,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">6CB1F91CE619A13C4D9C1A6EE579470A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">08A4B366426D08E6F460271B5E29BCBF</UserChecksum>
+          <UserChecksum dnOrder="5">6CB1F91CE619A13C4D9C1A6EE579470A</UserChecksum>
         </File>
         <File dnOrder="87">
           <Type dnOrder="0">SOURCE</Type>

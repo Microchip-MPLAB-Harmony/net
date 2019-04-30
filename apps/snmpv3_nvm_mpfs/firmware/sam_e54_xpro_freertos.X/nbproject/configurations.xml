@@ -620,8 +620,8 @@
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/snmp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/arp.c</itemPath>
@@ -756,8 +756,16 @@
       <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
         <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f3" displayName="protect" projectFiles="true">
@@ -765,8 +773,28 @@
           <itemPath>../src/web_pages/protect/index.htm</itemPath>
           <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
           <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
         </logicalFolder>
         <itemPath>../src/web_pages/auth.htm</itemPath>
