@@ -45,117 +45,95 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef CRYPT_SHA_SAM6156_H_
 #define CRYPT_SHA_SAM6156_H_
 
+#include <stdint.h>
 
-/*------------------------------------------------------------------------------
- *         Headers
- *----------------------------------------------------------------------------*/
+typedef union {
+  struct {
+    uint8_t START : 1;
+    uint8_t : 3;
+    uint8_t FIRST : 1;
+    uint8_t : 3;
+    uint8_t SWRST : 1;
+    uint8_t : 3;
+    uint8_t WUIHV : 1;
+    uint8_t WUIEHV : 1;
+    uint8_t : 2;
+    uint16_t : 16;  
+  } s;
+  uint32_t v;
+} CRYPT_SHA_SAM6156_SHA_CR;
 
-#include "packs/ATSAMA5D27_DFP/atsama5d27.h"
-
-/* block and digest bytes per algorithm */
-#define CRYPT_SHA1_BLOCK_BYTES     64   /* 512 bits */
-#define CRYPT_SHA1_DIGEST_BYTES    20   /* 160 bits */
-
-#define CRYPT_SHA224_BLOCK_BYTES   64   /* 512 bits */
-#define CRYPT_SHA224_DIGEST_BYTES  28   /* 224 bits */
-
-#define CRYPT_SHA256_BLOCK_BYTES   64   /* 512 bits */
-#define CRYPT_SHA256_DIGEST_BYTES  32   /* 256 bits */
-
-#define CRYPT_SHA384_BLOCK_BYTES   128  /* 1024 bits */
-#define CRYPT_SHA384_DIGEST_BYTES   48  /* 384 bits */
-
-#define CRYPT_SHA512_BLOCK_BYTES   128  /* 1024 bits */
-#define CRYPT_SHA512_DIGEST_BYTES   64  /* 512 bits */
-
-/* SHA_MR Start Mode bits 1..0 */
-enum sha_start_mode {
-    SHA_MANUAL_START = 0, /* To begin processing, must set SHA_CR.START */
-    SHA_AUTO_START,       /* Processing starts as soon as correct number of 
-                             SHA_IDATARx is written. No action in the SHA_CR 
-                             is necessary. */
-    SHA_IDATAR0_START,    /* access only mode (mandatory when DMA is used) */
-};
-
-/* SHA_MR processing delay bit 4 */
-enum sha_proc_delay {
-    SHA_SHORTEST_RUNTIME = 0, /* runtime period is 72 clock cycles*/
-    SHA_LONGEST_RUNTIME       /* runtime period is 194 clock cycles
-                                 (reduces SHA bandwidth requirement and
-                                  reduces system bus overload) */
-};
-
-/* SHA_MR user initial hash values bit 5 */
-enum sha_UIHV {
-    SHA_STD_UIHV = 0, /* start algo with standard initial values per FIPS180-2*/
-    SHA_USER_UIHV     /* start algo with user initial hash values stored in IR1*/
-};
-
-/* SHA_MR User Initial or Expected Hash Value Registers bit 6 */
-enum sha_UIEHV {
-    SHA_STD_UIEHV = 0, /* use standard initial values per FIPS180-2*/
-    SHA_USER_UIEHV     /* use user initial hash values stored in IR0 */
-};
-
-/* SHA_MR Algorithm bits 11..8 */
-enum sha_algo {
-    SHA_1_ALGO = 0, 
-    SHA_256_ALGO,
-    SHA_384_ALGO,
-    SHA_512_ALGO,
-    SHA_224_ALGO,
-    HMAC_SHA_1_ALGO,
-    HMAC_SHA_256_ALGO,
-    HMAC_SHA_384_ALGO,
-    HMAC_SHA_512_ALGO,    
-    HMAC_SHA_224_ALGO     
-};
-
-/* SHA_MR Dual Input Buffer bit 16 */
-enum sha_dualbuff {
-    SHA_DUALBUFF_INACTIVE = 0, /* SHA_IDATARx and SHA_IODATARx cannot be written
-                                  during processing of previous block*/
-    SHA_DUALBUFF_ACTIVE        /* SHA_IDATARx and SHA_IODATARx can be written 
-                                  during processing of previous block when 
-                                  SMOD value = 2*/
-};
-
-/* SHA_MR Hash Check bits 25..24 */
-enum sha_hashcheck {
-    SHA_HASHCHECK_NONE = 0, /* No check */
-    SHA_HASHCHECK_EHV,      /* Check is performed with expected hash stored in 
-                               internal expected hash value registers */
-    SHA_HASHCHECK_MSG       /* Check is performed with expected hash provided 
-                               after the message */
-};
-
-/* SHA configuration */
-struct sha_descriptor
+typedef enum 
 {
-	/** SHA start mode */
-	enum sha_start_mode start_mode;
+  SHA_HW_MANUAL_START = 0,
+  SHA_HW_AUTO_START = 1,
+  SHA_HW_IDATAR0_START = 2,
+}CRYPT_SHA_SAM6156_StartModes;
 
-	/** SHA processing delay */
-	enum sha_proc_delay proc_delay;
+typedef enum 
+{
+  SHA_HW_SHA1 = 0,
+  SHA_HW_SHA256 = 1,
+  SHA_HW_SHA384 = 2,
+  SHA_HW_SHA512 = 3,
+  SHA_HW_SHA224 = 4,
+  SHA_HW_HMAC_SHA1 = 8,
+  SHA_HW_HMAC_SHA256 = 9,
+  SHA_HW_HMAC_SHA384 = 10,
+  SHA_HW_HMAC_SHA512 = 11,
+  SHA_HW_HMAC_SHA224 = 12,
+}CRYPT_SHA_SAM6156_Alogithms;
 
-	/** SHA user initial hash values */
-	enum sha_UIHV UIHV;
+typedef enum 
+{
+  SHA_HW_NO_CHECK = 0,
+  SHA_HW_CHECK_EHV = 1,
+  SHA_HW_CHECK_MESSAGE = 2,
+}CRYPT_SHA_SAM6156_HashCheck;
 
-	/** User Initial or Expected Hash Value Registers */
-	enum sha_UIEHV UIEHV;
+typedef union
+{
+  struct {
+    CRYPT_SHA_SAM6156_StartModes SMOD : 2;
+    uint8_t : 2;
+    uint8_t PROCDLY : 1;
+    uint8_t UIHV : 1;
+    uint8_t UIEHV : 1;
+    uint8_t : 1;
+    CRYPT_SHA_SAM6156_Alogithms ALGO : 4;
+    uint8_t : 4;
+    uint8_t DUALBUFF: 1;
+    uint8_t : 7;
+    CRYPT_SHA_SAM6156_HashCheck CHECK : 2;
+    uint8_t : 2;
+    uint8_t CHKCNT : 4;
+  } s;
+  uint32_t v;  
+}CRYPT_SHA_SAM6156_SHA_MR;
 
-	/** Algorithm */
-	enum sha_algo algo;
+typedef union
+{
+  struct {
+    uint8_t DATRDY : 1;
+    uint8_t : 7;
+    uint8_t URAD : 1;
+    uint8_t : 7;
+    uint8_t CHECKF : 1;
+    uint8_t : 7;
+    uint8_t : 8;
+  } s;
+  uint32_t v;
+} CRYPT_SHA_SAM6156_SHA_IER;
 
-	/** Dual Input Buffer */
-	enum sha_dualbuff dualbuff;
+#define CRYPT_SHA_SAM6156_SHA_IDR CRYPT_SHA_SAM6156_SHA_IER
+#define CRYPT_SHA_SAM6156_SHA_IMR CRYPT_SHA_SAM6156_SHA_IER
+#define CRYPT_SHA_SAM6156_SHA_ISR CRYPT_SHA_SAM6156_SHA_IER
 
-	/** Hash Check */
-	enum sha_hashcheck hashcheck;
-
-	/** Check count */
-	uint16_t checkcount;
-};
+typedef struct 
+{
+  CRYPT_SHA_SAM6156_Alogithms ALGO : 4;
+} CRYPT_SHA_SAM6156_shaDescriptor;
+  
 
 
 #endif /* CRYPT_SHA_SAM6156_H_ */

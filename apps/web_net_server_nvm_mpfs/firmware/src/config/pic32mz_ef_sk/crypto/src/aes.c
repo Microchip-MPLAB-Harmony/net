@@ -62,7 +62,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(WOLFSSL_TI_CRYPT)
     #include "crypto/src/port/ti/ti-aes.c"
-#elif defined(HAVE_MICROCHIP_HARMONY3_HW_AES)
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_AES) && !defined(WOLFSSL_MICROCHIP_PIC32MZ)
 #include "crypt_aes_hw.h"
 #include "crypt_aes_hwInt.h"
 

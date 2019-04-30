@@ -78,6 +78,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         #define CYASSL_SHA384
     #endif
 	/* for fips @wc_fips */
+    #include <cyassl/ctaocrypt/sha512.h>
 #endif
 
 #ifdef __cplusplus
@@ -88,15 +89,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if !defined(HAVE_FIPS) || \
     (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2))
 
-#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
-    #include "crypto/src/crypt_sha_sam6156.h" 
-#endif
 #ifdef WOLFSSL_ASYNC_CRYPT
-    #include "crypto/src/async.h"
+    #include <wolfssl/wolfcrypt/async.h>
 #endif
-#ifdef WOLFSSL_ESP32WROOM32_CRYPT
-    #include "crypto/src/port/Espressif/esp32-crypt.h"
-#endif
+
 #if defined(_MSC_VER)
     #define SHA512_NOINLINE __declspec(noinline)
 #elif defined(__GNUC__)
@@ -132,10 +128,10 @@ enum {
 
 
 #ifdef WOLFSSL_IMX6_CAAM
-    #include "crypto/src/port/caam/wolfcaam_sha.h"
-#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512) || defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
-    #include "crypto/src/crypt_sha_hw.h"
-    #define wc_Sha512 crypt_sha_hw_descriptor
+    #include "wolfssl/wolfcrypt/port/caam/wolfcaam_sha.h"
+#elif defined(HAVE_MICROCHIP_HARMONY3_HW_SHA512)
+    #include "crypto/src/crypt_sha512_hw.h"
+    #define wc_Sha512 crypt_sha512_hw_descriptor
 #else
 /* wc_Sha512 digest */
 typedef struct wc_Sha512 {
@@ -154,10 +150,6 @@ typedef struct wc_Sha512 {
 #ifdef WOLFSSL_SMALL_STACK_CACHE
     word64* W;
 #endif
-#if defined(WOLFSSL_ESP32WROOM32_CRYPT) && \
-   !defined(NO_WOLFSSL_ESP32WROOM32_CRYPT_HASH)
-    WC_ESP32SHA ctx;
-#endif
 } wc_Sha512;
 #endif
 
@@ -166,7 +158,6 @@ typedef struct wc_Sha512 {
 #ifdef WOLFSSL_SHA512
 
 WOLFSSL_API int wc_InitSha512(wc_Sha512*);
-WOLFSSL_API int wc_InitHmacSha512(wc_Sha512*);
 WOLFSSL_API int wc_InitSha512_ex(wc_Sha512*, void*, int);
 WOLFSSL_API int wc_Sha512Update(wc_Sha512*, const byte*, word32);
 WOLFSSL_API int wc_Sha512FinalRaw(wc_Sha512*, byte*);
@@ -202,13 +193,16 @@ enum {
     WC_SHA384_DIGEST_SIZE  =   48,
     WC_SHA384_PAD_SIZE     =   WC_SHA512_PAD_SIZE
 };
-
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_SHA384)
+    #include "crypto/src/crypt_sha384_hw.h"
+    #define wc_Sha384 crypt_sha384_hw_descriptor
+#else
 
 typedef wc_Sha512 wc_Sha384;
+#endif
 #endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha384(wc_Sha384*);
-WOLFSSL_API int wc_InitHmacSha384(wc_Sha384*);
 WOLFSSL_API int wc_InitSha384_ex(wc_Sha384*, void*, int);
 WOLFSSL_API int wc_Sha384Update(wc_Sha384*, const byte*, word32);
 WOLFSSL_API int wc_Sha384FinalRaw(wc_Sha384*, byte*);

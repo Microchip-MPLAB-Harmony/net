@@ -42,14 +42,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
 //DOM-IGNORE-END
 
 
@@ -115,6 +107,11 @@ enum {
 };
 #endif
 
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_TDES) && !defined(WOLFSSL_PIC32MZ_CRYPT)
+    #include "crypto/src/crypt_tdes_hw.h"
+    #define Des crypt_tdes_hw_descriptor
+    #define Des3 crypt_tdes_hw_descriptor
+#else
 
 /* DES encryption and decryption */
 typedef struct Des {
@@ -122,6 +119,7 @@ typedef struct Des {
     word32 tmp[DES_BLOCK_SIZE / sizeof(word32)];      /* same         */
     word32 key[DES_KS_SIZE];
 } Des;
+
 
 
 /* DES3 encryption and decryption */
@@ -136,6 +134,7 @@ typedef struct Des3 {
 #endif
     void* heap;
 } Des3;
+#endif /* HAVE_MICROCHIP_HARMONY3_HW_TDES */
 #endif /* HAVE_FIPS */
 
 
@@ -150,6 +149,7 @@ WOLFSSL_API int  wc_Des_EcbEncrypt(Des* des, byte* out,
                                    const byte* in, word32 sz);
 WOLFSSL_API int wc_Des3_EcbEncrypt(Des3* des, byte* out,
                                    const byte* in, word32 sz);
+
 
 /* ECB decrypt same process as encrypt but with decrypt key */
 #define wc_Des_EcbDecrypt  wc_Des_EcbEncrypt
