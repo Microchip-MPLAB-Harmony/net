@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_SocketWriteIsReady Function</title>
+<title>NET_PRES_SocketRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01152.html" target="topic">NET_PRES_SocketWriteIsReady Function</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01152.html" target="topic">NET_PRES_SocketRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01151.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01049.html" target="topic">Next</a></div>
+<a href="01151.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01153.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketWriteIsReady@NET_PRES_SKT_HANDLE_T@uint16_t@uint16_t Topic Title: NET_PRES_SocketWriteIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRead@NET_PRES_SKT_HANDLE_T@void *@uint16_t Topic Title: NET_PRES_SocketRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_SocketWriteIsReady Function</div>
+NET_PRES_SocketRead Function</div>
 </div>
 </div>
 
@@ -49,21 +49,21 @@ NET_PRES_SocketWriteIsReady Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function calls the transport or the encryption layer's WriteIsReady, if it exists.</p></div>
+This function reads an array of data bytes from a <a href="01295.html" target="topic">socket</a>'s RX buffer/FIFO. The data is removed from the FIFO in the process. If the connection is encrypted this function calls the encryption provider's read function, otherwise it calls the transport layer's read function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">NET_PRES_SocketWriteIsReady</span></strong>(
-    <a href="01103.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
-    uint16_t <strong><span style="color: #000000">reqSize</span></strong>, 
-    uint16_t <strong><span style="color: #000000">minSize</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">NET_PRES_SocketRead</span></strong>(
+    <a href="01110.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
+    uint16_t <strong><span style="color: #000000">size</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A <a href="01288.html" target="topic">socket</a> needs to have been opened by <a href="01141.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
+A <a href="01295.html" target="topic">socket</a> needs to have been opened by <a href="01148.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,17 +82,17 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Presentation layer <a href="01288.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
+The presentation layer <a href="01295.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-reqSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Write size to check for.&nbsp;</div></td></tr><tr>
+The pointer to the array to store data that was read.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-minSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Minimum size that could be guaranteed. Could be '0' if not needed.&nbsp;</div></td></tr></table></div></div>
+The number of bytes to be read.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -100,19 +100,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The number of bytes available in the TX buffer:
-<ul class="Element633">
-<li class="Element603">&gt;= reqSize - If the requested space is available in the output buffer</li>
-<li class="Element603">&gt;= minSize - I there's at least this minimum space (minSize != 0)</li>
-<li class="Element603">0 - Requested (minimum) space cannot be granted</li>
-</ul></p></div>
+The number of bytes read from the <a href="01295.html" target="topic">socket</a>. If less than len, the RX FIFO buffer became empty or the <a href="01295.html" target="topic">socket</a> is not connected.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+For encrypted connections, a null buffer is an invalid parameter. For non encrypted connections if the supplied buffer is null, the data is simply discarded.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01152.html" target="topic">NET_PRES_SocketWriteIsReady Function</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01152.html" target="topic">NET_PRES_SocketRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -120,13 +122,13 @@ The number of bytes available in the TX buffer:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01151.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01049.html" target="topic">Next</a></div>
+<a href="01151.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01153.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketWriteIsReady@NET_PRES_SKT_HANDLE_T@uint16_t@uint16_t Topic Title: NET_PRES_SocketWriteIsReady Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRead@NET_PRES_SKT_HANDLE_T@void *@uint16_t Topic Title: NET_PRES_SocketRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

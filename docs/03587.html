@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_NetConfigSet Function</title>
+<title>TCPIP_STACK_NetAddressMac Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; f) Network Structure Storage Functions &gt; <a href="03587.html" target="topic">TCPIP_STACK_NetConfigSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; e) Network Address Status and Control Functions &gt; <a href="03587.html" target="topic">TCPIP_STACK_NetAddressMac Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03586.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="03509.html" target="topic">Next</a></div>
+<a href="03586.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="03589.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetConfigSet@void*@void*@size_t@size_t* Topic Title: TCPIP_STACK_NetConfigSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetAddressMac@TCPIP_NET_HANDLE Topic Title: TCPIP_STACK_NetAddressMac Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_NetConfigSet Function</div>
+TCPIP_STACK_NetAddressMac Function</div>
 </div>
 </div>
 
@@ -49,28 +49,19 @@ TCPIP_STACK_NetConfigSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function restores data from a previously dump buffer and updates the supplied interface configuration. All the data is recovered and constructed into the netConfigBuff (supposing this buffer is large enough). If this operation succeeded, the netConfigBuff can be safely cast to a (TCPIP_NETWORK_CONFIG*).&nbsp;</p>
-<p class="Element10">
-The structure of the netConfigBuff is as follows:
-<ul class="Element632">
-<li class="Element602">A TCPIP_NETWORK_CONFIG structure is created at the very beginning of the buffer.</li>
-<li class="Element602">All of the necessary fields that are part of the TCPIP_NETWORK_CONFIG will be placed in the buffer itself.</li>
-</ul></p></div>
+The function returns the network interface physical (MAC) address. The interface should be enabled for this function to work.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">TCPIP_NETWORK_CONFIG* <strong><span style="color: #000000">TCPIP_STACK_NetConfigSet</span></strong>(
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">configStoreBuff</span></strong>, 
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">netConfigBuff</span></strong>, 
-    size_t <strong><span style="color: #000000">buffSize</span></strong>, 
-    size_t* <strong><span style="color: #000000">pNeededSize</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">TCPIP_STACK_NetAddressMac</span></strong>(
+    <a href="03121.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The TCP/IP stack should have been initialized by <a href="03564.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03608.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY.</p></div>
+The TCP/IP stack should have been initialized by <a href="03571.html" target="topic">TCPIP_STACK_Initialize</a> and the <a href="03615.html" target="topic">TCPIP_STACK_Status</a> returned SYS_STATUS_READY. The network interface should be up and running.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -87,24 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-configStoreBuff&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-pointer to a buffer that received configuration data from a <a href="03586.html" target="topic">TCPIP_STACK_NetConfigGet</a> call.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-netConfigBuff&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to a buffer that will receive the TCPIP_NETWORK_CONFIG data&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-buffSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-size of the supplied netConfigBuff buffer&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pNeededSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to store the size needed for storage; can be NULL if not needed. If supplied, the pNeededSize will be updated with the actual size that's needed for the netConfigBuff.&nbsp;</div></td></tr></table></div></div>
+Interface handle to get the address of.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -114,8 +90,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element632">
-<li class="Element602">valid TCPIP_NETWORK_CONFIG pointer (netConfigBuff) if netConfigBuff was successfully updated</li>
-<li class="Element602">0 if the netConfigBuff is not supplied or is not large enough</li>
+<li class="Element602">Constant pointer to the MAC address</li>
+<li class="Element602">0 if no such interface</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -123,31 +99,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The function is a helper for being able to restore the configuration data. Its companion function, <a href="03586.html" target="topic">TCPIP_STACK_NetConfigGet</a>, saves the TCPIP_NETWORK_CONFIG to a dump buffer.</p></div>
+None.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"> uint8_t currConfig[200];
- uint8_t restoreBuff[200];
- size_t neededSize, result;
- <a href="03114.html" target="topic">TCPIP_NET_HANDLE</a> hNet = <a href="03592.html" target="topic">TCPIP_STACK_NetHandleGet</a>(&quot;PIC32INT&quot;);
- result = <a href="03586.html" target="topic">TCPIP_STACK_NetConfigGet</a>(hNet, currConfig, <strong><span style="color: #000080">sizeof</span></strong>(currConfig), &amp;neededSize);
- <strong><span style="color: #000080">if</span></strong>(result &gt; 0)
- {   
-      <i><span style="color: #008000">// store the currConfig buffer to some external storage (neededSize bytes needed)</span></i>
-
-      <i><span style="color: #008000">// later on restore the configuration</span></i>
-      TCPIP_NETWORK_CONFIG* netConfig;
-      <i><span style="color: #008000">// extract the network configuration from the previously saved buffer </span></i>
-      netConfig = TCPIP_STACK_NetConfigSet(currConfig, restoreBuff, <strong><span style="color: #000080">sizeof</span></strong>(restoreBuff), &amp;neededSize);
-      <strong><span style="color: #000080">if</span></strong>(netConfig)
-      {
-          <i><span style="color: #008000">// use this netConfig to initialize a network interface</span></i>
-          <a href="03605.html" target="topic">TCPIP_STACK_NetUp</a>(hNet, netConfig);
-      }
- }</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"> <a href="03121.html" target="topic">TCPIP_NET_HANDLE</a> netH = <a href="03599.html" target="topic">TCPIP_STACK_NetHandleGet</a>(&quot;PIC32INT&quot;);
+ <strong><span style="color: #000080">const</span></strong> TCPIP_MAC_ADDR* pAdd = TCPIP_STACK_NetAddressMac(netH);</pre></div></div>
 </div>
 </div>
 </div>
@@ -155,7 +114,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; f) Network Structure Storage Functions &gt; <a href="03587.html" target="topic">TCPIP_STACK_NetConfigSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; e) Network Address Status and Control Functions &gt; <a href="03587.html" target="topic">TCPIP_STACK_NetAddressMac Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -163,13 +122,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03586.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="03509.html" target="topic">Next</a></div>
+<a href="03586.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="03589.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetConfigSet@void*@void*@size_t@size_t* Topic Title: TCPIP_STACK_NetConfigSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_NetAddressMac@TCPIP_NET_HANDLE Topic Title: TCPIP_STACK_NetAddressMac Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

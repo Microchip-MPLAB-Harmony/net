@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00330.html" target="topic">DHCP Server Module</a> &gt; <a href="01419.html" target="topic">Configuring the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00331.html" target="topic">DHCP Client Module</a> &gt; <a href="01419.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01422.html" target="topic">Previous</a> | <a href="00330.html" target="topic">Up</a> | <a href="01946.html" target="topic">Next</a></div>
+<a href="01412.html" target="topic">Previous</a> | <a href="00331.html" target="topic">Up</a> | <a href="01881.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPSERVER Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCP Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -49,14 +49,12 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The configuration of the DHCP Server TCP/IP Stack is based on the file <span class="Element146"><a href="00335.html" target="topic">dhcps_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
+This section describes the Application Programming Interface (API) functions of the DHCP module.&nbsp;</p>
 <p class="Element10">
-This header file contains the configuration selection for the DHCP Server TCP/IP Stack. Based on the selections made, the DHCP Server TCP/IP Stack may support the selected features. These configuration settings will apply to all instances of the DHCP Server TCP/IP Stack.&nbsp;</p>
-<p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01310.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+Refer to each section for a detailed description.</p></div>
 </div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
+<a name="612920436F6E66696775726174696F6E2046756E6374696F6E73"></a><div class="Element14">
+a) Configuration Functions</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -72,74 +70,185 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01946.html" target="topic">TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01881.html" target="topic">TCPIP_DHCP_Enable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-These below IPv4 DHCP server address details are default address and it is assigned to the network default network interface. for Other interfaces , tcpip_stack_init.c file should be use to configure DHCP_POOL_CONFIG[]. IPv4 Address range is starting from 100, because the from 1 to 100 is reserved. Reserved Address will be used for the gateway address. Start of IP address Range , network_config.h ipaddress and this start of IP address should be in same SUBNET RECOMENDED - network_config.h ipaddress should be 192.168.1.1 if DHCP server ip address range starts from 192.168.1.100.&nbsp;</div></td></tr><tr>
+Enables the DHCP client for the specified interface.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01947.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01924.html" target="topic">TCPIP_DHCP_Renew</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-DHCP server Address per interface. DHCP server Address selection should be in the same subnet.&nbsp;</div></td></tr><tr>
+Renews the DHCP lease for the specified interface.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01948.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01925.html" target="topic">TCPIP_DHCP_Request</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-DHCP server subnet Address per interface.&nbsp;</div></td></tr><tr>
+Requests the supplied IPv4 address from a DHCP server.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01949.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01880.html" target="topic">TCPIP_DHCP_Disable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-DHCP server DNS primary Address&nbsp;</div></td></tr><tr>
+Disables the DHCP Client for the specified interface.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01950.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01900.html" target="topic">TCPIP_DHCP_HandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-DHCP server DNS Secondary Address&nbsp;</div></td></tr><tr>
+Registers a DHCP Handler.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01955.html" target="topic">TCPIP_DHCPS_LEASE_DURATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01899.html" target="topic">TCPIP_DHCP_HandlerDeRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Timeout for a solved entry in the cache, in seconds the entry will be removed if the TMO elapsed and the entry has not been referenced again&nbsp;</div></td></tr><tr>
+Deregisters a previously registered DHCP handler.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01956.html" target="topic">TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01903.html" target="topic">TCPIP_DHCP_HostNameCallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The Maximum Number of entries in the lease table Default total number of entries for all the the interface&nbsp;</div></td></tr><tr>
+Registers a DHCP host name callback with the DHCP client.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01962.html" target="topic">TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01926.html" target="topic">TCPIP_DHCP_RequestTimeoutSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Timeout for a unsolved entry , in seconds and should be removed from the entry if there is no REQUEST after OFFER&nbsp;</div></td></tr><tr>
+Sets the DHCP client request and base time-out values.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6229205374617475732046756E6374696F6E73"></a><div class="Element14">
+b) Status Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01963.html" target="topic">TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01917.html" target="topic">TCPIP_DHCP_IsEnabled</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Timeout for a solved entry in the cache, in seconds. The entry will be removed if the TMO lapsed and the entry has not been referenced again&nbsp;</div></td></tr><tr>
+Determines if the DHCP client is enabled on the specified interface.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01977.html" target="topic">TCPIP_DHCPS_TASK_PROCESS_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01918.html" target="topic">TCPIP_DHCP_IsServerDetected</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-DHCPS task processing rate, in milliseconds. The DHCPS module will process a timer event with this rate for maintaining its own queues, processing timeouts, etc. Choose it so that the other TMO are multiple of this The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03611.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr></table></div></div>
+Determines if the DHCP client on the specified interface has been able to contact a DHCP server.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01916.html" target="topic">TCPIP_DHCP_IsBound</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines if the DHCP client has an IP address lease on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01914.html" target="topic">TCPIP_DHCP_InfoGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns information about the DHCP client on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01915.html" target="topic">TCPIP_DHCP_IsActive</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines if the DHCP client is currently active on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01942.html" target="topic">TCPIP_DHCP_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+c) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01882.html" target="topic">TCPIP_DHCP_EVENT_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP event handler prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01883.html" target="topic">TCPIP_DHCP_EVENT_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP Event Type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01898.html" target="topic">TCPIP_DHCP_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP handle.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01901.html" target="topic">TCPIP_DHCP_HOST_NAME_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP Host name callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01904.html" target="topic">TCPIP_DHCP_INFO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reports DHCP module information.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01919.html" target="topic">TCPIP_DHCP_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP Module Configuration run-time parameters.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01927.html" target="topic">TCPIP_DHCP_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Lists the current status of the DHCP module.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -147,7 +256,7 @@ DHCPS task processing rate, in milliseconds. The DHCPS module will process a tim
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00330.html" target="topic">DHCP Server Module</a> &gt; <a href="01419.html" target="topic">Configuring the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00331.html" target="topic">DHCP Client Module</a> &gt; <a href="01419.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -155,13 +264,13 @@ DHCPS task processing rate, in milliseconds. The DHCPS module will process a tim
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01422.html" target="topic">Previous</a> | <a href="00330.html" target="topic">Up</a> | <a href="01946.html" target="topic">Next</a></div>
+<a href="01412.html" target="topic">Previous</a> | <a href="00331.html" target="topic">Up</a> | <a href="01881.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPSERVER Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCP Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

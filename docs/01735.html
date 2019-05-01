@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>How the Library Works</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03909.html" target="topic">UDP Module</a> &gt; <a href="01735.html" target="topic">Using the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03916.html" target="topic">UDP Module</a> &gt; <a href="01742.html" target="topic">Using the Library</a> &gt; <a href="01735.html" target="topic">How the Library Works</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01729.html" target="topic">Previous</a> | <a href="03909.html" target="topic">Up</a> | <a href="01722.html" target="topic">Next</a></div>
+<a href="01738.html" target="topic">Previous</a> | <a href="01742.html" target="topic">Up</a> | <a href="01732.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+How the Library Works</div>
 </div>
 </div>
 
@@ -49,11 +49,13 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong>Interface Header File</strong>: <span class="Element146"><a href="03910.html" target="topic">udp.h</a></span>&nbsp;</p>
+Connections over UDP should be thought of as data-gram based transfers. Each packet is a separate entity, the application should expect some packets to arrive out-of-order or even fail to reach the destination node. This is in contrast to TCP, in which the connection is thought of as a stream and network errors are automatically corrected. These tradeoffs in reliability are made for an increase in throughput. In general, UDP transfers operate two to three times faster than those made over TCP.&nbsp;</p>
 <p class="Element10">
-The interface to the UDP<span style="color: #0000FF"> </span>TCP/IP Stack library is defined in the <a href="03910.html" target="topic">udp.h</a> header file. This file is included by the <span class="Element146">tcpip.h</span> file. Any C language source (<span class="Element146">.c</span>) file that uses the UDP<span style="color: #0000FF"> </span>TCP/IP Stack library should include <span class="Element146">tcpip.h</span>.&nbsp;</p>
+UDP sockets have their own TX buffers. Once the transmit buffer has valid data it is the <a href="01295.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>user's responsibility to <a href="01195.html" target="topic">send</a> the data over the network , calling the corresponding <a href="03853.html" target="topic">TCPIP_UDP_Flush</a> function.&nbsp;</p>
 <p class="Element10">
-Please refer to the <strong>What is MPLAB Harmony?</strong> section for how the TCP/IP Stack interacts with the framework.</p></div>
+There is no state machine within the UDP module to automatically take care of the data transmission.&nbsp;</p>
+<p class="Element10">
+On the receive side, a UDP <a href="01295.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>does not have its own RX buffer; however, it will use the RX buffer that was allocated by the corresponding MAC driver for receiving a network packet. What this means is that the user of the UDP <a href="01295.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>will have to consume that pending RX data (or discard it), because eventually, the stack will run out of memory for other incoming traffic.</p></div>
 </div>
 <a name="546F70696373"></a><div class="Element14">
 Topics</div>
@@ -70,19 +72,9 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01722.html" target="topic">Abstraction Model</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01732.html" target="topic">Core Functionality</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This library provides the API of the UDP TCP/IP Module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP stack<span style="color: #0000FF">.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01731.html" target="topic">Library Overview</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the UDP module.</span> &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01728.html" target="topic">How the Library Works</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic describes how the UDP TCP/IP Stack Library works.&nbsp;</div></td></tr></table></div></div>
+This topic describes the core functionality of the UDP TCP/IP Stack Library.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +82,7 @@ This topic describes how the UDP TCP/IP Stack Library works.&nbsp;</div></td></t
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03909.html" target="topic">UDP Module</a> &gt; <a href="01735.html" target="topic">Using the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03916.html" target="topic">UDP Module</a> &gt; <a href="01742.html" target="topic">Using the Library</a> &gt; <a href="01735.html" target="topic">How the Library Works</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +90,13 @@ This topic describes how the UDP TCP/IP Stack Library works.&nbsp;</div></td></t
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01729.html" target="topic">Previous</a> | <a href="03909.html" target="topic">Up</a> | <a href="01722.html" target="topic">Next</a></div>
+<a href="01738.html" target="topic">Previous</a> | <a href="01742.html" target="topic">Up</a> | <a href="01732.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

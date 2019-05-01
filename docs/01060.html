@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_EncProviderOutputSize Type</title>
+<title>NET_PRES_EncProviderConnectionClose Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01060.html" target="topic">NET_PRES_EncProviderOutputSize Type</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01060.html" target="topic">NET_PRES_EncProviderConnectionClose Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01057.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01038.html" target="topic">Next</a></div>
+<a href="01059.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01061.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderOutputSize Topic Title: NET_PRES_EncProviderOutputSize Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderConnectionClose Topic Title: NET_PRES_EncProviderConnectionClose Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_EncProviderOutputSize Type</div>
+NET_PRES_EncProviderConnectionClose Type</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ NET_PRES_EncProviderOutputSize Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Presentation Encryption Provider Output Size Function Pointer Prototype&nbsp;</p>
+Presentation Encryption Provider Close Function Pointer Prototype&nbsp;</p>
 <p class="Element10">
-This function pointer defines the output size function. It is called by the presentation layer when the application wants to check how many bytes will be sent across the Transport layer, given a specified plaintext input size.</p></div>
+This function pointer defines the close function. It is called by the Networking Presentation Layer after a connection has been closed by the client.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> int32_t (* <strong><span style="color: #000000">NET_PRES_EncProviderOutputSize</span></strong>)(<strong><span style="color: #000080">void</span></strong> * providerData, int32_t inSize);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <a href="01073.html" target="topic">NET_PRES_EncSessionStatus</a> (* <strong><span style="color: #000000">NET_PRES_EncProviderConnectionClose</span></strong>)(<strong><span style="color: #000080">void</span></strong> * providerData);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A connection must have already been created, and be in the open state. This function must be called after the SSL/TLS handshake has been completed.</p></div>
+A connection must have already been created.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,12 +80,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 providerData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-A pointer to the buffer for the provider to keep connection specific data.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-inSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The requested plain text size to check for.&nbsp;</div></td></tr></table></div></div>
+A pointer to the buffer for the provider to keep connection specific data.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -93,11 +88,10 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Upon success, the requested size will be returned. Upon error, 0 is returned:
+
 <ul class="Element633">
-<li class="Element603">if the input size is greater than the maximum TLS fragment size </li>
-<li class="Element603">invalid function argument</li>
-<li class="Element603">if the SSL/TLS handshake has not been completed yet</li>
+<li class="Element603">NET_PRES_ENC_SS_CLOSING - Connection is closing, function must be called again to pump the close</li>
+<li class="Element603">NET_PRES_ENC_SS_CLOSED - The connection is closed and can be cleaned up</li>
 </ul></p></div>
 </div>
 </div>
@@ -105,7 +99,7 @@ Upon success, the requested size will be returned. Upon error, 0 is returned:
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01060.html" target="topic">NET_PRES_EncProviderOutputSize Type</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01060.html" target="topic">NET_PRES_EncProviderConnectionClose Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +107,13 @@ Upon success, the requested size will be returned. Upon error, 0 is returned:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01057.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01038.html" target="topic">Next</a></div>
+<a href="01059.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01061.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderOutputSize Topic Title: NET_PRES_EncProviderOutputSize Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderConnectionClose Topic Title: NET_PRES_EncProviderConnectionClose Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

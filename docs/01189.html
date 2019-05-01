@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>sendto Function</title>
+<title>recv Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01389.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="01189.html" target="topic">sendto Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01396.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="01189.html" target="topic">recv Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01188.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="01288.html" target="topic">Next</a></div>
+<a href="01007.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01190.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sendto@SOCKET@char*@int@int@struct sockaddr*@int Topic Title: sendto Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: recv@SOCKET@char*@int@int Topic Title: recv Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-sendto Function</div>
+recv Function</div>
 </div>
 </div>
 
@@ -49,24 +49,22 @@ sendto Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The sendto function is used to <a href="01188.html" target="topic">send</a> outgoing data on a <a href="01288.html" target="topic">socket</a>. The destination address is given by to and tolen. Both Datagram and stream sockets are supported.</p></div>
+The recv() function is used to receive incoming data that has been queued for a <a href="01295.html" target="topic">socket</a>. This function can be used with both datagram and stream <a href="01295.html" target="topic">socket</a>. If the available data is too large to fit in the supplied application buffer buf, excess bytes are discarded in case of <a href="01271.html" target="topic">SOCK_DGRAM</a> type sockets. For <a href="01272.html" target="topic">SOCK_STREAM</a> types, the data is buffered internally so the application can retrieve all data by multiple calls of <a href="01190.html" target="topic">recvfrom</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">sendto</span></strong>(
-    <a href="01287.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">buf</span></strong>, 
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">recv</span></strong>(
+    <a href="01294.html" target="topic">SOCKET</a> <strong><span style="color: #000000">s</span></strong>, 
+    <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">buf</span></strong>, 
     <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">len</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">flags</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="01266.html" target="topic">sockaddr</a>* <strong><span style="color: #000000">to</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">tolen</span></strong>
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">flags</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="01288.html" target="topic">socket</a> function should be called.</p></div>
+The <a href="00274.html" target="topic">connect</a> function should be called for TCP and UDP sockets. Server side, accept function should be called.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -85,32 +83,22 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 s&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-Socket descriptor returned from a previous call to <a href="01288.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+Socket descriptor returned from a previous call to <a href="01295.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 buf&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-application data buffer containing data to transmit.&nbsp;</div></td></tr><tr>
+Application data receive buffer&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-length of data in bytes.&nbsp;</div></td></tr><tr>
+Buffer length in bytes&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
 flags&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-message flags. Currently this field is not supported.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-to&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Optional pointer to the <a href="01266.html" target="topic">sockaddr</a> structure containing the destination address. If NULL, the currently bound remote port and IP address are used as the destination.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-tolen&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-length of the <a href="01266.html" target="topic">sockaddr</a> structure.&nbsp;</div></td></tr></table></div></div>
+No significance in this implementation&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -118,7 +106,15 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-On success, sendto returns number of bytes sent. In case of error returns <a href="01291.html" target="topic">SOCKET_ERROR</a> (and errno is set accordingly).</p></div>
+If the recv function is successful, the <a href="01295.html" target="topic">socket</a> is valid and it has pending data:
+<ul class="Element632">
+<li class="Element602">The supplied buffer is non NULL and has non zero length, the function will return the number of bytes copied to the application buffer.</li>
+<li class="Element602">The supplied buffer is NULL or has zero length then no data will be copied and the function will return the number of bytes pending in the <a href="01295.html" target="topic">socket</a> buffer.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+A return value of <a href="01298.html" target="topic">SOCKET_ERROR</a> (-1) indicates an error condition (and errno set accordingly). errno is set to EWOULDBLOCK if there is no data pending in the <a href="01295.html" target="topic">socket</a> buffer.&nbsp;</p>
+<p class="Element10">
+A value of zero indicates <a href="01295.html" target="topic">socket</a> has been shutdown by the peer.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -132,7 +128,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01389.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="01189.html" target="topic">sendto Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01396.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="01189.html" target="topic">recv Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -140,13 +136,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01188.html" target="topic">Previous</a> | <a href="01389.html" target="topic">Up</a> | <a href="01288.html" target="topic">Next</a></div>
+<a href="01007.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01190.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: sendto@SOCKET@char*@int@int@struct sockaddr*@int Topic Title: sendto Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: recv@SOCKET@char*@int@int Topic Title: recv Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

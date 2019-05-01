@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_SocketSignalHandlerRegister Function</title>
+<title>NET_PRES_SocketOptionsGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01149.html" target="topic">NET_PRES_SocketSignalHandlerRegister Function</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01149.html" target="topic">NET_PRES_SocketOptionsGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01148.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01150.html" target="topic">Next</a></div>
+<a href="01148.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01150.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketSignalHandlerRegister@NET_PRES_SKT_HANDLE_T@uint16_t@NET_PRES_SIGNAL_FUNCTION@void* Topic Title: NET_PRES_SocketSignalHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOptionsGet@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_OPTION_TYPE@void* Topic Title: NET_PRES_SocketOptionsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_SocketSignalHandlerRegister Function</div>
+NET_PRES_SocketOptionsGet Function</div>
 </div>
 </div>
 
@@ -49,22 +49,21 @@ NET_PRES_SocketSignalHandlerRegister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function calls the transport layer's register signal handle function directly, if it exists</p></div>
+Various options can be obtained at the <a href="01295.html" target="topic">socket</a> level. This function calls directly to the transport layer's OptionGet function, if it exists.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01092.html" target="topic">NET_PRES_SIGNAL_HANDLE</a> <strong><span style="color: #000000">NET_PRES_SocketSignalHandlerRegister</span></strong>(
-    <a href="01103.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
-    uint16_t <strong><span style="color: #000000">sigMask</span></strong>, 
-    <a href="01091.html" target="topic">NET_PRES_SIGNAL_FUNCTION</a> <strong><span style="color: #000000">handler</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">hParam</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NET_PRES_SocketOptionsGet</span></strong>(
+    <a href="01110.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
+    <a href="01111.html" target="topic">NET_PRES_SKT_OPTION_TYPE</a> <strong><span style="color: #000000">option</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">optParam</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A <a href="01288.html" target="topic">socket</a> needs to have been opened by <a href="01141.html" target="topic">NET_PRES_SocketOpen</a></p></div>
+A <a href="01295.html" target="topic">socket</a> needs to have been opened by <a href="01148.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,22 +82,17 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The presentation layer <a href="01288.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
+The <a href="01295.html" target="topic">socket</a> to set options for.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-sigMask&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+option&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The mask of signals to be reported, this parameter is passed to the transport layer directly.&nbsp;</div></td></tr><tr>
+The specific option to set, this is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-handler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+optParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-signal handler to be called when an event occurs. This parameter is passed to the transport layer directly.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Parameter to be used in the handler call. This parameter is passed to the transport layer directly.&nbsp;</div></td></tr></table></div></div>
+The option value, which is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -108,8 +102,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element633">
-<li class="Element603">valid handle - Indicates the call succeeded</li>
-<li class="Element603">null handle - Indicates the call failed (null handler, no such <a href="01288.html" target="topic">socket</a>, existent handler)</li>
+<li class="Element603">true - Indicates success</li>
+<li class="Element603">false - Indicates failure</li>
 </ul></p></div>
 </div>
 </div>
@@ -117,7 +111,7 @@ Returns</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01149.html" target="topic">NET_PRES_SocketSignalHandlerRegister Function</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01149.html" target="topic">NET_PRES_SocketOptionsGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +119,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01148.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01150.html" target="topic">Next</a></div>
+<a href="01148.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01150.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketSignalHandlerRegister@NET_PRES_SKT_HANDLE_T@uint16_t@NET_PRES_SIGNAL_FUNCTION@void* Topic Title: NET_PRES_SocketSignalHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOptionsGet@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_OPTION_TYPE@void* Topic Title: NET_PRES_SocketOptionsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
