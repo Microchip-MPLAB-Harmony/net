@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00336.html" target="topic">DHCPv6 Module</a> &gt; <a href="01438.html" target="topic">Using the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00336.html" target="topic">DHCPv6 Module</a> &gt; <a href="01438.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01434.html" target="topic">Previous</a> | <a href="00336.html" target="topic">Up</a> | <a href="01427.html" target="topic">Next</a></div>
+<a href="01441.html" target="topic">Previous</a> | <a href="00336.html" target="topic">Up</a> | <a href="01985.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,40 +49,230 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong>Interface Header File</strong>: <span class="Element146"><a href="00337.html" target="topic">dhcpv6.h</a></span>&nbsp;</p>
+The configuration of the DHCPv6 TCP/IP Stack is based on the file <span class="Element146"><a href="00338.html" target="topic">dhcpv6_config.h</a></span> with the actual symbols generated in the configuration.h.&nbsp;</p>
 <p class="Element10">
-The interface to the DHCPv6<span style="color: #0000FF"> </span>TCP/IP Stack library is defined in the <span class="Element146"><a href="00337.html" target="topic">dhcpv6.h</a></span> header file. This file is included by the <span class="Element146">tcpip.h</span> file. Any C language source (<span class="Element146">.c</span>) file that uses the DHCPv6<span style="color: #0000FF"> </span>TCP/IP Stack library should include <span class="Element146">tcpip.h</span>.&nbsp;</p>
+This header file contains the configuration parameters for the DHCPv6 TCP/IP Stack. Based on the selections made, the DHCPv6 TCP/IP Stack will adjust its behavior.&nbsp;</p>
 <p class="Element10">
-Please refer to the <strong>What is MPLAB Harmony?</strong> section for how the TCP/IP Stack interacts with the framework.</p></div>
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01317.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="35%">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<a href="01427.html" target="topic">Abstraction Model</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This library provides the API of the DHCPv6 TCP/IP Module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP stack<span style="color: #0000FF">.</span>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01436.html" target="topic">Library Overview</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01985.html" target="topic">TCPIP_DHCPV6_CLIENT_DUID_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the DHCPv6 module.</span> &nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
+Default DUID type to be used by the client&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<a href="01433.html" target="topic">How the Library Works</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02001.html" target="topic">TCPIP_DHCPV6_CLIENT_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The IPv6 Dynamic Host Configuration Protocol (DHCPv6) is a standard networking protocol used to automatically allocate IPv6 addresses for hosts in a network.<br>The DHCPv6 server has a pool of IP addresses, which are leased for clients requesting them. The leases have a limited lifetime after which the hosts need to renew the lease or acquire a new one.<br>The DHCPv6 client module in the TCP/IP stack takes care of the communication with the DHCPv6 server and renewing the lease when the lifetime expires.&nbsp;</div></td></tr></table></div></div>
+Clients <a href="01007.html" target="topic">listen</a> for DHCP messages on UDP port:&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02016.html" target="topic">TCPIP_DHCPV6_DNS_SERVERS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+number of DNS servers to store from a DHCP server reply&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02017.html" target="topic">TCPIP_DHCPV6_DOMAIN_SEARCH_LIST_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+space for the Domain Search List option - multiple of 16&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02024.html" target="topic">TCPIP_DHCPV6_FORCED_SERVER_PREFERENCE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+preference value that forces the server selection 8 bit value!&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02034.html" target="topic">TCPIP_DHCPV6_IA_FREE_DESCRIPTORS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of free IA descriptors per client&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02050.html" target="topic">TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_PREF_LTIME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default lifetimes for the solicited addresses&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02051.html" target="topic">TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_VALID_LTIME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro TCPIP_DHCPV6_IA_SOLICIT_ADDRESS_VALID_LTIME.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02077.html" target="topic">TCPIP_DHCPV6_IANA_DEFAULT_T1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default values for IANA T1, T2&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02078.html" target="topic">TCPIP_DHCPV6_IANA_DEFAULT_T2</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro TCPIP_DHCPV6_IANA_DEFAULT_T2.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02079.html" target="topic">TCPIP_DHCPV6_IANA_DESCRIPTORS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of IANA descriptors per client&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02080.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default addresses for IANA in a solicit message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02081.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_DEFAULT_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default values for the IANA Solicit addresses irrelevant if <a href="02080.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_ADDRESSES_NO</a> == 0 should be a value for each <a href="02080.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02082.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_T1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default values for IANA T1, T2 in a solicit message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02083.html" target="topic">TCPIP_DHCPV6_IANA_SOLICIT_T2</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro TCPIP_DHCPV6_IANA_SOLICIT_T2.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02084.html" target="topic">TCPIP_DHCPV6_IATA_DEFAULT_T1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default values for IATA T1, T2 If 0, the timeout will be infinite (0xffffffff)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02085.html" target="topic">TCPIP_DHCPV6_IATA_DEFAULT_T2</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro TCPIP_DHCPV6_IATA_DEFAULT_T2.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02086.html" target="topic">TCPIP_DHCPV6_IATA_DESCRIPTORS_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of IATA descriptors per client&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02087.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default addresses for IATA in a solicit message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02088.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_DEFAULT_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default values for the IANA Solicit addresses irrelevant if <a href="02087.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_ADDRESSES_NO</a> == 0 should be a value for each <a href="02087.html" target="topic">TCPIP_DHCPV6_IATA_SOLICIT_ADDRESSES_NO</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02089.html" target="topic">TCPIP_DHCPV6_MESSAGE_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default value of the buffer to assemble messages, etc.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02090.html" target="topic">TCPIP_DHCPV6_MESSAGE_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default number of buffers&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02091.html" target="topic">TCPIP_DHCPV6_MIN_UDP_TX_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+minimum size of a UDP buffer&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02110.html" target="topic">TCPIP_DHCPV6_SERVER_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Servers and relay agents <a href="01007.html" target="topic">listen</a> for DHCP messages on UDP port:&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02120.html" target="topic">TCPIP_DHCPV6_SKIP_DAD_PROCESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+defining this symbol will skip the DAD processing for DHCPv6 generated addresses&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02121.html" target="topic">TCPIP_DHCPV6_STATUS_CODE_MESSAGE_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+number of character to reserve for a server status code associated message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02123.html" target="topic">TCPIP_DHCPV6_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The DHCPv6 task processing rate: number of milliseconds to generate an DHCPv6 tick. Used by the DHCPv6 state machine The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03618.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03624.html" target="topic">TCPIP_STACK_USE_DHCPV6_CLIENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+enable IPv6 DHCP client functionality&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00014.html" target="topic">_DCHPV6_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro _DCHPV6_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +280,7 @@ The IPv6 Dynamic Host Configuration Protocol (DHCPv6) is a standard networking p
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00336.html" target="topic">DHCPv6 Module</a> &gt; <a href="01438.html" target="topic">Using the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00336.html" target="topic">DHCPv6 Module</a> &gt; <a href="01438.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +288,13 @@ The IPv6 Dynamic Host Configuration Protocol (DHCPv6) is a standard networking p
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01434.html" target="topic">Previous</a> | <a href="00336.html" target="topic">Up</a> | <a href="01427.html" target="topic">Next</a></div>
+<a href="01441.html" target="topic">Previous</a> | <a href="00336.html" target="topic">Up</a> | <a href="01985.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPv6 Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

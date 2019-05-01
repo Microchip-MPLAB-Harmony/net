@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_CurrentConnectionUserDataSet Function</title>
+<title>TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01484.html" target="topic">Library Interface</a> &gt; <a href="01481.html" target="topic">a) Functions</a> &gt; <a href="02362.html" target="topic">TCPIP_HTTP_CurrentConnectionUserDataSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01491.html" target="topic">Library Interface</a> &gt; <a href="01488.html" target="topic">a) Functions</a> &gt; <a href="02362.html" target="topic">TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02361.html" target="topic">Previous</a> | <a href="01481.html" target="topic">Up</a> | <a href="02344.html" target="topic">Next</a></div>
+<a href="02358.html" target="topic">Previous</a> | <a href="01488.html" target="topic">Up</a> | <a href="02363.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_CurrentConnectionUserDataSet@HTTP_CONN_HANDLE@void* Topic Title: TCPIP_HTTP_CurrentConnectionUserDataSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet@HTTP_CONN_HANDLE Topic Title: TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_CurrentConnectionUserDataSet Function</div>
+TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function</div>
 </div>
 </div>
 
@@ -49,13 +49,12 @@ TCPIP_HTTP_CurrentConnectionUserDataSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will set the user data value for the current HTTP connection. This data belongs to the user and is not used in any way by the HTTP server module. It is available to the user by calling <a href="02361.html" target="topic">TCPIP_HTTP_CurrentConnectionUserDataGet</a>.</p></div>
+This function will return the Current address of current connection upload buffer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_HTTP_CurrentConnectionUserDataSet</span></strong>(
-    <a href="00715.html" target="topic">HTTP_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">uData</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet</span></strong>(
+    <a href="00715.html" target="topic">HTTP_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -81,12 +80,7 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-HTTP connection handle&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-uData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-user supplied data&nbsp;</div></td></tr></table></div></div>
+HTTP connection handle&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,30 +88,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+the Current address of current connection upload buffer..</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  uint32_t myConnData;
-
-  TCPIP_HTTP_CurrentConnectionUserDataSet(connHandle, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>*)myConnData);</pre></div></div>
-</div>
+None</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01484.html" target="topic">Library Interface</a> &gt; <a href="01481.html" target="topic">a) Functions</a> &gt; <a href="02362.html" target="topic">TCPIP_HTTP_CurrentConnectionUserDataSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01491.html" target="topic">Library Interface</a> &gt; <a href="01488.html" target="topic">a) Functions</a> &gt; <a href="02362.html" target="topic">TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +110,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02361.html" target="topic">Previous</a> | <a href="01481.html" target="topic">Up</a> | <a href="02344.html" target="topic">Next</a></div>
+<a href="02358.html" target="topic">Previous</a> | <a href="01488.html" target="topic">Up</a> | <a href="02363.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_CurrentConnectionUserDataSet@HTTP_CONN_HANDLE@void* Topic Title: TCPIP_HTTP_CurrentConnectionUserDataSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet@HTTP_CONN_HANDLE Topic Title: TCPIP_HTTP_CurrentConnectionUploadBufferCurrGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

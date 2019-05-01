@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_NET_ConnectionStatusSet Function</title>
+<title>TCPIP_HTTP_NET_ConnectionPostSmSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01497.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02454.html" target="topic">TCPIP_HTTP_NET_ConnectionStatusSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01504.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02454.html" target="topic">TCPIP_HTTP_NET_ConnectionPostSmSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02451.html" target="topic">Previous</a> | <a href="01497.html" target="topic">Up</a> | <a href="02455.html" target="topic">Next</a></div>
+<a href="02450.html" target="topic">Previous</a> | <a href="01504.html" target="topic">Up</a> | <a href="02456.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionStatusSet@TCPIP_HTTP_NET_CONN_HANDLE@TCPIP_HTTP_NET_STATUS Topic Title: TCPIP_HTTP_NET_ConnectionStatusSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionPostSmSet@TCPIP_HTTP_NET_CONN_HANDLE@uint16_t Topic Title: TCPIP_HTTP_NET_ConnectionPostSmSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_NET_ConnectionStatusSet Function</div>
+TCPIP_HTTP_NET_ConnectionPostSmSet Function</div>
 </div>
 </div>
 
@@ -49,13 +49,13 @@ TCPIP_HTTP_NET_ConnectionStatusSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Allows write access to the HTTP status of the selected HTTP connection.</p></div>
+This function sets the POST state machine state for the connection defined by connHandle. This state is maintained by the HTTP connection and can be used by the user of the HTTP to maintain its own POST state machine. The values of the POST state machine have significance only for the user of the HTTP connection.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionStatusSet</span></strong>(
-    <a href="02420.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>, 
-    <a href="02580.html" target="topic">TCPIP_HTTP_NET_STATUS</a> <strong><span style="color: #000000">stat</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionPostSmSet</span></strong>(
+    <a href="02427.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>, 
+    uint16_t <strong><span style="color: #000000">state</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -84,9 +84,9 @@ connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 HTTP connection handle&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-stat&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+state&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-new <a href="02580.html" target="topic">TCPIP_HTTP_NET_STATUS</a> enumeration value.&nbsp;</div></td></tr></table></div></div>
+16 bit integer state for POST state machine&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -107,15 +107,30 @@ None.</p></div>
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  byteCount = <a href="02423.html" target="topic">TCPIP_HTTP_NET_ConnectionByteCountGet</a>(connHandle);
-  <strong><span style="color: #000080">int</span></strong> sktRxSize;
-  
-  sktRxSize = <a href="02450.html" target="topic">TCPIP_HTTP_NET_ConnectionReadBufferSize</a>(connHandle);
+<div class="Element13"><div class="Element12"><pre class="Element12">  uint8_t* httpDataBuff;
+  uint16_t httpBuffSize;
+  <strong><span style="color: #000080">#define</span></strong> SM_POST_LCD_READ_NAME   1
+  <strong><span style="color: #000080">#define</span></strong> SM_POST_LCD_READ_VALUE  2
 
-  <strong><span style="color: #000080">if</span></strong>(byteCount &gt; sktRxSize)
-  {   <i><span style="color: #008000">// Configuration Failure</span></i>
-      <i><span style="color: #008000">// 302 Redirect will be returned</span></i>
-      TCPIP_HTTP_NET_ConnectionStatusSet(connHandle, TCPIP_HTTP_NET_STAT_REDIRECT);
+  <strong><span style="color: #000080">switch</span></strong>(<a href="02453.html" target="topic">TCPIP_HTTP_NET_ConnectionPostSmGet</a>(connHandle))
+  {
+      <i><span style="color: #008000">// Find the name</span></i>
+      <strong><span style="color: #000080">case</span></strong> SM_POST_LCD_READ_NAME:
+
+          <i><span style="color: #008000">// Read a name</span></i>
+          httpBuffSize = <a href="02435.html" target="topic">TCPIP_HTTP_NET_ConnectionDataBufferSizeGet</a>(connHandle);
+          <strong><span style="color: #000080">if</span></strong>(<a href="02451.html" target="topic">TCPIP_HTTP_NET_ConnectionPostNameRead</a>(connHandle, httpDataBuff, 
+             httpBuffSize) == TCPIP_HTTP_NET_READ_INCOMPLETE)
+              <strong><span style="color: #000080">return</span></strong> TCPIP_HTTP_NET_IO_RES_NEED_DATA;
+
+          TCPIP_HTTP_NET_ConnectionPostSmSet(connHandle, SM_POST_LCD_READ_VALUE);
+          <i><span style="color: #008000">// No break...continue reading value</span></i>
+
+      <i><span style="color: #008000">// Found the value, so store the LCD and return</span></i>
+      <strong><span style="color: #000080">case</span></strong> SM_POST_LCD_READ_VALUE:
+       .
+       .
+       .
   }</pre></div></div>
 </div>
 </div>
@@ -124,7 +139,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01497.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02454.html" target="topic">TCPIP_HTTP_NET_ConnectionStatusSet Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01504.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02454.html" target="topic">TCPIP_HTTP_NET_ConnectionPostSmSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +147,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02451.html" target="topic">Previous</a> | <a href="01497.html" target="topic">Up</a> | <a href="02455.html" target="topic">Next</a></div>
+<a href="02450.html" target="topic">Previous</a> | <a href="01504.html" target="topic">Up</a> | <a href="02456.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionStatusSet@TCPIP_HTTP_NET_CONN_HANDLE@TCPIP_HTTP_NET_STATUS Topic Title: TCPIP_HTTP_NET_ConnectionStatusSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionPostSmSet@TCPIP_HTTP_NET_CONN_HANDLE@uint16_t Topic Title: TCPIP_HTTP_NET_ConnectionPostSmSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

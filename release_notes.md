@@ -1,5 +1,5 @@
 # Microchip MPLAB Harmony 3 Release Notes
-## Net Release v3.3.0 (April, 2019)
+## Net Release v3.3.0 (May, 2019)
 ### ADDITIONS AND UPDATES FOR  3.3.0:
 
 - **New part support** -This release introduces initial support for [PIC32MZEF](https://www.microchip.com/design-centers/32-bit/pic-32-bit-mcus/pic32mz-ef-family) and [PIC32MZDA](https://www.microchip.com/design-centers/32-bit/pic-32-bit-mcus/pic32mz-da-family) families of 32-bit microcontrollers.
@@ -44,7 +44,7 @@ The following table provides the list of updated utilities for the TCP/IP stack 
 
 | Module                | Description                                             |
 | ------ | ------ |
-| mpfs2.jar             | The tool has been updated to disable the default compression of html files. The new http_net web server module parses the web pages at run time. |
+| mpfs.jar              | - This tool updates and replaces the existent mpfs2.jar.<br> - The new MPFS utility version 3.3.3 is capable of parsing SSI directives. <br> - The utility is intended to be used with the HTTP_NET server. <br> - It generates the http_net_print.h and http_net_print.c files. <br> - HTTP_Net Application initialization and HTTP registration are now part of http_net_print.c file. <br> - The tool has been updated to disable the default compression of html files. <br> - When the application Custom Template is enabled, the Web pages are added to the project. <br> - The Source directory path is the source of the web page files. <br> - The Destination directory path is the location where the web page files will be copied. <br> - The Destination location is not currently configurable. <br> - The maximum number of supported web page files is currently 100. <br> - The NVM MPFS demos use a customized pre-build step to generate the mpfs_net_img.c file: <br> java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /z "snmp.bib" "../src/web_pages" "../src" "mpfs_net_img.c" <br> - If there is no JRE installed on the building machine, the project will not build. The pre-build step needs to be disabled manually|
 
 - **Bug Fixes**
 

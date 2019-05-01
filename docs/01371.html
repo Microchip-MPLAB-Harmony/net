@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Library</title>
+<title>Discovering the Board</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00263.html" target="topic">ARP Module</a> &gt; <a href="01371.html" target="topic">Building the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01376.html" target="topic">Using the Library</a> &gt; <a href="01371.html" target="topic">Discovering the Board</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01839.html" target="topic">Previous</a> | <a href="00263.html" target="topic">Up</a> | <a href="01379.html" target="topic">Next</a></div>
+<a href="01367.html" target="topic">Previous</a> | <a href="01376.html" target="topic">Up</a> | <a href="01369.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ARP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Discovering the Board Topic Title: Discovering the Board)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Library</div>
+Discovering the Board</div>
 </div>
 </div>
 
@@ -49,72 +49,52 @@ Building the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/tcpip</span>.</p><div class="Element15">
-Interface File(s)</div>
-<p class="Element10">
-This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="32%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="32%">
-<div class="Element68">
-<span class="Element146">/tcpip.h</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
-<div class="Element68">
-Header file that includes all of the TCP/IP modules.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Required File(s)</div>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="48%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="48%">
-<div class="Element68">
-<span class="Element146">/src/arp.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
-<div class="Element68">
-ARP implementation file.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Optional File(s)</div>
-<p class="Element10">
-This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="24%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Module Dependencies</div>
-<p class="Element10">
-The ARP module depends on the following modules:
+The Announce module provides an easy way to determine useful parameters for your TCP/IP node’s interfaces. This module works in conjunction with the TCP/IP Discoverer personal computer utility to display an interface’s MAC and IPv4/IPv6 addresses, IPv6 multicast listeners, NBNS host name, and MAC type. During stack operation several events may cause an Announce packet to be broadcast on a particular interface. These include:
+<ul class="Element632">
+<li class="Element602">Reception of an Announce packet request on that interface</li>
+<li class="Element602">A DHCP event on that interface (i.e., the interface has configured a new IPv4 address using DHCP)</li>
+<li class="Element602">The addition or removal of an IPv6 Unicast Address from an interface (after Duplicate Address Detection)</li>
+<li class="Element602">The addition or removal of an IPv6 Multicast Listener from an interface</li>
+<li class="Element602">A user call to the ANNOUNCE_Notify function specifying the interface on which to <a href="01195.html" target="topic">send</a> the announce message</li>
+</ul>Each Announce packet is a UDP packet broadcast from the corresponding interface’s IP address. The payload is a series of fields beginning with an 8-bit field ID, followed by field information, followed by a field terminator (0x0D 0x0A). The current field IDs and information formats are:
+<ul class="Element632">
+<li class="Element602">0x01 – This field ID indicates that not all of the interface’s address information could be transmitted in one packet. There is no field information for this ID.
 <ul class="Element633">
-<li class="Element603"><a href="01003.html" target="topic">TCP/IP Stack Library</a></li>
+<li class="Element603">0x01 0x0A 0x0D</li>
+</ul></li>
+<li class="Element602">0x02 – MAC address (6 bytes).
+<ul class="Element633">
+<li class="Element603">0x02 0x00 0x04 0xA3 0x12 0x0f 0x94 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x03 – MAC type. The field information for this ID is a variable length string describing the MAC type of this interface – &quot;ENCJ60&quot;, &quot;ENCJ600&quot;, &quot;97J60&quot;, &quot;PIC32INT&quot;, &quot;PIC32CINT&quot;, etc.
+<ul class="Element633">
+<li class="Element603">0x03 ‘P’ ‘I’ ‘C’ ‘3’ ‘2’ ‘I’ ‘N’ ‘T’ 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x04 – Host name. The NBNS host name of the interface, with trailing spaces.
+<ul class="Element633">
+<li class="Element603">0x04 ‘M’ ‘C’ ‘H’ ‘P’ ‘B’ ‘O’ ‘A’ ‘R’ ‘D’ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ ‘ 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x05 – The interface’s IPv4 address (4 bytes, big-endian).
+<ul class="Element633">
+<li class="Element603">0x05 0x0A 0x00 0x01 0x03 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x06 – One of the interface's IPv6 unicast addresses (16 bytes, big-endian). Note that the interface may have more than one of these. The interface also has a corresponding solicited-node multicast address listener for every unicast address that is given. The interface may have static IP address.
+<ul class="Element633">
+<li class="Element603">0x06 0xFE 0x80 0x00 0x00 0x00 0x00 0x00 0x00 0x02 0x04 0xA3 0xFF 0xFE 0x12 0x0F 0x94 0x0D 0x0A</li>
+<li class="Element603">0x06 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x02 0x04 0xA3 0xFF 0xAA 0xAA 0xAA 0xAA 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x07 – One of the interface’s IPv6 multicast address listeners (16 bytes, big-endian). The solicited-node multicast address listeners will not be included.
+<ul class="Element633">
+<li class="Element603">0x07 0xFF 0x02 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x08 – One of the interface's IPv6 default router address (16 bytes, big-endian).
+<ul class="Element633">
+<li class="Element603">0x08 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</li>
+</ul></li>
+<li class="Element602">0x09 – One of the interface's IPv6 default gateway address (16 bytes, big-endian).
+<ul class="Element633">
+<li class="Element603">0x08 0xFD 0xFE 0xDC 0xDA 0x98 0x76 0x00 0x01 0x00 0x00 0x00 0x00 0x00 0x00 0x00 0x01 0x0D 0x0A</li>
+</ul></li>
 </ul></p></div>
 </div>
 </div>
@@ -122,7 +102,7 @@ The ARP module depends on the following modules:
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00263.html" target="topic">ARP Module</a> &gt; <a href="01371.html" target="topic">Building the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01376.html" target="topic">Using the Library</a> &gt; <a href="01371.html" target="topic">Discovering the Board</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,13 +110,13 @@ The ARP module depends on the following modules:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01561.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01839.html" target="topic">Previous</a> | <a href="00263.html" target="topic">Up</a> | <a href="01379.html" target="topic">Next</a></div>
+<a href="01367.html" target="topic">Previous</a> | <a href="01376.html" target="topic">Up</a> | <a href="01369.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ARP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Discovering the Board Topic Title: Discovering the Board)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
