@@ -162,27 +162,27 @@ This topic lists the contents of this release and identifies each module.
 This table lists the contents of this release, including a brief description, and the release type (Alpha, Beta, Production, or Vendor).
 
 
-| Folder                                | Description                                                          | Release Type |
-| --- | --- | --- |
-| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        | Beta |
-| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        | Beta |
-| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        | Beta |
-| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         | Beta |
-| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        | Beta |
-| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  | Beta |
-| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          | Beta |
-| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    | Beta |
-| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             | Beta |
-| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  | Beta |
-| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             | Beta |
-| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             | Beta |
-| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  | Beta |
-| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             | Beta |
-| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               | Beta |
-| net/apps/web_net_server_qspi_mpfs     | Web server with MPFS file system on the onboard QSPI Flash Memory    | Beta |
-| net/apps/web_net_server_sdcard_fatfs  | Web server with FAT FS file system on the external SD card           | Beta |
-| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     | Beta |
-| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card | Beta |
+| Folder                                | Description                                                          | 
+| --- | --- | 
+| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        |
+| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        |
+| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        |
+| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         |
+| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        |
+| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  |
+| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          |
+| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    |
+| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             |
+| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  |
+| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             |
+| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             |
+| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  |
+| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             |
+| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               |
+| net/apps/web_net_server_qspi_mpfs     | Web server with MPFS file system on the onboard QSPI Flash Memory    |
+| net/apps/web_net_server_sdcard_fatfs  | Web server with FAT FS file system on the external SD card           |
+| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     |
+| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card |
 
 
 ## Net Release v3.2.0 (March, 2019)
