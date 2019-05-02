@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_TCP_ClientOpen Function</title>
+<title>TCPIP_STACK_VersionStrGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01306.html" target="topic">TCP Module</a> &gt; <a href="01684.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03653.html" target="topic">TCPIP_TCP_ClientOpen Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03653.html" target="topic">TCPIP_STACK_VersionStrGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03692.html" target="topic">Previous</a> | <a href="01684.html" target="topic">Up</a> | <a href="03654.html" target="topic">Next</a></div>
+<a href="03652.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="03617.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ClientOpen@IP_ADDRESS_TYPE@TCP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_TCP_ClientOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_VersionStrGet@SYS_MODULE_INDEX Topic Title: TCPIP_STACK_VersionStrGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_TCP_ClientOpen Function</div>
+TCPIP_STACK_VersionStrGet Function</div>
 </div>
 </div>
 
@@ -49,23 +49,19 @@ TCPIP_TCP_ClientOpen Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Provides a unified method for opening TCP client sockets.&nbsp;</p>
-<p class="Element10">
-Sockets are created at the TCP module initialization, and can be claimed with this function and freed using <a href="03646.html" target="topic">TCPIP_TCP_Abort</a> or <a href="03654.html" target="topic">TCPIP_TCP_Close</a>.</p></div>
+This function gets the TCP/IP stack version. The version is returned as major.minor.path[type], where type is optional. The numerical version can be obtained using <a href="03652.html" target="topic">TCPIP_STACK_VersionGet</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="01333.html" target="topic">TCP_SOCKET</a> <strong><span style="color: #000000">TCPIP_TCP_ClientOpen</span></strong>(
-    IP_ADDRESS_TYPE <strong><span style="color: #000000">addType</span></strong>, 
-    <a href="01332.html" target="topic">TCP_PORT</a> <strong><span style="color: #000000">remotePort</span></strong>, 
-    IP_MULTI_ADDRESS* <strong><span style="color: #000000">remoteAddress</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">TCPIP_STACK_VersionStrGet</span></strong>(
+    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX <strong><span style="color: #000000">index</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCP is initialized.</p></div>
+None.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -82,19 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-IP_ADDRESS_TYPE addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+index&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The type of address being used. Example: IP_ADDRESS_TYPE_IPV4.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-TCP_PORT remotePort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-TCP port to <a href="00274.html" target="topic">connect</a> to. The local port for client sockets will be automatically picked by the TCP module.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-IP_MULTI_ADDRESS* remoteAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The remote address to be used. If 0 then the address is unspecified&nbsp;</div></td></tr></table></div></div>
+Identifier for the object instance to get the version for.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -102,29 +88,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element632">
-<li class="Element602"><a href="00827.html" target="topic">INVALID_SOCKET</a> - No sockets of the specified type were available to be opened</li>
-<li class="Element602"><a href="01333.html" target="topic">TCP_SOCKET</a> handle - Save this handle and use it when calling all other TCP APIs</li>
-</ul></p></div>
+Current TCP/IP stack version in the string format.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-IP_ADDRESS_TYPE_ANY is not supported (not a valid type for client open)!&nbsp;</p>
-<p class="Element10">
-If the remoteAddress != 0 (and the address pointed by remoteAddress != 0) then the <a href="01287.html" target="topic">socket</a> will immediately initiate a connection to the remote host&nbsp;</p>
-<p class="Element10">
-If the remoteAddress is unspecified, no connection is initiated. Client <a href="01287.html" target="topic">socket</a> parameters can be set using <a href="03652.html" target="topic">TCPIP_TCP_Bind</a>, <a href="03691.html" target="topic">TCPIP_TCP_RemoteBind</a>, etc. calls and then connection initiated by calling <a href="03657.html" target="topic">TCPIP_TCP_Connect</a>.</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01306.html" target="topic">TCP Module</a> &gt; <a href="01684.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03653.html" target="topic">TCPIP_TCP_ClientOpen Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; b) Task and Initialize Functions &gt; <a href="03653.html" target="topic">TCPIP_STACK_VersionStrGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +110,13 @@ If the remoteAddress is unspecified, no connection is initiated. Client <a href=
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03692.html" target="topic">Previous</a> | <a href="01684.html" target="topic">Up</a> | <a href="03654.html" target="topic">Next</a></div>
+<a href="03652.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="03617.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_ClientOpen@IP_ADDRESS_TYPE@TCP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_TCP_ClientOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_VersionStrGet@SYS_MODULE_INDEX Topic Title: TCPIP_STACK_VersionStrGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

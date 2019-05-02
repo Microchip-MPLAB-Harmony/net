@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_IPV4_PacketGetDestAddress Function</title>
+<title>TCPIP_IPV4_PACKET_PARAMS Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01547.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02757.html" target="topic">TCPIP_IPV4_PacketGetDestAddress Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01555.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02757.html" target="topic">TCPIP_IPV4_PACKET_PARAMS Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01547.html" target="topic">Previous</a> | <a href="01547.html" target="topic">Up</a> | <a href="02758.html" target="topic">Next</a></div>
+<a href="02754.html" target="topic">Previous</a> | <a href="01555.html" target="topic">Up</a> | <a href="00004.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_PacketGetDestAddress@TCPIP_MAC_PACKET* Topic Title: TCPIP_IPV4_PacketGetDestAddress Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_PACKET_PARAMS Topic Title: TCPIP_IPV4_PACKET_PARAMS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_IPV4_PacketGetDestAddress Function</div>
+TCPIP_IPV4_PACKET_PARAMS Structure</div>
 </div>
 </div>
 
@@ -49,64 +49,60 @@ TCPIP_IPV4_PacketGetDestAddress Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The function will return a pointer to where the IPv4 destination address is located in the <a href="02882.html" target="topic">TCPIP_MAC_PACKET</a>. The <a href="02882.html" target="topic">TCPIP_MAC_PACKET</a> is supposed to be a valid IPv4 packet that has destination address properly set.</p></div>
+IPv4 packet parameters&nbsp;</p>
+<p class="Element10">
+This is the structure describing parameters that can be specified for the formatting of an IPv4 packet for transmission.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000000">TCPIP_IPV4_PacketGetDestAddress</span></strong>(
-    <a href="02882.html" target="topic">TCPIP_MAC_PACKET</a>* <strong><span style="color: #000000">pPkt</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  TCPIP_IPV4_TOS_FLAGS <strong><span style="color: #000000">tosFlags</span></strong>;
+  uint8_t <strong><span style="color: #000000">ttl</span></strong>;
+  uint8_t <strong><span style="color: #000000">df</span></strong>;
+} TCPIP_IPV4_PACKET_PARAMS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-pPkt - valid IPv4 packet, pNetLayer filed properly set.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pPkt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-packet to query&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_IPV4_TOS_FLAGS tosFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Type Of Service specification A value of 0 means TCPIP_IPV4_TOS_DEFAULT&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t ttl;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Time to Live. 0 means default&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint8_t df;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Don't Fragment - boolean. 0 means default: fragmentation allowed&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element631">
-<li class="Element601">A valid pointer to an IPV4_ADDR - if it succeeds</li>
-<li class="Element601">0 - if call failed</li>
-</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is primarily meant for RX packets.</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01547.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02757.html" target="topic">TCPIP_IPV4_PacketGetDestAddress Function</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00848.html" target="topic">IPv4 Module</a> &gt; <a href="01555.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02757.html" target="topic">TCPIP_IPV4_PACKET_PARAMS Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,13 +110,13 @@ This function is primarily meant for RX packets.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01547.html" target="topic">Previous</a> | <a href="01547.html" target="topic">Up</a> | <a href="02758.html" target="topic">Next</a></div>
+<a href="02754.html" target="topic">Previous</a> | <a href="01555.html" target="topic">Up</a> | <a href="00004.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_PacketGetDestAddress@TCPIP_MAC_PACKET* Topic Title: TCPIP_IPV4_PacketGetDestAddress Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_PACKET_PARAMS Topic Title: TCPIP_IPV4_PACKET_PARAMS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

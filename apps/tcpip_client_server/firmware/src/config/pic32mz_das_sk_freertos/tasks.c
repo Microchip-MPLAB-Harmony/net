@@ -58,6 +58,7 @@
 // Section: RTOS "Tasks" Routine
 // *****************************************************************************
 // *****************************************************************************
+
 void _TCPIP_STACK_Task(  void *pvParameters  )
 {
     while(1)
@@ -122,6 +123,7 @@ void _APP4_Tasks(  void *pvParameters  )
         vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
+
 
 void _DRV_MIIM_Task(  void *pvParameters  )
 {

@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00382.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00592.html" target="topic">DRV_GMAC_Process Function</a></div>
+<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00382.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00592.html" target="topic">DRV_GMAC_Process Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,7 +26,7 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00591.html" target="topic">Previous</a> | <a href="00382.html" target="topic">Up</a> | <a href="00593.html" target="topic">Next</a></div>
@@ -51,11 +51,11 @@ DRV_GMAC_Process Function</div>
 <p class="Element10">
 This is a function that allows for internal processing by the MAC driver. It is meant for processing that cannot be done from within ISR.&nbsp;</p>
 <p class="Element10">
-Normally this function will be called in response to an TX and/or RX event signaled by the driver. This is specified by the MAC driver at initialization time using <a href="02864.html" target="topic">TCPIP_MAC_MODULE_CTRL</a>.</p></div>
+Normally this function will be called in response to an TX and/or RX event signaled by the driver. This is specified by the MAC driver at initialization time using <a href="02872.html" target="topic">TCPIP_MAC_MODULE_CTRL</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02965.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">DRV_GMAC_Process</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02973.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">DRV_GMAC_Process</span></strong>(
     DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
@@ -91,9 +91,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">TCPIP_MAC_RES_OK if all processing went on OK</li>
-<li class="Element602">a <a href="02965.html" target="topic">TCPIP_MAC_RES</a> error code if processing failed for some reason</li>
+<ul class="Element633">
+<li class="Element603">TCPIP_MAC_RES_OK if all processing went on OK</li>
+<li class="Element603">a <a href="02973.html" target="topic">TCPIP_MAC_RES</a> error code if processing failed for some reason</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -102,11 +102,11 @@ Remarks</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">The MAC driver may use the DRV_GMAC_Process() for:
 <ul class="Element633">
-<li class="Element603">Processing its pending TX queues</li>
-<li class="Element603">RX buffers replenishing functionality. If the number of packets in the RX queue falls below a specified limit, the MAC driver may use this function to allocate some extra RX packets. Similarly, if there are too many allocated RX packets, the MAC driver can free some of them.</li>
+<li class="Element603">The MAC driver may use the DRV_GMAC_Process() for:
+<ul class="Element634">
+<li class="Element604">Processing its pending TX queues</li>
+<li class="Element604">RX buffers replenishing functionality. If the number of packets in the RX queue falls below a specified limit, the MAC driver may use this function to allocate some extra RX packets. Similarly, if there are too many allocated RX packets, the MAC driver can free some of them.</li>
 </ul></li>
 </ul></p></div>
 </div>
@@ -122,7 +122,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01459.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00382.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00592.html" target="topic">DRV_GMAC_Process Function</a></div>
+<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00382.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00592.html" target="topic">DRV_GMAC_Process Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -130,7 +130,7 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00591.html" target="topic">Previous</a> | <a href="00382.html" target="topic">Up</a> | <a href="00593.html" target="topic">Next</a></div>

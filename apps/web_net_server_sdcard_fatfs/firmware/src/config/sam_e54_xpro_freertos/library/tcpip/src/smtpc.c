@@ -1930,10 +1930,20 @@ static TCPIP_SMTPC_STATUS smtpDcptRxProcEhlo(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, co
     }
 
     // start TLS?
+    bool doTls = false;
     if(pDcpt->currStat == TCPIP_SMTPC_STAT_EHLO_PLAIN_WAIT && (pDcpt->smtpMailMessage.messageFlags & TCPIP_SMTPC_MAIL_FLAG_SKIP_TLS) == 0) 
     {
         if((pDcpt->smtpMailMessage.messageFlags & TCPIP_SMTPC_MAIL_FLAG_FORCE_TLS) != 0 || (pDcpt->dcptFlags & TCPIP_SMTPC_SERVER_FLAG_TLS) != 0)
-        {   // start TLS
+        {   // either TLS is forced or the server expects it
+            doTls = true;
+        }
+    }
+
+    if(doTls)
+    {
+        bool tlsSupported = NET_PRES_SocketIsOpenModeSupported(0, NET_PRES_SKT_ENCRYPTED_STREAM_CLIENT);
+        if(tlsSupported)
+        {
             return TCPIP_SMTPC_STAT_TLS_START;
         } 
     }

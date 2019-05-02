@@ -236,17 +236,11 @@ public class MainMPFS extends javax.swing.JFrame {
         }
 
         initComponents();
-        radUnifiedStackuse.setVisible(true);
-        radUnifiedStackuse.setEnabled(false);
-        radUnifiedStackuse.setFocusable(false);
         jProgressBar1.setIndeterminate(false);
         this.setIconImage(icon.getImage());
-
-        if(radUnifiedStackuse.isSelected())
-        {
-            radC18C32.setText("PIC32 Image");
-            txtProjectImageName.setText("mpfs_img2");
-        }
+        radC18C32.setText("PIC32 Image");
+        txtProjectImageName.setText("mpfs_net_img");
+       
         this.setSize(638,520);
 
         //advSetting = new AdvanceSettings(new JFrame(),true,this);
@@ -255,8 +249,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Apr,2 2019"+"<br>";
-        String version = "Version MPFS 3.3.0";
+        aboutStr = "<html>"+"Date Apr,29 2019"+"<br>";
+        String version = "Version MPFS 3.3.2";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
@@ -491,10 +485,7 @@ public class MainMPFS extends javax.swing.JFrame {
         lblProcess = new javax.swing.JLabel();
         radBin = new javax.swing.JRadioButton();
         radC18C32 = new javax.swing.JRadioButton();
-        radAsm = new javax.swing.JRadioButton();
-        radMdd = new javax.swing.JRadioButton();
         btnAdvSetting = new javax.swing.JButton();
-        radUnifiedStackuse = new javax.swing.JRadioButton();
         jPanel4 = new javax.swing.JPanel();
         groupLbl4 = new javax.swing.JLabel();
         lblUploadImg = new javax.swing.JLabel();
@@ -603,7 +594,7 @@ public class MainMPFS extends javax.swing.JFrame {
         jPanel3.add(lblProjectImg, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 70, -1, -1));
 
         txtProjectImageName.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 11)); // NOI18N
-        txtProjectImageName.setText("MPFSImg2");
+        txtProjectImageName.setText("mpfs_net_img");
         txtProjectImageName.setToolTipText("File name for the image you'd like to create.");
         txtProjectImageName.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -647,7 +638,7 @@ public class MainMPFS extends javax.swing.JFrame {
                 radBinActionPerformed(evt);
             }
         });
-        jPanel2.add(radBin, new org.netbeans.lib.awtextra.AbsoluteConstraints(150, 30, -1, -1));
+        jPanel2.add(radBin, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, -1, -1));
 
         processOpnButGrp.add(radC18C32);
         radC18C32.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 11)); // NOI18N
@@ -660,30 +651,7 @@ public class MainMPFS extends javax.swing.JFrame {
                 radC18C32ActionPerformed(evt);
             }
         });
-        jPanel2.add(radC18C32, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 30, -1, -1));
-
-        processOpnButGrp.add(radAsm);
-        radAsm.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 11)); // NOI18N
-        radAsm.setText("PIC24/dsPIC Image");
-        radAsm.setToolTipText("Output an image compatible with 16-bit parts to be stored in internal Flash program memory.  Remember to add the generated .S file to your project.");
-        radAsm.setName("radASM30Image"); // NOI18N
-        radAsm.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radAsmActionPerformed(evt);
-            }
-        });
-        jPanel2.add(radAsm, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 30, -1, -1));
-
-        processOpnButGrp.add(radMdd);
-        radMdd.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 11)); // NOI18N
-        radMdd.setText("MDD");
-        radMdd.setToolTipText("Use this option to store pages on drive using MDD file system.");
-        radMdd.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radMddActionPerformed(evt);
-            }
-        });
-        jPanel2.add(radMdd, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 30, -1, -1));
+        jPanel2.add(radC18C32, new org.netbeans.lib.awtextra.AbsoluteConstraints(440, 30, -1, -1));
 
         btnAdvSetting.setFont(new java.awt.Font("Microsoft Sans Serif", 0, 14)); // NOI18N
         btnAdvSetting.setText("Advanced Settings");
@@ -692,17 +660,7 @@ public class MainMPFS extends javax.swing.JFrame {
                 btnAdvSettingActionPerformed(evt);
             }
         });
-        jPanel2.add(btnAdvSetting, new org.netbeans.lib.awtextra.AbsoluteConstraints(182, 58, 157, -1));
-
-        radUnifiedStackuse.setSelected(true);
-        radUnifiedStackuse.setText("V7 Stack Use");
-        radUnifiedStackuse.setToolTipText("");
-        radUnifiedStackuse.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                radUnifiedStackuseActionPerformed(evt);
-            }
-        });
-        jPanel2.add(radUnifiedStackuse, new org.netbeans.lib.awtextra.AbsoluteConstraints(370, 60, -1, -1));
+        jPanel2.add(btnAdvSetting, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 60, 157, -1));
 
         jPanel4.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Upload Settings", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.TOP, new java.awt.Font("Microsoft Sans Serif", 1, 11))); // NOI18N
         jPanel4.setFont(new java.awt.Font("MS Reference Sans Serif", 0, 11)); // NOI18N
@@ -815,7 +773,7 @@ public class MainMPFS extends javax.swing.JFrame {
     private void btnGenAndUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenAndUploadActionPerformed
         // TODO add your handling code here:
 
-        final MPFS2Lib builder = new MPFS2Lib(radUnifiedStackuse.isSelected());
+        final MPFS2Lib builder = new MPFS2Lib(true);
         MPFS2Lib.MPFSClassicBuilder classicBuilder = null;
 
         //AdvanceSettings settings;
@@ -828,15 +786,7 @@ public class MainMPFS extends javax.swing.JFrame {
             builder.DynamicTypes(advSetting.getDynamicFileStr());
             builder.NonGZipTypes(advSetting.getNoCompressionFileStr());
             lblMessage.setText("Adding source files to image...");
-            builder.AddDirectory(TextSrcDir.getText());
-            if(radUnifiedStackuse.isSelected())
-            {
-                if(builder.getnumberOfDynamicRecordFiles()> 0)
-                {
-                    builder.MDDWriter(TextSrcDir.getText());
-                }
-                builder.AddDirectory(TextSrcDir.getText());
-            }
+            builder.AddDirectory(TextSrcDir.getText());            
         }
         else
         {
@@ -864,15 +814,7 @@ public class MainMPFS extends javax.swing.JFrame {
             else if (radC18C32.isSelected())
             {
                 generationResult = builder.Generate(MPFS2Lib.MPFSOutputFormat.C18);
-            }
-            else if (radAsm.isSelected())
-            {
-                generationResult = builder.Generate(MPFS2Lib.MPFSOutputFormat.ASM30);
-            }
-            else if (radMdd.isSelected())
-            {
-                generationResult = builder.Generate(MPFS2Lib.MPFSOutputFormat.MDD);
-            }
+            }           
         }
         else
         {
@@ -883,15 +825,7 @@ public class MainMPFS extends javax.swing.JFrame {
             else if (radC18C32.isSelected())
             {
                 generationResult = classicBuilder.Generate(MPFS2Lib.MPFSOutputFormat.C18);
-            }
-            else if (radAsm.isSelected())
-            {
-                generationResult = classicBuilder.Generate(MPFS2Lib.MPFSOutputFormat.ASM30);
-            }
-            else if (radMdd.isSelected())
-            {
-                generationResult = classicBuilder.Generate(MPFS2Lib.MPFSOutputFormat.MDD);
-            }
+            }           
         }
         jProgressBar1.setIndeterminate(false);
 
@@ -934,10 +868,10 @@ public class MainMPFS extends javax.swing.JFrame {
         // Show a warning if index has changed
         if (builder.indexUpdated)
         {
-            JOptionPane.showMessageDialog(null,"The dynamic variables in your web pages have changed!\n\n" +
+            JOptionPane.showMessageDialog(null,"The dynamic variables or file in your web pages have changed!\n\n" +
                             "Remember to recompile your MPLAB project before continuing\n" +
                             "to ensure that the project is in sync.",
-                            "MPFS2 Warning", JOptionPane.INFORMATION_MESSAGE);
+                            "MPFS Warning", JOptionPane.INFORMATION_MESSAGE);
         }// This is just an upload
         }
         else
@@ -1342,55 +1276,14 @@ public class MainMPFS extends javax.swing.JFrame {
         lblProjectImg.setVisible(true);
         txtProjectImageName.setVisible(true);
         lbnImageType.setVisible(true);
-         this.setSize(638, 420);
-         radPreBuildDir.setEnabled(true);
-         btnAdvSetting.setEnabled(true);
-         btnAdvSetting.setFocusable(true);
-         saveXmlNodeValue(eXmlNodeAttribute.OUTPUT_IMAGE_FORMAT_RAD_BOTTON,null,1,true);
-
-         if(radUnifiedStackuse.isSelected())
-         {
-             txtProjectImageName.setText("mpfs_img2");
-             saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-         }
-         else
-         {
-             saveXmlNodeValue(eXmlNodeAttribute.UNIFIEDSTACK_USE,null,1,false);
-             txtProjectImageName.setText("MPFSImg2");
-             saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-         }
-    }//GEN-LAST:event_radC18C32ActionPerformed
-
-    private void radAsmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radAsmActionPerformed
-        // TODO add your handling code here:
-         lbnImageType.setText("[.s]");
-         jPanel4.setVisible(false);
-         btnGenAndUpload.setText("Generate");
-         lblProjectImg.setVisible(true);
-        txtProjectImageName.setVisible(true);
-        lbnImageType.setVisible(true);
         this.setSize(638, 420);
         radPreBuildDir.setEnabled(true);
         btnAdvSetting.setEnabled(true);
         btnAdvSetting.setFocusable(true);
-        saveXmlNodeValue(eXmlNodeAttribute.OUTPUT_IMAGE_FORMAT_RAD_BOTTON,null,2,true);
-
-        if(radUnifiedStackuse.isSelected())
-        {
-            txtProjectImageName.setText("mpfs_img2");
-            saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-        }
-        else
-        {
-            saveXmlNodeValue(eXmlNodeAttribute.UNIFIEDSTACK_USE,null,1,false);
-            txtProjectImageName.setText("MPFSImg2");
-            saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-        }
-        //radUnifiedStackuse.setVisible(false);
-        //txtProjectImageName.setText("MPFSImg2");
-        //saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-
-    }//GEN-LAST:event_radAsmActionPerformed
+        saveXmlNodeValue(eXmlNodeAttribute.OUTPUT_IMAGE_FORMAT_RAD_BOTTON,null,1,true);
+        txtProjectImageName.setText("mpfs_net_img");
+        saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);         
+    }//GEN-LAST:event_radC18C32ActionPerformed
 
     private void chkBoxUploadActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkBoxUploadActionPerformed
         // TODO add your handling code here:
@@ -1424,21 +1317,14 @@ public class MainMPFS extends javax.swing.JFrame {
          {
              radC18C32ActionPerformed(null);
          }
-         else if(radAsm.isSelected() == true)
-         {
-            radAsmActionPerformed(null);
-         }
-         else if(radMdd.isSelected() == true)
-         {
-             radMddActionPerformed(null);
-         }
+         
          chkBoxUpload.setVisible(true);
          chkBoxUpload.setEnabled(true);
          if((chkBoxUpload.isSelected()== true) && (radBin.isSelected() == true))
          {
              btnGenAndUpload.setText("Generate and Upload");
          }
-         else if(chkBoxUpload.isSelected() == false)
+         else if((chkBoxUpload.isSelected() == false) || (radC18C32.isSelected() == true))
          {
              btnGenAndUpload.setText("Generate");
          }
@@ -1583,39 +1469,9 @@ public class MainMPFS extends javax.swing.JFrame {
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
         //radUnifiedStackuse.setEnabled(true);
         //radUnifiedStackuse.setVisible(true);
-
-         if(radUnifiedStackuse.isSelected())
-         {
-             txtProjectImageName.setText("mpfs_img2");
-             saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-         }
-         else
-         {
-             saveXmlNodeValue(eXmlNodeAttribute.UNIFIEDSTACK_USE,null,1,false);
-             txtProjectImageName.setText("MPFSImg2");
-             saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-         }
-
+        txtProjectImageName.setText("mpfs_net_img");
+        saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
     }//GEN-LAST:event_radBinActionPerformed
-
-    private void radMddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radMddActionPerformed
-        // TODO add your handling code here:
-         //jLabel12.setText("[.mdd]");
-         jPanel4.setVisible(false);
-         btnGenAndUpload.setText("Generate");
-         lblProjectImg.setVisible(false);
-         txtProjectImageName.setVisible(false);
-         lbnImageType.setVisible(false);
-         this.setSize(638, 420);
-         radPreBuildDir.setEnabled(false);
-         btnAdvSetting.setEnabled(false);
-         saveXmlNodeValue(eXmlNodeAttribute.OUTPUT_IMAGE_FORMAT_RAD_BOTTON,null,3,true);
-         radUnifiedStackuse.setEnabled(false);
-         txtProjectImageName.setText("mpfs_img2");
-         saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-
-
-    }//GEN-LAST:event_radMddActionPerformed
 
     private void lebelAboutMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_lebelAboutMouseClicked
          aboutBox.setVisible(true);
@@ -1652,32 +1508,6 @@ public class MainMPFS extends javax.swing.JFrame {
         saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
     }//GEN-LAST:event_txtProjectImageNameKeyReleased
 
-    private void radUnifiedStackuseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radUnifiedStackuseActionPerformed
-        // TODO add your handling code here:
-        if(radUnifiedStackuse.isSelected())
-        {
-            saveXmlNodeValue(eXmlNodeAttribute.UNIFIEDSTACK_USE,null,1,true);
-            txtProjectImageName.setText("mpfs_img2");
-            saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-            radC18C32.setText("PIC32 Image");
-            advSetting.setNoCompressionFileStr("*.inc, snmp.bib,*.bin,*.htm, *.html");
-            advSetting.setDynamicFileStr("*.htm, *.html, *.cgi, *.xml");
-            saveXmlNodeValue(eXmlNodeAttribute.DYNAMIC_FILES,advSetting.getDynamicFileStr(),0,true);
-            saveXmlNodeValue(eXmlNodeAttribute.NO_COMPRESS_FILE_LIST,advSetting.getNoCompressionFileStr(),0,true);
-        }
-        else
-        {
-            saveXmlNodeValue(eXmlNodeAttribute.UNIFIEDSTACK_USE,null,1,false);
-            txtProjectImageName.setText("MPFSImg2");
-            saveXmlNodeValue(eXmlNodeAttribute.IMAGE_NAME,txtProjectImageName.getText(),0,true);
-            radC18C32.setText("PIC18/PIC32 Image");
-            advSetting.setNoCompressionFileStr("*.inc, snmp.bib");
-            advSetting.setDynamicFileStr("*.htm, *.html, *.cgi, *.xml");
-            saveXmlNodeValue(eXmlNodeAttribute.DYNAMIC_FILES,advSetting.getDynamicFileStr(),0,true);
-            saveXmlNodeValue(eXmlNodeAttribute.NO_COMPRESS_FILE_LIST,advSetting.getNoCompressionFileStr(),0,true);
-        }
-    }//GEN-LAST:event_radUnifiedStackuseActionPerformed
-
     void toolTipSettings()
     {
         String infoString;
@@ -1699,25 +1529,11 @@ public class MainMPFS extends javax.swing.JFrame {
         radBin.setToolTipText(infoString +"Output a BIN image to be <br>" +
              "uploaded to external storage,<br>such as EEPROM or serial Flash."
              +"</body></html>" );
-        if(radUnifiedStackuse.isSelected())
-        {
-            radC18C32.setToolTipText(infoString+"Output an image compatible with " +
+        
+        radC18C32.setToolTipText(infoString+"Output an image compatible with " +
                 "<br> PIC32 to be stored in internal Flash <br>progra" +
                 "m memory."+"</body></html>");
-        }
-        else
-        {
-            radC18C32.setToolTipText(infoString+"Output an image compatible with " +
-                "<br>PIC18/PIC32 to be stored in internal Flash <br>progra" +
-                "m memory."+"</body></html>");
-        }
-        radAsm.setToolTipText(infoString+ "Output an image compatible with 16-bit parts" +
-                "<br>to be stored in internal Flash program<br> memory. " +
-                "Remember to add the <br>generated .S file to your project."
-                +"</body></html>");
-        radMdd.setToolTipText(infoString+"Use this option to store pages " +
-                "<br>on drive using MDD file system."+"</body></html>");
-
+       
         txtProjectDir.setToolTipText(infoString +"Select your MPLAB project " +
                 "directory. <br>Your image file will be placed here, <br>al" +
                     "ong with HTTPPrint.h if applicable."+"</body></html>");
@@ -1729,9 +1545,7 @@ public class MainMPFS extends javax.swing.JFrame {
                     "s destination."+"</body></html>");
         chkBoxUpload.setToolTipText(infoString+"Select this box to upload <br>" +
                 "your image upon generation."+"</body></html>");
-        radUnifiedStackuse.setToolTipText(infoString+"Output an image compatible with " +
-                "<br>TCPIP Stack version 6 or furture<br> to be stored in internal Flash <br>progra" +
-                "m memory."+"</body></html>");
+        
 
     }
     public boolean getRadBotWebPageDirStatus()
@@ -1871,16 +1685,7 @@ public class MainMPFS extends javax.swing.JFrame {
                     radC18C32.setSelected(true);
                    // radC18C32ActionPerformed(null);
                 }
-                else if(ouputFormat.get((byte)cNodeValue) == outputFileFormat.ASM30)
-                {
-                    radAsm.setSelected(true);
-                    //radAsmActionPerformed(null);
-                }
-                else if(ouputFormat.get((byte)cNodeValue) == outputFileFormat.MDD)
-                {
-                    radMdd.setSelected(true);
-                   // radMddActionPerformed(null);
-                }
+               
                 break;
             case 7:  // UPLOAD_PROTOCOL
                 uploadSettings.setUploadProtocolRadBtn(cNodeValue);
@@ -1903,15 +1708,7 @@ public class MainMPFS extends javax.swing.JFrame {
             case 13: // UPLOAD_PASSWORD
                 uploadSettings.setUploadPass(sNodeValue);
                 break;
-            case 14: // UNIFIEDSTACK_USE
-                if(!radMdd.isSelected())
-                {
-                    if(bNodeValue)
-                    {
-                        radUnifiedStackuse.setSelected(bNodeValue);
-                    }
-                    radUnifiedStackuse.setVisible(true);
-                }
+            
         }
     }
     private void MainKeyEventActionIntialization()
@@ -2057,8 +1854,7 @@ public class MainMPFS extends javax.swing.JFrame {
                     "    /html \"...\"\t\t(/h)\t: Dynamic file types (\"*.htm, *.html, *.xml, *.cgi\")\n" +
                     "    /xgzip \"...\"\t(/z)\t: Non-compressible types (\"snmp.bib, *.inc\")\n\n" +
                     "SourceDir, ProjectDir, and OutputFile are required and should be enclosed in quotes.\n" +
-                    "OutputFile is placed relative to ProjectDir and *CANNOT* be a full path name.\n" +
-                    "For unified stack (/v) should be used with PIC32 output image format. \n");
+                    "OutputFile is placed relative to ProjectDir and *CANNOT* be a full path name.\n");
                 return;
             }
 
@@ -2072,7 +1868,7 @@ public class MainMPFS extends javax.swing.JFrame {
            // System.out.println("sourceDir :"+sourceDir);
            // System.out.println("outputFile :"+outputFile);
             boolean genResult;
-            boolean ifUnifiedStackisSelected = false;
+            //boolean ifUnifiedStackisSelected = false;
             final MPFS2Lib builder ;
             MPFS2Lib.MPFSClassicBuilder classicBuilder = null;
             // Set up some defaults
@@ -2080,7 +1876,7 @@ public class MainMPFS extends javax.swing.JFrame {
             byte version = 2;
             int reserveBlock = 64;
             String htmlTypes = "*.htm, *.html, *.xml, *.cgi";
-            String noGZipTypes = "*.inc, snmp.bib,*.bin,*.htm,*.html";
+            String noGZipTypes = "snmp.bib,*.bin";
 
             // Process each command line argument
             for(int i =0; i < (args.length - 3); i++)
@@ -2120,24 +1916,24 @@ public class MainMPFS extends javax.swing.JFrame {
                 {
                     noGZipTypes = args[++i];
                 }
-                else if(arg.compareTo("/v6_stack")==0 || arg.compareTo("/v")==0)
-                {
-                    if(fmt != MPFS2Lib.MPFSOutputFormat.MDD)
-                    {
-                        ifUnifiedStackisSelected = true;
-                    }
-                }
+//                else if(arg.compareTo("/v6_stack")==0 || arg.compareTo("/v")==0)
+//                {
+//                    if(fmt != MPFS2Lib.MPFSOutputFormat.MDD)
+//                    {
+//                        ifUnifiedStackisSelected = true;
+//                    }
+//                }
                 else
                 {
                     System.out.println("The command-line option \""+args[i]+"\" was not recognized.");
                     return;
                 }
             }
-            if(fmt != MPFS2Lib.MPFSOutputFormat.MDD)
-            {
-                ifUnifiedStackisSelected = true;
-            }
-            builder = new MPFS2Lib(ifUnifiedStackisSelected);
+//            if(fmt != MPFS2Lib.MPFSOutputFormat.MDD)
+//            {
+//                ifUnifiedStackisSelected = true;
+//            }
+            builder = new MPFS2Lib(true);
             if (version == 2)
             {
                 builder.MPFS2Builder(projectDir,outputFile);
@@ -2145,11 +1941,11 @@ public class MainMPFS extends javax.swing.JFrame {
                 builder.NonGZipTypes(noGZipTypes);
                 // Add the files to the image and generate the image
                 builder.AddDirectory(sourceDir);
-                if(ifUnifiedStackisSelected)
-                {
-                    builder.MDDWriter(sourceDir);
-                    builder.AddDirectory(sourceDir);
-                }
+//                if(ifUnifiedStackisSelected)
+//                {
+//                    builder.MDDWriter(sourceDir);
+//                    builder.AddDirectory(sourceDir);
+//                }
                 genResult = builder.Generate(fmt);
 
             }
@@ -2219,12 +2015,9 @@ public class MainMPFS extends javax.swing.JFrame {
     private javax.swing.JLabel lbnImageType;
     private javax.swing.JLabel lebelAbout;
     private javax.swing.ButtonGroup processOpnButGrp;
-    private javax.swing.JRadioButton radAsm;
     private javax.swing.JRadioButton radBin;
     private javax.swing.JRadioButton radC18C32;
-    private javax.swing.JRadioButton radMdd;
     private javax.swing.JRadioButton radPreBuildDir;
-    public javax.swing.JRadioButton radUnifiedStackuse;
     private javax.swing.JRadioButton radWebDir;
     private javax.swing.ButtonGroup sourceSettingButGrp;
     private javax.swing.JTextField txtProjectDir;

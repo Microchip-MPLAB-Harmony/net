@@ -262,7 +262,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_SSI_CMD_MAX_LEN                  100
 #define TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER             13
 #define TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH     10
-#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   10
+#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   20
 #define TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE       "SSI Echo - Not Found: "
 #define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		0
 #define TCPIP_HTTP_NET_MALLOC_FUNC                     0
@@ -600,7 +600,6 @@ extern "C" {
 /*** Crypto Library Configuration ***/
 #define WC_NO_HARDEN
 #define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
 #define WOLFSSL_IGNORE_FILE_WARN
 

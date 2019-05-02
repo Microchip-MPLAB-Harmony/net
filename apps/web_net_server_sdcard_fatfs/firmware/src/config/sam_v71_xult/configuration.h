@@ -127,7 +127,7 @@ extern "C" {
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_PRINT_BUFFER_SIZE          2048
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 
@@ -144,9 +144,6 @@ extern "C" {
 #define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
-
 
 
 /*** MIIM Driver Configuration ***/
@@ -169,7 +166,7 @@ extern "C" {
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING
+
 
 
 
@@ -257,7 +254,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_SSI_CMD_MAX_LEN                  100
 #define TCPIP_HTTP_NET_SSI_VARIABLES_NUMBER             13
 #define TCPIP_HTTP_NET_SSI_VARIABLE_NAME_MAX_LENGTH     10
-#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   10
+#define TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH   20
 #define TCPIP_HTTP_NET_SSI_ECHO_NOT_FOUND_MESSAGE       "SSI Echo - Not Found: "
 #define TCPIP_HTTP_NET_CONNECTION_TIMEOUT          		0
 #define TCPIP_HTTP_NET_MALLOC_FUNC                     0
@@ -386,7 +383,7 @@ extern "C" {
 #define TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT 			10
 #define TCPIP_IPV6_TASK_PROCESS_RATE 					1000
 #define TCPIP_IPV6_INIT_TASK_PROCESS_RATE 				32
-#define TCPIP_IPV6_ULA_GENERATE_ENABLE 					false
+#define TCPIP_IPV6_ULA_GENERATE_ENABLE 					true
 #define TCPIP_IPV6_ULA_NTP_ACCESS_TMO 					12000
 #define TCPIP_IPV6_ULA_NTP_VALID_WINDOW 				1000
 #define TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT 				60
@@ -426,7 +423,7 @@ extern "C" {
 /*** TCPIP Heap Configuration ***/
 
 #define TCPIP_STACK_USE_INTERNAL_HEAP
-#define TCPIP_STACK_DRAM_SIZE                       80960
+#define TCPIP_STACK_DRAM_SIZE                       60960
 #define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
 
 #define TCPIP_STACK_MALLOC_FUNC                     malloc
@@ -614,7 +611,6 @@ extern "C" {
 /*** Crypto Library Configuration ***/
 #define WC_NO_HARDEN
 #define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
 #define WOLFSSL_IGNORE_FILE_WARN
 
@@ -631,6 +627,7 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_AES
+#define WOLFSSL_SHA512
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>tcpip_mac_config.h</title>
+<title>tcpip_mac.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01569.html" target="topic">Files</a> &gt; <a href="02819.html" target="topic">tcpip_mac_config.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01577.html" target="topic">Files</a> &gt; <a href="02819.html" target="topic">tcpip_mac.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02811.html" target="topic">Previous</a> | <a href="01569.html" target="topic">Up</a> | <a href="00665.html" target="topic">Next</a></div>
+<a href="01577.html" target="topic">Previous</a> | <a href="01577.html" target="topic">Up</a> | <a href="02827.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_mac_config.h Topic Title: tcpip_mac_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_mac.h Topic Title: tcpip_mac.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-tcpip_mac_config.h</div>
+tcpip_mac.h</div>
 </div>
 </div>
 
@@ -56,21 +56,19 @@ File Name</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-tcpip_mac_config.h</p></div>
+tcpip_mac.h</p></div>
 </div>
 <a name="4465736372697074696F6E"></a><div class="Element14">
 Description</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MAC Configuration file&nbsp;</p>
+MAC Module Definitions for the Microchip TCP/IP Stack&nbsp;</p>
 <p class="Element10">
-This file contains the MAC module configuration options&nbsp;</p>
-<p class="Element10">
-This file is not part of the project, it is a configuration template file only.</p></div>
+&nbsp;</p></div>
 </div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -86,137 +84,534 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02249.html" target="topic">TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02820.html" target="topic">TCPIP_MAC_ACTION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This symbol enables/disables the auto flow control When in full-duplex mode and the auto flow control is enabled, the MAC will <a href="01187.html" target="topic">send</a> pause frames whenever the number of pending RX packets reached the full watermark. Once this number drops to the empty watermark, a pause frame with pause value of 0 is transmitted, resuming the normal traffic Use 1 to enable, 0 to disable Default should be enabled&nbsp;</div></td></tr><tr>
+Network interface action for initialization/deinitialization&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02250.html" target="topic">TCPIP_EMAC_ETH_OPEN_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02831.html" target="topic">TCPIP_MAC_EVENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Flags to use for the Ethernet connection A TCPIP_ETH_OPEN_FLAGS value. Set to TCPIP_ETH_OPEN_DEFAULT unless very good reason to use different value&nbsp;</div></td></tr><tr>
+Defines the possible MAC event types.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02251.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02867.html" target="topic">TCPIP_MAC_LINK_MTU</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-An 8 bit value representing the empty water mark, in number of packets When the auto flow control is active and the number of pending received packets falls reaching this threshold the auto flow control pause frames will stop Always <a href="02252.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK</a> &gt; TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK Used only when auto flow control is enabled Default value could be 0: resume normal traffic when there is no pending RX packet&nbsp;</div></td></tr><tr>
+MTU size correspondig to the MAC types.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02252.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02892.html" target="topic">TCPIP_MAC_PACKET_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-An 8 bit value representing the full water mark, in number of packets When the number of pending received packets reaches this threshold the auto flow control kicks in A good rule to use for avoiding any packet overflow is to have enough receive room for at least 2 maximum packets, i.e. fullWMMark = (rxScheduledBuffers x rxBuffSize) / <a href="02255.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> - (2 x <a href="02255.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> ) / rxBuffSize; Always TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK &gt; <a href="02251.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK</a> Used only when auto flow control is enabled Adjust to your own value #define TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK 2 Default value should use the calculation of the watermark based on the selected RX... <a href="02252.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
+Flags belonging to MAC packet.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02253.html" target="topic">TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02936.html" target="topic">TCPIP_MAC_PKT_ACK_RES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Pause Time Value for the Auto Flow Control, in bytes This represents the number of bytes to request the pause for when the auto flow control kicks in. It is normally thought of in terms of RX packets: pauseBytes / rxBuffSize = pausePackets Using bytes instead of packets allows better granularity The value should be a multiple of 64 bytes The range is : 64 bytes &lt;= TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES &lt;= (4 MB - 64) bytes (0x3fffc0) An usual value is 2 full packets. For example 2 * 1536 bytes Used only when flow control is enabled&nbsp;</div></td></tr><tr>
+List of MAC return codes for a packet acknowledge function.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02254.html" target="topic">TCPIP_EMAC_LINK_MTU</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02960.html" target="topic">TCPIP_MAC_POWER_MODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Link Maximum Transmission Unit (MTU) This symbol defines the largest network protocol data unit that can be transmitted over this link in a single frame. It relates to the <a href="02255.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> value - see above. The default value for an Ethernet link should be 1500. The minimum value for an Eternet link should be 576. If need to change this, make sure that the <a href="02255.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> &gt;= TCPIP_EMAC_LINK_MTU + 18 where the value 18 represents the Ethernet frame header: 12 bytes - destination + source address 2 bytes - frame type 4 bytes - FCS&nbsp;</div></td></tr><tr>
+Supported MAC power mode state.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02255.html" target="topic">TCPIP_EMAC_MAX_FRAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02966.html" target="topic">TCPIP_MAC_PROCESS_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Maximum MAC supported RX/TX frame size. The default value is 1536 (allows for VLAN tagged frames, although the VLAN tagged frames are discarded on RX). On RX: any incoming ETH frame that's longer than this size will be discarded. On TX: any frame that's longer than this size will be aborted by the MAC.<br>Normally there's no need to touch this value unless you know exactly the maximum size of the frames you want to process on your network.&nbsp;</div></td></tr><tr>
+List of the MAC processing flags.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02256.html" target="topic">TCPIP_EMAC_PHY_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02973.html" target="topic">TCPIP_MAC_RES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The PHY address, as configured on the board. By default all the PHYs respond to address 0&nbsp;</div></td></tr><tr>
+List of return codes from MAC functions.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02257.html" target="topic">TCPIP_EMAC_PHY_CONFIG_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02989.html" target="topic">TCPIP_MAC_RX_FILTER_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Flags to configure the MAC -&gt;PHY connection a <a href="00435.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a> This depends on the actual connection (MII/RMII, default/alternate I/O) The DRV_ETHPHY_CFG_AUTO value will use the configuration fuses setting&nbsp;</div></td></tr><tr>
+Defines the possible MAC RX filter types.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02258.html" target="topic">TCPIP_EMAC_PHY_LINK_INIT_DELAY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03013.html" target="topic">TCPIP_MAC_SEGMENT_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The value of the delay for the link initialization, ms This insures that the PHY is ready to transmit after it is reset A usual value is &gt; 500 ms up to 2000 ms. The longer the delay, the less chance that the PHY drops packets when the link is established Adjust to your needs.&nbsp;</div></td></tr><tr>
+Flags belonging to MAC data segment.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02259.html" target="topic">TCPIP_EMAC_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03024.html" target="topic">TCPIP_MAC_SYNCH_REQUEST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Size of a RX packet buffer. Should be multiple of 16. This is the size of all receive packet buffers processed by the ETHC. The size should be enough to accommodate any network received packet. If the packets are larger, they will have to take multiple RX buffers and the packet manipulation is less efficient. #define TCPIP_EMAC_RX_BUFF_SIZE 512 Together with <a href="02260.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a> it has impact on <a href="03480.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting.&nbsp;</div></td></tr><tr>
+Defines the possible MAC synchronization request types.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02260.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03039.html" target="topic">TCPIP_MAC_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Number of MAC dedicated RX packet buffers. These buffers are always owned by the MAC. Note that the MAC driver allocates these buffers for storing the incoming network packets. The bigger the storage capacity, the higher data throughput can be obtained. Note that these packet buffers are allocated from the private TCP/IP heap that is specified by the <a href="03480.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting.&nbsp;</div></td></tr><tr>
+List of the MAC types.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02261.html" target="topic">TCPIP_EMAC_RX_DESCRIPTORS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03055.html" target="topic">TCPIP_MODULE_MAC_ID</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Number of the RX descriptors to be created. If not using the run time replenish mechanism (see below) it should match the number of dedicated buffers: <a href="02260.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a>; Otherwise it should be bigger than the sum of dedicated + non-dedicated buffers: TCPIP_EMAC_RX_DESCRIPTORS &gt; <a href="02260.html" target="topic">TCPIP_EMAC_RX_DEDICATED_BUFFERS</a> + replenish_buffers&nbsp;</div></td></tr><tr>
+IDs of the MAC module supported by the stack.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02262.html" target="topic">TCPIP_EMAC_RX_FILTERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02826.html" target="topic">TCPIP_MAC_Close</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-MAC RX Filters These filters define the packets that are accepted and rejected by the MAC driver Adjust to your needs The default value allows the processing of unicast, multicast and broadcast packets that have a valid CRC&nbsp;</div></td></tr><tr>
+MAC driver close function.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02263.html" target="topic">TCPIP_EMAC_RX_FRAGMENTS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02828.html" target="topic">TCPIP_MAC_ConfigGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-MAC maximum number of supported RX fragments. Based on the values of <a href="02255.html" target="topic">TCPIP_EMAC_MAX_FRAME</a> and <a href="02259.html" target="topic">TCPIP_EMAC_RX_BUFF_SIZE</a> an incoming frame may span multiple RX buffers (fragments). Note that excessive fragmentation leads to performance degradation. The default and recommended value should be 1. #define TCPIP_EMAC_RX_FRAGMENTS 1 Alternatively you can use the calculation of the number of fragments based on the selected RX sizes:&nbsp;</div></td></tr><tr>
+Gets the current MAC driver configuration.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02264.html" target="topic">TCPIP_EMAC_RX_INIT_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02830.html" target="topic">TCPIP_MAC_Deinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Number of non-dedicated buffers for the MAC initialization Buffers allocated at the MAC driver initialization.&nbsp;</div></td></tr><tr>
+MAC driver deinitialization function.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02265.html" target="topic">TCPIP_EMAC_RX_LOW_FILL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02850.html" target="topic">TCPIP_MAC_EventAcknowledge</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Number of RX buffers to allocate when below threshold condition is detected. If 0, the MAC driver will allocate (scheduled buffers - rxThres) If !0, the MAC driver will allocate exactly TCPIP_EMAC_RX_LOW_FILL buffers&nbsp;</div></td></tr><tr>
+This function acknowledges a previously reported MAC event.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02266.html" target="topic">TCPIP_EMAC_RX_LOW_THRESHOLD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02852.html" target="topic">TCPIP_MAC_EventMaskSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Minumum threshold for the buffer replenish process. Whenever the number of RX scheduled buffers is &lt;= than this threshold the MAC driver will allocate new non-dedicated buffers (meaning that they will be released to the TCP/IP heap once they are processed). Setting this value to 0 disables the buffer replenishing process.&nbsp;</div></td></tr><tr>
+MAC events report enable/disable function.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="02267.html" target="topic">TCPIP_EMAC_TX_DESCRIPTORS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02853.html" target="topic">TCPIP_MAC_EventPendingGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Number of the TX descriptors to be created. Because a TCP packet can span at most 3 buffers, the value should always be &gt;= 4 The amount of memory needed per descriptor is not high (around 24 bytes) so when high MAC TX performance is needed make sure that this number is &gt;= 8.&nbsp;</div></td></tr></table></div></div>
+Returns the currently pending MAC events.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02866.html" target="topic">TCPIP_MAC_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC driver initialization function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02871.html" target="topic">TCPIP_MAC_LinkCheck</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC link checking function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02889.html" target="topic">TCPIP_MAC_Open</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC driver open function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02928.html" target="topic">TCPIP_MAC_PacketRx</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+A packet is returned if such a pending packet exists.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02929.html" target="topic">TCPIP_MAC_PacketTx</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC driver transmit function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02935.html" target="topic">TCPIP_MAC_ParametersGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC parameter get function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02965.html" target="topic">TCPIP_MAC_Process</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC periodic processing function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02971.html" target="topic">TCPIP_MAC_RegisterStatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the current MAC hardware statistics registers.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02972.html" target="topic">TCPIP_MAC_Reinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC driver reinitialization function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03012.html" target="topic">TCPIP_MAC_RxFilterHashTableEntrySet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the current MAC hash table receive filter.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03022.html" target="topic">TCPIP_MAC_StatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the current MAC statistics.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03023.html" target="topic">TCPIP_MAC_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Provides the current status of the MAC driver module.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03033.html" target="topic">TCPIP_MAC_Tasks</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Maintains the MAC driver's state machine.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00111.html" target="topic">_tag_MAC_DATA_SEGMENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+A data segment that's part of a TX/RX packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00137.html" target="topic">_tag_TCPIP_MAC_PACKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+A TX/RX packet descriptor.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02829.html" target="topic">TCPIP_MAC_DATA_SEGMENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+A data segment that's part of a TX/RX packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02862.html" target="topic">TCPIP_MAC_INIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Contains all the data necessary to initialize the MAC device.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02872.html" target="topic">TCPIP_MAC_MODULE_CTRL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data structure that's passed to the MAC at the initialization time.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02930.html" target="topic">TCPIP_MAC_PARAMETERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data structure that tells the MAC run time parameters.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03005.html" target="topic">TCPIP_MAC_RX_STATISTICS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC receive statistics data gathered at run time.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03019.html" target="topic">TCPIP_MAC_STATISTICS_REG_ENTRY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Describes a MAC hardware statistics register.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03034.html" target="topic">TCPIP_MAC_TX_STATISTICS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC transmit statistics data gathered at run time.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03049.html" target="topic">TCPIP_MODULE_GMAC_QUEUE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Configuration Structure for Queues in GMAC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03076.html" target="topic">TCPIP_MODULE_MAC_MRF24WN_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MODULE_MAC_MRF24WN_CONFIG.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03078.html" target="topic">TCPIP_MODULE_MAC_PIC32C_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data that's passed to the MAC at initialization time.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03086.html" target="topic">TCPIP_MODULE_MAC_PIC32INT_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data that's passed to the MAC at initialization time.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03099.html" target="topic">TCPIP_MODULE_MAC_PIC32WK_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MODULE_MAC_PIC32WK_CONFIG.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03101.html" target="topic">TCPIP_MODULE_MAC_WINC1500_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MODULE_MAC_WINC1500_CONFIG.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="5479706573"></a><div class="Element14">
+Types</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02851.html" target="topic">TCPIP_MAC_EventF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC event notification handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02854.html" target="topic">TCPIP_MAC_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Handle to a MAC driver.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02855.html" target="topic">TCPIP_MAC_HEAP_CallocF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC allocation function prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02856.html" target="topic">TCPIP_MAC_HEAP_CallocFDbg</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MAC_HEAP_CallocFDbg.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02857.html" target="topic">TCPIP_MAC_HEAP_FreeF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC allocation function prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02858.html" target="topic">TCPIP_MAC_HEAP_FreeFDbg</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MAC_HEAP_FreeFDbg.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02859.html" target="topic">TCPIP_MAC_HEAP_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+A handle used for memory allocation functions.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02860.html" target="topic">TCPIP_MAC_HEAP_MallocF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC allocation function prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02861.html" target="topic">TCPIP_MAC_HEAP_MallocFDbg</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MAC_HEAP_MallocFDbg.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02890.html" target="topic">TCPIP_MAC_PACKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Forward reference to a MAC packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02891.html" target="topic">TCPIP_MAC_PACKET_ACK_FUNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Prototype of a MAC packet acknowledge function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02955.html" target="topic">TCPIP_MAC_PKT_AckF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC packet acknowledge function prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02956.html" target="topic">TCPIP_MAC_PKT_AllocF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC packet allocation function prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02957.html" target="topic">TCPIP_MAC_PKT_AllocFDbg</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MAC_PKT_AllocFDbg.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02958.html" target="topic">TCPIP_MAC_PKT_FreeF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC packet free function prototype.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02959.html" target="topic">TCPIP_MAC_PKT_FreeFDbg</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is type TCPIP_MAC_PKT_FreeFDbg.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03032.html" target="topic">TCPIP_MAC_SynchReqF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+MAC synchronization request function definition.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="556E696F6E73"></a><div class="Element14">
+Unions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02903.html" target="topic">TCPIP_MAC_PACKET_RX_STAT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Status of a received packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02906.html" target="topic">TCPIP_MAC_PACKET_RX_STAT_PIC32C</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Status of a received packet for PIC32C MAC driver.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -224,7 +619,7 @@ Number of the TX descriptors to be created. Because a TCP packet can span at mos
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01569.html" target="topic">Files</a> &gt; <a href="02819.html" target="topic">tcpip_mac_config.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01577.html" target="topic">Files</a> &gt; <a href="02819.html" target="topic">tcpip_mac.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -232,13 +627,13 @@ Number of the TX descriptors to be created. Because a TCP packet can span at mos
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02811.html" target="topic">Previous</a> | <a href="01569.html" target="topic">Up</a> | <a href="00665.html" target="topic">Next</a></div>
+<a href="01577.html" target="topic">Previous</a> | <a href="01577.html" target="topic">Up</a> | <a href="02827.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_mac_config.h Topic Title: tcpip_mac_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_mac.h Topic Title: tcpip_mac.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

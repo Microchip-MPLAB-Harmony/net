@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>tftpc_config.h</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03900.html" target="topic">TFTP Client Module</a> &gt; <a href="01704.html" target="topic">Files</a> &gt; <a href="03902.html" target="topic">tftpc_config.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03912.html" target="topic">TFTP Server Module</a> &gt; <a href="03902.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03901.html" target="topic">Previous</a> | <a href="01704.html" target="topic">Up</a> | <a href="01027.html" target="topic">Next</a></div>
+<a href="03911.html" target="topic">Previous</a> | <a href="03912.html" target="topic">Up</a> | <a href="01720.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tftpc_config.h Topic Title: tftpc_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIPS TFTP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-tftpc_config.h</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -46,100 +46,43 @@ tftpc_config.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+<strong>Interface Header File</strong>: <span class="Element146"><a href="03913.html" target="topic">tftps.h</a></span>&nbsp;</p>
+<p class="Element10">
+The interface to the TFTP<span style="color: #0000FF"> </span>TCP/IP Stack library is defined in the <span class="Element146"><a href="03913.html" target="topic">tftps.h</a></span> header file. This file is included by the <span class="Element146">tcpip.h</span> file. Any C language source (<span class="Element146">.c</span>) file that uses the <span class="Element146"><a href="03913.html" target="topic">tftps.h</a></span><span style="color: #0000FF"> </span>TCP/IP Stack library should include <span class="Element146">tcpip.h</span>.&nbsp;</p>
+<p class="Element10">
+Please refer to the <strong>What is MPLAB Harmony?</strong> section for how the TCP/IP Stack interacts with the framework.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-tftpc_config.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Trivial File Transfer Protocol (TFTP) Client Configuration file&nbsp;</p>
-<p class="Element10">
-This file contains the TFTP Client module configuration options.&nbsp;</p>
-<p class="Element10">
-This file is not part of the project, it is a configuration template file only.</p></div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<td class="Element200" valign="top" width="35%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00158.html" target="topic">_TFTP_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01720.html" target="topic">Abstraction Model</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This is macro _TFTP_CONFIG_H_.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This library provides the API of the TFTP TCP/IP Server Module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP stack<span style="color: #0000FF">.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03744.html" target="topic">TCPIP_TFTPC_ARP_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01727.html" target="topic">Library Overview</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The number of seconds to wait before declaring a TIMEOUT error on PUT.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the </span>TFTP<span style="color: #000000"> server module.</span> &nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03746.html" target="topic">TCPIP_TFTPC_DEFAULT_IF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01725.html" target="topic">How the Library Works</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The default TFTP interface for multi-homed hosts.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03761.html" target="topic">TCPIP_TFTPC_FILENAME_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The maximum value for the file name size.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03766.html" target="topic">TCPIP_TFTPC_HOSTNAME_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The maximum TFTP host name length size.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03767.html" target="topic">TCPIP_TFTPC_MAX_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The number of attempts before declaring a TIMEOUT error.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03787.html" target="topic">TCPIP_TFTPC_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The TFTP client task rate in milliseconds. The default value is 100 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03610.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03788.html" target="topic">TCPIP_TFTPC_USER_NOTIFICATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-allow TFTP client user notification if enabled, the <a href="03765.html" target="topic">TCPIP_TFTPC_HandlerRegister</a>/<a href="03764.html" target="topic">TCPIP_TFTPC_HandlerDeRegister</a> functions exist and can be used&nbsp;</div></td></tr></table></div></div>
+This topic provides information on how the TFTP server module works including write and read requests.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -147,7 +90,7 @@ allow TFTP client user notification if enabled, the <a href="03765.html" target=
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03900.html" target="topic">TFTP Client Module</a> &gt; <a href="01704.html" target="topic">Files</a> &gt; <a href="03902.html" target="topic">tftpc_config.h</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03912.html" target="topic">TFTP Server Module</a> &gt; <a href="03902.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -155,13 +98,13 @@ allow TFTP client user notification if enabled, the <a href="03765.html" target=
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03901.html" target="topic">Previous</a> | <a href="01704.html" target="topic">Up</a> | <a href="01027.html" target="topic">Next</a></div>
+<a href="03911.html" target="topic">Previous</a> | <a href="03912.html" target="topic">Up</a> | <a href="01720.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tftpc_config.h Topic Title: tftpc_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIPS TFTP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

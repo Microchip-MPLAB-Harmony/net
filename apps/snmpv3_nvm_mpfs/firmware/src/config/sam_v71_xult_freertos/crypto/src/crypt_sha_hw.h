@@ -41,8 +41,8 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-#ifndef _CRYPTO_SHA_HW_H_
-#define _CRYPTO_SHA_HW_H_
+#ifndef _CRYPT_SHA_HW_H_
+#define _CRYPT_SHA_HW_H_
 
 #include "configuration.h"
 #include "sha.h"
@@ -52,9 +52,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "crypt_sha_sam11105.h"
 #endif
 
-
-
-
-
-
+#if defined(CRYPTO_SHA_HW_6156)
+#include "crypt_sha_sam6156.h"
 #endif
+
+
+#endif /* _CRYPT_SHA_HW_H_ */

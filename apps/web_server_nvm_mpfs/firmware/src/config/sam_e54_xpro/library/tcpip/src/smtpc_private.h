@@ -87,7 +87,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // minimum number of retries
-#define TCPIP_SMTPC_MIN_RETRIES         1 
+// allow for 0 retries
+#define TCPIP_SMTPC_MIN_RETRIES         0 
 
 // minimum server timeout, seconds
 #define TCPIP_SMTPC_MIN_SERVER_TMO            10 

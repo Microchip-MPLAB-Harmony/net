@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HTTP Features</title>
+<title>Compression</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a> &gt; <a href="01481.html" target="topic">HTTP Features</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01509.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">HTTP Features</a> &gt; <a href="01481.html" target="topic">Compression</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01484.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="01477.html" target="topic">Next</a></div>
+<a href="01483.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP HTTP Features Topic Title: HTTP Features)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Compression Topic Title: Compression)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HTTP Features</div>
+Compression</div>
 </div>
 </div>
 
@@ -49,54 +49,16 @@ HTTP Features</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The HTTP Web Server module has many capabilities. The following topics will introduce these features and provide examples.</p></div>
-</div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01477.html" target="topic">Dynamic Variables</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-One of the most basic needs is to provide status information back to the user of the Web application (the client browser). The HTTP server provides for this using dynamic variable substitution callbacks. These commands in your HTML code will alert the server to execute a callback function at that point, which the developer creates to write data into the web page. Dynamic Variables should be considered the output of your application.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01479.html" target="topic">Form Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Many applications need to<span style="color: #FFFFFF">_</span>accept<span style="color: #FFFFFF">_</span>data from a user. A common solution is to present a form to the user in a Web page, and then have the device process the values submitted via this form. Web forms are usually submitted using one of two methods (GET and POST), and the HTTP Web server supports both.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01471.html" target="topic">Authentication</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The HTTP protocol provides a method for servers to request a user name and password from a client before granting access to a page. The HTTP server supports this authentication mechanism, allowing developers to require valid credentials for access to some or all pages.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01475.html" target="topic">Cookies</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-By design, HTTP is a session-less and state-less protocol; every connection is an independent session with no relation to another.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="01473.html" target="topic">Compression</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-All modern web browsers can receive files encoded with GZIP compression. For static files (those without dynamic variables), this can decrease the amount of data transmitted by as much as 60%.&nbsp;</div></td></tr></table></div></div>
-</div>
+The MPFS2 Utility will automatically determine which files can benefit from GZIP compression, and will store the compressed file in the MPFS2 image when possible. This generally includes all JavaScript and CSS files. (Images are typically already compressed, so the MPFS2 Utility will generally decide it is better to store them uncompressed.) This HTTP server will then seamlessly return this compressed file to the browser. Less non-volatile storage space will be required for storing the pages image, and faster transfers back to the client will result. No special configuration is required for this feature.&nbsp;</p>
+<p class="Element10">
+To prevent certain extensions from being compressed, use the Advanced Settings dialog in the MPFS2 Utility.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a> &gt; <a href="01481.html" target="topic">HTTP Features</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01509.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">HTTP Features</a> &gt; <a href="01481.html" target="topic">Compression</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -104,13 +66,13 @@ All modern web browsers can receive files encoded with GZIP compression. For sta
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01484.html" target="topic">Previous</a> | <a href="01501.html" target="topic">Up</a> | <a href="01477.html" target="topic">Next</a></div>
+<a href="01483.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01482.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP HTTP Features Topic Title: HTTP Features)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Compression Topic Title: Compression)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

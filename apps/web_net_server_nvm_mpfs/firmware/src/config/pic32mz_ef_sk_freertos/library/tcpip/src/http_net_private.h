@@ -382,17 +382,19 @@ typedef struct _tag_TCPIP_HTTP_CHUNK_DCPT
 
 typedef union
 {
-    uint8_t    val;
+    uint16_t    val;
     struct
     {
-        uint8_t        procPhase:        3;         // simple phase counter for processing functions
-        uint8_t        requestError:     1;         // an eror occurred while processing the requests (invalid file, buffer overflow, etc.)
+        uint16_t    procPhase:      3;         // simple phase counter for processing functions
+        uint16_t    requestError:   1;         // an eror occurred while processing the requests (invalid file, buffer overflow, etc.)
                                                     // the header parsing will just remove from the socket buffer, don't process
-        uint8_t        discardRxBuff:    1;         // socket RX buffer needs to be discarded before listening to a new request
+        uint16_t    discardRxBuff:  1;         // socket RX buffer needs to be discarded before listening to a new request
                                                     // set because of an error
-        uint8_t        uploadMemError:   1;         // an out of memory occurred during an upload operation
-        uint8_t        sktLocalReset:    1;         // socket reset/disconnect was initiated locally 
-        uint8_t        sktIsConnected:   1;         // socket connect persistent flag 
+        uint16_t    uploadMemError: 1;         // an out of memory occurred during an upload operation
+        uint16_t    sktLocalReset:  1;         // socket reset/disconnect was initiated locally 
+        uint16_t    sktIsConnected: 1;         // socket connect persistent flag 
+        uint16_t    uploadPhase:    1;         // the upload procedure phase: is waiting for the signature
+        uint16_t    reserved:       7;         // not used
     };
 }TCPIP_HTTP_NET_CONN_FLAGS;
 
@@ -434,7 +436,7 @@ typedef struct _tag_TCPIP_HTTP_NET_CONN
     TCPIP_HTTP_NET_CONN_FLAGS   flags;                          // connection flags
     uint8_t                     closeEvent;                     // the event for the reported connection close
     // 
-    char                        fileName[SYS_FS_MAX_PATH];      // file name storage
+    char                        fileName[SYS_FS_MAX_PATH + 1];  // file name storage
 
 } TCPIP_HTTP_NET_CONN;
 

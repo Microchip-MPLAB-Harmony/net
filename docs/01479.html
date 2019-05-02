@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Form Processing</title>
+<title>Authentication</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a> &gt; <a href="01481.html" target="topic">HTTP Features</a> &gt; <a href="01479.html" target="topic">Form Processing</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01509.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">HTTP Features</a> &gt; <a href="01479.html" target="topic">Authentication</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01477.html" target="topic">Previous</a> | <a href="01481.html" target="topic">Up</a> | <a href="01471.html" target="topic">Next</a></div>
+<a href="01487.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01483.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Form Processing Topic Title: Form Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Authentication Topic Title: Authentication)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Form Processing</div>
+Authentication</div>
 </div>
 </div>
 
@@ -48,54 +48,67 @@ Form Processing</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
+<p class="Element10">
+Authentication functionality is supported by two user-provided callback functions. The first, <a href="02401.html" target="topic">TCPIP_HTTP_FileAuthenticate</a>, determines if the requested page requires valid credentials to proceed. The second, <a href="02638.html" target="topic">TCPIP_HTTP_UserAuthenticate</a>, checks the user name and password against an accepted list and determines whether to grant or deny access. The connection stores the current authorization setting which can be manipulated by using the <a href="02354.html" target="topic">TCPIP_HTTP_CurrentConnectionIsAuthorizedGet</a> and <a href="02355.html" target="topic">TCPIP_HTTP_CurrentConnectionIsAuthorizedSet</a> functions.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table0">
+<tr>
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+The HTTP authentication is <strong>NOT</strong> <strong>secure!</strong> The passwords are sent in clear over the network.<br>For a secure approach, the HTTP_NET module with TLS enabled should be used.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+&nbsp;</p>
 <div class="Element15">
-The GET Method</div>
+Requiring Authentication</div>
 <p class="Element10">
-The GET method appends the data to the end of the URI. This data follows the question mark (?) in the browser's address bar. (ex: http://mchpboard/form.htm?led1=0&amp;led2=1&amp;led3=0) Data sent via GET is automatically decoded and stored in the current connection data buffer. Since it is to be stored in memory, this data is limited to the size of the connection data buffer which by default is 100 bytes (configurable by HTTP_MAX_DATA_LEN build time symbol or by the run time data passed at the HTTP module initialization).&nbsp;</p>
+When a request is first made, the function <a href="02401.html" target="topic">TCPIP_HTTP_FileAuthenticate</a> is called to determine if that page needs password protection. This function returns a value to instruct the HTTP server how to proceed. The most significant bit indicates whether or not access is granted. That is, values 0x80 and higher allow access unconditionally, while values 0x79 and lower will require a user name and password at a later point. The value returned is stored in the connection data so that it can be accessed by future callback functions.&nbsp;</p>
 <p class="Element10">
-It is generally easier to process data received in this manner.&nbsp;</p>
+The following example is the simplest case, in which all files require a password for access: </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)
+{
+<strong><span style="color: #000080">return</span></strong> 0;
+}
+In some cases, only certain files will need to be <strong><span style="color: #000080">protected</span></strong>. The second example requires a password <strong><span style="color: #000080">for</span></strong> any file located in the /treasure folder:
+uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)
+{
+    <i><span style="color: #008000">// Compare to &quot;/treasure&quot; folder. Don't use strcmp here, because</span></i>
+    <i><span style="color: #008000">// cFile has additional path info such as &quot;/treasure/gold.htm&quot;</span></i>
+    <strong><span style="color: #000080">if</span></strong>(memcmp(cFile, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>*)&quot;treasure&quot;, 8) == 0)
+    {   <i><span style="color: #008000">// Authentication will be needed later</span></i>
+        <strong><span style="color: #000080">return</span></strong> 0;
+    }
+
+    <i><span style="color: #008000">// No authentication required</span></i>
+    <strong><span style="color: #000080">return</span></strong> 0x80;
+}</pre></div></div>
 <p class="Element10">
-The callback function <a href="02396.html" target="topic">TCPIP_HTTP_GetExecute</a> is implemented by the application developer to process this data and perform any necessary actions. The function <a href="02331.html" target="topic">TCPIP_HTTP_ArgGet</a> provides an easy method to retrieve submitted values for processing.&nbsp;</p>
+More complex uses could require an administrative user to access the <span class="Element146">/admin</span> folder, while any authenticated user can access the rest of the site. This requires the <a href="02401.html" target="topic">TCPIP_HTTP_FileAuthenticate</a> to return different authentication values for a different file.</p><div class="Element15">
+Validating Credentials</div>
 <p class="Element10">
-See the custom _http_app.c for an example of <a href="02396.html" target="topic">TCPIP_HTTP_GetExecute</a> implementation.</p><div class="Element15">
-The POST Method</div>
+The <a href="02638.html" target="topic">TCPIP_HTTP_UserAuthenticate</a> function determines if the supplied user name and password are valid to access the specific resource. Again, the most significant bit indicates whether or not access is granted. The value returned is also stored in the connection internal data and it can be accessed by future callback functions.&nbsp;</p>
 <p class="Element10">
-The POST method transmits data after all the request headers have been sent. This data is not visible in the browser's address bar, and can only be seen with a packet capture tool. It does however use the same URL encoding method.&nbsp;</p>
+The following example is the simplest case, in which one user/password pair is accepted for all pages: </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t TCPIP_HTTP_UserAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cUser, uint8_t* cPass)
+{
+    <strong><span style="color: #000080">if</span></strong>(!strcmp((<strong><span style="color: #000080">char</span></strong>*)cUser, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>*)&quot;AliBaba&quot;) &amp;&amp;
+    !strcmp((<strong><span style="color: #000080">char</span></strong>*)cPass, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>*)&quot;Open Sesame!&quot;) )
+    {
+        <strong><span style="color: #000080">return</span></strong> 0x80;
+    }
+
+    <strong><span style="color: #000080">return</span></strong> 0;
+}</pre></div></div>
 <p class="Element10">
-The HTTP server does not perform any preparsing of this data. All POST data is left in the TCP buffer, so the custom application will need to access the TCP buffer directly to retrieve and decode it. The functions <a href="02609.html" target="topic">TCPIP_HTTP_PostNameRead</a> and <a href="02611.html" target="topic">TCPIP_HTTP_PostValueRead</a> have been provided to assist with these requirements. However, these functions can only be used when at least entire variables are expected to fit in the TCP buffer at once. Most POST processing functions will be implemented as state machines to use these functions. There is a status variable per each connection that stores the current state accessible with <a href="02348.html" target="topic">TCPIP_HTTP_CurrentConnectionPostSmGet</a> and <a href="02349.html" target="topic">TCPIP_HTTP_CurrentConnectionPostSmSet</a> functions. This state machine variable is reset to zero with each new request. Functions should generally implement a state to read a variable name, and another to read an expected value. Additional states may be helpful depending on the application.&nbsp;</p>
-<p class="Element10">
-The following example form accepts an e-mail address, a subject, and a message body. Since this data will likely total over the size of the internal connection data buffer, it should be submitted via POST. </p><div class="Element13"><div class="Element12"><pre class="Element12">&lt;form method=&quot;post&quot; action=&quot;/email.htm&quot;&gt;
-To: &lt;input type=&quot;text&quot; name=&quot;to&quot; maxlength=&quot;50&quot; /&gt;&lt;br /&gt;
-Subject: &lt;input type=&quot;text&quot; name=&quot;subject&quot; maxlength=&quot;50&quot; /&gt;&lt;br /&gt;
-Message:&lt;br /&gt;
-&lt;textarea name=&quot;msg&quot; rows=&quot;6&quot;&gt;&lt;/textarea&gt;&lt;br /&gt;
-&lt;input type=&quot;submit&quot; value=&quot;Send Message&quot; /&gt;&lt;/div&gt;
-&lt;/form&gt;</pre></div></div>
-<p class="Element10">
-Suppose a user enters the following data into this form:&nbsp;</p>
-<p class="Element10">
-To: joe@picsaregood.com&nbsp;</p>
-<p class="Element10">
-Subject: Sent by a PIC&nbsp;</p>
-<p class="Element10">
-Message: I sent this message using my development board!&nbsp;</p>
-<p class="Element10">
-The <a href="02608.html" target="topic">TCPIP_HTTP_PostExecute</a> function will be called with the following data still in the TCP buffer:&nbsp;</p>
-<p class="Element10">
-to=joe%40picsaregood.com&amp;subject=Sent+by+a+PIC&amp;msg=I+sent+this+message+using+my+development+board%21&nbsp;</p>
-<p class="Element10">
-To use the e-mail module, the application needs to read in the address and the subject, store those in RAM, and then <a href="01187.html" target="topic">send</a> the message. However, since the message is not guaranteed to fit in RAM all at once, it must be read as space is available and passed to the e-mail module. A state machine, coupled with the <a href="02609.html" target="topic">TCPIP_HTTP_PostNameRead</a> and&nbsp;</p>
-<p class="Element10">
-<a href="02611.html" target="topic">TCPIP_HTTP_PostValueRead</a> functions can simplify this greatly.&nbsp;</p>
-<p class="Element10">
-See the <a href="02608.html" target="topic">TCPIP_HTTP_PostExecute</a> and HTTPPostEmail functions in the supplied custom_http_app.c for a complete implementation of this example.</p></div>
+More complex uses are certainly feasible. Many applications may choose to store the user names and passwords in protected files so that they may be updated by a privileged user. In some cases, you may have multiple users with various levels of access. The application may wish to return various values above 0x80 in <a href="02638.html" target="topic">TCPIP_HTTP_UserAuthenticate</a> so that later callback functions can determine which user logged in.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a> &gt; <a href="01481.html" target="topic">HTTP Features</a> &gt; <a href="01479.html" target="topic">Form Processing</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01509.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">HTTP Features</a> &gt; <a href="01479.html" target="topic">Authentication</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +116,13 @@ See the <a href="02608.html" target="topic">TCPIP_HTTP_PostExecute</a> and HTTPP
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01477.html" target="topic">Previous</a> | <a href="01481.html" target="topic">Up</a> | <a href="01471.html" target="topic">Next</a></div>
+<a href="01487.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01483.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Form Processing Topic Title: Form Processing)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Authentication Topic Title: Authentication)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

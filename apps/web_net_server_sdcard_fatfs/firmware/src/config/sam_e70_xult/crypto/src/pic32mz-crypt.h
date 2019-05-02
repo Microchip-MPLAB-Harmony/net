@@ -17,29 +17,39 @@
 **************************************************************************/
 
 //DOM-IGNORE-BEGIN
-/******************************************************************************
-Copyright © 2013-2017 released Microchip Technology Inc.  All rights reserved.
+/*****************************************************************************
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
-Microchip licenses to you the right to use, modify, copy and distribute
-Software only when embedded on a Microchip microcontroller or digital signal
-controller that is integrated into your product or third party product
-(pursuant to the sublicense terms in the accompanying license agreement).
+Microchip Technology Inc. and its subsidiaries.
 
-You should refer to the license agreement accompanying this Software for
-additional information regarding your rights and obligations.
+Subject to your compliance with these terms, you may use Microchip software 
+and any derivatives exclusively with Microchip products. It is your 
+responsibility to comply with third party license terms applicable to your 
+use of third party software (including open source software) that may 
+accompany Microchip software.
 
-SOFTWARE AND DOCUMENTATION ARE PROVIDED “AS IS” WITHOUT WARRANTY OF ANY KIND,
-EITHER EXPRESS OR IMPLIED, INCLUDING WITHOUT LIMITATION, ANY WARRANTY OF
-MERCHANTABILITY, TITLE, NON-INFRINGEMENT AND FITNESS FOR A PARTICULAR PURPOSE.
-IN NO EVENT SHALL MICROCHIP OR ITS LICENSORS BE LIABLE OR OBLIGATED UNDER
-CONTRACT, NEGLIGENCE, STRICT LIABILITY, CONTRIBUTION, BREACH OF WARRANTY, OR
-OTHER LEGAL EQUITABLE THEORY ANY DIRECT OR INDIRECT DAMAGES OR EXPENSES
-INCLUDING BUT NOT LIMITED TO ANY INCIDENTAL, SPECIAL, INDIRECT, PUNITIVE OR
-CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
-SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
-(INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
-*******************************************************************************/
+THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
+EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
+WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
+PURPOSE.
+
+IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
+INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
+WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
+BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
+FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
+ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
+THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************/
+
+
+
+
+
+
+
 //DOM-IGNORE-END
+
 
 #ifndef PIC32MZ_CRYPT_H
 #define PIC32MZ_CRYPT_H
@@ -47,6 +57,8 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #ifdef __cplusplus
     extern "C" {
 #endif
+
+#include "crypto/src/settings.h"
 
 #ifdef WOLFSSL_MICROCHIP_PIC32MZ
 
@@ -67,6 +79,9 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
     #endif
 #endif
 
+/* Enables support for large hashing */
+/* requires exclusive access to crypto hardware done at application layer */
+#define WOLFSSL_PIC32MZ_LARGE_HASH
 
 #include <xc.h>
 #include <sys/endian.h>
@@ -133,6 +148,9 @@ typedef struct hashUpdCache {
     unsigned int    bufLen;
     unsigned int    updLen;
     int             isCopy;
+#ifdef WOLFSSL_PIC32MZ_LARGE_HASH
+    unsigned int    finalLen;
+#endif
 } hashUpdCache;
 
 
@@ -208,9 +226,25 @@ int wc_Pic32DesCrypt(word32 *key, int keyLen, word32 *iv, int ivLen,
 #endif
 
 #ifdef WOLFSSL_PIC32MZ_HASH
+#define WOLFSSL_NO_HASH_RAW
+
 int wc_Pic32Hash(const byte* in, int inLen, word32* out, int outLen, int algo);
 int wc_Pic32HashCopy(hashUpdCache* src, hashUpdCache* dst);
+
+#ifndef NO_MD5
+struct wc_Md5;
+void wc_Md5Pic32Free(struct wc_Md5* md5);
 #endif
+#ifndef NO_SHA
+struct wc_Sha;
+void wc_ShaPic32Free(struct wc_Sha* sha);
+#endif
+
+#ifndef NO_SHA256
+struct wc_Sha256;
+void wc_Sha256Pic32Free(struct wc_Sha256* sha256);
+#endif
+#endif /* WOLFSSL_PIC32MZ_HASH */
 
 #endif /* WOLFSSL_MICROCHIP_PIC32MZ */
 

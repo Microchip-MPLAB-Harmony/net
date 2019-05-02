@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_IF_UP_DOWN_OPERATION Macro</title>
+<title>TCPIP_STACK_HEAP_USAGE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01579.html" target="topic">Configuring the Library</a> &gt; <a href="03561.html" target="topic">TCPIP_STACK_IF_UP_DOWN_OPERATION Macro</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03561.html" target="topic">TCPIP_STACK_HEAP_USAGE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03484.html" target="topic">Previous</a> | <a href="01579.html" target="topic">Up</a> | <a href="03565.html" target="topic">Next</a></div>
+<a href="03556.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="00007.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_IF_UP_DOWN_OPERATION Topic Title: TCPIP_STACK_IF_UP_DOWN_OPERATION Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_USAGE Topic Title: TCPIP_STACK_HEAP_USAGE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_IF_UP_DOWN_OPERATION Macro</div>
+TCPIP_STACK_HEAP_USAGE Enumeration</div>
 </div>
 </div>
 
@@ -49,27 +49,82 @@ TCPIP_STACK_IF_UP_DOWN_OPERATION Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This setting enables the <a href="03604.html" target="topic">TCPIP_STACK_NetUp</a>/<a href="03589.html" target="topic">TCPIP_STACK_NetDown</a> operations When enabled, these functions are built in and can be used by an app Useful when interfaces do not need restarting at run time - results in smaller code footprint.</p></div>
+Type: TCPIP_STACK_HEAP_USAGE&nbsp;</p>
+<p class="Element10">
+Definition of the heap usage/purpose. It defines what modules in the TCP/IP stack will use this heap.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_STACK_IF_UP_DOWN_OPERATION</span></strong> <strong><span style="color: #000080">true</span></strong></pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_DEFAULT</span></strong> = 0x00,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_GENERIC</span></strong> = 0x01,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_PACKET</span></strong> = 0x02,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_SOCKET_TCP</span></strong> = 0x04,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_SOCKET_UDP</span></strong> = 0x08,
+  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_POOL_UDP</span></strong> = 0x10
+} TCPIP_STACK_HEAP_USAGE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_USE_DEFAULT = 0x00&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Default heap usage&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_USE_GENERIC = 0x01&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Generic heap usage&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_USE_PACKET = 0x02&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Heap for packet allocations&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_USE_SOCKET_TCP = 0x04&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Heap for TCP sockets&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_USE_SOCKET_UDP = 0x08&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Heap for UDP sockets&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_STACK_HEAP_USE_POOL_UDP = 0x10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Heap for UDP TX pool buffers&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element631">
-<li class="Element601">Combination <a href="03477.html" target="topic">TCPIP_STACK_DOWN_OPERATION</a> == false and TCPIP_STACK_IF_UP_DOWN_OPERATION == true is invalid and must not be used otherwise the behavior is undefined!</li>
-</ul></p></div>
+This is an advanced definition that is currently not used. Multiple heaps usage will be added in the future. For now only one heap type is supported and its used for all allocation operations.&nbsp;</p>
+<p class="Element10">
+New usages could be eventually added.&nbsp;</p>
+<p class="Element10">
+Multiple usage flags can be simultaneously set.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01579.html" target="topic">Configuring the Library</a> &gt; <a href="03561.html" target="topic">TCPIP_STACK_IF_UP_DOWN_OPERATION Macro</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03561.html" target="topic">TCPIP_STACK_HEAP_USAGE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -77,13 +132,13 @@ Remarks</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03484.html" target="topic">Previous</a> | <a href="01579.html" target="topic">Up</a> | <a href="03565.html" target="topic">Next</a></div>
+<a href="03556.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="00007.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_IF_UP_DOWN_OPERATION Topic Title: TCPIP_STACK_IF_UP_DOWN_OPERATION Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_USAGE Topic Title: TCPIP_STACK_HEAP_USAGE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
