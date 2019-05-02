@@ -192,7 +192,9 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
+
     SYS_MODULE_OBJ  tcpip;
+
     SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysConsole0;
 

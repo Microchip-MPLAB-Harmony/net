@@ -1,5 +1,5 @@
 # Microchip MPLAB Harmony 3 Release Notes
-## Net Release v3.3.0 (April, 2019)
+## Net Release v3.3.0 (May, 2019)
 ### ADDITIONS AND UPDATES FOR  3.3.0:
 
 - **New part support** -This release introduces initial support for [PIC32MZEF](https://www.microchip.com/design-centers/32-bit/pic-32-bit-mcus/pic32mz-ef-family) and [PIC32MZDA](https://www.microchip.com/design-centers/32-bit/pic-32-bit-mcus/pic32mz-da-family) families of 32-bit microcontrollers.
@@ -44,7 +44,7 @@ The following table provides the list of updated utilities for the TCP/IP stack 
 
 | Module                | Description                                             |
 | ------ | ------ |
-| mpfs2.jar             | The tool has been updated to disable the default compression of html files. The new http_net web server module parses the web pages at run time. |
+| mpfs.jar              | - This tool updates and replaces the existent mpfs2.jar.<br> - The new MPFS utility version 3.3.3 is capable of parsing SSI directives. <br> - The utility is intended to be used with the HTTP_NET server. <br> - It generates the http_net_print.h and http_net_print.c files. <br> - HTTP_Net Application initialization and HTTP registration are now part of http_net_print.c file. <br> - The tool has been updated to disable the default compression of html files. <br> - When the application Custom Template is enabled, the Web pages are added to the project. <br> - The Source directory path is the source of the web page files. <br> - The Destination directory path is the location where the web page files will be copied. <br> - The Destination location is not currently configurable. <br> - The maximum number of supported web page files is currently 100. <br> - The NVM MPFS demos use a customized pre-build step to generate the mpfs_net_img.c file: <br> java -jar ../../../../utilities/mpfs_generator/mpfs.jar /c /z "snmp.bib" "../src/web_pages" "../src" "mpfs_net_img.c" <br> - If there is no JRE installed on the building machine, the project will not build. The pre-build step needs to be disabled manually|
 
 - **Bug Fixes**
 
@@ -53,6 +53,10 @@ The following table provides the list of bug fixes in this release:
 | Module                | Description                                             |
 | ------ | ------ |
 | TCP/IP Manager        | Created function to update the default interface at run time after an interface is changed or brought down |
+| TCP/IP Packet logger  | Improvements to the packet logger. Now is part of the main source code.                                           |
+| HTTP_NET              | Fixed an error in the upload state machine that was discarding the MPFS signature from the incoming stream |
+| drv_extphy_smsc9303   | Added patch to eliminate leaks based on the customer suggestion.                                           |
+
 
 
 ### TESTED WITH:
@@ -74,7 +78,7 @@ In order to regenerate source code for any of the applications, you will also ne
 - Harmony csp repository, 3.2.1
 - Harmony core repository, 3.2.1
 - Harmony dev_packs repository, 3.2.1
-- Harmony crypto repository, 3.2.0
+- Harmony crypto repository, 3.2.1
 - CMSIS-FreeRTOS repository, 10.0.1 if building a FreeRTOS project (from www.github.com/arm-software/cmsis-freertos)
 
 #### Development Kit Support
@@ -97,9 +101,12 @@ The current known issues are as follows:
 * For projects using the mpfs_img2.c and mpfs_img2_net.c files, these may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
 * The SAME70 XULT board has some issues and detection of the PHY board may fail. This issue is under investigation.
     - For now the SAME70 projects are present in the repo just for reference and not for actual running demos.
-    - For now the SAME70 projects are generated using the LAN8740 PHY.
+    - For now the SAME70 projects are generated using the LAN8740 PHY instead of KSZ8061 which is the default PHY for this board.
 * The ICD4 loads the reset line of the SAM V71 Xplained Ultra board. When running demo projects using the V71, the ICD4 flex cable should be removed after programming to run the application.
 * Interactive help using the Show User Manual Entry in the Right-click menu for configuration options provided by this module is not yet available from within the MPLAB Harmony Configurator (MHC).  Please see the *Configuring the Library* section in the help documentation in the doc folder for this Harmony 3 module instead.  Help is available in both CHM and PDF formats.
+* The SAM E70/V71/E54/A5D2 processors do not have a built in factory pre-programmed MAC address.
+    - The XULT boards use the AT24MAC402 serial EEPROM for having an unique MAC address per board.
+    - Currently the demo applications do not use the AT24MAC402 EEPROM for reading the MAC address. This will be added in a future release.
 
 * The SAME70 and SAMV71 TCPIP demos with SDCARD, won’t work with optimisation 0. Use optimization level 1.
 
@@ -107,7 +114,7 @@ The current known issues are as follows:
     - The SNMP protocol and corresponding demo applications is not be available.
     - IPv6 ULA generation is not available
     - ZCLL module is not supported
-    - Crypto library is not supported
+    - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer has not yet been fully tested for these projects. This will be done in a next release when wolfSSL support is added to the TCP/IP stack.  
     - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
 
 * SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
@@ -155,27 +162,27 @@ This topic lists the contents of this release and identifies each module.
 This table lists the contents of this release, including a brief description, and the release type (Alpha, Beta, Production, or Vendor).
 
 
-| Folder                                | Description                                                          | Release Type |
-| --- | --- | --- |
-| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        | Beta |
-| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        | Beta |
-| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        | Beta |
-| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         | Beta |
-| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        | Beta |
-| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  | Beta |
-| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          | Beta |
-| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    | Beta |
-| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             | Beta |
-| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  | Beta |
-| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             | Beta |
-| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             | Beta |
-| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  | Beta |
-| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             | Beta |
-| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               | Beta |
-| net/apps/web_net_server_qspi_mpfs     | Web server with MPFS file system on the onboard QSPI Flash Memory    | Beta |
-| net/apps/web_net_server_sdcard_fatfs  | Web server with FAT FS file system on the external SD card           | Beta |
-| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     | Beta |
-| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card | Beta |
+| Folder                                | Description                                                          | 
+| --- | --- | 
+| net/apps/berkeley_tcp_client          | TCP Client demo using BSD API                                        |
+| net/apps/berkeley_tcp_server          | TCP Server demo using BSD API                                        |
+| net/apps/berkeley_udp_client          | UDP Client demo using BSD API                                        |
+| net/apps/berkeley_udp_relay           | UDP Relay demo using BSD API                                         |
+| net/apps/berkeley_udp_server          | UDP Server demo using BSD API                                        |
+| net/apps/snmpv3_nvm_mpfs              | SNMPv3 demo with MPFS file system using NVM storage                  |
+| net/apps/snmpv3_sdcard_fatfs          | SNMPv3 demo with  FAT FS file system using external SD card          |
+| net/apps/tcpip_client_server          | Multi-threaded example with TCP and UDP server and client threads    |
+| net/apps/tcpip_tcp_client             | TCP Client demo using Harmony native API                             |
+| net/apps/tcpip_tcp_client_server      | TCP Client and Server demo using Harmony native API                  |
+| net/apps/tcpip_tcp_server             | TCP Server demo using Harmony native API                             |
+| net/apps/tcpip_udp_client             | UDP Client demo using Harmony native API                             |
+| net/apps/tcpip_udp_client_server      | UDP Client and Server demo using Harmony native API                  |
+| net/apps/tcpip_udp_server             | UDP Server demo using Harmony native API                             |
+| net/apps/web_net_server_nvm_mpfs      | Web server with MPFS file system using the NVM storage               |
+| net/apps/web_net_server_qspi_mpfs     | Web server with MPFS file system on the onboard QSPI Flash Memory    |
+| net/apps/web_net_server_sdcard_fatfs  | Web server with FAT FS file system on the external SD card           |
+| net/apps/web_server_nvm_mpfs          | Old style web server with MPFS file system using the NVM storage     |
+| net/apps/web_server_sdcard_fatfs      | Old style web server with FAT FS file system on the external SD card |
 
 
 ## Net Release v3.2.0 (March, 2019)

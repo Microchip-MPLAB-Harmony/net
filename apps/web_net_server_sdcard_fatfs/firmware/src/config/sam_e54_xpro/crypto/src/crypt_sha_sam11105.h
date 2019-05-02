@@ -23,24 +23,10 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
-
-
-
-
-#ifndef _SAME70_HASH_
-#define _SAME70_HASH_
+#ifndef _CRYPT_SHA_SAM11105_H_
+#define _CRYPT_SHA_SAM11105_H_
 
 #include "definitions.h"
-
-
 
 /**
  *  ICM region descriptor in main list.

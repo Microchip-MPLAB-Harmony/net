@@ -336,18 +336,28 @@ const TCPIP_TCP_MODULE_CONFIG tcpipTCPInitData =
     .sktRxBuffSize  = TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE,
 };
 
-/*** HTTP Server Initialization Data ***/
-const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
-{
-    .nConnections   = TCPIP_HTTP_MAX_CONNECTIONS,
-    .dataLen		= TCPIP_HTTP_MAX_DATA_LEN,
-    .sktTxBuffSize	= TCPIP_HTTP_SKT_TX_BUFF_SIZE,
-    .sktRxBuffSize	= TCPIP_HTTP_SKT_RX_BUFF_SIZE,
-    .configFlags	= TCPIP_HTTP_CONFIG_FLAGS,
-    .http_malloc_fnc    = TCPIP_HTTP_MALLOC_FUNC,
-    .http_free_fnc      = TCPIP_HTTP_FREE_FUNC,
-};
 
+/*** HTTP_NET Server Initialization Data ***/
+const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
+{
+    .nConnections   = TCPIP_HTTP_NET_MAX_CONNECTIONS,
+    .dataLen		= TCPIP_HTTP_NET_MAX_DATA_LEN,
+    .sktTxBuffSize	= TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize	= TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE,
+    .listenPort	    = TCPIP_HTTP_NET_LISTEN_PORT,
+    .nDescriptors   = TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER,
+    .nChunks        = TCPIP_HTTP_NET_CHUNKS_NUMBER, 
+    .maxRecurseLevel= TCPIP_HTTP_NET_MAX_RECURSE_LEVEL,    
+    .configFlags	= TCPIP_HTTP_NET_CONFIG_FLAGS,
+    .nFileBuffers   = TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER,
+    .fileBufferSize = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE,
+    .chunkPoolRetries = TCPIP_HTTP_NET_CHUNK_RETRIES,
+    .fileBufferRetries = TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_RETRIES,
+    .dynVarRetries  = TCPIP_HTTP_NET_DYNVAR_PROCESS_RETRIES,
+    .connTimeout        = TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
+    .http_malloc_fnc    = TCPIP_HTTP_NET_MALLOC_FUNC,
+    .http_free_fnc      = TCPIP_HTTP_NET_FREE_FUNC,
+};
 
 
 
@@ -613,7 +623,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_DNS_CLIENT,       &tcpipDNSClientInitData},       // TCPIP_MODULE_DNS_CLIENT
     {TCPIP_MODULE_NBNS,             &tcpipNBNSInitData},            // TCPIP_MODULE_NBNS
 
-    {TCPIP_MODULE_HTTP_SERVER,      &tcpipHTTPInitData},            // TCPIP_MODULE_HTTP_SERVER
+    {TCPIP_MODULE_HTTP_NET_SERVER,  &tcpipHTTPNetInitData},         // TCPIP_MODULE_HTTP_NET_SERVER
     {TCPIP_MODULE_SNMP_SERVER,      &tcpipSNMPInitData},            // TCPIP_MODULE_SNMP_SERVER
     {TCPIP_MODULE_SMTPC, &tcpipSMTPCInitData},                                  // TCPIP_MODULE_SMTPC,
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER

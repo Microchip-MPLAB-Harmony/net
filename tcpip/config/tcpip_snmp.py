@@ -1,3 +1,26 @@
+"""*****************************************************************************
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************"""
+
 TCPIP_SNMP_VERSIONS = ["SNMP_V1", "SNMP_V2C", "SNMP_V3"]
 tcpipSnmpMaxCommNum = 3
 tcpipSnmpConfigNumPrev = 3
@@ -216,11 +239,11 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpMibHeaderFile.setOverwrite(True)
 	tcpipSnmpMibHeaderFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_SNMP_CUSTOM_TEMPLATE"])
 # ifblock (USE_SYS_FS) && (SYS_FS_MPFS) && (!TCPIP_STACK_USE_HTTP_SERVER)
-# template SNMP_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_img2.c"
+# template SNMP_MPFS_IMG "$HARMONY_VERSION_PATH/framework/tcpip/config/custom_app/mpfs_img2_net.c.ftl" to "$PROJECT_SOURCE_FILES/app/mpfs_net_img.c"
 # endif
 	tcpipSnmpMpfsImg2SourceFile = tcpipSnmpComponent.createFileSymbol(None, None)
-	tcpipSnmpMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2.c.ftl")
-	tcpipSnmpMpfsImg2SourceFile.setOutputName("mpfs_img2.c")
+	tcpipSnmpMpfsImg2SourceFile.setSourcePath("tcpip/config/custom_app/mpfs_img2_net.c.ftl")
+	tcpipSnmpMpfsImg2SourceFile.setOutputName("mpfs_net_img.c")
 	tcpipSnmpMpfsImg2SourceFile.setDestPath("../../")
 	tcpipSnmpMpfsImg2SourceFile.setProjectPath("")
 	tcpipSnmpMpfsImg2SourceFile.setType("SOURCE")

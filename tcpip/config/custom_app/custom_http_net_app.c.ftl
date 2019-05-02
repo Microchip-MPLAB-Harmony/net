@@ -36,7 +36,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "system_config.h"
 #include "system_definitions.h"
-
+#include "http_net_print.h"
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 <#if lib_crypto?? >
@@ -164,98 +164,6 @@ static bool lastSuccess = false;
 
 // Stick status message variable.  See lastSuccess for details.
 static bool lastFailure = false;
-
-<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
-// Number of buffers to be used by the app for dynamic variable callbacks
-#define HTTP_APP_DYNVAR_BUFFERS_NO      4
-
-// size of an allocated dynamic variable call back buffer
-#define HTTP_APP_DYNVAR_BUFFER_SIZE     100
-
-typedef struct
-{
-    uint16_t    busy;           // buffer is currently in process
-    uint16_t    bufferSize;     // size of the associated buffer
-    char        data[HTTP_APP_DYNVAR_BUFFER_SIZE];  // buffer for writing the dynamic variable callback content
-}HTTP_APP_DYNVAR_BUFFER;
-
-static HTTP_APP_DYNVAR_BUFFER httpDynVarBuffers[HTTP_APP_DYNVAR_BUFFERS_NO];
-
-// helper to get one of the application's dynamic buffer that are used in the
-// dynamic variables processing
-static HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
-{
-    int ix;
-    HTTP_APP_DYNVAR_BUFFER *pDynBuffer;
-
-    pDynBuffer = httpDynVarBuffers;
-    for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix, pDynBuffer++)
-    {
-        if(pDynBuffer->busy == 0)
-        {
-            pDynBuffer->busy = 1;
-            return pDynBuffer;
-        }
-    }
-    return 0;
-}
-
-</#if>
-/****************************************************************************
-  Section:
-    Application initialization and HTTP registration.
-    Here the application registers with the HTTP module the functions
-    that will process the HTTP events (dynamic variables, SSI events, Post, Get, etc.).
-    Note that without registering the process functions with HTTP, there won't be any web page processing.
-    There is no default processing for a web page!
-
-    See http_net.h for details regarding each of these functions.
- ****************************************************************************/
-void HTTP_APP_Initialize(void)
-{
-
-<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
-    int ix;
-
-    for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix)
-    {
-        httpDynVarBuffers[ix].busy = 0;
-        httpDynVarBuffers[ix].bufferSize = HTTP_APP_DYNVAR_BUFFER_SIZE;
-    }
-</#if>
-
-    TCPIP_HTTP_NET_USER_CALLBACK appHttpCBack =
-    {
-        .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
-        .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
-<#if ((TCPIP_HTTP_NET_USE_AUTHENTICATION?has_content) && (TCPIP_HTTP_NET_USE_AUTHENTICATION  == true))>
-        .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
-        .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
-<#else>
-        .fileAuthenticate = 0,
-        .userAuthenticate = 0,
-</#if>
-
-<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
-        .dynamicPrint = TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
-        .dynamicAck = TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
-<#else>
-        .dynamicPrint = 0,
-        .dynamicAck = 0,
-</#if>
-        .eventReport = TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
-
-<#if ((TCPIP_HTTP_NET_SSI_PROCESS?has_content) && (TCPIP_HTTP_NET_SSI_PROCESS  == true)) >
-        .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
-<#else>
-        .ssiNotify = 0,
-</#if>
-    };
-
-    TCPIP_HTTP_NET_USER_HANDLE httpH = TCPIP_HTTP_NET_UserHandlerRegister(&appHttpCBack);
-    if(httpH == 0)
-        SYS_CONSOLE_MESSAGE("APP: Failed to register the HTTP callback!\r\n");
-}
 
 /****************************************************************************
   Section:

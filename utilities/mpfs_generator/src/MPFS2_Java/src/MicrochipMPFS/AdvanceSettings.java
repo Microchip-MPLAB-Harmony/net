@@ -184,14 +184,9 @@ public class AdvanceSettings extends javax.swing.JDialog {
 
         defaultAdvanceSetting();
         DynVarStr = "*.htm, *.html, *.cgi, *.xml";
-        NoCompStr = "*.inc, snmp.bib";
+        NoCompStr = "snmp.bib,*.bin";
         txtDynFiles.setText(DynVarStr);
-        txtDoNotCompress.setText(NoCompStr);
-        if(mainMpfs.radUnifiedStackuse.isSelected())
-        {
-           NoCompStr = "*.inc, snmp.bib,*.bin,,*.htm,*.html";
-           txtDoNotCompress.setText(NoCompStr);
-        }        
+        txtDoNotCompress.setText(NoCompStr);        
     }
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {

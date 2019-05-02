@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>Using the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01196.html" target="topic">SMTPC Module</a> &gt; <a href="01645.html" target="topic">Library Interface</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01198.html" target="topic">SMTP Module</a> &gt; <a href="01645.html" target="topic">Using the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01639.html" target="topic">Previous</a> | <a href="01196.html" target="topic">Up</a> | <a href="03229.html" target="topic">Next</a></div>
+<a href="01639.html" target="topic">Previous</a> | <a href="01198.html" target="topic">Up</a> | <a href="01633.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+Using the Library</div>
 </div>
 </div>
 
@@ -49,175 +49,40 @@ Library Interface</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section describes the Application Programming Interface (API) functions of the <span style="color: #000000">SMTPC</span> module.&nbsp;</p>
+<strong>Interface Header File</strong>: <span class="Element146"><a href="01199.html" target="topic">smtp.h</a></span>&nbsp;</p>
 <p class="Element10">
-Refer to each section for a detailed description.</p></div>
+The interface to the <span style="color: #000000">SMTP</span><span style="color: #0000FF"> </span>TCP/IP Stack library is defined in the <span class="Element146"><a href="01199.html" target="topic">smtp.h</a></span> header file. This file is included by the <span class="Element146">tcpip.h</span> file. Any C language source (<span class="Element146">.c</span>) file that uses the <span style="color: #000000">SMTP</span><span style="color: #0000FF"> </span>TCP/IP Stack library should include <span class="Element146">tcpip.h</span>.&nbsp;</p>
+<p class="Element10">
+Please refer to the <strong>What is MPLAB Harmony?</strong> section for how the TCP/IP Stack interacts with the framework.</p></div>
 </div>
-<a name="61292046756E6374696F6E73"></a><div class="Element14">
-a) Functions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<td class="Element200" valign="top" width="35%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03229.html" target="topic">TCPIP_SMTPC_MailMessage</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01633.html" target="topic">Abstraction Model</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-SMTPC mail message function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This library provides the API of the <span style="color: #000000">SMTP</span> TCP/IP Module that is available on the Microchip family ofdevices with a convenient C language interface. It is a module that belongs to the TCP/IP stack<span style="color: #0000FF">.</span>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03297.html" target="topic">TCPIP_SMTPC_MessageQuery</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01641.html" target="topic">Library Overview</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-SMTPC mail message query function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the SMTP module.</span> &nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03316.html" target="topic">TCPIP_SMTPC_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01642.html" target="topic">SMTP Client Examples</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6229204461746120547970657320616E642046756E6374696F6E73"></a><div class="Element14">
-b) Data Types and Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03173.html" target="topic">TCPIP_SMTPC_ATTACH_BUFFER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Buffer attachment to the mail.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03179.html" target="topic">TCPIP_SMTPC_ATTACH_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-File attachment to the mail.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03183.html" target="topic">TCPIP_SMTPC_ATTACH_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTPC attachment type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03191.html" target="topic">TCPIP_SMTPC_ENCODE_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTPC encoding type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03197.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Mail message flags&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03207.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Mail message descriptor.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03230.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines a mail message callback&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03231.html" target="topic">TCPIP_SMTPC_MESSAGE_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines a handle to a mail message&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03232.html" target="topic">TCPIP_SMTPC_MESSAGE_QUERY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Structure defining a run time query for a mail message&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03237.html" target="topic">TCPIP_SMTPC_MESSAGE_REPORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Structure defining a mail message report&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03242.html" target="topic">TCPIP_SMTPC_MESSAGE_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTPC result code&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03276.html" target="topic">TCPIP_SMTPC_MESSAGE_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTPC message status&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03291.html" target="topic">TCPIP_SMTPC_MESSAGE_WARNING</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTPC warning type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03298.html" target="topic">TCPIP_SMTPC_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SMTPC configuration data.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03311.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines a mail server reply callback&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00005.html" target="topic">__SMTPC_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro __SMTPC_H.&nbsp;</div></td></tr></table></div></div>
+SMTP Client examples.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -225,7 +90,7 @@ This is macro __SMTPC_H.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01196.html" target="topic">SMTPC Module</a> &gt; <a href="01645.html" target="topic">Library Interface</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01198.html" target="topic">SMTP Module</a> &gt; <a href="01645.html" target="topic">Using the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -233,13 +98,13 @@ This is macro __SMTPC_H.&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01639.html" target="topic">Previous</a> | <a href="01196.html" target="topic">Up</a> | <a href="03229.html" target="topic">Next</a></div>
+<a href="01639.html" target="topic">Previous</a> | <a href="01198.html" target="topic">Up</a> | <a href="01633.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

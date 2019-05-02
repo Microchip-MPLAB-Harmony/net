@@ -106,7 +106,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/dns_manager.h"
 #include "tcpip/src/tcp_manager.h"
 #include "tcpip/src/nbns_manager.h"
-#include "tcpip/src/http_manager.h"
+#include "tcpip/src/http_net_manager.h"
 #include "tcpip/src/tcpip_commands_manager.h"
 #include "tcpip/src/udp_manager.h"
 #include "tcpip/src/snmp_manager.h"

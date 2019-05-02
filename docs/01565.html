@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Core Functionality</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01576.html" target="topic">Using the Library</a> &gt; <a href="01571.html" target="topic">How the Library Works</a> &gt; <a href="01565.html" target="topic">Core Functionality</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00896.html" target="topic">IPv6 Module</a> &gt; <a href="01565.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01571.html" target="topic">Previous</a> | <a href="01571.html" target="topic">Up</a> | <a href="01564.html" target="topic">Next</a></div>
+<a href="01559.html" target="topic">Previous</a> | <a href="00896.html" target="topic">Up</a> | <a href="02785.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv6 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Core Functionality</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -48,40 +48,450 @@ Core Functionality</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10" style="text-align: center;">
-<strong>MAC Connection Flow Diagram</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="TCPIP MAC mac_flow.png" border="0" alt="" title=""></p><p class="Element10">
-The MAC driver is used internally by the TCP/IP Stack Manager and its API is not normally exposed outside the stack. There is little need to interface directly with the MAC from the application level. The TCP/IP Stack provides all the data interface functions to the application by exposing the<span style="color: #FFFFFF">_</span><a href="01287.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>API (TCP and UDP) and also low level IPv4 and IPv6 API. However, the functionality of the MAC driver is important for having a thorough understanding of how the TCP/IP Stack works or for integrating the MPLAB Harmony MAC driver into a third-party TCP/IP Stack.&nbsp;</p>
 <p class="Element10">
-The MAC driver needs to be initialized by a call to <a href="02858.html" target="topic">TCPIP_MAC_Initialize</a>() with both stack and module specific initialization data. The stack initialization data contains absolutely necessary data for the MAC driver to operate (memory allocation functions, packet allocation functions, event notification functions, etc.) Note that the module initialization data could be different from one MAC module to another and, if missing, normally the MAC driver should use some default values specified in the <span class="Element146"><a href="02819.html" target="topic">tcpip_mac_config.h</a></span> file.&nbsp;</p>
+This section describes the Application Programming Interface (API) functions of the IPv6 module.&nbsp;</p>
 <p class="Element10">
-Once the initialization process succeeds, a MAC client handle is obtained by using <a href="02881.html" target="topic">TCPIP_MAC_Open</a>.&nbsp;</p>
-<p class="Element10">
-Other parameters can be set, like the active events and receive filters by calling <a href="02844.html" target="topic">TCPIP_MAC_EventMaskSet</a>, <a href="03004.html" target="topic">TCPIP_MAC_RxFilterHashTableEntrySet</a>, etc.&nbsp;</p>
-<p class="Element10">
-By default the MAC driver operates in interrupts and the events are reported to the TCP/IP stack by using the event notification function that’s passed in at the MAC driver initialization. However, by using the <a href="02845.html" target="topic">TCPIP_MAC_EventPendingGet</a> function, it is possible to use the MAC driver in a polling manner.&nbsp;</p>
-<p class="Element10">
-To <a href="01187.html" target="topic">send</a> a packet, a MAC driver client has to obtain a <a href="02882.html" target="topic">TCPIP_MAC_PACKET</a> data structure, either statically or dynamically. Note that the Harmony TCP/IP Stack uses dynamic packet allocation and has a packet allocation module that the Stack Manager calls for this purpose. The packet has to be properly formatted with all the required fields before being passed to the MAC driver for transmission. The MAC driver will perform a minimum sanity check and will try to transmit the packet over the network. Once the corresponding interrupt signals to the driver that the packet was (successfully/non-successfully) transmitted the MAC driver will call the packet acknowledge function. This will indicate to the owner of the packet (the module that created/allocated the packet) that the packet is no longer in use and it can be reused, discarded, etc.&nbsp;</p>
-<p class="Element10">
-The receive process is configured as part of the MAC driver initialization procedure. Usually the MAC driver needs some buffers for storing the received network traffic. How exactly this is done is driver specific and not part of this specification. The Harmony Ethernet MAC driver, for example, allocates multiple receive buffers at initialization and uses those for the whole duration of the driver life. Other implementations may choose to free the receive buffers once they are processed and allocate new ones, as needed.&nbsp;</p>
-<p class="Element10">
-The receive process is initiated by the hardware indicating through an interrupt that a packet is pending. This will trigger a notification event to the MAC client (the TCP/IP stack) and the actual packet receive function can be called. Alternatively the MAC client can call the <a href="02845.html" target="topic">TCPIP_MAC_EventPendingGet</a> function which can be used in a polling manner.&nbsp;</p>
-<p class="Element10">
-To actually receive the packet the TCP/IP stack should call the <a href="02920.html" target="topic">TCPIP_MAC_PacketRx</a> function. This function, besides returning a pointer to the newly received packet will provide additional info about the packet status. Also, some MAC drivers have the possibility to mark the packet being received as being unicast, multicast or broadcast.&nbsp;</p>
-<p class="Element10">
-Once a packet is obtained, the stack has to dispatch it accordingly, based on the info contained within the packet (ARP, IPv4, IPv6, etc.). Note that in the Harmony TCP/IP stack it’s the Stack Manager that performs the receiving and dispatching function of the packets. The recipient of the packet will be called to process the incoming packet and may forward the packet for further processing (TCP, UDP, ICMP). Note that during all this processing time this packet can no longer be used by the MAC driver for storing newly receive data. Therefore once the final recipient of the received packet has processed the data it has to call the packet acknowledge function, so that the packet can be returned to its owner, the MAC driver in this case. If the MAC driver reuses the packet (as the Harmony Ethernet MAC driver does) or simply discards it is driver implementation specific.&nbsp;</p>
-<p class="Element10">
-Once the data transfer of packets over the network is no longer needed the <a href="02818.html" target="topic">TCPIP_MAC_Close</a> function can be called and also <a href="02822.html" target="topic">TCPIP_MAC_Deinitialize</a>. This is part of the normal procedure that the Harmony stack uses for shutting down and restarting a network interface dynamically.&nbsp;</p>
-<p class="Element10">
-For detailed information about the MAC layer<span style="color: #FFFFFF">_</span>requirements and functionality, please consult the IEEE 802.3 specifications.</p></div>
+Refer to each section for a detailed description.</p></div>
+</div>
+<a name="61292046756E6374696F6E73"></a><div class="Element14">
+a) Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02785.html" target="topic">TCPIP_IPV6_HandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Registers an IPv6 event handler callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02784.html" target="topic">TCPIP_IPV6_HandlerDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deregisters an IPv6 event handler callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02786.html" target="topic">TCPIP_IPV6_InterfaceIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines if an interface is ready for IPv6 transactions.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02807.html" target="topic">TCPIP_IPV6_PacketFree</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Frees a TCP/IP Packet structure from dynamic memory.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02808.html" target="topic">TCPIP_IPV6_PayloadSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Allocates a segment on the end of a packet segment chain and uses it to address prebuffered data.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02777.html" target="topic">TCPIP_IPV6_DASSourceAddressSelect</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines the appropriate source address for a given destination address.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02780.html" target="topic">TCPIP_IPV6_DestAddressGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the destination address for a IPv6 packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02781.html" target="topic">TCPIP_IPV6_DestAddressSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the destination address for a IPv6 packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02812.html" target="topic">TCPIP_IPV6_SourceAddressGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the source address for an IPv6 packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02813.html" target="topic">TCPIP_IPV6_SourceAddressSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the source address for a IPv6 packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02776.html" target="topic">TCPIP_IPV6_ArrayPutHelper</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Helper function to write data to a packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02809.html" target="topic">TCPIP_IPV6_Put</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Writes a character of data to a packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02815.html" target="topic">TCPIP_IPV6_TxIsPutReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines whether a TX packet can be written to.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02816.html" target="topic">TCPIP_IPV6_TxPacketAllocate</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Dynamically allocates a packet for transmitting IP protocol data.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02775.html" target="topic">TCPIP_IPV6_ArrayGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reads the next byte of data from the specified MAC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02782.html" target="topic">TCPIP_IPV6_Flush</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Flushes a IP TX packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02783.html" target="topic">TCPIP_IPV6_Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reads the next byte of data from the specified MAC.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02818.html" target="topic">TCPIP_IPV6_UniqueLocalUnicastAddressAdd</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Adds a Unique Local Unicast Address (ULA) to a specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02811.html" target="topic">TCPIP_IPV6_RouterAddressAdd</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Adds a new router address to a specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02817.html" target="topic">TCPIP_IPV6_UnicastAddressAdd</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Adds a unicast address to a specified interface&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02778.html" target="topic">TCPIP_IPV6_DefaultRouterDelete</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deletes the current router list for a specified interface&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02779.html" target="topic">TCPIP_IPV6_DefaultRouterGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the current router address for a specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02814.html" target="topic">TCPIP_IPV6_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02787.html" target="topic">TCPIP_IPV6_IsFragmentationEnabled</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Helper to get the IPv6 fragmentation support.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02788.html" target="topic">TCPIP_IPV6_MaxDatagramDataSizeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Helper to get the maximum datagream data size (MDDS) on a specific interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02774.html" target="topic">TCPIP_IPV6_AddressUnicastRemove</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Removed a configured unicast address from an interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02793.html" target="topic">TCPIP_IPV6_MulticastListenerAdd</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Adds a multicast listener to an interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02794.html" target="topic">TCPIP_IPV6_MulticastListenerRemove</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Removes a multicast listener from a given interface.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6229204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+b) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00923.html" target="topic">IPV6_DATA_SEGMENT_HEADER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data structure for IPv6 Data Segment header.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00947.html" target="topic">IPV6_NEXT_HEADER_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a list of IPv6 next header types.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00961.html" target="topic">IPV6_PACKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Packet structure/state tracking for IPv6 packets.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00962.html" target="topic">IPV6_PACKET_ACK_FNC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Packet allocation and deallocation acknowledgment callback function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00964.html" target="topic">IPV6_SEGMENT_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Provides an enumeration of IPv6 segment types.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00990.html" target="topic">IPV6_ULA_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Provides a list of possible ULA action flags.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00994.html" target="topic">IPV6_ULA_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Provides a list of possible ULA results.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00919.html" target="topic">IPV6_DATA_DYNAMIC_BUFFER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data to transmit is allocated in dynamically allocated RAM&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00920.html" target="topic">IPV6_DATA_NETWORK_FIFO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data to transmit is stored in the Network Controller's FIFOs&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00921.html" target="topic">IPV6_DATA_NONE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The data segment is unused&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00922.html" target="topic">IPV6_DATA_PIC_RAM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data to transmit is stored in PIC RAM&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00960.html" target="topic">IPV6_NO_UPPER_LAYER_CHECKSUM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Value flag for no upper layer checksum&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02810.html" target="topic">TCPIP_IPV6_PutArray</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Writes data to a packet&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00923.html" target="topic">_IPV6_DATA_SEGMENT_HEADER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data structure for IPv6 Data Segment header.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00961.html" target="topic">_IPV6_PACKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Packet structure/state tracking for IPv6 packets.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00963.html" target="topic">_IPV6_RX_FRAGMENT_BUFFER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Data structure for IPv6 Received fragmented packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02789.html" target="topic">TCPIP_IPV6_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Provides a place holder for IPv6 configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00938.html" target="topic">IPV6_HEADER_OFFSET_DEST_ADDR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Header offset for destination address&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00939.html" target="topic">IPV6_HEADER_OFFSET_NEXT_HEADER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Header offset for next header&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00940.html" target="topic">IPV6_HEADER_OFFSET_PAYLOAD_LENGTH</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Header offset for payload length&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00941.html" target="topic">IPV6_HEADER_OFFSET_SOURCE_ADDR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Header offset for source address&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00977.html" target="topic">IPV6_TLV_HBHO_PAYLOAD_JUMBOGRAM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 Type-length-value type code for the Hop-by-hop &quot;Jumbo-gram Payload&quot; option&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00978.html" target="topic">IPV6_TLV_HBHO_ROUTER_ALERT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 Type-length-value type code for the Hop-by-hop &quot;Router Alert&quot; option&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00984.html" target="topic">IPV6_TLV_PAD_1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 Type-length-value type code for the Pad 1 option&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00985.html" target="topic">IPV6_TLV_PAD_N</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 Type-length-value type code for the Pad N option&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00986.html" target="topic">IPV6_TLV_UNREC_OPT_DISCARD_PP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 action code for the unrecognized option reaction to discard the packet and <a href="01195.html" target="topic">send</a> an ICMP parameter problem message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00987.html" target="topic">IPV6_TLV_UNREC_OPT_DISCARD_PP_NOT_MC</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 action code for the unrecognized option reaction to discard the packet and <a href="01195.html" target="topic">send</a> an ICMP parameter problem message is the destination address isn't a multicast address&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00988.html" target="topic">IPV6_TLV_UNREC_OPT_DISCARD_SILENT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 action code for the unrecognized option reaction to discard the packet silently&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00989.html" target="topic">IPV6_TLV_UNREC_OPT_SKIP_OPTION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IPv6 action code for the unrecognized option reaction to skip the option&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01576.html" target="topic">Using the Library</a> &gt; <a href="01571.html" target="topic">How the Library Works</a> &gt; <a href="01565.html" target="topic">Core Functionality</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00896.html" target="topic">IPv6 Module</a> &gt; <a href="01565.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -89,13 +499,13 @@ For detailed information about the MAC layer<span style="color: #FFFFFF">_</span
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01571.html" target="topic">Previous</a> | <a href="01571.html" target="topic">Up</a> | <a href="01564.html" target="topic">Next</a></div>
+<a href="01559.html" target="topic">Previous</a> | <a href="00896.html" target="topic">Up</a> | <a href="02785.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP MAC Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv6 Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

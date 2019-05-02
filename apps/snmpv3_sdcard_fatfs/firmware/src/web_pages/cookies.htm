@@ -1,4 +1,4 @@
-~inc:header.inc~
+<!--#include file="header.htm" -->
 <div id="content">
 
 <h1>Cookies</h1>
@@ -31,10 +31,10 @@ corner, as well as in the box above.</p>
 
 <p>Cookies are set by storing null-terminated name/value pairs in the current HTTP connection
 data buffer. The number of cookies that are set is also stored.
-They can be set in either <code>TCPIP_HTTP_GetExecute</code> or <code>TCPIP_HTTP_PostExecute</code>.</p>
+They can be set in either <code>getExecute</code> or <code>postExecute</code>.</p>
 
 <p>Cookies are retrieved in the same manner as GET form arguments.  They are stored
-in the current HTTP connection data buffer and can be located using the <code>TCPIP_HTTP_ArgGet</code>
+in the current HTTP connection data buffer and can be located using the <code>TCPIP_HTTP_NET_ArgGet</code>
 functions.  Since they are stored in the same array as GET arguments, the total
 length of cookies and variable arguments cannot exceed the 80 byte buffer limit.</p>
 
@@ -48,4 +48,4 @@ value of the <code>favorite</code> field and have it displayed in the gray box a
 document.getElementById('hello').innerHTML = "~hellomsg~";
 -->
 </script>
-~inc:footer.inc~
+<!--#include file="footer.htm" -->

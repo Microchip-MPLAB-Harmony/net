@@ -573,13 +573,13 @@ extern "C" {
 /*** Crypto Library Configuration ***/
 #define WC_NO_HARDEN
 #define NO_DSA
-#define MICROCHIP_MPLAB_HARMONY
 #define HAVE_MCAPI
 #define WOLFSSL_IGNORE_FILE_WARN
 
 #define MICROCHIP_MPLAB_HARMONY
 #define MICROCHIP_MPLAB_HARMONY_3
 
+#define MICROCHIP_PIC32
 #define SIZEOF_LONG_LONG 8
 #define SINGLE_THREADED
 #define WOLFSSL_USER_IO
@@ -591,6 +591,7 @@ extern "C" {
 #define USE_CERT_BUFFERS_2048
 #define NO_BIG_INT
 #define NO_AES
+#define WOLFSSL_SHA512
 #define NO_ASN
 #define NO_RSA
 #define NO_DES3

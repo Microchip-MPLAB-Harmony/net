@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_TransSignalHandlerDeregister Type</title>
+<title>NET_PRES_TransOpen Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01174.html" target="topic">NET_PRES_TransSignalHandlerDeregister Type</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01174.html" target="topic">NET_PRES_TransOpen Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01173.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01175.html" target="topic">Next</a></div>
+<a href="01172.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01175.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransSignalHandlerDeregister Topic Title: NET_PRES_TransSignalHandlerDeregister Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransOpen Topic Title: NET_PRES_TransOpen Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_TransSignalHandlerDeregister Type</div>
+NET_PRES_TransOpen Type</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ NET_PRES_TransSignalHandlerDeregister Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Transport Layer Deregister Handler Function Pointer Prototype&nbsp;</p>
+Transport Layer Open Function Pointer Prototype&nbsp;</p>
 <p class="Element10">
-This function is called by the presentation layer when the application wants to deregister a handler function.</p></div>
+This function is called by the presentation layer when an application wants to open a <a href="01295.html" target="topic">socket</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">bool</span></strong> (* <strong><span style="color: #000000">NET_PRES_TransSignalHandlerDeregister</span></strong>)(<a href="01103.html" target="topic">NET_PRES_SKT_HANDLE_T</a> handle, <a href="01091.html" target="topic">NET_PRES_SIGNAL_FUNCTION</a> hSig);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <a href="01110.html" target="topic">NET_PRES_SKT_HANDLE_T</a> (* <strong><span style="color: #000000">NET_PRES_TransOpen</span></strong>)(<a href="01164.html" target="topic">NET_PRES_TRANS_ADDRESS_TYPE</a> addType, <a href="01113.html" target="topic">NET_PRES_SKT_PORT_T</a> port, <a href="01053.html" target="topic">NET_PRES_ADDRESS</a> * address);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A <a href="01287.html" target="topic">socket</a> needs to have been opened by <a href="01167.html" target="topic">NET_PRES_TransOpen</a>.</p></div>
+Transport layer must be initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,14 +78,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The handle returned from <a href="01167.html" target="topic">NET_PRES_TransOpen</a>.&nbsp;</div></td></tr><tr>
+The type of address being used. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hSig&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The handler handle returned from <a href="01165.html" target="topic">NET_PRES_TransHandlerRegister</a>.&nbsp;</div></td></tr></table></div></div>
+The port to <a href="01007.html" target="topic">listen</a> or to <a href="01195.html" target="topic">send</a> to. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The address to use. This is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -94,9 +99,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">true - Indicates success</li>
-<li class="Element602">false - Indicates failure</li>
+<ul class="Element633">
+<li class="Element603"><a href="01096.html" target="topic">NET_PRES_INVALID_SOCKET</a> - No sockets of the specified type were available to be opened.</li>
+<li class="Element603"><a href="01110.html" target="topic">NET_PRES_SKT_HANDLE_T</a> handle - Returned when <a href="01096.html" target="topic">NET_PRES_INVALID_SOCKET</a> is returned. Save this handle and use it when calling all other presentation <a href="01295.html" target="topic">socket</a> APIs.</li>
 </ul></p></div>
 </div>
 </div>
@@ -104,7 +109,7 @@ Returns</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01026.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01040.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01174.html" target="topic">NET_PRES_TransSignalHandlerDeregister Type</a></div>
+<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01174.html" target="topic">NET_PRES_TransOpen Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -112,13 +117,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01173.html" target="topic">Previous</a> | <a href="01040.html" target="topic">Up</a> | <a href="01175.html" target="topic">Next</a></div>
+<a href="01172.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01175.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransSignalHandlerDeregister Topic Title: NET_PRES_TransSignalHandlerDeregister Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransOpen Topic Title: NET_PRES_TransOpen Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Using the Library</title>
+<title>HTTP Net Features</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01508.html" target="topic">Using the Library</a> &gt; <a href="01501.html" target="topic">HTTP Net Features</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01482.html" target="topic">Previous</a> | <a href="00712.html" target="topic">Up</a> | <a href="01470.html" target="topic">Next</a></div>
+<a href="01505.html" target="topic">Previous</a> | <a href="01508.html" target="topic">Up</a> | <a href="01497.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET HTTP Net Features Topic Title: HTTP Net Features)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Using the Library</div>
+HTTP Net Features</div>
 </div>
 </div>
 
@@ -49,11 +49,19 @@ Using the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong>Interface Header File</strong>: <span class="Element146"><a href="00713.html" target="topic">http.h</a></span>&nbsp;</p>
+The HTTP Net module is a HTTP server module that works using the Networking Presentation Layer of the MPLAB Harmony framework. This allows it to support both encrypted and plain text connections.&nbsp;</p>
 <p class="Element10">
-The interface to the HTTP<span style="color: #0000FF"> </span>TCP/IP Stack library is defined in the <span class="Element146"><a href="00713.html" target="topic">http.h</a></span> header file. This file is included by the <span class="Element146">tcpip.h</span> file. Any C language source (<span class="Element146">.c</span>) file that uses the HTTP<span style="color: #0000FF"> </span>TCP/IP Stack library should include <span class="Element146">tcpip.h</span>.&nbsp;</p>
-<p class="Element10">
-Please refer to the <strong>What is MPLAB Harmony?</strong> section for how the TCP/IP Stack interacts with the framework.</p></div>
+Some of the key features of the HTTP Net module include:
+<ul class="Element632">
+<li class="Element602">The updated module implements HTTP 1.1 persistent connections by default, using the “Transfer-Encoding: chunked” HTTP header. It can be configured to operate with closing the connections like the previous HTTP server.</li>
+<li class="Element602">The application has to dynamically register its HTTP processing functions with the HTTP Net server using the <a href="02614.html" target="topic">TCPIP_HTTP_NET_UserHandlerRegister</a> call. The HTTP Net server no longer relies on well known function names.</li>
+<li class="Element602">The HTTP Net server supports either secure or plain text connections, but not both simultaneously. The specification of a secure or non-secure connection can be easily done by:
+<ul class="Element633">
+<li class="Element603">Selecting the server listening port: 80 or 443</li>
+<li class="Element603">Using the module configuration flags</li>
+</ul></li>
+<li class="Element602">The HTTP Net module reports run-time events that could be caught by the user application using the “eventReport” registered function that carries a <a href="02478.html" target="topic">TCPIP_HTTP_NET_EVENT_TYPE</a> enumerated type</li>
+</ul></p></div>
 </div>
 <a name="546F70696373"></a><div class="Element14">
 Topics</div>
@@ -70,19 +78,29 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01470.html" target="topic">Abstraction Model</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01497.html" target="topic">Dynamic Variables Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-This library provides the API of the HTTP TCP/IP Module that is available on the Microchip family of devices with a convenient C language interface. It is a module that belongs to the TCP/IP stack<span style="color: #0000FF">.</span>&nbsp;</div></td></tr><tr>
+This section describes the dynamic variable processing.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01484.html" target="topic">Library Overview</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01502.html" target="topic">Include Files Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the HTTP module.</span> &nbsp;</div></td></tr><tr>
+This section provides information on include file processing.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<a href="01481.html" target="topic">HTTP Features</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01498.html" target="topic">File Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-The HTTP Web Server module has many capabilities. The following topics will introduce these features and provide examples.&nbsp;</div></td></tr></table></div></div>
+This section provides information on file processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01507.html" target="topic">SSI Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on SSI processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01506.html" target="topic">mpfs2.jar Utility</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This section provides information on using the mpfs2 utility.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -90,7 +108,7 @@ The HTTP Web Server module has many capabilities. The following topics will intr
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01501.html" target="topic">Using the Library</a></div>
+<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00711.html" target="topic">HTTP Net Module</a> &gt; <a href="01508.html" target="topic">Using the Library</a> &gt; <a href="01501.html" target="topic">HTTP Net Features</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -98,13 +116,13 @@ The HTTP Web Server module has many capabilities. The following topics will intr
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01560.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01482.html" target="topic">Previous</a> | <a href="00712.html" target="topic">Up</a> | <a href="01470.html" target="topic">Next</a></div>
+<a href="01505.html" target="topic">Previous</a> | <a href="01508.html" target="topic">Up</a> | <a href="01497.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Using the Library Topic Title: Using the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET HTTP Net Features Topic Title: HTTP Net Features)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

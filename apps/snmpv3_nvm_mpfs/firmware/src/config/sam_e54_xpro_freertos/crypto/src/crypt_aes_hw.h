@@ -47,8 +47,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "configuration.h"
 #include "aes.h"
 
-#if defined(CRYPTO_SHA_HW_11105) || defined(CRYPTO_SHA_HW_6156)
+#if defined(CRYPTO_AES_HW_6149)
 #include "crypt_aes_sam6149.h"
+#endif
+
+#if defined(CRYPTO_AES_HW_U2238)
+#include "crypt_aes_u2238.h"
 #endif
 
 #ifdef __cplusplus
@@ -58,7 +62,7 @@ extern "C" {
 
 typedef struct 
 {
-#if defined(CRYPTO_SHA_HW_11105) || defined(CRYPTO_SHA_HW_6156)
+#if defined(CRYPTO_AES_HW_6149)
     CRYPT_AES_SAM6149_AES_MR aesMr;
     uint8_t aesKey[32];
     uint8_t aesIv[16];
@@ -66,6 +70,14 @@ typedef struct
     uint8_t aesGHash[16];
     uint32_t aesCtr;
     uint8_t aesGcmH[16];
+#elif defined(CRYPTO_AES_HW_U2238)
+    CRYPT_AES_U2238_AES_CTRLA ctrla;
+    CRYPT_AES_U2238_AES_CTRLB ctrlb;
+    uint8_t aesKey[32];
+    uint8_t aesIv[16];
+    uint32_t aesAadlen;
+    uint8_t aesGHash[16];
+    uint32_t aesCtr;
 #endif
 }crypt_aes_hw_descriptor;
 

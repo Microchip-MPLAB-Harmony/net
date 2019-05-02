@@ -61,6 +61,7 @@
               <Value dnOrder="2" id="core" priority="2" value="0"/>
               <Value dnOrder="3" id="core" priority="2" value="0"/>
               <Value dnOrder="4" id="core" priority="2" value="0"/>
+              <Value dnOrder="5" id="core" priority="2" value="0"/>
             </Dynamic>
           </Values>
         </Integer>
@@ -72,6 +73,7 @@
               <Value dnOrder="2" id="hsmci" priority="2" value="true"/>
               <Value dnOrder="3" id="hsmci" priority="2" value="true"/>
               <Value dnOrder="4" id="hsmci" priority="2" value="true"/>
+              <Value dnOrder="5" id="hsmci" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -3604,6 +3606,7 @@
               <Value dnOrder="2" id="core" priority="2" value="HSMCI"/>
               <Value dnOrder="3" id="core" priority="2" value="HSMCI"/>
               <Value dnOrder="4" id="core" priority="2" value="HSMCI"/>
+              <Value dnOrder="5" id="core" priority="2" value="HSMCI"/>
             </Dynamic>
           </Values>
         </Combo>
@@ -3615,6 +3618,7 @@
               <Value dnOrder="2" id="core" priority="2" value="true"/>
               <Value dnOrder="3" id="core" priority="2" value="true"/>
               <Value dnOrder="4" id="core" priority="2" value="true"/>
+              <Value dnOrder="5" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -5292,6 +5296,7 @@
               <Value dnOrder="2" id="core" priority="2" value="true"/>
               <Value dnOrder="3" id="core" priority="2" value="true"/>
               <Value dnOrder="4" id="core" priority="2" value="true"/>
+              <Value dnOrder="5" id="core" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -5345,41 +5350,6 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <File dnOrder="777" id="xdmacCommonHeaderFile">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="778" id="xdmacHeaderFile">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="779" id="xdmacSourceFile">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="780" id="xdmacSystemDefFile">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
-        <File dnOrder="781" id="xdmacSystemInitFile">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
       </Symbols>
     </UniqueComponent>
     <UniqueComponent dnOrder="3" id="dfp"/>
@@ -5393,6 +5363,7 @@
               <Value dnOrder="2" id="drv_sdmmc_0" priority="1" value="true"/>
               <Value dnOrder="3" id="drv_sdmmc_0" priority="1" value="true"/>
               <Value dnOrder="4" id="drv_sdmmc_0" priority="1" value="true"/>
+              <Value dnOrder="5" id="drv_sdmmc_0" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
@@ -5403,69 +5374,45 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <File dnOrder="2" id="DRV_SDMMC_FS_SOURCE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </File>
       </Symbols>
       <Instances dnOrder="1">
         <InstanceComponent dnOrder="0" id="drv_sdmmc" instance="0">
           <Symbols dnOrder="0">
             <Integer dnOrder="0" id="DRV_SDMMC_BUFFER_OBJECT_NUMBER">
-              <Attributes dnOrder="0">
-                <Boolean dnOrder="0" id="readOnly">
-                  <Value dnOrder="0">true</Value>
-                </Boolean>
-              </Attributes>
-              <Values dnOrder="1">
+              <Values dnOrder="0">
                 <Dynamic dnOrder="0">
                   <Value dnOrder="0" id="drv_sdmmc_0" priority="1" value="1"/>
                 </Dynamic>
               </Values>
             </Integer>
-            <String dnOrder="1" id="DRV_SDMMC_CARD_DETECTION_METHOD">
-              <Values dnOrder="0">
-                <Dynamic dnOrder="0">
-                  <Value dnOrder="0" id="drv_sdmmc_0" priority="2" value="Use Polling"/>
-                </Dynamic>
-              </Values>
-            </String>
-            <Combo dnOrder="2" id="DRV_SDMMC_CARD_DETECTION_METHOD_HSMCI">
-              <Attributes dnOrder="0">
-                <Boolean dnOrder="0" id="visible">
-                  <Value dnOrder="0">true</Value>
-                </Boolean>
-              </Attributes>
-              <Values dnOrder="1">
-                <Dynamic dnOrder="0">
-                  <Value dnOrder="0" id="drv_sdmmc_0" priority="1" value="Use Polling"/>
-                </Dynamic>
-              </Values>
-            </Combo>
-            <Boolean dnOrder="3" id="DRV_SDMMC_FS_ENABLE">
+            <Boolean dnOrder="1" id="DRV_SDMMC_FS_ENABLE">
               <Values dnOrder="0">
                 <Dynamic dnOrder="0">
                   <Value dnOrder="0" id="drv_sdmmc_0" priority="1" value="true"/>
                 </Dynamic>
               </Values>
             </Boolean>
-            <String dnOrder="4" id="DRV_SDMMC_PLIB">
+            <String dnOrder="2" id="DRV_SDMMC_PLIB">
               <Values dnOrder="0">
                 <Dynamic dnOrder="0">
                   <Value dnOrder="0" id="drv_sdmmc_0" priority="2" value="HSMCI"/>
                 </Dynamic>
               </Values>
             </String>
-            <Integer dnOrder="5" id="DRV_SDMMC_POLLING_INTERVAL">
+            <Menu dnOrder="3" id="DRV_SDMMC_RTOS_MENU">
               <Attributes dnOrder="0">
                 <Boolean dnOrder="0" id="visible">
-                  <Value dnOrder="0">true</Value>
+                  <Value dnOrder="0">false</Value>
                 </Boolean>
               </Attributes>
-            </Integer>
+            </Menu>
+            <File dnOrder="4" id="DRV_SDMMC_SYS_RTOS_TASK">
+              <Attributes dnOrder="0">
+                <Boolean dnOrder="0" id="enabled">
+                  <Value dnOrder="0">false</Value>
+                </Boolean>
+              </Attributes>
+            </File>
           </Symbols>
           <Attachments dnOrder="1">
             <DirectDependency dnOrder="0" id="drv_sdmmc_SDHC_dependency">
@@ -5484,21 +5431,28 @@
     </GeneratorComponent>
     <UniqueComponent dnOrder="5" id="HarmonyCore">
       <Symbols dnOrder="0">
-        <File dnOrder="0" id="APP0_C">
+        <File dnOrder="0" id="CONFIGURATION_H">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="1" id="APP0_H">
+        <File dnOrder="1" id="DRIVER_COMMON">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <Boolean dnOrder="2" id="ENABLE_APP_FILE">
+        <File dnOrder="2" id="DRIVER_ROOT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <Boolean dnOrder="3" id="ENABLE_APP_FILE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="HarmonyCore" priority="1" value="true"/>
@@ -5506,7 +5460,7 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="3" id="ENABLE_DRV_COMMON">
+        <Boolean dnOrder="4" id="ENABLE_DRV_COMMON">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="drv_sdmmc_0" priority="2" value="true"/>
@@ -5516,7 +5470,7 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="4" id="ENABLE_OSAL">
+        <Boolean dnOrder="5" id="ENABLE_OSAL">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="HarmonyCore" priority="1" value="true"/>
@@ -5524,14 +5478,14 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="5" id="ENABLE_SYS_CACHE">
+        <Boolean dnOrder="6" id="ENABLE_SYS_CACHE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="HarmonyCore" priority="1" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="6" id="ENABLE_SYS_COMMON">
+        <Boolean dnOrder="7" id="ENABLE_SYS_COMMON">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="drv_sdmmc_0" priority="2" value="true"/>
@@ -5542,7 +5496,7 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="7" id="ENABLE_SYS_INT">
+        <Boolean dnOrder="8" id="ENABLE_SYS_INT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="HarmonyCore" priority="1" value="true"/>
@@ -5550,7 +5504,7 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="8" id="ENABLE_SYS_MEDIA">
+        <Boolean dnOrder="9" id="ENABLE_SYS_MEDIA">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="drv_sdmmc_0" priority="2" value="true"/>
@@ -5558,28 +5512,98 @@
             </Dynamic>
           </Values>
         </Boolean>
-        <File dnOrder="9" id="SYSTEM_MEDIA">
+        <Menu dnOrder="10" id="GEN_APP_TASK_MENU">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </Menu>
+        <File dnOrder="11" id="INT_DEF">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="10" id="SYS_CACHE_DEF">
+        <File dnOrder="12" id="INT_HEADER">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="11" id="SYS_CACHE_HEADER">
+        <File dnOrder="13" id="INT_MAPPING">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="12" id="SYS_CACHE_SOURCE">
+        <File dnOrder="14" id="INT_SOURCE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="15" id="OSAL_DEFINITIONS_H">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="16" id="OSAL_H">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="17" id="OSAL_IMPL_BASIC_H">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="18" id="OSAL_SYSDEF_H">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="19" id="SYSTEM_COMMON">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="20" id="SYSTEM_MODULE">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="21" id="SYSTEM_ROOT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="22" id="TASKS_C">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+        <File dnOrder="23" id="USER_H">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">true</Value>
@@ -5625,14 +5649,14 @@
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="3" id="crypt_sha256_sam11105_c">
+        <File dnOrder="3" id="crypt_sha224_sam11105_c">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
             </Boolean>
           </Attributes>
         </File>
-        <File dnOrder="4" id="crypt_sha_hw_h">
+        <File dnOrder="4" id="crypt_sha256_sam11105_c">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="enabled">
               <Value dnOrder="0">false</Value>
@@ -5692,7 +5716,14 @@
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="13" id="cryptoHashSHA256">
+        <Boolean dnOrder="13" id="cryptoHashSHA224">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="label">
+              <Value dnOrder="0">Hash&amp;#160;-&amp;#160;SHA-224</Value>
+            </String>
+          </Attributes>
+        </Boolean>
+        <Boolean dnOrder="14" id="cryptoHashSHA256">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">Hash&amp;#160;-&amp;#160;SHA-256</Value>
@@ -5702,14 +5733,19 @@
             <User dnOrder="0" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="14" id="cryptoIsWolfsslEnabled">
+        <Boolean dnOrder="15" id="cryptoHashSHA512">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="true"/>
+          </Values>
+        </Boolean>
+        <Boolean dnOrder="16" id="cryptoIsWolfsslEnabled">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="lib_crypto" priority="1" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="15" id="cryptoRandom">
+        <Boolean dnOrder="17" id="cryptoRandom">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="label">
               <Value dnOrder="0">TRNG</Value>
@@ -5721,17 +5757,26 @@
         <DirectCapability dnOrder="0" id="lib_crypto">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0">TCP/IP&amp;#160;STACK</Value>
+              <Value dnOrder="0">netPres_0</Value>
             </String>
             <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0">APPLICATION&amp;#160;LAYER:tcpipHttp:Http_Crypto_Dependency</Value>
+              <Value dnOrder="0">NetPres_Crypto_Dependency</Value>
             </String>
           </Attributes>
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
     <GeneratorComponent dnOrder="8" id="netPres">
-      <Instances dnOrder="0">
+      <Symbols dnOrder="0">
+        <File dnOrder="0" id="NET_PRES_SYS_RTOS_TASK">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="enabled">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </File>
+      </Symbols>
+      <Instances dnOrder="1">
         <InstanceComponent dnOrder="0" id="netPres" instance="0">
           <Symbols dnOrder="0">
             <Boolean dnOrder="0" id="NET_PRES_SUPPORT_DATAGRAM_IDX0">
@@ -5749,6 +5794,18 @@
               </Values>
             </Boolean>
           </Symbols>
+          <Attachments dnOrder="1">
+            <DirectDependency dnOrder="0" id="NetPres_Crypto_Dependency">
+              <Attributes dnOrder="0">
+                <String dnOrder="0" id="targetComponentID">
+                  <Value dnOrder="0">lib_crypto</Value>
+                </String>
+                <String dnOrder="1" id="targetAttachmentID">
+                  <Value dnOrder="0">lib_crypto</Value>
+                </String>
+              </Attributes>
+            </DirectDependency>
+          </Attachments>
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
@@ -5985,146 +6042,170 @@
           </Values>
         </String>
         <KeyValueSet dnOrder="6" id="SYS_TIME_TC_CHANNEL">
-          <Values dnOrder="0">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="1" value="0"/>
             </Dynamic>
           </Values>
         </KeyValueSet>
-        <Integer dnOrder="7" id="TC0_CLOCK_FREQ">
+        <Comment dnOrder="7" id="TC0_CLK_ENABLE_COMMENT">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Comment>
+        <Integer dnOrder="8" id="TC0_CLOCK_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="150000000"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Boolean dnOrder="8" id="TC0_ENABLE">
+        <Boolean dnOrder="9" id="TC0_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="9" id="TC0_IER_CPAS">
-          <Values dnOrder="0">
+        <Boolean dnOrder="10" id="TC0_IER_CPAS">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">true</Value>
+            </Boolean>
+          </Attributes>
+          <Values dnOrder="1">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="10" id="TC0_IER_CPCS">
+        <Boolean dnOrder="11" id="TC0_IER_CPCS">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Comment dnOrder="11" id="TC0_Resolution">
+        <Comment dnOrder="12" id="TC0_Resolution">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****Clock&amp;#160;resolution&amp;#160;is&amp;#160;6.66666666667&amp;#160;nS****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Boolean dnOrder="12" id="TC0_SYS_TIME_CONNECTED">
+        <Boolean dnOrder="13" id="TC0_SYS_TIME_CONNECTED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="true"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Comment dnOrder="13" id="TC0_TIMER_PERIOD_CMT">
+        <Comment dnOrder="14" id="TC0_TIMER_PERIOD_CMT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****Period&amp;#160;Count&amp;#160;is&amp;#160;60000****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Long dnOrder="14" id="TC0_TIMER_PERIOD_COUNT">
+        <Long dnOrder="15" id="TC0_TIMER_PERIOD_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="60000"/>
             </Dynamic>
           </Values>
         </Long>
-        <Boolean dnOrder="15" id="TC1_ENABLE">
+        <Float dnOrder="16" id="TC0_TIMER_PERIOD_MS">
+          <Attributes dnOrder="0">
+            <Boolean dnOrder="0" id="visible">
+              <Value dnOrder="0">false</Value>
+            </Boolean>
+          </Attributes>
+        </Float>
+        <Boolean dnOrder="17" id="TC1_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="16" id="TC1_SYS_TIME_CONNECTED">
+        <Boolean dnOrder="18" id="TC1_SYS_TIME_CONNECTED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Comment dnOrder="17" id="TC1_TIMER_PERIOD_CMT">
+        <Comment dnOrder="19" id="TC1_TIMER_PERIOD_CMT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****Period&amp;#160;Count&amp;#160;is&amp;#160;60000****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Long dnOrder="18" id="TC1_TIMER_PERIOD_COUNT">
+        <Long dnOrder="20" id="TC1_TIMER_PERIOD_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="60000"/>
             </Dynamic>
           </Values>
         </Long>
-        <Boolean dnOrder="19" id="TC2_ENABLE">
+        <Boolean dnOrder="21" id="TC2_ENABLE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Boolean dnOrder="20" id="TC2_SYS_TIME_CONNECTED">
+        <Boolean dnOrder="22" id="TC2_SYS_TIME_CONNECTED">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <Comment dnOrder="21" id="TC2_TIMER_PERIOD_CMT">
+        <Comment dnOrder="23" id="TC2_TIMER_PERIOD_CMT">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="text">
               <Value dnOrder="0">****Period&amp;#160;Count&amp;#160;is&amp;#160;60000****</Value>
             </String>
           </Attributes>
         </Comment>
-        <Long dnOrder="22" id="TC2_TIMER_PERIOD_COUNT">
+        <Long dnOrder="24" id="TC2_TIMER_PERIOD_COUNT">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="60000"/>
             </Dynamic>
           </Values>
         </Long>
-        <Integer dnOrder="23" id="TC3_CLOCK_FREQ">
+        <Integer dnOrder="25" id="TC3_CLOCK_FREQ">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="32000"/>
             </Dynamic>
           </Values>
         </Integer>
-        <Boolean dnOrder="24" id="TC3_PCK7">
+        <Boolean dnOrder="26" id="TC3_PCK7">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="false"/>
             </Dynamic>
           </Values>
         </Boolean>
-        <String dnOrder="25" id="TIMER_START_API_NAME">
+        <String dnOrder="27" id="TIMER_START_API_NAME">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="TC0_CH0_TimerStart"/>
             </Dynamic>
           </Values>
         </String>
-        <String dnOrder="26" id="TIMER_STOP_API_NAME">
+        <String dnOrder="28" id="TIMER_STOP_API_NAME">
           <Values dnOrder="0">
             <Dynamic dnOrder="0">
               <Value dnOrder="0" id="tc0" priority="2" value="TC0_CH0_TimerStop "/>
@@ -6166,7 +6247,7 @@
                     <User dnOrder="0" value="true"/>
                   </Values>
                 </Boolean>
-                <Boolean dnOrder="3" id="TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER">
+                <Boolean dnOrder="3" id="TCPIP_AUTOCONFIG_ENABLE_HTTP_NET_SERVER">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="true"/>
                   </Values>
@@ -6201,15 +6282,13 @@
             <UniqueComponent dnOrder="1" id="tcpipAnnounce"/>
             <UniqueComponent dnOrder="2" id="tcpipDhcp"/>
             <UniqueComponent dnOrder="3" id="tcpipDns"/>
-            <UniqueComponent dnOrder="4" id="tcpipHttp">
+            <UniqueComponent dnOrder="4" id="tcpipHttpNet">
               <Symbols dnOrder="0">
-                <Boolean dnOrder="0" id="TCPIP_HTTP_CUSTOM_TEMPLATE_SL">
+                <Integer dnOrder="0" id="TCPIP_HTTP_NET_SSI_VARIABLE_STRING_MAX_LENGTH">
                   <Values dnOrder="0">
-                    <Dynamic dnOrder="0">
-                      <Value dnOrder="0" id="tcpipHttp" priority="2" value="false"/>
-                    </Dynamic>
+                    <User dnOrder="0" value="20"/>
                   </Values>
-                </Boolean>
+                </Integer>
               </Symbols>
             </UniqueComponent>
             <UniqueComponent dnOrder="5" id="tcpipNbns"/>
@@ -6228,9 +6307,6 @@
             <UniqueComponent dnOrder="8" id="tcpipSnmpv3"/>
             <UniqueComponent dnOrder="9" id="tcpipSntp"/>
           </Children>
-          <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="Http_Crypto_Dependency" namespace="tcpipHttp" targetAttachmentID="TCP/IP STACK:tcpipHttp:Http_Crypto_Dependency" targetComponentID="TCP/IP STACK"/>
-          </Attachments>
         </GroupComponent>
         <GroupComponent displayName="BASIC CONFIGURATION" dnOrder="1" id="BASIC CONFIGURATION">
           <Children dnOrder="0">
@@ -6264,31 +6340,7 @@
                 </Boolean>
               </Symbols>
             </UniqueComponent>
-            <UniqueComponent dnOrder="1" id="tcpipCmd">
-              <Symbols dnOrder="0">
-                <Integer dnOrder="0" id="TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="visible">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </Integer>
-                <Integer dnOrder="1" id="TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="visible">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </Integer>
-                <Boolean dnOrder="2" id="TCPIP_STACK_COMMANDS_STORAGE_ENABLE">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="visible">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </Boolean>
-              </Symbols>
-            </UniqueComponent>
+            <UniqueComponent dnOrder="1" id="tcpipCmd"/>
             <GeneratorComponent dnOrder="2" id="tcpipNetConfig">
               <Instances dnOrder="0">
                 <InstanceComponent dnOrder="0" id="tcpipNetConfig" instance="0">
@@ -6374,6 +6426,13 @@
                     <User dnOrder="0" value="60960"/>
                   </Values>
                 </Integer>
+                <Boolean dnOrder="1" id="TCPIP_STACK_INTERFACE_CHANGE_SIGNALING">
+                  <Attributes dnOrder="0">
+                    <Boolean dnOrder="0" id="visible">
+                      <Value dnOrder="0">true</Value>
+                    </Boolean>
+                  </Attributes>
+                </Boolean>
               </Symbols>
             </UniqueComponent>
             <UniqueComponent dnOrder="4" id="tcpipSysFsWrapper">
@@ -6389,9 +6448,9 @@
             </UniqueComponent>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="TcpipFsWarapper_SysFS_Dependency" namespace="tcpipSysFsWrapper" targetAttachmentID="TCP/IP STACK:tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" targetComponentID="TCP/IP STACK"/>
-            <Attachment dnOrder="1" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
-            <Attachment dnOrder="2" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvGmac:libdrvGmac" targetComponentID="DRIVER LAYER"/>
+            <Attachment dnOrder="0" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="1" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvGmac:libdrvGmac" targetComponentID="DRIVER LAYER"/>
+            <Attachment dnOrder="2" id="TcpipFsWarapper_SysFS_Dependency" namespace="tcpipSysFsWrapper" targetAttachmentID="TCP/IP STACK:tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" targetComponentID="TCP/IP STACK"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
@@ -6533,7 +6592,6 @@
       <Attachments dnOrder="1">
         <Attachment dnOrder="0" id="tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
         <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console"/>
-        <Attachment dnOrder="2" id="tcpipHttp:Http_Crypto_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="lib_crypto" targetComponentID="lib_crypto"/>
       </Attachments>
     </GroupComponent>
     <UniqueComponent dnOrder="14" id="usart1">
@@ -6567,27 +6625,32 @@
   </Components>
   <UserData>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="0"/>
-    <ComponentGraph dnOrder="1" id="TCP/IP STACK">
+    <ComponentGraph dnOrder="1" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
-        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
-        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="540" y="20"/>
-        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
-        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
+        <ElementPosition dnOrder="0" id="tcpipAnnounce" x="11" y="201"/>
+        <ElementPosition dnOrder="1" id="tcpipDhcp" x="351" y="17"/>
+        <ElementPosition dnOrder="2" id="tcpipDns" x="460" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpipHttpNet" x="530" y="220"/>
+        <ElementPosition dnOrder="4" id="tcpipNbns" x="30" y="60"/>
+        <ElementPosition dnOrder="5" id="tcpipSmtpc" x="170" y="60"/>
+        <ElementPosition dnOrder="6" id="tcpipSnmp" x="177" y="221"/>
+        <ElementPosition dnOrder="7" id="tcpipSnmpv3" x="390" y="220"/>
+        <ElementPosition dnOrder="8" id="tcpipSntp" x="470" y="120"/>
+        <ElementPosition dnOrder="9" id="tcpip_apps_config" x="21" y="20"/>
       </ElementPositions>
     </ComponentGraph>
     <ComponentGraph dnOrder="2" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="BSP_SAM_E70_Xplained_Ultra" x="0" y="321"/>
+        <ElementPosition dnOrder="0" id="BSP_SAM_E70_Xplained_Ultra" x="214" y="66"/>
         <ElementPosition dnOrder="1" id="HarmonyCore" x="30" y="66"/>
-        <ElementPosition dnOrder="2" id="TCP/IP STACK" x="665" y="232"/>
+        <ElementPosition dnOrder="2" id="TCP/IP STACK" x="643" y="339"/>
         <ElementPosition dnOrder="3" id="cmsis" x="340" y="20"/>
         <ElementPosition dnOrder="4" id="core" x="240" y="19"/>
         <ElementPosition dnOrder="5" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="6" id="drv_sdmmc" x="213" y="343"/>
         <ElementPosition dnOrder="7" id="hsmci" x="4" y="432"/>
-        <ElementPosition dnOrder="8" id="lib_crypto" x="314" y="133"/>
-        <ElementPosition dnOrder="9" id="netPres" x="12" y="168"/>
+        <ElementPosition dnOrder="8" id="lib_crypto" x="546" y="149"/>
+        <ElementPosition dnOrder="9" id="netPres" x="805" y="109"/>
         <ElementPosition dnOrder="10" id="sys_console" x="428" y="227"/>
         <ElementPosition dnOrder="11" id="sys_fs" x="431" y="416"/>
         <ElementPosition dnOrder="12" id="sys_time" x="614" y="5"/>
@@ -6604,33 +6667,28 @@
         <ElementPosition dnOrder="4" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="5" id="APPLICATION LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipAnnounce" x="11" y="201"/>
-        <ElementPosition dnOrder="1" id="tcpipDhcp" x="320" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipDns" x="460" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpipHttp" x="760" y="20"/>
-        <ElementPosition dnOrder="4" id="tcpipNbns" x="30" y="60"/>
-        <ElementPosition dnOrder="5" id="tcpipSmtpc" x="170" y="60"/>
-        <ElementPosition dnOrder="6" id="tcpipSnmp" x="177" y="221"/>
-        <ElementPosition dnOrder="7" id="tcpipSnmpv3" x="390" y="220"/>
-        <ElementPosition dnOrder="8" id="tcpipSntp" x="470" y="120"/>
-        <ElementPosition dnOrder="9" id="tcpip_apps_config" x="21" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="6" id="DRIVER LAYER">
+    <ComponentGraph dnOrder="4" id="DRIVER LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="380" y="20"/>
         <ElementPosition dnOrder="1" id="drvGmac" x="280" y="20"/>
         <ElementPosition dnOrder="2" id="drvMiim" x="500" y="20"/>
         <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="5" id="TCP/IP STACK">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
+        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
+        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="540" y="20"/>
+        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
+        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="6" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
     <ComponentGraph dnOrder="7" id="NETWORK LAYER">

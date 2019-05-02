@@ -44,8 +44,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _CRYPTO_SHA1_HW_H_
 #define _CRYPTO_SHA1_HW_H_
 
-#include "configuration.h"
-#include "sha.h"
 
 #if defined(CRYPTO_SHA_HW_11105)
 #include "crypt_sha_sam11105.h"
@@ -54,6 +52,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(CRYPTO_SHA_HW_6156)
 #include "crypt_sha_sam6156.h"
 #endif
+
+#include "configuration.h"
+#include "types.h"
 
 typedef struct 
 {
@@ -64,13 +65,16 @@ typedef struct
     uint64_t total_len;   /* number of bytes to be processed  */
 #endif
 #if defined(CRYPTO_SHA_HW_6156)
-    struct sha_descriptor sha_descriptor;
+    CRYPT_SHA_SAM6156_shaDescriptor sha_descriptor;
+    uint8_t  buffer[SHA_BLOCK_SIZE];
+    uint32_t digest[SHA_DIGEST_SIZE/4];
+    uint64_t total_len;   /* number of bytes to be processed  */
 #endif
-}crypt_sha_hw_descriptor;
+}crypt_sha1_hw_descriptor;
 
-int CRYPT_SHA1_InitSha(crypt_sha_hw_descriptor* sha, void* heap, int devId);
-int CRYPT_SHA1_Update(crypt_sha_hw_descriptor* sha, const byte* data, word32 len);
-int CRYPT_SHA1_Final(crypt_sha_hw_descriptor* sha, byte* hash);
-int CRYPT_SHA1_FinalRaw(crypt_sha_hw_descriptor* sha, byte* hash);
+int CRYPT_SHA1_InitSha(crypt_sha1_hw_descriptor* sha, void* heap, int devId);
+int CRYPT_SHA1_Update(crypt_sha1_hw_descriptor* sha, const byte* data, word32 len);
+int CRYPT_SHA1_Final(crypt_sha1_hw_descriptor* sha, byte* hash);
+int CRYPT_SHA1_FinalRaw(crypt_sha1_hw_descriptor* sha, byte* hash);
 
 #endif
