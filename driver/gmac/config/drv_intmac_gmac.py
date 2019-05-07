@@ -31,9 +31,10 @@ def instantiateComponent(drvGmacComponent):
     
     gmac_node = ATDF.getNode('/avr-tools-device-file/devices/device/peripherals/module@[name="GMAC"]')
     gmac_periphID = str(gmac_node.getAttribute("id"))
-
+    
     # GMAC device name
     tcpipGmacDevName = drvGmacComponent.createStringSymbol("TCPIP_INTMAC_DEVICE", None)
+    tcpipGmacDevName.setVisible(False)
     if(gmac_periphID == "11046"): # SAME70, SAMV71
         tcpipGmacDevName.setDefaultValue("SAME7x_V7x")   
     elif (gmac_periphID == "U2005"): # SAME54
@@ -91,6 +92,31 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacTxBuffSizeQue0.setDefaultValue(1536)
     tcpipGmacTxBuffSizeQue0.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"])
     
+    # Number of additional Rx buffers To Be Created for Queue0
+    tcpipGmacRxAddlBuffCountQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0", tcpipGmacQue0)
+    tcpipGmacRxAddlBuffCountQue0.setLabel("Number of additional Rx buffers to be created")
+    tcpipGmacRxAddlBuffCountQue0.setVisible(True)
+    tcpipGmacRxAddlBuffCountQue0.setDescription("Number of additional Sticky Rx buffers to be created for Queue0")
+    tcpipGmacRxAddlBuffCountQue0.setDefaultValue(2)
+    tcpipGmacRxAddlBuffCountQue0.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"])  
+        
+    # Rx buffer Count Threshold to allocate new Rx buffers, for Queue0
+    tcpipGmacRxBuffCountThresQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0", tcpipGmacQue0)
+    tcpipGmacRxBuffCountThresQue0.setLabel("Minimum Threshold for Rx Buffer replenish process")
+    tcpipGmacRxBuffCountThresQue0.setVisible(True)
+    tcpipGmacRxBuffCountThresQue0.setDescription("Rx buffer Count Threshold to allocate new Rx buffers for Queue0")
+    tcpipGmacRxBuffCountThresQue0.setDefaultValue(1)
+    tcpipGmacRxBuffCountThresQue0.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"]) 
+        
+    # Rx buffer allocate Count for Queue0
+    tcpipGmacRxBuffAllocCountQue0 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0", tcpipGmacQue0)
+    tcpipGmacRxBuffAllocCountQue0.setLabel("Rx Buffer allocate count during  replenish process")
+    tcpipGmacRxBuffAllocCountQue0.setVisible(True)
+    tcpipGmacRxBuffAllocCountQue0.setDescription("Rx buffer allocate Count for Queue0")
+    tcpipGmacRxBuffAllocCountQue0.setDefaultValue(1)
+    tcpipGmacRxBuffAllocCountQue0.setMin(1)
+    tcpipGmacRxBuffAllocCountQue0.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"]) 
+        
     if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
         # GMAC Queue 1  
         tcpipGmacQue1 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_1", None)
@@ -131,7 +157,32 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue1.setDescription("Size Of TX Buffer for Queue1. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue1.setDefaultValue(64)
         tcpipGmacTxBuffSizeQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_1"])
-
+        
+        # Number of additional Rx buffers To Be Created for Queue1
+        tcpipGmacRxAddlBuffCountQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE1", tcpipGmacQue1)
+        tcpipGmacRxAddlBuffCountQue1.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue1.setVisible(False)
+        tcpipGmacRxAddlBuffCountQue1.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue1")
+        tcpipGmacRxAddlBuffCountQue1.setDefaultValue(0)
+        tcpipGmacRxAddlBuffCountQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_1"])  
+            
+        # Rx buffer Count Threshold to allocate new Rx buffers, for Queue1
+        tcpipGmacRxBuffCountThresQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE1", tcpipGmacQue1)
+        tcpipGmacRxBuffCountThresQue1.setLabel("Minimum Threshold for Rx Buffer replenish process")
+        tcpipGmacRxBuffCountThresQue1.setVisible(False)
+        tcpipGmacRxBuffCountThresQue1.setDescription("Rx buffer Count Threshold to allocate new Rx buffers for Queue1")
+        tcpipGmacRxBuffCountThresQue1.setDefaultValue(1)
+        tcpipGmacRxBuffCountThresQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_1"]) 
+            
+        # Rx buffer allocate Count for Queue1
+        tcpipGmacRxBuffAllocCountQue1 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE1", tcpipGmacQue1)
+        tcpipGmacRxBuffAllocCountQue1.setLabel("Rx Buffer allocate count during  replenish process")
+        tcpipGmacRxBuffAllocCountQue1.setVisible(False)
+        tcpipGmacRxBuffAllocCountQue1.setDescription("Rx buffer allocate Count for Queue1")
+        tcpipGmacRxBuffAllocCountQue1.setDefaultValue(1)
+        tcpipGmacRxBuffAllocCountQue1.setMin(1)
+        tcpipGmacRxBuffAllocCountQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_1"]) 
+    
         # GMAC Queue 2
         tcpipGmacQue2 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_2", None)
         tcpipGmacQue2.setLabel("GMAC Queue 2")
@@ -171,7 +222,32 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue2.setDescription("Size Of TX Buffer for Queue2. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue2.setDefaultValue(64)
         tcpipGmacTxBuffSizeQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_2"])
-
+        
+        # Number of additional Rx buffers To Be Created for Queue2
+        tcpipGmacRxAddlBuffCountQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE2", tcpipGmacQue2)
+        tcpipGmacRxAddlBuffCountQue2.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue2.setVisible(False)
+        tcpipGmacRxAddlBuffCountQue2.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue2")
+        tcpipGmacRxAddlBuffCountQue2.setDefaultValue(0)
+        tcpipGmacRxAddlBuffCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_2"])
+            
+        # Rx buffer Count Threshold to allocate new Rx buffers, for Queue2
+        tcpipGmacRxBuffCountThresQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE2", tcpipGmacQue2)
+        tcpipGmacRxBuffCountThresQue2.setLabel("Minimum Threshold for Rx Buffer replenish process")
+        tcpipGmacRxBuffCountThresQue2.setVisible(False)
+        tcpipGmacRxBuffCountThresQue2.setDescription("Rx buffer Count Threshold to allocate new Rx buffers for Queue2")
+        tcpipGmacRxBuffCountThresQue2.setDefaultValue(1)
+        tcpipGmacRxBuffCountThresQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_2"]) 
+            
+        # Rx buffer allocate Count for Queue2
+        tcpipGmacRxBuffAllocCountQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE2", tcpipGmacQue2)
+        tcpipGmacRxBuffAllocCountQue2.setLabel("Rx Buffer allocate count during  replenish process")
+        tcpipGmacRxBuffAllocCountQue2.setVisible(False)
+        tcpipGmacRxBuffAllocCountQue2.setDescription("Rx buffer allocate Count for Queue2")
+        tcpipGmacRxBuffAllocCountQue2.setDefaultValue(1)
+        tcpipGmacRxBuffAllocCountQue2.setMin(1)
+        tcpipGmacRxBuffAllocCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_2"]) 
+            
         # GMAC Queue 3
         tcpipGmacQue3 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_3", None)
         tcpipGmacQue3.setLabel("GMAC Queue 3")
@@ -211,7 +287,32 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue3.setDescription("Size Of TX Buffer for Queue3. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue3.setDefaultValue(64)
         tcpipGmacTxBuffSizeQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_3"])
-
+        
+        # Number of additional Rx buffers To Be Created for Queue3
+        tcpipGmacRxAddlBuffCountQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE3", tcpipGmacQue3)
+        tcpipGmacRxAddlBuffCountQue3.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue3.setVisible(False)
+        tcpipGmacRxAddlBuffCountQue3.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue3")
+        tcpipGmacRxAddlBuffCountQue3.setDefaultValue(0)
+        tcpipGmacRxAddlBuffCountQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_3"])
+            
+        # Rx buffer Count Threshold to allocate new Rx buffers, for Queue3
+        tcpipGmacRxBuffCountThresQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE3", tcpipGmacQue3)
+        tcpipGmacRxBuffCountThresQue3.setLabel("Minimum Threshold for Rx Buffer replenish process")
+        tcpipGmacRxBuffCountThresQue3.setVisible(False)
+        tcpipGmacRxBuffCountThresQue3.setDescription("Rx buffer Count Threshold to allocate new Rx buffers for Queue3")
+        tcpipGmacRxBuffCountThresQue3.setDefaultValue(1)
+        tcpipGmacRxBuffCountThresQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_3"]) 
+            
+        # Rx buffer allocate Count for Queue3
+        tcpipGmacRxBuffAllocCountQue3 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE3", tcpipGmacQue3)
+        tcpipGmacRxBuffAllocCountQue3.setLabel("Rx Buffer allocate count during  replenish process")
+        tcpipGmacRxBuffAllocCountQue3.setVisible(False)
+        tcpipGmacRxBuffAllocCountQue3.setDescription("Rx buffer allocate Count for Queue3")
+        tcpipGmacRxBuffAllocCountQue3.setDefaultValue(1)
+        tcpipGmacRxBuffAllocCountQue3.setMin(1)
+        tcpipGmacRxBuffAllocCountQue3.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_3"]) 
+        
         # GMAC Queue 4
         tcpipGmacQue4 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_4", None)
         tcpipGmacQue4.setLabel("GMAC Queue 4")
@@ -251,7 +352,32 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue4.setDescription("Size Of TX Buffer for Queue4. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue4.setDefaultValue(64)
         tcpipGmacTxBuffSizeQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_4"])
-
+        
+        # Number of additional Rx buffers To Be Created for Queue4
+        tcpipGmacRxAddlBuffCountQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE4", tcpipGmacQue4)
+        tcpipGmacRxAddlBuffCountQue4.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue4.setVisible(False)
+        tcpipGmacRxAddlBuffCountQue4.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue4")
+        tcpipGmacRxAddlBuffCountQue4.setDefaultValue(0)
+        tcpipGmacRxAddlBuffCountQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_4"])
+            
+        # Rx buffer Count Threshold to allocate new Rx buffers, for Queue4
+        tcpipGmacRxBuffCountThresQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE4", tcpipGmacQue4)
+        tcpipGmacRxBuffCountThresQue4.setLabel("Minimum Threshold for Rx Buffer replenish process")
+        tcpipGmacRxBuffCountThresQue4.setVisible(False)
+        tcpipGmacRxBuffCountThresQue4.setDescription("Rx buffer Count Threshold to allocate new Rx buffers for Queue4")
+        tcpipGmacRxBuffCountThresQue4.setDefaultValue(1)
+        tcpipGmacRxBuffCountThresQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_4"]) 
+            
+        # Rx buffer allocate Count for Queue4
+        tcpipGmacRxBuffAllocCountQue4 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE4", tcpipGmacQue4)
+        tcpipGmacRxBuffAllocCountQue4.setLabel("Rx Buffer allocate count during  replenish process")
+        tcpipGmacRxBuffAllocCountQue4.setVisible(False)
+        tcpipGmacRxBuffAllocCountQue4.setDescription("Rx buffer allocate Count for Queue4")
+        tcpipGmacRxBuffAllocCountQue4.setDefaultValue(1)
+        tcpipGmacRxBuffAllocCountQue4.setMin(1)
+        tcpipGmacRxBuffAllocCountQue4.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_4"])     
+        
         # GMAC Queue 5
         tcpipGmacQue5 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_5", None)
         tcpipGmacQue5.setLabel("GMAC Queue 5")
@@ -291,6 +417,31 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue5.setDescription("Size Of TX Buffer for Queue5. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue5.setDefaultValue(64)
         tcpipGmacTxBuffSizeQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"])
+        
+        # Number of additional Rx buffers To Be Created for Queue5
+        tcpipGmacRxAddlBuffCountQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE5", tcpipGmacQue5)
+        tcpipGmacRxAddlBuffCountQue5.setLabel("Number of additional Rx buffers to be created")
+        tcpipGmacRxAddlBuffCountQue5.setVisible(False)
+        tcpipGmacRxAddlBuffCountQue5.setDescription("Number of additional Sticky Rx buffers to Be Created for Queue5")
+        tcpipGmacRxAddlBuffCountQue5.setDefaultValue(0)
+        tcpipGmacRxAddlBuffCountQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"])      
+            
+        # Rx buffer Count Threshold to allocate new Rx buffers, for Queue5
+        tcpipGmacRxBuffCountThresQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE5", tcpipGmacQue5)
+        tcpipGmacRxBuffCountThresQue5.setLabel("Minimum Threshold for Rx Buffer replenish process")
+        tcpipGmacRxBuffCountThresQue5.setVisible(False)
+        tcpipGmacRxBuffCountThresQue5.setDescription("Rx buffer Count Threshold to allocate new Rx buffers for Queue5")
+        tcpipGmacRxBuffCountThresQue5.setDefaultValue(1)
+        tcpipGmacRxBuffCountThresQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"]) 
+            
+        # Rx buffer allocate Count for Queue5
+        tcpipGmacRxBuffAllocCountQue5 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE5", tcpipGmacQue5)
+        tcpipGmacRxBuffAllocCountQue5.setLabel("Rx Buffer allocate count during  replenish process")
+        tcpipGmacRxBuffAllocCountQue5.setVisible(False)
+        tcpipGmacRxBuffAllocCountQue5.setDescription("Rx buffer allocate Count for Queue5")
+        tcpipGmacRxBuffAllocCountQue5.setDefaultValue(1)
+        tcpipGmacRxBuffAllocCountQue5.setMin(1)
+        tcpipGmacRxBuffAllocCountQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"])
 
     # GMAC TX descriptors Dummy Count
     tcpipGmacTxDescCountDummmy = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY", None)

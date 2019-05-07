@@ -221,7 +221,13 @@ typedef enum
 
     /* Not enough descriptors available */
     DRV_PIC32CGMAC_RES_NO_DESCRIPTORS,
-    
+            
+    /* Not enough nodes in Tx Queues */
+    DRV_PIC32CGMAC_RES_NO_TX_QUEUE,   
+            
+    /* Not enough nodes in Rx Queues */
+    DRV_PIC32CGMAC_RES_NO_RX_QUEUE,
+            
     /* Errors: Ethernet buffers, descriptors */
 	DRV_PIC32CGMAC_RES_DESC_CNT_ERR,
     /* Some memory allocation failed */
@@ -255,10 +261,21 @@ typedef enum
 {
 	GMAC_RX_NO_FRAME_STATE,
 	GMAC_RX_SOF_DETECTED_STATE,
-	GMAC_RX_EOF_DETECTED_STATE,
-	GMAC_RX_VALID_FRAME_STATE
+	GMAC_RX_VALID_FRAME_DETECTED_STATE
 } GMAC_RXFRAME_STATE;
 
+/**************************************************************************
+  Summary:
+     GMAC Rx descriptor data packet attributes
+  Description:
+	 These attributes used during the search for valid Rx packet,on GMAC Rx Interrupt.
+**************************************************************************/
+typedef struct
+{
+	uint16_t startIndex;
+	uint16_t endIndex;
+	uint16_t buffer_count;	
+} DRV_PIC32CGMAC_RX_FRAME_INFO; 
 
 // *****************************************************************************
 /* Ethernet Close Flags
