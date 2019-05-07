@@ -227,6 +227,9 @@ typedef struct
                                                                   // So that many number of Rx packet pointers for all Queues
 	/** Pointer to Rx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc;
+    // Rx queues for RX packet buffers
+	DRV_PIC32CGMAC_SGL_LIST _RxBuffNewQueue;
+    DRV_PIC32CGMAC_SGL_LIST _RxBuffAckQueue;
 	
 	/** Pointer to Tx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc;
