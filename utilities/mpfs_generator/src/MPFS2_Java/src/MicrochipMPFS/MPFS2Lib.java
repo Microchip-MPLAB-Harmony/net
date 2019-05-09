@@ -502,18 +502,20 @@ public class MPFS2Lib //: MPFS2Writer
            }
            if (f.isDirectory())
            {
-              //AddDirectory(f.getPath());
-//              log.add(f.getPath() + " :");
-//               if(dataPath.contains(f.getPath()) == false)
-//               {
-//                  if((tempImagePath.length() > 0) &&(f.getPath().contains(tempImagePath.split("/")[0])))
-//                    tempImagePath = tempImagePath+"/" + f.getName();
-//                  else
-//                    tempImagePath = f.getName();
-//
-//                 imagePath = tempImagePath;
-//                 imagePath = imagePath+"/";
-//               }
+/*TODO - Following code can be reused for a directory processing         
+              AddDirectory(f.getPath());
+              log.add(f.getPath() + " :");
+               if(dataPath.contains(f.getPath()) == false)
+               {
+                  if((tempImagePath.length() > 0) &&(f.getPath().contains(tempImagePath.split("/")[0])))
+                    tempImagePath = tempImagePath+"/" + f.getName();
+                  else
+                    tempImagePath = f.getName();
+
+                 imagePath = tempImagePath;
+                 imagePath = imagePath+"/";
+               }
+               */
            }
            else
            {
@@ -538,9 +540,6 @@ public class MPFS2Lib //: MPFS2Writer
                imagePath = tempImagePath.replace(dataPath,"").replace(File.separator,"/");
                
                imagePath = imagePath.substring(1);
-               
-               //imagePath = imagePath+"/";
-               //AddFile(f.getPath(),imagePath+f.getName(),f);
                
                AddFile(f.getPath(),imagePath,f);
                parentPath = f.getParent();
@@ -606,8 +605,6 @@ public class MPFS2Lib //: MPFS2Writer
             {
                 case C18:
                 case C32:
-                    //MPFS2C18Writer mpfs2C18Wr = new MPFS2C18Writer(this.LocalPath + this.LocalFile);
-                    //WriteImage(mpfs2C18Wr);
                     w = new MPFS2C18Writer(LocalPath + LocalFile);
                     WriteImage(w);
                     break;                

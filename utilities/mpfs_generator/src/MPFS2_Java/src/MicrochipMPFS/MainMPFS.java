@@ -249,8 +249,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Apr,29 2019"+"<br>";
-        String version = "Version MPFS 3.3.2";
+        aboutStr = "<html>"+"Date May,09 2019"+"<br>";
+        String version = "Version MPFS 3.3.4";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
@@ -290,27 +290,11 @@ public class MainMPFS extends javax.swing.JFrame {
                     sourceDirectoryPath = defaultHarmonySourceDirectoryPath;
                 }
             }
-//            sourceDirectoryPath = sourceFile.getCanonicalPath();
-//            if(sourceFile.exists() == false)
-//            {
-//                if(sourceFile_unifiedStack.exists())
-//                {
-//                    sourceDirectoryPath = sourceFile_unifiedStack.getCanonicalPath();
-//                }
-//                else if(sourceFile_old.exists() == false)
-//                {
-//                    sourceDirectoryPath = defaultSourceDirectoryPath;
-//                }
-//                else
-//                {
-//                    //System.out.println("correct sourceDirectoryPath =" + sourceFile_old.getCanonicalPath());
-//                    sourceDirectoryPath = sourceFile_old.getCanonicalPath();
-//                }
-//            }
+
             saveXmlNodeValue(eXmlNodeAttribute.SOURCE_DIRECTORY_PATH,sourceDirectoryPath,0,true);
 
         }catch(IOException E){
-        //System.out.println("Catch sourceDirectoryPath =" + sourceDirectoryPath);
+
         }
 
         // project Bin File Path
@@ -325,21 +309,9 @@ public class MainMPFS extends javax.swing.JFrame {
                    projectBinFilePath = defaultHarmonyProjectBinFilePath;
                 }
             }
-//            projectBinFilePath = projectBinFile.getCanonicalPath();
-//            if(projectBinFile.exists() == false)
-//            {
-//                 if(projectBinFile_old.exists() == false)
-//                 {
-//                    projectBinFilePath = defaultProjectBinFilePath;
-//                 }
-//                 else
-//                 {
-//                     projectBinFilePath = projectBinFile_old.getCanonicalPath();
-//                 }
-//            }
-            //xmlIntrf.modifyExistingXmlFile("Setting", "ProjectBinFile", projectBinFilePath);
+
             saveXmlNodeValue(eXmlNodeAttribute.PROJECT_BIN_FILE_PATH,projectBinFilePath,0,true);
-            //System.out.println("projectBinFilePath =" + projectBinFilePath);
+
         }catch(IOException E){}
 
         // project directory path
@@ -354,25 +326,8 @@ public class MainMPFS extends javax.swing.JFrame {
                     projectDirectoryPath = defaultHarmonyProjectDirectoryPath;
                 }
             }
-//            projectDirectoryPath = projectDir.getCanonicalPath();
-//            if(projectDir.exists() == false)
-//            {
-//               if(projectDir_unifiedStack.exists())
-//               {
-//                   projectDirectoryPath = projectDir_unifiedStack.getCanonicalPath();
-//               }
-//               else if(projectDir_old.exists() == false)
-//               {
-//                    projectDirectoryPath = defaultProjectDirectoryPath;
-//               }
-//               else
-//               {
-//                   projectDirectoryPath = projectDir_old.getCanonicalPath();
-//               }
-//            }
-            //xmlIntrf.modifyExistingXmlFile("Setting", "ProjectDirectory", projectDirectoryPath);
+
             saveXmlNodeValue(eXmlNodeAttribute.PROJECT_DIRECTORY_PATH,projectDirectoryPath,0,true);
-            //System.out.println("projectDirectoryPath =" + projectDirectoryPath);
         }catch(IOException E){}
          // Soure directory Image path
         TextSrcDir.setText(sourceDirectoryPath);
