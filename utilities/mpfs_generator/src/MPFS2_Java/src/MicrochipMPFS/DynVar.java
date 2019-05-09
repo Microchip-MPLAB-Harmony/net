@@ -44,10 +44,17 @@ public class DynVar {
     int parseItrtn = 0;
     int tempFileRcrdLen = 0;
     boolean tcpipHttpNetVersionused;
+    // dynamic variables/SSI, etc. ignore pattern start and end
+// any dynamic variable within these keywords are ignored
+    //String IGNORE_BEGIN = "<code>"
+
     String regEx = "~(inc:[A-Za-z0-9\\ \\.-_\\/]{1,60}|[A-Za-z0-9_]{0,40}(\\([A-Za-z0-9_,\\ ]*\\))?)~";
+    String ignore_dynmicvar_regEx = "<code>~(inc:[A-Za-z0-9\\ \\.-_\\/]{1,60}|[A-Za-z0-9_]{0,40}(\\([A-Za-z0-9_,\\ ]*\\))?)~</code>";
     private static List<DynamicVariable> vars;
+    public List<String> ignoredDynVar;
     //private Vector<Byte> resizeArray = new Vector(8,8);
     private Pattern parser = Pattern.compile(regEx);
+    private Pattern ignore_dynmicvar_parser = Pattern.compile(ignore_dynmicvar_regEx);
     private String projectDir;
 
     String HTTPPRINT_NET_H_HEADER =
@@ -370,13 +377,8 @@ public class DynVar {
         "    {\r\n"+
         "        SYS_CONSOLE_MESSAGE("+ "\"" + "APP: Failed to register the HTTP callback! \\r\\n" + "\""+ ");\r\n"+
         "    }\r\n"+
-        "}\r\n\r\n" +
-        "//This following registered function is called  for the dynamic variable \"myVariable\".\n" +
-        "TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_myVariable(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)\n" +
-        "{\n" +
-        "    TCPIP_HTTP_NET_DynamicWriteString(vDcpt,\"~\", true);\n" +
-        "    return TCPIP_HTTP_DYN_PRINT_RES_DONE;\n" +
-        "}";
+        "}\r\n\r\n";
+        
 
 
 /*
@@ -386,6 +388,7 @@ public class DynVar {
     {
         this.projectDir = path;
         vars = new LinkedList<DynamicVariable>();
+        this.ignoredDynVar = new ArrayList<String>();
         tcpipHttpNetVersionused = ifTcpipVersion6used;
         // Read previous index file if it exists.
         File file_exists;
@@ -429,14 +432,36 @@ public class DynVar {
     public MPFSFileRecord Parse(MPFSFileRecord file,StringBuilder strLine)
     {
         int dynVarCntr=0;
-        //Vector<Byte> resizeArray = new Vector(8,8);
+        boolean flagPresent = false;
         ByteArrayOutputStream resizeArray = new ByteArrayOutputStream();
         Matcher matches = parser.matcher(strLine);
+        Matcher ignore_matches = ignore_dynmicvar_parser.matcher(strLine);
+        
+        // add the ignored dynamic variable to the list which are part of the <code> and </code>
+        while(ignore_matches.find())
+        {
+            ignoredDynVar.add(ignore_matches.group());
+        }
 
         while(matches.find())
         {
+            // compare the dynamic variable which is exist in the <code> and </code> with the 
+            // regular dynamic variable regular expression list.
+            for(String ignoreDynStr : ignoredDynVar)
+            {
+                if(ignoreDynStr.contains(matches.group()) == true)
+                {
+                    flagPresent =true;
+                }
+            }
+            if(flagPresent == true)
+            {
+                flagPresent = false;
+                continue;
+            }
             int i = GetIndex(matches.group().replace(" ","").replace("~",""));
-
+            
+            
             resizeArray.write((byte)matches.start());
             resizeArray.write((byte)(matches.start()>>8));
             resizeArray.write((byte)(matches.start()>>16));
@@ -508,7 +533,7 @@ public class DynVar {
         boolean isChanged = false;
         File httpFileIdx = null;
         String temp_str;
-/*
+/* TODO [HS] - The following code can be reused for idx file recreation
         for(DynamicVariable dv : vars)
         {
             if ((dv.getWasUsed() && dv.getCount() == 0) ||
@@ -558,10 +583,7 @@ public class DynVar {
             file_header_output = new FileOutputStream(projectDir + "http_net_print.h");
             file_source_output = new FileOutputStream(projectDir + "http_net_print.c");
         }
-//        else
-//        {
-//            file_output = new FileOutputStream(projectDir + "HTTPPrint.h");
-//        }
+
         data_header_out = new DataOutputStream (file_header_output);
         fout_header = new BufferedWriter(new OutputStreamWriter(data_header_out));
         data_source_out = new DataOutputStream (file_source_output);
@@ -604,111 +626,11 @@ public class DynVar {
                 temp_str = "{" + "\""+ m.group(1) + "\"" + "," + "\t\t\t\t\t" + "TCPIP_HTTP_Print_" + m.group(1);
                 fout_source.write(temp_str);
                 fout_source.write("},\r\n");
-//                if(m.group(3) != null)
-//                {
-//                    if(tcpipHttpNetVersionused)
-//                    {
-//                        fout_source.write("HTTP_CONN_HANDLE connHandle,");
-//                    }
-//                    if(m.groupCount() == 3 && m.group(3).length() > 0)
-//                    {
-//                        int numParams = m.group(3).split(",").length;
-//                        for (int i = 0; i < numParams - 1; i++)
-//                        {
-//                            if(tcpipHttpNetVersionused)
-//                            {
-//                                fout_source.write("uint16_t,");
-//                            }
-//                            else
-//                            {
-//                                fout_source.write("WORD,");
-//                            }
-//                        }
-//                        if(tcpipHttpNetVersionused)
-//                        {
-//                            fout_source.write("uint16_t");
-//                        }
-//                        else
-//                        {
-//                            fout_source.write("WORD");
-//                        }
-//                    }
-//                }
-//                else
-//                {
-//                     if(tcpipHttpNetVersionused)
-//                     {
-//                        fout_source.write("HTTP_CONN_HANDLE connHandle");
-//                     }
-//                     else
-//                     {
-//                        fout_source.write("void");
-//                     }
-//                }
-//               fout_source.write(");\r\n");
             }
         }
 
        // header file middle one
-        fout_header.write(HTTPPRINT_NET_H_MIDDLE);
-        
-//        int index = 0;
-//        for(DynamicVariable dv : vars)
-//        {
-//            if (dv.getCount() == 0)
-//            {
-//                index++;
-//                continue;
-//            }
-//            temp_str  = "        case 0x" + String.format("%08x",index++) + ":\r\n";
-//            fout_source.write(temp_str);
-//
-//            // Write the actual case statement
-//            if(dv.GetName().startsWith("inc:"))
-//            {
-//                if(tcpipHttpNetVersionused)
-//                {
-//                    temp_str = "\t\t\tTCPIP_HTTP_FileInclude(connHandle,(const uint8_t *)\"" + dv.GetName().substring(4) + "\");\r\n\t\t\tbreak;\r\n";
-//                }
-//                else
-//                {
-//                    temp_str = "\t\t\tHTTPIncFile((ROM BYTE*)\"" + dv.GetName().substring(4) + "\");\r\n\t\t\tbreak;\r\n";
-//                }
-//                fout_source.write(temp_str);
-//            }
-//            else
-//            {
-//                if(tcpipHttpNetVersionused)
-//                {
-//                    if(!dv.GetName().endsWith(")"))
-//                    {
-//                        temp_str = "\t\t\tTCPIP_HTTP_Print_" + dv.GetName();
-//                        fout_source.write(temp_str);
-//                        fout_source.write("(connHandle)");
-//                    }
-//                    else
-//                    {
-//                        temp_str = dv.GetName();
-//                        temp_str = temp_str.replace("(", "(connHandle,");
-//                        temp_str = "\t\t\tTCPIP_HTTP_Print_" + temp_str;
-//                        fout_source.write(temp_str);
-//                    }
-//                }
-//                else
-//                {
-//                    temp_str = "\t\t\tHTTPPrint_" + dv.GetName();
-//                    fout_source.write(temp_str);
-//                    if(!dv.GetName().endsWith(")"))
-//                    {
-//                        fout_source.write("()");
-//                    }
-//                }
-//
-//                fout_source.write(";\r\n\t\t\tbreak;\r\n");
-//            }
-//        }
-
-        
+        fout_header.write(HTTPPRINT_NET_H_MIDDLE);    
         fout_header.write(HTTPPRINT_NET_H_FOOTER);
         fout_source.write(HTTPPRINT_NET_C_FOOTER);
         fout_source.flush();
@@ -807,13 +729,8 @@ class DynamicVariable
     {
         String regEx = "[\\ \\+]";
         this.wasUsed = name.startsWith("+");
-        //Pattern pattern = Pattern.compile(regEx);
-        //Matcher match = pattern.matcher(name);
-        //if(match.find())
-        //    this.name = pattern.matcher(name).replaceFirst("");
-        //else
+       
         this.name = name.replaceFirst(regEx,"");
-        //this.name = matches.group().replaceFirst(regEx,"");
         this.count = 0;
     }
 
