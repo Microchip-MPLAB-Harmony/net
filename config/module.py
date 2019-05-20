@@ -46,7 +46,7 @@ def loadModule():
     tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_cmd.py")
     tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD",True) 
     # tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_CORE", None, True, True)
-    # tcpipCmdComponent.addDependency("Cmd_SysConsole_Dependency", "SYS_CONSOLE")
+    tcpipCmdComponent.addDependency("TcpipCmd_SysCmd_Dependency", "SYS_COMMAND", None, True, True)
     tcpipCmdComponent.setDisplayType("TCP/IP Library")
 
     ###########  TCP/IP LIBRARY Network Layer Configurations  ###########
