@@ -640,22 +640,16 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 #include "tcpip/tcpip_common_ports.h"
-
 #include "tcpip/tcpip_mac.h"
 #include "tcpip/tcpip_mac_object.h"
 #include "tcpip/tcpip_manager.h"
-
-
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
-
 <#if (tcpipNdp.TCPIP_USE_NDP)?has_content && (tcpipNdp.TCPIP_USE_NDP) == true>
 #include "tcpip/ndp.h"
 </#if>
-<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4)?has_content && (tcpipIPv4.TCPIP_STACK_USE_IPV4) == true) >
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
-</#if>
 <#if ((tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true) >
 #include "tcpip/icmpv6.h"
 #include "tcpip/dhcpv6.h"
