@@ -99,19 +99,19 @@ APP_DATA appData;
 /* TODO:  Add any necessary local functions.
  */
 
-static int _APP_Commands_StartService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_RelayHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_RelayPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_Ipv4ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_StartService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_RelayHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_RelayPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_Ipv4ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #ifdef TCPIP_STACK_USE_IPV6
-static int _APP_Commands_Ipv6ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_Ipv6ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
-static int _APP_Commands_StopService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_CurrentSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_StopService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_CurrentSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
-static int _APP_Commands_RelayClientHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_RelayClientSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_RelayClientStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_RelayClientHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_RelayClientSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_RelayClientStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static void _APP_ServerTasks();
 static void _APP_ClientTasks();
@@ -331,59 +331,53 @@ void APP_Tasks(void) {
     }
 }
 
-int _APP_Commands_StartService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_StartService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     appData.serviceStarted = true;
-    return 0;
 }
 
-int _APP_Commands_RelayHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_RelayHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: relayhost <host name>\r\n");
-        return 0;
+        return;
     }
     strcpy(appData.relayHost, argv[1]);
-    return 0;
 }
 
-int _APP_Commands_RelayPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_RelayPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: relayport <port number>\r\n");
-        return 0;
+        return;
     }
     appData.relayPort = atoi(argv[1]);
-    return 0;
 }
 
-int _APP_Commands_Ipv4ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_Ipv4ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ipv4port <server port number>\r\n");
-        return 0;
+        return;
     }
     appData.ipv4ServerPort = atoi(argv[1]);
-    return 0;
 }
 #ifdef TCPIP_STACK_USE_IPV6
 
-int _APP_Commands_Ipv6ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_Ipv6ServerPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ipv6port <server port number>\r\n");
-        return 0;
+        return;
     }
     appData.ipv6ServerPort = atoi(argv[1]);
-    return 0;
 }
 #endif
 
-int _APP_Commands_StopService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_StopService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     appData.serviceStarted = false;
-    return 0;
 }
 
-int _APP_Commands_CurrentSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_CurrentSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "Current Setup: %s\r\n", appData.serviceStarted ? "started" : "stopped");
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tRelay Host '%s'\r\n", appData.relayHost);
@@ -394,27 +388,24 @@ int _APP_Commands_CurrentSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 #endif
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tRelay Client Host '%s'\r\n", appData.relayClientHost);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tRelay Client Host Iterations '%d'\r\n", appData.relayClientCounter);
-    return 0;
 }
 
-int _APP_Commands_RelayClientHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_RelayClientHost(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: relayhost <host name>\r\n");
-        return 0;
+        return;
     }
     strcpy(appData.relayClientHost, argv[1]);
-    return 0;
 }
 
-int _APP_Commands_RelayClientSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+void _APP_Commands_RelayClientSetup(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: relayiter <number of packets>\r\n");
-        return 0;
+        return;
     }
     appData.relayClientCounter = atoi(argv[1]);
-    return 0;
 }
 
 uint8_t dataBuffer[1500];
@@ -764,9 +755,8 @@ static void _APP_RelayClientTasks() {
 
 }
 
-static int _APP_Commands_RelayClientStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
+static void _APP_Commands_RelayClientStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv) {
     appData.relayClientState = APP_STATE_RELAY_CLIENT_DNS_LOOKUP;
-    return 0;
 }
 
 

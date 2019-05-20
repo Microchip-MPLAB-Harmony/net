@@ -48,7 +48,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-static int _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static const SYS_CMD_DESCRIPTOR    appCmdTbl[]=
 {
@@ -68,7 +68,7 @@ bool APP_Commands_Init()
 
 char APP_URL_Buffer[MAX_URL_SIZE];
 
-int _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -77,11 +77,10 @@ int _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: openurl <url>\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: openurl http://www.google.com/\r\n");
-        return false;
+        return;
     }
 
     strncpy(APP_URL_Buffer, argv[1], MAX_URL_SIZE);
-    return true;
 }
 
 

@@ -48,10 +48,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-static int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static const SYS_CMD_DESCRIPTOR    appCmdTbl[]=
 {
@@ -80,7 +80,7 @@ char APP_Port_Buffer[6];
 char APP_Message_Buffer[MAX_URL_SIZE];
 bool APP_Send_Packet = false;
 
-int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -89,13 +89,12 @@ int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: sendudp\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: sendudp\r\n");
-        return true;
+        return;
     }
     APP_Send_Packet = true;
-    return false;
 }
 
-int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -104,19 +103,18 @@ int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: setopt <hostname> <port> <message>\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: setopt 10.0.1.4 9760 Hello\r\n");
-        return true;
+        return;
     }
 
     strcpy(APP_Hostname_Buffer, argv[1]);
     strcpy(APP_Port_Buffer, argv[2]);
     strcpy(APP_Message_Buffer, argv[3]);
-    return true;
 }
 
 static char buffer1[160];
 static char buffer2[160];
 static char buffer3[160];
-int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -124,7 +122,7 @@ int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: getopt\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: getopt\r\n");
-        return true;
+        return;
     }
 
      (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Current UDP Options:\r\n");
@@ -135,11 +133,10 @@ int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
      sprintf(buffer3, "\tmessage: '%s'\r\n", APP_Message_Buffer);
      (*pCmdIO->pCmdApi->msg)(cmdIoParam, buffer3);
 
-    return false;
 }
 
 extern APP_DATA appData;
-int _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -149,7 +146,7 @@ int _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: settmo <ms>\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: settmo 2000\r\n");
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Current tmo is: %d\r\n", appData.tmoMs);
-        return true;
+        return;
     }
 
     int tmoMs = atoi(argv[1]);
@@ -164,7 +161,6 @@ int _APP_Commands_SetTimeout(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     }
 
 
-    return true;
 }
 
 #endif

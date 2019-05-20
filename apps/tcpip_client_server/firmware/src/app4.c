@@ -119,14 +119,14 @@ static uint32_t    appRxTotBytes = 0;           // statistics counters
 static uint32_t    appTxTotBytes = 0;
 
 // local prototypes
-static int appClientOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appClientMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appClientClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetIpv4Server(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetSendAsync(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appClientStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appClientOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appClientMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appClientClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetIpv4Server(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetSendAsync(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appClientStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static void appRecvData(void);
 
@@ -260,7 +260,7 @@ static void appRecvData(void)
 }
 
 
-static int appClientOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appClientOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     IP_MULTI_ADDRESS    appRemAddress;
     IP_MULTI_ADDRESS*   pMAdd;
@@ -299,11 +299,10 @@ static int appClientOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     }
 
-    return true;
 }
 
 
-static int appClientMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appClientMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     static const char* appMsg = "Message from Client UdpCli1: %d\r\n";
     static const char fillMsg[] = "aaaabbbbccccddddeeeeffff";
@@ -348,10 +347,9 @@ static int appClientMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }
 
-    return true;
 }
 
-static int appClientClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appClientClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(appSkt != INVALID_SOCKET)
     {
@@ -359,10 +357,9 @@ static int appClientClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         appSkt = INVALID_SOCKET;
         (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Cli: Socket closed\r\n");
     }
-    return true;
 }
 
-static int appSetIpv4Server(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetIpv4Server(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(argc > 1)
     {
@@ -379,10 +376,9 @@ static int appSetIpv4Server(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     }
 
     (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Server address: %s, Port: %d\r\n", appIpv4RemHost, appRemPort);
-    return true;
 }
 
-static int appSetSendAsync(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetSendAsync(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(argc >= 2)
     {
@@ -391,11 +387,10 @@ static int appSetSendAsync(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set async to: %d\r\n", appSendAsync);
     }
 
-    return true;
 }
 
 
-static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(argc >= 2)
     {
@@ -413,11 +408,10 @@ static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set display to: %1d\r\n", appDisplayLocal);
     }
 
-    return true;
 }
 
 
-static int appClientStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appClientStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Client Stat - RX: %d, TX: %d\r\n", appRxTotBytes, appTxTotBytes);
 
@@ -429,10 +423,9 @@ static int appClientStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Stat cleared\r\n");
         }
     }
-    return true;
 }
 
-static int appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     uint32_t txSize;
 
@@ -450,7 +443,6 @@ static int appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }    
 
-    return true;
 }
 /*******************************************************************************
  End of File

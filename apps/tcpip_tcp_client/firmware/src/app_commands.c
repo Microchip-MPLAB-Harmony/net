@@ -52,8 +52,8 @@ int32_t DRV_ETHPHY_SMSC9303_InitCmdProcessor();
 
 
 
-static int _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_ChangeIP(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_ChangeIP(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static const SYS_CMD_DESCRIPTOR    appCmdTbl[]=
 {
@@ -77,7 +77,7 @@ bool APP_Commands_Init()
 
 char APP_URL_Buffer[MAX_URL_SIZE];
 
-int _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -86,21 +86,19 @@ int _APP_Commands_OpenURL(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: openurl <url>\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: openurl http://www.google.com/\r\n");
-        return false;
+        return;
     }
 
     strncpy(APP_URL_Buffer, argv[1], MAX_URL_SIZE);
-    return false;
 }
 
-int _APP_Commands_ChangeIP(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_ChangeIP(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     TCPIP_NET_HANDLE    netH;
     IPV4_ADDR ipAddress;
     ipAddress.Val = 0xB677A8C0;
     netH = TCPIP_STACK_IndexToNet(0);
     TCPIP_STACK_NetAddressSet(netH, &ipAddress, NULL, 0);
-    return true;
 }
 
 #endif
