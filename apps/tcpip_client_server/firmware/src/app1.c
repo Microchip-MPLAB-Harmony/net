@@ -121,14 +121,14 @@ static SYS_CMD_DEVICE_NODE* appDisplayCmdNode;  // console communicating device
 static const void*  appDisplayIoParam;
 
 // local prototypes
-static int appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerAbort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetTcpTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetTcpRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerAbort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetTcpTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetTcpRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static void appRecvMessage(void);
 
@@ -304,7 +304,7 @@ static void appRecvMessage(void)
 }
 
 
-static int appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(appSkt == INVALID_SOCKET)
     {
@@ -344,10 +344,9 @@ static int appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     }
 
-    return true;
 }
 
-static int appServerMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     static const char* appMsg = "Message from Server: %d\r\n";
     static uint32_t appMsgCnt = 0;
@@ -371,10 +370,9 @@ static int appServerMsg(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }
 
-    return true;
 }
 
-static int appServerAbort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerAbort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(appSkt != INVALID_SOCKET)
     {
@@ -382,10 +380,9 @@ static int appServerAbort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         appIsConnected = false;
         (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Srv: Socket aborted\r\n");
     }
-    return true;
 }
 
-static int appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(appSkt != INVALID_SOCKET)
     {
@@ -393,10 +390,9 @@ static int appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         appSkt = INVALID_SOCKET;
         (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Srv: Socket closed\r\n");
     }
-    return true;
 }
 
-static int appSetTcpTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetTcpTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     uint32_t txSize;
 
@@ -414,10 +410,9 @@ static int appSetTcpTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }    
 
-    return true;
 }
 
-static int appSetTcpRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetTcpRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     uint32_t rxSize;
 
@@ -435,10 +430,9 @@ static int appSetTcpRxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }    
 
-    return true;
 }
 
-static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(argc >= 2)
     {
@@ -456,11 +450,10 @@ static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set display to: %1d\r\n", appDisplayLocal);
     }
 
-    return true;
 }
 
 
-static int appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int pendingTxBytes = appCurrWrPtr - appCurrRdPtr;
     int pendingRxBytes = TCPIP_TCP_GetIsReady(appSkt);
@@ -474,7 +467,6 @@ static int appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Stat cleared\r\n");
         }
     }
-    return true;
 }
 
  

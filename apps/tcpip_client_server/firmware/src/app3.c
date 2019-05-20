@@ -122,14 +122,14 @@ static const void*  appDisplayIoParam;
 
 
 // local prototypes
-static int appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerStrictNet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerStrictPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerStrictAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerStrictNet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerStrictPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerStrictAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 
 static void    appRecvMessage(void);
@@ -284,7 +284,7 @@ static void appRecvMessage(void)
     }
 }
 
-static int appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(appSkt == INVALID_SOCKET)
     {
@@ -324,10 +324,9 @@ static int appServerOpen(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }
     
-    return true;
 }
 
-static int appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(appSkt != INVALID_SOCKET)
     {
@@ -335,10 +334,9 @@ static int appServerClose(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         appSkt = INVALID_SOCKET;
         (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Cli: Socket closed\r\n");
     }
-    return true;
 }
 
-static int appServerStrictNet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerStrictNet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int strictNet;
 
@@ -349,11 +347,10 @@ static int appServerStrictNet(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set Strict Net to: %1d\r\n", appSetStrictNet);
     }    
 
-    return true;
 
 }
 
-static int appServerStrictPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerStrictPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int strictPort;
 
@@ -364,11 +361,10 @@ static int appServerStrictPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set Strict Port to: %1d\r\n", appSetStrictPort);
     }    
 
-    return true;
 
 }
 
-static int appServerStrictAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerStrictAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int strictAddress;
 
@@ -379,11 +375,9 @@ static int appServerStrictAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set Strict Address to: %1d\r\n", appSetStrictAddress);
     }    
 
-    return true;
-
 }
 
-static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     if(argc >= 2)
     {
@@ -401,10 +395,9 @@ static int appSetDisplayLocal(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         (*pCmdIO->pCmdApi->print)(pCmdIO->cmdIoParam, "Set display to: %1d\r\n", appDisplayLocal);
     }
 
-    return true;
 }
 
-static int appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int pendingTxBytes = appCurrWrPtr - appCurrRdPtr;
     int pendingRxBytes = TCPIP_UDP_GetIsReady(appSkt);
@@ -418,10 +411,9 @@ static int appServerStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "Stat cleared\r\n");
         }
     }
-    return true;
 }
 
-static int appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     uint32_t txSize;
 
@@ -439,7 +431,6 @@ static int appSetTxSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         }
     }    
 
-    return true;
 }
 
 

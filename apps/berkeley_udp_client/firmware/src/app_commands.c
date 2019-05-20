@@ -47,11 +47,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-static int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #ifdef TCPIP_STACK_USE_IPV6
-static int _APP_Commands_IPVersion(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _APP_Commands_IPVersion(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 
 
@@ -84,7 +84,7 @@ char APP_Port_Buffer[6];
 char APP_Message_Buffer[MAX_URL_SIZE];
 bool APP_Send_Packet = false;
 
-int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -93,13 +93,12 @@ int _APP_Commands_SendUDPPacket(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: sendudppacket\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: sendudppacket\r\n");
-        return false;
+        return;
     }
     APP_Send_Packet = true;
-    return true;
 }
 
-int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -108,18 +107,17 @@ int _APP_Commands_SetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: setudppacketoptions <hostname> <port> <message>\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: setudppacketoptions 10.0.1.4 9760 Hello\r\n");
-        return false;
+        return;
     }
 
     strcpy(APP_Hostname_Buffer, argv[1]);
     strcpy(APP_Port_Buffer, argv[2]);
     strcpy(APP_Message_Buffer, argv[3]);
-    return false;
 }
 
 char bufferArea[3][80];
 
-int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
@@ -127,7 +125,7 @@ int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: getudppacketoptions\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: getudppacketoptions\r\n");
-        return false;
+        return;
     }
 
      (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Current UDP Options:\r\n");
@@ -138,38 +136,36 @@ int _APP_Commands_GetOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
      sprintf(bufferArea[2], "\tmessage: '%s'\r\n", APP_Message_Buffer);
      (*pCmdIO->pCmdApi->msg)(cmdIoParam, bufferArea[2]);
 
-    return false;
 }
 extern APP_DATA appData;
 #ifdef TCPIP_STACK_USE_IPV6
-int _APP_Commands_IPVersion(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+void _APP_Commands_IPVersion(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     if (argc != 2)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ipver <ANY|4|6>\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ipver 6\r\n");
-        return true;
+        return;
 
     }
     if (strcmp("ANY", argv[1]) == 0)
     {
         appData.hints.ai_family = 0;
-        return true;
+        return;
     }
     else if (strcmp("4", argv[1]) == 0)
     {
         appData.hints.ai_family = AF_INET;
-        return true;
+        return;
     }
     else if (strcmp("6", argv[1]) == 0)
     {
         appData.hints.ai_family = AF_INET6;
-        return true;
+        return;
     }
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ipver <ANY|4|6>\r\n");
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ipver 6\r\n");
-    return true;
 
 }
 #endif
