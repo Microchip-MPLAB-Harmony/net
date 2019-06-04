@@ -33,12 +33,15 @@ def instantiateComponent(drvPic32mEthmacComponent):
     print("PIC32M Internal Ethernet MAC Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
     
+    #Clock enable
+    Database.setSymbolValue("core", "ETH" + "_CLOCK_ENABLE", True, 1)
+    
     # Use Internal Ethernet MAC Driver? 
     drvEthmac = drvPic32mEthmacComponent.createBooleanSymbol("TCPIP_USE_ETH_MAC", None)
     drvEthmac.setLabel("Use Internal Ethernet MAC Driver?")
     drvEthmac.setVisible(False)
     drvEthmac.setDescription("Use Internal Ethernet MAC Driver?")
-    drvEthmac.setDefaultValue(True)
+    drvEthmac.setDefaultValue(True)	
     
     # Enable RMII mode
     Database.setSymbolValue("core", "CONFIG_FMIIEN", "OFF", 1)
@@ -317,7 +320,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEmacModuleId.setVisible(True)
     tcpipEmacModuleId.setDescription("EMAC Module ID")
     tcpipEmacModuleId.setDefaultValue("_ETH_BASE_ADDRESS")
-
+    
     # Get register names, mask values, bit shifts based on vector number
     tcpipEthmacInterruptVector = "ETHERNET_INTERRUPT_ENABLE"
     tcpipEthmacInterruptHandler = "ETHERNET_INTERRUPT_HANDLER"
