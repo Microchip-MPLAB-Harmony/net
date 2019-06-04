@@ -53,7 +53,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     </#if>
 </#list>
 <#if needSysConsole == true>
-#include "system/console/sys_command.h"
+#include "system/command/sys_command.h"
 </#if>
 
 
