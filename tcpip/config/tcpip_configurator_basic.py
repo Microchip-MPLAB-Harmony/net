@@ -207,7 +207,7 @@ def tcpipAutoConfigTcpipCmdEnable(symbol, event):
         res = Database.deactivateComponents(["tcpipCmd"])
         
     # Enable command processor in SYS_COMMAND
-    if(Database.getComponentByID("sys_command") == None):
+    if(event["value"] == True) and (Database.getComponentByID("sys_command") == None):
         # tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipCmd", "TcpipCmd_SysCmd_Dependency")
         # tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipCmd:TcpipCmd_SysCmd_Dependency")
         res = Database.activateComponents(["sys_command"])
