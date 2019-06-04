@@ -155,17 +155,18 @@ def netPresInstnEncryptMenuVisible(symbol, event):
 def netPresInstnEncProviderMenu(symbol, event):
     netPresIndex = int(symbol.getID().strip("NET_PRES_USE_WOLF_SSL_IDX"))   
     data = symbol.getComponent()    
-    if (event["value"] == 0):
-        res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), True, 2)
-        res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), False, 2)
+    if (event["value"] == 0):        
+        res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), False)
+        res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), True)
         res = Database.activateComponents(["lib_wolfssl"])
-        Database.setSymbolValue("lib_wolfssl","wolfssl", True, 2)
+        Database.setSymbolValue("lib_wolfssl","wolfssl", True)
         
     else:
-        res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), False, 2)
-        res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), True, 2)
-        Database.setSymbolValue("lib_wolfssl","wolfssl", False, 2)
+        Database.setSymbolValue("lib_wolfssl","wolfssl", False)
         res = Database.deactivateComponents(["lib_wolfssl"])
+        res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), False)
+        res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), True)
+        
     
 def netPresWolfSSLDebugEnable(symbol, event):
     netPresIndex = int(symbol.getID().strip("NET_PRES_USE_WOLF_SSL_DEBUG_LOG_IDX")) 
@@ -173,9 +174,9 @@ def netPresWolfSSLDebugEnable(symbol, event):
     netPresWolfSSLEnabled = data.getSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex))
     wolfSSLDebugEnabled = Database.getSymbolValue("lib_wolfssl", "wolfssl_debug")
     if (netPresWolfSSLEnabled == True) and (wolfSSLDebugEnabled == True):
-        symbol.setValue(True, 2)
+        symbol.setValue(True)
     else:
-        symbol.setValue(False, 2)
+        symbol.setValue(False)
 
         
 def netPresInstnStreamEnable(symbol, event):    
@@ -185,9 +186,9 @@ def netPresInstnStreamEnable(symbol, event):
     netPresTcpipTransportEnabled = data.getSymbolValue("NET_PRES_TRANSPORT_AS_TCPIP_IDX"+str(netPresIndex))
 
     if (netPresTCPEnabled == True) and (netPresTcpipTransportEnabled == True):
-        symbol.setValue(True, 2)        
+        symbol.setValue(True)        
     else:
-        symbol.setValue(False, 2)
+        symbol.setValue(False)
         
 
 def netPresInstnDatagramEnable(symbol, event):
@@ -197,6 +198,6 @@ def netPresInstnDatagramEnable(symbol, event):
     netPresTcpipTransportEnabled = data.getSymbolValue("NET_PRES_TRANSPORT_AS_TCPIP_IDX"+str(netPresIndex))
 
     if (netPresUDPEnabled == True) and (netPresTcpipTransportEnabled == True):
-        symbol.setValue(True, 2)
+        symbol.setValue(True)
     else:
-        symbol.setValue(False, 2)
+        symbol.setValue(False)
