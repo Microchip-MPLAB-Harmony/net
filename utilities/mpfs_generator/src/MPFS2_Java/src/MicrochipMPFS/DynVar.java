@@ -44,15 +44,10 @@ public class DynVar {
     int parseItrtn = 0;
     int tempFileRcrdLen = 0;
     boolean tcpipHttpNetVersionused;
-    // dynamic variables/SSI, etc. ignore pattern start and end
-// any dynamic variable within these keywords are ignored
-    //String IGNORE_BEGIN = "<code>"
 
     String regEx = "~(inc:[A-Za-z0-9\\ \\.-_\\/]{1,60}|[A-Za-z0-9_]{0,40}(\\([A-Za-z0-9_,\\ ]*\\))?)~";
-    String ignore_dynmicvar_regEx = "<code>~(inc:[A-Za-z0-9\\ \\.-_\\/]{1,60}|[A-Za-z0-9_]{0,40}(\\([A-Za-z0-9_,\\ ]*\\))?)~</code>";
+    String ignore_dynmicvar_regEx = "<code>[\\ ]{0,1}~(inc:[A-Za-z0-9\\ \\.-_\\/]{1,60}|[A-Za-z0-9_]{0,40}(\\([A-Za-z0-9_,\\ ]*\\))?)~[\\ ]{0,1}</code>";
     private static List<DynamicVariable> vars;
-    public List<String> ignoredDynVar;
-    //private Vector<Byte> resizeArray = new Vector(8,8);
     private Pattern parser = Pattern.compile(regEx);
     private Pattern ignore_dynmicvar_parser = Pattern.compile(ignore_dynmicvar_regEx);
     private String projectDir;
@@ -345,7 +340,7 @@ public class DynVar {
         "    Note that without registering the process functions with HTTP, there won't be any web page processing.\r\n"+
         "    There is no default processing for a web page!\r\n"+
         "\r\n"+    
-        "    See http_net.h for details regarding each of these functions.\r\n"+
+        "    See http_net_print.h for details regarding each of these functions.\r\n"+
         "****************************************************************************/\r\n"+
         "void HTTP_APP_Initialize(void)\r\n"+
         "{\r\n"+
@@ -388,7 +383,6 @@ public class DynVar {
     {
         this.projectDir = path;
         vars = new LinkedList<DynamicVariable>();
-        this.ignoredDynVar = new ArrayList<String>();
         tcpipHttpNetVersionused = ifTcpipVersion6used;
         // Read previous index file if it exists.
         File file_exists;
@@ -432,35 +426,30 @@ public class DynVar {
     public MPFSFileRecord Parse(MPFSFileRecord file,StringBuilder strLine)
     {
         int dynVarCntr=0;
-        boolean flagPresent = false;
         ByteArrayOutputStream resizeArray = new ByteArrayOutputStream();
-        Matcher matches = parser.matcher(strLine);
+        Matcher matches;
         Matcher ignore_matches = ignore_dynmicvar_parser.matcher(strLine);
         
         // add the ignored dynamic variable to the list which are part of the <code> and </code>
         while(ignore_matches.find())
         {
-            ignoredDynVar.add(ignore_matches.group());
+            // Get the matching string starts with <code> and ends with </code>
+            String tempStr = ignore_matches.group();
+            // find the length of the string
+            int strLen = tempStr.length();
+            int offset = 0;
+            // get the location of the tempStr which starts with <code> with dynamic variable
+            offset = strLine.indexOf(tempStr);
+            // replace '~' to '#' and where this variable won't be used for dynamic processing.
+            tempStr = tempStr.replaceAll("~", "#");
+            // replace the old string with new string -
+            // e.g - chnage "<code> ~myVariable~ </code>" to "<code> #myVariable# </code>"
+            strLine.replace(offset, offset+strLen, tempStr);
         }
-
+        matches = parser.matcher(strLine);
         while(matches.find())
         {
-            // compare the dynamic variable which is exist in the <code> and </code> with the 
-            // regular dynamic variable regular expression list.
-            for(String ignoreDynStr : ignoredDynVar)
-            {
-                if(ignoreDynStr.contains(matches.group()) == true)
-                {
-                    flagPresent =true;
-                }
-            }
-            if(flagPresent == true)
-            {
-                flagPresent = false;
-                continue;
-            }
             int i = GetIndex(matches.group().replace(" ","").replace("~",""));
-            
             
             resizeArray.write((byte)matches.start());
             resizeArray.write((byte)(matches.start()>>8));
