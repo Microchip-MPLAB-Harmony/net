@@ -30,7 +30,7 @@ def loadModule():
     tcpipStackComponent.addCapability("libtcpipStack","TCPIP_CORE",True)
     tcpipStackComponent.addDependency("Core_NetConfig_Dependency", "NETCONFIG", None, True, True)
     tcpipStackComponent.addDependency("Core_SysTime_Dependency", "SYS_TIME", None, True, True)
-    tcpipStackComponent.addDependency("Core_SysConsole_Dependency", "SYS_CONSOLE")
+    tcpipStackComponent.addDependency("Core_SysConsole_Dependency", "SYS_CONSOLE", None, False, False)
     tcpipStackComponent.setDisplayType("TCP/IP Library")
         
     tcpipNetConfigComponent = Module.CreateGeneratorComponent("tcpipNetConfig", "NETCONFIG", "/Libraries/TCPIP/CORE/","tcpip/config/tcpip_network_config_common.py","tcpip/config/tcpip_network_config.py")
@@ -273,7 +273,7 @@ def loadModule():
     ########################## Harmony Network Presentation Module #################################    
     netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
     netPresComponent.addCapability("libNetPres","net_pres",True)    
-    netPresComponent.addDependency("NetPres_Crypto_Dependency", "LIB_CRYPTO", None, False, False)
+    netPresComponent.addDependency("NetPres_Crypto_Dependency", "Encryption", None, False, False)
     
     ############################### TCP/IP STACK CONFIGURATOR #####################################
     #tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
