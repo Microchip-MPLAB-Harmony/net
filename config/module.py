@@ -273,7 +273,7 @@ def loadModule():
     ########################## Harmony Network Presentation Module #################################    
     netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
     netPresComponent.addCapability("libNetPres","net_pres",True)    
-    netPresComponent.addDependency("NetPres_Crypto_Dependency", "Encryption", None, False, False)
+    netPresComponent.addDependency("NetPres_Crypto_Dependency", "TLS Provider", None, False, False)
     
     ############################### TCP/IP STACK CONFIGURATOR #####################################
     #tcpipAutoConfigComponent = Module.CreateComponent("tcpip_template", "TCP/IP Stack Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_templates.py")
