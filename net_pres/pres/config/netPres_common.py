@@ -390,8 +390,6 @@ def netPresMenuVisible(symbol, event):
 
 def netPresBlobCertMenu(symbol, event): 
     data = symbol.getComponent()
-    # print "Niyas"
-    # print event["value"]
     if (event["value"] == 0):        
         res = data.setSymbolValue("NET_PRES_CERT_STORE_STUBS", False)
         res = data.setSymbolValue("NET_PRES_BLOB_CERT_REPO", True)

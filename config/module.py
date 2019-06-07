@@ -287,3 +287,9 @@ def loadModule():
     tcpipAutoConfigDriverComponent = Module.CreateComponent("tcpip_driver_config", "TCP/IP Driver Layer Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_driver.py")
 
     tcpipAutoConfigBasicComponent = Module.CreateComponent("tcpip_basic_config", "TCP/IP Basic Configurator", "/Libraries/TCPIP/", "tcpip/config/tcpip_configurator_basic.py")
+    
+    ########################## Thirdy-Party Modules #################################   
+    # Wolfmqtt 
+    wolfmqttComponent = Module.CreateComponent("lib_wolfmqtt", "wolfMQTT Library", "/Third Party Libraries/wolfSSL/", "third_party_adapter/wolfMQTT/config/wolfmqtt.py")
+    wolfmqttComponent.addCapability("lib_wolfmqtt","wolfmqtt",True)   
+    wolfmqttComponent.addDependency("WolfMqtt_NetPres_Dependency", "net_pres", None, True, True)

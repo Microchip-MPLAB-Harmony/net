@@ -154,7 +154,7 @@ def netPresInstnEncryptMenuVisible(symbol, event):
         
 def netPresInstnEncProviderMenu(symbol, event):
     netPresIndex = int(symbol.getID().strip("NET_PRES_USE_WOLF_SSL_IDX"))   
-    data = symbol.getComponent()    
+    data = symbol.getComponent() 
     if (event["value"] == 0):        
         res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), False)
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), True)
@@ -162,7 +162,7 @@ def netPresInstnEncProviderMenu(symbol, event):
         Database.setSymbolValue("lib_wolfssl","wolfssl", True)
         
     else:
-        Database.setSymbolValue("lib_wolfssl","wolfssl", False)
+        # Database.setSymbolValue("lib_wolfssl","wolfssl", False)
         res = Database.deactivateComponents(["lib_wolfssl"])
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), False)
         res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), True)
@@ -176,7 +176,8 @@ def netPresWolfSSLDebugEnable(symbol, event):
     if (netPresWolfSSLEnabled == True) and (wolfSSLDebugEnabled == True):
         symbol.setValue(True)
     else:
-        symbol.setValue(False)
+        if (symbol.getValue() == True):
+            symbol.setValue(False)
 
         
 def netPresInstnStreamEnable(symbol, event):    

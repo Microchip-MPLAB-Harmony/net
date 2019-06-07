@@ -312,7 +312,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacEthRmii.setVisible(True)
     tcpipEthmacEthRmii.setDescription("RMII Connection")
     tcpipEthmacEthRmii.setDefaultValue(True)
-    # niyas todo default y if FMIIEN = "OFF" 
+    # todo default y if FMIIEN = "OFF" 
     
     # EMAC Module ID
     tcpipEmacModuleId = drvPic32mEthmacComponent.createStringSymbol("TCPIP_EMAC_MODULE_ID", None)

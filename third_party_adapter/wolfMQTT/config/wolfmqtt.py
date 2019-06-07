@@ -1,0 +1,258 @@
+"""*****************************************************************************
+* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+*
+* Subject to your compliance with these terms, you may use Microchip software
+* and any derivatives exclusively with Microchip products. It is your
+* responsibility to comply with third party license terms applicable to your
+* use of third party software (including open source software) that may
+* accompany Microchip software.
+*
+* THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+* EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+* WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A
+* PARTICULAR PURPOSE.
+*
+* IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+* INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+* WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+* BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+* FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+* ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+* THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+*****************************************************************************"""
+def instantiateComponent(wolfmqttComponent):
+    print("wolfMQTT Component")
+    configName = Variables.get("__CONFIGURATION_NAME")
+    res = Database.activateComponents(["HarmonyCore"])
+    # Enable "Generate Harmony Driver Common Files" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON", True)
+
+    # Enable "Generate Harmony System Service Common Files" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
+
+    # wolfMQTT Library Configurations
+    wolfMqttLibMenu = wolfmqttComponent.createMenuSymbol(None, None) 
+    wolfMqttLibMenu.setLabel("wolfMQTT Library Configurations")
+    wolfMqttLibMenu.setVisible(True)
+    wolfMqttLibMenu.setDescription("wolfMQTT Library Configurations")
+
+    # Enable Diconnect Callback
+    wolfMqttLibDisconnectCb = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_DISCONNECT_CB", wolfMqttLibMenu)
+    wolfMqttLibDisconnectCb.setLabel("Enable Disconnect Callback")
+    wolfMqttLibDisconnectCb.setVisible(True)
+    wolfMqttLibDisconnectCb.setDescription("Enable Disconnect Callback")
+    wolfMqttLibDisconnectCb.setDefaultValue(True)
+
+    # Disable Error String
+    wolfMqttLibDisErrString = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_NO_ERROR_STRINGS", wolfMqttLibMenu)
+    wolfMqttLibDisErrString.setLabel("Disable Error Strings")
+    wolfMqttLibDisErrString.setVisible(True)
+    wolfMqttLibDisErrString.setDescription("Disable Error Strings")
+    wolfMqttLibDisErrString.setDefaultValue(True)
+
+    # Enable Sensor Network Client Support
+    wolfMqttLibSnEn = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_SN", wolfMqttLibMenu)
+    wolfMqttLibSnEn.setLabel("Enable Sensor Network Client")
+    wolfMqttLibSnEn.setVisible(True)
+    wolfMqttLibSnEn.setDescription("Enable Sensor Network Client")
+    wolfMqttLibSnEn.setDefaultValue(True)
+
+    # Enable MQTT v5.0
+    wolfMqttLibV5En = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_V5", wolfMqttLibMenu)
+    wolfMqttLibV5En.setLabel("Enable MQTT v5.0")
+    wolfMqttLibV5En.setVisible(True)
+    wolfMqttLibV5En.setDescription("Enable MQTT v5.0")
+    wolfMqttLibV5En.setDefaultValue(True)
+
+    # Enable Property Callback
+    wolfMqttLibPrprtyCbEn = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_PROPERTY_CB", wolfMqttLibV5En)
+    wolfMqttLibPrprtyCbEn.setLabel("Enable Property Callback")
+    wolfMqttLibPrprtyCbEn.setVisible(True)
+    wolfMqttLibPrprtyCbEn.setDescription("Enable Property Callback")
+    wolfMqttLibPrprtyCbEn.setDefaultValue(True)
+    wolfMqttLibPrprtyCbEn.setDependencies(wolfMqttLibMenuVisible, ["WOLFMQTT_V5"])
+
+    # Disable standard I/O
+    wolfMqttLibNoStdio = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_NO_STDIO", wolfMqttLibMenu)
+    wolfMqttLibNoStdio.setLabel("Disable Std I/O")
+    wolfMqttLibNoStdio.setVisible(True)
+    wolfMqttLibNoStdio.setDescription("Disable Std I/O")
+    wolfMqttLibNoStdio.setDefaultValue(True)
+    
+    # Enable Client Debug
+    wolfMqttLibClientDbgEn = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_DEBUG_CLIENT", wolfMqttLibMenu)
+    wolfMqttLibClientDbgEn.setLabel("Enable Client Debug")
+    wolfMqttLibClientDbgEn.setVisible(False)
+    wolfMqttLibClientDbgEn.setDescription("Enable Client Debug")
+    wolfMqttLibClientDbgEn.setDefaultValue(True)
+    wolfMqttLibClientDbgEn.setDependencies(wolfMqttLibMenuInvisible, ["WOLFMQTT_NO_STDIO"])
+    
+    # Enable Socket Debug
+    wolfMqttLibSktDbgEn = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_DEBUG_SOCKET", wolfMqttLibMenu)
+    wolfMqttLibSktDbgEn.setLabel("Enable Socket Debug")
+    wolfMqttLibSktDbgEn.setVisible(False)
+    wolfMqttLibSktDbgEn.setDescription("Enable Socket Debug")
+    wolfMqttLibSktDbgEn.setDefaultValue(True)
+    wolfMqttLibSktDbgEn.setDependencies(wolfMqttLibMenuInvisible, ["WOLFMQTT_NO_STDIO"])
+    
+    # wolfMQTT Net Glue Configurations
+    wolfMqttNetGlueMenu = wolfmqttComponent.createMenuSymbol(None, None) 
+    wolfMqttNetGlueMenu.setLabel("wolfMQTT Net Glue Configurations")
+    wolfMqttNetGlueMenu.setVisible(True)
+    wolfMqttNetGlueMenu.setDescription("wolfMQTT Net Glue Configurations")
+    
+    # Enable TLS
+    wolfMqttNetForceTls = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_FORCE_TLS", wolfMqttNetGlueMenu)
+    wolfMqttNetForceTls.setLabel("MQTT Enable TLS")
+    wolfMqttNetForceTls.setVisible(True)
+    wolfMqttNetForceTls.setDescription("MQTT Enable TLS")
+    wolfMqttNetForceTls.setDefaultValue(False)
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetForceTlsEnable, ["WMQTT_NET_GLUE_FORCE_TLS"])
+
+    # Enable IPv6
+    wolfMqttNetIPv6En = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_IPV6", wolfMqttNetGlueMenu)
+    wolfMqttNetIPv6En.setLabel("MQTT Enable IPv6")
+    wolfMqttNetIPv6En.setVisible(True)
+    wolfMqttNetIPv6En.setDescription("MQTT Enable IPv6")
+    wolfMqttNetIPv6En.setDefaultValue(False)
+    
+    # Max Broker name
+    wolfMqttNetMaxBrkrName = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_GLUE_MAX_BROKER_NAME", wolfMqttNetGlueMenu)
+    wolfMqttNetMaxBrkrName.setLabel("MQTT max. broker name") 
+    wolfMqttNetMaxBrkrName.setVisible(True)
+    wolfMqttNetMaxBrkrName.setDescription("MQTT max. broker name")
+    wolfMqttNetMaxBrkrName.setDefaultValue(64)  
+
+    # Debug enable
+    wolfMqttNetDbgEn = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_DEBUG_ENABLE", wolfMqttNetGlueMenu)
+    wolfMqttNetDbgEn.setLabel("MQTT Debug Enable")
+    wolfMqttNetDbgEn.setVisible(True)
+    wolfMqttNetDbgEn.setDescription("MQTT Debug Enable")
+    wolfMqttNetDbgEn.setDefaultValue(False)
+
+    # Enable Error Strings
+    wolfMqttNetErrStrngEn = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_ERROR_STRINGS", wolfMqttNetGlueMenu)
+    wolfMqttNetErrStrngEn.setLabel("MQTT Error String Enable")
+    wolfMqttNetErrStrngEn.setVisible(True)
+    wolfMqttNetErrStrngEn.setDescription("MQTT Error Strings Enable")
+    wolfMqttNetErrStrngEn.setDefaultValue(True)
+    
+    # Memory allocation function
+    wolfMqttNetGlueMalloc = wolfmqttComponent.createStringSymbol("WMQTT_NET_GLUE_MALLOC", wolfMqttNetGlueMenu)
+    wolfMqttNetGlueMalloc.setLabel("MQTT Memory allocation function")
+    wolfMqttNetGlueMalloc.setVisible(True)
+    wolfMqttNetGlueMalloc.setDescription("Memory allocation function")
+    wolfMqttNetGlueMalloc.setDefaultValue("malloc")
+        
+    # Memory free function
+    wolfMqttNetGlueFree = wolfmqttComponent.createStringSymbol("WMQTT_NET_GLUE_FREE", wolfMqttNetGlueMenu)
+    wolfMqttNetGlueFree.setLabel("MQTT Memory free function")
+    wolfMqttNetGlueFree.setVisible(True)
+    wolfMqttNetGlueFree.setDescription("Memory de-allocation function")
+    wolfMqttNetGlueFree.setDefaultValue("free")
+    
+    # Tx Buffer size
+    wolfMqttNetSktTxBuff = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_SKT_TX_BUFF", wolfMqttNetGlueMenu)
+    wolfMqttNetSktTxBuff.setLabel("MQTT Tx Buffer Size") 
+    wolfMqttNetSktTxBuff.setVisible(True)
+    wolfMqttNetSktTxBuff.setDescription("MQTT Tx Buffer Size")
+    wolfMqttNetSktTxBuff.setDefaultValue(2048)  
+    
+    # Rx Buffer size
+    wolfMqttNetSktRxBuff = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_SKT_RX_BUFF", wolfMqttNetGlueMenu)
+    wolfMqttNetSktRxBuff.setLabel("MQTT Rx Buffer Size") 
+    wolfMqttNetSktRxBuff.setVisible(True)
+    wolfMqttNetSktRxBuff.setDescription("MQTT Rx Buffer Size")
+    wolfMqttNetSktRxBuff.setDefaultValue(2048)
+
+    #Add to configuration.h
+    wolfMqttNetConfigFtl = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttNetConfigFtl.setSourcePath("third_party_adapter/wolfMQTT/config/wolfmqtt.h.ftl")
+    wolfMqttNetConfigFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+    wolfMqttNetConfigFtl.setMarkup(True)
+    wolfMqttNetConfigFtl.setType("STRING")
+    
+    wolfMqttPath = wolfmqttComponent.createSettingSymbol("WOLFMQTT_INCLUDE_PATH", None)
+    wolfMqttPath.setValue("../src/third_party/wolfmqtt")
+    wolfMqttPath.setCategory("C32")
+    wolfMqttPath.setKey("extra-include-directories")
+    wolfMqttPath.setAppend(True, ";")
+
+    wolfMqttPreProc = wolfmqttComponent.createSettingSymbol("FREERTOS_XC32_AS_INCLUDE_PRE_PROC_DIRS", None)
+    wolfMqttPreProc.setCategory("C32")
+    wolfMqttPreProc.setKey("preprocessor-macros")
+    wolfMqttPreProc.setValue("HAVE_CONFIG_H")
+    wolfMqttPreProc.setAppend(True, ";")
+    
+    coreHeapSize = Database.getSymbolValue("core","XC32_HEAP_SIZE")
+    if (coreHeapSize < 102400): # heap size less than 100K
+        Database.setSymbolValue("core","XC32_HEAP_SIZE", 102400)
+   
+    # third_party_adapter/wolfMQTT/src/mqtt_net_glue.h to config/<configName>/third_party_adapter/wolfMQTT/src/mqtt_net_glue.h 
+    wolfMqttNetGlueHeaderFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttNetGlueHeaderFile.setSourcePath("third_party_adapter/wolfMQTT/src/mqtt_net_glue.h")
+    wolfMqttNetGlueHeaderFile.setOutputName("mqtt_net_glue.h")
+    wolfMqttNetGlueHeaderFile.setDestPath("third_party_adapter/wolfMQTT/src/")
+    wolfMqttNetGlueHeaderFile.setProjectPath("config/" + configName + "/third_party_adapter/wolfMQTT/src/")
+    wolfMqttNetGlueHeaderFile.setType("HEADER")
+    wolfMqttNetGlueHeaderFile.setOverwrite(True)
+    wolfMqttNetGlueHeaderFile.setEnabled(True)
+
+    # third_party_adapter/wolfMQTT/src/mqtt_net_glue.c to config/<configName>/third_party_adapter/wolfMQTT/src/mqtt_net_glue.c
+    wolfMqttNetGlueSourceFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttNetGlueSourceFile.setSourcePath("third_party_adapter/wolfMQTT/src/mqtt_net_glue.c")
+    wolfMqttNetGlueSourceFile.setOutputName("mqtt_net_glue.c")
+    wolfMqttNetGlueSourceFile.setOverwrite(True)
+    wolfMqttNetGlueSourceFile.setDestPath("third_party_adapter/wolfMQTT/src/")
+    wolfMqttNetGlueSourceFile.setProjectPath("config/" + configName + "/third_party_adapter/wolfMQTT/src/")
+    wolfMqttNetGlueSourceFile.setType("SOURCE")
+    wolfMqttNetGlueSourceFile.setEnabled(True)
+
+    # wolfMQTT/src/mqtt_client.c to third_party/wolfMQTT/src/mqtt_client.c
+    wolfMqttClientSourceFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttClientSourceFile.setSourcePath("../wolfMQTT/src/mqtt_client.c")
+    wolfMqttClientSourceFile.setOutputName("mqtt_client.c")
+    wolfMqttClientSourceFile.setOverwrite(True)
+    wolfMqttClientSourceFile.setDestPath("../../third_party/wolfMQTT/src/")
+    wolfMqttClientSourceFile.setProjectPath("third_party/wolfMQTT/src/")
+    wolfMqttClientSourceFile.setType("SOURCE")
+    wolfMqttClientSourceFile.setEnabled(True)
+
+    # wolfMQTT/src/mqtt_packet.c to third_party/wolfMQTT/src/mqtt_packet.c
+    wolfMqttPacketSourceFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttPacketSourceFile.setSourcePath("../wolfMQTT/src/mqtt_packet.c")
+    wolfMqttPacketSourceFile.setOutputName("mqtt_packet.c")
+    wolfMqttPacketSourceFile.setOverwrite(True)
+    wolfMqttPacketSourceFile.setDestPath("../../third_party/wolfMQTT/src/")
+    wolfMqttPacketSourceFile.setProjectPath("third_party/wolfMQTT/src/")
+    wolfMqttPacketSourceFile.setType("SOURCE")
+    wolfMqttPacketSourceFile.setEnabled(True)
+
+    # wolfMQTT/src/mqtt_socket.c to third_party/wolfMQTT/src/mqtt_socket.c
+    wolfMqttSocketSourceFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttSocketSourceFile.setSourcePath("../wolfMQTT/src/mqtt_socket.c")
+    wolfMqttSocketSourceFile.setOutputName("mqtt_socket.c")
+    wolfMqttSocketSourceFile.setOverwrite(True)
+    wolfMqttSocketSourceFile.setDestPath("../../third_party/wolfMQTT/src/")
+    wolfMqttSocketSourceFile.setProjectPath("third_party/wolfMQTT/src/")
+    wolfMqttSocketSourceFile.setType("SOURCE")
+    wolfMqttSocketSourceFile.setEnabled(True)    
+    
+def wolfMqttLibMenuVisible(symbol, event): 
+    symbol.setVisible(event["value"])
+    
+def wolfMqttLibMenuInvisible(symbol, event): 
+    if (event["value"] == True):
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
+    
+def wolfMqttNetForceTlsEnable(symbol, event):
+    if (event["value"] == True): 
+        if(Database.getComponentByID("netPres") == None):
+            res = Database.activateComponents(["netPres"])
+            Database.setSymbolValue("netPres_0","NET_PRES_SUPPORT_ENCRYPTION0", True)
+            Database.setSymbolValue("netPres_0","NET_PRES_ENC_PROVIDE_IDX0", 0)
+        
