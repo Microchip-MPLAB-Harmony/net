@@ -1,31 +1,4 @@
 /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
-
-  Company:
-    Microchip Technology Inc.
-
-  File Name:
-    plib_clk.h
-
-  Summary:
-    SYS CLK static function interface for the Clock System Service.
-
-  Description:
-    The Clock System Service provides a simple interface to manage the
-    oscillators on Microchip microcontrollers. This file defines the static
-    implementation for the Clock System Service.
-
-  Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.
-    It provides static version of the routines, eliminating the need for an
-    object ID or object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
-
-*******************************************************************************/
-
-/*******************************************************************************
 * Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
@@ -48,25 +21,18 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
 
+
 #ifndef PLIB_CLK_H
 #define PLIB_CLK_H
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
 
 #include <stddef.h>
 #include <stdbool.h>  
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-	extern "C" {
+    extern "C" {
 
 #endif
-// DOM-IGNORE-END
  
 // *****************************************************************************
 // *****************************************************************************
@@ -76,7 +42,7 @@
 
 // *****************************************************************************
 /* Function:
-    void CLK_Initialize( void )
+    void CLK_Initialize ( void )
 
   Summary:
     Initializes hardware of the System Clock and Peripheral Clock.
@@ -104,15 +70,11 @@
     None.
 */
 
-void CLK_Initialize( void );
+void CLK_Initialize ( void );
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
-
-    }
-
+#ifdef __cplusplus
+}
 #endif
-// DOM-IGNORE-END
 
 #endif //PLIB_CLK_H
 
