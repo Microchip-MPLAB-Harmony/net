@@ -56,8 +56,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "driver/miim/src/drv_miim_local.h"
 #include "driver/miim/src/dynamic/drv_miim_mapping.h"
 
+//#include "system/tmr/sys_tmr.h"
 #include "system/sys_time_h2_adapter.h"
-#include "system/debug/sys_debug.h"
+#include "system/console/sys_debug.h"
 #include "system/console/sys_console.h"
 
 

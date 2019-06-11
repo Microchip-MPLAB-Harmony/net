@@ -214,13 +214,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define  TCPIP_IMAP_SERVER_PORT                 (143)
 #define  TCPIP_IMAP_SERVER_SECURE_PORT          (993)
 
-// ************************************************************
-// MQTT broker TCP port
-#define TCPIP_MQTT_BROKER_PORT                  (1883)
-
-// MQTT broker secure TCP port
-#define TCPIP_MQTT_BROKER_SECURE_PORT           (8883)
-
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

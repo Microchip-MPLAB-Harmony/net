@@ -48,11 +48,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
 
-#include "system/console/sys_console.h"
-#include "system/debug/sys_debug.h"
-#include "system/command/sys_command.h"
+#include "system/console/sys_command.h"
 #include "driver/miim/drv_miim.h"
-#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -382,84 +379,84 @@ static const void*          miimCmdIoParam = 0;
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
-    {"netinfo",     (SYS_CMD_FNC)_Command_NetInfo,              ": Get network information"},
-    {"defnet",      (SYS_CMD_FNC)_Command_DefaultInterfaceSet,  ": Set/Get default interface"},
+    {"netinfo",     _Command_NetInfo,              ": Get network information"},
+    {"defnet",      _Command_DefaultInterfaceSet,  ": Set/Get default interface"},
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-    {"dhcp",        (SYS_CMD_FNC)_CommandDhcpOptions,           ": DHCP client commands"},
+    {"dhcp",        _CommandDhcpOptions,           ": DHCP client commands"},
 #endif
-    {"dhcps",       (SYS_CMD_FNC)_Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
-    {"zcll",        (SYS_CMD_FNC)_Command_ZcllOnOff,            ": Turn ZCLL on/off"},
-    {"setdns",      (SYS_CMD_FNC)_Command_PrimaryDNSAddressSet, ": Set DNS address"},
+    {"dhcps",       _Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
+    {"zcll",        _Command_ZcllOnOff,            ": Turn ZCLL on/off"},
+    {"setdns",      _Command_PrimaryDNSAddressSet, ": Set DNS address"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-    {"setip",       (SYS_CMD_FNC)_Command_IPAddressSet,         ": Set IP address and mask"},
-    {"setgw",       (SYS_CMD_FNC)_Command_GatewayAddressSet,    ": Set Gateway address"},
-    {"setbios",     (SYS_CMD_FNC)_Command_BIOSNameSet,          ": Set host's NetBIOS name"},
-    {"setmac",      (SYS_CMD_FNC)_Command_MACAddressSet,        ": Set MAC address"},
+    {"setip",       _Command_IPAddressSet,         ": Set IP address and mask"},
+    {"setgw",       _Command_GatewayAddressSet,    ": Set Gateway address"},
+    {"setbios",     _Command_BIOSNameSet,          ": Set host's NetBIOS name"},
+    {"setmac",      _Command_MACAddressSet,        ": Set MAC address"},
 #if (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
-    {"if",          (SYS_CMD_FNC)_Command_NetworkOnOff,         ": Bring an interface up/down"},
+    {"if",          _Command_NetworkOnOff,         ": Bring an interface up/down"},
 #endif  // (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-    {"stack",       (SYS_CMD_FNC)_Command_StackOnOff,           ": Stack turn on/off"},
+    {"stack",       _Command_StackOnOff,           ": Stack turn on/off"},
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-    {"heapinfo",    (SYS_CMD_FNC)_Command_HeapInfo,             ": Check heap status"},
+    {"heapinfo",    _Command_HeapInfo,             ": Check heap status"},
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
-    {"dhcpsinfo",   (SYS_CMD_FNC)_Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
+    {"dhcpsinfo",   _Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
 #endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER)
 #if defined(_TCPIP_COMMAND_PING4)
-    {"ping",        (SYS_CMD_FNC)_CommandPing,                  ": Ping an IP address"},
+    {"ping",        _CommandPing,                  ": Ping an IP address"},
 #endif  // defined(_TCPIP_COMMAND_PING4)
 #if defined(_TCPIP_COMMAND_PING6)
-    {"ping6",       (SYS_CMD_FNC)_Command_IPv6_Ping,            ": Ping an IPV6 address"},
+    {"ping6",       _Command_IPv6_Ping,            ": Ping an IPV6 address"},
 #endif  // defined(_TCPIP_COMMAND_PING6)
 #if defined(TCPIP_STACK_USE_IPV4)
-    {"arp",         (SYS_CMD_FNC)_CommandArp,                   ": ARP commands"},
+    {"arp",         _CommandArp,                   ": ARP commands"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DNS_SERVER)
-    {"dnss",        (SYS_CMD_FNC)_Command_DnsServService,       ": DNS server commands"},
+    {"dnss",        _Command_DnsServService,       ": DNS server commands"},
 #endif
 #if defined(TCPIP_STACK_USE_DNS)
-    {"dnsc",        (SYS_CMD_FNC)_Command_DNS_Service,          ": DNS client commands"},
+    {"dnsc",        _Command_DNS_Service,          ": DNS client commands"},
 #endif
-    {"macinfo",     (SYS_CMD_FNC)_Command_MacInfo,              ": Check MAC statistics"},
+    {"macinfo",     _Command_MacInfo,              ": Check MAC statistics"},
 #if defined(TCPIP_STACK_USE_TFTP_CLIENT)
-    {"tftpc",       (SYS_CMD_FNC)_Command_TFTPC_Service,        ": TFTP client Service"},
+    {"tftpc",       _Command_TFTPC_Service,        ": TFTP client Service"},
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
-    {"tftps",       (SYS_CMD_FNC)_Command_TFTPServerOnOff,        ": TFTP Server Service"},
+    {"tftps",       _Command_TFTPServerOnOff,        ": TFTP Server Service"},
 #endif
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-    {"dhcpv6",      (SYS_CMD_FNC)_CommandDhcpv6Options,         ": DHCPV6 client commands"},
+    {"dhcpv6",      _CommandDhcpv6Options,         ": DHCPV6 client commands"},
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-    {"http",        (SYS_CMD_FNC)_Command_HttpInfo,             ": HTTP information"},
+    {"http",        _Command_HttpInfo,             ": HTTP information"},
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
-    {"ssi",         (SYS_CMD_FNC)_Command_SsiInfo,              ": SSI information"},
+    {"ssi",         _Command_SsiInfo,              ": SSI information"},
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
-	{"mail", 	    (SYS_CMD_FNC)_CommandMail,			       ": Send Mail Message"},
+	{"mail", 	    _CommandMail,			       ": Send Mail Message"},
 #endif  // defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
 #if defined(_TCPIP_COMMANDS_MIIM)
-	{"miim", 	    (SYS_CMD_FNC)_CommandMiim,			       ": MIIM commands"},
+	{"miim", 	    _CommandMiim,			       ": MIIM commands"},
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 #if (TCPIP_UDP_COMMANDS)
-    {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
+    {"udpinfo",     _Command_UdpInfo,              ": Check UDP statistics"},
 #endif  // (TCPIP_UDP_COMMANDS)
 #if (TCPIP_TCP_COMMANDS)
-    {"tcpinfo",     (SYS_CMD_FNC)_Command_TcpInfo,              ": Check TCP statistics"},
+    {"tcpinfo",     _Command_TcpInfo,              ": Check TCP statistics"},
 #endif  // (TCPIP_TCP_COMMANDS)
 #if (TCPIP_PACKET_LOG_ENABLE)
-    {"plog",        (SYS_CMD_FNC)_Command_PktLog,               ": PKT flight log"},
+    {"plog",        _Command_PktLog,               ": PKT flight log"},
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
-    {"pktinfo",   (SYS_CMD_FNC)_Command_PktInfo,                ": Check PKT allocation"},
+    {"pktinfo",   _Command_PktInfo,                ": Check PKT allocation"},
 #endif  // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 #if defined(TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
-    {"heaplist",    (SYS_CMD_FNC)_Command_HeapList,             ": List heap"},
+    {"heaplist",    _Command_HeapList,             ": List heap"},
 #endif  // defined(TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
-    {"announce",    (SYS_CMD_FNC)_Command_Announce,             ": Announce"},
+    {"announce",    _Command_Announce,             ": Announce"},
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 };
 
@@ -3555,14 +3552,13 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat/disconnect\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat\r\n");
         return false;
     }
 
-    httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
-
     if(strcmp(argv[1], "info") == 0)
     {
+        httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections - active: %d, open: %d\r\n", httpActiveConn, httpOpenConn);
 
         for(connIx = 0; connIx < httpOpenConn; connIx++)
@@ -3590,17 +3586,6 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
-    }
-    else if(strcmp(argv[1], "disconnect") == 0)
-    {
-        for(connIx = 0; connIx < httpOpenConn; connIx++)
-        {
-            TCPIP_HTTP_NET_CONN_HANDLE connHandle = TCPIP_HTTP_NET_ConnectionHandleGet(connIx);
-            NET_PRES_SKT_HANDLE_T skt_h = TCPIP_HTTP_NET_ConnectionSocketGet(connHandle);
-            NET_PRES_SocketDisconnect(skt_h);
-        }
-
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP disconnected %d connections, active: %d\r\n", httpOpenConn, httpActiveConn);
     }
     else
     {
