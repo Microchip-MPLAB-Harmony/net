@@ -230,6 +230,7 @@ static const char* const _SNTP_DbgResError_Tbl[] =
 {
     "Unknown",    // None            
     "busy",       // SNTP_RES_BUSY           
+    "ts_err",     // SNTP_RES_TSTAMP_ERROR   
     "t_stale",    // SNTP_RES_TSTAMP_STALE   
     "skt_err",    // SNTP_RES_SKT_ERR        
     "skt_bind",   // SNTP_RES_SKT_BIND_ERR   
