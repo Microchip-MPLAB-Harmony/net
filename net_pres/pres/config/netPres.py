@@ -160,12 +160,25 @@ def netPresInstnEncProviderMenu(symbol, event):
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), True)
         res = Database.activateComponents(["lib_wolfssl"])
         Database.setSymbolValue("lib_wolfssl","wolfssl", True)
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_CERT", 0)
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_CLIENT_CERT_FILENAME", "wolfssl/certs_test.h")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_CLIENT_CERT_VARIABLE", "client_cert_der_2048")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_CLIENT_CERT_LEN_VARIABLE", "sizeof_client_cert_der_2048")
         
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_SERVER_CERT_FILENAME", "wolfssl/certs_test.h")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_SERVER_CERT_VARIABLE", "server_cert_der_2048")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_SERVER_CERT_LEN_VARIABLE", "sizeof_server_cert_der_2048")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_SERVER_KEY_FILENAME", "wolfssl/certs_test.h")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_SERVER_KEY_VARIABLE", "server_key_der_2048")
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_SERVER_KEY_LEN_VARIABLE", "sizeof_server_key_der_2048")
     else:
-        # Database.setSymbolValue("lib_wolfssl","wolfssl", False)
+        Database.setSymbolValue("lib_wolfssl","wolfssl", False)
         res = Database.deactivateComponents(["lib_wolfssl"])
         res = data.setSymbolValue("NET_PRES_USE_WOLF_SSL_IDX"+str(netPresIndex), False)
+        Database.setSymbolValue("netPres","NET_PRES_BLOB_CERT", 1)
         res = data.setSymbolValue("NET_PRES_GENERATE_ENC_STUBS_IDX"+str(netPresIndex), True)
+        
+        
         
     
 def netPresWolfSSLDebugEnable(symbol, event):

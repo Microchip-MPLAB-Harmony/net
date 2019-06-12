@@ -28,7 +28,8 @@
 autoConnectTableFS = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipSysFsWrapper:TcpipFsWarapper_SysFS_Dependency", "sys_fs", "sys_fs"]]
 # autoConnectTableTIME = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipStack:Core_SysTime_Dependency", "sys_time", "sys_time"]]
 autoConnectTableConsole = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipStack:Core_SysConsole_Dependency", "sys_console_0", "sys_console"]]
-# autoConnectTableCmd = [["TCP/IP STACK", "BASIC CONFIGURATION:tcpipCmd:TcpipCmd_SysCmd_Dependency", "sys_command", "sys_command"]]
+autoConnectTableDebug = [["sys_debug", "sys_debug_SYS_CONSOLE_dependency", "sys_console_0", "sys_console"]]
+autoConnectTableCmd = [["sys_command", "sys_command_SYS_CONSOLE_dependency", "sys_console_0", "sys_console"]]
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -75,12 +76,6 @@ def instantiateComponent(tcpipAutoConfigBasicComponent):
     tcpipAutoConfigTcpipCmd.setDescription("Enable TCPIP CMD")  
     tcpipAutoConfigTcpipCmd.setDependencies(tcpipAutoConfigTcpipCmdEnable, ["TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD"])
     
-    # Enable SYSTEM DEBUG
-    tcpipAutoConfigSysDbg = tcpipAutoConfigBasicComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SYS_DEBUG", None)
-    tcpipAutoConfigSysDbg.setLabel("Enable System Debug")
-    tcpipAutoConfigSysDbg.setVisible(True)
-    tcpipAutoConfigSysDbg.setDescription("Enable System Debug") 
-    tcpipAutoConfigSysDbg.setDependencies(tcpipAutoConfigSysDbgEnable, ["TCPIP_AUTOCONFIG_ENABLE_SYS_DEBUG"])   
 ########################################################################################################
 def finalizeComponent(tcpipAutoConfigBasicComponent):
     tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
@@ -153,6 +148,10 @@ def tcpipAutoConfigStackEnable(symbol, event):
             tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipStack:Core_SysConsole_Dependency")
             res = Database.activateComponents(["sys_console"])  
             res = Database.connectDependencies(autoConnectTableConsole)
+        if(Database.getComponentByID("sys_debug") == None):
+            res = Database.activateComponents(["sys_debug"])
+            res = Database.connectDependencies(autoConnectTableDebug)           
+        
     else:
         res = Database.deactivateComponents(["tcpipStack"])
     
@@ -211,17 +210,5 @@ def tcpipAutoConfigTcpipCmdEnable(symbol, event):
         # tcpipAutoConfigBasicGroup.setAttachmentVisible("tcpipCmd", "TcpipCmd_SysCmd_Dependency")
         # tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipCmd:TcpipCmd_SysCmd_Dependency")
         res = Database.activateComponents(["sys_command"])
-        # res = Database.connectDependencies(autoConnectTableCmd)
+        res = Database.connectDependencies(autoConnectTableCmd)
         
-def tcpipAutoConfigSysDbgEnable(symbol, event):
-    tcpipAutoConfigBasicGroup = Database.findGroup("BASIC CONFIGURATION")
-    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
-    enableTcpipAutoConfigBasic(True)
-    if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
-        Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
-    if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):
-        Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True, 2)
-    
-    # Enable SYS_Debug
-    if (event["value"] == True) and (Database.getComponentByID("sys_debug") == None):
-        res = Database.activateComponents(["sys_debug"])
