@@ -344,9 +344,9 @@
       </logicalFolder>
       <logicalFolder name="f4" displayName="packs" projectFiles="true">
         <logicalFolder name="f1"
-                       displayName="PIC32MZ2048EFH144_DFP"
+                       displayName="PIC32MZ2048EFM144_DFP"
                        projectFiles="true">
-          <itemPath>../src/packs/PIC32MZ2048EFH144_DFP/device.h</itemPath>
+          <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="third_party" projectFiles="true">
@@ -655,7 +655,7 @@
     <conf name="pic32mz_ef_sk" type="2">
       <toolsSet>
         <developmentServer>localhost</developmentServer>
-        <targetDevice>PIC32MZ2048EFH144</targetDevice>
+        <targetDevice>PIC32MZ2048EFM144</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
@@ -699,7 +699,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;../src/third_party/wolfmqtt;../src/config/pic32mz_ef_sk/third_party_adapter/wolfMQTT/src/;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl"/>
+                  value="../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;../src/third_party/wolfmqtt;../src/config/pic32mz_ef_sk/third_party_adapter/wolfMQTT/src/;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/packs/PIC32MZ2048EFM144_DFP;"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>

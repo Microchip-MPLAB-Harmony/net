@@ -44,11 +44,17 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifdef __CPLUSPLUS
 extern "C" {
 #endif
+extern NET_PRES_EncProviderObject net_pres_EncProviderStreamServer0;
 extern NET_PRES_EncProviderObject net_pres_EncProviderStreamClient0;
+bool NET_PRES_EncProviderStreamServerInit0(struct _NET_PRES_TransportObject * transObject);
+bool NET_PRES_EncProviderStreamServerDeinit0();
+bool NET_PRES_EncProviderStreamServerOpen0(uintptr_t transHandle, void * providerData);
+bool NET_PRES_EncProviderStreamServerIsInited0();
 bool NET_PRES_EncProviderStreamClientInit0(struct _NET_PRES_TransportObject * transObject);
 bool NET_PRES_EncProviderStreamClientDeinit0();
 bool NET_PRES_EncProviderStreamClientOpen0(uintptr_t transHandle, void * providerData);
 bool NET_PRES_EncProviderStreamClientIsInited0();
+NET_PRES_EncSessionStatus NET_PRES_EncProviderServerAccept0(void * providerData);
 NET_PRES_EncSessionStatus NET_PRES_EncProviderClientConnect0(void * providerData);
 NET_PRES_EncSessionStatus NET_PRES_EncProviderConnectionClose0(void * providerData);
 int32_t NET_PRES_EncProviderWrite0(void * providerData, const uint8_t * buffer, uint16_t size);
