@@ -2,7 +2,7 @@
 <Configuration>
   <Configurator>
     <Name dnOrder="0" value="pic32mz_ef_sk"/>
-    <Processor dnOrder="1" value="PIC32MZ2048EFH144"/>
+    <Processor dnOrder="1" value="PIC32MZ2048EFM144"/>
     <Harmony dnOrder="2" path="../../.."/>
     <Manifest dnOrder="3">
       <Files dnOrder="0">
@@ -427,8 +427,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E6CC90D2BB52E1B660CBD8E00FB99DF2</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E6CC90D2BB52E1B660CBD8E00FB99DF2</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9C5A33563E8EE9D3E3688ABDA1D41160</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9C5A33563E8EE9D3E3688ABDA1D41160</UserChecksum>
         </File>
         <File dnOrder="53">
           <Type dnOrder="0">SOURCE</Type>
@@ -571,16 +571,16 @@
           <Name dnOrder="1">net_pres_cert_store.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/net_pres/pres/</LogicalPath>
           <PhysicalPath dnOrder="3">/net_pres/pres/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1BBA9C18BD7FFAFE1D7543B05F50C41B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1BBA9C18BD7FFAFE1D7543B05F50C41B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">98FBCDAE8D08055A4805E0C0DB104767</GeneratedChecksum>
+          <UserChecksum dnOrder="5">98FBCDAE8D08055A4805E0C0DB104767</UserChecksum>
         </File>
         <File dnOrder="71">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">net_pres_enc_glue.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/net_pres/pres/</LogicalPath>
           <PhysicalPath dnOrder="3">/net_pres/pres/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">49CF82710580609D5A505A5D04557D43</GeneratedChecksum>
-          <UserChecksum dnOrder="5">49CF82710580609D5A505A5D04557D43</UserChecksum>
+          <GeneratedChecksum dnOrder="4">37992DF19C9A3726B570478DCEEF7EEC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">37992DF19C9A3726B570478DCEEF7EEC</UserChecksum>
         </File>
         <File dnOrder="72">
           <Type dnOrder="0">SOURCE</Type>
@@ -1315,8 +1315,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F62D6B5EE8FD530985CC83017B96212A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F62D6B5EE8FD530985CC83017B96212A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">CA6655D0C364C84BEFFEB97729A5CCF0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CA6655D0C364C84BEFFEB97729A5CCF0</UserChecksum>
         </File>
         <File dnOrder="164">
           <Type dnOrder="0">HEADER</Type>
@@ -1537,8 +1537,8 @@
         <File dnOrder="191">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <LogicalPath dnOrder="2">packs/PIC32MZ2048EFH144_DFP/</LogicalPath>
-          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2048EFH144_DFP/</PhysicalPath>
+          <LogicalPath dnOrder="2">packs/PIC32MZ2048EFM144_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2048EFM144_DFP/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
           <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
         </File>
@@ -2483,8 +2483,8 @@
           <Name dnOrder="1">net_pres_enc_glue.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/net_pres/pres/</LogicalPath>
           <PhysicalPath dnOrder="3">/net_pres/pres/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">62E11462EFDA8161E2107ABA84775C3D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">62E11462EFDA8161E2107ABA84775C3D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D055F16A6D26E34B57898A603CDC0282</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D055F16A6D26E34B57898A603CDC0282</UserChecksum>
         </File>
         <File dnOrder="310">
           <Type dnOrder="0">HEADER</Type>
@@ -2635,8 +2635,8 @@
           <Name dnOrder="1">plib_evic.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0718C4C8BAA47288E82FE9CCD4854832</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0718C4C8BAA47288E82FE9CCD4854832</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B38028A617FDD4D90B80660771629645</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B38028A617FDD4D90B80660771629645</UserChecksum>
         </File>
         <File dnOrder="329">
           <Type dnOrder="0">HEADER</Type>
@@ -2995,8 +2995,8 @@
           <Name dnOrder="1">sys_clk_h2_adapter.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4F2C6E0380F09412BD404EFC1373D616</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4F2C6E0380F09412BD404EFC1373D616</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A21466440BDF8A610CE73BEB8753565D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A21466440BDF8A610CE73BEB8753565D</UserChecksum>
         </File>
         <File dnOrder="374">
           <Type dnOrder="0">HEADER</Type>
@@ -3700,16 +3700,16 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" value="../src/third_party/wolfcrypt_support"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" value="../src/third_party/wolfmqtt;../src/config/pic32mz_ef_sk/third_party_adapter/wolfMQTT/src/"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src/third_party/wolfssl"/>
-        <Setting append="true" category="C32" delimiter=";" dnOrder="4" key="extra-include-directories" value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;;../src/mips"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="4" key="extra-include-directories" value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFM144_DFP;;../src/mips"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="5" key="preprocessor-macros" value="HAVE_CONFIG_H"/>
-        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="64960"/>
+        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="102400"/>
         <Setting category="C32-LD" dnOrder="7" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="8" key="preprocessor-macros" value=""/>
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.4.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.28\atdf\PIC32MZ2048EFH144.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.28\atdf\PIC32MZ2048EFM144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
