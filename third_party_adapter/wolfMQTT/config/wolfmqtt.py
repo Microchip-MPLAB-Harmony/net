@@ -31,7 +31,8 @@ def instantiateComponent(wolfmqttComponent):
     # Enable "Generate Harmony System Service Common Files" option in MHC
     if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON") == False):
         Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
-
+    if(Database.getComponentByID("netPres") == None):
+        res = Database.activateComponents(["netPres"])
     # wolfMQTT Library Configurations
     wolfMqttLibMenu = wolfmqttComponent.createMenuSymbol(None, None) 
     wolfMqttLibMenu.setLabel("wolfMQTT Library Configurations")
@@ -57,21 +58,21 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttLibSnEn.setLabel("Enable Sensor Network Client")
     wolfMqttLibSnEn.setVisible(True)
     wolfMqttLibSnEn.setDescription("Enable Sensor Network Client")
-    wolfMqttLibSnEn.setDefaultValue(True)
+    wolfMqttLibSnEn.setDefaultValue(False)
 
     # Enable MQTT v5.0
     wolfMqttLibV5En = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_V5", wolfMqttLibMenu)
     wolfMqttLibV5En.setLabel("Enable MQTT v5.0")
     wolfMqttLibV5En.setVisible(True)
     wolfMqttLibV5En.setDescription("Enable MQTT v5.0")
-    wolfMqttLibV5En.setDefaultValue(True)
+    wolfMqttLibV5En.setDefaultValue(False)
 
     # Enable Property Callback
     wolfMqttLibPrprtyCbEn = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_PROPERTY_CB", wolfMqttLibV5En)
     wolfMqttLibPrprtyCbEn.setLabel("Enable Property Callback")
-    wolfMqttLibPrprtyCbEn.setVisible(True)
+    wolfMqttLibPrprtyCbEn.setVisible(False)
     wolfMqttLibPrprtyCbEn.setDescription("Enable Property Callback")
-    wolfMqttLibPrprtyCbEn.setDefaultValue(True)
+    wolfMqttLibPrprtyCbEn.setDefaultValue(False)
     wolfMqttLibPrprtyCbEn.setDependencies(wolfMqttLibMenuVisible, ["WOLFMQTT_V5"])
 
     # Disable standard I/O
@@ -359,10 +360,8 @@ def wolfMqttLibMenuInvisible(symbol, event):
     
 def wolfMqttNetForceTlsEnable(symbol, event):
     if (event["value"] == True): 
-        if(Database.getComponentByID("netPres") == None):
-            res = Database.activateComponents(["netPres"])
-            Database.setSymbolValue("netPres_0","NET_PRES_SUPPORT_ENCRYPTION0", True)
-            Database.setSymbolValue("netPres_0","NET_PRES_ENC_PROVIDE_IDX0", 0)
+        Database.setSymbolValue("netPres_0","NET_PRES_SUPPORT_ENCRYPTION0", True)
+        Database.setSymbolValue("netPres_0","NET_PRES_ENC_PROVIDE_IDX0", 0)
         
 def wolfMqttCstmApp(symbol, event):
     symbol.setEnabled(event["value"]) 

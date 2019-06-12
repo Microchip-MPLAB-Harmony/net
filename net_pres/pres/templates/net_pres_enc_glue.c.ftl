@@ -56,8 +56,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/command/sys_command.h"
 </#if>
 
-
-static uint8_t _net_pres_wolfsslUsers = 0;
 </#if>
 <#macro NET_PRES_ENC_PROV_INFOS
     INST_NUMBER>
@@ -593,6 +591,10 @@ net_pres_wolfsslInfo net_pres_wolfSSLInfoDataGramClient${INST};
     INST>
 	<#assign netPresSuppEnc = "netPres_${INST}.NET_PRES_SUPPORT_ENCRYPTION${INST}"?eval>
     <#if netPresSuppEnc?has_content && netPresSuppEnc == true>
+	<#assign netPresUseWolfSSL= "netPres_${INST}.NET_PRES_USE_WOLF_SSL_IDX${INST}"?eval>
+	<#if netPresUseWolfSSL?has_content && netPresUseWolfSSL == true>
+static uint8_t _net_pres_wolfsslUsers = 0;
+	</#if>
         <#assign netPresSuppStream = "netPres_${INST}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"?eval>
 		<#if netPresSuppStream?has_content && netPresSuppStream == true>
             <#assign netPresSuppServer= "netPres_${INST}.NET_PRES_SUPPORT_SERVER_ENC_IDX${INST}"?eval>
@@ -687,7 +689,8 @@ int NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, i
 	<#assign netPresSuppStream = "netPres_${INST}.NET_PRES_SUPPORT_STREAM_ENC_IDX${INST}"?eval>
 	<#assign netPresSuppClient= "netPres_${INST}.NET_PRES_SUPPORT_CLIENT_ENC_IDX${INST}"?eval>
 	<#assign netPresSuppDatagram= "netPres_${INST}.NET_PRES_SUPPORT_DATAGRAM_ENC_IDX${INST}"?eval>
-		
+	<#assign netPresSuppEnc = "netPres_${INST}.NET_PRES_SUPPORT_ENCRYPTION${INST}"?eval>
+	<#if netPresSuppEnc?has_content && netPresSuppEnc == true>
     <#if netPresSuppServer?has_content && (netPresSuppServer == true) && netPresSuppStream?has_content && (netPresSuppStream == true)>
         <@NET_PRES_WOLF_CB INST "Server" "Stream"/>
     </#if>
@@ -700,6 +703,7 @@ int NET_PRES_EncGlue_${TYPE}${CONNECTION}SendCb${INST}(void *sslin, char *buf, i
     <#if netPresSuppClient?has_content && (netPresSuppClient == true) && netPresSuppDatagram?has_content && (netPresSuppDatagram == true)>
         <@NET_PRES_WOLF_CB INST "Client" "DataGram"/>
     </#if>
+	</#if>
 </#macro>
 <#if (lib_wolfssl.wolfssl)?has_content && lib_wolfssl.wolfssl == true>
 typedef struct 
