@@ -498,7 +498,6 @@
             <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/pic32mz-crypt.c</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/crypto/src/rsa.c</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ecc.c</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ecc_fp.c</itemPath>
