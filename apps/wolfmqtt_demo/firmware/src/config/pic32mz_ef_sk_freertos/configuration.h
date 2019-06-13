@@ -102,6 +102,9 @@ extern "C" {
 #define SYS_CMD_PRINT_BUFFER_SIZE          1024
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+/* Command System Service RTOS Configurations*/
+#define SYS_CMD_RTOS_STACK_SIZE                1024
+#define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
 #define SYS_DEBUG_ENABLE
@@ -135,6 +138,9 @@ extern "C" {
 #define DRV_MIIM_DRIVER_INDEX               DRV_MIIM_INDEX_0              
 
 
+/* MIIM RTOS Configurations*/
+#define DRV_MIIM_RTOS_STACK_SIZE           1024
+#define DRV_MIIM_RTOS_TASK_PRIORITY             1
 
 
 
@@ -378,6 +384,9 @@ extern "C" {
 #define NET_PRES_NUM_INSTANCE 1
 #define NET_PRES_NUM_SOCKETS 10
 
+/* Net Pres RTOS Configurations*/
+#define NET_PRES_RTOS_STACK_SIZE           1024
+#define NET_PRES_RTOS_TASK_PRIORITY             1
 
 
 
@@ -439,6 +448,9 @@ extern "C" {
 
 
 /*** TCP/IP Configuration ***/
+/* TCP/IP RTOS Configurations*/
+#define TCPIP_RTOS_STACK_SIZE           1024
+#define TCPIP_RTOS_PRIORITY             1
 
 
 
