@@ -53,53 +53,6 @@
 #include "configuration.h"
 #include "definitions.h"
 
-// *****************************************************************************
-// *****************************************************************************
-// Section: RTOS "Tasks" Routine
-// *****************************************************************************
-// *****************************************************************************
-
-void _TCPIP_STACK_Task(  void *pvParameters  )
-{
-    while(1)
-    {
-        TCPIP_STACK_Task(sysObj.tcpip);
-        vTaskDelay(1 / portTICK_PERIOD_MS);
-    }
-}
-
-/* Handle for the APP_Tasks. */
-TaskHandle_t xAPP_Tasks;
-
-void _APP_Tasks(  void *pvParameters  )
-{
-    while(1)
-    {
-        APP_Tasks();
-        vTaskDelay(2 / portTICK_PERIOD_MS);
-    }
-}
-
-
-void _DRV_MIIM_Task(  void *pvParameters  )
-{
-    while(1)
-    {
-        DRV_MIIM_Tasks(sysObj.drvMiim);
-        vTaskDelay(1 / portTICK_PERIOD_MS);
-    }
-}
-
-void _SYS_CMD_Tasks(  void *pvParameters  )
-{
-    while(1)
-    {
-        SYS_CMD_Tasks();
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}
-
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -118,58 +71,33 @@ void _SYS_CMD_Tasks(  void *pvParameters  )
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-        xTaskCreate( _SYS_CMD_Tasks,
-        "SYS_CMD_TASKS",
-        SYS_CMD_RTOS_STACK_SIZE,
-        (void*)NULL,
-        SYS_CMD_RTOS_TASK_PRIORITY,
-        (TaskHandle_t*)NULL
-    );
+    SYS_CMD_Tasks();
+
 
 
 
     /* Maintain Device Drivers */
-        xTaskCreate( _DRV_MIIM_Task,
-        "DRV_MIIM_Tasks",
-        DRV_MIIM_RTOS_STACK_SIZE,
-        (void*)NULL,
-        DRV_MIIM_RTOS_TASK_PRIORITY,
-        (TaskHandle_t*)NULL
-    );
+    DRV_MIIM_Tasks(sysObj.drvMiim);
 
 
 
 
     /* Maintain Middleware & Other Libraries */
     
-    xTaskCreate( _TCPIP_STACK_Task,
-        "TCPIP_STACK_Tasks",
-        TCPIP_RTOS_STACK_SIZE,
-        (void*)NULL,
-        TCPIP_RTOS_PRIORITY,
-        (TaskHandle_t*)NULL
-    );
+NET_PRES_Tasks(sysObj.netPres);
+
+
+
+TCPIP_STACK_Task(sysObj.tcpip);
 
 
 
 
     /* Maintain the application's state machine. */
-        /* Create OS Thread for APP_Tasks. */
-    xTaskCreate((TaskFunction_t) _APP_Tasks,
-                "APP_Tasks",
-                1024,
-                NULL,
-                1,
-                &xAPP_Tasks);
+        /* Call Application task APP. */
+    APP_Tasks();
 
 
-
-    /* Start RTOS Scheduler. */
-    
-     /**********************************************************************
-     * Create all Threads for APP Tasks before starting FreeRTOS Scheduler *
-     ***********************************************************************/
-    vTaskStartScheduler(); /* This function never returns. */
 
 }
 
