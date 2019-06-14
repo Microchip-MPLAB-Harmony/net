@@ -1218,7 +1218,7 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	
 
     //packet in queue for transmission
-	while(((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0) && (ethRes != DRV_PIC32CGMAC_RES_NO_DESCRIPTORS))
+	while(((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.nNodes) != 0) && (ethRes != DRV_PIC32CGMAC_RES_NO_DESCRIPTORS))
 	{
 		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv, queueIdx);
         
@@ -1294,7 +1294,9 @@ static void _MACCleanup(DRV_GMAC_DRIVER * pMACDrv )
 
 static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 {
-	GMAC_QUE_LIST queueIdx;
+	DRV_PIC32CGMAC_SGL_LIST_NODE*   pRxBuffQueueUsedNode;
+    TCPIP_MAC_PACKET* pRxPkt;
+    GMAC_QUE_LIST queueIdx;
 	uint8_t index = 0;
 	//free all the rx packets linked to all Queues.
 	for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
@@ -1304,9 +1306,23 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 		{
 			if(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] != 0)
             {
-				(*pMACDrv->sGmacData.pktFreeF)(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index]);
+				pRxPkt = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index];
+				if((pRxBuffQueueUsedNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[0]._RxBuffAckQueue))!= NULL)
+                {
+                    pRxBuffQueueUsedNode->data = (TCPIP_MAC_PACKET*) pRxPkt;
+                    // add the node to Free queue
+                    DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[0]._RxBuffNewQueue,pRxBuffQueueUsedNode);
+                }
+                else //error state
+                {        
+                    SYS_CONSOLE_PRINT("_MacRxFreePacket:Rx Buffer Queue error \r\n");
+                    break;
+                }  
+				(pRxPkt->ackFunc)(pRxPkt, pRxPkt->ackParam);
                 pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] = 0; //remove rx packet from rx desc
+                _DRV_GMAC_RxLock(pMACDrv);
                 pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_buffaddr.val &= ~GMAC_ADDRESS_MASK; //clear the buffer address bitfields                
+                _DRV_GMAC_RxUnlock(pMACDrv);
             }
 		}
         __DMB();
