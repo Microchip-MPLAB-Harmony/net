@@ -48,10 +48,15 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "crypto/crypto.h"
 #include "peripheral/efc/plib_efc.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "system/time/sys_time.h"
 #include "bsp/bsp.h"
+#include "net_pres/pres/net_pres.h"
+#include "net_pres/pres/net_pres_encryptionproviderapi.h"
+#include "net_pres/pres/net_pres_transportapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 #include "peripheral/usart/plib_usart1.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
@@ -194,6 +199,8 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
+    SYS_MODULE_OBJ  netPres;
+
     SYS_MODULE_OBJ  sysConsole0;
 
 

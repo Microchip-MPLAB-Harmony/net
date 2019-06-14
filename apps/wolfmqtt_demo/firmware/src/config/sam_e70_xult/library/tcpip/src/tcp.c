@@ -1367,7 +1367,7 @@ static bool _Tcpv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
     bool critLock = false;
     bool freePkt = true;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler = 0;
-    const void* sigParam;
+    const void* sigParam = 0;
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
     while(pSkt != 0)
@@ -6044,7 +6044,7 @@ bool TCPIP_TCP_OptionsSet(TCP_SOCKET hTCP, TCP_SOCKET_OPTION option, void* optPa
                 return true;
 
             case TCP_OPTION_THRES_FLUSH:
-                pSkt->Flags.halfThresType = (TCP_OPTION_THRES_FLUSH_TYPE)optParam;
+                pSkt->Flags.halfThresType = (TCP_OPTION_THRES_FLUSH_TYPE)(uint32_t)optParam;
                 return true;
 
             case TCP_OPTION_DELAY_SEND_ALL_ACK:
