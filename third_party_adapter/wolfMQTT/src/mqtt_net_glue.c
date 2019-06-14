@@ -264,6 +264,9 @@ static int WMQTT_NETGlue_Connect(void* context, const char* host, word16 port, i
             NET_PRES_SocketConnect(net_glue_ctx->sktH);
             WMQTT_NETGlue_SetTmo(net_glue_ctx, timeout_ms);
             net_glue_ctx->stat = NET_GLUE_SOCKET_CONNECT;
+#if (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
+            SYS_CONSOLE_PRINT("WMQTT_NET_GLUE Info: %s\r\n", "Started Connect");
+#endif  // (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
             // fall_through;
 
         case NET_GLUE_SOCKET_CONNECT:
@@ -278,6 +281,9 @@ static int WMQTT_NETGlue_Connect(void* context, const char* host, word16 port, i
                 return MQTT_CODE_CONTINUE;
             }
             
+#if (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
+            SYS_CONSOLE_PRINT("WMQTT_NET_GLUE Info: %s\r\n", "Connected Successfully");
+#endif  // (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
             // OK, we're connected
             // check if we need encryption
 #if (WMQTT_NET_GLUE_FORCE_TLS != 0)
@@ -288,6 +294,9 @@ static int WMQTT_NETGlue_Connect(void* context, const char* host, word16 port, i
 
             if(startTls)
             {
+#if (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
+                SYS_CONSOLE_PRINT("WMQTT_NET_GLUE Info: %s\r\n", "Start TLS");
+#endif  // (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
                 if (!NET_PRES_SocketEncryptSocket(net_glue_ctx->sktH))
                 {
                     return WMQTT_NETGlue_Error(net_glue_ctx, WMQTT_NET_GLUE_START_ENCRYPT_ERR, __func__, __LINE__);
@@ -321,6 +330,9 @@ static int WMQTT_NETGlue_Connect(void* context, const char* host, word16 port, i
                 return WMQTT_NETGlue_Error(net_glue_ctx, WMQTT_NET_GLUE_TLS_NEGOTIATION_ERR, __func__, __LINE__);
             }
 
+#if (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
+            SYS_CONSOLE_PRINT("WMQTT_NET_GLUE Info: %s\r\n", "Secure Connection Established");
+#endif  // (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
             // good to go
             net_glue_ctx->stat = NET_GLUE_IDLE;
             return MQTT_CODE_SUCCESS;
