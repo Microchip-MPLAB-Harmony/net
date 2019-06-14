@@ -4,10 +4,107 @@
     <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
-          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/bsp/bsp.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="driver" projectFiles="true">
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
+            <itemPath>../src/config/sam_e70_xult/crypto/crypto.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/aes.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/arc4.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/asn.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/asn_public.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/async.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/camellia.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/certs_test.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/chacha.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/chacha20_poly1305.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/cmac.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/coding.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/compress.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_rng_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/curve25519.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/des3.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/dh.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha_sam11105.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha_sam6156.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_sam6149.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha1_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha256_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha224_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_aes_u2238.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha384_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_sha512_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_tdes_hw.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_tdes_sam6150.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypt_tdes_hwInt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/dsa.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ed25519.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/error-crypt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/fe_operations.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pic32mz-crypt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/fips_test.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ge_operations.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/hash.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/hc128.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/hmac.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/idea.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/integer.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/logging.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md2.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md4.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md5.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/mem_track.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/memory.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/misc.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/mpi_class.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/mpi_superclass.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs11.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs12.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs7.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/poly1305.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pwdbased.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/rabbit.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/random.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ripemd.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/rsa.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/selftest.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/settings.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha256.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha3.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha512.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/signature.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sniffer.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sniffer_error.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/srp.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ssl.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/tfm.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/types.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/version.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/visibility.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_encrypt.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_pkcs11.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_port.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wolfevent.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wolfio.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wolfmath.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/crc32.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/deflate.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inffast.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inffixed.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inflate.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inftrees.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/trees.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zconf.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zutil.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zlib.h</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="driver" projectFiles="true">
             <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -43,7 +140,7 @@
             <itemPath>../src/config/sam_e70_xult/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="library" projectFiles="true">
+          <logicalFolder name="f6" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
@@ -166,12 +263,19 @@
           </logicalFolder>
           <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <itemPath>../src/config/sam_e70_xult/net_pres/pres/src/net_pres_local.h</itemPath>
+              </logicalFolder>
               <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_transportapi.h</itemPath>
               <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
@@ -197,7 +301,7 @@
               <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="system" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
@@ -227,6 +331,14 @@
             <itemPath>../src/config/sam_e70_xult/system/system_common.h</itemPath>
             <itemPath>../src/config/sam_e70_xult/system/system_module.h</itemPath>
           </logicalFolder>
+          <logicalFolder name="f1" displayName="third_party_adapter" projectFiles="true">
+            <logicalFolder name="f1" displayName="wolfMQTT" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <itemPath>../src/config/sam_e70_xult/third_party_adapter/wolfMQTT/src/mqtt_net_glue.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <itemPath>../src/config/sam_e70_xult/config.h</itemPath>
           <itemPath>../src/config/sam_e70_xult/system_config.h</itemPath>
           <itemPath>../src/config/sam_e70_xult/system_definitions.h</itemPath>
           <itemPath>../src/config/sam_e70_xult/user.h</itemPath>
@@ -236,12 +348,12 @@
           <itemPath>../src/config/sam_e70_xult/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="osal" projectFiles="true">
+      <logicalFolder name="f5" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_e70_xult/osal/osal.h</itemPath>
         <itemPath>../src/config/sam_e70_xult/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/sam_e70_xult/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+      <logicalFolder name="f4" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAME70Q21B_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAME70Q21B_DFP/component/acc.h</itemPath>
@@ -310,10 +422,84 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="third_party" projectFiles="true">
+        <logicalFolder name="f1" displayName="wolfMQTT" projectFiles="true">
+          <logicalFolder name="f1" displayName="wolfmqtt" projectFiles="true">
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/mqtt_client.h</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/mqtt_packet.h</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/mqtt_socket.h</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/mqtt_types.h</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/version.h</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/visibility.h</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/wolfmqtt/vs_settings.h</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/aes.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/arc4.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn_public.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/camellia.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/chacha.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/coding.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/compress.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/cpuid.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/des3.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dh.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dsa.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ecc.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/error-crypt.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hash.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hc128.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hmac.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/integer.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/logging.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md2.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md4.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md5.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/memory.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/misc.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs7.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs12.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_class.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_superclass.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pwdbased.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rabbit.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/random.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ripemd.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rsa.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/settings.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha256.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha512.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/tfm.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/types.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/visibility.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_encrypt.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_port.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wolfmath.h</itemPath>
+      </logicalFolder>
       <itemPath>../src/app_commands.h</itemPath>
+      <itemPath>../src/app_mqtt_task.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
+      <logicalFolder name="f1" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfcrypt_support/wolfcrypt/src/misc.c</itemPath>
+      </logicalFolder>
       <itemPath>Makefile</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
@@ -321,10 +507,75 @@
     <logicalFolder name="f3" displayName="Source Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e70_xult" projectFiles="true">
-          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/bsp/bsp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="driver" projectFiles="true">
+          <logicalFolder name="f9" displayName="crypto" projectFiles="true">
+            <itemPath>../src/config/sam_e70_xult/crypto/src/crypto.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/aes.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/arc4.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/asm.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/asn.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/async.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/camellia.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/chacha.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/chacha20_poly1305.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/cmac.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/coding.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/compress.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/curve25519.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/dh.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/dsa.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ed25519.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/error.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/fe_low_mem.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/fe_operations.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ge_low_mem.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ge_operations.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/hash.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/hc128.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/hmac.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/idea.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/integer.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/logging.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md2.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md4.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/memory.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/misc.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs12.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pkcs7.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/poly1305.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/pwdbased.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/rabbit.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/random.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ripemd.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha256.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha3.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/signature.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/sha512.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/srp.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/tfm.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_encrypt.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_pkcs11.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wc_port.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wolfevent.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/wolfmath.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/des3.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/md5.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/adler32.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/crc32.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/deflate.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inflate.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/trees.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/zutil.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/zlib-1.2.7/inffast.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/rsa.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc.c</itemPath>
+            <itemPath>../src/config/sam_e70_xult/crypto/src/ecc_fp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="driver" projectFiles="true">
             <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -357,6 +608,7 @@
                 </logicalFolder>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_commands.c</itemPath>
@@ -369,11 +621,21 @@
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_manager.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult/library/tcpip/src/sntp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f6" displayName="net_pres" projectFiles="true">
+            <logicalFolder name="f1" displayName="pres" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <itemPath>../src/config/sam_e70_xult/net_pres/pres/src/net_pres.c</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_e70_xult/net_pres/pres/net_pres_cert_store.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
@@ -396,10 +658,10 @@
               <itemPath>../src/config/sam_e70_xult/peripheral/usart/plib_usart1.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="stdio" projectFiles="true">
+          <logicalFolder name="f8" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e70_xult/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
+          <logicalFolder name="f4" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e70_xult/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
@@ -425,6 +687,13 @@
             </logicalFolder>
             <itemPath>../src/config/sam_e70_xult/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
+          <logicalFolder name="f2" displayName="third_party_adapter" projectFiles="true">
+            <logicalFolder name="f1" displayName="wolfMQTT" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <itemPath>../src/config/sam_e70_xult/third_party_adapter/wolfMQTT/src/mqtt_net_glue.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
           <itemPath>../src/config/sam_e70_xult/tasks.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/initialization.c</itemPath>
           <itemPath>../src/config/sam_e70_xult/interrupts.c</itemPath>
@@ -433,7 +702,28 @@
           <itemPath>../src/config/sam_e70_xult/libc_syscalls.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/app_commands.c</itemPath>
+      <logicalFolder name="f2" displayName="third_party" projectFiles="true">
+        <logicalFolder name="f1" displayName="wolfMQTT" projectFiles="true">
+          <logicalFolder name="f1" displayName="src" projectFiles="true">
+            <itemPath>../src/third_party/wolfMQTT/src/mqtt_client.c</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/src/mqtt_packet.c</itemPath>
+            <itemPath>../src/third_party/wolfMQTT/src/mqtt_socket.c</itemPath>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/internal.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/sniffer.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ssl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
+      </logicalFolder>
+      <itemPath>../src/app_mqtt_commands.c</itemPath>
+      <itemPath>../src/app_mqtt_task.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
@@ -449,7 +739,7 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
@@ -515,7 +805,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e70_xult/library;../src/config/sam_e70_xult/library/tcpip/src;../src/config/sam_e70_xult/library/tcpip/src/common;../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
+                  value="../src/config/sam_e70_xult/library;../src/config/sam_e70_xult/library/tcpip/src;../src/config/sam_e70_xult/library/tcpip/src/common;../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfmqtt;../src/config/sam_e70_xult/third_party_adapter/wolfMQTT/src/;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -524,7 +814,7 @@
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="HAVE_CONFIG_H"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="toplevel-reordering" value=""/>
@@ -576,7 +866,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="44960"/>
+        <property key="heap-size" value="102400"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -662,6 +952,49 @@
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
       </EdbgTool>
+      <ICD4Tool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UpdateOptions"
+                  value="ToolFirmwareOption.UseLatest"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="400000-5fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.ledbrightness" value="5"/>
+        <property key="programoptions.pgcconfig" value="pull down"/>
+        <property key="programoptions.pgcresistor.value" value="4.7"/>
+        <property key="programoptions.pgdconfig" value="pull down"/>
+        <property key="programoptions.pgdresistor.value" value="4.7"/>
+        <property key="programoptions.pgmentry.voltage" value="low"/>
+        <property key="programoptions.pgmspeed" value="Med"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="voltagevalue" value="3.25"/>
+      </ICD4Tool>
       <PICkit3PlatformTool>
         <property key="ADC 1" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>

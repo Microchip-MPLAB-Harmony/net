@@ -479,7 +479,7 @@ typedef struct
   Remarks:
     None
 */
-typedef int (*SYS_CMD_FNC)(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char **argv);
+typedef void (*SYS_CMD_FNC)(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char **argv);
 
 
 // *****************************************************************************

@@ -197,9 +197,9 @@ static const KEY_SEQ_DCPT keySeqTbl[] =
 
 // prototypes
 
-static int     CommandReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int     CommandQuit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);              // command quit
-static int     CommandHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);              // help
+static void     CommandReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void     CommandQuit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);              // command quit
+static void     CommandHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);              // help
 
 static int      StringToArgs(char *pRawString, char *argv[]); // Convert string to argc & argv[]
 static bool     ParseCmdBuffer(SYS_CMD_IO_DCPT* pCmdIO);      // parse the command buffer
@@ -827,17 +827,17 @@ static char GetCommandCharacter(const void* cmdIoParam)
 }
 
 // implementation
-static int CommandReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM " *** System Reboot ***\r\n" );
-    return 1;
+
     // SYS_RESET_SoftwareReset();
 
 }
 
 // quit
-static int CommandQuit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandQuit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     SYS_CMD_IO_DCPT* pCmdIoNode;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
@@ -850,10 +850,9 @@ static int CommandQuit(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         free(pCmdIoNode);
     }
-    return 1;
 }
 
-static int CommandHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int ix, groupIx;
     const SYS_CMD_DESCRIPTOR*  pDcpt;
@@ -927,7 +926,6 @@ static int CommandHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, LINE_TERM "Unknown command group. Try help" LINE_TERM );
         }
     }
-    return 0;
 
 }
 

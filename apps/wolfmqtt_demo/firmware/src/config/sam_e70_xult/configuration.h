@@ -171,6 +171,105 @@ extern "C" {
 
 
 
+/*** wolfMQTT configuration ***/
+#define WOLFMQTT_NONBLOCK
+// #define ENABLE_MQTT_TLS
+#define WOLFMQTT_USER_SETTINGS
+// #define WOLFMQTT_NO_TIMEOUT
+// #define WOLFMQTT_NO_STDIN_CAP
+
+#define WOLFMQTT_DISCONNECT_CB
+#define WOLFMQTT_NO_ERROR_STRINGS
+#define WOLFMQTT_NO_STDIO
+
+/*** wolMQTT Net Glue configuration ***/
+#define WMQTT_NET_GLUE_FORCE_TLS			false
+#define WMQTT_NET_GLUE_IPV6					false
+#define WMQTT_NET_GLUE_MAX_BROKER_NAME		64
+#define WMQTT_NET_GLUE_DEBUG_ENABLE			true
+#define WMQTT_NET_GLUE_ERROR_STRINGS		true
+#define WMQTT_NET_GLUE_MALLOC				malloc
+#define WMQTT_NET_GLUE_FREE					free
+#define WMQTT_NET_SKT_TX_BUFF				2048
+#define WMQTT_NET_SKT_RX_BUFF				2048
+
+
+
+
+
+
+/******************************************************************************/
+/*wolfSSL TLS Layer Configuration*/
+/******************************************************************************/
+
+#define HAVE_AES_DECRYPT
+//#define HAVE_AES_ECB
+#define WOLFSSL_ALT_NAMES
+#define WOLFSSL_DER_LOAD
+#define KEEP_OUR_CERT
+#define KEEP_PEER_CERT
+#define HAVE_CRL_IO
+#define HAVE_IO_TIMEOUT
+#define HAVE_FFDHE_2048
+#define HAVE_FFDHE_3072
+#define HAVE_FFDHE_4096
+#define HAVE_FFDHE_6144
+#define HAVE_FFDHE_8192
+#define TFM_NO_ASM
+#define WOLFSSL_NO_ASM
+#define SINGLE_THREADED
+#define SIZEOF_LONG_LONG 8
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define NO_DEV_RANDOM
+#define NO_FILESYSTEM
+#define MICROCHIP_TCPIP
+#define USER_TICKS
+#define WOLFSSL_DTLS
+
+
+#define TFM_TIMING_RESISTANT
+#define ECC_TIMING_RESISTANT
+#define WC_RSA_BLINDING
+
+
+    
+    
+    
+
+#define NO_ERROR_STRINGS
+    
+    
+    
+    
+    
+    
+
+
+
+/*** TCP Configuration ***/
+#define TCPIP_TCP_MAX_SEG_SIZE_TX		        	1460
+#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE			512
+#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE			512
+#define TCPIP_TCP_DYNAMIC_OPTIONS             			true
+#define TCPIP_TCP_START_TIMEOUT_VAL		        	1000
+#define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
+#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
+#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		200
+#define TCPIP_TCP_MAX_RETRIES		            		5
+#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
+#define TCPIP_TCP_MAX_SYN_RETRIES		        	3
+#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL			40
+#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL			200
+#define TCPIP_TCP_MAX_SOCKETS		                10
+#define TCPIP_TCP_TASK_TICK_RATE		        	5
+#define TCPIP_TCP_MSL_TIMEOUT		        	    0
+#define TCPIP_TCP_QUIET_TIME		        	    0
+#define TCPIP_TCP_COMMANDS   false
+
+
+
 /*** DHCP Configuration ***/
 #define TCPIP_STACK_USE_DHCP_CLIENT
 #define TCPIP_DHCP_TIMEOUT                          2
@@ -230,6 +329,12 @@ extern "C" {
 #define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
 
 
+/* MPLAB Harmony Net Presentation Layer Definitions*/
+#define NET_PRES_NUM_INSTANCE 1
+#define NET_PRES_NUM_SOCKETS 10
+
+
+
 
 /*** IPv4 Configuration ***/
 
@@ -238,7 +343,7 @@ extern "C" {
 /*** TCPIP Heap Configuration ***/
 
 #define TCPIP_STACK_USE_INTERNAL_HEAP
-#define TCPIP_STACK_DRAM_SIZE                       39250
+#define TCPIP_STACK_DRAM_SIZE                       65536
 #define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
 
 #define TCPIP_STACK_MALLOC_FUNC                     malloc
@@ -265,6 +370,7 @@ extern "C" {
 // *****************************************************************************
 
 #define TCPIP_STACK_USE_IPV4
+#define TCPIP_STACK_USE_TCP
 #define TCPIP_STACK_USE_UDP
 
 #define TCPIP_STACK_TICK_RATE		        		5
@@ -382,6 +488,24 @@ extern "C" {
 
 
 
+/*** SNTP Configuration ***/
+#define TCPIP_STACK_USE_SNTP_CLIENT
+#define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
+#define TCPIP_NTP_VERSION             			    	4
+#define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
+#define TCPIP_NTP_EPOCH		                		2208988800ul
+#define TCPIP_NTP_REPLY_TIMEOUT		        		6
+#define TCPIP_NTP_MAX_STRATUM		        		15
+#define TCPIP_NTP_TIME_STAMP_TMO				660
+#define TCPIP_NTP_SERVER		        		"pool.ntp.org"
+#define TCPIP_NTP_SERVER_MAX_LENGTH				30
+#define TCPIP_NTP_QUERY_INTERVAL				600
+#define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
+#define TCPIP_NTP_TASK_TICK_RATE				1100
+#define TCPIP_NTP_RX_QUEUE_LIMIT				2
+
+
+
 /*** UDP Configuration ***/
 #define TCPIP_UDP_MAX_SOCKETS		                	10
 #define TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE		    	512
@@ -410,6 +534,39 @@ extern "C" {
 #define DRV_ETHPHY_RESET_CLR_TMO					500
 #define DRV_ETHPHY_USE_DRV_MIIM                     true
 
+
+
+
+/*** Crypto Library Configuration ***/
+#define WC_NO_HARDEN
+#define NO_DSA
+#define HAVE_MCAPI
+#define WOLFSSL_IGNORE_FILE_WARN
+
+#define MICROCHIP_MPLAB_HARMONY
+#define MICROCHIP_MPLAB_HARMONY_3
+
+#define SIZEOF_LONG_LONG 8
+#define SINGLE_THREADED
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define NO_DEV_RANDOM
+#define NO_FILESYSTEM
+#define USE_FAST_MATH
+#define TFM_TIMING_RESISTANT
+#define USE_CERT_BUFFERS_2048
+#define WOLFSSL_AES_COUNTER
+#define HAVE_AES_CBC
+#define HAVE_AESGCM
+#define WOLFSSL_SHA224
+#define WOLFSSL_SHA512
+#define WOLFSSL_SHA384
+#define HAVE_ECC
+#define USE_FAST_MATH
+#define WOLFSSL_STATIC_RSA
+#define NO_DES3
+#define WOLFSSL_AES_COUNTER
+#define NO_RNG_TEST
 
 
 
