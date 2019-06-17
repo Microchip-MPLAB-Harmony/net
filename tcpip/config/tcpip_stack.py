@@ -174,7 +174,7 @@ def instantiateComponent(tcpipStackComponent):
     
     # RTOS Task Stack Size
     tcpipStackTaskSize = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_STACK_SIZE", tcpipStackRtosMenu)
-    tcpipStackTaskSize.setLabel("Task Size")
+    tcpipStackTaskSize.setLabel("Stack Size")
     tcpipStackTaskSize.setVisible(True)
     tcpipStackTaskSize.setDescription("Rtos Task Stack Size")
     tcpipStackTaskSize.setDefaultValue(1024)
