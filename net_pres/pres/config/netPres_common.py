@@ -53,11 +53,11 @@ def instantiateComponent(netPresCommonComponent):
     netPresExecMode.setDescription("Net Pres Execution mode")
     netPresExecMode.setDefaultValue("Standalone")
     
-    # Net Pres Task Size
+    # Net Pres Task Stack Size
     netPresTaskSize = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_STACK_SIZE", netPresRtosMenu)
-    netPresTaskSize.setLabel("Task Size")
+    netPresTaskSize.setLabel("Stack Size")
     netPresTaskSize.setVisible(True)
-    netPresTaskSize.setDescription("Net Pres Task Size")
+    netPresTaskSize.setDescription("Net Pres Task Stack Size")
     netPresTaskSize.setDefaultValue(1024)
     netPresTaskSize.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
     
