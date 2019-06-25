@@ -53,17 +53,12 @@
 // Section: Global objects
 // *****************************************************************************
 // *****************************************************************************
-DRV_MEMORY_EVENT_HANDLER   efcEventHandler;
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Driver EFC Local Functions
 // *****************************************************************************
 // *****************************************************************************
-static void DRV_EFC_EventHandler( uintptr_t context)
-{
-    efcEventHandler(MEMORY_DEVICE_TRANSFER_COMPLETED, context);
-}
 
 // *****************************************************************************
 // *****************************************************************************
@@ -98,11 +93,6 @@ bool DRV_EFC_SectorErase( const DRV_HANDLE handle, uint32_t address )
     return (EFC_SectorErase(address));
 }
 
-void DRV_EFC_EventHandlerSet( const DRV_HANDLE handle, const DRV_MEMORY_EVENT_HANDLER eventHandler, const uintptr_t context )
-{
-    efcEventHandler = eventHandler;
-    EFC_CallbackRegister(DRV_EFC_EventHandler, context);
-}
 
 bool DRV_EFC_GeometryGet( const DRV_HANDLE handle, MEMORY_DEVICE_GEOMETRY *geometry )
 {

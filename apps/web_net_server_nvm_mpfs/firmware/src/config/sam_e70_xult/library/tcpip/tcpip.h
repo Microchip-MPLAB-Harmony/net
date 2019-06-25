@@ -640,15 +640,11 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 #include "tcpip/tcpip_common_ports.h"
-
 #include "tcpip/tcpip_mac.h"
 #include "tcpip/tcpip_mac_object.h"
 #include "tcpip/tcpip_manager.h"
-
-
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
-
 #include "tcpip/ndp.h"
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
@@ -667,6 +663,7 @@ typedef struct
 #include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"
 #include "tcpip/smtpc.h"
+#include "tcpip/iperf.h"
 #include "tcpip/tcpip_commands.h"
 
 #endif  // __TCPIP_H__
