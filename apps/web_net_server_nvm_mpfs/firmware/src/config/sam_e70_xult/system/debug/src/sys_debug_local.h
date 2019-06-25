@@ -1,25 +1,20 @@
 /*******************************************************************************
- System Tasks File
+  Debug System Service Local Data Structures
+
+  Company:
+    Microchip Technology Inc.
 
   File Name:
-    tasks.c
+    sys_debug_local.h
 
   Summary:
-    This file contains source code necessary to maintain system's polled tasks.
+    Debug System Service local declarations and definitions.
 
   Description:
-    This file contains source code necessary to maintain system's polled tasks.
-    It implements the "SYS_Tasks" function that calls the individual "Tasks"
-    functions for all polled MPLAB Harmony modules in the system.
+    This file contains the Debug System Service local declarations and definitions.
+*******************************************************************************/
 
-  Remarks:
-    This file requires access to the systemObjects global data structure that
-    contains the object handles to all MPLAB Harmony module objects executing
-    polled in the system.  These handles are passed into the individual module
-    "Tasks" functions to identify the instance of the module to maintain.
- *******************************************************************************/
-
-// DOM-IGNORE-BEGIN
+//DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -41,73 +36,84 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
-// DOM-IGNORE-END
+*******************************************************************************/
+//DOM-IGNORE-END
+
+#ifndef SYS_DEBUG_LOCAL_H
+#define SYS_DEBUG_LOCAL_H
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: File includes
 // *****************************************************************************
 // *****************************************************************************
 
 #include "configuration.h"
-#include "definitions.h"
+#include "driver/driver.h"
+#include "system/debug/sys_debug.h"
 
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
+// DOM-IGNORE-END
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: System "Tasks" Routine
+// Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
 
-/*******************************************************************************
-  Function:
-    void SYS_Tasks ( void )
+// *****************************************************************************
+/* SYS Debug State Machine States
 
-  Remarks:
-    See prototype in system/common/sys_module.h.
+   Summary
+    Defines the various states that can be achieved by the driver operation.
+
+   Description
+    This enumeration defines the various states that can be achieved by the
+    driver operation.
+
+   Remarks:
+    None.
 */
 
-void SYS_Tasks ( void )
+typedef enum
 {
-    /* Maintain system services */
-    
-SYS_FS_Tasks();
+    SYS_DEBUG_STATE_IDLE
 
-SYS_CMD_Tasks();
+} SYS_DEBUG_STATES;
 
 
+// *****************************************************************************
+/* SYS DEBUG OBJECT INSTANCE structure
 
+  Summary:
+    System Debug object instance structure.
 
-    /* Maintain Device Drivers */
-    DRV_MIIM_Tasks(sysObj.drvMiim);
+  Description:
+    This data type defines the System Debug object instance.
 
+  Remarks:
+    None.
+*/
 
-DRV_MEMORY_Tasks(sysObj.drvMemory0);
+typedef struct
+{
+    SYS_STATUS                        status;
+    SYS_DEBUG_STATES                  state;
+    SYS_MODULE_INDEX                  debugConsole;
+    int                               prtBufPtr;
+} SYS_DEBUG_INSTANCE;
 
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
 
+    }
 
-    /* Maintain Middleware & Other Libraries */
-    
-NET_PRES_Tasks(sysObj.netPres);
+#endif
+//DOM-IGNORE-END
 
-
-
-TCPIP_STACK_Task(sysObj.tcpip);
-
-
-
-
-    /* Maintain the application's state machine. */
-        /* Call Application task APP. */
-    APP_Tasks();
-
-
-
-}
-
-
-/*******************************************************************************
- End of File
- */
-
+#endif //#ifndef SYS_DEBUG_LOCAL_H

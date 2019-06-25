@@ -66,19 +66,24 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 int CRYPT_RNG_HwInit(void)
 {
-    /* Enable Peripheral clock for TRNG in Power Management Controller */
+        /* enable */
+#if defined(TRNG_CR_WAKEY_PASSWD)
+        /* Enable Peripheral clock for TRNG in Power Management Controller */
+#ifdef CRYPT_TRNG_HW_6334_A5D2
     uint32_t PmcBit = 1u << (ID_TRNG - 32);
     if ((PMC_REGS->PMC_PCSR1 & PmcBit) != PmcBit)
     {
         /* turn on */
         PMC_REGS->PMC_PCER1 = PmcBit;
 
-        /* enable */
-        TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
-
         /* memory barrier */
         __DMB();
     }
+#endif
+    TRNG_REGS->TRNG_CR = TRNG_CR_WAKEY_PASSWD | TRNG_CR_ENABLE_Msk;        
+#else
+    TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+#endif
 
     return 0;
 }
@@ -125,11 +130,14 @@ int CRYPT_RNG_GenerateBlock(byte* output, word32 sz)
 int CRYPT_RNG_FreeRng(void)
 {
     /* disable */
-    TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD;
+#if defined(TRNG_CR_WAKEY_PASSWD)
+        TRNG_REGS->TRNG_CR = TRNG_CR_WAKEY_PASSWD | TRNG_CR_ENABLE_Msk;        
+#else
+        TRNG_REGS->TRNG_CR = TRNG_CR_KEY_PASSWD | TRNG_CR_ENABLE_Msk;
+#endif
 
     /* Disable Peripheral Clock to TRNG by writing 1 to bit position */
     /* TRNG >=32 use PCDR1 not PCDR0 and remove 32 bit positions */
-    PMC_REGS->PMC_PCDR1 = 1u << (ID_TRNG - 32);
 
     return 0;
 }
