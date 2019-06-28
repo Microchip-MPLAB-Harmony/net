@@ -1,25 +1,20 @@
 /*******************************************************************************
-  Interrupt System Service Library Interface Implementation File
+  Debug System Service Local Data Structures
 
-  Company
+  Company:
     Microchip Technology Inc.
 
-  File Name
-    sys_int_nvic.c
+  File Name:
+    sys_debug_local.h
 
-  Summary
-    NVIC implementation of interrupt system service library.
+  Summary:
+    Debug System Service local declarations and definitions.
 
-  Description
-    This file implements the interface to the interrupt system service library
-    not provided in CMSIS.
-
-  Remarks:
-    None.
-
+  Description:
+    This file contains the Debug System Service local declarations and definitions.
 *******************************************************************************/
 
-// DOM-IGNORE-BEGIN
+//DOM-IGNORE-BEGIN
 /*******************************************************************************
 * Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
@@ -42,85 +37,83 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+//DOM-IGNORE-END
+
+#ifndef SYS_DEBUG_LOCAL_H
+#define SYS_DEBUG_LOCAL_H
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: File includes
+// *****************************************************************************
+// *****************************************************************************
+
+#include "configuration.h"
+#include "driver/driver.h"
+#include "system/debug/sys_debug.h"
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+
+    extern "C" {
+
+#endif
 // DOM-IGNORE-END
 
-
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
-// *****************************************************************************
-// *****************************************************************************
-#include "system/int/sys_int.h"
-
-
-// *****************************************************************************
-// *****************************************************************************
-// Section: Interface Implementation
+// Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-void SYS_INT_Enable( void )
+/* SYS Debug State Machine States
+
+   Summary
+    Defines the various states that can be achieved by the driver operation.
+
+   Description
+    This enumeration defines the various states that can be achieved by the
+    driver operation.
+
+   Remarks:
+    None.
+*/
+
+typedef enum
 {
-    __DMB();
-    __enable_irq();
+    SYS_DEBUG_STATE_IDLE
 
-    return;
-}
+} SYS_DEBUG_STATES;
 
 
 // *****************************************************************************
-bool SYS_INT_Disable( void )
+/* SYS DEBUG OBJECT INSTANCE structure
+
+  Summary:
+    System Debug object instance structure.
+
+  Description:
+    This data type defines the System Debug object instance.
+
+  Remarks:
+    None.
+*/
+
+typedef struct
 {
-    bool processorStatus;
+    SYS_STATUS                        status;
+    SYS_DEBUG_STATES                  state;
+    SYS_MODULE_INDEX                  debugConsole;
+    int                               prtBufPtr;
+} SYS_DEBUG_INSTANCE;
 
-    processorStatus = (bool) (__get_PRIMASK() == 0);
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
 
-    __disable_irq();
-    __DMB();
-
-    return processorStatus;
-}
-
-
-// *****************************************************************************
-void SYS_INT_Restore( bool state )
-{
-    if( state == true )
-    {
-        __DMB();
-        __enable_irq();
     }
-    else
-    {
-        __disable_irq();
-        __DMB();
-    }
 
-    return;
-}
+#endif
+//DOM-IGNORE-END
 
-bool SYS_INT_SourceDisable( INT_SOURCE source )
-{
-    bool processorStatus;
-    bool intSrcStatus;
-
-    processorStatus = SYS_INT_Disable();
-
-    intSrcStatus = NVIC_GetEnableIRQ(source);
-
-    NVIC_DisableIRQ( source );
-
-    SYS_INT_Restore( processorStatus );
-
-    /* return the source status */
-    return intSrcStatus;
-}
-
-void SYS_INT_SourceRestore( INT_SOURCE source, bool status )
-{
-    if( status ) {
-        SYS_INT_SourceEnable( source );
-    }
-    return;
-}
+#endif //#ifndef SYS_DEBUG_LOCAL_H
