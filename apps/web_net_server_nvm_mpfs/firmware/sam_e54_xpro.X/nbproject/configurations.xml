@@ -6,7 +6,7 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e54_xpro" projectFiles="true">
-          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f7" displayName="crypto" projectFiles="true">
@@ -106,7 +106,7 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+          <logicalFolder name="f1" displayName="driver" projectFiles="true">
             <logicalFolder name="f2" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -117,7 +117,7 @@
               </logicalFolder>
               <itemPath>../src/config/sam_e54_xpro/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f4" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
@@ -133,7 +133,7 @@
               <itemPath>../src/config/sam_e54_xpro/driver/memory/drv_memory_definitions.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/driver/memory/drv_memory_nvmctrl.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="miim" projectFiles="true">
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="config" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro/driver/miim/config/drv_miim_config.h</itemPath>
               </logicalFolder>
@@ -283,7 +283,7 @@
               <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f4" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
@@ -317,18 +317,18 @@
               <itemPath>../src/config/sam_e54_xpro/peripheral/tc/plib_tc0.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
             <logicalFolder name="f4" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="console" projectFiles="true">
+            <logicalFolder name="f6" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/command/sys_command.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_command.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
@@ -371,6 +371,7 @@
             <itemPath>../src/config/sam_e54_xpro/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
+          <itemPath>../src/config/sam_e54_xpro/config.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/user.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/configuration.h</itemPath>
           <itemPath>../src/config/sam_e54_xpro/system_config.h</itemPath>
@@ -385,7 +386,7 @@
         <itemPath>../src/config/sam_e54_xpro/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/sam_e54_xpro/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+      <logicalFolder name="f4" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAME54P20A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAME54P20A_DFP/component/ac.h</itemPath>
@@ -457,8 +458,65 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <itemPath>../src/http_net_print.h</itemPath>
+      <logicalFolder name="f2" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/aes.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/arc4.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn_public.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/camellia.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/chacha.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/coding.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/compress.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/cpuid.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/des3.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dh.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dsa.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ecc.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/error-crypt.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hash.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hc128.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hmac.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/integer.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/logging.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md2.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md4.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md5.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/memory.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/misc.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs7.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs12.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_class.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_superclass.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pwdbased.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rabbit.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/random.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ripemd.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rsa.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/settings.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha256.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha512.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/tfm.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/types.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/visibility.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_encrypt.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_port.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wolfmath.h</itemPath>
+      </logicalFolder>
       <itemPath>../src/app.h</itemPath>
+      <itemPath>../src/http_net_print.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -469,7 +527,7 @@
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1" displayName="sam_e54_xpro" projectFiles="true">
-          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro/bsp/bsp.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f8" displayName="crypto" projectFiles="true">
@@ -537,7 +595,7 @@
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro/crypto/src/ecc_fp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="driver" projectFiles="true">
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f2" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -546,7 +604,7 @@
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f4" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
@@ -559,7 +617,7 @@
               <itemPath>../src/config/sam_e54_xpro/driver/memory/src/drv_memory_file_system.c</itemPath>
               <itemPath>../src/config/sam_e54_xpro/driver/memory/src/drv_memory_nvmctrl.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="miim" projectFiles="true">
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/driver/miim/src/dynamic/drv_miim.c</itemPath>
@@ -567,26 +625,28 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="library" projectFiles="true">
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/common/sys_fs_wrapper.c</itemPath>
                   <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_net.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ndp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv6.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/smtpc.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmpv6.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.c</itemPath>
@@ -596,8 +656,6 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/sntp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -607,9 +665,10 @@
                 <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
               <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_cert_store.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f5" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
@@ -643,15 +702,23 @@
           <logicalFolder name="f7" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/command/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/debug/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
@@ -683,16 +750,8 @@
       <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
         <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
-          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
-          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
-          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
-          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="email" projectFiles="true">
-          <itemPath>../src/web_pages/email/index.htm</itemPath>
-          <itemPath>../src/web_pages/email/index.htm</itemPath>
-          <itemPath>../src/web_pages/email/index.htm</itemPath>
-          <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f3" displayName="protect" projectFiles="true">
@@ -700,55 +759,34 @@
           <itemPath>../src/web_pages/protect/index.htm</itemPath>
           <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
           <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
-          <itemPath>../src/web_pages/protect/config.htm</itemPath>
-          <itemPath>../src/web_pages/protect/index.htm</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
-          <itemPath>../src/web_pages/protect/config.htm</itemPath>
-          <itemPath>../src/web_pages/protect/index.htm</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
-          <itemPath>../src/web_pages/protect/config.htm</itemPath>
-          <itemPath>../src/web_pages/protect/index.htm</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
-          <itemPath>../src/web_pages/protect/config.htm</itemPath>
-          <itemPath>../src/web_pages/protect/index.htm</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="snmp" projectFiles="true">
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
-          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
-          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
-          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
-          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
         </logicalFolder>
-        <itemPath>../src/web_pages/auth.htm</itemPath>
-        <itemPath>../src/web_pages/cookies.htm</itemPath>
-        <itemPath>../src/web_pages/dynvars.htm</itemPath>
-        <itemPath>../src/web_pages/footer.htm</itemPath>
-        <itemPath>../src/web_pages/forms.htm</itemPath>
-        <itemPath>../src/web_pages/harmony.gif</itemPath>
-        <itemPath>../src/web_pages/header.htm</itemPath>
-        <itemPath>../src/web_pages/index.htm</itemPath>
-        <itemPath>../src/web_pages/leds.cgi</itemPath>
-        <itemPath>../src/web_pages/mchp.css</itemPath>
-        <itemPath>../src/web_pages/mchp.gif</itemPath>
-        <itemPath>../src/web_pages/mchp.js</itemPath>
-        <itemPath>../src/web_pages/ssi.htm</itemPath>
-        <itemPath>../src/web_pages/status.xml</itemPath>
-        <itemPath>../src/web_pages/upload.htm</itemPath>
       </logicalFolder>
+      <logicalFolder name="f3" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/internal.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/sniffer.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ssl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
+      </logicalFolder>
+      <itemPath>../src/app.c</itemPath>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
       <itemPath>../src/mpfs_net_img.c</itemPath>
-      <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
+      <logicalFolder name="f1" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfcrypt_support/wolfcrypt/src/misc.c</itemPath>
+      </logicalFolder>
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -763,14 +801,14 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.20</languageToolchainVersion>
+        <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -805,16 +843,16 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e54_xpro/library;../src/config/sam_e54_xpro/library/tcpip/src;../src/config/sam_e54_xpro/library/tcpip/src/common;../src;../src/config/sam_e54_xpro;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
+                  value="../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/sam_e54_xpro/library;../src/config/sam_e54_xpro/library/tcpip/src;../src/config/sam_e54_xpro/library/tcpip/src/common;../src;../src/config/sam_e54_xpro;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="isolate-each-function" value="false"/>
+        <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="false"/>
-        <property key="optimization-level" value=""/>
+        <property key="optimization-level" value="-O1"/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="HAVE_CONFIG_H"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="toplevel-reordering" value=""/>
@@ -944,18 +982,57 @@
                   value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="0-fffff"/>
-        <property key="poweroptions.powerenable" value="false"/>
         <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges"
-                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value=""/>
         <property key="programoptions.preserveprogramrange" value="false"/>
         <property key="programoptions.preserveuserid" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
-        <property key="voltagevalue" value=""/>
       </EdbgTool>
+      <ICD4Tool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UpdateOptions"
+                  value="ToolFirmwareOption.UseLatest"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="hwtoolclock.frcindebug" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.donoteraseauxmem" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.ledbrightness" value="5"/>
+        <property key="programoptions.pgcconfig" value="pull down"/>
+        <property key="programoptions.pgcresistor.value" value="4.7"/>
+        <property key="programoptions.pgdconfig" value="pull down"/>
+        <property key="programoptions.pgdresistor.value" value="4.7"/>
+        <property key="programoptions.pgmentry.voltage" value="low"/>
+        <property key="programoptions.pgmspeed" value="Med"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value=""/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programcalmem" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="voltagevalue" value="3.25"/>
+      </ICD4Tool>
     </conf>
   </confs>
 </configurationDescriptor>
