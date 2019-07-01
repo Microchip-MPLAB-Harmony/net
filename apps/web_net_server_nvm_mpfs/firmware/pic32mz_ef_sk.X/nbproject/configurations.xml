@@ -372,9 +372,9 @@
       </logicalFolder>
       <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f1"
-                       displayName="PIC32MZ2048EFH144_DFP"
+                       displayName="PIC32MZ2048EFM144_DFP"
                        projectFiles="true">
-          <itemPath>../src/packs/PIC32MZ2048EFH144_DFP/device.h</itemPath>
+          <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f2" displayName="wolfSSL" projectFiles="true">
@@ -656,10 +656,8 @@
         <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
-          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="email" projectFiles="true">
-          <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
         </logicalFolder>
@@ -672,13 +670,8 @@
           <itemPath>../src/web_pages/protect/index.htm</itemPath>
           <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
           <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
-          <itemPath>../src/web_pages/protect/config.htm</itemPath>
-          <itemPath>../src/web_pages/protect/index.htm</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
-          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="snmp" projectFiles="true">
-          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
         </logicalFolder>
@@ -777,7 +770,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips"/>
+                  value="../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFM144_DFP;../src/mips"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -838,7 +831,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="105000"/>
+        <property key="heap-size" value="95000"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

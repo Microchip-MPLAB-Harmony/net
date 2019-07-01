@@ -195,7 +195,7 @@ SYS_STATUS_ERROR    Indicates that the specified module is in an error state
 
 static __inline__ uint32_t __attribute__((always_inline)) SYS_CLK_FrequencyGet ( SYS_CLK_CLOCK clock  )
 {
-    return 150000000;           // PIC32MZ2048EFH144
+    return 150000000;           // PIC32MZ2048EFM144
 }
 
 
