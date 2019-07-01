@@ -1596,7 +1596,7 @@
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">4316EAFEE04940B3FCC831A21A426499</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4316EAFEE04940B3FCC831A21A426499</UserChecksum>
+          <UserChecksum dnOrder="5">B814158C0FBE7A9E83D9772231585D90</UserChecksum>
         </File>
         <File dnOrder="199">
           <Type dnOrder="0">HEADER</Type>
@@ -1817,8 +1817,8 @@
         <File dnOrder="226">
           <Type dnOrder="0">HEADER</Type>
           <Name dnOrder="1">device.h</Name>
-          <LogicalPath dnOrder="2">packs/PIC32MZ2048EFH144_DFP/</LogicalPath>
-          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2048EFH144_DFP/</PhysicalPath>
+          <LogicalPath dnOrder="2">packs/PIC32MZ2048EFM144_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2048EFM144_DFP/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
           <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
         </File>
@@ -2955,8 +2955,8 @@
           <Name dnOrder="1">plib_evic.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/peripheral/evic/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0718C4C8BAA47288E82FE9CCD4854832</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0718C4C8BAA47288E82FE9CCD4854832</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B38028A617FDD4D90B80660771629645</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B38028A617FDD4D90B80660771629645</UserChecksum>
         </File>
         <File dnOrder="369">
           <Type dnOrder="0">HEADER</Type>
@@ -3323,8 +3323,8 @@
           <Name dnOrder="1">sys_clk_h2_adapter.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4F2C6E0380F09412BD404EFC1373D616</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4F2C6E0380F09412BD404EFC1373D616</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A21466440BDF8A610CE73BEB8753565D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A21466440BDF8A610CE73BEB8753565D</UserChecksum>
         </File>
         <File dnOrder="415">
           <Type dnOrder="0">HEADER</Type>
@@ -4059,7 +4059,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" value="../src/third_party/wolfcrypt_support"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" value="../src/third_party/wolfssl"/>
-        <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFH144_DFP;;../src/mips"/>
+        <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFM144_DFP;;../src/mips"/>
         <Setting category="C32" dnOrder="4" key="preprocessor-macros" value="HAVE_CONFIG_H"/>
         <Setting category="C32-LD" dnOrder="5" key="heap-size" value="95000"/>
         <Setting category="C32-LD" dnOrder="6" key="no-device-startup-code" value="true"/>
