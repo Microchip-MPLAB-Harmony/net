@@ -58,7 +58,13 @@ typedef union {
     uint8_t WUIHV : 1;
     uint8_t WUIEHV : 1;
     uint8_t : 2;
+#if defined(CRYPTO_SHA_HW_6156_R)
+    uint8_t : 8;
+    uint8_t UNLOCK : 1;
+    uint8_t : 7;    
+#else
     uint16_t : 16;  
+#endif
   } s;
   uint32_t v;
 } CRYPT_SHA_SAM6156_SHA_CR;
@@ -95,13 +101,27 @@ typedef union
 {
   struct {
     CRYPT_SHA_SAM6156_StartModes SMOD : 2;
+#if defined(CRYPTO_SHA_HW_6156_R)
+    uint8_t AOE : 1;
+    uint8_t : 1;
+#else
     uint8_t : 2;
+#endif
     uint8_t PROCDLY : 1;
     uint8_t UIHV : 1;
     uint8_t UIEHV : 1;
+#if defined(CRYPTO_SHA_HW_6156_R)
+    uint8_t BPE : 1;
+#else
     uint8_t : 1;
+#endif
     CRYPT_SHA_SAM6156_Alogithms ALGO : 4;
+#if defined(CRYPTO_SHA_HW_6156_R)
+    uint8_t : 3;
+    uint8_t TMPLCK : 1;
+#else
     uint8_t : 4;
+#endif
     uint8_t DUALBUFF: 1;
     uint8_t : 7;
     CRYPT_SHA_SAM6156_HashCheck CHECK : 2;
@@ -120,15 +140,44 @@ typedef union
     uint8_t : 7;
     uint8_t CHECKF : 1;
     uint8_t : 7;
+#if defined(CRYPTO_SHA_HW_6156_R)
+    uint8_t SECE : 1;
+    uint8_t : 7;
+#else
     uint8_t : 8;
+#endif
   } s;
   uint32_t v;
 } CRYPT_SHA_SAM6156_SHA_IER;
 
 #define CRYPT_SHA_SAM6156_SHA_IDR CRYPT_SHA_SAM6156_SHA_IER
 #define CRYPT_SHA_SAM6156_SHA_IMR CRYPT_SHA_SAM6156_SHA_IER
-#define CRYPT_SHA_SAM6156_SHA_ISR CRYPT_SHA_SAM6156_SHA_IER
 
+typedef union
+{
+  struct {
+    uint8_t DATRDY : 1;
+    uint8_t : 3;
+    uint8_t WRDY : 1;
+    uint8_t : 3;
+    uint8_t URAD : 1;
+    uint8_t : 3;
+    uint8_t URAT : 3;
+    uint8_t : 1;
+    uint8_t CHCKF : 1;
+    uint8_t : 3;
+    uint8_t CHKST : 4;
+#if defined(CRYPTO_SHA_HW_6156_R)
+    uint8_t SECE : 1;
+    uint8_t : 7;
+#else
+    uint8_t : 8;
+#endif
+  } s;
+  uint32_t v;
+} CRYPT_SHA_SAM6156_SHA_ISR;
+
+  
 typedef struct 
 {
   CRYPT_SHA_SAM6156_Alogithms ALGO : 4;

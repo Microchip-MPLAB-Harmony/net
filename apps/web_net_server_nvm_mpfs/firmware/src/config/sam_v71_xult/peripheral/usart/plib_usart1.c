@@ -135,13 +135,13 @@ void USART1_InterruptHandler( void )
     }
 
     /* Receiver status */
-    if(US_CSR_RXRDY_Msk == (USART1_REGS->US_CSR& US_CSR_RXRDY_Msk))
+    if(US_CSR_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_RXRDY_Msk))
     {
         USART1_ISR_RX_Handler();
     }
 
     /* Transmitter status */
-    if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+    if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
     {
         USART1_ISR_TX_Handler();
     }
@@ -304,7 +304,7 @@ bool USART1_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(US_CSR_TXEMPTY_Msk == (USART1_REGS->US_CSR& US_CSR_TXEMPTY_Msk))
+            if(US_CSR_TXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_TXRDY_Msk))
             {
                 USART1_REGS->US_THR = (US_THR_TXCHR(*lBuffer) & US_THR_TXCHR_Msk);
                 usart1Obj.txProcessedSize++;
