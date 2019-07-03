@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-18T21:21:15Z */
+/* file generated from device description version 2019-04-01T08:56:33Z */
 #ifndef _SAMV71Q21B_GPIO_H_
 #define _SAMV71Q21B_GPIO_H_
 

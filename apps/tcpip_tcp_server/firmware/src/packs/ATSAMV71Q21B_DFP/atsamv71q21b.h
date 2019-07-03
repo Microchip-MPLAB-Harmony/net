@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-18T21:21:15Z */
+/* file generated from device description version 2019-04-01T08:56:33Z */
 #ifndef _SAMV71Q21B_H_
 #define _SAMV71Q21B_H_
 
@@ -685,7 +685,7 @@ void GMAC_Q5_Handler               ( void );
 /**  DEVICE SIGNATURES FOR SAMV71Q21B                                         */
 /* ************************************************************************** */
 #define CHIP_JTAGID                    _UL_(0X05B3D03F)
-#define CHIP_CIDR                      _UL_(0XA1220E00)
+#define CHIP_CIDR                      _UL_(0XA1220E01)
 #define CHIP_EXID                      _UL_(0X00000002)
 
 /* ************************************************************************** */
