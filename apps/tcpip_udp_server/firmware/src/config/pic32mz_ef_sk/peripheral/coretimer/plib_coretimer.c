@@ -95,13 +95,14 @@ uint32_t CORETIMER_CounterGet ( void )
     count = _CP0_GET_COUNT();
     return count;
 }
-    
+
 void CORE_TIMER_InterruptHandler (void)
 {
+    uint32_t status = IFS0bits.CTIF;
     IFS0CLR=0x1;
     if(coreTmr.callback != NULL)
     {
-        coreTmr.callback(coreTmr.context);
+        coreTmr.callback(status, coreTmr.context);
     }
 }
 
