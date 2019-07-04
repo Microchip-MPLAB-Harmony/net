@@ -88,10 +88,6 @@ extern "C" {
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         120000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (188)
 
-/* Console System Service Configuration Options */
-#define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
-#define SYS_CONSOLE_INSTANCES_NUMBER       1
-#define SYS_CONSOLE_UART_MAX_INSTANCES     1
 
 /* RX queue size has one additional element for the empty spot needed in circular queue */
 #define SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0    11
@@ -106,6 +102,18 @@ extern "C" {
 #define SYS_CMD_PRINT_BUFFER_SIZE          2560
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+#define SYS_DEBUG_USE_CONSOLE
+
+
+/* Console System Service Configuration Options */
+#define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
+#define SYS_CONSOLE_UART_MAX_INSTANCES     1
 
 
 
@@ -311,6 +319,9 @@ extern "C" {
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0				10
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE0				    	1536
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE0				   		12
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0				1
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0					1
 
 
 
