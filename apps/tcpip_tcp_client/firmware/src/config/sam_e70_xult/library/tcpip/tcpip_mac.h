@@ -178,6 +178,12 @@ typedef struct
 {	
 	/** RX Descriptor count */
 	uint16_t nRxDescCnt;
+    /** RX buffer count */
+	uint16_t nRxBuffCount;
+    /** RX buffer count threshold */
+	uint16_t nRxBuffCntThres;
+    /** RX buffer allocate count */
+	uint16_t nRxBuffAllocCnt;
 	/** TX Descriptor count */
 	uint16_t nTxDescCnt;	
 	/** TX buffer size */
