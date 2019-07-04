@@ -41,10 +41,8 @@
 *******************************************************************************/
 //DOM-IGNORE-END
 
-
 #ifndef SYS_CONSOLE_UART_H
 #define SYS_CONSOLE_UART_H
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -57,7 +55,7 @@
 #include "system/console/src/sys_console_uart_definitions.h"
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus
+#ifdef __cplusplus  // Provide C++ Compatibility
 
     extern "C" {
 
@@ -76,7 +74,7 @@ typedef enum
     CONSOLE_UART_READ_BUSY,
     CONSOLE_UART_READ_DONE,
     CONSOLE_UART_READ_ERROR
-}CONSOLE_UART_READ_STATUS;
+} CONSOLE_UART_READ_STATUS;
 
 typedef enum
 {
@@ -84,19 +82,19 @@ typedef enum
     CONSOLE_UART_WRITE_BUSY,
     CONSOLE_UART_WRITE_DONE,
     CONSOLE_UART_WRITE_ERROR,
-}CONSOLE_UART_WRITE_STATUS;
+} CONSOLE_UART_WRITE_STATUS;
 
 typedef enum
 {
     CONSOLE_UART_READ_STATE_IDLE,
     CONSOLE_UART_READ_STATE_BUSY,
-}CONSOLE_UART_READ_STATE;
+} CONSOLE_UART_READ_STATE;
 
 typedef enum
 {
     CONSOLE_UART_WRITE_STATE_IDLE,
     CONSOLE_UART_WRITE_STATE_BUSY,
-}CONSOLE_UART_WRITE_STATE;
+} CONSOLE_UART_WRITE_STATE;
 
 typedef struct
 {
@@ -146,7 +144,7 @@ typedef struct
     /* Mutex to protect access to the transfer objects */
     OSAL_MUTEX_DECLARE(mutexTransferObjects);
 
-}CONSOLE_UART_DATA;
+} CONSOLE_UART_DATA;
 
 void Console_UART_Initialize(uint32_t index, const void* initData);
 ssize_t Console_UART_Read(uint32_t index, int fd, void* buf, size_t count);
@@ -159,7 +157,9 @@ SYS_CONSOLE_STATUS Console_UART_Status (uint32_t index);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus
-}
+
+    }
+
 #endif
 // DOM-IGNORE-END
 

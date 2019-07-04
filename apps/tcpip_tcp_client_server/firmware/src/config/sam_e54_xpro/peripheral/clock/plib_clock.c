@@ -108,11 +108,18 @@ static void GCLK0_Initialize(void)
     }
 }
 
+static void GCLK2_Initialize(void)
+{
+    GCLK_REGS->GCLK_GENCTRL[2] = GCLK_GENCTRL_DIV(48) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
+
+    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL_GCLK2) == GCLK_SYNCBUSY_GENCTRL_GCLK2)
+    {
+        /* wait for the Generator 2 synchronization */
+    }
+}
+
 void CLOCK_Initialize (void)
 {
-    /* NVM Wait States */
-    NVMCTRL_REGS->NVMCTRL_CTRLA |= NVMCTRL_CTRLA_RWS(5);
-
     /* Function to Initialize the Oscillators */
     OSCCTRL_Initialize();
 
@@ -122,6 +129,7 @@ void CLOCK_Initialize (void)
     FDPLL0_Initialize();
     DFLL_Initialize();
     GCLK0_Initialize();
+    GCLK2_Initialize();
 
     /* selection of the CPU clock Division */
     MCLK_REGS->MCLK_CPUDIV = MCLK_CPUDIV_DIV(0x01);
@@ -154,5 +162,6 @@ void CLOCK_Initialize (void)
 
     /* Configure the APBB Bridge Clocks */
     MCLK_REGS->MCLK_APBBMASK = 0x18256;
+
 
 }

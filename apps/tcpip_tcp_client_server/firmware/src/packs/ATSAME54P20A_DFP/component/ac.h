@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-02-04T09:12:27Z */
+/* file generated from device description version 2019-06-03T16:18:52Z */
 #ifndef _SAME54_AC_COMPONENT_H_
 #define _SAME54_AC_COMPONENT_H_
 
