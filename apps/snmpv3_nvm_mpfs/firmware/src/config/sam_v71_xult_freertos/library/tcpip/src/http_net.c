@@ -3682,6 +3682,19 @@ static void _HTTP_FreeChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DCPT
         {   // dynamic variable chunk with allocated dyn var user space
             (*http_free_fnc)(pHead->dynChDcpt.pDynAllocDcpt);
         }
+        // check if there are dynamic buffers that are not freed
+        TCPIP_HTTP_DYNVAR_BUFF_DCPT* pDynDcpt;
+        while((pDynDcpt = (TCPIP_HTTP_DYNVAR_BUFF_DCPT*)TCPIP_Helper_SingleListHeadRemove(&pChDcpt->dynChDcpt.dynBuffList)) != 0)
+        {
+            if((pDynDcpt->dynFlags & TCPIP_HTTP_DYNVAR_BUFF_FLAG_ACK) != 0)
+            {   // needs acknowlegment
+                if(httpUserCback != 0 && httpUserCback->dynamicAck != 0)
+                {
+                    (*httpUserCback->dynamicAck)(pHttpCon, pDynDcpt->dynBuffer, httpUserCback);
+                }
+            }
+            _HTTP_ReleaseDynBuffDescriptor(pDynDcpt);
+        }
     }
 #endif // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
