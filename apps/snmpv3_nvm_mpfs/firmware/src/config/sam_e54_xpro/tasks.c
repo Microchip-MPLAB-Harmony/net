@@ -78,11 +78,12 @@ SYS_CMD_Tasks();
 
 
 
+
     /* Maintain Device Drivers */
-    DRV_MEMORY_Tasks(sysObj.drvMemory0);
+    DRV_MIIM_Tasks(sysObj.drvMiim);
 
-DRV_MIIM_Tasks(sysObj.drvMiim);
 
+DRV_MEMORY_Tasks(sysObj.drvMemory0);
 
 
 

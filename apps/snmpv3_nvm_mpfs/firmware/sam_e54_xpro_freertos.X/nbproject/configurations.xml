@@ -6,7 +6,7 @@
         <logicalFolder name="f1"
                        displayName="sam_e54_xpro_freertos"
                        projectFiles="true">
-          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro_freertos/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f7" displayName="crypto" projectFiles="true">
@@ -106,7 +106,7 @@
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/zlib-1.2.7/zlib.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+          <logicalFolder name="f1" displayName="driver" projectFiles="true">
             <logicalFolder name="f2" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -117,7 +117,7 @@
               </logicalFolder>
               <itemPath>../src/config/sam_e54_xpro_freertos/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f4" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_freertos/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
@@ -133,7 +133,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/driver/memory/drv_memory_definitions.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/driver/memory/drv_memory_nvmctrl.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="miim" projectFiles="true">
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="config" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro_freertos/driver/miim/config/drv_miim_config.h</itemPath>
               </logicalFolder>
@@ -148,14 +148,14 @@
             <itemPath>../src/config/sam_e54_xpro_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f6" displayName="library" projectFiles="true">
+          <logicalFolder name="f4" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="common" projectFiles="true">
+                <logicalFolder name="f2" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                 </logicalFolder>
-                <logicalFolder name="f2" displayName="crypto" projectFiles="true">
+                <logicalFolder name="f1" displayName="crypto" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/crypto/aes.h</itemPath>
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/crypto/aes_cbc.h</itemPath>
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/crypto/aes_cfb.h</itemPath>
@@ -278,7 +278,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f6" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
@@ -292,7 +292,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f5" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
@@ -326,18 +326,18 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/tc/plib_tc0.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
             <logicalFolder name="f4" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="console" projectFiles="true">
+            <logicalFolder name="f6" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/command/sys_command.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f8" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/sys_command.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
@@ -421,12 +421,12 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="osal" projectFiles="true">
+      <logicalFolder name="f2" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_e54_xpro_freertos/osal/osal.h</itemPath>
         <itemPath>../src/config/sam_e54_xpro_freertos/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/sam_e54_xpro_freertos/osal/osal_freertos.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+      <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f1" displayName="ATSAME54P20A_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAME54P20A_DFP/component/ac.h</itemPath>
@@ -499,8 +499,8 @@
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/mib.h</itemPath>
-      <itemPath>../src/http_net_print.h</itemPath>
       <itemPath>../src/app.h</itemPath>
+      <itemPath>../src/http_net_print.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
       <itemPath>Makefile</itemPath>
@@ -512,7 +512,7 @@
         <logicalFolder name="f1"
                        displayName="sam_e54_xpro_freertos"
                        projectFiles="true">
-          <logicalFolder name="f5" displayName="bsp" projectFiles="true">
+          <logicalFolder name="f4" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro_freertos/bsp/bsp.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f8" displayName="crypto" projectFiles="true">
@@ -580,7 +580,7 @@
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/ecc.c</itemPath>
             <itemPath>../src/config/sam_e54_xpro_freertos/crypto/src/ecc_fp.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="driver" projectFiles="true">
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f2" displayName="ethphy" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -589,7 +589,7 @@
                 </logicalFolder>
               </logicalFolder>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="gmac" projectFiles="true">
+            <logicalFolder name="f4" displayName="gmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_freertos/driver/gmac/src/dynamic/drv_gmac.c</itemPath>
@@ -602,7 +602,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/driver/memory/src/drv_memory_file_system.c</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/driver/memory/src/drv_memory_nvmctrl.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="miim" projectFiles="true">
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_freertos/driver/miim/src/dynamic/drv_miim.c</itemPath>
@@ -618,19 +618,23 @@
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/snmp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/http_net.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/arp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ndp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ipv6.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/smtpc.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_announce.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/udp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/snmpv3.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/snmpv3_usm.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/http_net.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/icmpv6.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_heap_internal.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/hash_fnv.c</itemPath>
@@ -640,10 +644,6 @@
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_packet.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/sntp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_announce.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/udp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/snmpv3.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/snmpv3_usm.c</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -653,9 +653,10 @@
                 <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
               <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/net_pres/pres/net_pres_cert_store.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f5" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f6" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
@@ -689,15 +690,23 @@
           <logicalFolder name="f7" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/sam_e54_xpro_freertos/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="system" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/command/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_debug.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro_freertos/system/console/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/debug/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f4" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
@@ -816,9 +825,9 @@
       </logicalFolder>
       <itemPath>../src/custom_snmp_app.c</itemPath>
       <itemPath>../src/mpfs_net_img.c</itemPath>
+      <itemPath>../src/app.c</itemPath>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
-      <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
   </logicalFolder>

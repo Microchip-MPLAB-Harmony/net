@@ -70,7 +70,6 @@ bool DRV_EFC_Read( const DRV_HANDLE handle, void *rx_data, uint32_t rx_data_leng
 
 bool DRV_EFC_PageWrite( const DRV_HANDLE handle, void *tx_data, uint32_t address );
 
-void DRV_EFC_EventHandlerSet( const DRV_HANDLE handle, const DRV_MEMORY_EVENT_HANDLER eventHandler, const uintptr_t context );
 
 MEMORY_DEVICE_TRANSFER_STATUS DRV_EFC_TransferStatusGet( const DRV_HANDLE handle );
 
