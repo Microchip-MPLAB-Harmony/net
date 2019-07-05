@@ -58,29 +58,23 @@ SPI_OBJECT spi1Obj;
 #define SPI1_CON_MCLKSEL                    (0 << _SPI1CON_MCLKSEL_POSITION)
 #define SPI1_CON_MSSEN                      (1 << _SPI1CON_MSSEN_POSITION)
 
-
-
 void SPI1_Initialize ( void )
 {
     uint32_t rdata;
 
-    /*Disable SPI1_FAULT Interrupt, */
-    /*Disable SPI1_RX Interrupt, */
-    /*Disable SPI1_TX Interrupt */
+    /* Disable SPI1 Interrupts */
     IEC3CLR = 0x2000;
     IEC3CLR = 0x4000;
     IEC3CLR = 0x8000;
 
-    /* STOP and Reset the SPI*/
+    /* STOP and Reset the SPI */
     SPI1CON = 0;
 
-    /*Clear the Receiver buffer */
+    /* Clear the Receiver buffer */
     rdata = SPI1BUF;
     rdata = rdata;
 
-    /* Clear SPI1_FAULT Interrupt flag */
-    /* Clear SPI1_RX Interrupt flag */
-    /* Clear SPI1_TX Interrupt flag */
+    /* Clear SPI1 Interrupt flags */
     IFS3CLR = 0x2000;
     IFS3CLR = 0x4000;
     IFS3CLR = 0x8000;
@@ -111,9 +105,7 @@ void SPI1_Initialize ( void )
     spi1Obj.callback = NULL;
 
     /* Enable SPI1 */
-    SPI1CONSET= _SPI1CON_ON_MASK;
-
-    return;
+    SPI1CONSET = _SPI1CON_ON_MASK;
 }
 
 bool SPI1_TransferSetup (SPI_TRANSFER_SETUP* setup, uint32_t spiSourceClock )
@@ -220,22 +212,23 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         }
 
         /* Configure SPI to generate receive interrupt when receive buffer is empty (SRXISEL = '01') */
+        SPI1CONCLR = _SPI1CON_SRXISEL_MASK;
         SPI1CONSET = 0x00000001;
 
         /* Configure SPI to generate transmit interrupt when the transmit shift register is empty (STXISEL = '00')*/
         SPI1CONCLR = _SPI1CON_STXISEL_MASK;
-
-        /* Clear the receive interrupt flag */
-        IFS3CLR = 0x4000;
-
-        /* Clear the transmit interrupt flag */
-        IFS3CLR = 0x8000;
 
         /* Disable the receive interrupt */
         IEC3CLR = 0x4000;
 
         /* Disable the transmit interrupt */
         IEC3CLR = 0x8000;
+
+        /* Clear the receive interrupt flag */
+        IFS3CLR = 0x4000;
+
+        /* Clear the transmit interrupt flag */
+        IFS3CLR = 0x8000;
 
         /* Start the first write here itself, rest will happen in ISR context */
         if((_SPI1CON_MODE32_MASK) == (SPI1CON & (_SPI1CON_MODE32_MASK)))
@@ -246,12 +239,12 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
             if(spi1Obj.txCount < spi1Obj.txSize)
             {
-                SPI1BUF= *((uint32_t*)spi1Obj.txBuffer);
+                SPI1BUF = *((uint32_t*)spi1Obj.txBuffer);
                 spi1Obj.txCount++;
             }
             else if (spi1Obj.dummySize > 0)
             {
-                SPI1BUF= (uint32_t)(0xff);
+                SPI1BUF = (uint32_t)(0xff);
                 spi1Obj.dummySize--;
             }
         }
@@ -263,12 +256,12 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
             if (spi1Obj.txCount < spi1Obj.txSize)
             {
-                SPI1BUF= *((uint16_t*)spi1Obj.txBuffer);
+                SPI1BUF = *((uint16_t*)spi1Obj.txBuffer);
                 spi1Obj.txCount++;
             }
             else if (spi1Obj.dummySize > 0)
             {
-                SPI1BUF= (uint16_t)(0xff);
+                SPI1BUF = (uint16_t)(0xff);
                 spi1Obj.dummySize--;
             }
         }
@@ -276,12 +269,12 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
         {
             if (spi1Obj.txCount < spi1Obj.txSize)
             {
-                SPI1BUF= *((uint8_t*)spi1Obj.txBuffer);
+                SPI1BUF = *((uint8_t*)spi1Obj.txBuffer);
                 spi1Obj.txCount++;
             }
             else if (spi1Obj.dummySize > 0)
             {
-                SPI1BUF= (uint8_t)(0xff);
+                SPI1BUF = (uint8_t)(0xff);
                 spi1Obj.dummySize--;
             }
         }
@@ -312,7 +305,7 @@ bool SPI1_WriteRead (void* pTransmitData, size_t txSize, void* pReceiveData, siz
 
 bool SPI1_IsBusy (void)
 {
-    return spi1Obj.transferIsBusy;
+    return ( (spi1Obj.transferIsBusy) || ((SPI1STAT & _SPI1STAT_SRMT_MASK) == 0));
 }
 
 void SPI1_CallbackRegister (SPI_CALLBACK callback, uintptr_t context)
@@ -355,6 +348,10 @@ void SPI1_RX_InterruptHandler (void)
 
                 /* Disable the receive interrupt */
                 IEC3CLR = 0x4000;
+
+                /* Generate TX interrupt when buffer is completely empty (STXISEL = '00') */
+                SPI1CONCLR = _SPI1CON_STXISEL_MASK;
+                SPI1CONSET = 0x00000004;
 
                 /* Enable the transmit interrupt. Callback will be given from the
                  * transmit interrupt, when all bytes are shifted out. */
@@ -476,3 +473,4 @@ void SPI1_TX_InterruptHandler (void)
     /* Clear the transmit interrupt flag */
     IFS3CLR = 0x8000;
 }
+

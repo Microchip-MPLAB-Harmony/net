@@ -141,7 +141,7 @@ typedef struct
 
 } DRV_SDSPI_TRANSFER_SETUP;
 
-typedef void (* DRV_SDSPI_PLIB_CALLBACK)( uintptr_t );
+typedef    void (* DRV_SDSPI_PLIB_CALLBACK)( uintptr_t );
 
 typedef    bool (* DRV_SDSPI_PLIB_WRITEREAD)(void*, size_t, void *, size_t);
 
@@ -243,6 +243,9 @@ typedef struct
 
     /* Speed at which SD card communication should happen */
     uint32_t                        sdcardSpeedHz;
+
+    uint32_t                        pollingIntervalMs;
+
 
 } DRV_SDSPI_INIT;
 

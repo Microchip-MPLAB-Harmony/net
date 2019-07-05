@@ -146,7 +146,10 @@ typedef enum
 
 typedef enum
 {
-    DRV_SDMMC_INIT_RESET_CARD = 0,
+    DRV_SDMMC_INIT_SET_INIT_SPPED = 0,
+    DRV_SDMMC_INIT_START_POLLING_TIMEOUT,
+    DRV_SDMMC_INIT_WAIT_POLLING_TIMEOUT,
+    DRV_SDMMC_INIT_RESET_CARD,
     DRV_SDMMC_INIT_RESET_DELAY,
     DRV_SDMMC_INIT_CHK_IFACE_CONDITION,
     DRV_SDMMC_INIT_SEND_APP_CMD,
@@ -182,6 +185,7 @@ typedef enum
     DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH = 0,
     DRV_SDMMC_TASK_MEDIA_INIT,
     DRV_SDMMC_TASK_PROCESS_QUEUE,
+    DRV_SDMMC_TASK_CHECK_CARD_DETACH,
     DRV_SDMMC_TASK_SELECT_CARD,
     DRV_SDMMC_TASK_SETUP_XFER,
     DRV_SDMMC_TASK_XFER_COMMAND,
@@ -221,8 +225,8 @@ typedef enum
     /* This macro defined the command code to check for sector addressing */
     DRV_SDMMC_CMD_SEND_IF_COND  = 8,
 
-	/* for MMC CMD8 is used to fetch ext csd */
-	DRV_SDMMC_CMD_SEND_EXT_CSD = 8,
+    /* for MMC CMD8 is used to fetch ext csd */
+    DRV_SDMMC_CMD_SEND_EXT_CSD = 8,
 
     /* Command code to get the Card Specific Data */
     DRV_SDMMC_CMD_SEND_CSD      = 9,
@@ -315,26 +319,27 @@ typedef enum
 
 typedef struct
 {
-    bool                        isAttached;
-    DRV_SDMMC_BUS_WIDTH          busWidth;
-    uint16_t                    rca;
-    uint8_t                     cidBuffer[DRV_SDMMC_CID_BUFFER_LEN];
-    uint8_t                     csdBuffer[DRV_SDMMC_CSD_BUFFER_LEN];
-    uint8_t __attribute__((aligned(32))) scrBuffer[DRV_SDMMC_SCR_BUFFER_LEN];
-    uint8_t __attribute__((aligned(32))) switchStatusBuffer[DRV_SDMMC_SWITCH_STATUS_BUFFER_LEN];
-    uint8_t                     cmd6Mode;
-    uint8_t                     voltWindow;
+    uint8_t __ALIGNED(4)            cidBuffer[DRV_SDMMC_CID_BUFFER_LEN];
+    uint8_t __ALIGNED(4)            csdBuffer[DRV_SDMMC_CSD_BUFFER_LEN];
+    uint8_t __ALIGNED(32)           scrBuffer[DRV_SDMMC_SCR_BUFFER_LEN];
+    uint8_t __ALIGNED(32)           switchStatusBuffer[DRV_SDMMC_SWITCH_STATUS_BUFFER_LEN];
+    bool                            isAttached;
+    DRV_SDMMC_BUS_WIDTH             busWidth;
+    uint16_t                        rca;
+    uint8_t                         cmd6Mode;
+    uint8_t                         voltWindow;
     /* SDSD or SDHC card type */
-    DRV_SDMMC_CARD_TYPE          cardType;
+    DRV_SDMMC_CARD_TYPE             cardType;
     /* Capacity of the card in number of blocks. */
-    uint32_t                    discCapacity;
-    uint8_t                     cardVer;
-    bool                        isWriteProtected;
-    bool                        isLocked;
+    uint32_t                        discCapacity;
+    uint8_t                         cardVer;
+    bool                            isWriteProtected;
+    bool                            isLocked;
     /* Variables to track the command/data transfer status. */
-    bool                        isDataCompleted;
-    bool                        isCommandCompleted;
-    uint16_t                    errorFlag;
+    bool                            isDataCompleted;
+    bool                            isCommandCompleted;
+    uint16_t                        errorFlag;
+    uint32_t                        currentSpeed;
 } DRV_SDHOST_CARD_CTXT;
 
 // *****************************************************************************
@@ -354,22 +359,22 @@ typedef struct
 typedef struct
 {
     /* The hardware instance index associated with the client */
-    SYS_MODULE_INDEX                drvIndex;
+    SYS_MODULE_INDEX                    drvIndex;
 
     /* Flag to indicate in use  */
-    bool                            inUse;
+    bool                                inUse;
 
     /* The intent with which the client was opened */
-    DRV_IO_INTENT                   intent;
+    DRV_IO_INTENT                       intent;
 
     /* Client specific event handler */
-    DRV_SDMMC_EVENT_HANDLER          eventHandler;
+    DRV_SDMMC_EVENT_HANDLER             eventHandler;
 
     /* Client specific context */
-    uintptr_t                       context;
+    uintptr_t                           context;
 
     /* Client handle assigned to this client object when it was opened */
-    DRV_HANDLE                      clientHandle;
+    DRV_HANDLE                          clientHandle;
 
 } DRV_SDMMC_CLIENT_OBJ;
 
@@ -377,34 +382,34 @@ typedef struct
 typedef struct DRV_SDMMC_BUFFER_OBJ
 {
     /* True if object is allocated */
-    bool                            inUse;
+    bool                                inUse;
 
     /* Handle to the client that owns this buffer object */
-    DRV_HANDLE                      clientHandle;
+    DRV_HANDLE                          clientHandle;
 
     /* Present status of this command */
-    DRV_SDMMC_COMMAND_STATUS         status;
+    DRV_SDMMC_COMMAND_STATUS            status;
 
     /* Current command handle of this buffer object */
-    DRV_SDMMC_COMMAND_HANDLE         commandHandle;
+    DRV_SDMMC_COMMAND_HANDLE            commandHandle;
 
     /* Pointer to the source/destination buffer */
-    uint8_t*                        buffer;
+    uint8_t*                            buffer;
 
     /* Start address of the operation. */
-    uint32_t                        blockStart;
+    uint32_t                            blockStart;
 
     /* Number of blocks */
-    uint32_t                        nBlocks;
+    uint32_t                            nBlocks;
 
     /* Op code associated with the buffer object. */
-    uint8_t                         opCode;
+    uint8_t                             opCode;
 
     /* Operation type - read/write */
-    DRV_SDMMC_OPERATION_TYPE         opType;
+    DRV_SDMMC_OPERATION_TYPE            opType;
 
     /* Pointer to the next buffer in the queue */
-    struct DRV_SDMMC_BUFFER_OBJ*     next;
+    struct DRV_SDMMC_BUFFER_OBJ*        next;
 
 } DRV_SDMMC_BUFFER_OBJ;
 
@@ -426,95 +431,99 @@ typedef struct DRV_SDMMC_BUFFER_OBJ
 typedef struct
 {
     /* The status of the driver */
-    SYS_STATUS                  status;
+    SYS_STATUS                      status;
 
     /* Flag to indicate in use  */
-    bool                        inUse;
+    bool                            inUse;
+
+    /* Card detection method to use */
+    DRV_SDMMC_CD_METHOD             cardDetectionMethod;
+
+    /* Rate at which card insertion/removal is checked if polling method is selected */
+    uint32_t                        cardDetectionPollingIntervalMs;
 
     /* SDMMC PLIB API */
-	const DRV_SDMMC_PLIB_API*    sdmmcPlib;
+    const DRV_SDMMC_PLIB_API*       sdmmcPlib;
 
     /* Card context data */
-    DRV_SDHOST_CARD_CTXT        cardCtxt;
+    DRV_SDHOST_CARD_CTXT            cardCtxt;
 
     /* Flag to indicate if the driver is used in exclusive mode of operation */
-    bool                        isExclusive;
+    bool                            isExclusive;
 
     /* Instance specific token counter used to generate unique client/transfer handles */
-    uint16_t                    sdmmcTokenCount;
+    uint16_t                        sdmmcTokenCount;
 
     /* Size of buffer objects queue */
-    uint32_t                    bufferObjPoolSize;
+    uint32_t                        bufferObjPoolSize;
 
     /* Pointer to the buffer pool */
-    uintptr_t                   bufferObjPool;
+    uintptr_t                       bufferObjPool;
 
     /* Linked list of buffer objects */
-    uintptr_t                   bufferObjList;
+    uintptr_t                       bufferObjList;
 
     /* Number of active clients */
-    size_t                      nClients;
+    size_t                          nClients;
 
     /* Maximum number of clients */
-    size_t                      nClientsMax;
+    size_t                          nClientsMax;
 
     /* Memory Pool for Client Objects */
-    uintptr_t                   clientObjPool;
-
-    /* Whether card detect should be used for detecting the presence/absence of
-     * the card. */
-    bool                        isCardDetectEnabled;
+    uintptr_t                       clientObjPool;
 
     /* Whether the write protect pin should be used to check if the card is
      * write protected. */
-    bool                        isWriteProtectCheckEnabled;
+    bool                            isWriteProtectCheckEnabled;
 
     /* Sent command status. */
-    uint8_t                     commandStatus;
+    uint8_t                         commandStatus;
 
     /* Status of the device */
-    SYS_MEDIA_STATUS            mediaState;
+    SYS_MEDIA_STATUS                mediaState;
 
     /* This variable holds the current state of the DRV_SDMMC_Tasks */
-    DRV_SDMMC_TASK_STATES        taskState;
+    DRV_SDMMC_TASK_STATES           taskState;
 
     /* Different stages in media initialization */
-    DRV_SDMMC_INIT_STATES        initState;
+    DRV_SDMMC_INIT_STATES           initState;
 
-    DRV_SDMMC_INIT_STATES        nextInitState;
+    DRV_SDMMC_INIT_STATES           nextInitState;
 
     /* Different states in sending a command */
-    DRV_SDMMC_COMMAND_STATES     cmdState;
+    DRV_SDMMC_COMMAND_STATES        cmdState;
 
     /* Data transfer flags */
-    DRV_SDMMC_DataTransferFlags  dataTransferFlags;
+    DRV_SDMMC_DataTransferFlags     dataTransferFlags;
 
     /* Different states in setting up the clock */
-    DRV_SDMMC_CLOCK_STATES       clockState;
+    DRV_SDMMC_CLOCK_STATES          clockState;
 
     /* System Timer Handle */
-    SYS_TIME_HANDLE             tmrHandle;
+    SYS_TIME_HANDLE                 tmrHandle;
+
+    SYS_TIME_HANDLE                 generalTimerHandle;
 
     /* Speed mode - Default Speed or High Speed mode of operation. */
-    DRV_SDMMC_SPEED_MODE         speedMode;
+    DRV_SDMMC_SPEED_MODE            speedMode;
 
     /* Bus width to be used for the card. */
-    DRV_SDMMC_BUS_WIDTH          busWidth;
+    DRV_SDMMC_BUS_WIDTH             busWidth;
 
     /* Timer command handle. */
-    SYS_TIME_HANDLE             cmdTimerHandle;
+    SYS_TIME_HANDLE                 cmdTimerHandle;
 
     /* Timer command state. */
-    bool                        isCmdTimerExpired;
+    bool                            isCmdTimerExpired;
 
     /* Variable used to track the number of trials of a particular operation */
-    uint16_t                    trials;
+    uint16_t                        trials;
 
     /* SDMMC driver geometry object */
-    SYS_MEDIA_GEOMETRY          mediaGeometryObj;
+    SYS_MEDIA_GEOMETRY              mediaGeometryObj;
 
     /* SDMMC driver media geometry table. */
-    SYS_MEDIA_REGION_GEOMETRY   mediaGeometryTable[3];
+    SYS_MEDIA_REGION_GEOMETRY       mediaGeometryTable[3];
 
     /* Mutex to protect access to the transfer objects */
     OSAL_MUTEX_DECLARE(mutex);

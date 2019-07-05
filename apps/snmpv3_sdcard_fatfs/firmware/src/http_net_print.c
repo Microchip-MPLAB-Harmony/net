@@ -62,7 +62,6 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
     {"hellomsg",					TCPIP_HTTP_Print_hellomsg},
 	{"cookiename",					TCPIP_HTTP_Print_cookiename},
 	{"cookiefav",					TCPIP_HTTP_Print_cookiefav},
-	{"myVariable",					TCPIP_HTTP_Print_myVariable},
 	{"builddate",					TCPIP_HTTP_Print_builddate},
 	{"led",							TCPIP_HTTP_Print_led},
 	{"ledSelected",					TCPIP_HTTP_Print_ledSelected},
@@ -152,7 +151,7 @@ HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
     Note that without registering the process functions with HTTP, there won't be any web page processing.
     There is no default processing for a web page!
 
-    See http_net.h for details regarding each of these functions.
+    See http_net_print.h for details regarding each of these functions.
  ****************************************************************************/
 void HTTP_APP_Initialize(void)
 {
@@ -186,9 +185,3 @@ void HTTP_APP_Initialize(void)
     }
 }
 
-//This following registered function is called  for the dynamic variable "myVariable".
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_myVariable(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt,"~", true);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
