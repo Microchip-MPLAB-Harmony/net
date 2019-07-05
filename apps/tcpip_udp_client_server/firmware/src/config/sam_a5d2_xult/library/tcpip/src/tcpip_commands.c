@@ -48,8 +48,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
 
-#include "system/console/sys_command.h"
+#include "system/console/sys_console.h"
+#include "system/debug/sys_debug.h"
+#include "system/command/sys_command.h"
 #include "driver/miim/drv_miim.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -200,8 +203,19 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogType(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, int maskType);
+static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogDefHandler(TCPIP_STACK_MODULE moduleId, const TCPIP_PKT_LOG_ENTRY* pLogEntry);
+
+typedef enum
+{
+    CMD_PKT_XTRACT_RES_OK   = 0,    // all OK
+    CMD_PKT_XTRACT_RES_CLR  = 1,    // all OK, 'clr' was requested
+
+
+    CMD_PKT_XTRACT_RES_ERR  = -1,   // some error occurred
+
+}CMD_PKT_XTRACT_RES;
+static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_t* pAndMask, uint32_t* pOrMask);
 
 static SYS_CMD_DEVICE_NODE*   _pktHandlerCmdIo = 0;
 
@@ -368,84 +382,84 @@ static const void*          miimCmdIoParam = 0;
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
-    {"netinfo",     _Command_NetInfo,              ": Get network information"},
-    {"defnet",      _Command_DefaultInterfaceSet,  ": Set default network interface"},
+    {"netinfo",     (SYS_CMD_FNC)_Command_NetInfo,              ": Get network information"},
+    {"defnet",      (SYS_CMD_FNC)_Command_DefaultInterfaceSet,  ": Set/Get default interface"},
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-    {"dhcp",        _CommandDhcpOptions,           ": DHCP client commands"},
+    {"dhcp",        (SYS_CMD_FNC)_CommandDhcpOptions,           ": DHCP client commands"},
 #endif
-    {"dhcps",       _Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
-    {"zcll",        _Command_ZcllOnOff,            ": Turn ZCLL on/off"},
-    {"setdns",      _Command_PrimaryDNSAddressSet, ": Set DNS address"},
+    {"dhcps",       (SYS_CMD_FNC)_Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
+    {"zcll",        (SYS_CMD_FNC)_Command_ZcllOnOff,            ": Turn ZCLL on/off"},
+    {"setdns",      (SYS_CMD_FNC)_Command_PrimaryDNSAddressSet, ": Set DNS address"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-    {"setip",       _Command_IPAddressSet,         ": Set IP address and mask"},
-    {"setgw",       _Command_GatewayAddressSet,    ": Set Gateway address"},
-    {"setbios",     _Command_BIOSNameSet,          ": Set host's NetBIOS name"},
-    {"setmac",      _Command_MACAddressSet,        ": Set MAC address"},
+    {"setip",       (SYS_CMD_FNC)_Command_IPAddressSet,         ": Set IP address and mask"},
+    {"setgw",       (SYS_CMD_FNC)_Command_GatewayAddressSet,    ": Set Gateway address"},
+    {"setbios",     (SYS_CMD_FNC)_Command_BIOSNameSet,          ": Set host's NetBIOS name"},
+    {"setmac",      (SYS_CMD_FNC)_Command_MACAddressSet,        ": Set MAC address"},
 #if (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
-    {"if",          _Command_NetworkOnOff,         ": Bring an interface up/down"},
+    {"if",          (SYS_CMD_FNC)_Command_NetworkOnOff,         ": Bring an interface up/down"},
 #endif  // (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-    {"stack",       _Command_StackOnOff,           ": Stack turn on/off"},
+    {"stack",       (SYS_CMD_FNC)_Command_StackOnOff,           ": Stack turn on/off"},
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-    {"heapinfo",    _Command_HeapInfo,             ": Check heap status"},
+    {"heapinfo",    (SYS_CMD_FNC)_Command_HeapInfo,             ": Check heap status"},
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
-    {"dhcpsinfo",   _Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
+    {"dhcpsinfo",   (SYS_CMD_FNC)_Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
 #endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER)
 #if defined(_TCPIP_COMMAND_PING4)
-    {"ping",        _CommandPing,                  ": Ping an IP address"},
+    {"ping",        (SYS_CMD_FNC)_CommandPing,                  ": Ping an IP address"},
 #endif  // defined(_TCPIP_COMMAND_PING4)
 #if defined(_TCPIP_COMMAND_PING6)
-    {"ping6",       _Command_IPv6_Ping,            ": Ping an IPV6 address"},
+    {"ping6",       (SYS_CMD_FNC)_Command_IPv6_Ping,            ": Ping an IPV6 address"},
 #endif  // defined(_TCPIP_COMMAND_PING6)
 #if defined(TCPIP_STACK_USE_IPV4)
-    {"arp",         _CommandArp,                   ": ARP commands"},
+    {"arp",         (SYS_CMD_FNC)_CommandArp,                   ": ARP commands"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DNS_SERVER)
-    {"dnss",        _Command_DnsServService,       ": DNS server commands"},
+    {"dnss",        (SYS_CMD_FNC)_Command_DnsServService,       ": DNS server commands"},
 #endif
 #if defined(TCPIP_STACK_USE_DNS)
-    {"dnsc",        _Command_DNS_Service,          ": DNS client commands"},
+    {"dnsc",        (SYS_CMD_FNC)_Command_DNS_Service,          ": DNS client commands"},
 #endif
-    {"macinfo",     _Command_MacInfo,              ": Check MAC statistics"},
+    {"macinfo",     (SYS_CMD_FNC)_Command_MacInfo,              ": Check MAC statistics"},
 #if defined(TCPIP_STACK_USE_TFTP_CLIENT)
-    {"tftpc",       _Command_TFTPC_Service,        ": TFTP client Service"},
+    {"tftpc",       (SYS_CMD_FNC)_Command_TFTPC_Service,        ": TFTP client Service"},
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
-    {"tftps",       _Command_TFTPServerOnOff,        ": TFTP Server Service"},
+    {"tftps",       (SYS_CMD_FNC)_Command_TFTPServerOnOff,        ": TFTP Server Service"},
 #endif
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-    {"dhcpv6",      _CommandDhcpv6Options,         ": DHCPV6 client commands"},
+    {"dhcpv6",      (SYS_CMD_FNC)_CommandDhcpv6Options,         ": DHCPV6 client commands"},
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-    {"http",        _Command_HttpInfo,             ": HTTP information"},
+    {"http",        (SYS_CMD_FNC)_Command_HttpInfo,             ": HTTP information"},
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
-    {"ssi",         _Command_SsiInfo,              ": SSI information"},
+    {"ssi",         (SYS_CMD_FNC)_Command_SsiInfo,              ": SSI information"},
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
-	{"mail", 	    _CommandMail,			       ": Send Mail Message"},
+	{"mail", 	    (SYS_CMD_FNC)_CommandMail,			       ": Send Mail Message"},
 #endif  // defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
 #if defined(_TCPIP_COMMANDS_MIIM)
-	{"miim", 	    _CommandMiim,			       ": MIIM commands"},
+	{"miim", 	    (SYS_CMD_FNC)_CommandMiim,			       ": MIIM commands"},
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 #if (TCPIP_UDP_COMMANDS)
-    {"udpinfo",     _Command_UdpInfo,              ": Check UDP statistics"},
+    {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
 #endif  // (TCPIP_UDP_COMMANDS)
 #if (TCPIP_TCP_COMMANDS)
-    {"tcpinfo",     _Command_TcpInfo,              ": Check TCP statistics"},
+    {"tcpinfo",     (SYS_CMD_FNC)_Command_TcpInfo,              ": Check TCP statistics"},
 #endif  // (TCPIP_TCP_COMMANDS)
 #if (TCPIP_PACKET_LOG_ENABLE)
-    {"plog",        _Command_PktLog,               ": PKT flight log"},
+    {"plog",        (SYS_CMD_FNC)_Command_PktLog,               ": PKT flight log"},
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
-    {"pktinfo",   _Command_PktInfo,                ": Check PKT allocation"},
+    {"pktinfo",   (SYS_CMD_FNC)_Command_PktInfo,                ": Check PKT allocation"},
 #endif  // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 #if defined(TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
-    {"heaplist",    _Command_HeapList,             ": List heap"},
+    {"heaplist",    (SYS_CMD_FNC)_Command_HeapList,             ": List heap"},
 #endif  // defined(TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
-    {"announce",    _Command_Announce,             ": Announce"},
+    {"announce",    (SYS_CMD_FNC)_Command_Announce,             ": Announce"},
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 };
 
@@ -699,6 +713,8 @@ static int _Command_NetInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Link is %s\r\n", TCPIP_STACK_NetIsLinked(netH) ? "UP" : "DOWN");
 
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Status: %s\r\n", TCPIP_STACK_NetIsReady(netH) ? "Ready" : "Not Ready");
+
     }
     return true;
 }
@@ -758,33 +774,59 @@ static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
 
 static int _Command_DefaultInterfaceSet (SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    TCPIP_NET_HANDLE netH;
+    bool res;
+    int nameSize;
+    TCPIP_NET_HANDLE netH = 0;
+    int defaultOp = 0;      // 0 - nop, error; 1 set; 2 get
+    char nameBuff[20];
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    if (argc != 2)
+    while(argc >= 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: defnet <interface>\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: defnet PIC32INT\r\n");
-        return false;
+        if(strcmp(argv[1], "set") == 0)
+        {
+            if(argc < 3)
+            {
+                break;
+            }
+
+            netH = TCPIP_STACK_NetHandleGet(argv[2]);
+            if (netH == 0)
+            {
+                (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
+                return false;
+            }
+            defaultOp = 1;
+        }
+        else if(strcmp(argv[1], "get") == 0)
+        {
+            defaultOp = 2;
+        }
+
+        break;
     }
 
-    netH = TCPIP_STACK_NetHandleGet(argv[1]);
-    if (netH == 0)
+    switch(defaultOp)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown interface specified \r\n");
-        return false;
+        case 1:
+            res = TCPIP_STACK_NetDefaultSet(netH);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Default interface set %s\r\n", res ? "successful" : "failed!");
+            break;
+
+        case 2:
+            netH = TCPIP_STACK_NetDefaultGet();
+            nameSize = TCPIP_STACK_NetAliasNameGet(netH, nameBuff, sizeof(nameBuff));
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Default interface is: %s\r\n", nameSize ? nameBuff : "None");
+            break;
+
+        default:
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: defnet set/get <interface>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: defnet set eth0\r\n");
+            break;
     }
 
-    if(TCPIP_STACK_NetDefaultSet(netH))
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Default interface set successful\r\n");
-    }
-    else
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Operation not accepted\r\n");
-    }
 
-    return true;
+    return false;
 }
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_DHCP_CLIENT)
@@ -3513,13 +3555,14 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat/disconnect\r\n");
         return false;
     }
 
+    httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
+
     if(strcmp(argv[1], "info") == 0)
     {
-        httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections - active: %d, open: %d\r\n", httpActiveConn, httpOpenConn);
 
         for(connIx = 0; connIx < httpOpenConn; connIx++)
@@ -3547,6 +3590,17 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
+    }
+    else if(strcmp(argv[1], "disconnect") == 0)
+    {
+        for(connIx = 0; connIx < httpOpenConn; connIx++)
+        {
+            TCPIP_HTTP_NET_CONN_HANDLE connHandle = TCPIP_HTTP_NET_ConnectionHandleGet(connIx);
+            NET_PRES_SKT_HANDLE_T skt_h = TCPIP_HTTP_NET_ConnectionSocketGet(connHandle);
+            NET_PRES_SocketDisconnect(skt_h);
+        }
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP disconnected %d connections, active: %d\r\n", httpOpenConn, httpActiveConn);
     }
     else
     {
@@ -3678,7 +3732,7 @@ static char        tcpipAuthUser[80 + 1] = "";
 static char        tcpipAuthPass[80 + 1] = "";
 static char        tcpipMailFrom[80 + 1] = "";
 static char        tcpipMailTo[80 + 1] = "";
-static bool        tcpipTlsFlag = 0;
+static int         tcpipTlsFlag = 0;
 static bool        tcpipAuthPlain = 0;
 static bool        tcpipForceAuth = 0;
 static bool        tcpipHeloGreet = 0;
@@ -4193,14 +4247,14 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     
     if(argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <show log/info/all> - Displays the logs\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <clear temp/all> - Clears the log service\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <handler on/off <all>> - Turns on/off the local log handler\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <type RX/TX/RXTX <clr>> - Enables the log for RX, TX or both RX and TX packets\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <net or/nor/and/nand <clr> interface> - Starts/stops the log service on that interface\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <persist or/nor/and/nand <clr> modId modId ...> - Updates the persist mask for the module list\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <discard or/nor/and/nand <clr> modId modId ...> - Updates the discard mask for the module list\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog <socket or/nor/and/nand <clr> sktIx sktIx ...> - Updates the discard mask for the socket numbers\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog show <all/unack/ack/err> - Displays the log entries: unack/pending (default), ack, all or error ones\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog clear <ack/all> - Clears the log service\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog handler on/off <all> - Turns on/off the local log handler\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog type RX/TX/RXTX <clr> - Enables the log for RX, TX or both RX and TX packets\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog net and none/all/ifIx ifIx ... or none/all/ifIx ifIx.... <clr> - Updates the network log mask for the interface list\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog persist and none/all/modId modId... or none/all/modId modId... <clr> - Updates the persist mask for the module list\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog module and none/all/modId modId... or none/all/modId modId... <clr> - Updates the log mask for the module list\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog socket and none/all/sktIx sktIx... or none/all/sktIx sktIx... <clr> - Updates the log mask for the socket numbers\r\n");
         return false;
     }
 
@@ -4220,25 +4274,9 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         _CommandPktLogType(pCmdIO, argc, argv);
     }
-    else if(strcmp(argv[1], "net") == 0)
-    {
-        _CommandPktLogMask(pCmdIO, argc, argv, 0);
-    }
-    else if(strcmp(argv[1], "persist") == 0)
-    {
-        _CommandPktLogMask(pCmdIO, argc, argv, 1);
-    }
-    else if(strcmp(argv[1], "discard") == 0)
-    {
-        _CommandPktLogMask(pCmdIO, argc, argv, 2);
-    }
-    else if(strcmp(argv[1], "socket") == 0)
-    {
-        _CommandPktLogMask(pCmdIO, argc, argv, 3);
-    }
     else
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown command\r\n");
+        _CommandPktLogMask(pCmdIO, argc, argv);
     }
 
     return false;
@@ -4247,7 +4285,7 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
 static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // "Usage: plog <show log/info/all>"
+    // "Usage: plog show <all/unack/ack/err>"
     int ix, jx;
     TCPIP_PKT_LOG_INFO logInfo;
     TCPIP_PKT_LOG_ENTRY logEntry;
@@ -4256,21 +4294,33 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
     char   printBuff[20];
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
-    int showMask = 1;   // 0x1: show info; 0x2: show log; default show info
+    int showMask = 0;   // 0: unacknowledged/pending ones (default);
+                        // 1: only error ones (i.e. done + ack < 0);
+                        // 2: only the ack ones (i.e. done + ack >= 0);;
+                        // 3: all (i.e. including the ack ones);
     if(argc > 2)
     {
-        if(strcmp(argv[2], "log") == 0)
+        if(strcmp(argv[2], "unack") == 0)
         {
-            showMask = 2;
+            showMask = 0; // log unack
         } 
-        else if(strcmp(argv[2], "info") == 0)
+        else if(strcmp(argv[2], "err") == 0)
         {
-            showMask = 1;
+            showMask = 1; // error ones
         } 
+        else if(strcmp(argv[2], "ack") == 0)
+        {
+            showMask = 2; // acknowledged
+        }
+        else if(strcmp(argv[2], "all") == 0)
+        {
+            showMask = 3; // all
+        }
         else
         {
-            showMask = 3;
-        }
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "plog show: Unknown parameter!\r\n");
+            return;
+        } 
     }
 
     if(!TCPIP_PKT_FlightLogGetInfo(&logInfo))
@@ -4279,25 +4329,47 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
         return;
     }
 
-    if((showMask & 0x1) != 0)
+    strcpy(printBuff, logInfo.logType == TCPIP_PKT_LOG_TYPE_RX_ONLY ? "RX" : logInfo.logType == TCPIP_PKT_LOG_TYPE_TX_ONLY ? "TX" : "RXTX");
+    if((logInfo.logType & TCPIP_PKT_LOG_TYPE_SKT_ONLY) != 0)
     {
-        strcpy(printBuff, logInfo.logType == TCPIP_PKT_LOG_TYPE_RX_ONLY ? "RX" : logInfo.logType == TCPIP_PKT_LOG_TYPE_TX_ONLY ? "TX" : "RXTX");
-        if((logInfo.logType & TCPIP_PKT_LOG_TYPE_SKT_ONLY) != 0)
-        {
-            strcat(printBuff, "_SKT");
-        }
-
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog entries: %d, used: %d, persistent: %d, failed: %d\r\n", logInfo.nEntries, logInfo.nUsed, logInfo.nPersistent, logInfo.nFailed);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog persist mask: 0x%4x, discard mask: 0x%4x, log type: %s\r\n", logInfo.persistMask, logInfo.discardMask, printBuff);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog net log mask 0x%4x, socket discard mask: 0x%8x, handler: 0x%8x\r\n\n", logInfo.netLogMask, logInfo.sktDiscardMask, logInfo.logHandler);
+        strcat(printBuff, "_SKT");
     }
 
-    for(ix = 0; ix < logInfo.nEntries && (showMask & 0x2) != 0; ix++)
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog entries: %d, used: %d, persistent: %d, failed: %d\r\n", logInfo.nEntries, logInfo.nUsed, logInfo.nPersistent, logInfo.nFailed);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog persist mask: 0x%4x, module log mask: 0x%4x, log type: %s\r\n", logInfo.persistMask, logInfo.logModuleMask, printBuff);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog net log mask 0x%4x, socket log mask: 0x%8x, handler: 0x%8x\r\n\n", logInfo.netLogMask, logInfo.sktLogMask, logInfo.logHandler);
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog for -%s- entries\r\n", argc > 2 ? argv[2] : "unack");
+
+    for(ix = 0; ix < logInfo.nEntries; ix++)
     {
         if(!TCPIP_PKT_FlightLogGetEntry(ix, &logEntry))
         {
             continue;
         }
+
+        if(showMask == 0)
+        {   // show only unacknowledged ones
+            if((logEntry.logFlags & TCPIP_PKT_LOG_FLAG_DONE) != 0)
+            {   // entry done
+                continue;
+            }
+        }
+        else if(showMask == 1)
+        {   // show only error ones
+            if((logEntry.logFlags & TCPIP_PKT_LOG_FLAG_DONE) == 0 || logEntry.ackRes > 0)
+            {   // not done or good ack
+                continue;
+            }
+        }
+        else if(showMask == 2)
+        {   // show only properly acknowledged ones
+            if((logEntry.logFlags & TCPIP_PKT_LOG_FLAG_DONE) == 0 || logEntry.ackRes < 0)
+            {   // not done or bad ack
+                continue;
+            }
+        }
+        // else: show all
 
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog entry: %d\r\n", ix);
         if((logEntry.logFlags & (TCPIP_PKT_LOG_FLAG_RX | TCPIP_PKT_LOG_FLAG_TX)) == (TCPIP_PKT_LOG_FLAG_RX | TCPIP_PKT_LOG_FLAG_TX))
@@ -4343,39 +4415,36 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 
 static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // "Usage: plog <clear temp/all>"
+    // "Usage: plog clear <ack/all>"
     const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool clearPersist = false;
 
     while(argc >= 3)
     {
-        bool clearPersist;
-
-        if(strcmp(argv[2], "temp") == 0)
-        {
-            clearPersist = false;
-        }
-        else if(strcmp(argv[2], "all") == 0)
+        if(strcmp(argv[2], "all") == 0)
         {
             clearPersist = true;
         }
+        else if(strcmp(argv[2], "ack") == 0)
+        {   // default
+            clearPersist = false;
+        }
         else
         {   // unknown
-            break;
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown parameter\r\n");
+            return;
         }
 
-
-        TCPIP_PKT_FlightLogClear(clearPersist);
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: Cleared the %s log\r\n", clearPersist ? "whole" : "temporary");
-        return;
+        break;
     }
 
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown parameter\r\n");
-
+    TCPIP_PKT_FlightLogClear(clearPersist);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: Cleared the %s log\r\n", clearPersist ? "whole" : "acknowledged");
 }
 
 static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // "Usage: plog <handler on/off <all>>"
+    // "Usage: plog handler on/off <all>"
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     if(argc > 2)
@@ -4410,7 +4479,7 @@ static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
 
 static void _CommandPktLogType(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // "Usage: plog <type RX/TX/RXTX <clr>>"
+    // "Usage: plog type RX/TX/RXTX <clr>"
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     while(argc >= 3)
@@ -4451,142 +4520,249 @@ static void _CommandPktLogType(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 
 }
 
-// maskType == 0 - changing the network mask
-// maskType == 1 - changing the persist mask
-// maskType == 2 - changing the discard mask
-// maskType == 3 - changing the socket mask
-static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, int maskType)
+// extracts the AND and OR masks from the argv chars
+// returns true if the extraction is OK, false otherwise
+// expects input in the format:
+    // "plog <net and none/all/ifIx ifIx ... or none/all/ifIx ifIx.... <clr>>"
+    // "plog <persist and none/all/modId modId... or none/all/modId modId... <clr> >"
+    // "plog <module and none/all/modId modId... or none/all/modId modId... <clr> >"
+    // "plog <socket and none/all/sktIx sktIx... or none/all/sktIx sktIx... <clr> >"
+
+typedef enum
 {
-    // "Usage: plog <net or/nor/and/nand <clr> interface interface ...>"
-    // "Usage: plog <persist or/nor/and/nand <clr> modId modId ...>"
-    // "Usage: plog <discard or/nor/and/nand <clr> modId modId ...>"
-    const void* cmdIoParam = pCmdIO->cmdIoParam;
-    char  modBuff[20];
+    CMD_PKT_XTRACT_FLAG_NONE        = 0x00,     // no flag set
+    CMD_PKT_XTRACT_FLAG_AND         = 0x01,     // AND command: avoid using string compare
+    CMD_PKT_XTRACT_FLAG_OR          = 0x02,     // OR command: avoid using string compare
+    CMD_PKT_XTRACT_FLAG_CLR         = 0x04,     // CLR command: avoid using string compare
 
-    while(argc > 2)
+    CMD_PKT_XTRACT_FLAG_NEEDED      = 0x10,     // command needs to exist, not optional
+    CMD_PKT_XTRACT_FLAG_NEED_PARAMS = 0x20,     // command needs parameters
+
+}CMD_PKT_XTRACT_FLAGS;
+
+typedef struct
+{
+    const char* cmdName;        // identifier
+    uint8_t     cmdFlags;       // a CMD_PKT_XTRACT_FLAGS value
+    uint8_t     cmdParams;      // number of parameters gathered so far
+    uint16_t    cmdCount;       // number of executions
+    uint32_t    cmdMask;        // mask for that command
+}CMD_PKT_XTRACT_OP;
+
+static const CMD_PKT_XTRACT_OP const_xtract_op_tbl[] = 
+{
+    { "and",    CMD_PKT_XTRACT_FLAG_AND | CMD_PKT_XTRACT_FLAG_NEEDED | CMD_PKT_XTRACT_FLAG_NEED_PARAMS},
+    { "or",     CMD_PKT_XTRACT_FLAG_OR  | CMD_PKT_XTRACT_FLAG_NEEDED | CMD_PKT_XTRACT_FLAG_NEED_PARAMS},
+    { "clr",    CMD_PKT_XTRACT_FLAG_CLR },
+};
+
+static CMD_PKT_XTRACT_OP xtract_op_tbl[sizeof(const_xtract_op_tbl) / sizeof(*const_xtract_op_tbl)];
+
+static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_t* pAndMask, uint32_t* pOrMask)
+{
+    int ix;
+    CMD_PKT_XTRACT_OP *pXtOp, *pCurrOp, *pNewOp;
+    const CMD_PKT_XTRACT_OP* pCtOp;
+    CMD_PKT_XTRACT_RES xtractRes;
+    char argBuff[10 + 1];
+
+    // shortest form needs 6 args 'plog oper and none or all'
+    if(argc < 6)
     {
-        TCPIP_PKT_LOG_MASK_OP maskOp;
-        bool isClr = false;
-        int startIx = 0;
-
-        if(strcmp(argv[2], "or") == 0)
-        {
-            maskOp = TCPIP_PKT_LOG_MASK_OR;
-        }
-        else if(strcmp(argv[2], "nor") == 0)
-        {
-            maskOp = TCPIP_PKT_LOG_MASK_NOR;
-        }
-        else if(strcmp(argv[2], "and") == 0)
-        {
-            maskOp = TCPIP_PKT_LOG_MASK_AND;
-        }
-        else if(strcmp(argv[2], "nand") == 0)
-        {
-            maskOp = TCPIP_PKT_LOG_MASK_NAND;
-        }
-        else
-        {   // unknown
-            break;
-        }
-
-        if(argc > 3)
-        {
-            if(strcmp(argv[3], "clr") == 0)
-            {
-                isClr = true;
-                startIx = 4;
-                argc -= 4;
-            }
-            else
-            {
-                isClr = false;
-                startIx = 3;
-                argc -= 3;
-            }
-        }
-
-        uint32_t maskValue = 0;
-        bool maskFail = false;
-
-        // gather the list parameters
-        while(argc > 0)
-        {
-            if(maskType == 0)
-            {   // list of networks
-                TCPIP_NET_HANDLE netH = TCPIP_STACK_NetHandleGet(argv[startIx]);
-                if (netH == 0)
-                {   // wrong param
-                    maskFail = true;
-                    break;
-                }
-                // valid network
-                maskValue |= 1 << TCPIP_STACK_NetIndexGet(netH);
-            }
-            else
-            {   // list of modules Id/ socket numbers
-                strncpy(modBuff, argv[startIx], sizeof(modBuff) - 1);
-                bool modInc = false;
-                int len = strlen(modBuff);
-                if(modBuff[len - 1] == '0')
-                {
-                    modBuff[len - 1] += 1;
-                    modInc = true;
-                }
-
-                int modId = atoi(modBuff);
-                if(modId == 0)
-                {   // wrong param
-                    maskFail = true;
-                    break;
-                }
-                if(modInc)
-                {
-                    modId--;
-                }
-                if(modId > TCPIP_MODULE_LAYER3)
-                {   // wrong param
-                    maskFail = true;
-                    break;
-                }
-                // valid module
-                if(modId != 0)
-                {
-                    maskValue |= 1 << modId;
-                }
-            }
-            startIx++;
-            argc--;
-        }
-
-        if(!maskFail)
-        {
-            if(maskType == 0)
-            {
-                TCPIP_PKT_FlightLogSetNetMask(maskValue, maskOp, isClr);
-            }
-            else if(maskType == 1)
-            {
-                TCPIP_PKT_FlightLogSetPersistMask(maskValue, maskOp, isClr);
-            }
-            else if(maskType == 2)
-            {
-                TCPIP_PKT_FlightLogSetDiscardMask(maskValue, maskOp, isClr);
-            }
-            else
-            {
-                TCPIP_PKT_FlightLogSetSocketDiscardMask(maskValue, maskOp, isClr);
-            }
-            const char* logMsg = maskType == 0 ? "Net" : maskType == 1 ? "Persist" : maskType == 2 ? "Discard": "Socket";
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: %s %s for mask: 0x%4x,%scleared\r\n", logMsg, argv[2], maskValue, isClr ? " " : " not ");
-            return;
-        }
-
-        break;
+        return CMD_PKT_XTRACT_RES_ERR;
     }
 
+    // init the data structures
+    memset(xtract_op_tbl, 0, sizeof(xtract_op_tbl));
+    pXtOp = xtract_op_tbl;
+    pCtOp = const_xtract_op_tbl;
+    for(ix = 0; ix < sizeof(xtract_op_tbl) / sizeof(*xtract_op_tbl); ix++, pXtOp++, pCtOp++)
+    {
+        pXtOp->cmdName = pCtOp->cmdName;
+        pXtOp->cmdFlags = pCtOp->cmdFlags;
+    }
 
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown parameter\r\n");
+    int argIx = 2;
+    argc -= 2;
+    argBuff[sizeof(argBuff) - 1] = 0;
+    pCurrOp = 0;
+
+    while(argc)
+    {
+        pXtOp = xtract_op_tbl;
+        pNewOp = 0;
+        for(ix = 0; ix < sizeof(xtract_op_tbl) / sizeof(*xtract_op_tbl); ix++, pXtOp++)
+        {
+            if(strcmp(argv[argIx], pXtOp->cmdName) == 0)
+            {   // found command
+                pNewOp = pXtOp;
+                break;
+            }
+        }
+
+        if(pNewOp != 0)
+        {   // starting a new op
+            if(pNewOp->cmdCount != 0)
+            {   // no support for the same command multiple times
+                return CMD_PKT_XTRACT_RES_ERR;
+            }
+
+            // set the new command
+            pCurrOp = pNewOp;
+            pNewOp->cmdCount++;
+            if((pNewOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEED_PARAMS) == 0) 
+            {   // no need to continue this op
+                pCurrOp = 0;
+            }
+
+        }
+        else if(pCurrOp == 0)
+        {   // cannot collect parameters when outside a command
+            return CMD_PKT_XTRACT_RES_ERR;
+        }
+        else
+        {   // inside an op; collect parameters
+            if(strcmp(argv[argIx], "none") == 0)
+            {
+                if(pCurrOp->cmdParams != 0)
+                {   // 'none' should be the only parameter 
+                    return CMD_PKT_XTRACT_RES_ERR;
+                }
+                pCurrOp->cmdMask = 0;
+                pCurrOp->cmdParams++; 
+            }
+            else if(strcmp(argv[argIx], "all") == 0)
+            {
+                if(pCurrOp->cmdParams != 0)
+                {   // 'all' should be the only parameter 
+                    return CMD_PKT_XTRACT_RES_ERR;
+                }
+                pCurrOp->cmdMask = 0xffffff;
+                pCurrOp->cmdParams++; 
+            }
+            else
+            {   // should be a number
+                bool argInc = false;
+                strncpy(argBuff, argv[argIx], sizeof(argBuff) - 1);
+                int len = strlen(argBuff);
+                if(argBuff[len - 1] == '0')
+                {
+                    argBuff[len - 1] += 1;
+                    argInc = true;
+                }
+
+                int argInt = atoi(argBuff);
+                if(argInt == 0)
+                {   // wrong param
+                    return CMD_PKT_XTRACT_RES_ERR;
+                }
+
+                if(argInc)
+                {
+                    argInt--;
+                }
+                pCurrOp->cmdMask |= 1 << argInt;
+                pCurrOp->cmdParams++; 
+            }
+        }
+
+        argIx++;
+        argc--;
+    }
+
+    // we're done; collect the result
+    xtractRes = CMD_PKT_XTRACT_RES_OK;
+    pXtOp = xtract_op_tbl;
+    for(ix = 0; ix < sizeof(xtract_op_tbl) / sizeof(*xtract_op_tbl); ix++, pXtOp++)
+    {
+        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEEDED) != 0 && pXtOp->cmdCount == 0)
+        {   // mandatory command not found
+            return CMD_PKT_XTRACT_RES_ERR;
+        }
+        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_NEED_PARAMS) != 0 && pXtOp->cmdParams == 0)
+        {   // command without parameters
+            return CMD_PKT_XTRACT_RES_ERR;
+        }
+
+        if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_AND) != 0)
+        {
+            *pAndMask = pXtOp->cmdMask;
+        }
+        else if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_OR) != 0)
+        {
+            *pOrMask = pXtOp->cmdMask;
+        }
+        else if((pXtOp->cmdFlags & CMD_PKT_XTRACT_FLAG_CLR) != 0)
+        {
+            if(pXtOp->cmdCount != 0)
+            {   // 'clr' was mentioned
+                xtractRes = CMD_PKT_XTRACT_RES_CLR;
+            }
+        }
+    }
+
+    return xtractRes;
+}
+
+static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    int logMaskOp;  // 1: net; 2: persist; 3: module; 4: socket; 0 error
+    uint32_t andMask, orMask;
+    CMD_PKT_XTRACT_RES xtRes;
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    logMaskOp = 0;
+    if(strcmp(argv[1], "net") == 0)
+    {
+        logMaskOp = 1;
+    }
+    else if(strcmp(argv[1], "persist") == 0)
+    {
+        logMaskOp = 2;
+    }
+    else if(strcmp(argv[1], "module") == 0)
+    {
+        logMaskOp = 3;
+    }
+    else if(strcmp(argv[1], "socket") == 0)
+    {
+        logMaskOp = 4;
+    }
+
+    if(logMaskOp == 0)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown command\r\n");
+        return;
+    }
+
+    xtRes = _CommandPktExtractMasks(argc, argv, &andMask, &orMask);
+    if(xtRes == CMD_PKT_XTRACT_RES_ERR)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Wrong command parameters\r\n");
+        return;
+    }
+
+    switch(logMaskOp)
+    {
+        case 1:
+            TCPIP_PKT_FlightLogUpdateNetMask(andMask, orMask, (xtRes & CMD_PKT_XTRACT_RES_CLR) != 0);
+            break;
+
+        case 2:
+            TCPIP_PKT_FlightLogUpdatePersistMask(andMask, orMask, (xtRes & CMD_PKT_XTRACT_RES_CLR) != 0);
+            break;
+
+        case 3:
+            TCPIP_PKT_FlightLogUpdateModuleMask(andMask, orMask, (xtRes & CMD_PKT_XTRACT_RES_CLR) != 0);
+            break;
+
+        default:    // 4
+            TCPIP_PKT_FlightLogUpdateSocketMask(andMask, orMask, (xtRes & CMD_PKT_XTRACT_RES_CLR) != 0);
+            break;
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: %s and with: 0x%4x, or with: 0x%4x, %scleared\r\n", argv[1], andMask, orMask, (xtRes & CMD_PKT_XTRACT_RES_CLR) != 0 ? " " : " not ");
+
 }
 
 static void _CommandPktLogDefHandler(TCPIP_STACK_MODULE moduleId, const TCPIP_PKT_LOG_ENTRY* pLogEntry)
