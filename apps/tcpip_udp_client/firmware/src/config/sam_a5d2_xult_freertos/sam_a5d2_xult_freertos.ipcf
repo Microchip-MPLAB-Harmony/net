@@ -15,7 +15,7 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
         <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</path>
-        <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\include</path>
     </includePath>
     <asmIncludePath>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\library</path>
@@ -28,8 +28,11 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
         <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</path>
-        <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\include</path>
     </asmIncludePath>
+    <defines>
+        <defines>__FPU_PRESENT=1</defines>
+    </defines>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos\ddr.icf</path>
@@ -97,14 +100,6 @@
             <path>\..\..\packs\ATSAMA5D27_DFP\component\xdmac.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\atsama5d27.h</path>
             <path>\..\..\packs\ATSAMA5D27_DFP\pio\sama5d27.h</path>
-            <path>\net_pres\pres\net_pres.h</path>
-            <path>\net_pres\pres\net_pres_certstore.h</path>
-            <path>\net_pres\pres\net_pres_encryptionproviderapi.h</path>
-            <path>\net_pres\pres\net_pres_socketapi.h</path>
-            <path>\net_pres\pres\net_pres_transportapi.h</path>
-            <path>\net_pres\pres\src\net_pres_local.h</path>
-            <path>\net_pres\pres\net_pres_socketapiconversion.h</path>
-            <path>\net_pres\pres\net_pres_enc_glue.h</path>
             <path>\library\tcpip\tcpip_common_ports.h</path>
             <path>\library\tcpip\tcpip_mac.h</path>
             <path>\library\tcpip\tcpip_mac_object.h</path>
@@ -218,6 +213,9 @@
             <path>\library\tcpip\src\lldp_tlv.h</path>
             <path>\library\tcpip\tcpip_ethernet.h</path>
             <path>\library\tcpip\src\common\sys_fs_wrapper.h</path>
+            <path>\net_pres\pres\net_pres.h</path>
+            <path>\net_pres\pres\net_pres_socketapi.h</path>
+            <path>\net_pres\pres\net_pres_socketapiconversion.h</path>
             <path>\system\sys_clk_h2_adapter.h</path>
             <path>\system\sys_time_h2_adapter.h</path>
             <path>\system\sys_random_h2_adapter.h</path>
@@ -241,6 +239,7 @@
             <path>\driver\gmac\src\drv_gmac_local.h</path>
             <path>\driver\gmac\src\dynamic\_gmac_dcpt_lists.h</path>
             <path>\driver\gmac\src\dynamic\drv_gmac_lib.h</path>
+            <path>\system\command\sys_command.h</path>
             <path>\device_cache.h</path>
             <path>\toolchain_specifics.h</path>
             <path>\definitions.h</path>
@@ -253,17 +252,12 @@
             <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
+            <path>\system\debug\sys_debug.h</path>
             <path>\driver\ethphy\drv_ethphy.h</path>
             <path>\driver\ethphy\src\drv_ethphy_local.h</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_regs.h</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</path>
             <path>\system\console\sys_console.h</path>
-            <path>\system\console\src\sys_console_local.h</path>
-            <path>\system\console\src\sys_console_uart.h</path>
-            <path>\system\console\src\sys_console_uart_definitions.h</path>
-            <path>\system\console\src\sys_debug_local.h</path>
-            <path>\system\console\sys_command.h</path>
-            <path>\system\console\sys_debug.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_gcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>
@@ -305,8 +299,6 @@
             <path>\library\tcpip\src\tcpip_commands.c</path>
             <path>\bsp\bsp.c</path>
             <path>\peripheral\uart\plib_uart1.c</path>
-            <path>\net_pres\pres\src\net_pres.c</path>
-            <path>\net_pres\pres\net_pres_enc_glue.c</path>
             <path>\library\tcpip\src\ipv4.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
@@ -324,6 +316,7 @@
             <path>\tasks.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac_lib_samA5D2.c</path>
+            <path>\system\command\src\sys_command.c</path>
             <path>\..\..\main.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
@@ -335,16 +328,19 @@
             <path>\peripheral\pio\plib_pio.c</path>
             <path>\peripheral\aic\plib_aic.c</path>
             <path>\cstartup.s</path>
-            <path>\vectortrap.s</path>
+            <path>\fault_handlers.c</path>
             <path>\library\tcpip\src\tcpip_announce.c</path>
             <path>\library\tcpip\src\udp.c</path>
             <path>\driver\miim\src\dynamic\drv_miim.c</path>
+            <path>\system\debug\src\sys_debug_local.h</path>
+            <path>\system\debug\src\sys_debug.c</path>
             <path>\driver\ethphy\src\dynamic\drv_ethphy.c</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</path>
+            <path>\system\console\src\sys_console_local.h</path>
             <path>\system\console\src\sys_console.c</path>
+            <path>\system\console\src\sys_console_uart.h</path>
+            <path>\system\console\src\sys_console_uart_definitions.h</path>
             <path>\system\console\src\sys_console_uart.c</path>
-            <path>\system\console\src\sys_debug.c</path>
-            <path>\system\console\src\sys_command.c</path>
             <path>\freertos_hooks.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\croutine.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\list.c</path>

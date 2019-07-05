@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-23T22:42:12Z */
+/* file generated from device description version 2019-04-25T17:28:51Z */
 #ifndef _SAMA5D27_H_
 #define _SAMA5D27_H_
 

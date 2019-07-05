@@ -2692,25 +2692,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_certstore.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_enc_glue.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_encryptionproviderapi.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\src\net_pres_local.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_socketapi.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_socketapiconversion.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_transportapi.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\oahash.h</name>
@@ -2860,25 +2845,13 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\sys_clk_h2_adapter.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\sys_command.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\command\sys_command.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\sys_console.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_local.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_uart.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_uart_definitions.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\sys_debug.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_debug_local.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\debug\sys_debug.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\common\sys_fs_wrapper.h</name>
@@ -3118,6 +3091,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\exceptions.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\fault_handlers.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\hash_fnv.c</name>
             </file>
             <file>
@@ -3145,12 +3121,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\nbns.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\src\net_pres.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_enc_glue.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\oahash.c</name>
             </file>
             <file>
@@ -3175,16 +3145,28 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\peripheral\uart\plib_uart1.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_command.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\command\src\sys_command.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_local.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_uart.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_debug.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_uart.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\console\src\sys_console_uart_definitions.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\debug\src\sys_debug.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\debug\src\sys_debug_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\int\src\sys_int.c</name>
@@ -3227,9 +3209,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\library\tcpip\src\udp.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\vectortrap.s</name>
             </file>
         </group>
     </group>

@@ -9,8 +9,7 @@
 
   Description:
     This file contains the SYS UART CONSOLE support layer logic.
- *******************************************************************************/
-
+*******************************************************************************/
 
 // DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -34,9 +33,8 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
+*******************************************************************************/
 // DOM-IGNORE-END
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -81,7 +79,7 @@ static void Console_UART_DisableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
     if (intInfo->isSingleIntSrc == true)
     {
         /* Disable USART interrupt */
-        pConsoleUartData->usartInterruptStatus = SYS_INT_SourceDisable(intInfo->intSources.usartInterrupt);
+        pConsoleUartData->usartInterruptStatus = SYS_INT_SourceDisable((INT_SOURCE)intInfo->intSources.usartInterrupt);
     }
     else
     {
@@ -90,22 +88,22 @@ static void Console_UART_DisableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
         /* Disable USART interrupt sources */
         if(multiVector->usartTxReadyInt != -1)
         {
-            pConsoleUartData->usartTxReadyIntStatus = SYS_INT_SourceDisable(multiVector->usartTxReadyInt);
+            pConsoleUartData->usartTxReadyIntStatus = SYS_INT_SourceDisable((INT_SOURCE)multiVector->usartTxReadyInt);
         }
 
         if(multiVector->usartTxCompleteInt != -1)
         {
-            pConsoleUartData->usartTxCompleteIntStatus = SYS_INT_SourceDisable(multiVector->usartTxCompleteInt);
+            pConsoleUartData->usartTxCompleteIntStatus = SYS_INT_SourceDisable((INT_SOURCE)multiVector->usartTxCompleteInt);
         }
 
         if(multiVector->usartRxCompleteInt != -1)
         {
-            pConsoleUartData->usartRxCompleteIntStatus = SYS_INT_SourceDisable(multiVector->usartRxCompleteInt);
+            pConsoleUartData->usartRxCompleteIntStatus = SYS_INT_SourceDisable((INT_SOURCE)multiVector->usartRxCompleteInt);
         }
 
         if(multiVector->usartErrorInt != -1)
         {
-            pConsoleUartData->usartErrorIntStatus = SYS_INT_SourceDisable(multiVector->usartErrorInt);
+            pConsoleUartData->usartErrorIntStatus = SYS_INT_SourceDisable((INT_SOURCE)multiVector->usartErrorInt);
         }
 
         SYS_INT_Restore(interruptStatus);
@@ -121,7 +119,7 @@ static void Console_UART_EnableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
     if (intInfo->isSingleIntSrc == true)
     {
         /* Enable USART interrupt */
-        SYS_INT_SourceRestore(intInfo->intSources.usartInterrupt, pConsoleUartData->usartInterruptStatus);
+        SYS_INT_SourceRestore((INT_SOURCE)intInfo->intSources.usartInterrupt, pConsoleUartData->usartInterruptStatus);
     }
     else
     {
@@ -130,22 +128,22 @@ static void Console_UART_EnableInterrupts(CONSOLE_UART_DATA* pConsoleUartData)
 
         if(multiVector->usartTxReadyInt != -1)
         {
-            SYS_INT_SourceRestore(multiVector->usartTxReadyInt, pConsoleUartData->usartTxReadyIntStatus);
+            SYS_INT_SourceRestore((INT_SOURCE)multiVector->usartTxReadyInt, pConsoleUartData->usartTxReadyIntStatus);
         }
 
         if(multiVector->usartTxCompleteInt != -1)
         {
-            SYS_INT_SourceRestore(multiVector->usartTxCompleteInt, pConsoleUartData->usartTxCompleteIntStatus);
+            SYS_INT_SourceRestore((INT_SOURCE)multiVector->usartTxCompleteInt, pConsoleUartData->usartTxCompleteIntStatus);
         }
 
         if(multiVector->usartRxCompleteInt != -1)
         {
-            SYS_INT_SourceRestore(multiVector->usartRxCompleteInt, pConsoleUartData->usartRxCompleteIntStatus);
+            SYS_INT_SourceRestore((INT_SOURCE)multiVector->usartRxCompleteInt, pConsoleUartData->usartRxCompleteIntStatus);
         }
 
         if(multiVector->usartErrorInt != -1)
         {
-            SYS_INT_SourceRestore(multiVector->usartErrorInt, pConsoleUartData->usartErrorIntStatus);
+            SYS_INT_SourceRestore((INT_SOURCE)multiVector->usartErrorInt, pConsoleUartData->usartErrorIntStatus);
         }
 
         SYS_INT_Restore(interruptStatus);

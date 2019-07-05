@@ -53,6 +53,8 @@
 */
 #include "device.h"
 #include "plib_tc0.h"
+
+ 
  
 
  
@@ -126,6 +128,7 @@ void TC0_CH0_TimerCallbackRegister(TC_TIMER_CALLBACK callback, uintptr_t context
     TC0_CH0_CallbackObj.context = context;
 }
 
+/* Interrupt handler for Channel 0 */
 void TC0_CH0_InterruptHandler(void)
 {
     TC_TIMER_STATUS timer_status = (TC_TIMER_STATUS)(TC0_REGS->TC_CHANNEL[0].TC_SR & TC_TIMER_STATUS_MSK);
