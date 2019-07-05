@@ -52,7 +52,6 @@
 #include <xc.h>
 #include "ISR_Support.h"
 
-
     .extern  CORE_TIMER_Handler
 
     .section   .vector_0,code, keep
@@ -71,8 +70,6 @@ IntVectorCORE_TIMER_Handler:
     nop
     portRESTORE_CONTEXT
     .end   IntVectorCORE_TIMER_Handler
-
-
     .extern  UART2_FAULT_Handler
 
     .section   .vector_145,code, keep
@@ -91,8 +88,6 @@ IntVectorUART2_FAULT_Handler:
     nop
     portRESTORE_CONTEXT
     .end   IntVectorUART2_FAULT_Handler
-
-
     .extern  UART2_RX_Handler
 
     .section   .vector_146,code, keep
@@ -111,8 +106,6 @@ IntVectorUART2_RX_Handler:
     nop
     portRESTORE_CONTEXT
     .end   IntVectorUART2_RX_Handler
-
-
     .extern  UART2_TX_Handler
 
     .section   .vector_147,code, keep
@@ -131,8 +124,6 @@ IntVectorUART2_TX_Handler:
     nop
     portRESTORE_CONTEXT
     .end   IntVectorUART2_TX_Handler
-
-
     .extern  ETHERNET_Handler
 
     .section   .vector_153,code, keep
@@ -151,5 +142,4 @@ IntVectorETHERNET_Handler:
     nop
     portRESTORE_CONTEXT
     .end   IntVectorETHERNET_Handler
-
 
