@@ -49,17 +49,22 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include "crypto/crypto.h"
-#include "peripheral/tc/plib_tc0.h"
-#include "peripheral/sdhc/plib_sdhc1.h"
 #include "system/time/sys_time.h"
 #include "bsp/bsp.h"
+#include "system/int/sys_int.h"
+#include "system/cache/sys_cache.h"
+#include "osal/osal.h"
+#include "system/fs/sys_fs.h"
+#include "system/fs/sys_fs_media_manager.h"
+#include "system/fs/fat_fs/src/file_system/ff.h"
+#include "system/fs/fat_fs/src/file_system/ffconf.h"
+#include "system/fs/fat_fs/src/hardware_access/diskio.h"
+#include "peripheral/tc/plib_tc0.h"
+#include "peripheral/sdhc/plib_sdhc1.h"
 #include "net_pres/pres/net_pres.h"
 #include "net_pres/pres/net_pres_encryptionproviderapi.h"
 #include "net_pres/pres/net_pres_transportapi.h"
 #include "net_pres/pres/net_pres_socketapi.h"
-#include "system/int/sys_int.h"
-#include "system/cache/sys_cache.h"
-#include "osal/osal.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
 #include "driver/miim/drv_miim.h"
@@ -70,18 +75,13 @@
 #include "peripheral/sercom/usart/plib_sercom2_usart.h"
 #include "peripheral/evsys/plib_evsys.h"
 #include "driver/sdmmc/drv_sdmmc.h"
+#include "system/command/sys_command.h"
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
-#include "system/fs/sys_fs.h"
-#include "system/fs/sys_fs_media_manager.h"
-#include "system/fs/fat_fs/src/file_system/ff.h"
-#include "system/fs/fat_fs/src/file_system/ffconf.h"
-#include "system/fs/fat_fs/src/hardware_access/diskio.h"
+#include "system/debug/sys_debug.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
-#include "system/console/sys_debug.h"
-#include "system/console/sys_command.h"
 #include "FreeRTOS.h"
 #include "task.h"
 #include "app.h"
@@ -207,13 +207,14 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
+    SYS_MODULE_OBJ  sysConsole0;
+
+
+    SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  netPres;
 
 
     SYS_MODULE_OBJ  tcpip;
-
-    SYS_MODULE_OBJ  drvMiim;
-    SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
 
     SYS_MODULE_OBJ  drvSDMMC0;

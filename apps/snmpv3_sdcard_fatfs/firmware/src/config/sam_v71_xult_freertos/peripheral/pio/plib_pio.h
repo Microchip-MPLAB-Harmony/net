@@ -62,15 +62,6 @@
 // *****************************************************************************
 
 
-/*** Macros for LED pin ***/
-#define LED_Set()               (PIOA_REGS->PIO_SODR = (1<<23))
-#define LED_Clear()             (PIOA_REGS->PIO_CODR = (1<<23))
-#define LED_Toggle()            (PIOA_REGS->PIO_ODSR ^= (1<<23))
-#define LED_Get()               ((PIOA_REGS->PIO_PDSR >> 23) & 0x1)
-#define LED_OutputEnable()      (PIOA_REGS->PIO_OER = (1<<23))
-#define LED_InputEnable()       (PIOA_REGS->PIO_ODR = (1<<23))
-#define LED_PIN                  PIO_PIN_PA23
-
 /*** Macros for SWITCH pin ***/
 #define SWITCH_Set()               (PIOA_REGS->PIO_SODR = (1<<9))
 #define SWITCH_Clear()             (PIOA_REGS->PIO_CODR = (1<<9))
@@ -88,15 +79,6 @@
 #define LED1_OutputEnable()      (PIOC_REGS->PIO_OER = (1<<9))
 #define LED1_InputEnable()       (PIOC_REGS->PIO_ODR = (1<<9))
 #define LED1_PIN                  PIO_PIN_PC9
-
-/*** Macros for SWITCH1 pin ***/
-#define SWITCH1_Set()               (PIOB_REGS->PIO_SODR = (1<<12))
-#define SWITCH1_Clear()             (PIOB_REGS->PIO_CODR = (1<<12))
-#define SWITCH1_Toggle()            (PIOB_REGS->PIO_ODSR ^= (1<<12))
-#define SWITCH1_Get()               ((PIOB_REGS->PIO_PDSR >> 12) & 0x1)
-#define SWITCH1_OutputEnable()      (PIOB_REGS->PIO_OER = (1<<12))
-#define SWITCH1_InputEnable()       (PIOB_REGS->PIO_ODR = (1<<12))
-#define SWITCH1_PIN                  PIO_PIN_PB12
 
 
 // *****************************************************************************
@@ -298,42 +280,42 @@ void PIO_PortOutputEnable(PIO_PORT port, uint32_t mask);
 
 static inline void PIO_PinWrite(PIO_PIN pin, bool value)
 {
-    PIO_PortWrite(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
+    PIO_PortWrite((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), (uint32_t)(0x1) << (pin & 0x1f), (uint32_t)(value) << (pin & 0x1f));
 }
 
 static inline bool PIO_PinRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortRead(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
 }
 
 static inline bool PIO_PinLatchRead(PIO_PIN pin)
 {
-    return (bool)((PIO_PortLatchRead(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))) >> (pin & 0x1F)) & 0x1);
+    return (bool)((PIO_PortLatchRead((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)))) >> (pin & 0x1F)) & 0x1);
 }
 
 static inline void PIO_PinToggle(PIO_PIN pin)
 {
-    PIO_PortToggle(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
+    PIO_PortToggle((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 static inline void PIO_PinSet(PIO_PIN pin)
 {
-    PIO_PortSet(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
+    PIO_PortSet((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 static inline void PIO_PinClear(PIO_PIN pin)
 {
-    PIO_PortClear(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
+    PIO_PortClear((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 static inline void PIO_PinInputEnable(PIO_PIN pin)
 {
-    PIO_PortInputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
+    PIO_PortInputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 static inline void PIO_PinOutputEnable(PIO_PIN pin)
 {
-    PIO_PortOutputEnable(PIOA_BASE_ADDRESS + (0x200 * (pin>>5)), 0x1 << (pin & 0x1F));
+    PIO_PortOutputEnable((PIO_PORT)(PIOA_BASE_ADDRESS + (0x200 * (pin>>5))), 0x1 << (pin & 0x1F));
 }
 
 

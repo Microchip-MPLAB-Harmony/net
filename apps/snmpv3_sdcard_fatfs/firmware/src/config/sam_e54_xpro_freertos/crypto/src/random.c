@@ -975,7 +975,7 @@ int wc_FreeRng(WC_RNG* rng)
     rng->status = DRBG_NOT_INIT;
 #endif /* HAVE_HASHDRBG */
 
-#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)
+#if defined(HAVE_MICROCHIP_HARMONY3_HW_RNG)  && !defined(WOLFSSL_PIC32MZ_RNG)
     ret = CRYPT_RNG_FreeRng();
 #endif
 

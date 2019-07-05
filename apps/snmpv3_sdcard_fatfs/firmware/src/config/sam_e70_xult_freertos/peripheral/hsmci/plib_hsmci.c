@@ -209,6 +209,8 @@ void HSMCI_DmaSetup (
 {
     HSMCI_REGS->HSMCI_DMA = HSMCI_DMA_DMAEN_Msk;
 
+    XDMAC_ChannelDisable(HSMCI_DMA_CHANNEL);
+
     if (operation == HSMCI_DATA_TRANSFER_DIR_READ)
     {
         XDMAC_ChannelSettingsSet(HSMCI_DMA_CHANNEL,
@@ -221,7 +223,7 @@ void HSMCI_DmaSetup (
                             | XDMAC_CC_DIF_AHB_IF0
                             | XDMAC_CC_SAM_FIXED_AM
                             | XDMAC_CC_DAM_INCREMENTED_AM
-                            | XDMAC_CC_PERID(HSMCI_DMA_CHANNEL)
+                            | XDMAC_CC_PERID(0)
         );
 
         XDMAC_ChannelTransfer(
@@ -243,7 +245,7 @@ void HSMCI_DmaSetup (
                     | XDMAC_CC_DIF_AHB_IF1
                     | XDMAC_CC_SAM_INCREMENTED_AM
                     | XDMAC_CC_DAM_FIXED_AM
-                    | XDMAC_CC_PERID(HSMCI_DMA_CHANNEL)
+                    | XDMAC_CC_PERID(0)
         );
 
         XDMAC_ChannelTransfer(
@@ -466,6 +468,9 @@ void HSMCI_CommandSend (
 
 void HSMCI_ModuleInit ( void )
 {
+    /* Disable write protection */
+    HSMCI_REGS->HSMCI_WPMR = 0x4D434900;
+
     /* Set the Data Timeout Register to 2 Mega Cycles */
     HSMCI_REGS->HSMCI_DTOR = HSMCI_DTOR_DTOMUL_1048576 | HSMCI_DTOR_DTOCYC(2);
 

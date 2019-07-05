@@ -39,9 +39,8 @@
 *******************************************************************************/
 //DOM-IGNORE-END
 
-#ifndef _SYS_CONSOLE_UART_DEFINITIONS_H    /* Guard against multiple inclusion */
-#define _SYS_CONSOLE_UART_DEFINITIONS_H
-
+#ifndef SYS_CONSOLE_UART_DEFINITIONS_H    /* Guard against multiple inclusion */
+#define SYS_CONSOLE_UART_DEFINITIONS_H
 
 /* ************************************************************************** */
 /* ************************************************************************** */
@@ -51,22 +50,19 @@
 
 #include "system/int/sys_int.h"
 
-/* This section lists the other files that are included in this file.
- */
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-/* TODO:  Include other files here if needed. */
+    extern "C" {
 
-
-/* Provide C++ Compatibility */
-#ifdef __cplusplus
-extern "C" {
 #endif
+// DOM-IGNORE-END
 
 typedef struct
 {
     char* pBuffer;
     size_t size;
-}QElement;
+} QElement;
 
 typedef struct
 {
@@ -75,7 +71,7 @@ typedef struct
     uint32_t maxQElements;
     uint32_t inIndex;
     uint32_t outIndex;
-}Queue;
+} Queue;
 
 typedef void (*SYS_CONSOLE_UART_PLIB_CALLBACK)( uintptr_t context );
 typedef void (*SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)(SYS_CONSOLE_UART_PLIB_CALLBACK callback, uintptr_t context);
@@ -129,8 +125,12 @@ typedef struct
 
 } SYS_CONSOLE_UART_INIT_DATA;
 
+// DOM-IGNORE-BEGIN
 #ifdef __cplusplus
-}
-#endif
 
-#endif /* _SYS_CONSOLE_UART_DEFINITIONS_H */
+    }
+
+#endif
+// DOM-IGNORE-END
+
+#endif /* SYS_CONSOLE_UART_DEFINITIONS_H */
