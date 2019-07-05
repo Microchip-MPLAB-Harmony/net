@@ -71,7 +71,7 @@
 #pragma config POSCBOOST =  ON
 #pragma config POSCFGAIN =  GAIN_G3
 #pragma config POSCAGCDLY = POSCAGCDLY1
-#pragma config POSCAGC =      ON
+#pragma config POSCAGC =      OFF
 #pragma config EJTAGBEN =   NORMAL
 
 /*** DEVCFG1 ***/
@@ -106,7 +106,6 @@
 
 /*** DEVCFG3 ***/
 #pragma config USERID =     0xffff
-#pragma config EXTDDRSIZE = DDR_SIZE_128MB
 #pragma config FMIIEN =     OFF
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    ON
@@ -433,6 +432,17 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .deviceIndex = 0,
 };
 
+// </editor-fold>
+
+
+const SYS_CMD_INIT sysCmdInit =
+{
+    .moduleInit = {0},
+    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
+	.consoleIndex = 0,
+};
+
+
 const SYS_DEBUG_INIT debugInit =
 {
     .moduleInit = {0},
@@ -440,12 +450,6 @@ const SYS_DEBUG_INIT debugInit =
     .consoleIndex = 0,
 };
 
-const SYS_CMD_INIT sysCmdInit =
-{
-    .moduleInit = {0},
-    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
-};
-// </editor-fold>
 
 
 
@@ -474,7 +478,6 @@ void SYS_Initialize ( void* data )
     CFGCONbits.ECCCON = 3;
 
 
-
     CORETIMER_Initialize();
 	UART2_Initialize();
 
@@ -487,8 +490,11 @@ void SYS_Initialize ( void* data )
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
-    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+
     SYS_CMD_Initialize((SYS_MODULE_INIT*)&sysCmdInit);
+
+    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+
 
 
 

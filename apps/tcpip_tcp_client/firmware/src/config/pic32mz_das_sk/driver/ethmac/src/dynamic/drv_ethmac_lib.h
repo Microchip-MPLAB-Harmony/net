@@ -55,8 +55,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <xc.h>
 
 #include "system_config.h"
-#include "system_definitions.h"
-#include "system/console/sys_debug.h"
+#include "system/debug/sys_debug.h"
+#include "system/command/sys_command.h"
+#include "system/time/sys_time.h"
+#include "system/sys_time_h2_adapter.h"
+
 #include "tcpip/tcpip_ethernet.h"
 #include "driver/ethmac/src/dynamic/_eth_dcpt_lists.h"
 #include "driver/ethmac/src/dynamic/drv_eth_pic32_lib.h"
