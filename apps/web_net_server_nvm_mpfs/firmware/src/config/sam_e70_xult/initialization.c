@@ -637,6 +637,8 @@ void SYS_Initialize ( void* data )
 	PIO_Initialize();
 
 	BSP_Initialize();
+  
+
  
     TC0_CH0_TimerInitialize(); 
      
