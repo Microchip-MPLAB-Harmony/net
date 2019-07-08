@@ -716,7 +716,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">6CB1F91CE619A13C4D9C1A6EE579470A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6CB1F91CE619A13C4D9C1A6EE579470A</UserChecksum>
+          <UserChecksum dnOrder="5">2C5D5D10F3B2AFA079A0F7FF50658E18</UserChecksum>
         </File>
         <File dnOrder="89">
           <Type dnOrder="0">SOURCE</Type>
@@ -4061,7 +4061,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" value="../src/third_party/wolfssl"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src;../src/config/pic32mz_das_sk;../src/packs/PIC32MZ2064DAS169_DFP;;../src/mips"/>
         <Setting category="C32" dnOrder="4" key="preprocessor-macros" value="HAVE_CONFIG_H"/>
-        <Setting category="C32-LD" dnOrder="5" key="heap-size" value="105000"/>
+        <Setting category="C32-LD" dnOrder="5" key="heap-size" value="125000"/>
         <Setting category="C32-LD" dnOrder="6" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="7" key="preprocessor-macros" value=""/>
       </Settings>
