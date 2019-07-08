@@ -772,7 +772,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">6CB1F91CE619A13C4D9C1A6EE579470A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6CB1F91CE619A13C4D9C1A6EE579470A</UserChecksum>
+          <UserChecksum dnOrder="5">DFC311EB893185F4E8B2CA5DFEE74422</UserChecksum>
         </File>
         <File dnOrder="96">
           <Type dnOrder="0">SOURCE</Type>
@@ -1724,7 +1724,7 @@
           <LogicalPath dnOrder="2">config/pic32mz_das_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">AD63EA5DA2BB454667513597C2A2AD97</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AD63EA5DA2BB454667513597C2A2AD97</UserChecksum>
+          <UserChecksum dnOrder="5">8AB59B0425331A004384744C34DA3CBB</UserChecksum>
         </File>
         <File dnOrder="215">
           <Type dnOrder="0">HEADER</Type>
@@ -4123,8 +4123,8 @@
           <Name dnOrder="1">user.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="515">
           <Type dnOrder="0">HEADER</Type>
