@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_Reinitialize Function</title>
+<title>TCPIP_MAC_PROCESS_FLAGS Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01582.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02972.html" target="topic">TCPIP_MAC_Reinitialize Function</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01014.html" target="topic">MAC Driver Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02972.html" target="topic">TCPIP_MAC_PROCESS_FLAGS Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02965.html" target="topic">Previous</a> | <a href="01582.html" target="topic">Up</a> | <a href="03023.html" target="topic">Next</a></div>
+<a href="02964.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="03019.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_Reinitialize@SYS_MODULE_OBJ@SYS_MODULE_INIT * const Topic Title: TCPIP_MAC_Reinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PROCESS_FLAGS Topic Title: TCPIP_MAC_PROCESS_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_Reinitialize Function</div>
+TCPIP_MAC_PROCESS_FLAGS Enumeration</div>
 </div>
 </div>
 
@@ -49,72 +49,66 @@ TCPIP_MAC_Reinitialize Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MAC Re-Initialize function. void TCPIP_MAC_Reinitialize(SYS_MODULE_OBJ object, const SYS_MODULE_INIT * const init);&nbsp;</p>
+MAC Process Flags&nbsp;</p>
 <p class="Element10">
-This is the function that re-initializes the MAC. It is called by the stack as a result of the system changing power modes. Allows reinitialization of the MAC with different power modes, etc.</p></div>
+List of specific MAC processing flags that indicate to the user of the MAC (TCP/IP stack) the processing that is expected by the MAC driver.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_MAC_Reinitialize</span></strong>(
-    SYS_MODULE_OBJ <strong><span style="color: #000000">object</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000000">init</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">TCPIP_MAC_PROCESS_FLAG_NONE</span></strong> = 0x0000,
+  <strong><span style="color: #000000">TCPIP_MAC_PROCESS_FLAG_RX</span></strong> = 0x0001,
+  <strong><span style="color: #000000">TCPIP_MAC_PROCESS_FLAG_TX</span></strong> = 0x0002,
+  <strong><span style="color: #000000">TCPIP_MAC_PROCESS_FLAG_ANY</span></strong> = 0x0100
+} TCPIP_MAC_PROCESS_FLAGS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-<a href="02866.html" target="topic">TCPIP_MAC_Initialize</a> should have been called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-object&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Driver object handle, returned from the <a href="02866.html" target="topic">TCPIP_MAC_Initialize</a> function<br>&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-init&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to <a href="02862.html" target="topic">TCPIP_MAC_INIT</a> initialization data containing:
-<ul class="Element633">
-<li class="Element603">macControl - Stack prepared data.</li>
-<li class="Element603">moduleData - Driver specific. Dependent on the MAC type. For PIC32 MAC driver, the <a href="03086.html" target="topic">TCPIP_MODULE_MAC_PIC32INT_CONFIG</a> is used. </li>
-</ul>&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PROCESS_FLAG_NONE = 0x0000&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the stack never has to call the <a href="02971.html" target="topic">TCPIP_MAC_Process</a> function&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PROCESS_FLAG_RX = 0x0001&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the stack has to call the <a href="02971.html" target="topic">TCPIP_MAC_Process</a> after an RX signal&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PROCESS_FLAG_TX = 0x0002&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the stack has to call the <a href="02971.html" target="topic">TCPIP_MAC_Process</a> after an TX signal&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_MAC_PROCESS_FLAG_ANY = 0x0100&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the stack has to call the <a href="02971.html" target="topic">TCPIP_MAC_Process</a> after any type of signal&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function is optional and is not currently implemented.</p></div>
+Multiple flags can be &quot;ORed&quot;.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01582.html" target="topic">Library Interface</a> &gt; a) Initialization Functions &gt; <a href="02972.html" target="topic">TCPIP_MAC_Reinitialize Function</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01014.html" target="topic">MAC Driver Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02972.html" target="topic">TCPIP_MAC_PROCESS_FLAGS Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -122,13 +116,13 @@ This function is optional and is not currently implemented.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02965.html" target="topic">Previous</a> | <a href="01582.html" target="topic">Up</a> | <a href="03023.html" target="topic">Next</a></div>
+<a href="02964.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="03019.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_Reinitialize@SYS_MODULE_OBJ@SYS_MODULE_INIT * const Topic Title: TCPIP_MAC_Reinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PROCESS_FLAGS Topic Title: TCPIP_MAC_PROCESS_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

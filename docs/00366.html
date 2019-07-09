@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>Building the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Building the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00360.html" target="topic">Previous</a> | <a href="00678.html" target="topic">Up</a> | <a href="00457.html" target="topic">Next</a></div>
+<a href="00573.html" target="topic">Previous</a> | <a href="00684.html" target="topic">Up</a> | <a href="00372.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+Building the Library</div>
 </div>
 </div>
 
@@ -49,509 +49,107 @@ Library Interface</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section describes the Application Programming Interface (API) functions of the Ethernet PHY Driver Library.&nbsp;</p>
+The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/driver/ethphy</span>.</p><div class="Element15">
+Interface File(s)</div>
 <p class="Element10">
-Refer to each section for a detailed description.</p></div>
-</div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element65" valign="top" width="41%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="59%">
+<div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00372.html" target="topic">Variables</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
- &nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="61292053797374656D204C6576656C2046756E6374696F6E73"></a><div class="Element14">
-a) System Level Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<td class="Element67" valign="top" width="41%">
+<div class="Element68">
+<span class="Element146">/<a href="00429.html" target="topic">drv_ethphy.h</a></span>&nbsp;</div></td><td class="Element67" valign="top" width="59%">
+<div class="Element68">
+Header file that exports the driver API.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Required File(s)</div>
+<div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table0">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00457.html" target="topic">DRV_ETHPHY_Initialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the Ethernet PHY driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00441.html" target="topic">DRV_ETHPHY_Deinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deinitializes the specified instance of the Ethernet PHY driver module. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00544.html" target="topic">DRV_ETHPHY_Reinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reinitializes the driver and refreshes any associated hardware settings. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00565.html" target="topic">DRV_ETHPHY_Status</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides the current status of the Ethernet PHY driver module. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00566.html" target="topic">DRV_ETHPHY_Tasks</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Maintains the driver's state machine and implements its ISR. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00556.html" target="topic">DRV_ETHPHY_Setup</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes Ethernet PHY configuration and set up procedure. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="622920436C69656E74204C6576656C2046756E6374696F6E73"></a><div class="Element14">
-b) Client Level Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<td class="Element67" valign="top" width="10%" style="border:none;">
+<div class="Element68">
+<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<div class="Element68">
+<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element65" valign="top" width="48%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
+<div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00541.html" target="topic">DRV_ETHPHY_Open</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Opens the specified Ethernet PHY driver instance and returns a handle to it. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00433.html" target="topic">DRV_ETHPHY_Close</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Closes an opened instance of the Ethernet PHY driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00432.html" target="topic">DRV_ETHPHY_ClientStatus</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current client-specific status the Ethernet PHY driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00545.html" target="topic">DRV_ETHPHY_Reset</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Immediately resets the Ethernet PHY. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00429.html" target="topic">DRV_ETHPHY_ClientOperationAbort</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Aborts a current client operation initiated by the Ethernet PHY driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00430.html" target="topic">DRV_ETHPHY_ClientOperationResult</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the result of a client operation initiated by the Ethernet PHY driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="632920534D492F4D49494D2046756E6374696F6E73"></a><div class="Element14">
-c) SMI/MIIM Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<td class="Element67" valign="top" width="48%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
+<div class="Element68">
+Basic PHY driver implementation file.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Optional File(s)</div>
+<p class="Element10">
+This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element65" valign="top" width="49%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="51%">
+<div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00561.html" target="topic">DRV_ETHPHY_SMIScanStatusGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the status of the SMI/MIIM scan data. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00562.html" target="topic">DRV_ETHPHY_SMIScanStop</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Stops the scan of a previously requested SMI/MIIM register. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00557.html" target="topic">DRV_ETHPHY_SMIClockSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the SMI/MIIM interface clock. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00560.html" target="topic">DRV_ETHPHY_SMIScanStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts the scan of a requested SMI/MIIM register. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00558.html" target="topic">DRV_ETHPHY_SMIRead</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initiates a SMI/MIIM read transaction. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00559.html" target="topic">DRV_ETHPHY_SMIScanDataGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the latest SMI/MIIM scan data result. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00563.html" target="topic">DRV_ETHPHY_SMIStatus</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current status of the SMI/MIIM interface. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00564.html" target="topic">DRV_ETHPHY_SMIWrite</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initiates a SMI/MIIM write transaction. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="64292056656E646F722046756E6374696F6E73"></a><div class="Element14">
-d) Vendor Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00572.html" target="topic">DRV_ETHPHY_VendorDataGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current value of the vendor data. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00573.html" target="topic">DRV_ETHPHY_VendorDataSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current value of the vendor data. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00574.html" target="topic">DRV_ETHPHY_VendorSMIReadResultGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reads the result of a previous vendor initiated SMI read transfer with <a href="00575.html" target="topic">DRV_ETHPHY_VendorSMIReadStart</a>. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00575.html" target="topic">DRV_ETHPHY_VendorSMIReadStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts a vendor SMI read transfer. Data will be available with <a href="00574.html" target="topic">DRV_ETHPHY_VendorSMIReadResultGet</a>. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00576.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Starts a vendor SMI write transfer. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6529204F746865722046756E6374696F6E73"></a><div class="Element14">
-e) Other Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00481.html" target="topic">DRV_ETHPHY_LinkStatusGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current link status. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00543.html" target="topic">DRV_ETHPHY_PhyAddressGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the PHY address. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00442.html" target="topic">DRV_ETHPHY_HWConfigFlagsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current Ethernet PHY hardware MII/RMII and ALTERNATE/DEFAULT configuration flags. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00548.html" target="topic">DRV_ETHPHY_RestartNegotiation</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Restarts auto-negotiation of the Ethernet PHY link. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00488.html" target="topic">DRV_ETHPHY_NegotiationIsComplete</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the results of a previously initiated Ethernet PHY negotiation. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00489.html" target="topic">DRV_ETHPHY_NegotiationResultGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the result of a completed negotiation. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6629204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-f) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00424.html" target="topic">DRV_ETHPHY_CLIENT_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the client-specific status of the Ethernet PHY driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00447.html" target="topic">DRV_ETHPHY_INIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Contains all the data necessary to initialize the Ethernet PHY device.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00444.html" target="topic">DRV_ETHPHY_INDEX_0</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Ethernet PHY driver index definitions.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00445.html" target="topic">DRV_ETHPHY_INDEX_1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro DRV_ETHPHY_INDEX_1.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00446.html" target="topic">DRV_ETHPHY_INDEX_COUNT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of valid Ethernet PHY driver indices.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00484.html" target="topic">DRV_ETHPHY_NEGOTIATION_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Contains all the data necessary to get the Ethernet PHY negotiation result&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00550.html" target="topic">DRV_ETHPHY_SETUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Contains all the data necessary to set up the Ethernet PHY device.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00568.html" target="topic">DRV_ETHPHY_VENDOR_MDIX_CONFIGURE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to function that configures the MDIX mode for the Ethernet PHY.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00569.html" target="topic">DRV_ETHPHY_VENDOR_MII_CONFIGURE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to function to configure the Ethernet PHY in one of the MII/RMII operation modes.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00570.html" target="topic">DRV_ETHPHY_VENDOR_SMI_CLOCK_GET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a function to return the SMI/MIIM maximum clock speed in Hz of the Ethernet PHY.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00495.html" target="topic">DRV_ETHPHY_OBJECT_BASE_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the base interface of a Ethernet PHY driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00435.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines configuration options for the Ethernet PHY.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00471.html" target="topic">DRV_ETHPHY_LINK_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the possible status flags of PHY Ethernet link.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00490.html" target="topic">DRV_ETHPHY_OBJECT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the interface of a Ethernet PHY vendor driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00495.html" target="topic">DRV_ETHPHY_OBJECT_BASE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Identifies the base interface of a Ethernet PHY driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00571.html" target="topic">DRV_ETHPHY_VENDOR_WOL_CONFIGURE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a function to configure the PHY WOL functionality&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00016.html" target="topic">_DRV_ETHPHY_CONFIG_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _DRV_ETHPHY_CONFIG_H.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00017.html" target="topic">_DRV_ETHPHY_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _DRV_ETHPHY_H.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00547.html" target="topic">DRV_ETHPHY_RESET_FUNCTION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Pointer to a function to perform an additional PHY reset&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the possible results of Ethernet operations that can succeed or fail&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00459.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the index type for a PHY interface.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00467.html" target="topic">DRV_ETHPHY_INTERFACE_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the type of interface a PHY supports.&nbsp;</div></td></tr></table></div></div>
-</div>
+<td class="Element67" valign="top" width="49%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy_smsc8700.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+<div class="Element68">
+Microchip LAN8700 PHY implementation file.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="49%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy_smsc8720.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+<div class="Element68">
+Microchip LAN8720 PHY implementation file.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="49%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy_smsc8740.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+<div class="Element68">
+Microchip LAN8740 PHY implementation file.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="49%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy_smsc9303.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+<div class="Element68">
+Microchip LAN9303 PHY implementation file.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="49%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy_ksz8041.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+<div class="Element68">
+Microchip KSZ8041 PHY implementation file.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="49%">
+<div class="Element68">
+<span class="Element146">/src/dynamic/drv_extphy_ksz8061.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="51%">
+<div class="Element68">
+Microchip KSZ8061 PHY implementation file.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Module Dependencies</div>
+<p class="Element10">
+The Ethernet MAC Driver Library depends on the following modules:
+<ul class="Element633">
+<li class="Element603">MIIM <a href="01024.html" target="topic">MIIM Driver</a></li>
+<li class="Element603"><strong>Timer System Service Library</strong></li>
+<li class="Element603"><strong>Console System Service Library - </strong>for displaying diagnostic messages</li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Building the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -559,13 +157,13 @@ Defines the type of interface a PHY supports.&nbsp;</div></td></tr></table></div
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00360.html" target="topic">Previous</a> | <a href="00678.html" target="topic">Up</a> | <a href="00457.html" target="topic">Next</a></div>
+<a href="00573.html" target="topic">Previous</a> | <a href="00684.html" target="topic">Up</a> | <a href="00372.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

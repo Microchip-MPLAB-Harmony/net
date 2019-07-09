@@ -1372,7 +1372,7 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_drive(TCPIP_HTTP_NET_CONN_HANDLE connH
 
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fstype(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_MPFS_STRING, false);
+    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_FATFS_STRING, false);
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Overview</title>
+<title>Core Functionality</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03916.html" target="topic">UDP Module</a> &gt; <a href="01742.html" target="topic">Using the Library</a> &gt; <a href="01738.html" target="topic">Library Overview</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03925.html" target="topic">UDP Module</a> &gt; <a href="01748.html" target="topic">Using the Library</a> &gt; <a href="01741.html" target="topic">How the Library Works</a> &gt; <a href="01738.html" target="topic">Core Functionality</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01729.html" target="topic">Previous</a> | <a href="01742.html" target="topic">Up</a> | <a href="01735.html" target="topic">Next</a></div>
+<a href="01741.html" target="topic">Previous</a> | <a href="01741.html" target="topic">Up</a> | <a href="01737.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Library Overview Topic Title: Library Overview)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Overview</div>
+Core Functionality</div>
 </div>
 </div>
 
@@ -49,43 +49,20 @@ Library Overview</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the UDP module.</span> </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="40%">
-<div class="Element66">
-Library Interface Section&nbsp;</div></td><td class="Element65" valign="top" width="60%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Socket Management Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-<span style="color: #000000">Routines for Managing UDP Sockets</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Transmit Data Transfer Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-<span style="color: #000000">Routines for Managing Outgoing Data Transmissions</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Receive Data Transfer Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-<span style="color: #000000">Routines for Managing Incoming Data Transmissions</span>&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Data Types and Constants&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-<span style="color: #000000">This section provides various definitions describing This API</span>&nbsp;</div></td></tr></table></div></div>
-</div>
+The following flow diagram provides an overview for the use of the UDP module:&nbsp;</p>
+<p class="Element10">
+<img src="TCPIP UDP udp_diagram.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+Server/listening sockets are opened using <a href="03879.html" target="topic">TCPIP_UDP_ServerOpen</a>. Client sockets are opened using <a href="03855.html" target="topic">TCPIP_UDP_ClientOpen</a>. A client <a href="01301.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>needs to have a remote address specified before it can transmit data.&nbsp;</p>
+<p class="Element10">
+Once the <a href="01301.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>is opened, you can immediately begin transmitting data. To transmit a segment, call <a href="03876.html" target="topic">TCPIP_UDP_PutIsReady</a> to determine how many bytes can be written. Then, use any of the <a href="03852.html" target="topic">TCPIP_UDP_ArrayPut</a> family of functions to write data to the<span style="color: #FFFFFF">_</span><a href="01301.html" target="topic">socket</a>. Once all data has been written, call <a href="03862.html" target="topic">TCPIP_UDP_Flush</a> to build and transmit the packet. Since each UDP <a href="01301.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>has its own TX buffer, the sequence previously described can be executed in multiple steps. That data that is written in the <a href="01301.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>is persistent and it will be stored until <a href="03862.html" target="topic">TCPIP_UDP_Flush</a> is called.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03916.html" target="topic">UDP Module</a> &gt; <a href="01742.html" target="topic">Using the Library</a> &gt; <a href="01738.html" target="topic">Library Overview</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03925.html" target="topic">UDP Module</a> &gt; <a href="01748.html" target="topic">Using the Library</a> &gt; <a href="01741.html" target="topic">How the Library Works</a> &gt; <a href="01738.html" target="topic">Core Functionality</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -93,13 +70,13 @@ Data Types and Constants&nbsp;</div></td><td class="Element67" valign="top" widt
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01729.html" target="topic">Previous</a> | <a href="01742.html" target="topic">Up</a> | <a href="01735.html" target="topic">Next</a></div>
+<a href="01741.html" target="topic">Previous</a> | <a href="01741.html" target="topic">Up</a> | <a href="01737.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Library Overview Topic Title: Library Overview)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>How the Library Works</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03916.html" target="topic">UDP Module</a> &gt; <a href="01731.html" target="topic">Configuring the Library</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03921.html" target="topic">TFTP Server Module</a> &gt; <a href="03911.html" target="topic">Using the Library</a> &gt; <a href="01731.html" target="topic">How the Library Works</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01732.html" target="topic">Previous</a> | <a href="03916.html" target="topic">Up</a> | <a href="03858.html" target="topic">Next</a></div>
+<a href="01733.html" target="topic">Previous</a> | <a href="03911.html" target="topic">Up</a> | <a href="01734.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TFTPS How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+How the Library Works</div>
 </div>
 </div>
 
@@ -49,104 +49,75 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The configuration of the UDP TCP/IP Stack Library<span style="color: #0000FF"> </span>is based on the file <span class="Element146"><a href="03918.html" target="topic">udp_config.h</a> </span>with the actual symbols generated in the<span class="Element146"> configuration.h.</span>&nbsp;</p>
+Any transfer begins with a request from a client to read or write a file. If the server grants the request, the connection is opened and the file is sent usually in fixed length blocks of 512 bytes. Each data packet contains one block of data, and must be acknowledged by an acknowledgment packet before the next packet can be sent. A data packet of less than 512 bytes, signals termination of a transfer. If a packet gets lost in the network, the intended recipient will time out and may retransmit the last packet (which may be data or an acknowledgment), thus causing the sender of the lost packet to retransmit that lost packet.&nbsp;</p>
 <p class="Element10">
-This header file contains the configuration selection for the UDP TCP/IP Stack Library. Based on the selections made, the UDP TCP/IP Stack Library may support the selected features. These configuration settings will apply to the single instance of the UDP TCP/IP Stack Library for all sockets.&nbsp;</p>
+&nbsp;</p>
 <p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01317.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+&nbsp;</p>
+<p class="Element10">
+<strong>TFTP Transfer Set up</strong>
+<ul class="Element633">
+<li class="Element603">To set up a TFTP transfer, a TFTP client device can request (get) files from the server and also transfer (put) files to the server.</li>
+<li class="Element603">The File System on the server is transparent. Currently the Microchip Harmony devices support MPFS or FAT file systems.</li>
+<li class="Element603">The Microchip TFTP server implementation allows the user to start and stop the service dynamically by using the TFTP Application Programming Interface ( API) function.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>TFTP Transfer Options</strong>&nbsp;</p>
+<p class="Element10">
+The following options are supported in the current TFTP server implementation (see RFC 2348, 2349): </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table5">
+<tr>
+<td class="Element65" valign="top" width="20%">
+<div class="Element66">
+TFTP Option Name<br>&nbsp;</div></td><td class="Element65" valign="top" width="24%">
+<div class="Element66">
+TFTP Option Code<br>(Used in Request Messages)&nbsp;</div></td><td class="Element65" valign="top" width="56%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="20%">
+<div class="Element68">
+Block Size&nbsp;</div></td><td class="Element67" valign="top" width="24%">
+<div class="Element68">
+blksize&nbsp;</div></td><td class="Element67" valign="top" width="56%">
+<div class="Element68">
+The option allows the Client and the Server to <a href="01201.html" target="topic">send</a> data blocks of a size different than 512 bytes&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="20%">
+<div class="Element68">
+Timeout Interval&nbsp;</div></td><td class="Element67" valign="top" width="24%">
+<div class="Element68">
+interval&nbsp;</div></td><td class="Element67" valign="top" width="56%">
+<div class="Element68">
+The option permits the client /server to agree on a specified number of seconds to use for their retransmission.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="20%">
+<div class="Element68">
+Transfer Size&nbsp;</div></td><td class="Element67" valign="top" width="24%">
+<div class="Element68">
+tsize&nbsp;</div></td><td class="Element67" valign="top" width="56%">
+<div class="Element68">
+The option allows the side receiving the file to determine the ultimate size of the transfer before it begins.&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
+</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<td class="Element200" valign="top" width="35%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03858.html" target="topic">TCPIP_UDP_MAX_SOCKETS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01734.html" target="topic">TFTP Client Server Communication</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Maximum number of UDP sockets that can be opened simultaneously These sockets will be created when the module is initialized.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03880.html" target="topic">TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The maximum number of RX packets that can be queued by an UDP <a href="01295.html" target="topic">socket</a> at a certain time. Note that UDP sockets do not use their own RX buffers but instead use the network driver supplied packets and a timely processing is critical to avoid packet memory starvation for the whole stack. This symbol sets the maximum number of UDP buffers/packets that can be queued for a UDP <a href="01295.html" target="topic">socket</a> at a certain time. Once this limit is reached further incoming packets are silently discarded. Adjust depending on the number of RX buffers that are available for the stack and the... <a href="03880.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03881.html" target="topic">TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The maximum number of TX packets that can be queued by an UDP <a href="01295.html" target="topic">socket</a> at a certain time. For sockets that need to transfer a lot of data (Iperf, for example), especially on slow connections this limit prevents running out of memory because the MAC/PHY transfer cannot keep up with the UDP packet allocation rate imposed by the application. Adjust depending on the <a href="03882.html" target="topic">TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE</a>, the connection speed and the amount of memory available to the stack.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03882.html" target="topic">TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Default <a href="01295.html" target="topic">socket</a> TX buffer size. Note that this setting affects all UDP sockets that are created and, together with <a href="03858.html" target="topic">TCPIP_UDP_MAX_SOCKETS</a>, has a great impact on the heap size that's used by the stack (see <a href="03488.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting). When large TX bufferrs are needed, probably a dynamic, per <a href="01295.html" target="topic">socket</a> approach, is a better choice (see <a href="03865.html" target="topic">TCPIP_UDP_OptionsSet</a> function).&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03883.html" target="topic">TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Size of the buffers in the UDP pool. Any UDP <a href="01295.html" target="topic">socket</a> that is enabled to use the pool and has the TX size &lt;= than this size can use a buffer from the pool. Note that this setting, together with <a href="03884.html" target="topic">TCPIP_UDP_SOCKET_POOL_BUFFERS</a>, has impact on the heap size that's used by the stack (see <a href="03488.html" target="topic">TCPIP_STACK_DRAM_SIZE</a> setting).&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03884.html" target="topic">TCPIP_UDP_SOCKET_POOL_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of buffers in the private UDP pool. These are preallocated buffers that are to be used by UDP sockets only. This improves the UDP <a href="01295.html" target="topic">socket</a> throughput and is meant only for UDP sockets that have to sustain high TX traffic rate. However, this memory is not returned to the stack heap, it always belongs to UDP. A <a href="01295.html" target="topic">socket</a> needs to have an option set in order to use the buffers pool (see the UDPSetOptions()). Use 0 to disable the feature.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03895.html" target="topic">TCPIP_UDP_USE_POOL_BUFFERS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-enable the build of the pre-allocated pool buffers option&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03896.html" target="topic">TCPIP_UDP_USE_RX_CHECKSUM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Check incoming packets to have proper checksum.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03897.html" target="topic">TCPIP_UDP_USE_TX_CHECKSUM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Calculate and transmit a checksum when sending data. Checksum is not mandatory for UDP packets but is highly recommended. This will affect the UDP TX performance.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03848.html" target="topic">TCPIP_UDP_COMMANDS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-TCPIP UDP info commands Enables/Disables the UDP command feature. This setting will add a UDP &quot;info&quot; command to the TCP/IP command menu allowing a run time inspection of the UDP sockets Set the value to 1 to enable, 0 to disable the feature.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00159.html" target="topic">_UDP_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _UDP_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
+This section provides information on TFTP Write and Read requests.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -154,7 +125,7 @@ This is macro _UDP_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03916.html" target="topic">UDP Module</a> &gt; <a href="01731.html" target="topic">Configuring the Library</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03921.html" target="topic">TFTP Server Module</a> &gt; <a href="03911.html" target="topic">Using the Library</a> &gt; <a href="01731.html" target="topic">How the Library Works</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -162,13 +133,13 @@ This is macro _UDP_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01732.html" target="topic">Previous</a> | <a href="03916.html" target="topic">Up</a> | <a href="03858.html" target="topic">Next</a></div>
+<a href="01733.html" target="topic">Previous</a> | <a href="03911.html" target="topic">Up</a> | <a href="01734.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TFTPS How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

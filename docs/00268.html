@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>berkeley_api.h</title>
+<title>Running the Demonstration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01393.html" target="topic">Files</a> &gt; <a href="00268.html" target="topic">berkeley_api.h</a></div>
+<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00266.html" target="topic">wolfmqtt_demo</a> &gt; <a href="00268.html" target="topic">Running the Demonstration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01393.html" target="topic">Previous</a> | <a href="01393.html" target="topic">Up</a> | <a href="00269.html" target="topic">Next</a></div>
+<a href="00265.html" target="topic">Previous</a> | <a href="00266.html" target="topic">Up</a> | <a href="00267.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: berkeley_api.h Topic Title: berkeley_api.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS WOLFMQTT Run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-berkeley_api.h</div>
+Running the Demonstration</div>
 </div>
 </div>
 
@@ -46,811 +46,114 @@ berkeley_api.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
-</div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
-<div class="Element11">
-<div class="Element10">
+ &nbsp;</p>
 <p class="Element10">
-berkeley_api.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
+<strong>For SAM E70 Xplained Ultra Evaluation Kits</strong>&nbsp;</p>
 <p class="Element10">
-Berkeley Socket Distribution API Header File&nbsp;</p>
+Please use the following procedure to run the demonstration:
+<ol class="Element632">
+<li value="1" class="Element602">Configure the Development Board as given <a href="00216.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
+<li value="2" class="Element602">Make the demonstration setup as shown <a href="00335.html" target="topic">here</a>.</li>
+<li value="3" class="Element602">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element602">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
+<li value="5" class="Element602">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element602">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element602">Restart the demonstration by pressing the 'RESET' button on the board.</li>
+<li value="8" class="Element602">See that the initialization prints on the serial port terminal.</li>
+<li value="9" class="Element602">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+</ol>&nbsp;</p>
 <p class="Element10">
-The Berkeley Socket Distribution (BSD) APIs provide a BSD wrapper to the native Microchip TCP/IP Stack APIs. Using this interface, programmers familiar with BSD sockets can quickly develop applications using Microchip's TCP/IP Stack.</p></div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00172.html" target="topic">accept</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function accepts connection requests queued for a listening <a href="01295.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00272.html" target="topic">bind</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function assigns a name to the <a href="01295.html" target="topic">socket</a> descriptor.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00273.html" target="topic">closesocket</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The closesocket function closes an existing <a href="01295.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00274.html" target="topic">connect</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function connects to the peer communications end point.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00679.html" target="topic">freeaddrinfo</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Frees the memory allocated by <a href="00683.html" target="topic">getaddrinfo</a>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00683.html" target="topic">getaddrinfo</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Does an address look up for the provided node name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00684.html" target="topic">gethostbyname</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The gethostbyname function returns a structure of type <a href="00705.html" target="topic">hostent</a> for the given host name.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00685.html" target="topic">gethostname</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the standard host name for the system.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00686.html" target="topic">getsockname</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the current address to which the <a href="01295.html" target="topic">socket</a> is bound.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00687.html" target="topic">getsockopt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Allows setting options to a <a href="01295.html" target="topic">socket</a> like adjust RX/TX buffer size, etc&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01007.html" target="topic">listen</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The listen function sets the specified <a href="01295.html" target="topic">socket</a> in a listen mode.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01189.html" target="topic">recv</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The recv() function is used to receive incoming data that has been queued for a <a href="01295.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01190.html" target="topic">recvfrom</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The recvfrom() function is used to receive incoming data that has been queued for a <a href="01295.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01195.html" target="topic">send</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The send function is used to send outgoing data on an already connected <a href="01295.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01196.html" target="topic">sendto</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function used to <a href="01195.html" target="topic">send</a> the data for both connection oriented and connection-less sockets.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01197.html" target="topic">setsockopt</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Allows setting options to a <a href="01295.html" target="topic">socket</a> like adjust RX/TX buffer size, etc&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01295.html" target="topic">socket</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This function creates a new Berkeley socket.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01868.html" target="topic">TCPIP_BSD_Socket</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the native <a href="01295.html" target="topic">socket</a> number associated with the BSD <a href="01295.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01869.html" target="topic">TCPIP_BSD_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00006.html" target="topic">__ss_aligntype</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Structure large enough to hold any <a href="01295.html" target="topic">socket</a> address (with the historical exception of AF_UNIX). 128 bytes reserved.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00012.html" target="topic">_BERKELEY_API_HEADER_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _BERKELEY_API_HEADER_FILE.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00109.html" target="topic">_SS_PADSIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _SS_PADSIZE.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00110.html" target="topic">_SS_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _SS_SIZE.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00182.html" target="topic">AF_INET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Internet Address Family - IPv4, UDP, TCP, etc.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00183.html" target="topic">AF_INET6</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Internet Address Family - IPv6&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00666.html" target="topic">EAI_AGAIN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Temporary failure in name resolution.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00667.html" target="topic">EAI_BADFLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Invalid value for `ai_flags' field.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00668.html" target="topic">EAI_FAIL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Non-recoverable failure in name res.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00669.html" target="topic">EAI_FAMILY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ai_family' not supported.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00670.html" target="topic">EAI_MEMORY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Memory allocation failure.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00671.html" target="topic">EAI_NONAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-NAME or SERVICE is unknown.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00672.html" target="topic">EAI_OVERFLOW</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Argument buffer overflow.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00673.html" target="topic">EAI_SERVICE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SERVICE not supported for `ai_socktype'.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00674.html" target="topic">EAI_SOCKTYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-ai_socktype' not supported.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00675.html" target="topic">EAI_SYSTEM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-System error returned in `errno'.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00704.html" target="topic">HOST_NOT_FOUND</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Authoritative Answer host not found&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00772.html" target="topic">ICMP6_FILTER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SEt the IPv6 Filtering options - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00826.html" target="topic">INADDR_ANY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-IP address for server binding.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00828.html" target="topic">INVALID_TCP_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Invalid TCP port&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00830.html" target="topic">IP_ADD_MEMBERSHIP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Join a multicast group - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00831.html" target="topic">IP_ADDR_ANY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-IP Address for server binding&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00833.html" target="topic">IP_DROP_MEMBERSHIP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Leave a multicast group - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00834.html" target="topic">IP_MULTICAST_IF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the Interface that multicast packets should be sent on - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00835.html" target="topic">IP_MULTICAST_LOOP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Specify a copy of multicast packets should be delivered to the sending host - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00836.html" target="topic">IP_MULTICAST_TTL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the Time to Live option for multicast packets - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00837.html" target="topic">IP_OPTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-IP Header Options - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00838.html" target="topic">IP_TOS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Type of Service - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00839.html" target="topic">IP_TTL</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Time to Live - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00843.html" target="topic">IPPROTO_ICMPV6</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates IPv6 ICMP Protocol Options&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00844.html" target="topic">IPPROTO_IP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates IP pseudo-protocol.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00845.html" target="topic">IPPROTO_IPV6</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates IP v6 Header options&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00846.html" target="topic">IPPROTO_TCP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates TCP level options&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00847.html" target="topic">IPPROTO_UDP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates UDP level options&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00918.html" target="topic">IPV6_CHECKSUM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the IPv6 Checksum options - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00942.html" target="topic">IPV6_JOIN_GROUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Join an IPv6 multicast group - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00943.html" target="topic">IPV6_LEAVE_GROUP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Leave an IPv6 multicast group - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00944.html" target="topic">IPV6_MULTICAST_HOPS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the hop limit for multicast IPv6 packets - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00945.html" target="topic">IPV6_MULTICAST_IF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the Interface that multicast IPv6 packets should be sent on - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00946.html" target="topic">IPV6_MULTICAST_LOOP</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Specify a copy of multicast IPv6 packets should be delivered to the sending host - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01000.html" target="topic">IPV6_UNICAST_HOPS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the hop limit for unicast IPv6 packets - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01001.html" target="topic">IPV6_V6ONLY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the <a href="01295.html" target="topic">socket</a> to IPv6 only - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01184.html" target="topic">NO_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Valid name, no data record of requested type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01185.html" target="topic">NO_RECOVERY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Non recoverable errors,&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01258.html" target="topic">SO_BROADCAST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Enables the Socket for sending broadcast data&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01259.html" target="topic">SO_DEBUG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates if low level debut is active - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01260.html" target="topic">SO_DONTROUTE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Bypass normal routing - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01261.html" target="topic">SO_KEEPALIVE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Keep the connection alive by sending periodic transmissions - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01262.html" target="topic">SO_LINGER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates if the system should <a href="01195.html" target="topic">send</a> any buffered data when a <a href="01295.html" target="topic">socket</a> is closed&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01263.html" target="topic">SO_OOBINLINE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates whether or not Out of Band Data should be received inline with normal data - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01264.html" target="topic">SO_RCVBUF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Receive Buffer Size (TCP only)&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01265.html" target="topic">SO_RCVLOWAT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Receive Low Water mark - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01266.html" target="topic">SO_RCVTIMEO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the Receive Timeout - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01267.html" target="topic">SO_REUSEADDR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates if the local <a href="01295.html" target="topic">socket</a> can be reused immediately after close - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01268.html" target="topic">SO_SNDBUF</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Send Buffer Size&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01269.html" target="topic">SO_SNDLOWAT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Send Low Water mark - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01270.html" target="topic">SO_SNDTIMEO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Set the Send Timeout - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01271.html" target="topic">SOCK_DGRAM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Connectionless datagram <a href="01295.html" target="topic">socket</a>. Use UDP for the Internet address family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01272.html" target="topic">SOCK_STREAM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Connection based byte streams. Use TCP for the Internet address family.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01296.html" target="topic">SOCKET_CNXN_IN_PROGRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Socket connection state.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01297.html" target="topic">SOCKET_DISCONNECTED</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Socket disconnected&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01298.html" target="topic">SOCKET_ERROR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Socket error&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01299.html" target="topic">SOL_SOCKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates <a href="01295.html" target="topic">socket</a> level options&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01327.html" target="topic">TCP_NODELAY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Indicates if TCP is to buffer packets - Not yet supported&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03915.html" target="topic">TRY_AGAIN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Non authoritative host not found or server fail&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00173.html" target="topic">addrinfo</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is record addrinfo.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00705.html" target="topic">hostent</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is record hostent.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00810.html" target="topic">in_addr</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-in_addr structure&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00821.html" target="topic">in6_addr</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is record in6_addr.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01004.html" target="topic">linger</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is record linger.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01273.html" target="topic">sockaddr</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-generic address structure for all address families&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01277.html" target="topic">sockaddr_in</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-In the Internet address family&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01283.html" target="topic">sockaddr_in6</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-In the Internet address family&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01290.html" target="topic">sockaddr_storage</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is record sockaddr_storage.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00270.html" target="topic">BERKELEY_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Berkeley API module configuration structure&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="5479706573"></a><div class="Element14">
-Types</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01274.html" target="topic">SOCKADDR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-generic address structure for all address families&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01278.html" target="topic">SOCKADDR_IN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-In the Internet address family&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01284.html" target="topic">SOCKADDR_IN6</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type SOCKADDR_IN6.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01294.html" target="topic">SOCKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Socket descriptor&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="5661726961626C6573"></a><div class="Element14">
-Variables</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00688.html" target="topic">h_errno</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Error location for host lookup errors&nbsp;</div></td></tr></table></div></div>
-</div>
+<strong>For PIC32MZ Starter Kits</strong>
+<ol class="Element632">
+<li value="1" class="Element602">Configure the Development Board as given <a href="00260.html" target="topic">here</a>.</li>
+<li value="2" class="Element602">Make the demonstration setup as shown <a href="00335.html" target="topic">here</a>.</li>
+<li value="3" class="Element602">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element602">A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.</li>
+<li value="5" class="Element602">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element602">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element602">See that the initialization prints on the serial port terminal.</li>
+<li value="8" class="Element602">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+</ol>&nbsp;</p>
+<p class="Element10">
+The wolfMQTT demo is interactive, using a set of special MQTT commands that have been added to this demo.&nbsp;</p>
+<p class="Element10">
+Pressing &quot;mqtt help&quot; at the command prompt displays the list of the available commands/options:&nbsp;</p>
+<p class="Element10">
+<img src="wolmqtt_help.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+Most of the commands are self explanatory.&nbsp;</p>
+<p class="Element10">
+All settings come with default values.&nbsp;</p>
+<p class="Element10">
+A brief description of the most important settings/commands follows:&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt broker&quot;: sets the MQTT broker to <a href="00280.html" target="topic">connect</a> to. The default value is &quot;iot.eclipse.org&quot;&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt port&quot;: sets the MQTT port to use. Default is 1883&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt qos&quot;: setd the QoS. Default is MQTT_QOS_0.&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt topi&quot;: sets the MQTT topic. Default is &quot;MQTT_NET_Client topic&quot;&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt tls&quot;: sets the force TLS flag. Default is 0.&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt user&quot;: sets the user name. Default is &quot;MQTT_NET_User&quot;&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt txbuf&quot;: sets the size of the TX buffer for the connection. Default is 1024&nbsp;</p>
+<p class="Element10">
+- &quot;mqtt rxbuf&quot;: sets the size of the RX buffer for the connection. Default is 1024&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Note</strong>: The connection to the broker is normally done using the port number: 1883 for plain connections, 8883 for encrypted ones.&nbsp;</p>
+<p class="Element10">
+Using the &quot;force TLS&quot; will force an encrypted connection regardless of the port number.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The wolfMQTT demo is based on the examples provided by <a href="#" onclick="openExternalLink('https://github.com/wolfSSL/wolfMQTT/tree/master/examples');"><img src="indicator_external_link.gif" border="0" alt="" title="">wolfMQTT</a>.&nbsp;</p>
+<p class="Element10">
+To allow a simple usage of the wolfMQTT library, a wolfMQTT NET Glue layer has been added to the Harmony port,&nbsp;</p>
+<p class="Element10">
+The NET glue layer takes care of all the connections to the broker, supporting both encrypted and plain connections.&nbsp;</p>
+<p class="Element10">
+This way the application does not have to be concerned with the communication mechanisms and can use directly the wolfMQTT API on a Harmony platform without the need to add other supporting code.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The configuration parameters for the wolfmqtt demonstration are defined in the app_mqtt_task.h file that's part of the project.&nbsp;</p>
+<p class="Element10">
+The configuration parameters for the NET glue layer can be configured with MHC (see <a href="00267.html" target="topic">MHC Configuration</a>).&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+The demo starts with all parameters having default values (see above).&nbsp;</p>
+<p class="Element10">
+If needed, parameters can be adjusted as the application requires.&nbsp;</p>
+<p class="Element10">
+Then a connection to the broker can be started using the command: &quot;mqtt start&quot;.&nbsp;</p>
+<p class="Element10">
+A successful connection should render the following output:&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="wolfmqtt_connection.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+The &quot;mqtt stop&quot; command can be used to request the ongoing MQTT transaction to be aborted.&nbsp;</p>
+<p class="Element10">
+The &quot;mqtt stat&quot; can be used to display the current state of the MQTT connection cycle.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00267.html" target="topic">Berkeley Module</a> &gt; <a href="01393.html" target="topic">Files</a> &gt; <a href="00268.html" target="topic">berkeley_api.h</a></div>
+<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00266.html" target="topic">wolfmqtt_demo</a> &gt; <a href="00268.html" target="topic">Running the Demonstration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -858,13 +161,13 @@ Error location for host lookup errors&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01393.html" target="topic">Previous</a> | <a href="01393.html" target="topic">Up</a> | <a href="00269.html" target="topic">Next</a></div>
+<a href="00265.html" target="topic">Previous</a> | <a href="00266.html" target="topic">Up</a> | <a href="00267.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: berkeley_api.h Topic Title: berkeley_api.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS WOLFMQTT Run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

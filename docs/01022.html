@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPFS Command Line Options</title>
+<title>mib2bib.jar Run-time Error Codes</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01743.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01025.html" target="topic">MPFS Utility</a> &gt; <a href="01022.html" target="topic">MPFS Command Line Options</a></div>
+<a href="01749.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01023.html" target="topic">Microchip MIB Compiler</a> &gt; <a href="01022.html" target="topic">mib2bib.jar Run-time Error Codes</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01019.html" target="topic">Previous</a> | <a href="01025.html" target="topic">Up</a> | <a href="01023.html" target="topic">Next</a></div>
+<a href="01023.html" target="topic">Previous</a> | <a href="01023.html" target="topic">Up</a> | <a href="01031.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS MPFS Command Line Options Topic Title: MPFS Command Line Options)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MIB2BIB mib2bib.jar Run-time Error Codes Topic Title: mib2bib.jar Run-time Error Codes)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPFS Command Line Options</div>
+mib2bib.jar Run-time Error Codes</div>
 </div>
 </div>
 
@@ -49,127 +49,325 @@ MPFS Command Line Options</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-To facilitate batch files and automation, the MPFS Utility also supports execution from the command line. The syntax is as follows:&nbsp;</p>
-<p class="Element10">
-<span class="Element146">MPFS.jar [options] &lt;SourceDir&gt; &lt;ProjectDir&gt; &lt;OutputFile&gt;</span>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The SourceDir, ProjectDir, and OutputFile options are required and should be enclosed in quotation marks.&nbsp;</p>
-<p class="Element10">
-The OutputFile option will be relative to ProjectDir, and cannot be a full path name.&nbsp;</p>
-<p class="Element10">
-The various option switches are described in the following table. </p><div class="Element63">
+<strong>Run-time Error Codes</strong> </p><div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table2">
 <tr>
-<td class="Element65" valign="top" width="13%">
+<td class="Element65" valign="top" width="4%">
 <div class="Element66">
-Switch&nbsp;</div></td><td class="Element65" valign="top" width="8%">
+Error Code&nbsp;</div></td><td class="Element65" valign="top" width="48%">
 <div class="Element66">
-Short&nbsp;</div></td><td class="Element65" valign="top" width="79%">
+Description&nbsp;</div></td><td class="Element65" valign="top" width="47%">
 <div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+Reason&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-/BIN&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+1000&nbsp;</div></td><td class="Element67" valign="top" width="48%">
 <div class="Element68">
-/b&nbsp;</div></td><td class="Element67" valign="top" width="79%">
+Unexpected End-Of-File (EOF) found.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
 <div class="Element68">
-Output a BIN image (Default)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+End-Of-File was reached before the end of command.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-/PIC32&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+1001&nbsp;</div></td><td class="Element67" valign="top" width="48%">
 <div class="Element68">
-/c&nbsp;</div></td><td class="Element67" valign="top" width="79%">
+Unexpected End-Of-Line (EOL) found.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
 <div class="Element68">
-Output a XC32 image&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+End-Of-Line was reached before the end of command.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-/ASM30&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+1002&nbsp;</div></td><td class="Element67" valign="top" width="48%">
 <div class="Element68">
-/s&nbsp;</div></td><td class="Element67" valign="top" width="79%">
+Invalid escape sequence detected; only ‘<span class="Element146">,</span>’, ‘<span class="Element146">\</span>’, ‘<span class="Element146">(</span>‘, or ’<span class="Element146">)</span>’ may follow a ‘<span class="Element146">\</span>’.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
 <div class="Element68">
-Output an ASM16 image&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+All occurrences of ‘<span class="Element146">,</span>’, ‘<span class="Element146">(</span>‘, ’<span class="Element146">)</span>’, and ‘<span class="Element146">\</span>’ must be preceded by a ‘<span class="Element146">\</span>’.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-/MPFS&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+1003&nbsp;</div></td><td class="Element67" valign="top" width="48%">
 <div class="Element68">
-/2&nbsp;</div></td><td class="Element67" valign="top" width="79%">
+Unexpected empty command string received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
 <div class="Element68">
-Use the MPFS format (Default)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+Command does not contain any parameter.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-/html &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+1004&nbsp;</div></td><td class="Element67" valign="top" width="48%">
 <div class="Element68">
-/h &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="79%">
+Unexpected right parenthesis found.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
 <div class="Element68">
-File types to be parsed for dynamic variables (Default: &quot;<span class="Element146">*.htm</span>, <span class="Element146">*.html</span>, <span class="Element146">*.cgi</span>, <span class="Element146">*.xml</span>&quot;)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+Right parenthesis was found in place of a parameter.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
 <div class="Element68">
-/xgzip &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+1005&nbsp;</div></td><td class="Element67" valign="top" width="48%">
 <div class="Element68">
-/z &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="79%">
+Invalid or empty command received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
 <div class="Element68">
-File types to be excluded from GZIP compression (Default: &quot;<span class="Element146">*.bib</span>, <span class="Element146">*.bin</span>&quot;)&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-SourceDir, ProjectDir, and OutputFile are required and should be enclosed in quotes.&nbsp;</p>
-<p class="Element10">
-OutputFile is placed relative to ProjectDir and cannot be a full path name.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>PIC32 Output Option Example:</strong>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<img src="command_1_mpfs.png" border="0" alt="" title=""> &nbsp;</p><p class="Element10" style="text-align: center;">
-&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-&nbsp;</p><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Successful MPFS Image Generation Example:</strong>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<img src="command_2_mpfs.png" border="0" alt="" title=""> </p><p class="Element10" style="text-align: center;">
-&nbsp;</p>
-<p class="Element10">
-<strong>MPFS Utility Output Log Details</strong>&nbsp;</p>
-<div class="Element13"><div class="Element12"><pre class="Element12">D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages :
-auth.htm: 1388 bytes, 1 vars
-cookies.htm: 2104 bytes, 3 vars
-dynvars.htm: 1986 bytes, 6 vars
-footer.htm: 161 bytes
-forms.htm: 2068 bytes, 5 vars
-harmony.gif: 1605 bytes (gzipped by 26%)
-header.htm: 1232 bytes
-index.htm: 3953 bytes, 5 vars
-leds.cgi: 21 bytes, 1 vars
-mchp.css: 922 bytes (gzipped by 72%)
-mchp.gif: 1250 bytes (gzipped by 2%)
-mchp.js: 1451 bytes (gzipped by 62%)
-snmp.bib: 512 bytes
-ssi.htm: 2032 bytes, 1 vars
-status.xml: 183 bytes, 7 vars
-upload.htm: 970 bytes, 2 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\snmp :
-snmp/snmpconfig.htm: 1379 bytes, 7 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\protect :
-protect/config.htm: 1924 bytes, 10 vars
-protect/index.htm: 1021 bytes, 1 vars
-protect/reboot.cgi: 12 bytes, 1 vars
-protect/reboot.htm: 1815 bytes, 2 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\email :
-email/index.htm: 1791 bytes, 3 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\dyndns :
-dyndns/index.htm: 1497 bytes, 10 vars
-GENERATED MPFS IMAGE: 32126 bytes
-
-</pre></div></div>
+Command does not contain sufficient parameters.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1006&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Unexpected escape character received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+A ‘<span class="Element146">\</span>’ character was detected before or after parameters were expected.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1007&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Unknown command received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1008&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid parameters: expected <span class="Element146">$DeclareVar(oidName, dataType, oidType, accessType, oidType)</span>.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1009&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Duplicate OID name found.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Specified OID name is already in use.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1010&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Unknown data type received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Data type keyword does not match one of the allowed keywords.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1011&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Unknown OID type received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+OID type keyword does not match one of the allowed keywords.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1012&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Empty OID string received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1013&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid parameters: expected <span class="Element146">$DynamicVar(oidName, id)</span>.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1014&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+OID name is not defined.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1015&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid OID ID received – must be between 0-1023 inclusive.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1016&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid parameters: expected <span class="Element146">$SequenceVar(oidName,index)</span>.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1017&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid parameters: expected <span class="Element146">$SequenceVar(oidName,index)</span>.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1018&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Current OID already contains a static value.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+This OID has already been declared static.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1019&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid number of index parameters received.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All SequenceVar must include only one index.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1020&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+OID of sequence type cannot contain static data.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All sequence OID variables must be dynamic.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1021&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+This is a duplicate OID or the root of this OID is not the same as previous OID(s), or this OID is a child of a previously defined OID.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All OID strings must contain the same root OID.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1022&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid index received; must be BYTE data value.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All sequence index OID must be of data type, BYTE.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1023&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid OID access type received; must be READONLY or READWRITE.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1024&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Current OID is already assigned an ID value.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Current OID is already declared as dynamic.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1025&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Duplicate dynamic ID found.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Current OID is already declared as dynamic with duplicate ID.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1026&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+No static value found for this OID.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Current OID was declared static, but does not contain any data.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1027&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+No index value found for this OID.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Current OID was declared as sequence, but does not contain any index.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1028&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+OID data scope (dynamic/static) is not defined.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Current OID was declared, but was not defined to be static or dynamic.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1029&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid data value found.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Data value for current OID does not match with its data type.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1030&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid parameters: expected <span class="Element146">$AgentID(oidName, id)</span>.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1031&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Only OID data type is allowed for this command.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+AgentID command must use OID name of OID data type.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1032&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+This OID must contain static OID data.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+AgentID command must use OID name of static data.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1033&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+This OID is already declared as an Agent ID.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Only one AgentID command is allowed.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1034&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+An Agent ID is already assigned.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Only one AgentID command is allowed.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1035&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+OID with READWRITE access cannot be static.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+An OID was declared READWRITE and made static.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1036&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+OID of OID data type cannot be dynamic.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+Current version does not support OID variable of data type, OID.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1037&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+This OID is already declared as dynamic.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1038&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+This OID is already declared as static.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+N/A&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1039&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+This OID does not contain the Internet root. The Internet root of ‘43’ must be used if this is an Internet MIB.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All internet OIDs must start with ‘43’. This is a warning only and will not stop script generation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1040&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+The given value was truncated to fit in a specified data type.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+An OID was declared as BYTE or WORD but the value given in StaticVar exceeded the data range.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1041&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+The given string exceeds a maximum length of 127.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All OCTET_STRING and ASCII_STRING must be less than 128.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1042&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Invalid OID name detected; OID name must follow standard ‘C’ variable naming convention.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+All OID names must follow ‘C’ naming convention as these names are used to create ‘define' statements in the <span class="Element146">mib.h</span> file.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="4%">
+<div class="Element68">
+1043&nbsp;</div></td><td class="Element67" valign="top" width="48%">
+<div class="Element68">
+Total number of dynamic OIDs exceeds 1023.&nbsp;</div></td><td class="Element67" valign="top" width="47%">
+<div class="Element68">
+This version supports total dynamic OIDs of 1024 only. All dynamic OID IDs must range from 0-1023.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -177,7 +375,7 @@ GENERATED MPFS IMAGE: 32126 bytes
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01743.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01025.html" target="topic">MPFS Utility</a> &gt; <a href="01022.html" target="topic">MPFS Command Line Options</a></div>
+<a href="01749.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01023.html" target="topic">Microchip MIB Compiler</a> &gt; <a href="01022.html" target="topic">mib2bib.jar Run-time Error Codes</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -185,13 +383,13 @@ GENERATED MPFS IMAGE: 32126 bytes
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01019.html" target="topic">Previous</a> | <a href="01025.html" target="topic">Up</a> | <a href="01023.html" target="topic">Next</a></div>
+<a href="01023.html" target="topic">Previous</a> | <a href="01023.html" target="topic">Up</a> | <a href="01031.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS MPFS Command Line Options Topic Title: MPFS Command Line Options)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MIB2BIB mib2bib.jar Run-time Error Codes Topic Title: mib2bib.jar Run-time Error Codes)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
