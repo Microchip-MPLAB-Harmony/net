@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="net">
     <Dependencies>
-        <Dependency name="core" version="3.2.1"/>
-        <Dependency name="csp" version="3.2.1"/>
-        <Dependency name="bsp" version="3.2.1"/>
-        <Dependency name="dev_packs" version="3.2.1"/>
-        <Dependency name="crypto" version="3.2.1"/>
-        <Dependency name="mhc" version="3.2.0"/>
+        <Dependency name="core" version="3.4.0"/>
+        <Dependency name="csp" version="3.4.0"/>
+        <Dependency name="bsp" version="3.4.0"/>
+        <Dependency name="dev_packs" version="3.4.0"/>
+        <Dependency name="crypto" version="3.3.0"/>
+        <Dependency name="mhc" version="3.3.1"/>
     </Dependencies>
 </Package>
