@@ -101,8 +101,9 @@ static TCPIP_HELPER_PORT_ENTRY tcpSecurePortTbl[_TCPIP_STACK_SECURE_PORT_ENTRIES
     {990,           TCPIP_HELPER_PORT_FLAG_STREAM | TCPIP_HELPER_PORT_FLAG_DGRAM},      // FTPS
     {992,           TCPIP_HELPER_PORT_FLAG_STREAM | TCPIP_HELPER_PORT_FLAG_DGRAM},      // telnet
     {993,           TCPIP_HELPER_PORT_FLAG_STREAM },                                    // IMAPS
+    {8883,          TCPIP_HELPER_PORT_FLAG_STREAM },                                    // MQTT
 
-    {0,             0},                                                                 // extra slots available
+    // extra slots could be added
 };
 
 static TCPIP_HELPER_PORT_ENTRY*    _TCPIP_Helper_SecurePortEntry(uint16_t port, TCPIP_HELPER_PORT_ENTRY** pFreeEntry);
