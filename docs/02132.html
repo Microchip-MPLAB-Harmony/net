@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_DNS_CLIENT_INFO Structure</title>
+<title>TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00340.html" target="topic">DNS Module</a> &gt; <a href="01454.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02132.html" target="topic">TCPIP_DNS_CLIENT_INFO Structure</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00346.html" target="topic">DNS Module</a> &gt; <a href="01460.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02132.html" target="topic">TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02201.html" target="topic">Previous</a> | <a href="01454.html" target="topic">Up</a> | <a href="02142.html" target="topic">Next</a></div>
+<a href="02131.html" target="topic">Previous</a> | <a href="01460.html" target="topic">Up</a> | <a href="02133.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_CLIENT_INFO Topic Title: TCPIP_DNS_CLIENT_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Topic Title: TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_DNS_CLIENT_INFO Structure</div>
+TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro</div>
 </div>
 </div>
 
@@ -49,78 +49,17 @@ TCPIP_DNS_CLIENT_INFO Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Structure: TCPIP_DNS_CLIENT_INFO&nbsp;</p>
-<p class="Element10">
-DNS module data structure used for getting information about the module settings.</p></div>
+Default TTL time for a solved entry in the cache This value will be used when the DNS server TTL value for an entry is 0</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <a href="03121.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">strictNet</span></strong>;
-  <a href="03121.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">prefNet</span></strong>;
-  uint32_t <strong><span style="color: #000000">dnsTime</span></strong>;
-  uint16_t <strong><span style="color: #000000">pendingEntries</span></strong>;
-  uint16_t <strong><span style="color: #000000">currentEntries</span></strong>;
-  uint16_t <strong><span style="color: #000000">totalEntries</span></strong>;
-} TCPIP_DNS_CLIENT_INFO;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_NET_HANDLE strictNet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-current strict DNS interface&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_NET_HANDLE prefNet;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-current preferred DNS interface&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t dnsTime;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-current DNS time, seconds&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t pendingEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-number of entries that need to be solved&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t currentEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-number of solved and unslolved name entries&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t totalEntries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-total number of supported name entries&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL</span></strong> (20 * 60)</pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00340.html" target="topic">DNS Module</a> &gt; <a href="01454.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02132.html" target="topic">TCPIP_DNS_CLIENT_INFO Structure</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00346.html" target="topic">DNS Module</a> &gt; <a href="01460.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02132.html" target="topic">TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +67,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02201.html" target="topic">Previous</a> | <a href="01454.html" target="topic">Up</a> | <a href="02142.html" target="topic">Next</a></div>
+<a href="02131.html" target="topic">Previous</a> | <a href="01460.html" target="topic">Up</a> | <a href="02133.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_CLIENT_INFO Topic Title: TCPIP_DNS_CLIENT_INFO Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Topic Title: TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

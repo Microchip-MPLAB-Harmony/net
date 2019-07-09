@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>PIC32MZ EF Starter Kit</title>
+<title>NET_PRES_TransSignalHandlerDeregister Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01317.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00210.html" target="topic">Introduction</a> &gt; <a href="01316.html" target="topic">TCP/IP Demonstration Hardware</a> &gt; <a href="01187.html" target="topic">PIC32MZ EF Starter Kit</a></div>
+<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01187.html" target="topic">NET_PRES_TransSignalHandlerDeregister Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01186.html" target="topic">Previous</a> | <a href="01316.html" target="topic">Up</a> | <a href="01188.html" target="topic">Next</a></div>
+<a href="01186.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01188.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIC32MZ EF Starter Kit Topic Title: PIC32MZ EF Starter Kit)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransSignalHandlerDeregister Topic Title: NET_PRES_TransSignalHandlerDeregister Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-PIC32MZ EF Starter Kit</div>
+NET_PRES_TransSignalHandlerDeregister Type</div>
 </div>
 </div>
 
@@ -49,18 +49,54 @@ PIC32MZ EF Starter Kit</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<strong>Hardware Configurations</strong>
-<ul class="Element632">
-<li class="Element602">Refer PIC32MZ EF Starter Kit <a href="#" onclick="openExternalLink('http://ww1.microchip.com/downloads/en/devicedoc/70005230b.pdf');"><img src="indicator_external_link.gif" border="0" alt="" title="">User Guide</a></li>
-</ul>&nbsp;</p>
+Transport Layer Deregister Handler Function Pointer Prototype&nbsp;</p>
 <p class="Element10">
-<img src="PIC32MZ EF USB ETHERNET.png" border="0" alt="" title="">&nbsp;</p>
+This function is called by the presentation layer when the application wants to deregister a handler function.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">bool</span></strong> (* <strong><span style="color: #000000">NET_PRES_TransSignalHandlerDeregister</span></strong>)(<a href="01116.html" target="topic">NET_PRES_SKT_HANDLE_T</a> handle, <a href="01104.html" target="topic">NET_PRES_SIGNAL_FUNCTION</a> hSig);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+A <a href="01301.html" target="topic">socket</a> needs to have been opened by <a href="01180.html" target="topic">NET_PRES_TransOpen</a>.</p></div>
+</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The handle returned from <a href="01180.html" target="topic">NET_PRES_TransOpen</a>.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hSig&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The handler handle returned from <a href="01178.html" target="topic">NET_PRES_TransHandlerRegister</a>.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
 
-<ul class="Element632">
-<li class="Element602">Connect the mini USB cable from the computer to the USB DEBUG connector on the PIC32MZ EF Starter Kit</li>
-<li class="Element602">Connect the mini USB cable from the computer to the USB-UART connector on the PIC32MZ EF Starter Kit</li>
-<li class="Element602">Establish a connection between the router/switch with the PIC32MZ EF Starter Kit through the RJ45 connector on PHY daughter board </li>
+<ul class="Element633">
+<li class="Element603">true - Indicates success</li>
+<li class="Element603">false - Indicates failure</li>
 </ul></p></div>
 </div>
 </div>
@@ -68,7 +104,7 @@ PIC32MZ EF Starter Kit</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01317.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00210.html" target="topic">Introduction</a> &gt; <a href="01316.html" target="topic">TCP/IP Demonstration Hardware</a> &gt; <a href="01187.html" target="topic">PIC32MZ EF Starter Kit</a></div>
+<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01187.html" target="topic">NET_PRES_TransSignalHandlerDeregister Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -76,13 +112,13 @@ PIC32MZ EF Starter Kit</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01186.html" target="topic">Previous</a> | <a href="01316.html" target="topic">Up</a> | <a href="01188.html" target="topic">Next</a></div>
+<a href="01186.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01188.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: PIC32MZ EF Starter Kit Topic Title: PIC32MZ EF Starter Kit)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransSignalHandlerDeregister Topic Title: NET_PRES_TransSignalHandlerDeregister Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -89,6 +89,29 @@ extern "C" {
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (900)
 
 
+/* RX queue size has one additional element for the empty spot needed in circular queue */
+#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0    11
+
+/* TX queue size has one additional element for the empty spot needed in circular queue */
+#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0    65
+#define SYS_CONSOLE_BUFFER_DMA_READY
+
+
+#define SYS_CMD_ENABLE
+#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
+#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_BUFFER_DMA_READY
+#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+#define SYS_DEBUG_USE_CONSOLE
+
+
+
 /* File System Service Configuration */
 
 #define SYS_FS_MEDIA_NUMBER               1
@@ -109,27 +132,7 @@ extern "C" {
 
 /* Console System Service Configuration Options */
 #define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
-#define SYS_CONSOLE_INSTANCES_NUMBER       1
 #define SYS_CONSOLE_UART_MAX_INSTANCES     1
-
-/* RX queue size has one additional element for the empty spot needed in circular queue */
-#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0    11
-
-/* TX queue size has one additional element for the empty spot needed in circular queue */
-#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0    65
-#define SYS_CONSOLE_BUFFER_DMA_READY
-
-#define SYS_DEBUG_ENABLE
-#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
-#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
-#define SYS_DEBUG_BUFFER_DMA_READY
-#define SYS_DEBUG_USE_CONSOLE
-
-#define SYS_CMD_ENABLE
-#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
-#define SYS_CMD_BUFFER_DMA_READY
-#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 
 
 
@@ -144,6 +147,9 @@ extern "C" {
 #define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
+#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
+#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
+
 
 
 /*** MIIM Driver Configuration ***/
@@ -166,7 +172,7 @@ extern "C" {
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-
+#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING
 
 
 
@@ -265,6 +271,54 @@ extern "C" {
 /*** NBNS Configuration ***/
 #define TCPIP_STACK_USE_NBNS
 #define TCPIP_NBNS_TASK_TICK_RATE   110
+
+
+
+/******************************************************************************/
+/*wolfSSL TLS Layer Configuration*/
+/******************************************************************************/
+
+#define HAVE_AES_DECRYPT
+#define WOLFSSL_ALT_NAMES
+#define WOLFSSL_DER_LOAD
+#define KEEP_OUR_CERT
+#define KEEP_PEER_CERT
+#define HAVE_CRL_IO
+#define HAVE_IO_TIMEOUT
+#define HAVE_FFDHE_2048
+#define HAVE_FFDHE_3072
+#define HAVE_FFDHE_4096
+#define HAVE_FFDHE_6144
+#define HAVE_FFDHE_8192
+#define TFM_NO_ASM
+#define WOLFSSL_NO_ASM
+#define SINGLE_THREADED
+#define SIZEOF_LONG_LONG 8
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define NO_DEV_RANDOM
+#define NO_FILESYSTEM
+#define MICROCHIP_TCPIP
+#define USER_TICKS
+#define WOLFSSL_DTLS
+
+
+#define TFM_TIMING_RESISTANT
+#define ECC_TIMING_RESISTANT
+#define WC_RSA_BLINDING
+
+
+    
+    
+    
+
+#define NO_ERROR_STRINGS
+    
+    
+    
+    
+    
+    
 
 
 
@@ -488,36 +542,54 @@ extern "C" {
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0				10
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE0				    	1536
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE0				   		12
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0				1
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0					1
 
 /*** QUEUE 1 Disabled; Dummy Configuration ***/
 #define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE1				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE1				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE1				   		1
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE1				0
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE1					0
 
 /*** QUEUE 2 Disabled; Dummy Configuration ***/
 #define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE2				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE2				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE2				   		1
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE2				0
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE2					0
 
 /*** QUEUE 3 Disabled; Dummy Configuration ***/
 #define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE3				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE3				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE3				   		1
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE3				0
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE3					0
 
 /*** QUEUE 4 Disabled; Dummy Configuration ***/
 #define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE4				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE4				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE4				   		1
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE4				0
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE4					0
 
 /*** QUEUE 5 Disabled; Dummy Configuration ***/
 #define TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5				TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5				TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE5				    	TCPIP_GMAC_RX_BUFF_SIZE_DUMMY
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE5				    	TCPIP_GMAC_TX_BUFF_SIZE_DUMMY
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE5				   		1
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE5				0
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE5					0
 
 #define TCPIP_GMAC_RX_MAX_FRAME		    			1536
 #define TCPIP_GMAC_RX_FILTERS                       \
@@ -626,13 +698,17 @@ extern "C" {
 #define USE_FAST_MATH
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
-#define NO_AES
+#define WOLFSSL_AES_COUNTER
+#define HAVE_AES_CBC
+#define HAVE_AESGCM
+#define WOLFSSL_SHA224
 #define WOLFSSL_SHA512
-#define NO_ASN
-#define NO_RSA
+#define WOLFSSL_SHA384
+#define HAVE_ECC
+#define USE_FAST_MATH
+#define WOLFSSL_STATIC_RSA
 #define NO_DES3
-#define NO_AES_CBC
-#define NO_RNG
+#define WOLFSSL_AES_COUNTER
 #define NO_RNG_TEST
 
 

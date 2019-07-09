@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SNTP_EVENT Enumeration</title>
+<title>TCPIP_SNMPV3_USM_USER_CONFIG Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01255.html" target="topic">SNTP Module</a> &gt; <a href="01681.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="03425.html" target="topic">TCPIP_SNTP_EVENT Enumeration</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01667.html" target="topic">Library Interface</a> &gt; d) SNMPv3 Data Types and Constants &gt; <a href="03425.html" target="topic">TCPIP_SNMPV3_USM_USER_CONFIG Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03455.html" target="topic">Previous</a> | <a href="01681.html" target="topic">Up</a> | <a href="03436.html" target="topic">Next</a></div>
+<a href="03399.html" target="topic">Previous</a> | <a href="01667.html" target="topic">Up</a> | <a href="01665.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNTP_EVENT Topic Title: TCPIP_SNTP_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_USM_USER_CONFIG Topic Title: TCPIP_SNMPV3_USM_USER_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SNTP_EVENT Enumeration</div>
+TCPIP_SNMPV3_USM_USER_CONFIG Structure</div>
 </div>
 </div>
 
@@ -49,24 +49,20 @@ TCPIP_SNTP_EVENT Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-TCPIP_SNTP_EVENT Enumeration&nbsp;</p>
+Structure: SNMPV3_USM_USER_CONFIG&nbsp;</p>
 <p class="Element10">
-Provides a list of run time SNTP events .</p></div>
+This structure is used to configure predefined SNMPv3 USM details for run-time configuration.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_NONE</span></strong> = 0,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_TSTAMP_OK</span></strong> = 1,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_DNS_ERROR</span></strong> = -1,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_IF_ERROR</span></strong> = -2,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_SKT_ERROR</span></strong> = -3,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_SERVER_TMO</span></strong> = -4,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_VER_ERROR</span></strong> = -5,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_TSTAMP_ERROR</span></strong> = -6,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_KOD_ERROR</span></strong> = -7,
-  <strong><span style="color: #000000">TCPIP_SNTP_EVENT_SYNC_ERROR</span></strong> = -8
-} TCPIP_SNTP_EVENT;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">username</span></strong>;
+  <a href="01316.html" target="topic">STD_BASED_SNMPV3_SECURITY_LEVEL</a> <strong><span style="color: #000000">security_level</span></strong>;
+  <a href="01253.html" target="topic">SNMPV3_HMAC_HASH_TYPE</a> <strong><span style="color: #000000">usm_auth_proto</span></strong>;
+  <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">usm_auth_password</span></strong>;
+  <a href="01257.html" target="topic">SNMPV3_PRIV_PROT_TYPE</a> <strong><span style="color: #000000">usm_priv_proto</span></strong>;
+  <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">usm_priv_password</span></strong>;
+} TCPIP_SNMPV3_USM_USER_CONFIG;</pre></div></div>
 <a name="4D656D62657273"></a><div class="Element14">
 Members</div>
 <div class="Element11">
@@ -82,54 +78,34 @@ Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SNTP_EVENT_NONE = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+char * username;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-invalid event success&nbsp;</div></td></tr><tr>
+&lt; user name string&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SNTP_EVENT_TSTAMP_OK = 1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+STD_BASED_SNMPV3_SECURITY_LEVEL security_level;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-a new NTP timestamp has been acquired successfully error events&nbsp;</div></td></tr><tr>
+&lt; security level: auth, priv combination&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SNTP_EVENT_DNS_ERROR = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+SNMPV3_HMAC_HASH_TYPE usm_auth_proto;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-NTP server name DNS failed&nbsp;</div></td></tr><tr>
+&lt; auth type: md5, sha1&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SNTP_EVENT_IF_ERROR = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+char * usm_auth_password;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-could not select a valid NTP interface&nbsp;</div></td></tr><tr>
+&lt; passphrase string for authentication&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SNTP_EVENT_SKT_ERROR = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+SNMPV3_PRIV_PROT_TYPE usm_priv_proto;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-could not bind the <a href="01295.html" target="topic">socket</a> to the NTP interface or timeout on the <a href="01295.html" target="topic">socket</a> TX&nbsp;</div></td></tr><tr>
+&lt; priv type: DES&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SNTP_EVENT_SERVER_TMO = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+char * usm_priv_password;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-no reply received from the NTP server&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SNTP_EVENT_VER_ERROR = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the server response has a wrong version&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SNTP_EVENT_TSTAMP_ERROR = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the server response had wrong timestamp&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SNTP_EVENT_KOD_ERROR = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the server replied with a &quot;Kiss O' Death&quot; code&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_SNTP_EVENT_SYNC_ERROR = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the server response has a synchronization error&nbsp;</div></td></tr></table></div></div>
+&lt; passphrase string for privacy&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -137,14 +113,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None</p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01255.html" target="topic">SNTP Module</a> &gt; <a href="01681.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="03425.html" target="topic">TCPIP_SNTP_EVENT Enumeration</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01667.html" target="topic">Library Interface</a> &gt; d) SNMPv3 Data Types and Constants &gt; <a href="03425.html" target="topic">TCPIP_SNMPV3_USM_USER_CONFIG Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -152,13 +128,13 @@ None</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03455.html" target="topic">Previous</a> | <a href="01681.html" target="topic">Up</a> | <a href="03436.html" target="topic">Next</a></div>
+<a href="03399.html" target="topic">Previous</a> | <a href="01667.html" target="topic">Up</a> | <a href="01665.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNTP_EVENT Topic Title: TCPIP_SNTP_EVENT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_USM_USER_CONFIG Topic Title: TCPIP_SNMPV3_USM_USER_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

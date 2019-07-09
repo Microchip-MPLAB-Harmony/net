@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_TransReady Type</title>
+<title>NET_PRES_TransOpen Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01180.html" target="topic">NET_PRES_TransReady Type</a></div>
+<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01180.html" target="topic">NET_PRES_TransOpen Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01179.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01181.html" target="topic">Next</a></div>
+<a href="01178.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01181.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransReady Topic Title: NET_PRES_TransReady Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransOpen Topic Title: NET_PRES_TransOpen Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_TransReady Type</div>
+NET_PRES_TransOpen Type</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ NET_PRES_TransReady Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Presentation Layer Transport Layer Ready Function&nbsp;</p>
+Transport Layer Open Function Pointer Prototype&nbsp;</p>
 <p class="Element10">
-This function prototype is used to define the function that the Networking Presentation Layer will pass to the provider when it is initialized. The provider will use this function when it needs to check if it can read or write to the layer.</p></div>
+This function is called by the presentation layer when an application wants to open a <a href="01301.html" target="topic">socket</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> uint16_t (* <strong><span style="color: #000000">NET_PRES_TransReady</span></strong>)(uintptr_t transHandle);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <a href="01116.html" target="topic">NET_PRES_SKT_HANDLE_T</a> (* <strong><span style="color: #000000">NET_PRES_TransOpen</span></strong>)(<a href="01170.html" target="topic">NET_PRES_TRANS_ADDRESS_TYPE</a> addType, <a href="01119.html" target="topic">NET_PRES_SKT_PORT_T</a> port, <a href="01059.html" target="topic">NET_PRES_ADDRESS</a> * address);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+Transport layer must be initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +78,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-transHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-This is the transport layer handle provided by the transport layer when a communications channel is open.&nbsp;</div></td></tr></table></div></div>
+The type of address being used. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The port to <a href="01013.html" target="topic">listen</a> or to <a href="01201.html" target="topic">send</a> to. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+address&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The address to use. This is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -90,8 +100,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element633">
-<li class="Element603">true - The presentation layer can read or write to the transport layer</li>
-<li class="Element603">false - The transport layer is busy and cannot accept reads or write</li>
+<li class="Element603"><a href="01102.html" target="topic">NET_PRES_INVALID_SOCKET</a> - No sockets of the specified type were available to be opened.</li>
+<li class="Element603"><a href="01116.html" target="topic">NET_PRES_SKT_HANDLE_T</a> handle - Returned when <a href="01102.html" target="topic">NET_PRES_INVALID_SOCKET</a> is returned. Save this handle and use it when calling all other presentation <a href="01301.html" target="topic">socket</a> APIs.</li>
 </ul></p></div>
 </div>
 </div>
@@ -99,7 +109,7 @@ Returns</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01180.html" target="topic">NET_PRES_TransReady Type</a></div>
+<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01180.html" target="topic">NET_PRES_TransOpen Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -107,13 +117,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01179.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01181.html" target="topic">Next</a></div>
+<a href="01178.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01181.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransReady Topic Title: NET_PRES_TransReady Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransOpen Topic Title: NET_PRES_TransOpen Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

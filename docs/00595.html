@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_GMAC_RxFilterHashTableEntrySet Function</title>
+<title>DRV_GMAC_PacketTx Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00382.html" target="topic">Library Interface</a> &gt; b) Receive Functions &gt; <a href="00595.html" target="topic">DRV_GMAC_RxFilterHashTableEntrySet Function</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00682.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00388.html" target="topic">Library Interface</a> &gt; c) Transmit Functions &gt; <a href="00595.html" target="topic">DRV_GMAC_PacketTx Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00588.html" target="topic">Previous</a> | <a href="00382.html" target="topic">Up</a> | <a href="00589.html" target="topic">Next</a></div>
+<a href="00601.html" target="topic">Previous</a> | <a href="00388.html" target="topic">Up</a> | <a href="00587.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_RxFilterHashTableEntrySet@DRV_HANDLE@TCPIP_MAC_ADDR* Topic Title: DRV_GMAC_RxFilterHashTableEntrySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_PacketTx@DRV_HANDLE@TCPIP_MAC_PACKET * Topic Title: DRV_GMAC_PacketTx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_GMAC_RxFilterHashTableEntrySet Function</div>
+DRV_GMAC_PacketTx Function</div>
 </div>
 </div>
 
@@ -49,22 +49,20 @@ DRV_GMAC_RxFilterHashTableEntrySet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function sets the MAC hash table filtering to allow packets sent to DestMACAddr to be received. It calculates a CRC-32 using polynomial 0x4C11DB7 over the 6 byte MAC address and then, using bits 28:23 of the CRC, will set the appropriate bits in the hash table filter registers ( ETHHT0-ETHHT1).&nbsp;</p>
-<p class="Element10">
-The function will enable/disable the Hash Table receive filter if needed.</p></div>
+This is the MAC transmit function. Using this function a packet is submitted to the MAC driver for transmission.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02973.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">DRV_GMAC_RxFilterHashTableEntrySet</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02979.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">DRV_GMAC_PacketTx</span></strong>(
     DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> TCPIP_MAC_ADDR* <strong><span style="color: #000000">DestMACAddr</span></strong>
+    <a href="02896.html" target="topic">TCPIP_MAC_PACKET</a> * <strong><span style="color: #000000">ptrPacket</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="00585.html" target="topic">DRV_GMAC_Initialize</a>() should have been called. <a href="00587.html" target="topic">DRV_GMAC_Open</a>() should have been called to obtain a valid handle.</p></div>
+<a href="00591.html" target="topic">DRV_GMAC_Initialize</a>() should have been called. <a href="00593.html" target="topic">DRV_GMAC_Open</a>() should have been called to obtain a valid handle.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -74,7 +72,7 @@ Returns</div>
 
 <ul class="Element633">
 <li class="Element603">TCPIP_MAC_RES_OK if success</li>
-<li class="Element603">a <a href="02973.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
+<li class="Element603">a <a href="02979.html" target="topic">TCPIP_MAC_RES</a> error value if failed</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -84,10 +82,17 @@ Remarks</div>
 <p class="Element10">
 
 <ul class="Element633">
-<li class="Element603">Sets the appropriate bit in the ETHHT0/1 registers to allow packets sent to DestMACAddr to be received and enabled the Hash Table receive filter.</li>
-<li class="Element603">There is no way to individually remove destination MAC addresses from the hash table since it is possible to have a hash collision and therefore multiple MAC addresses relying on the same hash table bit.</li>
-<li class="Element603">A workaround is to have the stack store each enabled MAC address and to perform the comparison at run time.</li>
-<li class="Element603">A call to DRV_GMAC_RxFilterHashTableEntrySet() using a 00-00-00-00-00-00 destination MAC address, which will clear the entire hash table and disable the hash table filter. This will allow the receive of all packets, regardless of their destination</li>
+<li class="Element603">The MAC driver supports internal queuing. A packet is rejected only if it's not properly formatted. Otherwise it will be scheduled for transmission and queued internally if needed.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element633">
+<li class="Element603">Once the packet is scheduled for transmission the MAC driver will set the TCPIP_MAC_PKT_FLAG_QUEUED flag so that the stack is aware that this packet is under processing and cannot be modified.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element633">
+<li class="Element603">Once the packet is transmitted, the TCPIP_MAC_PKT_FLAG_QUEUED will be cleared, the proper packet acknowledgment result (ackRes) will be set and the packet acknowledgment function (ackFunc) will be called.</li>
 </ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
@@ -102,7 +107,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00382.html" target="topic">Library Interface</a> &gt; b) Receive Functions &gt; <a href="00595.html" target="topic">DRV_GMAC_RxFilterHashTableEntrySet Function</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00682.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00388.html" target="topic">Library Interface</a> &gt; c) Transmit Functions &gt; <a href="00595.html" target="topic">DRV_GMAC_PacketTx Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +115,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00588.html" target="topic">Previous</a> | <a href="00382.html" target="topic">Up</a> | <a href="00589.html" target="topic">Next</a></div>
+<a href="00601.html" target="topic">Previous</a> | <a href="00388.html" target="topic">Up</a> | <a href="00587.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_RxFilterHashTableEntrySet@DRV_HANDLE@TCPIP_MAC_ADDR* Topic Title: DRV_GMAC_RxFilterHashTableEntrySet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_PacketTx@DRV_HANDLE@TCPIP_MAC_PACKET * Topic Title: DRV_GMAC_PacketTx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

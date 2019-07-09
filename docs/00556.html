@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ETHPHY_Setup Function</title>
+<title>DRV_ETHPHY_SETUP Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00556.html" target="topic">DRV_ETHPHY_Setup Function</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00372.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00556.html" target="topic">DRV_ETHPHY_SETUP Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00566.html" target="topic">Previous</a> | <a href="00366.html" target="topic">Up</a> | <a href="00541.html" target="topic">Next</a></div>
+<a href="00490.html" target="topic">Previous</a> | <a href="00372.html" target="topic">Up</a> | <a href="00574.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Setup@DRV_HANDLE@DRV_ETHPHY_SETUP*@TCPIP_ETH_OPEN_FLAGS* Topic Title: DRV_ETHPHY_Setup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_SETUP Topic Title: DRV_ETHPHY_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ETHPHY_Setup Function</div>
+DRV_ETHPHY_SETUP Structure</div>
 </div>
 </div>
 
@@ -49,59 +49,72 @@ DRV_ETHPHY_Setup Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function initializes the Ethernet PHY communication. It tries to detect the external Ethernet PHY, to read the capabilities and find a match with the requested features. Then, it programs the Ethernet PHY accordingly.</p></div>
+Ethernet PHY Device Driver Set up Data&nbsp;</p>
+<p class="Element10">
+This data structure contains all the data necessary to configure the Ethernet PHY device.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_Setup</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
-    <a href="00550.html" target="topic">DRV_ETHPHY_SETUP</a>* <strong><span style="color: #000000">pSetUp</span></strong>, 
-    TCPIP_ETH_OPEN_FLAGS* <strong><span style="color: #000000">pSetupFlags</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">phyAddress</span></strong>;
+  TCPIP_ETH_OPEN_FLAGS <strong><span style="color: #000000">openFlags</span></strong>;
+  <a href="00441.html" target="topic">DRV_ETHPHY_CONFIG_FLAGS</a> <strong><span style="color: #000000">configFlags</span></strong>;
+  TCPIP_ETH_PAUSE_TYPE <strong><span style="color: #000000">macPauseType</span></strong>;
+  <a href="00553.html" target="topic">DRV_ETHPHY_RESET_FUNCTION</a> <strong><span style="color: #000000">resetFunction</span></strong>;
+} DRV_ETHPHY_SETUP;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">The <a href="00457.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
-<li class="Element603"><a href="00541.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
-</ul></p></div>
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int phyAddress;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the address the PHY is configured for&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_ETH_OPEN_FLAGS openFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+the capability flags: FD/HD, 100/100Mbps, etc.&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_ETHPHY_CONFIG_FLAGS configFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+configuration flags: MII/RMII, I/O setup&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_ETH_PAUSE_TYPE macPauseType;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+MAC requested pause type&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_ETHPHY_RESET_FUNCTION resetFunction;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+If ! NULL, function to be called when the PHY is reset/initialized&nbsp;</div></td></tr></table></div></div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">DRV_ETHPHY_RES_PENDING operation has been scheduled successfully</li>
-<li class="Element603">an <a href="00549.html" target="topic">DRV_ETHPHY_RESULT</a> error code if the set up procedure failed.</li>
-</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-PHY configuration may be a lengthy operation due to active negotiation that the PHY has to perform with the link party. The <a href="00432.html" target="topic">DRV_ETHPHY_ClientStatus</a> will repeatedly return DRV_ETHPHY_CLIENT_STATUS_BUSY until the set up procedure is complete (unless an error detected at which an error code will be returned immediately).&nbsp;</p>
-<p class="Element10">
-Use <a href="00432.html" target="topic">DRV_ETHPHY_ClientStatus</a>() and <a href="00430.html" target="topic">DRV_ETHPHY_ClientOperationResult</a>() to check when the operation was completed and its outcome.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
-</div>
+A pointer to a structure of this format containing the desired initialization data must be passed into the <a href="00562.html" target="topic">DRV_ETHPHY_Setup</a> routine.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00366.html" target="topic">Library Interface</a> &gt; a) System Level Functions &gt; <a href="00556.html" target="topic">DRV_ETHPHY_Setup Function</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00372.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="00556.html" target="topic">DRV_ETHPHY_SETUP Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -109,13 +122,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00566.html" target="topic">Previous</a> | <a href="00366.html" target="topic">Up</a> | <a href="00541.html" target="topic">Next</a></div>
+<a href="00490.html" target="topic">Previous</a> | <a href="00372.html" target="topic">Up</a> | <a href="00574.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_Setup@DRV_HANDLE@DRV_ETHPHY_SETUP*@TCPIP_ETH_OPEN_FLAGS* Topic Title: DRV_ETHPHY_Setup Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_SETUP Topic Title: DRV_ETHPHY_SETUP Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

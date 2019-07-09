@@ -57,6 +57,7 @@
 
 static DRV_SDMMC_OBJ gDrvSDMMCObj[DRV_SDMMC_INSTANCES_NUMBER];
 
+
 static inline uint32_t  _DRV_SDMMC_MAKE_HANDLE(uint16_t token, uint8_t drvIndex, uint8_t index)
 {
     return ((token << 16) | (drvIndex << 8) | index);
@@ -120,10 +121,11 @@ static DRV_SDMMC_CLIENT_OBJ* _DRV_SDMMC_DriverHandleValidate(DRV_HANDLE handle)
 
 static DRV_SDMMC_BUFFER_OBJ* _DRV_SDMMC_FreeBufferObjectGet(DRV_SDMMC_CLIENT_OBJ* clientObj)
 {
+    uint32_t index;
     DRV_SDMMC_OBJ* dObj = (DRV_SDMMC_OBJ* )&gDrvSDMMCObj[clientObj->drvIndex];
     DRV_SDMMC_BUFFER_OBJ* pBufferObj = (DRV_SDMMC_BUFFER_OBJ*)dObj->bufferObjPool;
 
-    for (uint32_t index = 0; index < dObj->bufferObjPoolSize; index++)
+    for (index = 0; index < dObj->bufferObjPoolSize; index++)
     {
         if (pBufferObj[index].inUse == false)
         {
@@ -309,61 +311,6 @@ static void _DRV_SDMMC_UpdateGeometry( DRV_SDMMC_OBJ* dObj )
     dObj->mediaGeometryObj.geometryTable = (SYS_MEDIA_REGION_GEOMETRY *)dObj->mediaGeometryTable;
 }
 
-static void _DRV_SDMMC_SetClock (
-    DRV_SDMMC_OBJ* dObj,
-    uint32_t clock
-)
-{
-    switch (dObj->clockState)
-    {
-        case DRV_SDMMC_CLOCK_SET_COMPLETE:
-        case DRV_SDMMC_CLOCK_SET_DIVIDER:
-        default:
-
-            dObj->sdmmcPlib->sdhostSetClock(clock);
-            dObj->tmrHandle = SYS_TIME_HANDLE_INVALID;
-            if (SYS_TIME_DelayMS(5, &(dObj->tmrHandle)) == SYS_TIME_SUCCESS)
-            {
-                dObj->clockState = DRV_SDMMC_CLOCK_PRE_ENABLE_DELAY;
-            }
-            break;
-
-        case DRV_SDMMC_CLOCK_PRE_ENABLE_DELAY:
-
-            if (SYS_TIME_DelayIsComplete(dObj->tmrHandle) == true)
-            {
-                /* Delay has elapsed. */
-                if (dObj->sdmmcPlib->sdhostClockEnable != NULL)
-                {
-                    dObj->clockState = DRV_SDMMC_CLOCK_ENABLE;
-                }
-                else
-                {
-                    dObj->clockState = DRV_SDMMC_CLOCK_SET_COMPLETE;
-                }
-            }
-            break;
-
-        case DRV_SDMMC_CLOCK_ENABLE:
-
-            dObj->sdmmcPlib->sdhostClockEnable ();
-            dObj->tmrHandle = SYS_TIME_HANDLE_INVALID;
-            if ( SYS_TIME_DelayMS(5, &(dObj->tmrHandle)) == SYS_TIME_SUCCESS)
-            {
-                dObj->clockState = DRV_SDMMC_CLOCK_POST_ENABLE_DELAY;
-            }
-            break;
-
-        case DRV_SDMMC_CLOCK_POST_ENABLE_DELAY:
-
-            if (SYS_TIME_DelayIsComplete(dObj->tmrHandle) == true)
-            {
-                /* Delay has elapsed. */
-                dObj->clockState = DRV_SDMMC_CLOCK_SET_COMPLETE;
-            }
-            break;
-    }
-}
 
 static void _DRV_SDMMC_PlibCallbackHandler(
     DRV_SDMMC_XFER_STATUS xferStatus,
@@ -398,7 +345,7 @@ static void _DRV_SDMMC_TimerCallback (
     *timeoutFlag = true;
 }
 
-static void _DRV_SDMMC_InitCardContext ( DRV_SDHOST_CARD_CTXT* cardCtxt )
+static void _DRV_SDMMC_InitCardContext ( uint32_t drvIndex, DRV_SDHOST_CARD_CTXT* cardCtxt )
 {
     cardCtxt->isAttached            = false;
     cardCtxt->busWidth              = DRV_SDMMC_BUS_WIDTH_1_BIT;
@@ -416,6 +363,7 @@ static void _DRV_SDMMC_InitCardContext ( DRV_SDHOST_CARD_CTXT* cardCtxt )
     cardCtxt->isWriteProtected      = false;
     cardCtxt->isLocked              = false;
     cardCtxt->errorFlag             = 0;
+
 
     memset (cardCtxt->cidBuffer, 0, DRV_SDMMC_CID_BUFFER_LEN);
     memset (cardCtxt->csdBuffer, 0, DRV_SDMMC_CSD_BUFFER_LEN);
@@ -599,6 +547,46 @@ static void _DRV_SDMMC_MediaInitialize (
 
     switch (dObj->initState)
     {
+        case DRV_SDMMC_INIT_SET_INIT_SPPED:
+            if (dObj->cardCtxt.currentSpeed != DRV_SDMMC_CLOCK_FREQ_400_KHZ)
+            {
+                if (dObj->sdmmcPlib->sdhostSetClock(DRV_SDMMC_CLOCK_FREQ_400_KHZ) == true)
+                {
+                    dObj->cardCtxt.currentSpeed = DRV_SDMMC_CLOCK_FREQ_400_KHZ;
+                    if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                    {
+                        dObj->initState = DRV_SDMMC_INIT_START_POLLING_TIMEOUT;
+                    }
+                }
+            }
+            else
+            {
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                {
+                    dObj->initState = DRV_SDMMC_INIT_START_POLLING_TIMEOUT;
+                }
+            }
+            break;
+
+        case DRV_SDMMC_INIT_START_POLLING_TIMEOUT:
+            if (SYS_TIME_DelayMS(dObj->cardDetectionPollingIntervalMs, &(dObj->tmrHandle)) == SYS_TIME_SUCCESS)
+            {
+                dObj->initState = DRV_SDMMC_INIT_WAIT_POLLING_TIMEOUT;
+            }
+            else
+            {
+                dObj->initState = DRV_SDMMC_INIT_ERROR;
+            }
+            break;
+
+        case DRV_SDMMC_INIT_WAIT_POLLING_TIMEOUT:
+            if (SYS_TIME_DelayIsComplete(dObj->tmrHandle) == true)
+            {
+                /* Delay has elapsed. */
+                dObj->initState = DRV_SDMMC_INIT_RESET_CARD;
+            }
+            break;
+
         case DRV_SDMMC_INIT_RESET_CARD:
             _DRV_SDMMC_CommandSend (dObj, DRV_SDMMC_CMD_GO_IDLE_STATE, 0x0, DRV_SDMMC_CMD_RESP_NONE, &dObj->dataTransferFlags);
             if (dObj->cmdState == DRV_SDMMC_CMD_EXEC_IS_COMPLETE)
@@ -628,7 +616,11 @@ static void _DRV_SDMMC_MediaInitialize (
                 dObj->initState = DRV_SDMMC_INIT_SEND_APP_CMD;
                 dObj->nextInitState = DRV_SDMMC_INIT_SEND_ACMD41;
                 dObj->cardCtxt.voltWindow = 0x00;
-                dObj->trials = 2000;
+                if (SYS_TIME_DelayMS (2000, &dObj->generalTimerHandle) == SYS_TIME_ERROR)
+                {
+                    dObj->initState = DRV_SDMMC_INIT_ERROR;
+                    break;
+                }
                 if (dObj->commandStatus == DRV_SDMMC_COMMAND_STATUS_SUCCESS)
                 {
                     dObj->sdmmcPlib->sdhostReadResponse (DRV_SDMMC_READ_RESP_REG_0, &response);
@@ -690,11 +682,10 @@ static void _DRV_SDMMC_MediaInitialize (
             /* Change from this state only on completion of command execution */
             if (dObj->cmdState == DRV_SDMMC_CMD_EXEC_IS_COMPLETE)
             {
-                if (dObj->trials == 0)
+                if (SYS_TIME_DelayIsComplete(dObj->generalTimerHandle) == true)
                 {
                     /* Timed out while waiting for the card's internal state
                      * machine to get initialized. */
-
                     dObj->initState = DRV_SDMMC_INIT_ERROR;
                     break;
                 }
@@ -724,6 +715,9 @@ static void _DRV_SDMMC_MediaInitialize (
                                 dObj->cardCtxt.cardType = DRV_SDMMC_CARD_TYPE_STANDARD;
                             }
 
+                            /* Destroy the timer */
+                            SYS_TIME_TimerDestroy(dObj->generalTimerHandle);
+
                             dObj->initState = DRV_SDMMC_INIT_ALL_SEND_CID;
                         }
                         else
@@ -731,8 +725,6 @@ static void _DRV_SDMMC_MediaInitialize (
                             /* Voltage window - 3.0V to 3.4V */
                             dObj->cardCtxt.voltWindow = 0x3C;
 
-                            /* Decrement the trial count. */
-                            dObj->trials --;
                             /* Repeat the APPCMD and the ACMD41 until the
                              * card sets the ready bit or until timeout. */
                             dObj->initState = DRV_SDMMC_INIT_SEND_APP_CMD;
@@ -820,11 +812,14 @@ static void _DRV_SDMMC_MediaInitialize (
             break;
 
         case DRV_SDMMC_INIT_CHANGE_CLK_FREQ:
-
-            _DRV_SDMMC_SetClock (dObj, DRV_SDMMC_CLOCK_FREQ_DS_25_MHZ);
-            if (dObj->clockState == DRV_SDMMC_CLOCK_SET_COMPLETE)
+            if (dObj->sdmmcPlib->sdhostSetClock(DRV_SDMMC_CLOCK_FREQ_DS_25_MHZ) == true)
             {
+                dObj->cardCtxt.currentSpeed = DRV_SDMMC_CLOCK_FREQ_DS_25_MHZ;
                 dObj->initState = DRV_SDMMC_INIT_SELECT_CARD;
+            }
+            else
+            {
+                dObj->initState = DRV_SDMMC_INIT_ERROR;
             }
             break;
 
@@ -1052,12 +1047,15 @@ static void _DRV_SDMMC_MediaInitialize (
             break;
 
         case DRV_SDMMC_INIT_SET_HS_FREQ:
-
-            _DRV_SDMMC_SetClock (dObj, DRV_SDMMC_CLOCK_FREQ_HS_50_MHZ);
-            if (dObj->clockState == DRV_SDMMC_CLOCK_SET_COMPLETE)
+            if (dObj->sdmmcPlib->sdhostSetClock(DRV_SDMMC_CLOCK_FREQ_HS_50_MHZ) == true)
             {
+                dObj->cardCtxt.currentSpeed = DRV_SDMMC_CLOCK_FREQ_HS_50_MHZ;
                 dObj->sdmmcPlib->sdhostSetSpeedMode (DRV_SDMMC_SPEED_MODE_HIGH);
                 dObj->initState = DRV_SDMMC_INIT_SET_BLOCK_LENGTH;
+            }
+            else
+            {
+                dObj->initState = DRV_SDMMC_INIT_ERROR;
             }
             break;
 
@@ -1089,12 +1087,13 @@ static void _DRV_SDMMC_MediaInitialize (
         case DRV_SDMMC_INIT_DONE:
         case DRV_SDMMC_INIT_ERROR:
 
-            dObj->initState = DRV_SDMMC_INIT_RESET_CARD;
+            SYS_TIME_TimerDestroy(dObj->generalTimerHandle);
+            dObj->initState = DRV_SDMMC_INIT_SET_INIT_SPPED;
             break;
 
         default:
 
-            dObj->initState = DRV_SDMMC_INIT_RESET_CARD;
+            dObj->initState = DRV_SDMMC_INIT_SET_INIT_SPPED;
             break;
     }
 }
@@ -1150,23 +1149,25 @@ SYS_MODULE_OBJ DRV_SDMMC_Initialize (
     dObj->inUse                 = true;
 
     /* Attach to the peripheral SDMMC PLIB driver */
-    dObj->sdmmcPlib                     = sdmmcInit->sdmmcPlib;
-    dObj->bufferObjPool                 = sdmmcInit->bufferObjPool;
-    dObj->bufferObjPoolSize             = sdmmcInit->bufferObjPoolSize;
-    dObj->clientObjPool                 = sdmmcInit->clientObjPool;
-    dObj->nClientsMax                   = sdmmcInit->numClients;
-    dObj->speedMode                     = sdmmcInit->speedMode;
-    dObj->busWidth                      = sdmmcInit->busWidth;
-    dObj->isCardDetectEnabled           = sdmmcInit->isCardDetectEnabled;
-    dObj->isWriteProtectCheckEnabled    = sdmmcInit->isWriteProtectCheckEnabled;
-    dObj->sdmmcTokenCount               = 1;
-    dObj->taskState                     = DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH;
-    dObj->cmdState                      = DRV_SDMMC_CMD_EXEC_IS_COMPLETE;
-    dObj->mediaState                    = SYS_MEDIA_DETACHED;
-    dObj->clockState                    = DRV_SDMMC_CLOCK_SET_DIVIDER;
-    dObj->bufferObjList                 = (uintptr_t)NULL;
-    dObj->isExclusive                   = false;
-    dObj->isCmdTimerExpired             = false;
+    dObj->sdmmcPlib                         = sdmmcInit->sdmmcPlib;
+    dObj->bufferObjPool                     = sdmmcInit->bufferObjPool;
+    dObj->bufferObjPoolSize                 = sdmmcInit->bufferObjPoolSize;
+    dObj->clientObjPool                     = sdmmcInit->clientObjPool;
+    dObj->nClientsMax                       = sdmmcInit->numClients;
+    dObj->speedMode                         = sdmmcInit->speedMode;
+    dObj->busWidth                          = sdmmcInit->busWidth;
+    dObj->cardDetectionMethod               = sdmmcInit->cardDetectionMethod;
+    dObj->cardDetectionPollingIntervalMs    = sdmmcInit->cardDetectionPollingIntervalMs;
+    dObj->isWriteProtectCheckEnabled        = sdmmcInit->isWriteProtectCheckEnabled;
+    dObj->sdmmcTokenCount                   = 1;
+    dObj->initState                         = DRV_SDMMC_INIT_SET_INIT_SPPED;
+    dObj->taskState                         = DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH;
+    dObj->cmdState                          = DRV_SDMMC_CMD_EXEC_IS_COMPLETE;
+    dObj->mediaState                        = SYS_MEDIA_DETACHED;
+    dObj->clockState                        = DRV_SDMMC_CLOCK_SET_DIVIDER;
+    dObj->bufferObjList                     = (uintptr_t)NULL;
+    dObj->isExclusive                       = false;
+    dObj->isCmdTimerExpired                 = false;
 
     /* Register a callback with the underlying SDMMC PLIB */
     dObj->sdmmcPlib->sdhostCallbackRegister(_DRV_SDMMC_PlibCallbackHandler, (uintptr_t)dObj);
@@ -1176,7 +1177,8 @@ SYS_MODULE_OBJ DRV_SDMMC_Initialize (
         DRV_SDMMC_RegisterWithSysFs(drvIndex);
     }
 
-    _DRV_SDMMC_InitCardContext(&dObj->cardCtxt);
+    _DRV_SDMMC_InitCardContext((uint32_t)drvIndex, &dObj->cardCtxt);
+    dObj->cardCtxt.currentSpeed = DRV_SDMMC_CLOCK_FREQ_400_KHZ;
 
     /* Update the status */
     dObj->status = SYS_STATUS_READY;
@@ -1346,6 +1348,11 @@ void DRV_SDMMC_SetupXfer(
     }
 
     dObj = (DRV_SDMMC_OBJ* )&gDrvSDMMCObj[clientObj->drvIndex];
+
+    if (dObj->mediaState != SYS_MEDIA_ATTACHED)
+    {
+        return;
+    }
 
     if (opType == DRV_SDMMC_OPERATION_TYPE_READ)
     {
@@ -1584,32 +1591,15 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
     switch (dObj->taskState)
     {
         case DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH:
-
-            /* Check the Present state register to see if the card is inserted */
-            if (dObj->sdmmcPlib->sdhostIsCardAttached != NULL)
+            if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
             {
-                if (dObj->sdmmcPlib->sdhostIsCardAttached ())
-                {
-                    _DRV_SDMMC_InitCardContext(&dObj->cardCtxt);
-                    dObj->sdmmcPlib->sdhostInitModule();
-                    /* Kick start the card initialization. */
-                    dObj->initState = DRV_SDMMC_INIT_RESET_CARD;
-                    dObj->taskState = DRV_SDMMC_TASK_MEDIA_INIT;
-                }
-                else
-                {
-                    /* Continue to remain in the same state till a card is inserted */
-                }
-            }
-            else
-            {
-                /* PLIB does not provide with card attach/detach status. Use polling method
-                 * to see if a card is present */
-
-                _DRV_SDMMC_InitCardContext(&dObj->cardCtxt);
+                /* Polling method available on SDHC and HSMCI PLIBs */
+                _DRV_SDMMC_InitCardContext((uint32_t)object, &dObj->cardCtxt);
                 dObj->sdmmcPlib->sdhostInitModule();
-                /* Kick start the card initialization. */
-                dObj->initState = DRV_SDMMC_INIT_RESET_CARD;
+                dObj->cardCtxt.currentSpeed = DRV_SDMMC_CLOCK_FREQ_400_KHZ;
+
+                /* PLIB does not provide with card attach/detach status.
+                 * Attempt media initialization assuming that the media is present */
                 dObj->taskState = DRV_SDMMC_TASK_MEDIA_INIT;
             }
             break;
@@ -1639,13 +1629,21 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                 /* Update the Media Geometry structure */
                 _DRV_SDMMC_UpdateGeometry (dObj);
 
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                {
+                    dObj->generalTimerHandle = SYS_TIME_HANDLE_INVALID;
+                }
+
                 dObj->mediaState = SYS_MEDIA_ATTACHED;
                 dObj->taskState = DRV_SDMMC_TASK_PROCESS_QUEUE;
             }
             else if (dObj->initState == DRV_SDMMC_INIT_ERROR)
             {
-                /* Cannot initialize this card. */
-                dObj->taskState = DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH;
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                {
+                    /* Polling method available on SDHC and HSMCI PLIBs */
+                    _DRV_SDMMC_InitCardContext((uint32_t)object, &dObj->cardCtxt);
+                }
             }
             break;
 
@@ -1654,6 +1652,12 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
             currentBufObj = _DRV_SDMMC_BufferListGet(dObj);
             if ((currentBufObj != NULL) && (dObj->cmdState == DRV_SDMMC_CMD_EXEC_IS_COMPLETE))
             {
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                {
+                    SYS_TIME_TimerDestroy(dObj->generalTimerHandle);
+                    dObj->generalTimerHandle = SYS_TIME_HANDLE_INVALID;
+                }
+
                 if (dObj->cardCtxt.isLocked == true)
                 {
                     /* Card is locked. Fail the transaction. */
@@ -1662,7 +1666,11 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                     break;
                 }
 
-                if (dObj->sdmmcPlib->sdhostIsCardAttached != NULL)
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                {
+                    /* Assume card is attached */
+                }
+                else
                 {
                     if (dObj->sdmmcPlib->sdhostIsCardAttached () == false)
                     {
@@ -1670,10 +1678,6 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                         dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
                         break;
                     }
-                }
-                else
-                {
-                    /* Assuming card is attached and continue */
                 }
 
                 currentBufObj->status = DRV_SDMMC_COMMAND_IN_PROGRESS;
@@ -1728,46 +1732,55 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
             }
             else
             {
-                /* Queue is empty. Check if the card is still present. */
-                if (dObj->sdmmcPlib->sdhostIsCardAttached != NULL)
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
                 {
-                    /* PLIB provides the card attach/detach status */
-                    if (dObj->sdmmcPlib->sdhostIsCardAttached () == false)
+                    /* Periodically check if the card is still attached. Start a timer first. */
+                    if (dObj->generalTimerHandle == SYS_TIME_HANDLE_INVALID)
                     {
-                        /* Card has been removed. Handle the event. */
+                        if (SYS_TIME_DelayMS (dObj->cardDetectionPollingIntervalMs, &dObj->generalTimerHandle) == SYS_TIME_ERROR)
+                        {
+                            dObj->taskState = DRV_SDMMC_TASK_ERROR;
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        if (SYS_TIME_DelayIsComplete(dObj->generalTimerHandle) == true)
+                        {
+                            dObj->generalTimerHandle = SYS_TIME_HANDLE_INVALID;
+                            /* Polling timeout has expired. Now check if the card is still attached. */
+                            dObj->taskState = DRV_SDMMC_TASK_CHECK_CARD_DETACH;
+                        }
+                    }
+                }
+                
+            }
+            break;
+
+        case DRV_SDMMC_TASK_CHECK_CARD_DETACH:
+            dObj->dataTransferFlags.isDataPresent = false;
+
+            _DRV_SDMMC_CommandSend (dObj, DRV_SDMMC_CMD_SEND_STATUS, (dObj->cardCtxt.rca << 16), DRV_SDMMC_CMD_RESP_R1, &dObj->dataTransferFlags);
+            if (dObj->cmdState == DRV_SDMMC_CMD_EXEC_IS_COMPLETE)
+            {
+                if (dObj->commandStatus == DRV_SDMMC_COMMAND_STATUS_SUCCESS)
+                {
+                    dObj->sdmmcPlib->sdhostReadResponse (DRV_SDMMC_READ_RESP_REG_0, &response);
+                    if (((response & 0x00001E00) >> 9) != 0x03)
+                    {
+                        /* Card is not in the expected state (standby state) */
                         dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
+                    }
+                    else
+                    {
+                        /* Card is present and is in the standby state. Go back and check if any request is queued. */
+                        dObj->taskState = DRV_SDMMC_TASK_PROCESS_QUEUE;
                     }
                 }
                 else
                 {
-                    /* PLIB does not provide card attach/detach status (HSMCI), poll the status
-                     * of the card by reading the card status.
-                    */
-
-                    dObj->dataTransferFlags.isDataPresent = false;
-
-                    _DRV_SDMMC_CommandSend (dObj, DRV_SDMMC_CMD_SEND_STATUS, (dObj->cardCtxt.rca << 16), DRV_SDMMC_CMD_RESP_R1, &dObj->dataTransferFlags);
-                    if (dObj->cmdState == DRV_SDMMC_CMD_EXEC_IS_COMPLETE)
-                    {
-                        if (dObj->commandStatus == DRV_SDMMC_COMMAND_STATUS_SUCCESS)
-                        {
-                            dObj->sdmmcPlib->sdhostReadResponse (DRV_SDMMC_READ_RESP_REG_0, &response);
-                            if (((response & 0x00001E00) >> 9) != 0x03)
-                            {
-                                /* Card is not in the expected state (standby state) */
-                                dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
-                            }
-                            else
-                            {
-                                /* Card is present and is in the standby state */
-                            }
-                        }
-                        else
-                        {
-                            /* The card is probably removed */
-                            dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
-                        }
-                    }
+                    /* The card is probably removed. Handle detach. */
+                    dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
                 }
             }
             break;
@@ -1826,6 +1839,7 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                 SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)currentBufObj->buffer, (currentBufObj->nBlocks << 9));
             }
 
+            dObj->dataTransferFlags.isDataPresent = true;
             dObj->sdmmcPlib->sdhostSetupDma (currentBufObj->buffer, (currentBufObj->nBlocks << 9), currentBufObj->opType);
             dObj->taskState = DRV_SDMMC_TASK_XFER_COMMAND;
 
@@ -1833,13 +1847,6 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
 
         case DRV_SDMMC_TASK_XFER_COMMAND:
 
-            if (currentBufObj == NULL)
-            {
-                dObj->taskState = DRV_SDMMC_TASK_ERROR;
-                break;
-            }
-
-            dObj->dataTransferFlags.isDataPresent = true;
             _DRV_SDMMC_CommandSend (dObj, currentBufObj->opCode, currentBufObj->blockStart, DRV_SDMMC_CMD_RESP_R1, &dObj->dataTransferFlags);
             if (dObj->cmdState == DRV_SDMMC_CMD_EXEC_IS_COMPLETE)
             {
@@ -1939,18 +1946,10 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
             break;
 
         case DRV_SDMMC_TASK_ERROR:
-
-            if (dObj->sdmmcPlib->sdhostIsCardAttached != NULL)
-            {
-                cardAttached = dObj->sdmmcPlib->sdhostIsCardAttached ();
-                currentBufObj->status = DRV_SDMMC_COMMAND_ERROR_UNKNOWN;
-                dObj->taskState = DRV_SDMMC_TASK_TRANSFER_COMPLETE;
-            }
-            else
+            if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
             {
                 /* PLIB does not provide card attach/detach status (HSMCI), poll the status
-                 * of the card by reading the card status from the card.
-                */
+                 * of the card by reading the card status from the card */
 
                 dObj->dataTransferFlags.isDataPresent = false;
 
@@ -1987,8 +1986,6 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                     {
                         evtStatus = DRV_SDMMC_EVENT_COMMAND_ERROR;
                     }
-
-
                     if(clientObj->eventHandler != NULL)
                     {
                         /* Call the event handler */
@@ -2015,10 +2012,6 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
 
             // Remove the buffer objects queued by all clients on this driver instance
             _DRV_SDMMC_RemoveBufferObjects (dObj);
-
-            _DRV_SDMMC_InitCardContext(&dObj->cardCtxt);
-
-            dObj->sdmmcPlib->sdhostInitModule();
 
             dObj->mediaState = SYS_MEDIA_DETACHED;
             dObj->taskState = DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH;

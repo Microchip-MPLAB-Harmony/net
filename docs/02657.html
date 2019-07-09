@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ICMPV6_CallbackDeregister Function</title>
+<title>TCPIP_ICMP_EchoRequestSend Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00773.html" target="topic">ICMPv6 Module</a> &gt; <a href="01527.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02657.html" target="topic">TCPIP_ICMPV6_CallbackDeregister Function</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00766.html" target="topic">ICMP Module</a> &gt; <a href="01523.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02657.html" target="topic">TCPIP_ICMP_EchoRequestSend Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01527.html" target="topic">Previous</a> | <a href="01527.html" target="topic">Up</a> | <a href="02661.html" target="topic">Next</a></div>
+<a href="02647.html" target="topic">Previous</a> | <a href="01523.html" target="topic">Up</a> | <a href="02661.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMPV6_CallbackDeregister@ICMPV6_HANDLE Topic Title: TCPIP_ICMPV6_CallbackDeregister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequestSend@TCPIP_NET_HANDLE@IPV4_ADDR *@uint16_t@uint16_t Topic Title: TCPIP_ICMP_EchoRequestSend Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ICMPV6_CallbackDeregister Function</div>
+TCPIP_ICMP_EchoRequestSend Function</div>
 </div>
 </div>
 
@@ -49,39 +49,22 @@ TCPIP_ICMPV6_CallbackDeregister Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function deregisters a previously registered function from the ICMPv6 register list.</p></div>
+This function allows a stack client to <a href="01201.html" target="topic">send</a> an ICMP query message to a remote host. The supplied sequence number and identifier will be used in the query message. The user will be notified by the result of the query using a notification handle registered by using the <a href="02647.html" target="topic">TCPIP_ICMP_CallbackRegister</a> function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_ICMPV6_CallbackDeregister</span></strong>(
-    <a href="00792.html" target="topic">ICMPV6_HANDLE</a> <strong><span style="color: #000000">hIcmpv6</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00769.html" target="topic">ICMP_ECHO_RESULT</a> <strong><span style="color: #000000">TCPIP_ICMP_EchoRequestSend</span></strong>(
+    <a href="03130.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>, 
+    IPV4_ADDR * <strong><span style="color: #000000">targetAddr</span></strong>, 
+    uint16_t <strong><span style="color: #000000">sequenceNumber</span></strong>, 
+    uint16_t <strong><span style="color: #000000">identifier</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-IPv6 and ICMPv6 are initialized.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hIcmpv6&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-ICMPv6 handler&nbsp;</div></td></tr></table></div></div>
-</div>
+The TCP/IP Stack must be initialized and up and running.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -89,9 +72,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element633">
-<li class="Element603">true - On Success</li>
-<li class="Element603">false - On Failure (If no such handler registered)</li>
+<ul class="Element632">
+<li class="Element602">ICMP_ECHO_OK - Indicates the query request was successfully sent</li>
+<li class="Element602"><a href="00769.html" target="topic">ICMP_ECHO_RESULT</a> - The query request was unsuccessfully sent, which results in an error code (interface not ready for transmission, allocation error, etc.)</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -99,14 +82,35 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+This function does not allow the user to specify a data buffer to be sent as part of the request. The preferred function to use is <a href="02655.html" target="topic">TCPIP_ICMP_EchoRequest</a>.&nbsp;</p>
+<p class="Element10">
+This function will eventually be obsoleted.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12">  IPV4_ADDR remoteAddress = 0xc0a00101;
+  uint16_t mySequenceNumber = 1;
+  uint16_t myId = 0x1234;
+
+  <strong><span style="color: #000080">if</span></strong>(TCPIP_ICMP_EchoRequestSend(0, &amp;remoteAddress, mySequenceNumber, myId) == ICMP_ECHO_OK )
+  {
+      <i><span style="color: #008000">// successfully sent the ICMP request</span></i>
+      <i><span style="color: #008000">//</span></i>
+  }
+  <strong><span style="color: #000080">else</span></strong>
+  {
+      <i><span style="color: #008000">// process the error</span></i>
+  }</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00773.html" target="topic">ICMPv6 Module</a> &gt; <a href="01527.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02657.html" target="topic">TCPIP_ICMPV6_CallbackDeregister Function</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00766.html" target="topic">ICMP Module</a> &gt; <a href="01523.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02657.html" target="topic">TCPIP_ICMP_EchoRequestSend Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,13 +118,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01527.html" target="topic">Previous</a> | <a href="01527.html" target="topic">Up</a> | <a href="02661.html" target="topic">Next</a></div>
+<a href="02647.html" target="topic">Previous</a> | <a href="01523.html" target="topic">Up</a> | <a href="02661.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMPV6_CallbackDeregister@ICMPV6_HANDLE Topic Title: TCPIP_ICMPV6_CallbackDeregister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequestSend@TCPIP_NET_HANDLE@IPV4_ADDR *@uint16_t@uint16_t Topic Title: TCPIP_ICMP_EchoRequestSend Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

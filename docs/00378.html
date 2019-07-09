@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>Variables</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00378.html" target="topic">Configuring the Library</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00372.html" target="topic">Library Interface</a> &gt; <a href="00378.html" target="topic">Variables</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00383.html" target="topic">Previous</a> | <a href="00676.html" target="topic">Up</a> | <a href="00375.html" target="topic">Next</a></div>
+<a href="00473.html" target="topic">Previous</a> | <a href="00372.html" target="topic">Up</a> | <a href="00502.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Variables Topic Title: Variables)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+Variables</div>
 </div>
 </div>
 
@@ -48,21 +48,122 @@ Configuring the Library</div>
 <a name="PageContent"></a><div class="Element58">
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
-<p class="Element10">
-The configuration of the Ethernet MAC driver is done as part of the MPLAB Harmony TCP/IP Stack configuration and is based on the <span class="Element146"><a href="02827.html" target="topic">tcpip_mac_config.h</a> and specific GMAC parameters with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
-<p class="Element10">
-This header file contains the configuration selection for the Ethernet GMAC Driver.&nbsp;</p>
-<p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01317.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.&nbsp;</p>
-<p class="Element10">
-See the <a href="01008.html" target="topic">TCP/IP Stack MAC Driver Module</a> help file for configuration options.</p></div>
+</div>
+</div>
+<a name="5661726961626C6573"></a><div class="Element14">
+Variables</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00502.html" target="topic">DRV_ETHPHY_OBJECT_BASE_Default</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The supported basic PHY driver (<a href="00501.html" target="topic">DRV_ETHPHY_OBJECT_BASE</a>). This object is implemented by default as part of PHY driver. It can be overwritten dynamically when needed.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00540.html" target="topic">DRV_ETHPHY_OBJECT_KSZ8863</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_KSZ8863.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00504.html" target="topic">DRV_ETHPHY_OBJECT_BASE_smsc9303</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_BASE_smsc9303.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00537.html" target="topic">DRV_ETHPHY_OBJECT_IP_IP101GR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_IP_IP101GR.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00541.html" target="topic">DRV_ETHPHY_OBJECT_National_DP83640</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+List of supported PHY drivers (vendor <a href="00496.html" target="topic">DRV_ETHPHY_OBJECT</a>)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00542.html" target="topic">DRV_ETHPHY_OBJECT_National_DP83848</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_National_DP83848.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00543.html" target="topic">DRV_ETHPHY_OBJECT_SMSC_LAN8700</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_SMSC_LAN8700.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00544.html" target="topic">DRV_ETHPHY_OBJECT_SMSC_LAN8720</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_SMSC_LAN8720.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00545.html" target="topic">DRV_ETHPHY_OBJECT_SMSC_LAN8740</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_SMSC_LAN8740.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00546.html" target="topic">DRV_ETHPHY_OBJECT_SMSC_LAN9303</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_SMSC_LAN9303.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00539.html" target="topic">DRV_ETHPHY_OBJECT_KSZ8061</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_KSZ8061.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00503.html" target="topic">DRV_ETHPHY_OBJECT_BASE_ksz8863</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_BASE_ksz8863.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_field.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00538.html" target="topic">DRV_ETHPHY_OBJECT_KSZ8041</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is variable DRV_ETHPHY_OBJECT_KSZ8041.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00676.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00378.html" target="topic">Configuring the Library</a></div>
+<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00372.html" target="topic">Library Interface</a> &gt; <a href="00378.html" target="topic">Variables</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -70,13 +171,13 @@ See the <a href="01008.html" target="topic">TCP/IP Stack MAC Driver Module</a> h
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00383.html" target="topic">Previous</a> | <a href="00676.html" target="topic">Up</a> | <a href="00375.html" target="topic">Next</a></div>
+<a href="00473.html" target="topic">Previous</a> | <a href="00372.html" target="topic">Up</a> | <a href="00502.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV GMAC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV ETHPHY Variables Topic Title: Variables)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01375.html" target="topic">Library Interface</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01375.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00153.html" target="topic">Previous</a> | <a href="00184.html" target="topic">Up</a> | <a href="01781.html" target="topic">Next</a></div>
+<a href="01377.html" target="topic">Previous</a> | <a href="00184.html" target="topic">Up</a> | <a href="01785.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP Announce Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,12 +49,14 @@ Library Interface</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section describes the Application Programming Interface (API) functions of the Announce module.&nbsp;</p>
+The configuration of the Announce TCP/IP Stack Library is based on the template file <a href="01773.html" target="topic">tcpip_announce_config.h</a> with the actual symbols generated in the configuration.h.&nbsp;</p>
 <p class="Element10">
-Refer to each section for a detailed description.</p></div>
+This header file contains the configuration selection for the Announce TCP/IP Stack Library. Based on the selections made, the Announce TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the Announce TCP/IP Stack Library.&nbsp;</p>
+<p class="Element10">
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01323.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
 </div>
-<a name="61292046756E6374696F6E73"></a><div class="Element14">
-a) Functions</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
@@ -70,70 +72,32 @@ Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01781.html" target="topic">TCPIP_ANNOUNCE_MessageRequest</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01785.html" target="topic">TCPIP_ANNOUNCE_MAX_PAYLOAD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-&nbsp;</div></td></tr><tr>
+Maximum size of a payload sent once Adjust to your needs&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01766.html" target="topic">TCPIP_ANNOUNCE_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01792.html" target="topic">TCPIP_ANNOUNCE_TASK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Allows the registration of a user callback.&nbsp;</div></td></tr><tr>
+announce task rate, millseconds The default value is 333 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03627.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01785.html" target="topic">TCPIP_ANNOUNCE_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01790.html" target="topic">TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6229204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-b) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
+Type of the broadcast used by the Announce module This type enables the network directed broadcast If it is not defined or it's 0, the network limited broadcast is used The default is nework limited broadcast&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01762.html" target="topic">TCPIP_ANNOUNCE_BROADCAST_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="00153.html" target="topic">_TCPIP_ANNOUNCE_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Announce message type&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01768.html" target="topic">TCPIP_ANNOUNCE_FIELD_PAYLOAD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce payload types&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01780.html" target="topic">TCPIP_ANNOUNCE_MESSAGE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce message callback function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01782.html" target="topic">TCPIP_ANNOUNCE_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Announce Configuration structure placeholder&nbsp;</div></td></tr></table></div></div>
+This is macro _TCPIP_ANNOUNCE_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -141,7 +105,7 @@ Announce Configuration structure placeholder&nbsp;</div></td></tr></table></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01375.html" target="topic">Library Interface</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00184.html" target="topic">Announce Module</a> &gt; <a href="01375.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -149,13 +113,13 @@ Announce Configuration structure placeholder&nbsp;</div></td></tr></table></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00153.html" target="topic">Previous</a> | <a href="00184.html" target="topic">Up</a> | <a href="01781.html" target="topic">Next</a></div>
+<a href="01377.html" target="topic">Previous</a> | <a href="00184.html" target="topic">Up</a> | <a href="01785.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP Announce Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

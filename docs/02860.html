@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_HEAP_MallocF Type</title>
+<title>TCPIP_MAC_HANDLE Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01582.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02860.html" target="topic">TCPIP_MAC_HEAP_MallocF Type</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01014.html" target="topic">MAC Driver Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02860.html" target="topic">TCPIP_MAC_HANDLE Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02859.html" target="topic">Previous</a> | <a href="01582.html" target="topic">Up</a> | <a href="02872.html" target="topic">Next</a></div>
+<a href="03110.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02979.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_HEAP_MallocF Topic Title: TCPIP_MAC_HEAP_MallocF Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_HANDLE Topic Title: TCPIP_MAC_HANDLE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_HEAP_MallocF Type</div>
+TCPIP_MAC_HANDLE Type</div>
 </div>
 </div>
 
@@ -49,37 +49,26 @@ TCPIP_MAC_HEAP_MallocF Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Memory Allocation Function: typedef void* (*TCPIP_MAC_HEAP_MallocF)(<a href="02859.html" target="topic">TCPIP_MAC_HEAP_HANDLE</a> heapH, size_t nBytes);&nbsp;</p>
+MAC Handle&nbsp;</p>
 <p class="Element10">
-This malloc style function is used by the MAC to allocate memory.</p></div>
+This data type defines a MAC client handle.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong>* (* <strong><span style="color: #000000">TCPIP_MAC_HEAP_MallocF</span></strong>)(<a href="02859.html" target="topic">TCPIP_MAC_HEAP_HANDLE</a> heapH, size_t nBytes);</pre></div></div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">valid pointer - if the allocation request succeeded</li>
-<li class="Element603">0 - if the allocation request failed</li>
-</ul></p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> DRV_HANDLE <strong><span style="color: #000000">TCPIP_MAC_HANDLE</span></strong>;</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The debug version adds the module identifier and source file line number.</p></div>
+Another name for the DRV_HANDLE.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01582.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02860.html" target="topic">TCPIP_MAC_HEAP_MallocF Type</a></div>
+<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01014.html" target="topic">MAC Driver Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="02860.html" target="topic">TCPIP_MAC_HANDLE Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -87,13 +76,13 @@ The debug version adds the module identifier and source file line number.</p></d
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02859.html" target="topic">Previous</a> | <a href="01582.html" target="topic">Up</a> | <a href="02872.html" target="topic">Next</a></div>
+<a href="03110.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02979.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_HEAP_MallocF Topic Title: TCPIP_MAC_HEAP_MallocF Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_HANDLE Topic Title: TCPIP_MAC_HANDLE Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

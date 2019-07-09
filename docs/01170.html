@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_TransClose Type</title>
+<title>NET_PRES_TRANS_ADDRESS_TYPE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01170.html" target="topic">NET_PRES_TransClose Type</a></div>
+<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01170.html" target="topic">NET_PRES_TRANS_ADDRESS_TYPE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01169.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01171.html" target="topic">Next</a></div>
+<a href="01168.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01172.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransClose Topic Title: NET_PRES_TransClose Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TRANS_ADDRESS_TYPE Topic Title: NET_PRES_TRANS_ADDRESS_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_TransClose Type</div>
+NET_PRES_TRANS_ADDRESS_TYPE Enumeration</div>
 </div>
 </div>
 
@@ -49,42 +49,17 @@ NET_PRES_TransClose Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Transport Layer Close Function Pointer Prototype&nbsp;</p>
+MPLAB Harmony Networking Presentation Layer Address type&nbsp;</p>
 <p class="Element10">
-This function is called by the presentation layer when the application wants to close a connection.</p></div>
+Defines the enumeration for the type of address. This enumeration is not used directly by the presentation layer and is used to enforce a consistent interface between layers.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">void</span></strong> (* <strong><span style="color: #000000">NET_PRES_TransClose</span></strong>)(<a href="01110.html" target="topic">NET_PRES_SKT_HANDLE_T</a> handle);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-A <a href="01295.html" target="topic">socket</a> needs to have been opened by <a href="01174.html" target="topic">NET_PRES_TransOpen</a>.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The handle returned from <a href="01174.html" target="topic">NET_PRES_TransOpen</a>.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">NET_PRES_ADDRT_UNKNOWN</span></strong>
+} NET_PRES_TRANS_ADDRESS_TYPE;</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
@@ -95,7 +70,7 @@ None.</p></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01033.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01047.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01170.html" target="topic">NET_PRES_TransClose Type</a></div>
+<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01170.html" target="topic">NET_PRES_TRANS_ADDRESS_TYPE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +78,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01169.html" target="topic">Previous</a> | <a href="01047.html" target="topic">Up</a> | <a href="01171.html" target="topic">Next</a></div>
+<a href="01168.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01172.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TransClose Topic Title: NET_PRES_TransClose Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_TRANS_ADDRESS_TYPE Topic Title: NET_PRES_TRANS_ADDRESS_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
