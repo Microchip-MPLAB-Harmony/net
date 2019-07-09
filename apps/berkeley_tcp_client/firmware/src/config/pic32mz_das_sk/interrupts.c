@@ -64,6 +64,7 @@ void UART2_FAULT_InterruptHandler( void );
 void UART2_RX_InterruptHandler( void );
 void UART2_TX_InterruptHandler( void );
 void ETHERNET_InterruptHandler( void );
+void NVM_InterruptHandler( void );
 
 
 
@@ -91,6 +92,11 @@ void __ISR(_UART2_TX_VECTOR, ipl1AUTO) UART2_TX_Handler (void)
 void __ISR(_ETHERNET_VECTOR, ipl1AUTO) ETHERNET_Handler (void)
 {
     ETHERNET_InterruptHandler();
+}
+
+void __ISR(_FLASH_CONTROL_VECTOR, ipl1AUTO) FLASH_CONTROL_Handler (void)
+{
+    NVM_InterruptHandler();
 }
 
 
