@@ -49,6 +49,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include "system/time/sys_time.h"
+#include "peripheral/nvm/plib_nvm.h"
 #include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/uart/plib_uart2.h"
 #include "net_pres/pres/net_pres.h"
@@ -64,13 +65,13 @@
 #include "system/sys_reset_h2_adapter.h"
 #include "system/int/sys_int.h"
 #include "osal/osal.h"
+#include "system/command/sys_command.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
 #include "peripheral/evic/plib_evic.h"
+#include "system/debug/sys_debug.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
-#include "system/console/sys_debug.h"
-#include "system/console/sys_command.h"
 #include "bsp/bsp.h"
 #include "FreeRTOS.h"
 #include "task.h"
@@ -199,11 +200,12 @@ typedef struct
     SYS_MODULE_OBJ  sysTime;
     SYS_MODULE_OBJ  netPres;
 
+    SYS_MODULE_OBJ  sysConsole0;
+
 
     SYS_MODULE_OBJ  tcpip;
 
     SYS_MODULE_OBJ  drvMiim;
-    SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
 
 

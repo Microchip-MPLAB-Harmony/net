@@ -48,7 +48,8 @@
 
 #define CORE_TIMER_FREQUENCY    100000000
 
-typedef void (*CORETIMER_CALLBACK)(uintptr_t context);
+
+typedef void (*CORETIMER_CALLBACK)(uint32_t status, uintptr_t context);
 
 typedef struct
 {

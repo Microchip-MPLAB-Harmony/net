@@ -71,7 +71,7 @@
 #pragma config POSCBOOST =  ON
 #pragma config POSCFGAIN =  GAIN_G3
 #pragma config POSCAGCDLY = POSCAGCDLY1
-#pragma config POSCAGC =      ON
+#pragma config POSCAGC =      OFF
 #pragma config EJTAGBEN =   NORMAL
 
 /*** DEVCFG1 ***/
@@ -106,7 +106,6 @@
 
 /*** DEVCFG3 ***/
 #pragma config USERID =     0xffff
-#pragma config EXTDDRSIZE = DDR_SIZE_128MB
 #pragma config FMIIEN =     OFF
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    ON
@@ -292,6 +291,11 @@ const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
     .gratProbeCount     = TCPIP_ARP_GRATUITOUS_PROBE_COUNT,
 };
 
+/*** Announce Discovery Initialization Data ***/
+const TCPIP_ANNOUNCE_MODULE_CONFIG tcpipAnnounceInitData =
+{ 
+    0
+};
 
 /*** UDP Sockets Initialization Data ***/
 const TCPIP_UDP_MODULE_CONFIG tcpipUDPInitData =
@@ -440,6 +444,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_UDP,              &tcpipUDPInitData},             // TCPIP_MODULE_UDP
     {TCPIP_MODULE_TCP,              &tcpipTCPInitData},             // TCPIP_MODULE_TCP
     {TCPIP_MODULE_DHCP_CLIENT,      &tcpipDHCPInitData},            // TCPIP_MODULE_DHCP_CLIENT
+    {TCPIP_MODULE_ANNOUNCE,         &tcpipAnnounceInitData},        // TCPIP_MODULE_ANNOUNCE
     {TCPIP_MODULE_DNS_CLIENT,       &tcpipDNSClientInitData},       // TCPIP_MODULE_DNS_CLIENT
 
     {TCPIP_MODULE_BERKELEY,         &tcpipBerkeleyInitData},        // TCPIP_MODULE_BERKELEY
@@ -557,6 +562,17 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .deviceIndex = 0,
 };
 
+// </editor-fold>
+
+
+const SYS_CMD_INIT sysCmdInit =
+{
+    .moduleInit = {0},
+    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
+	.consoleIndex = 0,
+};
+
+
 const SYS_DEBUG_INIT debugInit =
 {
     .moduleInit = {0},
@@ -564,12 +580,6 @@ const SYS_DEBUG_INIT debugInit =
     .consoleIndex = 0,
 };
 
-const SYS_CMD_INIT sysCmdInit =
-{
-    .moduleInit = {0},
-    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
-};
-// </editor-fold>
 
 
 
@@ -598,7 +608,6 @@ void SYS_Initialize ( void* data )
     CFGCONbits.ECCCON = 3;
 
 
-
     CORETIMER_Initialize();
 	UART2_Initialize();
 
@@ -611,8 +620,11 @@ void SYS_Initialize ( void* data )
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
-    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+
     SYS_CMD_Initialize((SYS_MODULE_INIT*)&sysCmdInit);
+
+    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+
 
 
     sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
