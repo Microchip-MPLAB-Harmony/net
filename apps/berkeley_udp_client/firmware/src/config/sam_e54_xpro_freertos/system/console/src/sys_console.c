@@ -52,6 +52,7 @@
 // Section: Included Files
 // *****************************************************************************
 // *****************************************************************************
+
 #include "system/console/sys_console.h"
 
 static SYS_CONSOLE_OBJECT_INSTANCE consoleDeviceInstance[SYS_CONSOLE_DEVICE_MAX_INSTANCES];
@@ -69,6 +70,7 @@ SYS_MODULE_OBJ SYS_CONSOLE_Initialize(
     {
         return SYS_MODULE_OBJ_INVALID;
     }
+
     pConsoleObj = &consoleDeviceInstance[index];
 
     if ((pConsoleObj->status == SYS_STATUS_UNINITIALIZED) && initConfig)

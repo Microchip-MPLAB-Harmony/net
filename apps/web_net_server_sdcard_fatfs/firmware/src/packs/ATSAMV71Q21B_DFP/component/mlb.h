@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-01-18T21:21:15Z */
+/* file generated from device description version 2019-04-01T08:56:33Z */
 #ifndef _SAMV71_MLB_COMPONENT_H_
 #define _SAMV71_MLB_COMPONENT_H_
 

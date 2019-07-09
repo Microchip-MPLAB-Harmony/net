@@ -53,12 +53,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         
 #include "toolchain_specifics.h"
 #include "system_config.h"
-#include "system/console/sys_debug.h"
+#include "system/debug/sys_debug.h"
 #include "system/console/sys_console.h"
-#include "system/console/sys_command.h"
-//#include "system/random/sys_random.h"
+#include "system/command/sys_command.h"
 #include "system/sys_random_h2_adapter.h"
-//#include "system/tmr/sys_tmr.h"
 #include "system/sys_time_h2_adapter.h"
 
 #include "osal/osal.h"
@@ -94,6 +92,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // private stack manager interface
 #include "tcpip/src/tcpip_manager_control.h"
 
+#include "tcpip/src/tcpip_announce_manager.h"
 #include "tcpip/src/ipv4_manager.h"
 #include "tcpip/src/icmp_manager.h"
 #include "tcpip/src/dhcp_manager.h"
