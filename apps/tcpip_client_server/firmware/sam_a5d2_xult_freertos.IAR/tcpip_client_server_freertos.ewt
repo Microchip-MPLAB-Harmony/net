@@ -2929,25 +2929,13 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\sys_clk_h2_adapter.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\sys_command.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\command\sys_command.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\sys_console.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_local.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart_definitions.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\sys_debug.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_debug_local.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\debug\sys_debug.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\sys_fs_wrapper.h</name>
@@ -3217,6 +3205,9 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\exceptions.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\fault_handlers.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\freertos_hooks.c</name>
             </file>
             <file>
@@ -3263,6 +3254,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\src\net_pres.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\net_pres_cert_store.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\net_pres\pres\net_pres_enc_glue.c</name>
@@ -3316,16 +3310,28 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\cache\sys_cache.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_command.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\command\src\sys_command.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_local.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_debug.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\console\src\sys_console_uart_definitions.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\debug\src\sys_debug.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\debug\src\sys_debug_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\int\src\sys_int.c</name>
@@ -3374,9 +3380,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\udp.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\vectortrap.s</name>
             </file>
         </group>
     </group>
