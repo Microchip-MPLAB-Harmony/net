@@ -58,6 +58,7 @@
 // Section: RTOS "Tasks" Routine
 // *****************************************************************************
 // *****************************************************************************
+
 void _NET_PRES_Tasks(  void *pvParameters  )
 {
     while(1)
@@ -66,6 +67,7 @@ void _NET_PRES_Tasks(  void *pvParameters  )
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
+
 
 void _TCPIP_STACK_Task(  void *pvParameters  )
 {
@@ -132,20 +134,22 @@ void _APP4_Tasks(  void *pvParameters  )
     }
 }
 
-void _DRV_MIIM_Task(  void *pvParameters  )
-{
-    while(1)
-    {
-        DRV_MIIM_Tasks(sysObj.drvMiim);
-        vTaskDelay(1 / portTICK_PERIOD_MS);
-    }
-}
-
 void _SYS_CMD_Tasks(  void *pvParameters  )
 {
     while(1)
     {
         SYS_CMD_Tasks();
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+}
+
+
+
+void _DRV_MIIM_Task(  void *pvParameters  )
+{
+    while(1)
+    {
+        DRV_MIIM_Tasks(sysObj.drvMiim);
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
@@ -176,6 +180,7 @@ void SYS_Tasks ( void )
         SYS_CMD_RTOS_TASK_PRIORITY,
         (TaskHandle_t*)NULL
     );
+
 
 
 

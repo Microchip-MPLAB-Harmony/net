@@ -59,6 +59,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 #define INT_InterruptPendingSet    	SYS_INT_SourceStatusSet
 #define INT_InterruptPendingClear  	SYS_INT_SourceStatusClear
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Implementation
@@ -66,6 +67,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 // *****************************************************************************
 
 // private methods *************************************************************
+
 
 static aic_registers_t *
 _aicInstanceGet( IRQn_Type aSrcSelection )
