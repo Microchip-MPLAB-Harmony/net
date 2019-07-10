@@ -1197,7 +1197,7 @@ enum Misc {
     SESSION_ADD_SZ = 4,        /* session age add */
     TICKET_NONCE_LEN_SZ = 1,   /* Ticket nonce length size */
     DEF_TICKET_NONCE_SZ = 1,   /* Default ticket nonce size */
-    MAX_TICKET_NONCE_SZ = 4,   /* maximum ticket nonce size */
+    MAX_TICKET_NONCE_SZ = 8,   /* maximum ticket nonce size */
     MAX_LIFETIME   = 604800,   /* maximum ticket lifetime */
     MAX_EARLY_DATA_SZ = 4096,  /* maximum early data size */
 
@@ -1508,6 +1508,7 @@ enum states {
 	SERVER_CHANGECIPHERSPEC_COMPLETE,
     SERVER_FINISHED_COMPLETE,
 
+    CLIENT_HELLO_RETRY,
     CLIENT_HELLO_COMPLETE,
     CLIENT_KEYEXCHANGE_COMPLETE,
 	CLIENT_CHANGECIPHERSPEC_COMPLETE,
@@ -2272,6 +2273,7 @@ enum key_cache_state {
 /* Additional Connection State according to rfc5746 section 3.1 */
 typedef struct SecureRenegotiation {
    byte                 enabled;  /* secure_renegotiation flag in rfc */
+   byte                 verifySet;
    byte                 startScr; /* server requested client to start scr */
    enum key_cache_state cache_status;  /* track key cache state */
    byte                 client_verify_data[TLS_FINISHED_SZ];  /* cached */
@@ -2283,7 +2285,7 @@ typedef struct SecureRenegotiation {
 WOLFSSL_LOCAL int TLSX_UseSecureRenegotiation(TLSX** extensions, void* heap);
 
 #ifdef HAVE_SERVER_RENEGOTIATION_INFO
-WOLFSSL_LOCAL int TLSX_AddEmptyRenegotiationInfo(TLSX** extensions, void* heap);
+WOLFSSL_LOCAL int TLSX_AddEmptyRenegotiationInfo(TLSX** extensions);
 #endif
 
 #endif /* HAVE_SECURE_RENEGOTIATION */
@@ -2511,7 +2513,7 @@ struct WOLFSSL_CTX {
 #ifdef HAVE_EXT_CACHE
     byte        internalCacheOff:1;
 #endif
-    byte        sendVerify;       /* for client side (can not be single bit) */
+    byte        sendVerify:2;     /* for client side (can not be single bit) */
     byte        haveRSA:1;        /* RSA available */
     byte        haveECC:1;        /* ECC available */
     byte        haveDH:1;         /* server DH parms set by user */
@@ -2555,10 +2557,12 @@ struct WOLFSSL_CTX {
 #if defined(HAVE_ECC) || defined(HAVE_ED25519)
     short       minEccKeySz;      /* minimum ECC key size */
 #endif
+#if defined(OPENSSL_EXTRA) || defined(HAVE_WEBSERVER)
+    unsigned long     mask;             /* store SSL_OP_ flags */
+#endif
 #ifdef OPENSSL_EXTRA
     byte              sessionCtx[ID_LEN]; /* app session context ID */
     word32            disabledCurves;   /* curves disabled by user */
-    unsigned long     mask;             /* store SSL_OP_ flags */
     const unsigned char *alpn_cli_protos;/* ALPN client protocol list */
     unsigned int         alpn_cli_protos_len;
     byte              sessionCtxSz;
@@ -4031,6 +4035,10 @@ WOLFSSL_LOCAL int SendCertificateRequest(WOLFSSL*);
 #if defined(HAVE_CERTIFICATE_STATUS_REQUEST) \
  || defined(HAVE_CERTIFICATE_STATUS_REQUEST_V2)
 WOLFSSL_LOCAL int CreateOcspResponse(WOLFSSL*, OcspRequest**, buffer*);
+#endif
+#if defined(HAVE_SECURE_RENEGOTIATION) && \
+    defined(HAVE_SERVER_RENEGOTIATION_INFO)
+WOLFSSL_LOCAL int SendHelloRequest(WOLFSSL*);
 #endif
 WOLFSSL_LOCAL int SendCertificateStatus(WOLFSSL*);
 WOLFSSL_LOCAL int SendServerKeyExchange(WOLFSSL*);
