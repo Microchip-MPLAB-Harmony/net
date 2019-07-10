@@ -1,32 +1,22 @@
 /*******************************************************************************
-  SYS CLK Static Functions for Clock System Service
+  Debug System Service Local Data Structures
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    plib_clk.h
+    sys_debug_local.h
 
   Summary:
-    SYS CLK static function interface for the Clock System Service.
+    Debug System Service local declarations and definitions.
 
   Description:
-    The Clock System Service provides a simple interface to manage the
-    oscillators on Microchip microcontrollers. This file defines the static
-    implementation for the Clock System Service.
-
-  Remarks:
-    Static functions incorporate all system clock configuration settings as
-    determined by the user via the Microchip Harmony Configurator GUI.
-    It provides static version of the routines, eliminating the need for an
-    object ID or object handle.
-
-    Static single-open interfaces also eliminate the need for the open handle.
-
+    This file contains the Debug System Service local declarations and definitions.
 *******************************************************************************/
 
+//DOM-IGNORE-BEGIN
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2018 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -47,72 +37,83 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
+//DOM-IGNORE-END
 
-#ifndef PLIB_CLK_H
-#define PLIB_CLK_H
+#ifndef SYS_DEBUG_LOCAL_H
+#define SYS_DEBUG_LOCAL_H
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: File includes
 // *****************************************************************************
 // *****************************************************************************
 
-#include <stddef.h>
-#include <stdbool.h>  
+#include "configuration.h"
+#include "driver/driver.h"
+#include "system/debug/sys_debug.h"
 
 // DOM-IGNORE-BEGIN
-#ifdef __cplusplus // Provide C++ Compatibility
+#ifdef __cplusplus  // Provide C++ Compatibility
 
-	extern "C" {
+    extern "C" {
 
 #endif
 // DOM-IGNORE-END
- 
+
 // *****************************************************************************
 // *****************************************************************************
-// Section: CLK Module System Interface Routines
+// Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
 
 // *****************************************************************************
-/* Function:
-    void CLK_Initialize( void )
+/* SYS Debug State Machine States
+
+   Summary
+    Defines the various states that can be achieved by the driver operation.
+
+   Description
+    This enumeration defines the various states that can be achieved by the
+    driver operation.
+
+   Remarks:
+    None.
+*/
+
+typedef enum
+{
+    SYS_DEBUG_STATE_IDLE
+
+} SYS_DEBUG_STATES;
+
+
+// *****************************************************************************
+/* SYS DEBUG OBJECT INSTANCE structure
 
   Summary:
-    Initializes hardware of the System Clock and Peripheral Clock.
-    
+    System Debug object instance structure.
+
   Description:
-    This function initializes the hardware of System Clock and Peripheral Clocks.
-
-  Precondition:
-    None.
-
-  Parameters:
-    None.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    //Example 1: Do not alter the configuration bit settings
-    CLK_Initialize ( );
-
-    </code>
+    This data type defines the System Debug object instance.
 
   Remarks:
     None.
 */
 
-void CLK_Initialize( void );
+typedef struct
+{
+    SYS_STATUS                        status;
+    SYS_DEBUG_STATES                  state;
+    SYS_MODULE_INDEX                  debugConsole;
+    int                               prtBufPtr;
+} SYS_DEBUG_INSTANCE;
 
-// DOM-IGNORE-BEGIN
-#ifdef __cplusplus  // Provide C++ Compatibility
+//DOM-IGNORE-BEGIN
+#ifdef __cplusplus
 
     }
 
 #endif
-// DOM-IGNORE-END
+//DOM-IGNORE-END
 
-#endif //PLIB_CLK_H
-
+#endif //#ifndef SYS_DEBUG_LOCAL_H
