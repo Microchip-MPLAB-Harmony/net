@@ -125,12 +125,8 @@ The current known issues are as follows:
     - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
 
 * SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
-* The operation over the secure connections using wolfSSL has not been added to the net repo for this release.
-    - There are 2 wolfSSL TCP demos in the crypto repo.
-    - The web_net_server_nvm_mpfs demo does not currently support encrypted connections.
-    - The wolfSSL third party package cannot be added to the application as an encryption provider.
 * EDBG programming of a hex file on the SAME54 XPRO board may fail.
-* There are some mandatory MISRA violations in some of the repo files. They will be fixed in the next release:
+* There are some mandatory MISRA violations in some of the repo files. They will be fixed in some next release:
     - System: sys_debug.c, sys_command.c
     - TCP/IP: smtpc.c, ndp.c, custom_http_net_app.c, icmpv6.c,
 * Adding TCP/IP components to the project must be done using the TCP/IP Configurators in order to 
@@ -166,7 +162,7 @@ This topic lists the contents of this release and identifies each module.
 
 #### Description
 
-This table lists the contents of this release, including a brief description, and the release type (Alpha, Beta, Production, or Vendor).
+This table lists the contents of this release, including a brief description.
 
 
 | Folder                                | Description                                                          | 
