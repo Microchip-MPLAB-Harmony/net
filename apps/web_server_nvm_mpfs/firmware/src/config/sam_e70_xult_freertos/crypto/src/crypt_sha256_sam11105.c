@@ -50,11 +50,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 #include "configuration.h"
 #include "crypto/src/settings.h"
+#include "system/cache/sys_cache.h"
 
 #include "crypto/src/sha256.h"
 #include "definitions.h"
-
-#include "core_cm7.h"
 
 #if !defined(NO_SHA256)
 
@@ -79,12 +78,19 @@ uint32_t actDigest[SHA256_DIGEST_SIZE/4] __attribute__((aligned (128)));
 int CRYPT_SHA256_InitSha(crypt_sha256_hw_descriptor* sha256, void* heap, int devId)
 {
     /* Enable ICM */
+#if !defined(CRYPTO_SHA_HW_U2010)
     uint32_t PmcBit = 1u << (ID_ICM - 32);
     if ((PMC_REGS->PMC_PCSR1 & PmcBit) != PmcBit)
     {
         PMC_REGS->PMC_PCER1 = PmcBit;
     }
-
+#else
+    uint32_t apbcBit = 1u << (ID_ICM&31);
+    if ((MCLK_REGS->MCLK_APBCMASK & apbcBit) != apbcBit)
+    {
+        MCLK_REGS->MCLK_APBCMASK |= apbcBit;
+    }
+#endif
     
     
     
@@ -126,9 +132,9 @@ static int32_t CRYPT_SHA256_Process(crypt_sha256_hw_descriptor* sha256, const ui
     memcpy(&actIcmDescriptor, &(sha256->icm_descriptor), sizeof(sha256->icm_descriptor));
     
     
-    SCB_CleanDCache_by_Addr((uint32_t*) (&actIcmDescriptor), sizeof(sha256->icm_descriptor));
-    SCB_CleanDCache_by_Addr((uint32_t *)input, length);
-    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha256->digest), SHA256_DIGEST_SIZE);
+    SYS_CACHE_CleanDCache_by_Addr((uint32_t*) (&actIcmDescriptor), sizeof(sha256->icm_descriptor));
+    SYS_CACHE_CleanDCache_by_Addr((uint32_t *)input, length);
+    SYS_CACHE_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha256->digest), SHA256_DIGEST_SIZE);
 
 
     /* ICM can set up FIPS default starting digest */
@@ -165,7 +171,7 @@ static int32_t CRYPT_SHA256_Process(crypt_sha256_hw_descriptor* sha256, const ui
     ICM_REGS->ICM_CTRL = ICM_CTRL_DISABLE(1);
     ICM_REGS->ICM_CTRL = ICM_CTRL_SWRST(1);
 
-    SCB_CleanInvalidateDCache_by_Addr((uint32_t*) (&actDigest), SHA256_DIGEST_SIZE);
+    SYS_CACHE_CleanInvalidateDCache_by_Addr((uint32_t*) (&actDigest), SHA256_DIGEST_SIZE);
     memcpy(sha256->digest, &actDigest, sizeof(sha256->digest));
     
     return 0;

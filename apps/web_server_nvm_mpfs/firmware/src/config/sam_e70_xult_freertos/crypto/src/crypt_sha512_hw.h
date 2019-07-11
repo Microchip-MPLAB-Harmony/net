@@ -1,19 +1,18 @@
 /**************************************************************************
-  Crypto Framework Library Header
+  Crypto Framework Library Source
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    cpuid.h
+    crypto_sha512_hw.h
 
   Summary:
-    Crypto Framework Library header for cryptographic functions.
+    Crypto Framework Libarary interface file for hardware RNG
 
   Description:
-    This header file contains function prototypes and definitions of
-    the data types and constants that make up the Cryptographic Framework
-    Library for PIC32 families of Microchip microcontrollers.
+    This file contains the interface that is required to be implemented by
+    the RNG hardware driver..
 **************************************************************************/
 
 //DOM-IGNORE-BEGIN
@@ -42,47 +41,31 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-//DOM-IGNORE-END
-
-
-
-#ifndef WOLF_CRYPT_CPUID_H
-#define WOLF_CRYPT_CPUID_H
+#ifndef _CRYPTO_SHA512_HW_H_
+#define _CRYPTO_SHA512_HW_H_
 
 
-#include "crypto/src/types.h"
-
-
-#ifdef __cplusplus
-    extern "C" {
+#if defined(CRYPTO_SHA_HW_6156)
+#include "crypt_sha_sam6156.h"
 #endif
 
-#if defined(WOLFSSL_X86_64_BUILD) || defined(USE_INTEL_SPEEDUP) || \
-    defined(WOLFSSL_AESNI)
-    #define CPUID_AVX1   0x0001
-    #define CPUID_AVX2   0x0002
-    #define CPUID_RDRAND 0x0004
-    #define CPUID_RDSEED 0x0008
-    #define CPUID_BMI2   0x0010   /* MULX, RORX */
-    #define CPUID_AESNI  0x0020
-    #define CPUID_ADX    0x0040   /* ADCX, ADOX */
+#include "configuration.h"
+#include "types.h"
 
-    #define IS_INTEL_AVX1(f)    ((f) & CPUID_AVX1)
-    #define IS_INTEL_AVX2(f)    ((f) & CPUID_AVX2)
-    #define IS_INTEL_RDRAND(f)  ((f) & CPUID_RDRAND)
-    #define IS_INTEL_RDSEED(f)  ((f) & CPUID_RDSEED)
-    #define IS_INTEL_BMI2(f)    ((f) & CPUID_BMI2)
-    #define IS_INTEL_AESNI(f)   ((f) & CPUID_AESNI)
-    #define IS_INTEL_ADX(f)     ((f) & CPUID_ADX)
 
-    void cpuid_set_flags(void);
-    word32 cpuid_get_flags(void);
+typedef struct 
+{
+#if defined(CRYPTO_SHA_HW_6156)
+    CRYPT_SHA_SAM6156_shaDescriptor sha_descriptor;
+    uint8_t  buffer[SHA512_BLOCK_SIZE];
+    uint32_t digest[SHA512_DIGEST_SIZE/4];
+    uint64_t total_len;   /* number of bytes to be processed  */
 #endif
+}crypt_sha512_hw_descriptor;
 
-#ifdef __cplusplus
-    }   /* extern "C" */
+int CRYPT_SHA512_InitSha(crypt_sha512_hw_descriptor* sha, void* heap, int devId);
+int CRYPT_SHA512_Update(crypt_sha512_hw_descriptor* sha, const byte* data, word32 len);
+int CRYPT_SHA512_Final(crypt_sha512_hw_descriptor* sha, byte* hash);
+int CRYPT_SHA512_FinalRaw(crypt_sha512_hw_descriptor* sha, byte* hash);
+
 #endif
-
-
-#endif /* WOLF_CRYPT_CPUID_H */
