@@ -220,7 +220,7 @@ int CRYPT_SHA224_Initialize(CRYPT_SHA256_CTX* sha224)
     if (sha224 == NULL)
         return BAD_FUNC_ARG;
 
-    return wc_InitSha224((Sha256*)sha224);
+    return wc_InitSha224((Sha224*)sha224);
 }
 
 
@@ -231,7 +231,7 @@ int CRYPT_SHA224_DataAdd(CRYPT_SHA256_CTX* sha224, const unsigned char* input,
     if (sha224 == NULL || input == NULL)
         return BAD_FUNC_ARG;
 
-    return wc_Sha224Update((Sha256*)sha224, input, sz);
+    return wc_Sha224Update((Sha224*)sha224, input, sz);
 }
 
 
@@ -241,7 +241,7 @@ int CRYPT_SHA224_Finalize(CRYPT_SHA256_CTX* sha224, unsigned char* digest)
     if (sha224 == NULL || digest == NULL)
         return BAD_FUNC_ARG;
 
-    return wc_Sha224Final((Sha256*)sha224, digest);
+    return wc_Sha224Final((Sha224*)sha224, digest);
 }
 
 #endif  // WOLFSSL_SHA224
