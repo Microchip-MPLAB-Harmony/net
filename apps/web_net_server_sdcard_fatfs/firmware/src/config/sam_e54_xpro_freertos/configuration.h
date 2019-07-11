@@ -125,7 +125,7 @@ extern "C" {
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                2560
+#define SYS_CMD_RTOS_STACK_SIZE                1024
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
@@ -524,7 +524,7 @@ extern "C" {
 #define NET_PRES_NUM_SOCKETS 10
 
 /* Net Pres RTOS Configurations*/
-#define NET_PRES_RTOS_STACK_SIZE           1024
+#define NET_PRES_RTOS_STACK_SIZE           4096
 #define NET_PRES_RTOS_TASK_PRIORITY             1
 
 
@@ -681,6 +681,7 @@ extern "C" {
 #define WOLFSSL_AES_COUNTER
 #define HAVE_AES_CBC
 #define HAVE_AESGCM
+#define WOLFSSL_SHA224
 #define WOLFSSL_SHA512
 #define WOLFSSL_SHA384
 #define HAVE_ECC

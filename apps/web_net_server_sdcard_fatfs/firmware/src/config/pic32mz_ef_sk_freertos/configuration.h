@@ -99,11 +99,11 @@ extern "C" {
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          2560
+#define SYS_CMD_PRINT_BUFFER_SIZE          1024
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                2560
+#define SYS_CMD_RTOS_STACK_SIZE                1024
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
@@ -157,7 +157,7 @@ extern "C" {
 
 
 /* SDSPI Driver Instance 0 RTOS Configurations*/
-#define DRV_SDSPI_STACK_SIZE_IDX0               256
+#define DRV_SDSPI_STACK_SIZE_IDX0               1024
 #define DRV_SDSPI_PRIORITY_IDX0                 1
 
 /* SDSPI Driver Common Configuration Options */
@@ -276,6 +276,54 @@ extern "C" {
 /*** NBNS Configuration ***/
 #define TCPIP_STACK_USE_NBNS
 #define TCPIP_NBNS_TASK_TICK_RATE   110
+
+
+
+/******************************************************************************/
+/*wolfSSL TLS Layer Configuration*/
+/******************************************************************************/
+
+#define HAVE_AES_DECRYPT
+#define WOLFSSL_ALT_NAMES
+#define WOLFSSL_DER_LOAD
+#define KEEP_OUR_CERT
+#define KEEP_PEER_CERT
+#define HAVE_CRL_IO
+#define HAVE_IO_TIMEOUT
+#define HAVE_FFDHE_2048
+#define HAVE_FFDHE_3072
+#define HAVE_FFDHE_4096
+#define HAVE_FFDHE_6144
+#define HAVE_FFDHE_8192
+#define TFM_NO_ASM
+#define WOLFSSL_NO_ASM
+#define SINGLE_THREADED
+#define SIZEOF_LONG_LONG 8
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define NO_DEV_RANDOM
+#define NO_FILESYSTEM
+#define MICROCHIP_TCPIP
+#define USER_TICKS
+#define WOLFSSL_DTLS
+
+
+#define TFM_TIMING_RESISTANT
+#define ECC_TIMING_RESISTANT
+#define WC_RSA_BLINDING
+
+
+    
+    
+    
+
+#define NO_ERROR_STRINGS
+    
+    
+    
+    
+    
+    
 
 
 /*** TCPIP MAC Configuration ***/
@@ -451,7 +499,7 @@ extern "C" {
 #define NET_PRES_NUM_SOCKETS 10
 
 /* Net Pres RTOS Configurations*/
-#define NET_PRES_RTOS_STACK_SIZE           1024
+#define NET_PRES_RTOS_STACK_SIZE           4096
 #define NET_PRES_RTOS_TASK_PRIORITY             1
 
 
@@ -618,13 +666,17 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_BIG_INT
-#define NO_AES
+#define WOLFSSL_AES_COUNTER
+#define HAVE_AES_CBC
+#define HAVE_AESGCM
+#define WOLFSSL_SHA224
 #define WOLFSSL_SHA512
-#define NO_ASN
-#define NO_RSA
+#define WOLFSSL_SHA384
+#define HAVE_ECC
+#define USE_FAST_MATH
+#define WOLFSSL_STATIC_RSA
 #define NO_DES3
-#define NO_AES_CBC
-#define NO_RNG
+#define WOLFSSL_AES_COUNTER
 #define NO_RNG_TEST
 
 

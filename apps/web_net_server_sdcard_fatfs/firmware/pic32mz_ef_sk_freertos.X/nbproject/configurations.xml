@@ -363,6 +363,7 @@
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_reset_h2_adapter.h</itemPath>
           </logicalFolder>
+          <itemPath>../src/config/pic32mz_ef_sk_freertos/config.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/user.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/configuration.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_freertos/system_config.h</itemPath>
@@ -372,7 +373,7 @@
           <itemPath>../src/config/pic32mz_ef_sk_freertos/FreeRTOSConfig.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="FreeRTOS" projectFiles="true">
+      <logicalFolder name="f5" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
           <logicalFolder name="f1" displayName="include" projectFiles="true">
             <itemPath>../src/third_party/rtos/FreeRTOS/Source/Include/croutine.h</itemPath>
@@ -402,17 +403,74 @@
           </logicalFolder>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="osal" projectFiles="true">
+      <logicalFolder name="f4" displayName="osal" projectFiles="true">
         <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal_freertos.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+      <logicalFolder name="f3" displayName="packs" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="PIC32MZ2048EFH144_DFP"
                        projectFiles="true">
           <itemPath>../src/packs/PIC32MZ2048EFH144_DFP/device.h</itemPath>
         </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/aes.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/arc4.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn_public.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/camellia.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/chacha.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/coding.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/compress.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/cpuid.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/des3.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dh.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dsa.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ecc.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/error-crypt.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hash.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hc128.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hmac.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/integer.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/logging.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md2.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md4.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md5.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/memory.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/misc.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs7.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs12.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_class.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_superclass.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pwdbased.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rabbit.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/random.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ripemd.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rsa.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/settings.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha256.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha512.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/tfm.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/types.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/visibility.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_encrypt.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_port.h</itemPath>
+        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wolfmath.h</itemPath>
       </logicalFolder>
       <itemPath>../src/http_net_print.h</itemPath>
       <itemPath>../src/app.h</itemPath>
@@ -639,7 +697,7 @@
           <itemPath>../src/config/pic32mz_ef_sk_freertos/freertos_hooks.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="FreeRTOS" projectFiles="true">
+      <logicalFolder name="f5" displayName="FreeRTOS" projectFiles="true">
         <logicalFolder name="f1" displayName="Source" projectFiles="true">
           <logicalFolder name="f1" displayName="portable" projectFiles="true">
             <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
@@ -661,7 +719,7 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="osal" projectFiles="true">
+      <logicalFolder name="f4" displayName="osal" projectFiles="true">
         <itemPath>../src/config/pic32mz_ef_sk_freertos/osal/osal_freertos.c</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
@@ -711,6 +769,17 @@
         <itemPath>../src/web_pages/status.xml</itemPath>
         <itemPath>../src/web_pages/upload.htm</itemPath>
       </logicalFolder>
+      <logicalFolder name="f3" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/internal.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/sniffer.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ssl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
+      </logicalFolder>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
       <itemPath>../src/app.c</itemPath>
@@ -719,6 +788,9 @@
     <logicalFolder name="ExternalFiles"
                    displayName="Important Files"
                    projectFiles="false">
+      <logicalFolder name="f1" displayName="wolfSSL" projectFiles="true">
+        <itemPath>../src/third_party/wolfcrypt_support/wolfcrypt/src/misc.c</itemPath>
+      </logicalFolder>
       <itemPath>Makefile</itemPath>
     </logicalFolder>
   </logicalFolder>
@@ -774,7 +846,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/pic32mz_ef_sk_freertos/library;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_freertos;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include"/>
+                  value="../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/pic32mz_ef_sk_freertos/library;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_freertos;../src/packs/PIC32MZ2048EFH144_DFP;../src/mips;../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -783,7 +855,7 @@
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros" value=""/>
+        <property key="preprocessor-macros" value="HAVE_CONFIG_H"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="toplevel-reordering" value=""/>
@@ -837,7 +909,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="95000"/>
+        <property key="heap-size" value="126960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

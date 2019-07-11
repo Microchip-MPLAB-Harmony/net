@@ -53,7 +53,6 @@
 #include "system/time/sys_time.h"
 #include "bsp/bsp.h"
 #include "system/int/sys_int.h"
-#include "system/ports/sys_ports.h"
 #include "system/cache/sys_cache.h"
 #include "osal/osal.h"
 #include "system/fs/sys_fs.h"
