@@ -80,12 +80,8 @@ typedef enum
     EFC_ECC_ERROR = 0xF0000,
 } EFC_ERROR;
 
-typedef void (*EFC_CALLBACK)(uintptr_t context);
-typedef struct
-{
-    EFC_CALLBACK          callback;
-    uintptr_t               context;
-} EFC_OBJECT ;
+
+void EFC_Initialize(void);
 
 bool EFC_Read( uint32_t *data, uint32_t length, uint32_t address );
 
@@ -103,7 +99,6 @@ void EFC_RegionLock(uint32_t address);
 
 void EFC_RegionUnlock(uint32_t address);
 
-void EFC_CallbackRegister( EFC_CALLBACK callback, uintptr_t context );
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
