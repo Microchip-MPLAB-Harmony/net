@@ -80,15 +80,6 @@
 #define LED1_InputEnable()       (PIOA_REGS->PIO_ODR = (1<<5))
 #define LED1_PIN                  PIO_PIN_PA5
 
-/*** Macros for LED2 pin ***/
-#define LED2_Set()               (PIOB_REGS->PIO_SODR = (1<<8))
-#define LED2_Clear()             (PIOB_REGS->PIO_CODR = (1<<8))
-#define LED2_Toggle()            (PIOB_REGS->PIO_ODSR ^= (1<<8))
-#define LED2_Get()               ((PIOB_REGS->PIO_PDSR >> 8) & 0x1)
-#define LED2_OutputEnable()      (PIOB_REGS->PIO_OER = (1<<8))
-#define LED2_InputEnable()       (PIOB_REGS->PIO_ODR = (1<<8))
-#define LED2_PIN                  PIO_PIN_PB8
-
 
 // *****************************************************************************
 /* PIO Port
