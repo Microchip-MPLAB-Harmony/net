@@ -179,11 +179,7 @@ int rawWrite( void )
             break;
 
         case APP_STATE_GEOMETRY_GET:
-            if( true != DRV_MX25L_UnlockFlash( appData.handle ) )
-            {
-                rawState = APP_STATE_ERROR;
-            }
-            else if( true == DRV_MX25L_GeometryGet(appData.handle, &appData.geometry) )
+            if( true == DRV_MX25L_GeometryGet(appData.handle, &appData.geometry) )
             {
                 appData.writeImageSize = MPFS_IMAGE_PARTITION_INFO.partSize;
                 appData.eraseIndex = 0;
