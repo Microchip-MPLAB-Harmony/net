@@ -71,19 +71,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 static void enableAesModule()
 {
-    const uint32_t AesPmcBit = 1u << (ID_AES - 32);
-    if ((PMC_REGS->PMC_PCSR1 & (AesPmcBit)) != (AesPmcBit))
-    {
-        PMC_REGS->PMC_PCER1 = AesPmcBit;
-    }
-    AES_REGS->AES_CR = AES_CR_SWRST_Msk;
-
 }
 
 static void disableAesModule()
 {
-   const uint32_t AesPmcBit = 1u << (ID_AES - 32);
-   PMC_REGS->PMC_PCDR1 = AesPmcBit;
 }
 
 /** AES interrupt callback function type. */

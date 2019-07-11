@@ -53,13 +53,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "configuration.h"
 
 #include "crypto/src/settings.h"
+#include "system/cache/sys_cache.h"
 
 #if !defined(NO_SHA)
 
 #include "crypto/src/sha.h"
 #include "definitions.h"
 
-#include "core_cm7.h"
 #include "crypt_sha1_hw.h"
 #include "crypt_sha_sam11105.h"
 
@@ -70,11 +70,19 @@ uint32_t actDigest[SHA_DIGEST_SIZE/4] __attribute__((aligned (128)));
 int CRYPT_SHA1_InitSha(Sha* sha, void* heap, int devId)
 {
     /* Enable ICM if not already */
+#if !defined(CRYPTO_SHA_HW_U2010)
     uint32_t PmcBit = 1u << (ID_ICM - 32);
     if ((PMC_REGS->PMC_PCSR1 & PmcBit) != PmcBit)
     {
         PMC_REGS->PMC_PCER1 = PmcBit;
     }
+#else
+    uint32_t apbcBit = 1u << (ID_ICM&31);
+    if ((MCLK_REGS->MCLK_APBCMASK & apbcBit) != apbcBit)
+    {
+        MCLK_REGS->MCLK_APBCMASK |= apbcBit;
+    }
+#endif
 
     /* ICM does the SHA work */
     sha->icm_descriptor.cfg.reg = 0x0;
@@ -102,9 +110,9 @@ static int32_t CRYPT_SHA1_Process(Sha *sha, const uint8_t *input, word32 length)
     sha->icm_descriptor.tran_size =  (length >> 6) - 1;
 
 	memcpy(&actIcmDescriptor, &(sha->icm_descriptor), sizeof(sha->icm_descriptor));
-    SCB_CleanDCache_by_Addr((uint32_t*) (&actIcmDescriptor), sizeof(sha->icm_descriptor));
-    SCB_CleanDCache_by_Addr((uint32_t *)input, length);
-    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha->digest), SHA_DIGEST_SIZE);
+    SYS_CACHE_CleanDCache_by_Addr((uint32_t*) (&actIcmDescriptor), sizeof(sha->icm_descriptor));
+    SYS_CACHE_CleanDCache_by_Addr((uint32_t *)input, length);
+    SYS_CACHE_CleanInvalidateDCache_by_Addr((uint32_t *)&(sha->digest), SHA_DIGEST_SIZE);
 
     /* ICM can set up FIPS default starting digest */
     ICM_REGS->ICM_DSCR = (uint32_t)&(actIcmDescriptor);
@@ -136,7 +144,7 @@ static int32_t CRYPT_SHA1_Process(Sha *sha, const uint8_t *input, word32 length)
     ICM_REGS->ICM_CTRL = ICM_CTRL_DISABLE(1);
     ICM_REGS->ICM_CTRL = ICM_CTRL_SWRST(1);
 
-    SCB_CleanInvalidateDCache_by_Addr((uint32_t *)&(actDigest), SHA_DIGEST_SIZE);
+    SYS_CACHE_CleanInvalidateDCache_by_Addr((uint32_t *)&(actDigest), SHA_DIGEST_SIZE);
 	memcpy(sha->digest, &actDigest, sizeof(sha->digest));
     return 0;
 }
@@ -169,7 +177,7 @@ int CRYPT_SHA1_Update(Sha* sha, const byte* data, word32 len)
         if ((((uint32_t)data) & 63) != 0)
         {
             // Data is not aligned!
-            while (len > SHA_BLOCK_SIZE)
+            while (len >= SHA_BLOCK_SIZE)
             {
                 memcpy(&actBuffer, data, SHA_BLOCK_SIZE);
                 result = CRYPT_SHA1_Process(sha, actBuffer, SHA_BLOCK_SIZE);
