@@ -72,17 +72,17 @@
 #include "system/sys_reset_h2_adapter.h"
 #include "peripheral/sercom/usart/plib_sercom2_usart.h"
 #include "peripheral/evsys/plib_evsys.h"
+#include "system/command/sys_command.h"
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
+#include "system/debug/sys_debug.h"
 #include "system/fs/sys_fs.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "system/fs/mpfs/mpfs.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
-#include "system/console/sys_debug.h"
-#include "system/console/sys_command.h"
 #include "app.h"
 
 
@@ -209,11 +209,12 @@ typedef struct
     SYS_MODULE_OBJ  drvMemory0;
     SYS_MODULE_OBJ  netPres;
 
+    SYS_MODULE_OBJ  sysConsole0;
+
 
     SYS_MODULE_OBJ  tcpip;
 
     SYS_MODULE_OBJ  drvMiim;
-    SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
 
 

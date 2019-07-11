@@ -319,16 +319,16 @@
             <logicalFolder name="f4" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_command.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/command/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="fs" projectFiles="true">
+            <logicalFolder name="f8" displayName="console" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <logicalFolder name="f1" displayName="file_system" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/file_system/ff.h</itemPath>
@@ -603,6 +603,7 @@
                 <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
               <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_cert_store.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
@@ -643,13 +644,21 @@
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_command.c</itemPath>
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="fs" projectFiles="true">
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/debug/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/debug/src/sys_debug.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/ff.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/diskio.c</itemPath>
@@ -694,14 +703,14 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
         <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -881,6 +890,37 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2.000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value="0-47001fff"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="voltagevalue" value=""/>
+      </EdbgTool>
       <ICD4Tool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
