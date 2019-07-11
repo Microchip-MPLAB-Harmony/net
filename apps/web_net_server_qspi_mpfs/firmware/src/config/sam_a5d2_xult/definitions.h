@@ -68,20 +68,20 @@
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
 #include "driver/mx25l/drv_mx25l.h"
+#include "system/command/sys_command.h"
 #include "peripheral/mmu/plib_mmu.h"
 #include "peripheral/matrix/plib_matrix.h"
 #include "peripheral/l2cc/plib_l2cc.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/aic/plib_aic.h"
+#include "system/debug/sys_debug.h"
 #include "peripheral/qspi/plib_qspi0.h"
 #include "system/fs/sys_fs.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "system/fs/mpfs/mpfs.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
-#include "system/console/sys_debug.h"
-#include "system/console/sys_command.h"
 #include "app.h"
 
 
@@ -208,10 +208,13 @@ typedef struct
     SYS_MODULE_OBJ  drvMemory0;
     SYS_MODULE_OBJ  netPres;
 
+    SYS_MODULE_OBJ  sysConsole0;
+
+
     SYS_MODULE_OBJ  tcpip;
     SYS_MODULE_OBJ  drvMX25L;
+
     SYS_MODULE_OBJ  drvMiim;
-    SYS_MODULE_OBJ  sysConsole0;
     SYS_MODULE_OBJ  sysDebug;
 
 

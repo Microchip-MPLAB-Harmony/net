@@ -41,7 +41,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_TELNET_SERVER)
 #include "net_pres/pres/net_pres_socketapi.h"
-#include "system/console/sys_command.h"
+#include "system/command/sys_command.h"
 
 
 #if !defined(TCPIP_TELNET_MAX_CONNECTIONS)
@@ -179,7 +179,7 @@ static tcpipSignalHandle       telnetSignalHandle = 0;
 static void _Telnet_MSG(const void* cmdIoParam, const char* str);
 static void _Telnet_PRINT(const void* cmdIoParam, const char* format, ...);
 static void _Telnet_PUTC(const void* cmdIoParam, char c);
-static bool _Telnet_DATA_RDY(const void* cmdIoParam);
+static int  _Telnet_DATA_RDY(const void* cmdIoParam);
 static char _Telnet_GETC(const void* cmdIoParam);
 
 static void _Telnet_Deregister(TELNET_DCPT* pDcpt);
@@ -369,15 +369,15 @@ static void _Telnet_PRINT(const void* cmdIoParam, const char* format, ...)
 
 
 // Telnet's data ready
-static bool _Telnet_DATA_RDY(const void* cmdIoParam)
+static int _Telnet_DATA_RDY(const void* cmdIoParam)
 {
     NET_PRES_SKT_HANDLE_T tSkt = (NET_PRES_SKT_HANDLE_T)(int)cmdIoParam;
     if(tSkt != INVALID_SOCKET)
     {
-        return NET_PRES_SocketReadIsReady(tSkt) != 0;
+        return NET_PRES_SocketReadIsReady(tSkt);
     }
 
-    return false;
+    return 0;
 }
 
 // Telnet's getc
@@ -509,7 +509,7 @@ static void TCPIP_TELNET_Process(void)
                 NET_PRES_SocketFlush(tSocket);
 
                 // Register telnet as cmd IO device
-                pDcpt->telnetIO = SYS_CMDIO_ADD(&telnetIOApi, (const void*)(int)tSocket, SYS_CMD_TELNET_COMMAND_READ_CONSOLE_IO_PARAM);
+                pDcpt->telnetIO = SYS_CMDIO_ADD(&telnetIOApi, (const void*)(int)tSocket, 0);
                 if (pDcpt->telnetIO == 0)
                 {
                     NET_PRES_SocketWrite(tSocket, (const uint8_t*)TELNET_FAIL_CMD_REGISTER, strlen(TELNET_FAIL_CMD_REGISTER));

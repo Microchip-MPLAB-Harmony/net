@@ -108,6 +108,44 @@ static bool DRV_MX25L_EnableQuadIO(void)
     return status;
 }
 
+static bool DRV_MX25L_ResetQuadIO(void)
+{
+    bool status = false;
+
+    memset((void *)&qspi_command_xfer, 0, sizeof(qspi_command_xfer_t));
+
+    qspi_command_xfer.instruction = MX25L_CMD_RESET_QUAD_IO;
+    qspi_command_xfer.width = QUAD_CMD;
+
+    status  = dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, 0);
+
+    return status;
+}
+
+static bool DRV_MX25L_UnlockFlash(void)
+{
+    bool status = false;
+
+    memset((void *)&qspi_command_xfer, 0, sizeof(qspi_command_xfer_t));
+
+    qspi_command_xfer.instruction = MX25L_CMD_WRITE_ENABLE;
+    qspi_command_xfer.width = SINGLE_BIT_SPI;
+
+    if (dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, 0) == false)
+    {
+        return status;
+    }
+
+    memset((void *)&qspi_command_xfer, 0, sizeof(qspi_command_xfer_t));
+
+    qspi_command_xfer.instruction = MX25L_CMD_UNPROTECT_GLOBAL;
+    qspi_command_xfer.width = SINGLE_BIT_SPI;
+
+    status  = dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, 0);
+
+    return status;
+}
+
 static bool DRV_MX25L_WriteEnable(void)
 {
     bool status = false;
@@ -135,7 +173,7 @@ bool DRV_MX25L_ResetFlash(void)
     memset((void *)&qspi_command_xfer, 0, sizeof(qspi_command_xfer_t));
 
     qspi_command_xfer.instruction = MX25L_CMD_FLASH_RESET_ENABLE;
-    qspi_command_xfer.width = SINGLE_BIT_SPI;
+    qspi_command_xfer.width = QUAD_CMD;
 
     if (dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, 0) == false)
     {
@@ -143,25 +181,6 @@ bool DRV_MX25L_ResetFlash(void)
     }
 
     qspi_command_xfer.instruction = MX25L_CMD_FLASH_RESET;
-    qspi_command_xfer.width = SINGLE_BIT_SPI;
-
-    status  = dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, 0);
-
-    return status;
-}
-
-bool DRV_MX25L_UnlockFlash( const DRV_HANDLE handle )
-{
-    bool status = false;
-
-    if (DRV_MX25L_WriteEnable() == false)
-    {
-        return status;
-    }
-
-    memset((void *)&qspi_command_xfer, 0, sizeof(qspi_command_xfer_t));
-
-    qspi_command_xfer.instruction = MX25L_CMD_UNPROTECT_GLOBAL;
     qspi_command_xfer.width = QUAD_CMD;
 
     status  = dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, 0);
@@ -272,7 +291,11 @@ static bool DRV_MX25L_Erase( uint8_t instruction, uint32_t address )
 
     qspi_command_xfer.instruction = instruction;
     qspi_command_xfer.width = QUAD_CMD;
-    qspi_command_xfer.addr_en = 1;
+
+    if (instruction != MX25L_CMD_CHIP_ERASE)
+    {
+        qspi_command_xfer.addr_en = 1;
+    }
 
     status = dObj->mx25lPlib->CommandWrite(&qspi_command_xfer, address);
 
@@ -286,9 +309,9 @@ bool DRV_MX25L_SectorErase( const DRV_HANDLE handle, uint32_t address )
     return (DRV_MX25L_Erase(MX25L_CMD_SECTOR_ERASE, address));
 }
 
-bool DRV_MX25L_BulkErase( const DRV_HANDLE handle, uint32_t address )
+bool DRV_MX25L_BlockErase( const DRV_HANDLE handle, uint32_t address )
 {
-    return (DRV_MX25L_Erase(MX25L_CMD_BULK_ERASE_64K, address));
+    return (DRV_MX25L_Erase(MX25L_CMD_BLOCK_ERASE_64K, address));
 }
 
 bool DRV_MX25L_ChipErase( const DRV_HANDLE handle )
@@ -372,14 +395,20 @@ SYS_MODULE_OBJ DRV_MX25L_Initialize
     /* Initialize the attached memory device functions */
     dObj->mx25lPlib = mx25lInit->mx25lPlib;
 
-    /* Put MX25L Flash device on QUAD IO Mode */
-    if (DRV_MX25L_EnableQuadIO() == false)
+    /* Put MX25L Flash device on SPI Mode */
+    if (DRV_MX25L_ResetQuadIO() == false)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
 
     /* Unlock the Flash */
-    if (DRV_MX25L_UnlockFlash(drvIndex) == false)
+    if (DRV_MX25L_UnlockFlash() == false)
+    {
+        return SYS_MODULE_OBJ_INVALID;
+    }
+
+    /* Put MX25L Flash device on QUAD IO Mode */
+    if (DRV_MX25L_EnableQuadIO() == false)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
