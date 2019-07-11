@@ -112,8 +112,8 @@ typedef enum
     /* Command to perform sector erase */
     MX25L_CMD_SECTOR_ERASE       = 0x20,
 
-    /* Command to perform Bulk erase */
-    MX25L_CMD_BULK_ERASE_64K     = 0xD8,
+    /* Command to perform Block erase */
+    MX25L_CMD_BLOCK_ERASE_64K    = 0xD8,
 
     /* Command to perform Chip erase */
     MX25L_CMD_CHIP_ERASE         = 0xC7,

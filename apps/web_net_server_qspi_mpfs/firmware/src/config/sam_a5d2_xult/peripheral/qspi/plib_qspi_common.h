@@ -92,6 +92,14 @@ typedef enum
     OPTL_8_BIT = QSPI_IFR_OPTL_OPTION_8BIT
 } QSPI_OPTION_LENGTH;
 
+typedef enum
+{
+    QSPI_REG_READ,
+    QSPI_REG_WRITE,
+    QSPI_MEM_READ,
+    QSPI_MEM_WRITE
+} QSPI_TRANSFER_TYPE;
+
 typedef struct {
     /* QSPI instruction code */
     uint8_t instruction;

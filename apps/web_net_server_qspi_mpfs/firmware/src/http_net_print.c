@@ -34,66 +34,11 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
 #include "configuration.h"
+#include "definitions.h" 
 #include "tcpip/tcpip.h"
+#include "http_net_print.h"
 
-/****************************************************************************
-Section:
-    Dynamic Variables Function Prototypes
-
-Remarks:
-    There are no predefined functions that do the dynamic variables processing.
-    The only interface between the application and the HTTP module is done using
-    TCPIP_HTTP_NET_UserHandlerRegister() call.
-    Therefore, whenever the HTTP module will encounter a dynamic variable it will
-    simply call the "dynamicPrint" function that was registrated!
-    It is up to the application to detect what dynamic variable is processed by
-    examining the TCPIP_HTTP_DYN_VAR_DCPT *parameter that's passed to the function
-    and take appropriate action.
-
-    The mpfs2 generator does not generate a list of dynamic variables functions anymore.
-    All the dynamic variable processing happens at run time!
-    Web pages could be changed at run time and the web server will work just fine
-    (providing that the application properly processes the dynamic variables).
-
-    These are just functions  belonging to the application.
-    They can have any name the application uses to.
- ****************************************************************************/
- 
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_hellomsg(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_builddate(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_version(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_drive(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fstype(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_cookiename(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_cookiefav(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_btn(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_led(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ledSelected(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_pot(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_status_ok(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_status_fail(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_uploadedmd5(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_hostname(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_dhcpchecked(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_ip(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_gw(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_subnet(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_dns1(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_dns2(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_config_mac(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_user(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_pass(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_host(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_service(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_status(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_ddns_status_msg(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_reboot(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_rebootaddr(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_snmp_en(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_read_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
 
 /****************************************************************************
   Section:
@@ -110,53 +55,43 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_write_comm(TCPIP_HTTP_NET_CONN_HANDLE 
     See http_net.h for details regarding each of these functions.
  ****************************************************************************/
 
-// application HTTP dynamic variables processing function
-typedef TCPIP_HTTP_DYN_PRINT_RES (*HTTP_APP_DYNVAR_FNC)(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt);
-
-// an entry for the application processing HTTP dynamic variables
-typedef struct
-{
-    const char *varName;        // name of the dynamic variable
-    HTTP_APP_DYNVAR_FNC varFnc; // processing function     
-}HTTP_APP_DYNVAR_ENTRY;
-
 // table with the processed dynamic variables in this demo
 static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] = 
 {
     // varName                      varFnc
-    {"hellomsg",                    TCPIP_HTTP_Print_hellomsg},
-    {"builddate",                   TCPIP_HTTP_Print_builddate},
-    {"version",                     TCPIP_HTTP_Print_version},
-    {"drive",                       TCPIP_HTTP_Print_drive},
-    {"fstype",                      TCPIP_HTTP_Print_fstype},
-    {"cookiename",                  TCPIP_HTTP_Print_cookiename},
-    {"cookiefav",                   TCPIP_HTTP_Print_cookiefav},
-    {"btn",                         TCPIP_HTTP_Print_btn},
-    {"led",                         TCPIP_HTTP_Print_led},
-    {"ledSelected",                 TCPIP_HTTP_Print_ledSelected},
-    {"pot",                         TCPIP_HTTP_Print_pot},
-    {"status_ok",                   TCPIP_HTTP_Print_status_ok},
-    {"status_fail",                 TCPIP_HTTP_Print_status_fail},
-    {"uploadedmd5",                 TCPIP_HTTP_Print_uploadedmd5},
-    {"config_hostname",             TCPIP_HTTP_Print_config_hostname},
-    {"config_dhcpchecked",          TCPIP_HTTP_Print_config_dhcpchecked},
-    {"config_ip",                   TCPIP_HTTP_Print_config_ip},
-    {"config_gw",                   TCPIP_HTTP_Print_config_gw},
-    {"config_subnet",               TCPIP_HTTP_Print_config_subnet},
-    {"config_dns1",                 TCPIP_HTTP_Print_config_dns1},
-    {"config_dns2",                 TCPIP_HTTP_Print_config_dns2},
-    {"config_mac",                  TCPIP_HTTP_Print_config_mac},
-    {"ddns_user",                   TCPIP_HTTP_Print_ddns_user},
-    {"ddns_pass",                   TCPIP_HTTP_Print_ddns_pass},
-    {"ddns_host",                   TCPIP_HTTP_Print_ddns_host},
-    {"ddns_service",                TCPIP_HTTP_Print_ddns_service},
-    {"ddns_status",                 TCPIP_HTTP_Print_ddns_status},
-    {"ddns_status_msg",             TCPIP_HTTP_Print_ddns_status_msg},
-    {"reboot",                      TCPIP_HTTP_Print_reboot},
-    {"rebootaddr",                  TCPIP_HTTP_Print_rebootaddr},
-    {"snmp_en",                     TCPIP_HTTP_Print_snmp_en},
-    {"read_comm",                   TCPIP_HTTP_Print_read_comm},
-    {"write_comm",                  TCPIP_HTTP_Print_write_comm},
+    {"hellomsg",					TCPIP_HTTP_Print_hellomsg},
+	{"cookiename",					TCPIP_HTTP_Print_cookiename},
+	{"cookiefav",					TCPIP_HTTP_Print_cookiefav},
+	{"builddate",					TCPIP_HTTP_Print_builddate},
+	{"led",							TCPIP_HTTP_Print_led},
+	{"ledSelected",					TCPIP_HTTP_Print_ledSelected},
+	{"version",						TCPIP_HTTP_Print_version},
+	{"drive",						TCPIP_HTTP_Print_drive},
+	{"fstype",						TCPIP_HTTP_Print_fstype},
+	{"btn",							TCPIP_HTTP_Print_btn},
+	{"pot",							TCPIP_HTTP_Print_pot},
+	{"uploadedmd5",					TCPIP_HTTP_Print_uploadedmd5},
+	{"snmp_en",						TCPIP_HTTP_Print_snmp_en},
+	{"read_comm",					TCPIP_HTTP_Print_read_comm},
+	{"write_comm",					TCPIP_HTTP_Print_write_comm},
+	{"status_fail",					TCPIP_HTTP_Print_status_fail},
+	{"config_mac",					TCPIP_HTTP_Print_config_mac},
+	{"config_hostname",				TCPIP_HTTP_Print_config_hostname},
+	{"config_dhcpchecked",			TCPIP_HTTP_Print_config_dhcpchecked},
+	{"config_ip",					TCPIP_HTTP_Print_config_ip},
+	{"config_gw",					TCPIP_HTTP_Print_config_gw},
+	{"config_subnet",				TCPIP_HTTP_Print_config_subnet},
+	{"config_dns1",					TCPIP_HTTP_Print_config_dns1},
+	{"config_dns2",					TCPIP_HTTP_Print_config_dns2},
+	{"reboot",						TCPIP_HTTP_Print_reboot},
+	{"rebootaddr",					TCPIP_HTTP_Print_rebootaddr},
+	{"status_ok",					TCPIP_HTTP_Print_status_ok},
+	{"ddns_status",					TCPIP_HTTP_Print_ddns_status},
+	{"ddns_status_msg",				TCPIP_HTTP_Print_ddns_status_msg},
+	{"ddns_service",				TCPIP_HTTP_Print_ddns_service},
+	{"ddns_user",					TCPIP_HTTP_Print_ddns_user},
+	{"ddns_pass",					TCPIP_HTTP_Print_ddns_pass},
+	{"ddns_host",					TCPIP_HTTP_Print_ddns_host},
 };
 
 // Function that processes the dynamic variables
@@ -186,3 +121,67 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DynPrint(TCPIP_HTTP_NET_CONN_HANDLE conn
     // not found; do nothing
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
+
+static HTTP_APP_DYNVAR_BUFFER httpDynVarBuffers[HTTP_APP_DYNVAR_BUFFERS_NO];
+
+// helper to get one of the application's dynamic buffer that are used in the
+// dynamic variables processing
+HTTP_APP_DYNVAR_BUFFER *HTTP_APP_GetDynamicBuffer(void)
+{
+    int ix;
+    HTTP_APP_DYNVAR_BUFFER *pDynBuffer;
+
+    pDynBuffer = httpDynVarBuffers;
+    for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix, pDynBuffer++)
+    {
+        if(pDynBuffer->busy == 0)
+        {
+            pDynBuffer->busy = 1;
+            return pDynBuffer;
+        }
+    }
+    return 0;
+}
+
+/****************************************************************************
+  Section:
+    Application initialization and HTTP registration.
+    Here the application registers with the HTTP module the functions
+    that will process the HTTP events (dynamic variables, SSI events, Post, Get, etc.).
+    Note that without registering the process functions with HTTP, there won't be any web page processing.
+    There is no default processing for a web page!
+
+    See http_net_print.h for details regarding each of these functions.
+ ****************************************************************************/
+void HTTP_APP_Initialize(void)
+{
+    int ix;
+    
+
+    for(ix = 0; ix < sizeof(httpDynVarBuffers)/sizeof(*httpDynVarBuffers); ++ix)
+    {
+        httpDynVarBuffers[ix].busy = 0;
+        httpDynVarBuffers[ix].bufferSize = HTTP_APP_DYNVAR_BUFFER_SIZE;
+    }
+
+    TCPIP_HTTP_NET_USER_CALLBACK appHttpCBack =
+    {
+        .getExecute = TCPIP_HTTP_NET_ConnectionGetExecute,              // Process the "GET" command
+        .postExecute = TCPIP_HTTP_NET_ConnectionPostExecute,            // Process the "POST" command
+        .fileAuthenticate = TCPIP_HTTP_NET_ConnectionFileAuthenticate,  // Process the file authentication
+        .userAuthenticate = TCPIP_HTTP_NET_ConnectionUserAuthenticate,  // Process the user authentication
+
+        .dynamicPrint = TCPIP_HTTP_NET_DynPrint,                        // Process the dynamic variable callback
+        .dynamicAck = TCPIP_HTTP_NET_DynAcknowledge,                    // Acknowledgment function for when the dynamic variable processing is completed
+        .eventReport = TCPIP_HTTP_NET_EventReport,                      // HTTP Event notification callback
+
+        .ssiNotify = TCPIP_HTTP_NET_SSINotification,                    // SSI command calback
+    };
+
+    TCPIP_HTTP_NET_USER_HANDLE httpH = TCPIP_HTTP_NET_UserHandlerRegister(&appHttpCBack);
+    if(httpH == 0)
+    {
+        SYS_CONSOLE_MESSAGE("APP: Failed to register the HTTP callback!\r\n");
+    }
+}
+

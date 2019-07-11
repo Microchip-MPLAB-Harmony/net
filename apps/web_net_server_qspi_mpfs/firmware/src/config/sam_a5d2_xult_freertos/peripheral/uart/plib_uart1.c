@@ -85,7 +85,7 @@ void static UART1_ISR_TX_Handler( void )
 {
     if(uart1Obj.txBusyStatus == true)
     {
-        while((UART_SR_TXEMPTY_Msk == (UART1_REGS->UART_SR& UART_SR_TXEMPTY_Msk)) && (uart1Obj.txSize > uart1Obj.txProcessedSize) )
+        while((UART_SR_TXRDY_Msk == (UART1_REGS->UART_SR & UART_SR_TXRDY_Msk)) && (uart1Obj.txSize > uart1Obj.txProcessedSize) )
         {
             UART1_REGS->UART_THR|= uart1Obj.txBuffer[uart1Obj.txProcessedSize++];
         }
@@ -140,7 +140,7 @@ void UART1_InterruptHandler( void )
     }
 
     /* Transmitter status */
-    if(UART_SR_TXEMPTY_Msk == (UART1_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
+    if(UART_SR_TXRDY_Msk == (UART1_REGS->UART_SR & UART_SR_TXRDY_Msk))
     {
         UART1_ISR_TX_Handler();
     }
@@ -294,7 +294,7 @@ bool UART1_Write( void *buffer, const size_t size )
             status = true;
 
             /* Initiate the transfer by sending first byte */
-            if(UART_SR_TXEMPTY_Msk == (UART1_REGS->UART_SR& UART_SR_TXEMPTY_Msk))
+            if(UART_SR_TXRDY_Msk == (UART1_REGS->UART_SR & UART_SR_TXRDY_Msk))
             {
                 UART1_REGS->UART_THR = (UART_THR_TXCHR(*lBuffer) & UART_THR_TXCHR_Msk);
                 uart1Obj.txProcessedSize++;

@@ -89,7 +89,7 @@ typedef enum
     DRV_MX25L_TRANSFER_ERROR_UNKNOWN,
 } DRV_MX25L_TRANSFER_STATUS;
 
-/* 
+/*
  Summary:
     MX25L Device Geometry data.
 
@@ -371,52 +371,6 @@ bool DRV_MX25L_ResetFlash(void);
 
 // *****************************************************************************
 /* Function:
-    bool DRV_MX25L_UnlockFlash( const DRV_HANDLE handle );
-
-  Summary:
-    Unlocks the flash device for Erase and Program operations.
-
-  Description:
-    This function schedules a blocking operation for unlocking the flash blocks
-    globally. This allows to perform erase and program operations on the flash.
-
-    The request is sent in QUAD_MODE to flash device.
-
-  Precondition:
-    The DRV_MX25L_Open() routine must have been called for the
-    specified MX25L driver instance.
-
-  Parameters:
-    handle       - A valid open-instance handle, returned from the driver's
-                   open routine
-
-  Returns:
-    false
-    - if Write enable fails before sending unlock command to flash
-    - if Unlock flash command itself fails
-
-    true
-    - if the unlock is successfully completed
-
-  Example:
-    <code>
-    DRV_HANDLE handle;  // Returned from DRV_MX25L_Open
-
-    if(true != DRV_MX25L_UnlockFlash(handle))
-    {
-        // Error handling here
-    }
-
-    </code>
-
-  Remarks:
-    This routine will block wait for request to complete.
-*/
-
-bool DRV_MX25L_UnlockFlash( const DRV_HANDLE handle );
-
-// *****************************************************************************
-/* Function:
     bool DRV_MX25L_ReadJedecId( const DRV_HANDLE handle, void *jedec_id );
 
   Summary:
@@ -522,7 +476,7 @@ bool DRV_MX25L_SectorErase( const DRV_HANDLE handle, uint32_t address );
 
 // **************************************************************************
 /* Function:
-    bool DRV_MX25L_BulkErase( const DRV_HANDLE handle, uint32_t address );
+    bool DRV_MX25L_BlockErase( const DRV_HANDLE handle, uint32_t address );
 
   Summary:
     Erase a block from the specified block start address.
@@ -576,7 +530,7 @@ bool DRV_MX25L_SectorErase( const DRV_HANDLE handle, uint32_t address );
     Client should wait until erase is complete to send next transfer request.
 */
 
-bool DRV_MX25L_BulkErase( const DRV_HANDLE handle, uint32_t address );
+bool DRV_MX25L_BlockErase( const DRV_HANDLE handle, uint32_t address );
 
 // **************************************************************************
 /* Function:
@@ -815,7 +769,7 @@ bool DRV_MX25L_PageWrite( const DRV_HANDLE handle, void *tx_data, uint32_t addre
 
   Example:
     <code>
-    
+
     DRV_HANDLE handle;  // Returned from DRV_MX25L_Open
 
     if (DRV_MX25L_TRANSFER_COMPLETED == DRV_MX25L_TransferStatusGet(handle))
