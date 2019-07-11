@@ -149,6 +149,26 @@ SYSTEM_OBJECTS sysObj;
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+/*** File System Initialization Data ***/
+
+
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+{
+	{NULL}
+};
+
+
+
+
+const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
+{
+    {
+        .nativeFileSystemType = FAT,
+        .nativeFileSystemFunctions = &FatFsFunctions
+    }
+};
+
+
 /* Net Presentation Layer Data Definitions */
 #include "net_pres/pres/net_pres_enc_glue.h"
 
@@ -252,8 +272,8 @@ static const NET_PRES_INST_DATA netPresCfgs[] =
         .pTransObject_sc = &netPresTransObject0SC,
         .pTransObject_ds = &netPresTransObject0DS,
         .pTransObject_dc = &netPresTransObject0DC,
-        .pProvObject_ss = NULL,
-        .pProvObject_sc = NULL,
+        .pProvObject_ss = &net_pres_EncProviderStreamServer0,
+        .pProvObject_sc = &net_pres_EncProviderStreamClient0,
         .pProvObject_ds = NULL,
         .pProvObject_dc = NULL,
     },
@@ -552,26 +572,6 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 }
 // </editor-fold>
 
-/*** File System Initialization Data ***/
-
-
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
-{
-	{NULL}
-};
-
-
-
-
-const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
-{
-    {
-        .nativeFileSystemType = FAT,
-        .nativeFileSystemFunctions = &FatFsFunctions
-    }
-};
-
-
 
 
 // *****************************************************************************
@@ -685,11 +685,11 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 
 
+	BSP_Initialize();
     TC0_TimerInitialize();
 
 	SDHC1_Initialize();
 
-	BSP_Initialize();
     SERCOM2_USART_Initialize();
 
     EVSYS_Initialize();
@@ -712,6 +712,9 @@ void SYS_Initialize ( void* data )
 
 
 
+    /*** File System Service Initialization Code ***/
+    SYS_FS_Initialize( (const void *) sysFSInit );
+
     sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
 
 
@@ -719,9 +722,6 @@ void SYS_Initialize ( void* data )
     sysObj.tcpip = TCPIP_STACK_Init();
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 
-
-    /*** File System Service Initialization Code ***/
-    SYS_FS_Initialize( (const void *) sysFSInit );
 
 
     APP_Initialize();
