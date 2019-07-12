@@ -391,7 +391,7 @@ static uint16_t _HTTP_SktFifoRxFree(NET_PRES_SKT_HANDLE_T skt);
 
 static bool _HTTP_DataTryOutput(TCPIP_HTTP_NET_CONN* pHttpCon, const char* data, uint16_t dataLen, uint16_t checkLen);
 
-static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* findStr, uint16_t wStart, uint16_t wSearchLen);
+static uint32_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* findStr, uint16_t wStart, uint16_t wSearchLen);
 
 static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen);
 
@@ -1331,7 +1331,7 @@ static bool _HTTP_HeaderParseAuthorization(TCPIP_HTTP_NET_CONN* pHttpCon)
     _HTTP_ConnectionDiscard(pHttpCon, 6);
 
     // Find the terminating CRLF, make sure it's a multiple of four and limit the size
-    len = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+    len = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     len += 3;
     len &= 0xfc;
     len = mMIN(len, sizeof(inBuff)-4);
@@ -1402,7 +1402,7 @@ static bool _HTTP_HeaderParseCookie(TCPIP_HTTP_NET_CONN* pHttpCon)
     uint16_t lenA, lenB;
 
     // Verify there's enough space
-    lenB = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+    lenB = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     if(lenB >= (uint16_t)(pHttpCon->httpData + httpConnDataSize - pHttpCon->ptrData - 2))
     {   // If not, overflow
         pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_OVERFLOW;
@@ -1432,7 +1432,7 @@ static bool _HTTP_HeaderParseCookie(TCPIP_HTTP_NET_CONN* pHttpCon)
         }
 
         // Find the new distance to the CRLF
-        lenB = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+        lenB = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     }
 
     return true;
@@ -1472,7 +1472,7 @@ static bool _HTTP_HeaderParseContentLength(TCPIP_HTTP_NET_CONN* pHttpCon)
     uint8_t buf[10];
 
     // Read up to the CRLF (max 9 bytes)
-    len = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+    len = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     if(len >= sizeof(buf))
     {
         pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_BAD_REQUEST;
@@ -1643,6 +1643,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileUpload(TCPIP_HTTP_NET_CONN* pHtt
         }
         else
         {
+            pHttpCon->flags.uploadPhase = 0;
             pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_STARTED;
         }
 
@@ -2716,25 +2717,38 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
     {
         // New upload, so look for the CRLFCRLF
         case TCPIP_HTTP_NET_STAT_UPLOAD_STARTED:
-            pHttpCon->uploadSectNo = 0;
-            lenA = _HTTP_ConnectionStringFind(pHttpCon, "\r\n\r\n", 0, 0);
+            if(pHttpCon->flags.uploadPhase == 0)
+            {   // just starting
+                pHttpCon->uploadSectNo = 0;
+                uint32_t peekRes = _HTTP_ConnectionStringFind(pHttpCon, "\r\n\r\n", 0, 0);
 
-            if(lenA == 0xffff)
-            {   // End of line not found, remove as much as possible
-                lenA = _HTTP_ConnectionDiscard(pHttpCon, NET_PRES_SocketReadIsReady(pHttpCon->socket) - 4);
-                pHttpCon->byteCount -= lenA;
+                if((uint16_t)peekRes == 0xffff)
+                {   // End of line not found, remove as much as possible
+                    lenA = peekRes >> 16;   // get the # of bytes safe to remove
+                    if(lenA > 4)
+                    {
+                        lenA = _HTTP_ConnectionDiscard(pHttpCon, lenA - 4);
+                        pHttpCon->byteCount -= lenA;
+                    }
+                    break;
+                }
+
+                // Found end of line, so remove all data up to and including
+                lenA = _HTTP_ConnectionDiscard(pHttpCon, (uint16_t)peekRes + 4);
+                pHttpCon->byteCount -= (lenA + 4);
+
+                pHttpCon->flags.uploadPhase = 1;
                 break;
             }
-
-            // Found end of line, so remove all data up to and including
-            lenA = _HTTP_ConnectionDiscard(pHttpCon, lenA + 4);
-            pHttpCon->byteCount -= (lenA + 4);
-
+            // waiting for the signature
             // Make sure first 6 bytes are also in
             if(NET_PRES_SocketReadIsReady(pHttpCon->socket) < sizeof(MPFS_SIGNATURE) - 1 )
             {
                 return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
             }
+
+            // reset the phase, we're done
+            pHttpCon->flags.uploadPhase = 0;
 
             lenA = NET_PRES_SocketRead(pHttpCon->socket, mpfsBuffer, sizeof(MPFS_SIGNATURE) - 1);
             pHttpCon->byteCount -= lenA;
@@ -3080,7 +3094,7 @@ int TCPIP_HTTP_NET_ActiveConnectionCountGet(int* pOpenCount)
 uint16_t TCPIP_HTTP_NET_ConnectionStringFind(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* str, uint16_t startOffs, uint16_t searchLen)
 {
     TCPIP_HTTP_NET_CONN* pHttpCon = (TCPIP_HTTP_NET_CONN*)connHandle;
-    return _HTTP_ConnectionStringFind(pHttpCon, str, startOffs, searchLen);
+    return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, str, startOffs, searchLen);
 }
 
 
@@ -3194,7 +3208,10 @@ static bool _HTTP_DataTryOutput(TCPIP_HTTP_NET_CONN* pHttpCon, const char* data,
 
 
 // Note that the search will fail if there's more data in the TCP socket than could be read at once.
-static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* str, uint16_t startOffs, uint16_t searchLen)
+// returns a 32 bit word:
+//      - hi 16 bits hold the peeked at data, i.e. the number of bytes to safely remove, if needed
+//      - low 16 bits is 0xffff if not found or offset where the string was found
+static uint32_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* str, uint16_t startOffs, uint16_t searchLen)
 {
     uint16_t    peekOffs, peekReqLen, peekSize, avlblBytes;
     char*   queryStr;
@@ -3218,6 +3235,7 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
     }
 
     uint16_t retCode = 0xffff;
+    peekSize = 0;
     // sanity check
     if(findLen < httpPeekBufferSize)
     {   // make sure enough room to find such string
@@ -3240,7 +3258,7 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
 
 
     (*http_free_fnc)(srchBuff);
-    return retCode;
+    return ((uint32_t)peekSize << 16) | retCode;
 }
 
 static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen)
@@ -3249,7 +3267,7 @@ static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t 
     srchBuff[0] = cFind;
     srchBuff[1] = 0;
 
-	return _HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
+	return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
 }
 
 
@@ -3663,6 +3681,19 @@ static void _HTTP_FreeChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DCPT
         if(pHead->dynChDcpt.pDynAllocDcpt != 0)
         {   // dynamic variable chunk with allocated dyn var user space
             (*http_free_fnc)(pHead->dynChDcpt.pDynAllocDcpt);
+        }
+        // check if there are dynamic buffers that are not freed
+        TCPIP_HTTP_DYNVAR_BUFF_DCPT* pDynDcpt;
+        while((pDynDcpt = (TCPIP_HTTP_DYNVAR_BUFF_DCPT*)TCPIP_Helper_SingleListHeadRemove(&pChDcpt->dynChDcpt.dynBuffList)) != 0)
+        {
+            if((pDynDcpt->dynFlags & TCPIP_HTTP_DYNVAR_BUFF_FLAG_ACK) != 0)
+            {   // needs acknowlegment
+                if(httpUserCback != 0 && httpUserCback->dynamicAck != 0)
+                {
+                    (*httpUserCback->dynamicAck)(pHttpCon, pDynDcpt->dynBuffer, httpUserCback);
+                }
+            }
+            _HTTP_ReleaseDynBuffDescriptor(pDynDcpt);
         }
     }
 #endif // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)

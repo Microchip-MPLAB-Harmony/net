@@ -37,7 +37,6 @@
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *******************************************************************************/
-
 #ifndef PLIB_SDMMC1_H
 #define PLIB_SDMMC1_H
 
@@ -70,7 +69,7 @@ bool SDMMC1_IsWriteProtected ( void );
 
 bool SDMMC1_IsCardAttached ( void );
 
-bool SDMMC1_ClockSet ( uint32_t clock );
+bool SDMMC1_ClockSet ( uint32_t freq );
 
 void SDMMC1_ClockEnable ( void );
 

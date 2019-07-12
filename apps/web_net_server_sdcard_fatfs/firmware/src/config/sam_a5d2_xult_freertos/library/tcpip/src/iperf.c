@@ -43,7 +43,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_STACK_USE_IPERF)
 
-#include "system/console/sys_command.h"
+#include "system/command/sys_command.h"
 
 //****************************************************************************
 // CONSTANTS (Defines and enums)
@@ -253,10 +253,10 @@ static int    nIperfSessions = 0;       // number of currently running instances
 
 static int    iperfInitCount = 0;      // iperf module initialization count
 
-static int CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int CommandIperfStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
-static int CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void CommandIperfStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 // Iperf command table
 static const SYS_CMD_DESCRIPTOR    iperfCmdTbl[]=
 {
@@ -2103,7 +2103,7 @@ static tIperfState* GetIperfSession(void)
 	return 0;
 }
 
-static int CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     uint8_t i, tos, len;
     char *ptr;
@@ -2118,7 +2118,7 @@ static int CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if(pIState == 0)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "\r\niperf: All instances busy. Retry later!\r\n");
-        return false;
+        return;
     }
 
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: Starting session instance %d\r\n", pIState - gIperfState);
@@ -2321,7 +2321,7 @@ static int CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             if ( values[0] <  MAX_BUFFER  )
             {
                (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "iperf: The minimum datagram size is %d\r\n", (int)MAX_BUFFER);
-               return false;
+               return;
             }
 
             pIState->mDatagramSize = values[0];
@@ -2384,10 +2384,9 @@ static int CommandIperfStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             break;
     }
     
-    return true;
 }
 
-static int CommandIperfStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandIperfStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     tIperfState* pIState;	
@@ -2411,13 +2410,13 @@ static int CommandIperfStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if(!okParam)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: iperfk <-i index>\r\n");
-        return false;
+        return;
     }
 
     if(iperfIndex < 0 || iperfIndex >= nIperfSessions)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: Invalid session number. Min: 0, Max: %d\r\n", nIperfSessions - 1);
-        return false;
+        return;
     }
 
     pIState = gIperfState + iperfIndex;	
@@ -2432,10 +2431,9 @@ static int CommandIperfStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: trying to stop iperf instance %d...\r\n", iperfIndex);
     }
 
-    return false;
 }
 
-static int CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     IPV4_ADDR   ipAddr;
     tIperfState* pIState;	
@@ -2460,7 +2458,7 @@ static int CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                 if(!TCPIP_Helper_StringToIPAddress(paramVal, &ipAddr))
                 {
                     (*pCmdIO->pCmdApi->msg)(cmdIoParam, "iperfi: use a valid IP address!\r\n");
-                    return false;
+                    return;
                 }
                 else
                 {
@@ -2484,13 +2482,13 @@ static int CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if (!addFound)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: iperfi -a address <-i index>\r\n");
-        return false;
+        return;
     }
 
     if(iperfIndex < 0 || iperfIndex >= nIperfSessions)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: Invalid session number. Min: 0, Max: %d\r\n", nIperfSessions - 1);
-        return false;
+        return;
     }
 
     pIState = gIperfState + iperfIndex;	
@@ -2498,16 +2496,15 @@ static int CommandIperfNetIf(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if (pIState->state != IPERF_STANDBY_STATE)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperfi: cannot change the ip address while session: %d running!\r\n", iperfIndex);
-        return false;
+        return;
     }
 
     pIState->localAddr.Val = ipAddr.Val;
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "iperfi: OK, set the IP address to instance: %d\r\n", iperfIndex);
 
-    return false;
 }
 
-static int CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+static void CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     bool        setTx, setRx;
     uint32_t    txBuffSize, rxBuffSize;
@@ -2520,7 +2517,7 @@ static int CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if (argc < 3)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: iperfs <-tx size> <-rx size> <-i index>\r\n");
-        return false;
+        return;
     }
 
     setTx = setRx = 0;
@@ -2558,13 +2555,13 @@ static int CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if(iperfIndex < 0 || iperfIndex >= nIperfSessions)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: Invalid session number. Min: 0, Max: %d\r\n", nIperfSessions - 1);
-        return false;
+        return;
     }
 
     if((setTx && (txBuffSize <= 0 || txBuffSize >= 65536)) || (setRx && (rxBuffSize <= 0 || rxBuffSize >= 65536)))
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "iperfs: 0 < size < 65536\r\n");
-        return false;
+        return;
     }
 
 
@@ -2581,7 +2578,6 @@ static int CommandIperfSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "iperfs: OK, set instance %d rx size to %d\r\n", iperfIndex, rxBuffSize);
     }
 
-    return false;
 }
 
 static void IperfSetState(tIperfState* pIState, int newState)
