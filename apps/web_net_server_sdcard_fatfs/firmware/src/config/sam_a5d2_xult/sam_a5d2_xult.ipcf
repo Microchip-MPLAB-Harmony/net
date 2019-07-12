@@ -26,12 +26,16 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </asmIncludePath>
+    <defines>
+        <defines>__FPU_PRESENT=1</defines>
+    </defines>
     <linkerFile>
         <override>true</override>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult\ddr.icf</path>
     </linkerFile>
     <files relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult">
         <group name="Header Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult">
+            <path>\..\..\http_net_print.h</path>
             <path>\peripheral\tc\plib_tc0.h</path>
             <path>\peripheral\tc\plib_tc_common.h</path>
             <path>\system\time\sys_time.h</path>
@@ -100,6 +104,17 @@
             <path>\net_pres\pres\src\net_pres_local.h</path>
             <path>\net_pres\pres\net_pres_socketapiconversion.h</path>
             <path>\net_pres\pres\net_pres_enc_glue.h</path>
+            <path>\driver\driver.h</path>
+            <path>\driver\driver_common.h</path>
+            <path>\system\system_media.h</path>
+            <path>\system\int\sys_int.h</path>
+            <path>\system\int\sys_int_mapping.h</path>
+            <path>\osal\osal.h</path>
+            <path>\osal\osal_definitions.h</path>
+            <path>\osal\osal_impl_basic.h</path>
+            <path>\..\..\app.h</path>
+            <path>\user.h</path>
+            <path>\configuration.h</path>
             <path>\library\tcpip\tcpip_common_ports.h</path>
             <path>\library\tcpip\tcpip_mac.h</path>
             <path>\library\tcpip\tcpip_mac_object.h</path>
@@ -219,27 +234,14 @@
             <path>\system\sys_reset_h2_adapter.h</path>
             <path>\system_config.h</path>
             <path>\system_definitions.h</path>
-            <path>\driver\driver.h</path>
-            <path>\driver\driver_common.h</path>
-            <path>\system\system.h</path>
-            <path>\system\system_common.h</path>
-            <path>\system\system_module.h</path>
-            <path>\system\system_media.h</path>
-            <path>\system\int\sys_int.h</path>
-            <path>\system\int\sys_int_mapping.h</path>
-            <path>\system\cache\sys_cache.h</path>
-            <path>\osal\osal.h</path>
-            <path>\osal\osal_definitions.h</path>
-            <path>\osal\osal_impl_basic.h</path>
-            <path>\..\..\app.h</path>
-            <path>\user.h</path>
-            <path>\configuration.h</path>
             <path>\driver\gmac\drv_gmac.h</path>
             <path>\driver\gmac\src\drv_gmac_local.h</path>
             <path>\driver\gmac\src\dynamic\_gmac_dcpt_lists.h</path>
             <path>\driver\gmac\src\dynamic\drv_gmac_lib.h</path>
             <path>\driver\sdmmc\drv_sdmmc.h</path>
+            <path>\driver\sdmmc\src\drv_sdmmc_local.h</path>
             <path>\driver\sdmmc\drv_sdmmc_definitions.h</path>
+            <path>\system\command\sys_command.h</path>
             <path>\device_cache.h</path>
             <path>\toolchain_specifics.h</path>
             <path>\definitions.h</path>
@@ -252,6 +254,7 @@
             <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
+            <path>\system\debug\sys_debug.h</path>
             <path>\system\fs\sys_fs.h</path>
             <path>\system\fs\src\sys_fs_local.h</path>
             <path>\system\fs\sys_fs_media_manager.h</path>
@@ -268,12 +271,6 @@
             <path>\peripheral\sdmmc\plib_sdmmc_common.h</path>
             <path>\peripheral\sdmmc\plib_sdmmc1.h</path>
             <path>\system\console\sys_console.h</path>
-            <path>\system\console\src\sys_console_local.h</path>
-            <path>\system\console\src\sys_console_uart.h</path>
-            <path>\system\console\src\sys_console_uart_definitions.h</path>
-            <path>\system\console\src\sys_debug_local.h</path>
-            <path>\system\console\sys_command.h</path>
-            <path>\system\console\sys_debug.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_gcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>
@@ -290,7 +287,29 @@
             <path>\library\tcpip\src\http_net.c</path>
             <path>\..\..\http_net_print.c</path>
             <path>\..\..\custom_http_net_app.c</path>
-            <path>\..\..\mpfs_img2_net.c</path>
+            <path>\..\..\web_pages\auth.htm</path>
+            <path>\..\..\web_pages\cookies.htm</path>
+            <path>\..\..\web_pages\dynvars.htm</path>
+            <path>\..\..\web_pages\footer.htm</path>
+            <path>\..\..\web_pages\forms.htm</path>
+            <path>\..\..\web_pages\harmony.gif</path>
+            <path>\..\..\web_pages\header.htm</path>
+            <path>\..\..\web_pages\index.htm</path>
+            <path>\..\..\web_pages\leds.cgi</path>
+            <path>\..\..\web_pages\mchp.css</path>
+            <path>\..\..\web_pages\mchp.gif</path>
+            <path>\..\..\web_pages\mchp.js</path>
+            <path>\..\..\web_pages\snmp.bib</path>
+            <path>\..\..\web_pages\ssi.htm</path>
+            <path>\..\..\web_pages\status.xml</path>
+            <path>\..\..\web_pages\upload.htm</path>
+            <path>\..\..\web_pages\dyndns\index.htm</path>
+            <path>\..\..\web_pages\email\index.htm</path>
+            <path>\..\..\web_pages\protect\config.htm</path>
+            <path>\..\..\web_pages\protect\index.htm</path>
+            <path>\..\..\web_pages\protect\reboot.cgi</path>
+            <path>\..\..\web_pages\protect\reboot.htm</path>
+            <path>\..\..\web_pages\snmp\snmpconfig.htm</path>
             <path>\library\tcpip\src\nbns.c</path>
             <path>\library\tcpip\src\tcp.c</path>
             <path>\library\tcpip\src\dhcp.c</path>
@@ -303,8 +322,12 @@
             <path>\library\tcpip\src\telnet.c</path>
             <path>\net_pres\pres\src\net_pres.c</path>
             <path>\net_pres\pres\net_pres_enc_glue.c</path>
+            <path>\net_pres\pres\net_pres_cert_store.c</path>
             <path>\library\tcpip\src\iperf.c</path>
             <path>\library\tcpip\src\ipv4.c</path>
+            <path>\system\int\src\sys_int.c</path>
+            <path>\..\..\app.c</path>
+            <path>\tasks.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
             <path>\library\tcpip\src\helpers.c</path>
@@ -315,15 +338,10 @@
             <path>\library\tcpip\src\tcpip_notify.c</path>
             <path>\library\tcpip\src\tcpip_packet.c</path>
             <path>\system\sys_time_h2_adapter.c</path>
-            <path>\system\int\src\sys_int.c</path>
-            <path>\system\cache\sys_cache.c</path>
-            <path>\..\..\app.c</path>
-            <path>\tasks.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac_lib_samA5D2.c</path>
-            <path>\driver\sdmmc\src\drv_sdmmc.c</path>
-            <path>\driver\sdmmc\src\drv_sdmmc_local.h</path>
             <path>\driver\sdmmc\src\drv_sdmmc_file_system.c</path>
+            <path>\system\command\src\sys_command.c</path>
             <path>\..\..\main.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
@@ -335,11 +353,13 @@
             <path>\peripheral\pio\plib_pio.c</path>
             <path>\peripheral\aic\plib_aic.c</path>
             <path>\cstartup.s</path>
-            <path>\vectortrap.s</path>
+            <path>\fault_handlers.c</path>
             <path>\library\tcpip\src\sntp.c</path>
             <path>\library\tcpip\src\tcpip_announce.c</path>
             <path>\library\tcpip\src\udp.c</path>
             <path>\driver\miim\src\dynamic\drv_miim.c</path>
+            <path>\system\debug\src\sys_debug_local.h</path>
+            <path>\system\debug\src\sys_debug.c</path>
             <path>\system\fs\src\sys_fs.c</path>
             <path>\system\fs\src\sys_fs_media_manager.c</path>
             <path>\system\fs\fat_fs\src\ff.c</path>
@@ -348,10 +368,12 @@
             <path>\driver\ethphy\src\dynamic\drv_ethphy.c</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</path>
             <path>\peripheral\sdmmc\plib_sdmmc1.c</path>
+            <path>\system\console\src\sys_console_local.h</path>
             <path>\system\console\src\sys_console.c</path>
+            <path>\system\console\src\sys_console_uart.h</path>
+            <path>\system\console\src\sys_console_uart_definitions.h</path>
             <path>\system\console\src\sys_console_uart.c</path>
-            <path>\system\console\src\sys_debug.c</path>
-            <path>\system\console\src\sys_command.c</path>
+            <path>\driver\sdmmc\src\drv_sdmmc.c</path>
         </group>
     </files>
 </iarProjectConnection>
