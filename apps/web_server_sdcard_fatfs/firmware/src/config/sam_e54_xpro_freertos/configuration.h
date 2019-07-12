@@ -89,6 +89,32 @@ extern "C" {
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (188)
 
 
+/* RX queue size has one additional element for the empty spot needed in circular queue */
+#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0    11
+
+/* TX queue size has one additional element for the empty spot needed in circular queue */
+#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0    65
+#define SYS_CONSOLE_BUFFER_DMA_READY
+
+
+#define SYS_CMD_ENABLE
+#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
+#define SYS_CMD_PRINT_BUFFER_SIZE          2560
+#define SYS_CMD_BUFFER_DMA_READY
+#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+/* Command System Service RTOS Configurations*/
+#define SYS_CMD_RTOS_STACK_SIZE                1024
+#define SYS_CMD_RTOS_TASK_PRIORITY             1
+
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+#define SYS_DEBUG_USE_CONSOLE
+
+
+
 /* File System Service Configuration */
 
 #define SYS_FS_MEDIA_NUMBER               1
@@ -112,30 +138,7 @@ extern "C" {
 
 /* Console System Service Configuration Options */
 #define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
-#define SYS_CONSOLE_INSTANCES_NUMBER       1
 #define SYS_CONSOLE_UART_MAX_INSTANCES     1
-
-/* RX queue size has one additional element for the empty spot needed in circular queue */
-#define SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0    11
-
-/* TX queue size has one additional element for the empty spot needed in circular queue */
-#define SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0    65
-#define SYS_CONSOLE_BUFFER_DMA_READY
-
-#define SYS_DEBUG_ENABLE
-#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
-#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
-#define SYS_DEBUG_BUFFER_DMA_READY
-#define SYS_DEBUG_USE_CONSOLE
-
-#define SYS_CMD_ENABLE
-#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          2560
-#define SYS_CMD_BUFFER_DMA_READY
-#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
-/* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                2560
-#define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
 
@@ -150,6 +153,9 @@ extern "C" {
 #define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
+#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
+#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
+
 
 
 /*** MIIM Driver Configuration ***/
@@ -175,7 +181,7 @@ extern "C" {
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
 #define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-
+#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN
 
 /* SDMMC Driver Instance 0 RTOS Configurations*/
 #define DRV_SDMMC_STACK_SIZE_IDX0                         1024
@@ -219,12 +225,6 @@ extern "C" {
 #define SYS_FS_SD_VOL						"/dev/mmcblka1"
 #define SYS_FS_FATFS_STRING					"FATFS"
 #define SYS_FS_MPFS_STRING					"MPFS2"
-
-
-
-/*** ICMPv4 Server Configuration ***/
-#define TCPIP_STACK_USE_ICMP_SERVER
-#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
 
@@ -284,24 +284,6 @@ extern "C" {
 
 
 
-#define TCPIP_STACK_USE_ICMPV6_SERVER
-
-
-#define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATION_DELAY 	1
-#define TCPIP_IPV6_NDP_RTR_SOLICITATION_INTERVAL 	4
-#define TCPIP_IPV6_NDP_MAX_RTR_SOLICITATIONS 		3
-#define TCPIP_IPV6_NDP_MAX_MULTICAST_SOLICIT 		3
-#define TCPIP_IPV6_NDP_MAX_UNICAST_SOLICIT 			3
-#define TCPIP_IPV6_NDP_MAX_ANYCAST_DELAY_TIME 		1
-#define TCPIP_IPV6_NDP_MAX_NEIGHBOR_ADVERTISEMENT 	3
-#define TCPIP_IPV6_NDP_REACHABLE_TIME 				30
-#define TCPIP_IPV6_NDP_RETRANS_TIMER 				1
-#define TCPIP_IPV6_NDP_DELAY_FIRST_PROBE_TIME 		5
-#define TCPIP_IPV6_NDP_VALID_LIFETIME_TWO_HOURS 	(60 * 60 * 2)
-#define TCPIP_IPV6_MTU_INCREASE_TIMEOUT 			600
-#define TCPIP_IPV6_NDP_TASK_TIMER_RATE 				32
-
-
 /* Network Configuration Index 0 */
 #define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"GMAC"
 #define TCPIP_IF_GMAC
@@ -351,27 +333,6 @@ extern "C" {
 #define DRV_ETHPHY_RESET_CLR_TMO                    500
 #define DRV_ETHPHY_USE_DRV_MIIM                     true
 
-
-
-
-/*** IPv6 Configuration ***/
-#define TCPIP_IPV6_DEFAULT_ALLOCATION_BLOCK_SIZE 		64
-#define TCPIP_IPV6_MINIMUM_LINK_MTU 					1280
-#define TCPIP_IPV6_DEFAULT_LINK_MTU 					1500
-#define TCPIP_IPV6_DEFAULT_CUR_HOP_LIMIT 				64
-#define TCPIP_IPV6_DEFAULT_BASE_REACHABLE_TIME 			30
-#define TCPIP_IPV6_DEFAULT_RETRANSMIT_TIME 				1000
-#define TCPIP_IPV6_QUEUE_NEIGHBOR_PACKET_LIMIT 			1
-#define TCPIP_IPV6_NEIGHBOR_CACHE_ENTRY_STALE_TIMEOUT 	600
-#define TCPIP_IPV6_QUEUE_MCAST_PACKET_LIMIT 			4
-#define TCPIP_IPV6_QUEUED_MCAST_PACKET_TIMEOUT 			10
-#define TCPIP_IPV6_TASK_PROCESS_RATE 					1000
-#define TCPIP_IPV6_INIT_TASK_PROCESS_RATE 				32
-#define TCPIP_IPV6_ULA_GENERATE_ENABLE 					false
-#define TCPIP_IPV6_ULA_NTP_ACCESS_TMO 					12000
-#define TCPIP_IPV6_ULA_NTP_VALID_WINDOW 				1000
-#define TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT 				60
-#define TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE 			1514
 
 
 /*** HTTP Configuration ***/
@@ -433,7 +394,7 @@ extern "C" {
 /*** TCPIP Heap Configuration ***/
 
 #define TCPIP_STACK_USE_INTERNAL_HEAP
-#define TCPIP_STACK_DRAM_SIZE                       64250
+#define TCPIP_STACK_DRAM_SIZE                       64960
 #define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
 
 #define TCPIP_STACK_MALLOC_FUNC                     malloc
@@ -460,7 +421,6 @@ extern "C" {
 // *****************************************************************************
 
 #define TCPIP_STACK_USE_IPV4
-#define TCPIP_STACK_USE_IPV6
 #define TCPIP_STACK_USE_TCP
 #define TCPIP_STACK_USE_UDP
 
@@ -501,6 +461,9 @@ extern "C" {
 #define TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0				10
 #define TCPIP_GMAC_RX_BUFF_SIZE_QUE0				    	1536
 #define TCPIP_GMAC_TX_BUFF_SIZE_QUE0				    	1536
+#define TCPIP_GMAC_RX_BUFF_COUNT_QUE0				   		12
+#define TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0				1
+#define TCPIP_GMAC_RX_BUFF_ALLOC_COUNT_QUE0					1
 
 
 
@@ -536,24 +499,6 @@ extern "C" {
 
 #define DRV_GMAC_INTERRUPT_MODE        				true
 #define DRV_GMAC_RMII_MODE					0
-
-
-
-/*** SNTP Configuration ***/
-#define TCPIP_STACK_USE_SNTP_CLIENT
-#define TCPIP_NTP_DEFAULT_IF		        		"GMAC"
-#define TCPIP_NTP_VERSION             			    	4
-#define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
-#define TCPIP_NTP_EPOCH		                		2208988800ul
-#define TCPIP_NTP_REPLY_TIMEOUT		        		6
-#define TCPIP_NTP_MAX_STRATUM		        		15
-#define TCPIP_NTP_TIME_STAMP_TMO				660
-#define TCPIP_NTP_SERVER		        		"pool.ntp.org"
-#define TCPIP_NTP_SERVER_MAX_LENGTH				30
-#define TCPIP_NTP_QUERY_INTERVAL				600
-#define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
-#define TCPIP_NTP_TASK_TICK_RATE				1100
-#define TCPIP_NTP_RX_QUEUE_LIMIT				2
 
 
 
@@ -597,6 +542,7 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_AES
+#define WOLFSSL_SHA224
 #define WOLFSSL_SHA512
 #define NO_ASN
 #define NO_RSA

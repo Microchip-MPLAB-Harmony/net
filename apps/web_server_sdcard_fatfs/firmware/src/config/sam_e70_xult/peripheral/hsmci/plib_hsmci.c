@@ -223,7 +223,7 @@ void HSMCI_DmaSetup (
                             | XDMAC_CC_DIF_AHB_IF0
                             | XDMAC_CC_SAM_FIXED_AM
                             | XDMAC_CC_DAM_INCREMENTED_AM
-                            | XDMAC_CC_PERID(HSMCI_DMA_CHANNEL)
+                            | XDMAC_CC_PERID(0)
         );
 
         XDMAC_ChannelTransfer(
@@ -245,7 +245,7 @@ void HSMCI_DmaSetup (
                     | XDMAC_CC_DIF_AHB_IF1
                     | XDMAC_CC_SAM_INCREMENTED_AM
                     | XDMAC_CC_DAM_FIXED_AM
-                    | XDMAC_CC_PERID(HSMCI_DMA_CHANNEL)
+                    | XDMAC_CC_PERID(0)
         );
 
         XDMAC_ChannelTransfer(
