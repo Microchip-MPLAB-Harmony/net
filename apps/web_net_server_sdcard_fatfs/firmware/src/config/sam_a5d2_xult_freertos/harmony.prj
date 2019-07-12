@@ -1051,8 +1051,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ED0B883E447507D1570D9A3BC9677A4A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ED0B883E447507D1570D9A3BC9677A4A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DFB7349C2A846BC2FF4C9AA93D5959A3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DFB7349C2A846BC2FF4C9AA93D5959A3</UserChecksum>
         </File>
         <File dnOrder="131">
           <Type dnOrder="0">HEADER</Type>
