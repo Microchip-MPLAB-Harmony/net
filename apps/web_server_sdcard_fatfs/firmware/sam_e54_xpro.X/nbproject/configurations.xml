@@ -139,6 +139,7 @@
             </logicalFolder>
             <logicalFolder name="f3" displayName="sdmmc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/drv_sdmmc.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/src/drv_sdmmc_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/drv_sdmmc_definitions.h</itemPath>
             </logicalFolder>
             <itemPath>../src/config/sam_e54_xpro/driver/driver.h</itemPath>
@@ -314,16 +315,16 @@
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_command.h</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/sys_debug.h</itemPath>
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/command/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="fs" projectFiles="true">
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/console/sys_console.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <logicalFolder name="f1" displayName="file_system" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/file_system/ff.h</itemPath>
@@ -549,9 +550,8 @@
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f3" displayName="sdmmc" projectFiles="true">
-              <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/src/drv_sdmmc.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/src/drv_sdmmc_local.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/src/drv_sdmmc_file_system.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/driver/sdmmc/src/drv_sdmmc.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f1" displayName="library" projectFiles="true">
@@ -582,7 +582,6 @@
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/sntp.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_announce.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
               </logicalFolder>
@@ -594,6 +593,7 @@
                 <itemPath>../src/config/sam_e54_xpro/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
               <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_enc_glue.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/net_pres/pres/net_pres_cert_store.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
@@ -631,13 +631,21 @@
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_debug.c</itemPath>
-              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_command.c</itemPath>
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="fs" projectFiles="true">
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart_definitions.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/console/src/sys_console_uart.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro/system/debug/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro/system/debug/src/sys_debug.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/ff.c</itemPath>
                 <itemPath>../src/config/sam_e54_xpro/system/fs/fat_fs/src/diskio.c</itemPath>

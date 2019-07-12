@@ -55,7 +55,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "driver/ethphy/src/drv_ethphy_local.h"
 #include "system/sys_time_h2_adapter.h"
-#include "system/console/sys_debug.h"
+#include "system/debug/sys_debug.h"
 #include "system/console/sys_console.h"
 
 

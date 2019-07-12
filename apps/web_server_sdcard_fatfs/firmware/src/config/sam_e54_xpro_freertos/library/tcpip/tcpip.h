@@ -640,28 +640,19 @@ typedef struct
 // *****************************************************************************
 // *****************************************************************************
 #include "tcpip/tcpip_common_ports.h"
-
 #include "tcpip/tcpip_mac.h"
 #include "tcpip/tcpip_mac_object.h"
 #include "tcpip/tcpip_manager.h"
-
-
 #include "tcpip/tcpip_heap.h"
 #include "tcpip/tcpip_helpers.h"
-
-#include "tcpip/ndp.h"
 #include "tcpip/ipv4.h"
 #include "tcpip/ipv6.h"
-#include "tcpip/icmpv6.h"
-#include "tcpip/dhcpv6.h"
 #include "tcpip/arp.h"
 #include "tcpip/tcp.h"
 #include "tcpip/udp.h"
 #include "tcpip/dhcp.h"
 #include "tcpip/dns.h"
-#include "tcpip/icmp.h"
 #include "tcpip/nbns.h"
-#include "tcpip/sntp.h"
 #include "tcpip/http.h"
 #include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"

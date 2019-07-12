@@ -71,13 +71,13 @@ typedef struct
     uint32_t aesCtr;
     uint8_t aesGcmH[16];
 #elif defined(CRYPTO_AES_HW_U2238)
-    CRYPT_AES_U2238_AES_CTRLA ctrla;
-    CRYPT_AES_U2238_AES_CTRLB ctrlb;
     uint8_t aesKey[32];
     uint8_t aesIv[16];
-    uint32_t aesAadlen;
     uint8_t aesGHash[16];
+    uint32_t aesAadlen;
     uint32_t aesCtr;
+    CRYPT_AES_U2238_AES_CTRLA ctrla;
+    CRYPT_AES_U2238_AES_CTRLB ctrlb;
 #endif
 }crypt_aes_hw_descriptor;
 

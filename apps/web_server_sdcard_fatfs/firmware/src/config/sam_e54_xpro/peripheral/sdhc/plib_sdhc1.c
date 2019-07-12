@@ -52,6 +52,7 @@
 
 #define SDHC1_DMA_NUM_DESCR_LINES        1
 #define SDHC1_BASE_CLOCK_FREQUENCY       120000000
+#define SDHC1_MAX_BLOCK_SIZE                   0x200
 
 static __attribute__((__aligned__(32))) SDHC_ADMA_DESCR sdhc1DmaDescrTable[SDHC1_DMA_NUM_DESCR_LINES];
 
@@ -188,7 +189,7 @@ uint16_t SDHC1_GetError(void)
 uint16_t SDHC1_CommandErrorGet(void)
 {
     return (sdhc1Obj.errorStatus & (SDHC_EISTR_CMDTEO_Msk | SDHC_EISTR_CMDCRC_Msk | \
-                SDHC_EISTR_CMDEND_Msk));
+                SDHC_EISTR_CMDEND_Msk | SDHC_EISTR_CMDIDX_Msk));
 }
 
 uint16_t SDHC1_DataErrorGet(void)
@@ -233,7 +234,7 @@ bool SDHC1_IsDatLineBusy ( void )
 
 bool SDHC1_IsWriteProtected ( void )
 {
-   return false;
+    return (SDHC1_REGS->SDHC_PSR & SDHC_PSR_WRPPL_Msk) ? false : true;
 }
 
 bool SDHC1_IsCardAttached ( void )
@@ -243,7 +244,19 @@ bool SDHC1_IsCardAttached ( void )
 
 void SDHC1_BlockSizeSet ( uint16_t blockSize )
 {
-    SDHC1_REGS->SDHC_BSR = blockSize;
+    if(blockSize == 0)
+    {
+        blockSize = 1;
+    }
+    else if(blockSize > SDHC1_MAX_BLOCK_SIZE)
+    {
+        blockSize = SDHC1_MAX_BLOCK_SIZE;
+    }
+    else
+    {
+      /* Do not modify the block size */
+    }
+    SDHC1_REGS->SDHC_BSR = (SDHC_BSR_BOUNDARY_4K | SDHC_BSR_BLOCKSIZE(blockSize));
 }
 
 void SDHC1_BlockCountSet ( uint16_t numBlocks )
@@ -253,7 +266,14 @@ void SDHC1_BlockCountSet ( uint16_t numBlocks )
 
 void SDHC1_ClockEnable ( void )
 {
-    SDHC1_REGS->SDHC_CCR |= (SDHC_CCR_INTCLKEN_Msk | SDHC_CCR_SDCLKEN_Msk);
+    /* Start the internal clock  */
+    SDHC1_REGS->SDHC_CCR |= SDHC_CCR_INTCLKEN_Msk;
+
+    /* Wait for the internal clock to stabilize */
+    while (!(SDHC1_REGS->SDHC_CCR & SDHC_CCR_INTCLKS_Msk)) ;
+
+    /* Enable the SD Clock */
+    SDHC1_REGS->SDHC_CCR |= SDHC_CCR_SDCLKEN_Msk;
 }
 
 void SDHC1_ClockDisable ( void )
