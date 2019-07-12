@@ -2,9 +2,9 @@
 ## Net Release v3.4.0 (July, 2019)
 ### ADDITIONS AND UPDATES FOR  3.4.0:
 
-- **New part support** -This release introduces initial support for [SAM 9X60](https://www.microchip.com/design-centers/32-bit-mpus) families of 32-bit MPUs.
-
-- **New features** -This release introduces initial support for wolfMQTT in the Harmony framework, including encryption support with wolfSSL. -The HTTP_NET demos have been updated to support encryption.
+- **New features**
+    - This release introduces initial support for wolfMQTT in the Harmony framework, including encryption support with wolfSSL.
+    - The HTTP_NET demos have been updated to support encryption.
 
 - **New Applications**
 
@@ -105,7 +105,10 @@ This release supports applications for the following development kits
 
 The current known issues are as follows:
 
-* For projects using the mpfs_img2.c and mpfs_img2_net.c files, these may be absent from the project after regeneration. The MPFS module needs to be removed and re-added to the project.
+* MHC may hang when configuring NET_PRES Presentation Layer component.
+    - Short-term work around is to save MHC state, close and reopen MHC.
+* Encryption support has been tested using wolfSSL v3.15.7-stable
+    -  Support for newer wolfSSL versions will be added in a future release
 * The SAME70 XULT board has some issues and detection of the PHY board may fail. This issue is under investigation.
     - For now the SAME70 projects are present in the repo just for reference and not for actual running demos.
     - For now the SAME70 projects are generated using the LAN8740 PHY instead of KSZ8061 which is the default PHY for this board.
@@ -121,7 +124,7 @@ The current known issues are as follows:
     - The SNMP protocol and corresponding demo applications is not be available.
     - IPv6 ULA generation is not available
     - ZCLL module is not supported
-    - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer has not yet been fully tested for these projects. This will be done in a next release when wolfSSL support is added to the TCP/IP stack.  
+    - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer with wolfSSL encryption has not yet been fully tested for these projects. This will be done in a future release.
     - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
 
 * SDMMC driver may block inside an internal routine while using the HTTP server and locks up the whole application. No workaround exists.
@@ -135,10 +138,6 @@ The current known issues are as follows:
 * Similarly, remove the TCP/IP components by using the TCP/IP Configurator for the respective layer
 * Do not add the TCP/IP components to the project by using both the TCP/IP Configurator and manually adding from "Available Components".
 * Do not delete the TCP/IP Configurators from project graph.
-* When multiple modules depending on the "netPres" component are added to the project (like Berkeley, HTTP_NET, TELNET etc.),
-  multiple 'netPres' nodes will be shown on TCP/IP STACK group box.
-  But internally all these TCP/IP modules are using a single instance of the NET_PRES service.
-  So only one instance of NET_PRES is needed.
 * Interactive help using the "Show User Manual Entry" in the Right-click menu for configuration options provided
   by this module is not yet available from within the MPLAB Harmony Configurator (MHC).
   Please see the "Configuring the Library" section in the help documentation in the doc folder for this module instead.
