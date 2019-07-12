@@ -408,7 +408,7 @@
             <path>\..\..\third_party\rtos\FreeRTOS\Source\timers.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\event_groups.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\stream_buffer.c</path>
-            <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\MemMang\heap_1.c</path>
+            <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\MemMang\heap_3.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\port.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portASM.s</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\FreeRTOS_tick_config.c</path>
