@@ -1723,8 +1723,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">9C254A17CB5A4A90A132D0BBE0B559B6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DCA6F5483F5FDBF5ADF63B405EC53BBB</UserChecksum>
+          <GeneratedChecksum dnOrder="4">570C088C7AC09BB5D71782BDB3343682</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C9340AA44154FA43964AEE004EC90825</UserChecksum>
         </File>
         <File dnOrder="215">
           <Type dnOrder="0">HEADER</Type>
