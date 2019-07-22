@@ -724,7 +724,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 
 	_DRV_GMAC_TxUnlock(pMACDrv);
 
-	return macRes;
+	return (macRes != TCPIP_MAC_RES_PACKET_ERR? TCPIP_MAC_RES_OK:TCPIP_MAC_RES_PACKET_ERR);
 }
 
 
