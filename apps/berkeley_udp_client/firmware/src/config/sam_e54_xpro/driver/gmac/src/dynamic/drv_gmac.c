@@ -684,7 +684,7 @@ void DRV_GMAC_Close( DRV_HANDLE hMac )
 
 TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)  
 {
-	TCPIP_MAC_RES       macRes;
+	TCPIP_MAC_RES       macRes = TCPIP_MAC_RES_PACKET_ERR;
 	DRV_GMAC_DRIVER * pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxQueueNode;
 	GMAC_QUE_LIST queueIdx = GMAC_QUE_0;	
@@ -719,12 +719,12 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 		}
 	}
 	
-	macRes = _MacTxPendingPackets(pMACDrv,queueIdx);
+	_MacTxPendingPackets(pMACDrv,queueIdx);
 	_MACTxAcknowledgeEth(pMACDrv,queueIdx);	
 
 	_DRV_GMAC_TxUnlock(pMACDrv);
 
-	return (macRes != TCPIP_MAC_RES_PACKET_ERR? TCPIP_MAC_RES_OK:TCPIP_MAC_RES_PACKET_ERR);
+	return macRes;
 }
 
 
