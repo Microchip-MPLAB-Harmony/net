@@ -167,11 +167,6 @@ typedef struct
     const void*                 _TcpNotifyParam;            // notification parameter
 }DRV_GMAC_EVENT_DCPT;   // event descriptor per group
 
-// Handle with  TX buffer and descriptors with Tx Interrupt
-// uncomment the following macro to enable Tx interrupt support
-//#define PIC32C_GMAC_ISR_TX
-
-
 // synchronization for the RX flow
 // The RX packets are allocated by the MAC and
 // passed to the stack in manager context but

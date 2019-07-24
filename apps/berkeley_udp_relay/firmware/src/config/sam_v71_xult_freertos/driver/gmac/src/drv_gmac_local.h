@@ -57,7 +57,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <string.h>
 
 #include "system_config.h"
-#include "system_definitions.h"
 #include "system/system.h"
 #include "system/int/sys_int.h"
 #include "system/time/sys_time.h"
@@ -168,11 +167,6 @@ typedef struct
     const void*                 _TcpNotifyParam;            // notification parameter
 }DRV_GMAC_EVENT_DCPT;   // event descriptor per group
 
-// Handle with  TX buffer and descriptors with Tx Interrupt
-// uncomment the following macro to enable Tx interrupt support
-//#define PIC32C_GMAC_ISR_TX
-
-
 // synchronization for the RX flow
 // The RX packets are allocated by the MAC and
 // passed to the stack in manager context but
@@ -227,6 +221,9 @@ typedef struct
                                                                   // So that many number of Rx packet pointers for all Queues
 	/** Pointer to Rx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_RXDCPT *pRxDesc;
+    // Rx queues for RX packet buffers
+	DRV_PIC32CGMAC_SGL_LIST _RxBuffNewQueue;
+    DRV_PIC32CGMAC_SGL_LIST _RxBuffAckQueue;
 	
 	/** Pointer to Tx TDs (must be 8-byte aligned) */
 	DRV_PIC32CGMAC_HW_TXDCPT *pTxDesc;
