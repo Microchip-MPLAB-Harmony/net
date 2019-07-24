@@ -50,11 +50,9 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(DRV_GMAC_DRIVER * pMACDrv,
         DRV_PIC32CGMAC_RX_FRAME_INFO *rx_state, TCPIP_MAC_PACKET** pRxPkt, GMAC_QUE_LIST queueIdx);  
 static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16_t buffer_count, GMAC_QUE_LIST queue_idx, bool sticky_flag);
 
-#if defined(PIC32C_GMAC_ISR_TX) //GMAC with TX interrupt enabled
-	#define GMAC_INT_BITS  (GMAC_INT_RX_BITS | GMAC_INT_TX_BITS)
-#else
-	#define GMAC_INT_BITS  (GMAC_INT_RX_BITS)
-#endif
+
+#define GMAC_INT_BITS  (GMAC_INT_RX_BITS | GMAC_INT_TX_BITS)
+
 
 //GMAC TX and RX Descriptor structure with multiple Queues	
 typedef struct

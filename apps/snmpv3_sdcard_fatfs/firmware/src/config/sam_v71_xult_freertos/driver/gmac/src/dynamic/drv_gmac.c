@@ -37,11 +37,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // All pause capabilities our MAC supports
 #define DRV_GMAC_PAUSE_CPBL_MASK     (TCPIP_ETH_PAUSE_TYPE_ALL)
 
-//GMAC TX interrupt enabled
-#if defined(PIC32C_GMAC_ISR_TX)	
-	volatile uint32_t tx_interrupt = false;
-#endif
-
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -1181,26 +1176,10 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 // acknowledge the ETHC packets
 static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx)  
 {
-
-#if !defined(PIC32C_GMAC_ISR_TX)	
 	//Clear the TXCOMP transmit status, if set
 	GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
 	DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
-
-#else
-	// Tx complete flag set in GMAC ISR?
-	if(tx_interrupt==true)
-	{
-		tx_interrupt = false;
-		DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
-
-	}
-#endif  // defined(PIC32C_GMAC_ISR_TX)
-
 }
-
-
-
 
 
 // transmits pending packets, if any
@@ -1651,11 +1630,6 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 	if(enable)
 	{
 		GMAC_EVENTS  ethSetEvents;
-       
-#if !defined(PIC32C_GMAC_ISR_TX)
-        //mask TX DONE event/interrupt when TX Interrupt processing is disabled
-        macEvMask &= ~TCPIP_MAC_EV_TX_DONE;
-#endif  // defined(PIC32C_GMAC_ISR_TX)
         
 		ethSetEvents = _XtlEventsTcp2Eth(macEvMask);
 
@@ -1896,10 +1870,6 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 	// process interrupts
 	pDcpt = &pMACDrv->sGmacData._pic32c_ev_group_dcpt;
 	currGroupEvents = currEthEvents & pDcpt->_EthEnabledEvents;     //  keep just the relevant ones
-
-#if defined(PIC32C_GMAC_ISR_TX)
-	tx_interrupt = ((currGroupEvents & GMAC_EV_TXCOMPLETE) != 0);
-#endif  // defined(PIC32C_GMAC_ISR_TX)
 
 	if(currGroupEvents)
 	{
