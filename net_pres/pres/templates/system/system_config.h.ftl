@@ -30,7 +30,20 @@
 <#if HarmonyCore.SELECT_RTOS != "BareMetal">
     <#lt>/* Net Pres RTOS Configurations*/
     <#lt>#define NET_PRES_RTOS_STACK_SIZE           ${NET_PRES_RTOS_STACK_SIZE}
-    <#lt>#define NET_PRES_RTOS_TASK_PRIORITY             ${NET_PRES_RTOS_TASK_PRIORITY}
+    <#lt>#define NET_PRES_RTOS_TASK_PRIORITY             ${NET_PRES_RTOS_TASK_PRIORITY}	
+	
+	<#assign numInstance= __INSTANCE_COUNT?number>
+	<#assign freertos_present= false/>
+    <#list 0..(numInstance-1) as idx>
+		<#assign netPresEncProviderIdx = "netPres_${idx}.NET_PRES_ENC_PROVIDE_IDX${idx}"?eval>		
+		<#if netPresEncProviderIdx == "WolfSSL" && (HarmonyCore.SELECT_RTOS) == "FreeRTOS">
+			<#assign freertos_present=true/>
+        </#if>
+    </#list>
+	<#if freertos_present == true>	
+		<#lt>#define FREERTOS
+	</#if>
+</#if>
 </#if>
 
-</#if>
+	
