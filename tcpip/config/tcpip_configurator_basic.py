@@ -186,6 +186,7 @@ def tcpipAutoConfigSysFSWrapperEnable(symbol, event):
         if(Database.getComponentByID("sys_fs") == None):    
             res = Database.activateComponents(["sys_fs"])
             res = Database.connectDependencies(autoConnectTableFS)
+            Database.setSymbolValue("sys_fs", "SYS_FS_MAX_FILES", 25)
     else:
         res = Database.deactivateComponents(["tcpipSysFsWrapper"])  
     
