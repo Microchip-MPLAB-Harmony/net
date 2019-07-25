@@ -212,4 +212,7 @@ def tcpipAutoConfigTcpipCmdEnable(symbol, event):
         # tcpipAutoConfigStackGroup.setAttachmentVisible("BASIC CONFIGURATION", "tcpipCmd:TcpipCmd_SysCmd_Dependency")
         res = Database.activateComponents(["sys_command"])
         res = Database.connectDependencies(autoConnectTableCmd)
+        series = ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("series")
+        if(series == "SAME54") or (series == "SAME70") or (series == "SAMV71")or (series == "SAMA5D2"):
+            Database.setSymbolValue("sys_command", "SYS_COMMAND_PRINT_BUFFER_SIZE", 2560)
         
