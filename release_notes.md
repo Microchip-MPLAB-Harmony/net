@@ -62,7 +62,10 @@ The following table provides the list of bug fixes in this release:
 | SNTP                          | Fixed the missing entry for the time stamp in the _SNTP_DbgResError_Tbl debug table   |
 | NET_PRES                      | Updates for integration of wolfSSL                                                    |
 | TCP/IP Helpers                | Added MQTT ports to the TCP/IP stack tables                                           |
-| drv_gmac                      |  update for GMAC RX buffer management                                                 |
+| drv_gmac                      | Update for GMAC RX buffer management                                                  |
+| drv_gmac                      | Updated return value of DRV_GMAC_PacketTx                                             |
+| drv_gmac                      | Updated return value of DRV_GMAC_PacketTx                                             |
+| drv_gmac                      | Enabled the GMAC TX interrupt                                                         |
 
 
 
@@ -109,6 +112,9 @@ The current known issues are as follows:
     - Short-term work around is to save MHC state, close and reopen MHC.
 * Encryption support has been tested using wolfSSL v3.15.7-stable
     -  Support for newer wolfSSL versions will be added in a future release
+* HTTP_NET demos using encryption (wolfSSL) with FreeRTOS are not part of this release 
+    - There are some memory overwrite issues when the HTTP_NET + wolfSSL run in multi-threaded mode
+    - This is currently under investigation
 * The SAME70 XULT board has some issues and detection of the PHY board may fail. This issue is under investigation.
     - For now the SAME70 projects are present in the repo just for reference and not for actual running demos.
     - For now the SAME70 projects are generated using the LAN8740 PHY instead of KSZ8061 which is the default PHY for this board.
