@@ -579,24 +579,24 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 
 #if (TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE) 
         // sanity check for water marks
-        uint8_t aaFullWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK;
-        uint8_t aaEmptyWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK;
+        uint8_t fullWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK;
+        uint8_t emptyWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK;
 
-        if(aaFullWMPkts == 0)
+        if(fullWMPkts == 0)
         {
-            aaFullWMPkts++;
+            fullWMPkts++;
         }
-        if(aaEmptyWMPkts >= aaFullWMPkts)
+        if(emptyWMPkts >= fullWMPkts)
         {
-            aaEmptyWMPkts = aaFullWMPkts - 1;
+            emptyWMPkts = fullWMPkts - 1;
         }
 
         // enable the AutoFC
         uint32_t ptValue = (TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES + _TCPIP_EMAC_QUANTA_PAUSE_BYTES - 1) / _TCPIP_EMAC_QUANTA_PAUSE_BYTES;
         DRV_ETH_PauseTimerSet(ethId, (uint16_t)ptValue);
 
-        DRV_ETH_RxFullWmarkSet(ethId, aaFullWMPkts);
-        DRV_ETH_RxEmptyWmarkSet(ethId, aaEmptyWMPkts);
+        DRV_ETH_RxFullWmarkSet(ethId, fullWMPkts);
+        DRV_ETH_RxEmptyWmarkSet(ethId, emptyWMPkts);
 
         DRV_ETH_TxPauseEnable(ethId);
         DRV_ETH_RxPauseEnable(ethId);
