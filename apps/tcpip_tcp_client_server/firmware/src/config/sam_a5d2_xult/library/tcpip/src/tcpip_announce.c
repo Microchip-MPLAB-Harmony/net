@@ -353,7 +353,7 @@ bool TCPIP_ANNOUNCE_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, c
         TCPIP_UDP_OptionsGet(s, UDP_OPTION_TX_BUFF, (void*)&currBuffSize);
         if(currBuffSize < announceDcpt.txBuffSize)
         {
-            if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_TX_BUFF, (void*)announceDcpt.txBuffSize))
+            if(!TCPIP_UDP_OptionsSet(s, UDP_OPTION_TX_BUFF, (void*)(uintptr_t)announceDcpt.txBuffSize))
             {
                 break;
             }
