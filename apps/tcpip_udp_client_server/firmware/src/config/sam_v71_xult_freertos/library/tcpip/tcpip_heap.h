@@ -135,6 +135,10 @@ typedef enum
        The TCP/IP stack heap can provide OSAL synchronization
        protection if needed */
     TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP,              
+
+    /* number of supported heap types */
+    TCPIP_STACK_HEAP_TYPES
+
 }TCPIP_STACK_HEAP_TYPE;
 
 // *****************************************************************************

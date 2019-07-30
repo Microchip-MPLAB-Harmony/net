@@ -2506,112 +2506,124 @@ static int _Command_HeapInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     TCPIP_STACK_HEAP_HANDLE heapH;
     const char* typeMsg;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-
-    if (argc < 2) {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: heapinfo 1/2/3 \r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: heapinfo 1\r\n");
-        return false;
-    }
-
-    TCPIP_STACK_HEAP_TYPE heapType = (TCPIP_STACK_HEAP_TYPE)atoi(argv[1]);
-
-    switch(heapType)
+    unsigned int hType, startType, endType;
+    bool hasArgs = false;
+    static const char* heapTypeStr[TCPIP_STACK_HEAP_TYPES] = 
     {
-        case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP:
-            typeMsg = "internal";
-            break;
+        0,              // TCPIP_STACK_HEAP_TYPE_NONE
+        "internal",     // TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP
+        "pool",         // TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL
+        "external",     // TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP
+    };
 
-        case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL:
-            typeMsg = "pool";
-            break;
-            
-        case TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP:
-            typeMsg = "external";
-            break;
 
-        default:
-            typeMsg = "unknown";
-            break;
+    if (argc > 1)
+    {   // there is an arg
+        hType = (unsigned int)atoi(argv[1]);
+        if(hType == TCPIP_STACK_HEAP_TYPE_NONE || hType >= TCPIP_STACK_HEAP_TYPES)
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Unknown heap type. Use: [1, %d]\r\n", TCPIP_STACK_HEAP_TYPES - 1);
+            return false;
+        }
+        // valid
+        startType = hType;
+        endType = hType + 1;
+        hasArgs = true;
     }
-    
-    heapH = TCPIP_STACK_HeapHandleGet(heapType, 0);
-    if(heapH == 0)
+    else
+    {   // consider all types
+        startType = TCPIP_STACK_HEAP_TYPE_NONE + 1;
+        endType = TCPIP_STACK_HEAP_TYPES;
+    }
+
+    // display info for each type
+    for(hType = startType; hType < endType; hType++)
     {
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "No heap info exists for type: %s!\r\n", typeMsg);
-        return false;
-    }
+        typeMsg = heapTypeStr[hType];
+        heapH = TCPIP_STACK_HeapHandleGet(hType, 0);
+        if(heapH == 0)
+        {
+            if(hasArgs == true)
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "No heap info exists for type: %s!\r\n", typeMsg);
+            }
+            continue;
+        }
 
-    heapSize = TCPIP_HEAP_Size(heapH);
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Heap type: %s. Initial created heap size: %d Bytes\r\n", typeMsg, heapSize);
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Allocable block heap size: %d Bytes\r\n", TCPIP_HEAP_MaxSize(heapH));
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "All available heap size: %d Bytes, high watermark: %d\r\n", TCPIP_HEAP_FreeSize(heapH), TCPIP_HEAP_HighWatermark(heapH));
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Last heap error: 0x%x\r\n", TCPIP_HEAP_LastError(heapH));
+        // display heap info
+        heapSize = TCPIP_HEAP_Size(heapH);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Heap type: %s. Initial created heap size: %d Bytes\r\n", typeMsg, heapSize);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Allocable block heap size: %d Bytes\r\n", TCPIP_HEAP_MaxSize(heapH));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "All available heap size: %d Bytes, high watermark: %d\r\n", TCPIP_HEAP_FreeSize(heapH), TCPIP_HEAP_HighWatermark(heapH));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Last heap error: 0x%x\r\n", TCPIP_HEAP_LastError(heapH));
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)    
-    nTraces = TCPIP_HEAP_TraceGetEntriesNo(heapH, true);
-    if(nTraces)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Trace info: \r\n");
-        nEntries = TCPIP_HEAP_TraceGetEntriesNo(heapH, false);
-        for(ix = 0; ix < nEntries; ix++)
+        nTraces = TCPIP_HEAP_TraceGetEntriesNo(heapH, true);
+        if(nTraces)
         {
-            if(TCPIP_HEAP_TraceGetEntry(heapH, ix, &tEntry))
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Trace info: \r\n");
+            nEntries = TCPIP_HEAP_TraceGetEntriesNo(heapH, false);
+            for(ix = 0; ix < nEntries; ix++)
             {
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "Module: %4d, totAllocated: %5d, currAllocated: %5d, totFailed: %5d, maxFailed: %5d \r\n", tEntry.moduleId, tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
+                if(TCPIP_HEAP_TraceGetEntry(heapH, ix, &tEntry))
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Module: %4d, totAllocated: %5d, currAllocated: %5d, totFailed: %5d, maxFailed: %5d \r\n", tEntry.moduleId, tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
+                }
+
             }
-                    
         }
-    }
 #else
-    nTraces = 0;
+        nTraces = 0;
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)    
 
-    if(nTraces == 0)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "No Trace info exists.\r\n");
-    }
-
-#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    nEntries = TCPIP_HEAP_DistGetEntriesNo(heapH);
-    if(nEntries)
-    {
-        int     modIx;
-        TCPIP_HEAP_DIST_ENTRY distEntry;
-        int currLowHitMem = 0;
-        int currHiHitMem = 0;
-
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TCPIP Heap distribution: \n\r");
-        
-        for(ix = 0; ix < nEntries; ix++)
+        if(nTraces == 0)
         {
-            TCPIP_HEAP_DistGetEntry(heapH, ix, &distEntry);
-            
-            int entryPrint = 0;
-            struct moduleDist* pMDist = distEntry.modDist;
-            for(modIx = 0; modIx < sizeof(distEntry.modDist)/sizeof(*distEntry.modDist); modIx++, pMDist++)
-            {
-                if(pMDist->modHits)
-                {
-                    if(entryPrint == 0)
-                    {
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "[%4d,    %5d]:\n\r", distEntry.lowLimit, distEntry.highLimit);
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tcurr hits: %d, \n\r", distEntry.currHits);
-                        currLowHitMem += distEntry.currHits * distEntry.lowLimit;
-                        currHiHitMem += distEntry.currHits * distEntry.highLimit;
-                        entryPrint = 1;
-                    }
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: %d, \thits: %d, \n\r", pMDist->modId, pMDist->modHits);
-                }
-            }
-            if(distEntry.gHits)
-            {
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: xx \thits: %d, \n\r", distEntry.gHits);
-            }
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "No Trace info exists.\r\n");
         }
 
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "curr Low Lim: %d, curr Hi Lim: %d, max Free: %d, min Free: %d\n\r", currLowHitMem, currHiHitMem, heapSize - currLowHitMem, heapSize - currHiHitMem);
-    }
+#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
+        nEntries = TCPIP_HEAP_DistGetEntriesNo(heapH);
+        if(nEntries)
+        {
+            int     modIx;
+            TCPIP_HEAP_DIST_ENTRY distEntry;
+            int currLowHitMem = 0;
+            int currHiHitMem = 0;
+
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TCPIP Heap distribution: \n\r");
+
+            for(ix = 0; ix < nEntries; ix++)
+            {
+                TCPIP_HEAP_DistGetEntry(heapH, ix, &distEntry);
+
+                int entryPrint = 0;
+                struct moduleDist* pMDist = distEntry.modDist;
+                for(modIx = 0; modIx < sizeof(distEntry.modDist)/sizeof(*distEntry.modDist); modIx++, pMDist++)
+                {
+                    if(pMDist->modHits)
+                    {
+                        if(entryPrint == 0)
+                        {
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "[%4d,    %5d]:\n\r", distEntry.lowLimit, distEntry.highLimit);
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tcurr hits: %d, \n\r", distEntry.currHits);
+                            currLowHitMem += distEntry.currHits * distEntry.lowLimit;
+                            currHiHitMem += distEntry.currHits * distEntry.highLimit;
+                            entryPrint = 1;
+                        }
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: %d, \thits: %d, \n\r", pMDist->modId, pMDist->modHits);
+                    }
+                }
+                if(distEntry.gHits)
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: xx \thits: %d, \n\r", distEntry.gHits);
+                }
+            }
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "curr Low Lim: %d, curr Hi Lim: %d, max Free: %d, min Free: %d\n\r", currLowHitMem, currHiHitMem, heapSize - currLowHitMem, heapSize - currHiHitMem);
+        }
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
+
+    }
 
     return true;
 }
