@@ -112,6 +112,8 @@ The current known issues are as follows:
     - Short-term work around is to save MHC state, close and reopen MHC.
 * Encryption support has been tested using wolfSSL v3.15.7-stable
     -  Support for newer wolfSSL versions will be added in a future release
+* When regenerating a project that includes wolfSSL and crypto, MHC will try to include the HAVE_AES_ECB symbol in the configuration.h.
+    -  Do not include this symbol as the build will fail. Simply ignore the change.
 * HTTP_NET demos using encryption (wolfSSL) with FreeRTOS are not part of this release 
     - There are some memory overwrite issues when the HTTP_NET + wolfSSL run in multi-threaded mode
     - This is currently under investigation
