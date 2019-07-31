@@ -63,11 +63,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define DRV_ETHPHY_NEG_INIT_TMO                     ${DRV_ETHPHY_NEG_INIT_TMO}
 #define DRV_ETHPHY_NEG_DONE_TMO                     ${DRV_ETHPHY_NEG_DONE_TMO}
 #define DRV_ETHPHY_RESET_CLR_TMO                    ${DRV_ETHPHY_RESET_CLR_TMO}
-<#if drvMiim.DRV_MIIM_USE_DRIVER?has_content && drvMiim.DRV_MIIM_USE_DRIVER == true >
-#define DRV_ETHPHY_USE_DRV_MIIM                     true
-<#else>
-#define DRV_ETHPHY_USE_DRV_MIIM                     false
-</#if>
 
 <#--
 /*******************************************************************************
