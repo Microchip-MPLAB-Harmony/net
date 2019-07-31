@@ -413,7 +413,6 @@ extern "C" {
 #define DRV_ETHPHY_NEG_INIT_TMO		    			1
 #define DRV_ETHPHY_NEG_DONE_TMO		    			2000
 #define DRV_ETHPHY_RESET_CLR_TMO					500
-#define DRV_ETHPHY_USE_DRV_MIIM                     true
 
 
 
