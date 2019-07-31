@@ -452,14 +452,6 @@ const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Default =
     DRV_ETHPHY_ClientStatus,
     DRV_ETHPHY_ClientOperationResult,
     DRV_ETHPHY_ClientOperationAbort,
-    DRV_ETHPHY_SMIRead,
-    DRV_ETHPHY_SMIWrite,
-    DRV_ETHPHY_SMIScanStart,
-    DRV_ETHPHY_SMIScanStop,
-    DRV_ETHPHY_SMIScanStatusGet,
-    DRV_ETHPHY_SMIScanDataGet,
-    DRV_ETHPHY_SMIStatus,
-    DRV_ETHPHY_SMIClockSet,
     DRV_ETHPHY_PhyAddressGet,
     DRV_ETHPHY_Setup,
     DRV_ETHPHY_RestartNegotiation,
@@ -1364,11 +1356,6 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_ClientOperationAbort( DRV_HANDLE handle)
 // *****************************************************************************
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIRead( DRV_HANDLE handle, unsigned int rIx, uint16_t* pSmiRes, int phyAdd)
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-}
-
 static void _DRV_ETHPHY_ClientOpSmiRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     uint16_t* pSmiRes = NULL;
@@ -1389,12 +1376,6 @@ static void _DRV_ETHPHY_ClientOpSmiRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 }
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIWrite( DRV_HANDLE handle, unsigned int rIx, uint16_t wData, int phyAdd, bool waitComplete)
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-}
-
-
 static void _DRV_ETHPHY_ClientOpSmiWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait for write transfer to complete
@@ -1408,11 +1389,6 @@ static void _DRV_ETHPHY_ClientOpSmiWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 }
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanStart( DRV_HANDLE handle, unsigned int rIx)
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-}
-
 static void _DRV_ETHPHY_ClientOpSmiScan(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait for scan transfer to complete
@@ -1424,35 +1400,6 @@ static void _DRV_ETHPHY_ClientOpSmiScan(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     // done; remain busy as to not start another SMI operation before aborting this one
 
 }
-
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanStop( DRV_HANDLE handle )
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-}
-
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanStatusGet( DRV_HANDLE handle )
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-}
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanDataGet( DRV_HANDLE handle, uint16_t* pScanRes )
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-}
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIStatus( DRV_HANDLE handle )
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-} 
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIClockSet( DRV_HANDLE handle,
-                             uint32_t hostClock,
-                             uint32_t maxSMIClock )
-{
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-} 
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
 {
