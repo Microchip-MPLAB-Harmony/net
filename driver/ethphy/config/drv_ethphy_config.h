@@ -131,14 +131,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     single client.
 
   Remarks:
-    The MAC driver is the client of the PHY driver.
-    Multiple clients may be needed when access to MIIM bus (for PHY vendor specific functionality)
-    is needed through the PHY driver.
+    The MAC driver is the only client of the PHY driver
+    and the number of clients should always be 1.
 
-    However MIIM operations are not supported when the PHY driver uses the MIIM driver for MIIM bus accesses.
-    In this case the number of clients should be 1 and the DRV_MIIM should be used for accessing the MIIM bus.
-
-        
   *************************************************************************/
 
 #define DRV_ETHPHY_CLIENTS_NUMBER                1
@@ -209,25 +204,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // Has no power modes
 //#define DRV_ETHPHY_POWER_STATE                 SYS_MODULE_POWER_IDLE_STOP
-
-// *****************************************************************************
-/* Ethernet MIIM access configuration
-
-  Summary:
-    Defines the way the PHY driver accesses the MIIM bus to communicate with the PHY.
-
-  Description:
-    Defines the way the PHY driver accesses the MIIM bus to communicate with the PHY:
-        - either using direct access to the ETH plibs
-        - using the MIIM driver - preferred way
-
-
-  Remarks:
-    Using the MIIM driver to perform MIIM bus operations is more versatile and preferred.
-
-*/
-
-#define DRV_ETHPHY_USE_DRV_MIIM         true
 
 
 #endif // #ifndef _DRV_ETHPHY_CONFIG_H
