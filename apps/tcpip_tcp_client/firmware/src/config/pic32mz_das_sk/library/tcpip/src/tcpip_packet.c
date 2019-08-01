@@ -32,24 +32,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-
-
-
-
-
-
-#if !defined(__PIC32C__) && !defined(__SAMA5D2__)
-    #include <sys/kmem.h>
-#else
-//kmem.h dummy definitions
-/* translate between KSEG0 and KSEG1 virtual addresses */
-#define KVA0_TO_KVA1(v)	(v)
-#define KVA1_TO_KVA0(v)	(v)
-
-/* Test for KSEGS */
-#define IS_KVA(v)	(true)
-#define IS_KVA0(v)	(true)
-//32-byte cache alignment for PIC32C
+#if defined(__PIC32C__) || defined(__SAMA5D2__)
+// 32-byte cache alignment for PIC32C
 #define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 32
 #endif
 
@@ -86,7 +70,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 static TCPIP_STACK_HEAP_HANDLE    pktMemH = 0;
-static bool                 pktK0Heap = 0;
 
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 static TCPIP_PKT_TRACE_ENTRY    _pktTraceTbl[TCPIP_PKT_TRACE_SIZE];
@@ -146,12 +129,7 @@ bool TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CON
         }
 
         TCPIP_HEAP_Free(heapH, allocPtr);
-        if(!IS_KVA(allocPtr))
-        {   // only kernel space buffers accepted
-            break;
-        }
         // success
-        pktK0Heap = IS_KVA0(allocPtr);
         pktMemH = heapH;
 
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
@@ -361,11 +339,6 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_Pa
         {
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
-
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA0_TO_KVA1(pPkt);
-        }
     }
 
     return pPkt;
@@ -382,10 +355,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_PacketFreeInt(T
             pNSeg = pSeg->next;
             if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
             {
-                if(pktK0Heap)
-                {
-                    pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-                }
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
                 TCPIP_HEAP_FreeDebug(pktMemH, pSeg, moduleId);
 #else
@@ -395,10 +364,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_PacketFreeInt(T
             pSeg = pNSeg;
         }
 
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA1_TO_KVA0(pPkt);
-        }
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
         TCPIP_HEAP_FreeDebug(pktMemH, pPkt, moduleId);
 #else
@@ -469,12 +434,6 @@ static __inline__ TCPIP_MAC_DATA_SEGMENT* __attribute__((always_inline)) _TCPIP_
             pSeg->segLoadOffset = loadOffset;
             pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
         }
-
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA0_TO_KVA1(pSeg);
-        }
-        
     }
 
     return pSeg;
@@ -484,10 +443,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_SegmentFreeInt(
 {
     if( (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
     {
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-        }
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
         TCPIP_HEAP_FreeDebug(pktMemH, pSeg, moduleId);
 #else
@@ -735,10 +690,6 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
 
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA0_TO_KVA1(pPkt);
-        }
     }
 
     return pPkt;
@@ -786,19 +737,11 @@ void _TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt)
             pNSeg = pSeg->next;
             if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
             {
-                if(pktK0Heap)
-                {
-                    pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-                }
                 TCPIP_HEAP_Free(pktMemH, pSeg);
             }
             pSeg = pNSeg;
         }
 
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA1_TO_KVA0(pPkt);
-        }
         TCPIP_HEAP_Free(pktMemH, pPkt);
     }
 }
@@ -830,12 +773,6 @@ TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAlloc(uint16_t loadLen, uint16_t loadO
             pSeg->segLoadOffset = loadOffset;
             pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
         }
-
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA0_TO_KVA1(pSeg);
-        }
-        
     }
 
     return pSeg;
@@ -845,10 +782,6 @@ void _TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg)
 {
     if( (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
     {
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-        }
         TCPIP_HEAP_Free(pktMemH, pSeg);
     }
 }

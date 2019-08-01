@@ -32,24 +32,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-
-
-
-
-
-
-#if !defined(__PIC32C__) && !defined(__SAMA5D2__)
-    #include <sys/kmem.h>
-#else
-//kmem.h dummy definitions
-/* translate between KSEG0 and KSEG1 virtual addresses */
-#define KVA0_TO_KVA1(v)	(v)
-#define KVA1_TO_KVA0(v)	(v)
-
-/* Test for KSEGS */
-#define IS_KVA(v)	(true)
-#define IS_KVA0(v)	(true)
-//32-byte cache alignment for PIC32C
+#if defined(__PIC32C__) || defined(__SAMA5D2__)
+// 32-byte cache alignment for PIC32C
 #define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 32
 #endif
 
@@ -86,7 +70,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 static TCPIP_STACK_HEAP_HANDLE    pktMemH = 0;
-static bool                 pktK0Heap = 0;
 
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 static TCPIP_PKT_TRACE_ENTRY    _pktTraceTbl[TCPIP_PKT_TRACE_SIZE];
@@ -146,12 +129,7 @@ bool TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CON
         }
 
         TCPIP_HEAP_Free(heapH, allocPtr);
-        if(!IS_KVA(allocPtr))
-        {   // only kernel space buffers accepted
-            break;
-        }
         // success
-        pktK0Heap = IS_KVA0(allocPtr);
         pktMemH = heapH;
 
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
@@ -361,11 +339,6 @@ static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_Pa
         {
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
-
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA0_TO_KVA1(pPkt);
-        }
     }
 
     return pPkt;
@@ -382,10 +355,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_PacketFreeInt(T
             pNSeg = pSeg->next;
             if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
             {
-                if(pktK0Heap)
-                {
-                    pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-                }
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
                 TCPIP_HEAP_FreeDebug(pktMemH, pSeg, moduleId);
 #else
@@ -395,10 +364,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_PacketFreeInt(T
             pSeg = pNSeg;
         }
 
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA1_TO_KVA0(pPkt);
-        }
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
         TCPIP_HEAP_FreeDebug(pktMemH, pPkt, moduleId);
 #else
@@ -469,12 +434,6 @@ static __inline__ TCPIP_MAC_DATA_SEGMENT* __attribute__((always_inline)) _TCPIP_
             pSeg->segLoadOffset = loadOffset;
             pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
         }
-
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA0_TO_KVA1(pSeg);
-        }
-        
     }
 
     return pSeg;
@@ -484,10 +443,6 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_SegmentFreeInt(
 {
     if( (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
     {
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-        }
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
         TCPIP_HEAP_FreeDebug(pktMemH, pSeg, moduleId);
 #else
@@ -735,10 +690,6 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
             pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
 
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA0_TO_KVA1(pPkt);
-        }
     }
 
     return pPkt;
@@ -786,19 +737,11 @@ void _TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt)
             pNSeg = pSeg->next;
             if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
             {
-                if(pktK0Heap)
-                {
-                    pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-                }
                 TCPIP_HEAP_Free(pktMemH, pSeg);
             }
             pSeg = pNSeg;
         }
 
-        if(pktK0Heap)
-        {
-            pPkt = (TCPIP_MAC_PACKET*)KVA1_TO_KVA0(pPkt);
-        }
         TCPIP_HEAP_Free(pktMemH, pPkt);
     }
 }
@@ -830,12 +773,6 @@ TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAlloc(uint16_t loadLen, uint16_t loadO
             pSeg->segLoadOffset = loadOffset;
             pSeg->segLoad = (uint8_t*)(pSeg + 1) + loadOffset;
         }
-
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA0_TO_KVA1(pSeg);
-        }
-        
     }
 
     return pSeg;
@@ -845,10 +782,6 @@ void _TCPIP_PKT_SegmentFree(TCPIP_MAC_DATA_SEGMENT* pSeg)
 {
     if( (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
     {
-        if(pktK0Heap)
-        {
-            pSeg = (TCPIP_MAC_DATA_SEGMENT*)KVA1_TO_KVA0(pSeg);
-        }
         TCPIP_HEAP_Free(pktMemH, pSeg);
     }
 }
@@ -988,7 +921,7 @@ static void _TCPIP_PKT_LogCallHandler(TCPIP_PKT_LOG_ENTRY* pLogEntry, TCPIP_STAC
                 }
             }
 
-            if((pLogEntry->moduleLog & ~_pktLogInfo.discardMask) == 0)
+            if((pLogEntry->moduleLog & _pktLogInfo.logModuleMask) == 0)
             {   // don't report
                 break;
             }
@@ -1138,7 +1071,7 @@ void TCPIP_PKT_FlightLogAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE m
             }
             else if((pLogEntry->logFlags & TCPIP_PKT_LOG_FLAG_SKT_PARAM) != 0)
             {   // a socket entry; check against skt discard mask
-                if(((1 << pLogEntry->sktNo) & ~_pktLogInfo.sktDiscardMask) == 0)
+                if(((1 << pLogEntry->sktNo) & _pktLogInfo.sktLogMask) == 0)
                 {   // discard it
                     discardPkt = true;
                     break;
@@ -1151,7 +1084,7 @@ void TCPIP_PKT_FlightLogAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_STACK_MODULE m
                 pLogEntry->logFlags |= TCPIP_PKT_LOG_FLAG_PERSISTENT;
                 _pktLogInfo.nPersistent++;
             }
-            else if((pLogEntry->moduleLog & ~_pktLogInfo.discardMask) == 0)
+            else if((pLogEntry->moduleLog & _pktLogInfo.logModuleMask) == 0)
             {   // discard it
                 discardPkt = true;
             }
@@ -1269,34 +1202,13 @@ bool TCPIP_PKT_FlightLogTypeSet(TCPIP_PKT_LOG_TYPE logType, bool clrPersist)
     return true;
 }
 
-void TCPIP_PKT_FlightLogSetDiscardMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_OP discardOp, bool clrPersist)
+void TCPIP_PKT_FlightLogUpdateModuleMask(uint32_t andModuleMask, uint32_t orModuleMask, bool clrPersist)
 {
     int ix;
     TCPIP_PKT_LOG_ENTRY *pEntry;
 
-
-    switch(discardOp)
-    {
-        case TCPIP_PKT_LOG_MASK_AND:
-            _pktLogInfo.discardMask &= moduleMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NOR:
-            _pktLogInfo.discardMask |= ~moduleMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NAND:
-            _pktLogInfo.discardMask &= ~moduleMask;
-            break;
-
-        default:    // TCPIP_PKT_LOG_MASK_OR
-            _pktLogInfo.discardMask |= moduleMask;
-            break;
-    }
-
-    // only up to and including TCPIP_MODULE_LAYER3 modules are logged
-    _pktLogInfo.discardMask &= (1 << (TCPIP_MODULE_LAYER3 + 1)) - 1;
-
+    // update mask only up to and including TCPIP_MODULE_LAYER3 modules
+    _pktLogInfo.logModuleMask = (( _pktLogInfo.logModuleMask & andModuleMask) | orModuleMask) & ((1 << (TCPIP_MODULE_LAYER3 + 1)) - 1);
 
     // apply discard mask it to all completed logs...
     for(ix = 0, pEntry = _pktLogTbl; ix < sizeof(_pktLogTbl) / sizeof(*_pktLogTbl); ix++, pEntry++)
@@ -1305,7 +1217,7 @@ void TCPIP_PKT_FlightLogSetDiscardMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_O
         {   // non empty completed slot
             if(clrPersist || (pEntry->logFlags & TCPIP_PKT_LOG_FLAG_PERSISTENT) == 0)
             {
-                if((pEntry->moduleLog & ~_pktLogInfo.discardMask) == 0)
+                if((pEntry->moduleLog & _pktLogInfo.logModuleMask) == 0)
                 {
                     _TCPIP_PKT_LogDiscardEntry(pEntry);
                 }
@@ -1314,32 +1226,13 @@ void TCPIP_PKT_FlightLogSetDiscardMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_O
     }
 }
 
-void TCPIP_PKT_FlightLogSetPersistMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_OP persistOp, bool clrNonPersist)
+void TCPIP_PKT_FlightLogUpdatePersistMask(uint32_t andModuleMask, uint32_t orModuleMask, bool clrNonPersist)
 {
     int ix;
     TCPIP_PKT_LOG_ENTRY *pEntry;
 
-    switch(persistOp)
-    {
-        case TCPIP_PKT_LOG_MASK_AND:
-            _pktLogInfo.persistMask &= moduleMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NOR:
-            _pktLogInfo.persistMask |= ~moduleMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NAND:
-            _pktLogInfo.persistMask &= ~moduleMask;
-            break;
-
-        default:    // TCPIP_PKT_LOG_MASK_OR
-            _pktLogInfo.persistMask |= moduleMask;
-            break;
-    }
-
-    // only up to and including TCPIP_MODULE_LAYER3 modules are logged
-    _pktLogInfo.persistMask &= (1 << (TCPIP_MODULE_LAYER3 + 1)) - 1;
+    // update mask only up to and including TCPIP_MODULE_LAYER3 modules
+    _pktLogInfo.persistMask =  ((_pktLogInfo.persistMask & andModuleMask) | orModuleMask) & ((1 << (TCPIP_MODULE_LAYER3 + 1)) - 1);
 
     // apply it to all completed logs...
     for(ix = 0, pEntry = _pktLogTbl; ix < sizeof(_pktLogTbl) / sizeof(*_pktLogTbl); ix++, pEntry++)
@@ -1362,29 +1255,13 @@ void TCPIP_PKT_FlightLogSetPersistMask(uint32_t moduleMask, TCPIP_PKT_LOG_MASK_O
     }
 }
 
-void TCPIP_PKT_FlightLogSetNetMask(uint32_t netMask, TCPIP_PKT_LOG_MASK_OP netOp, bool clrPersist)
+void TCPIP_PKT_FlightLogUpdateNetMask(uint32_t andNetMask, uint32_t orNetMask, bool clrPersist)
 {
     int ix;
     TCPIP_PKT_LOG_ENTRY *pEntry;
 
-    switch(netOp)
-    {
-        case TCPIP_PKT_LOG_MASK_AND:
-            _pktLogInfo.netLogMask &= netMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NOR:
-            _pktLogInfo.netLogMask |= ~netMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NAND:
-            _pktLogInfo.netLogMask &= ~netMask;
-            break;
-
-        default:    // TCPIP_PKT_LOG_MASK_OR
-            _pktLogInfo.netLogMask |= netMask;
-            break;
-    }
+    // update mask
+    _pktLogInfo.netLogMask = (_pktLogInfo.netLogMask & andNetMask) | orNetMask;
 
     // apply it to all completed logs...
     for(ix = 0, pEntry = _pktLogTbl; ix < sizeof(_pktLogTbl) / sizeof(*_pktLogTbl); ix++, pEntry++)
@@ -1403,29 +1280,13 @@ void TCPIP_PKT_FlightLogSetNetMask(uint32_t netMask, TCPIP_PKT_LOG_MASK_OP netOp
 
 }  
 
-void TCPIP_PKT_FlightLogSetSocketDiscardMask(uint32_t sktMask, TCPIP_PKT_LOG_MASK_OP netOp, bool clrPersist)
+void TCPIP_PKT_FlightLogUpdateSocketMask(uint32_t andSktMask, uint32_t orSktMask, bool clrPersist)
 {
     int ix;
     TCPIP_PKT_LOG_ENTRY *pEntry;
 
-    switch(netOp)
-    {
-        case TCPIP_PKT_LOG_MASK_AND:
-            _pktLogInfo.sktDiscardMask &= sktMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NOR:
-            _pktLogInfo.sktDiscardMask |= ~sktMask;
-            break;
-
-        case TCPIP_PKT_LOG_MASK_NAND:
-            _pktLogInfo.sktDiscardMask &= ~sktMask;
-            break;
-
-        default:    // TCPIP_PKT_LOG_MASK_OR
-            _pktLogInfo.sktDiscardMask |= sktMask;
-            break;
-    }
+    // update mask
+    _pktLogInfo.sktLogMask = (_pktLogInfo.sktLogMask & andSktMask) | orSktMask;
 
     // apply it to all completed logs...
     for(ix = 0, pEntry = _pktLogTbl; ix < sizeof(_pktLogTbl) / sizeof(*_pktLogTbl); ix++, pEntry++)
@@ -1436,7 +1297,7 @@ void TCPIP_PKT_FlightLogSetSocketDiscardMask(uint32_t sktMask, TCPIP_PKT_LOG_MAS
             {
                 if((pEntry->logFlags & TCPIP_PKT_LOG_FLAG_SKT_PARAM) != 0)
                 {
-                    if(((1 << pEntry->sktNo) & ~_pktLogInfo.sktDiscardMask) == 0)
+                    if(((1 << pEntry->sktNo) & _pktLogInfo.sktLogMask) == 0)
                     {
                         _TCPIP_PKT_LogDiscardEntry(pEntry);
                     }
