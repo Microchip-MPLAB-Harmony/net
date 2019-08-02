@@ -201,6 +201,7 @@ static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _CommandPktLogReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogType(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -4260,7 +4261,8 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if(argc < 2)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog show <all/unack/ack/err> - Displays the log entries: unack/pending (default), ack, all or error ones\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog clear <ack/all> - Clears the log service\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog clear <all> - Clears the acknowledged log entries + persistent\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog reset <all> - Resets the log data + all masks\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog handler on/off <all> - Turns on/off the local log handler\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog type RX/TX/RXTX <clr> - Enables the log for RX, TX or both RX and TX packets\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog net and none/all/ifIx ifIx ... or none/all/ifIx ifIx.... <clr> - Updates the network log mask for the interface list\r\n");
@@ -4277,6 +4279,10 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     else if(strcmp(argv[1], "clear") == 0)
     {
         _CommandPktLogClear(pCmdIO, argc, argv);
+    }
+    else if(strcmp(argv[1], "reset") == 0)
+    {
+        _CommandPktLogReset(pCmdIO, argc, argv);
     }
     else if(strcmp(argv[1], "handler") == 0)
     {
@@ -4427,7 +4433,7 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 
 static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // "Usage: plog clear <ack/all>"
+    // "Usage: plog clear <all>"
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     bool clearPersist = false;
 
@@ -4436,10 +4442,6 @@ static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
         if(strcmp(argv[2], "all") == 0)
         {
             clearPersist = true;
-        }
-        else if(strcmp(argv[2], "ack") == 0)
-        {   // default
-            clearPersist = false;
         }
         else
         {   // unknown
@@ -4452,6 +4454,31 @@ static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
 
     TCPIP_PKT_FlightLogClear(clearPersist);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: Cleared the %s log\r\n", clearPersist ? "whole" : "acknowledged");
+}
+
+static void _CommandPktLogReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // "Usage: plog reset <all>"
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool clearMasks = false;
+
+    while(argc >= 3)
+    {
+        if(strcmp(argv[2], "all") == 0)
+        {
+            clearMasks = true;
+        }
+        else
+        {   // unknown
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown parameter\r\n");
+            return;
+        }
+
+        break;
+    }
+
+    TCPIP_PKT_FlightLogReset(clearMasks);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: Reset the %s log\r\n", clearMasks ? "whole" : "data");
 }
 
 static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -4719,7 +4746,7 @@ static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_
 static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int logMaskOp;  // 1: net; 2: persist; 3: module; 4: socket; 0 error
-    uint32_t andMask, orMask;
+    uint32_t andMask = 0, orMask = 0;
     CMD_PKT_XTRACT_RES xtRes;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
