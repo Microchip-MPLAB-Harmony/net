@@ -249,8 +249,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date June,03 2019"+"<br>";
-        String version = "Version MPFS 3.3.5";
+        aboutStr = "<html>"+"Date Aug,07 2019"+"<br>";
+        String version = "Version MPFS 3.3.6";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
@@ -811,7 +811,7 @@ public class MainMPFS extends javax.swing.JFrame {
         {
             if (generationResult)
             {
-                ShowResultDialog("The MPFS" +/* ((Settings.Default.OutputVersion == 1) ? "" : */"2"/*)*/ +
+                ShowResultDialog("The MPFS" +
                     " image was successfully generated.");
             }
             else
@@ -886,13 +886,13 @@ public class MainMPFS extends javax.swing.JFrame {
         lblMessage.setText("Contacting device for upload...");
         if (protocol.contains("http") == true )
         {
-            generateLog.add("Uploading MPFS2 image: " + imageFile.length() + " bytes");
+            generateLog.add("Uploading MPFS image: " + imageFile.length() + " bytes");
             httpImageUpload(userName,pass,uploadSettings.getIpAddress(),
                     uploadSettings.getUploadPath(),imageFile,protocol);
         }
         else
         {
-            generateLog.add("Uploading MPFS2 image: " + imageFile.length() + " bytes");
+            generateLog.add("Uploading MPFS image: " + imageFile.length() + " bytes");
             ftpImageUpload(userName,pass,uploadSettings.getIpAddress(),
                     uploadSettings.getUploadPath(),imageFile,protocol);
         }
@@ -1058,14 +1058,14 @@ public class MainMPFS extends javax.swing.JFrame {
             // Display the results
             if ((uploadExceptionString == null) && generationResult)
             {
-                ShowResultDialog("The MPFS2 image upload was successfully completed.");
+                ShowResultDialog("The MPFS image upload was successfully completed.");
             }
             else
             {
                 generationResult = false;
                 generateLog.add("ERROR: Could not contact remote device for upload.");
                 generateLog.add("ERROR: " + uploadExceptionString);
-                ShowResultDialog("The MPFS2 image could not be uploaded.");
+                ShowResultDialog("The MPFS image could not be uploaded.");
             }
              uploadExceptionString = null;
              //jProgressBar1.setValue(0);
@@ -1797,14 +1797,14 @@ public class MainMPFS extends javax.swing.JFrame {
             if (args.length < 3)
             {
                 System.out.println("\n" +
-                    "Usage: MPFS2 [options] <SourceDir> <ProjectDir> <OutputFile>\n" +
+                    "Usage: MPFS [options] <SourceDir> <ProjectDir> <OutputFile>\n" +
                     "    /BIN\t\t(/b)\t: Output a BIN image (Default)\n" +
                     "    /PIC32\t\t(/c)\t: Output PIC32 image\n" +
                     "    /ASM30\t\t(/s)\t: Output an ASM16 image\n" +
                     //"   /v6_stack\t\t(/v)\t: Stack version (use this with C18_C32 output image)\n" +
                    // "    /C32\t\t(/x)\t: Output a C32 image\n" +
                  //   "    /classic\t\t(/1)\t: MPFSClassic format\n" +
-                    "    /mpfs2\t\t(/2)\t: MPFS2 format (Default)\n" +
+                    "    /mpfs\t\t(/m)\t: MPFS format (Default)\n" +
                 //    "    /reserve #\t\t(/r #)\t: Reserved space for Classic BINs (Default 64)\n" +
                     "    /html \"...\"\t\t(/h)\t: Dynamic file types (\"*.htm, *.html, *.xml, *.cgi\")\n" +
                     "    /xgzip \"...\"\t(/z)\t: Non-compressible types (\"snmp.bib, *.inc\")\n\n" +
@@ -1855,7 +1855,7 @@ public class MainMPFS extends javax.swing.JFrame {
 //                        fmt = MPFS2Lib.MPFSOutputFormat.C32;
 //                else if(arg.contains("/classic") || arg.contains("/1"))
   //                      version = 1;
-                else if(arg.compareTo("/mpfs2")==0 || arg.compareTo("/2")==0)
+                else if(arg.compareTo("/mpfs")==0 || arg.compareTo("/m")==0)
                 {
                     version = 2;
                 }
@@ -1923,7 +1923,7 @@ public class MainMPFS extends javax.swing.JFrame {
 //                dlg.setListArray(builder.log);
 //                dlg.setLabelMsg("The MPFS" +"2" +" image was successfully generated.");
 //                dlg.setVisible(true);
-                System.out.println("The MPFS2 image was successfully generated.\n");
+                System.out.println("The MPFS image was successfully generated.\n");
                 return;
             }
             else
@@ -1934,7 +1934,7 @@ public class MainMPFS extends javax.swing.JFrame {
 //                dlg.setListArray(builder.log);
 //                dlg.setLabelMsg("Errors were encountered while generating the MPFS image.");
 //                dlg.setVisible(true);
-                System.out.println("Errors were encountered while generating the MPFS2 image.\n");
+                System.out.println("Errors were encountered while generating the MPFS image.\n");
                 return;
             }
             //return;
