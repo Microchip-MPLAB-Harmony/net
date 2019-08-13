@@ -39,9 +39,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-// @@@@ move it to configuration
+// TODO aa: move it to configuration
 // add it to MHC!
 #define SYS_FS_SHELL_MTHREAD_PROTECTION     0
+//#define SYS_FS_SHELL_MALLOC                 malloc
+//#define SYS_FS_SHELL_FREE                   free
+
 
 
 
@@ -255,7 +258,15 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
         // create the object
-        newObj = (SHELL_OBJ_INSTANCE*)calloc(1, sizeof(*newObj));
+        void* (*shell_malloc_fnc)(size_t bytes);
+#if (SYS_FS_SHELL_MALLOC != 0)
+        shell_malloc_fnc = SYS_FS_SHELL_MALLOC;
+#else
+        shell_malloc_fnc = malloc;
+#endif  // (SYS_FS_SHELL_MALLOC != 0)
+
+
+        newObj = (SHELL_OBJ_INSTANCE*)(*shell_malloc_fnc)(sizeof(*newObj));
 
         if(newObj == 0)
         {
@@ -264,6 +275,7 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
         }
 
         // init the object
+        memset(newObj, 0, sizeof(*newObj));
         newObj->obj = default_shell_obj;
         newObj->self = newObj;
         char* pRoot = newObj->root;
@@ -438,7 +450,14 @@ static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj)
     memset(pShell, 0, sizeof(*pShell));
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
-    free(pShell);
+        void (*shell_free_fnc)(void* ptr);
+#if (SYS_FS_SHELL_FREE != 0)
+        shell_free_fnc = SYS_FS_SHELL_FREE;
+#else
+        shell_free_fnc = free;
+#endif  // (SYS_FS_SHELL_FREE != 0)
+
+    (*shell_free_fnc)(pShell);
     return SYS_FS_SHELL_RES_OK;
 }
 
