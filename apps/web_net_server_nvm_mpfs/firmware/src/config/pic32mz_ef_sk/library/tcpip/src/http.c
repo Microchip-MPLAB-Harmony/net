@@ -66,6 +66,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/common/sys_fs_shell.h"
 
+#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
+#include "system/fs/sys_fs_media_manager.h"
+#endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
+
 #include "http_private.h"
 
 extern void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
@@ -2178,7 +2182,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                     if(pHttpCon->uploadBufferStart == 0)
                     {
                         pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
-                        SYS_FS_Unmount_Wrapper((const char *)&pHttpCon->data[1]);
+                        SYS_FS_Unmount(LOCAL_WEBSITE_PATH);
                     }
 
                     if(pHttpCon->uploadBufferStart != 0)
