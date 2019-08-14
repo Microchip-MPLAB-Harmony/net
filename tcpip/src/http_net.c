@@ -50,6 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 #if defined (NVM_DRIVER_V080_WORKAROUND)
 #define MPFS_UPLOAD_DISK_NO         0
 #endif
@@ -58,6 +59,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE   (4 * 1024)
+
+#include "system/fs/sys_fs_media_manager.h"
+#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 #include "tcpip/src/common/sys_fs_shell.h"
 
@@ -2790,7 +2794,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
                 pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
 
-                SYS_FS_Unmount_Wrapper(pHttpCon->fileName);
+                SYS_FS_Unmount(LOCAL_WEBSITE_PATH);
                 pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_WRITE;
                 return TCPIP_HTTP_NET_IO_RES_WAITING;
             }
