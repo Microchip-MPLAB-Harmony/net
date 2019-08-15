@@ -79,7 +79,7 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
     // fname starting with:
     //      "/" - means absolute path access; For access to be allowed, this MUST be under the root with which the object was created!
     //          see SYS_FS_Shell_Create 
-    //          Example: SYS_FS_Shell_Create("/srv/ftp"); and then access file "/srv/ftp/dir/file" is OK
+    //          Example: SYS_FS_Shell_Create("/srv/ftp", ...); and then access file "/srv/ftp/dir/file" is OK
     //          but file "/srv/dir/file" will fail!
     //      "./" - means relative to the cwd (current working directory). 
     //              Absolute path will be: "root + cwd + name"
@@ -94,6 +94,9 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
 
     // file delete
     SYS_FS_RESULT (*fileDelete)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname);
+
+    // directory open 
+    SYS_FS_HANDLE (*dirOpen)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname);
 
     // common file operations, based on a file handle
     // the file shell object is not intended as a complete replacement of the SYS_FS file handle operations
@@ -146,9 +149,6 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
     // diagnostics
     SYS_FS_SHELL_RES (*lastError)(const struct _tag_SYS_FS_SHELL_OBJ* pObj);
 
-    // TODO aa: test only
-   SYS_FS_SHELL_RES (*get_file)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname, char* buff, int buffSize);
-
 }SYS_FS_SHELL_OBJ;
 
 // file shell creation flags
@@ -174,10 +174,16 @@ typedef enum
     //
 }SYS_FS_SHELL_CREATE_FLAGS;
 
-// rootDir could be something like:
+// rootDir - could be something like:
 //      "/" - to allow access to the whole file system
 //      "/srv/ftp" - to allow access to any directory below this 
-const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, SYS_FS_SHELL_RES* pRes);
+// flags - creation flags SYS_FS_SHELL_CREATE_FLAGS; see above
+// malloc_func - standard malloc style allocation function to be used
+//      if 0, the build time SYS_FS_SHELL_MALLOC symbol is used
+// free_func - standard free style deallocation function to be used
+//      if 0, the build time SYS_FS_SHELL_FREE symbol is used
+// pRes - address to store the operation result. Could be 0 if not needed. 
+const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, void*(*malloc_func)(size_t), void(*free_fnc)(void*), SYS_FS_SHELL_RES* pRes);
 
 
 #endif	/* _SYS_FS_SHELL_H_ */

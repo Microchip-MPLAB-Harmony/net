@@ -41,7 +41,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // TODO aa: move it to configuration
 // add it to MHC!
-#define SYS_FS_SHELL_MTHREAD_PROTECTION     0
+//#define SYS_FS_SHELL_MTHREAD_PROTECTION     0
 //#define SYS_FS_SHELL_MALLOC                 malloc
 //#define SYS_FS_SHELL_FREE                   free
 
@@ -71,6 +71,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 static SYS_FS_HANDLE Shell_FileOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fname, SYS_FS_FILE_OPEN_ATTRIBUTES attributes);
 static SYS_FS_RESULT Shell_FileStat(const SYS_FS_SHELL_OBJ* pObj, const char *fname, SYS_FS_FSTAT *buf);
 static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *fname);
+static SYS_FS_HANDLE Shell_DirOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fname);
 static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *cwd);
 static SYS_FS_SHELL_RES Shell_LastError(const SYS_FS_SHELL_OBJ* pObj);
 static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj);
@@ -85,9 +86,6 @@ static size_t Shell_FileWrite(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle
 static SYS_FS_SHELL_RES Shell_GetRoot(const SYS_FS_SHELL_OBJ* pObj, char* rootBuff, size_t rootBuffSize);
 static SYS_FS_SHELL_RES Shell_GetCwd(const SYS_FS_SHELL_OBJ* pObj, char* cwdBuff, size_t cwdBuffSize);
 
-// TODO aa: test only
-static SYS_FS_SHELL_RES Shell_GetFile(const SYS_FS_SHELL_OBJ* pObj, const char *fname, char* buff, int buffSize);
-
 struct _tag_SHELL_OBJ_INSTANCE;
 static SYS_FS_SHELL_RES Shell_FileAbsPath(struct _tag_SHELL_OBJ_INSTANCE *pShell, const char* fname, char* absBuff, size_t absBuffSize);
 
@@ -95,16 +93,17 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(struct _tag_SHELL_OBJ_INSTANCE *pShell
 
 static const SYS_FS_SHELL_OBJ  default_shell_obj = 
 {
-    .fileOpen = Shell_FileOpen,
-    .fileStat = Shell_FileStat, 
+    .fileOpen   = Shell_FileOpen,
+    .fileStat   = Shell_FileStat, 
     .fileDelete = Shell_FileDelete,
-    .fileClose = Shell_FileClose,
-    .fileSize = Shell_FileSize,
-    .fileSeek = Shell_FileSeek,
-    .fileTell = Shell_FileTell,
-    .fileEof = Shell_FileEof,
-    .fileRead = Shell_FileRead,
-    .fileWrite = Shell_FileWrite,
+    .dirOpen    = Shell_DirOpen,
+    .fileClose  = Shell_FileClose,
+    .fileSize   = Shell_FileSize,
+    .fileSeek   = Shell_FileSeek,
+    .fileTell   = Shell_FileTell,
+    .fileEof    = Shell_FileEof,
+    .fileRead   = Shell_FileRead,
+    .fileWrite  = Shell_FileWrite,
     // 
     .cwdSet = Shell_Cwd, 
     .cwdGet = Shell_GetCwd,
@@ -113,8 +112,6 @@ static const SYS_FS_SHELL_OBJ  default_shell_obj =
     .delete = Shell_Delete,
     .lastError = Shell_LastError,
     // 
-    // TODO aa: test only
-    .get_file = Shell_GetFile,
 };
 
 
@@ -124,13 +121,14 @@ typedef struct _tag_SHELL_OBJ_INSTANCE
     SYS_FS_SHELL_OBJ  obj;
     // private data
     const struct _tag_SHELL_OBJ_INSTANCE* self;     // self reference; quick protection/check
+    void (*freeFnc)(void*);                         // free function to use
     SYS_FS_SHELL_RES     opError;
     uint16_t             rootLen;                   // length of the root path
     uint16_t             cwdLen;                    // length of the cwd
-    uint8_t              createFlags;               // SYS_FS_SHELL_CREATE_FLAGS
 #if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     OSAL_SEM_HANDLE_TYPE mtSem;
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
+    uint8_t              createFlags;               // SYS_FS_SHELL_CREATE_FLAGS
     // root path; can never go higher than this
     char                root[SYS_FS_MAX_PATH + 1];  // formatted as "/srv/ftp", or "" : no trailing /
     // current working directory
@@ -215,7 +213,7 @@ static SYS_FS_SHELL_RES _Shell_ObjectUnlock(SHELL_OBJ_INSTANCE* pShell, SYS_FS_S
 // API
 //
 
-const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, SYS_FS_SHELL_RES* pRes)
+const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CREATE_FLAGS flags, void*(*shell_malloc_fnc)(size_t), void(*shell_free_fnc)(void*), SYS_FS_SHELL_RES* pRes)
 {
     int rootLen;
     bool needsRoot = false;
@@ -258,13 +256,14 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
         // create the object
-        void* (*shell_malloc_fnc)(size_t bytes);
+        if(shell_malloc_fnc == 0)
+        {
 #if (SYS_FS_SHELL_MALLOC != 0)
-        shell_malloc_fnc = SYS_FS_SHELL_MALLOC;
+            shell_malloc_fnc = SYS_FS_SHELL_MALLOC;
 #else
-        shell_malloc_fnc = malloc;
+            shell_malloc_fnc = malloc;
 #endif  // (SYS_FS_SHELL_MALLOC != 0)
-
+        }
 
         newObj = (SHELL_OBJ_INSTANCE*)(*shell_malloc_fnc)(sizeof(*newObj));
 
@@ -296,6 +295,16 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
         newObj->mtSem = shellSem;
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
         newObj->createFlags = flags;
+
+        if(shell_free_fnc == 0)
+        {
+#if (SYS_FS_SHELL_FREE != 0)
+            shell_free_fnc = SYS_FS_SHELL_FREE;
+#else
+            shell_free_fnc = free;
+#endif  // (SYS_FS_SHELL_FREE != 0)
+        }
+        newObj->freeFnc = shell_free_fnc; 
 
         res = SYS_FS_SHELL_RES_OK;
         break;
@@ -370,63 +379,89 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path
 
 static SYS_FS_HANDLE Shell_FileOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fname, SYS_FS_FILE_OPEN_ATTRIBUTES attributes)
 {
+    SYS_FS_HANDLE fsHandle = SYS_FS_HANDLE_INVALID;
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
-    if(!pShell)
+    if(pShell)
     {
-        return SYS_FS_HANDLE_INVALID;
+        char absBuff[SYS_FS_MAX_PATH + 1];
+        SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
+        _Shell_ObjectUnlock(pShell, absRes);
+
+        if(absRes == SYS_FS_SHELL_RES_OK)
+        {
+            fsHandle = SYS_FS_FileOpen(absBuff, attributes);
+        }
     }
 
-
-    char absBuff[SYS_FS_MAX_PATH + 1];
-    SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
-    _Shell_ObjectUnlock(pShell, absRes);
-
-    return (absRes == SYS_FS_SHELL_RES_OK) ? SYS_FS_FileOpen(absBuff, attributes) : SYS_FS_HANDLE_INVALID;
+    return fsHandle;
 }
 
 static SYS_FS_RESULT Shell_FileStat(const SYS_FS_SHELL_OBJ* pObj, const char *fname, SYS_FS_FSTAT* statBuff)
 {
+    SYS_FS_RESULT fsRes = SYS_FS_RES_FAILURE;
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
-    if(!pShell)
+    if(pShell)
     {
-        return SYS_FS_RES_FAILURE;
-    }
-    
-    char absBuff[SYS_FS_MAX_PATH + 1];
-    SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
-    _Shell_ObjectUnlock(pShell, absRes);
+        char absBuff[SYS_FS_MAX_PATH + 1];
+        SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
+        _Shell_ObjectUnlock(pShell, absRes);
 
-    return (absRes == SYS_FS_SHELL_RES_OK) ? SYS_FS_FileStat(absBuff, statBuff) : SYS_FS_RES_FAILURE;
+        if(absRes == SYS_FS_SHELL_RES_OK)
+        {
+            fsRes = SYS_FS_FileStat(absBuff, statBuff);
+        }
+    }
+    return fsRes;
 }
 
 static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *fname)
 {
+    SYS_FS_HANDLE fsHandle = SYS_FS_HANDLE_INVALID;
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
-    if(!pShell)
+    if(pShell)
     {
-        return SYS_FS_RES_FAILURE;
+        char absBuff[SYS_FS_MAX_PATH + 1];
+
+        SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
+        _Shell_ObjectUnlock(pShell, absRes);
+
+        if(absRes == SYS_FS_SHELL_RES_OK)
+        {
+            fsHandle = SYS_FS_FileDirectoryRemove(absBuff);
+        }
     }
-    
-    char absBuff[SYS_FS_MAX_PATH + 1];
+    return fsHandle;
+}
 
-    SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
-    _Shell_ObjectUnlock(pShell, absRes);
+static SYS_FS_HANDLE Shell_DirOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fname)
+{
+    SYS_FS_HANDLE fsHandle = SYS_FS_HANDLE_INVALID;
+    SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
+    if(pShell)
+    {
+        char absBuff[SYS_FS_MAX_PATH + 1];
+        SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
+        _Shell_ObjectUnlock(pShell, absRes);
 
-    return (absRes == SYS_FS_SHELL_RES_OK) ? SYS_FS_FileDirectoryRemove(absBuff) : SYS_FS_HANDLE_INVALID;
+        if(absRes == SYS_FS_SHELL_RES_OK)
+        {
+            fsHandle = SYS_FS_DirOpen(absBuff);
+        }
+    }
+    return fsHandle;
 }
 
 static SYS_FS_SHELL_RES Shell_LastError(const SYS_FS_SHELL_OBJ* pObj)
 {
+    SYS_FS_SHELL_RES res = SYS_FS_SHELL_RES_NO_OBJECT;
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
-    if(!pShell)
+
+    if(pShell)
     {
-        return SYS_FS_SHELL_RES_NO_OBJECT;
+        res = pShell->opError;
+        pShell->opError = 0;
+        _Shell_ObjectUnlock(pShell, SYS_FS_SHELL_RES_OK);
     }
-    
-    
-    SYS_FS_SHELL_RES res = pShell->opError;
-    pShell->opError = 0;
-    _Shell_ObjectUnlock(pShell, SYS_FS_SHELL_RES_OK);
     return res;
 }
 
@@ -438,6 +473,7 @@ static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj)
         return SYS_FS_SHELL_RES_NO_OBJECT;
     }
     
+    void(*shell_free_fnc)(void*) = pShell->freeFnc;
 #if (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     OSAL_SEM_HANDLE_TYPE sem = pShell->mtSem;
     uint8_t flags = pShell->createFlags;
@@ -450,12 +486,6 @@ static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj)
     memset(pShell, 0, sizeof(*pShell));
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
 
-        void (*shell_free_fnc)(void* ptr);
-#if (SYS_FS_SHELL_FREE != 0)
-        shell_free_fnc = SYS_FS_SHELL_FREE;
-#else
-        shell_free_fnc = free;
-#endif  // (SYS_FS_SHELL_FREE != 0)
 
     (*shell_free_fnc)(pShell);
     return SYS_FS_SHELL_RES_OK;
@@ -563,19 +593,6 @@ static SYS_FS_SHELL_RES Shell_GetCwd(const SYS_FS_SHELL_OBJ* pObj, char* cwdBuff
     _Shell_ObjectUnlock(pShell, SYS_FS_SHELL_RES_OK);
     return res;
 
-}
-
-static SYS_FS_SHELL_RES Shell_GetFile(const SYS_FS_SHELL_OBJ* pObj, const char *fname, char* buff, int buffSize)
-{
-    SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
-    if(!pShell)
-    {
-        return 0;
-    }
-    
-    SYS_FS_SHELL_RES getRes = Shell_FileAbsPath(pShell, fname, buff, buffSize);
-    _Shell_ObjectUnlock(pShell, SYS_FS_SHELL_RES_OK);
-    return getRes;
 }
 
 // local helpers

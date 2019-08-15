@@ -402,7 +402,7 @@ bool TCPIP_HTTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
 
         // create the SYS_FS shell
         SYS_FS_SHELL_RES shellRes;
-        httpFileShell = SYS_FS_Shell_Create(LOCAL_WEBSITE_PATH, 0, &shellRes);  // TODO aa: the docroot should be a HTTP configuration parameter
+        httpFileShell = SYS_FS_Shell_Create(LOCAL_WEBSITE_PATH, 0, 0, 0, &shellRes);  // TODO aa: the docroot should be a HTTP configuration parameter
         if(httpFileShell == 0)
         {
             SYS_ERROR(SYS_ERROR_WARNING, " HTTP: FS Shell creation failed: %d\r\n", shellRes);
