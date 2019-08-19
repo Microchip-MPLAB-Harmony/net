@@ -379,7 +379,9 @@ static const void*          miimCmdIoParam = 0;
 
 #define         TCPIP_MIIM_COMMAND_TASK_RATE  100   // milliseconds
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
-
+#if defined(TCPIP_STACK_USE_FTPC) && defined(TCPIP_FTPC_COMMANDS)
+static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+#endif
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
@@ -462,6 +464,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
     {"announce",    (SYS_CMD_FNC)_Command_Announce,             ": Announce"},
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
+#if defined(TCPIP_STACK_USE_FTPC)  && defined(TCPIP_FTPC_COMMANDS)
+    {"ftpc", (SYS_CMD_FNC)_Command_FTPC_Service,   ": Connect FTP Client to Server"},
+#endif  // (TCPIP_STACK_USE_FTPC)    
+    
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -4937,7 +4943,685 @@ static int _Command_Announce(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 
+#if defined(TCPIP_STACK_USE_FTPC) && defined(TCPIP_FTPC_COMMANDS)
 
-#endif    // defined(TCPIP_STACK_COMMAND_ENABLE)
+//Disable the following define to retrieve file for transmission from file system
+//#define FTPC_CALLBACK_TX_PROCESSING
+
+//Disable the following define to store file received in file system
+//#define FTPC_CALLBACK_RX_PROCESSING
+
+#ifdef FTPC_CALLBACK_TX_PROCESSING  
+char transmitData[] = "This is a text file for testing";
+#endif
+#ifdef FTPC_CALLBACK_RX_PROCESSING  
+char data_buffer[2048];
+#endif
+
+TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle;
+TCPIP_FTPC_RETURN_TYPE res = TCPIP_FTPC_RET_FAILURE;
+char ftpc_username[15];
+char ftpc_password[15];
+char ftpc_account[15];
+char ftpc_src_pathname[20];
+char ftpc_dst_pathname[20];
+char ctrl_buffer[150];
+
+void ctrlSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_CTRL_EVENT_TYPE ftpcEvent,
+                                            TCPIP_FTPC_CMD cmd, char * ctrlbuff, uint16_t ctrllen)
+{
+    
+    switch (ftpcEvent)
+    {
+        case TCPIP_FTPC_CTRL_EVENT_SUCCESS:
+            SYS_CONSOLE_MESSAGE("Command Success\r\n");
+            break;
+        case TCPIP_FTPC_CTRL_EVENT_FAILURE:
+            SYS_CONSOLE_MESSAGE("Command Failure\r\n"); 
+            break; 
+        case TCPIP_FTPC_CTRL_EVENT_DISCONNECTED:
+            SYS_CONSOLE_MESSAGE("FTPC Disconnected\r\n");     
+            break; 
+        case TCPIP_FTPC_CTRL_RCV:
+            break;
+        case TCPIP_FTPC_CTRL_SEND:
+            break;
+    }
+        
+    if(ctrllen)
+    {
+        memcpy (ctrl_buffer, ctrlbuff, ctrllen);
+        ctrl_buffer[ctrllen] = '\0';
+        SYS_CONSOLE_PRINT("%s\rLength = %d\r\n\n", ctrl_buffer, ctrllen); 
+    }
+}
+
+//This callback function returns 'true' when Data-Socket Rx/Tx data is handled in this callback itself.
+//Then, FTP Client function won't store/retrieve data to/from FileSystem.
+//When it returns 'false', the FTP Client function will store/retrieve data to/from FileSystem.
+bool dataSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_DATA_EVENT_TYPE ftpcEvent,
+                                            TCPIP_FTPC_CMD cmd, char * databuff, uint16_t  * datalen)
+{
+    static uint32_t buffCount= 0;
+    bool callback_processing = false;
+#ifdef FTPC_CALLBACK_TX_PROCESSING   
+    static uint16_t buff_index =0;
+    uint16_t len = 0;
+#endif
+    
+    switch (ftpcEvent)
+    {
+        case TCPIP_FTPC_DATA_RCV:
+#ifdef FTPC_CALLBACK_RX_PROCESSING  
+            memcpy (data_buffer, databuff, *datalen);
+            callback_processing = true;
+#else    
+            callback_processing = false;
+#endif                    
+            buffCount++;
+            SYS_CONSOLE_PRINT("Rx Data Len: %d\r\n",*datalen);            
+            break;
+        case TCPIP_FTPC_DATA_RCV_DONE:
+            SYS_CONSOLE_PRINT("Buffer Count: %d\r\n\n", buffCount);
+            buffCount = 0;
+            break;
+        case TCPIP_FTPC_DATA_SEND_READY:     
+#ifdef FTPC_CALLBACK_TX_PROCESSING
+            len = strlen(&transmitData[buff_index]);
+            if(*datalen <= len)
+            {
+                strncpy(databuff,&transmitData[buff_index], *datalen);
+                buff_index += *datalen ;
+                buffCount++;
+            }
+            else
+            {
+                if(len)
+                {
+                    strncpy(databuff,&transmitData[buff_index], len);
+                    buff_index += len ;
+                    *datalen = len;
+                    buffCount++;
+                }
+                else
+                {
+                    *datalen = 0;
+                    buff_index = 0;
+                }
+            }
+            callback_processing = true;
+#else
+            buffCount++;
+            callback_processing = false;
+#endif
+            break;
+        case TCPIP_FTPC_DATA_SEND_DONE:            
+            SYS_CONSOLE_PRINT("Buffer Count: %d\r\n\n", buffCount);
+            buffCount = 0;
+            break;
+    }   
+    return callback_processing;
+    
+}
+
+void ftpc_res_print(SYS_CMD_DEVICE_NODE* pCmdIO, TCPIP_FTPC_RETURN_TYPE res)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    if(res == TCPIP_FTPC_RET_OK)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Command Started\r\n");
+    }
+    else if(res == TCPIP_FTPC_RET_BUSY)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Ready\r\n");
+    }        
+    else if(res == TCPIP_FTPC_RET_NOT_CONNECT)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Connected\r\n");
+    }
+    else if(res == TCPIP_FTPC_RET_NOT_LOGIN)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Logged In\r\n");
+    }
+    else
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Failure\r\n");
+    }
+}
+
+static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    TCPIP_FTPC_STATUS_TYPE ftpcStatus;
+    
+    if(strcmp("connect",argv[1])==0)
+    {
+        TCPIP_FTPC_CTRL_CONN_TYPE ftpcConn;
+        static IP_MULTI_ADDRESS serverIpAddr;
+        static IP_ADDRESS_TYPE serverIpAddrType;
+        static uint16_t    tcpipServerPort = 0;
+
+        if ((argc < 3)||(argc > 4))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc connect <server ip address> <server port>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc connect 192.168.0.8 0 \r\n");
+            return false;
+        }
+        
+        tcpipServerPort = 0;
+        if (argc == 4)
+        {
+            if(strcmp("0",argv[3]) != 0)
+            {        
+                tcpipServerPort = atoi(argv[3]);
+            }            
+        }    
+        
+        if(TCPIP_Helper_StringToIPAddress(argv[2], &serverIpAddr.v4Add))
+        {
+            serverIpAddrType = IP_ADDRESS_TYPE_IPV4;
+        }
+        else if (TCPIP_Helper_StringToIPv6Address (argv[2], &serverIpAddr.v6Add))
+        {
+            serverIpAddrType = IP_ADDRESS_TYPE_IPV6;
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "FTPC: Invalid Server IP address.\r\n");
+            return true;
+        }        
+        
+        
+        ftpcConn.ftpcServerAddr = &serverIpAddr;
+        ftpcConn.ftpcServerIpAddrType = serverIpAddrType;
+        ftpcConn.serverCtrlPort = tcpipServerPort;
+        
+        ftpcHandle = TCPIP_FTPC_Connect(&ftpcConn, ctrlSktHandler, &res);
+        if(res != TCPIP_FTPC_RET_OK)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Command Failure\r\n");
+        }            
+    }  
+    else if(strcmp("disconnect",argv[1])==0)
+    {
+        if (argc != 2)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc disconnect\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc disconnect\r\n");
+            return false;
+        }
+        
+        TCPIP_FTPC_Get_Status(ftpcHandle, &ftpcStatus);
+        if(ftpcStatus.isConnected)
+        {
+            if(TCPIP_FTPC_Disconnect(ftpcHandle) != TCPIP_FTPC_RET_OK)
+                ftpc_res_print(pCmdIO,res);
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Connected\r\n");
+        }
+        
+    }
+    else if(strcmp("login",argv[1])==0)
+    {
+        if ((argc < 4)||(argc > 5))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc login <username> <pswd> <account>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc login ftptest test123 0 \r\n");
+            return false;
+        }
+        
+        strcpy(ftpc_username, argv[2]);
+        strcpy(ftpc_password, argv[3]);
+        strcpy(ftpc_account, "0");
+        if (argc == 5)
+        {
+            if(strcmp("0",argv[4]) != 0)
+            {        
+                strcpy(ftpc_account, argv[4]);
+            }            
+        }        
+        TCPIP_FTPC_Get_Status(ftpcHandle, &ftpcStatus);
+        if(ftpcStatus.isConnected)
+        {
+            res = TCPIP_FTPC_Login(ftpcHandle, ftpc_username, ftpc_password, ftpc_account);
+            ftpc_res_print(pCmdIO,res);
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not Connected\r\n");
+        }   
+    }    
+    else if(strcmp("pwd",argv[1])==0)
+    {       
+        if (argc != 2)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc pwd\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc pwd\r\n");
+            return false;
+        }        
+        res = TCPIP_FTPC_Get_WorkingDir(ftpcHandle);
+        ftpc_res_print(pCmdIO,res);
+    }
+    else if(strcmp("mkdir",argv[1])==0)
+    {       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc mkdir <pathname>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc mkdir test\r\n");
+            return false;
+        }        
+        strcpy(ftpc_src_pathname, argv[2]);        
+        res = TCPIP_FTPC_MakeDir(ftpcHandle, ftpc_src_pathname);
+        ftpc_res_print(pCmdIO,res);
+
+    }
+    else if(strcmp("cd",argv[1])==0)
+    {       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc cd <pathname>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc cd test\r\n");
+            return false;
+        }        
+        strcpy(ftpc_src_pathname, argv[2]);
+        res = TCPIP_FTPC_Change_Dir(ftpcHandle, ftpc_src_pathname);
+        ftpc_res_print(pCmdIO,res);
+        
+    }
+    else if(strcmp("cdup",argv[1])==0)
+    {       
+        if (argc != 2)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc cdup\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc cdup \r\n");
+            return false;
+        }
+        res = TCPIP_FTPC_ChangeToParentDir(ftpcHandle);
+        ftpc_res_print(pCmdIO,res);   
+    }
+    else if(strcmp("quit",argv[1])==0)
+    {       
+        if (argc != 2)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc quit\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc quit\r\n");
+            return false;
+        }
+        res = TCPIP_FTPC_Logout(ftpcHandle);
+        ftpc_res_print(pCmdIO,res);   
+    }
+    else if(strcmp("rmdir",argv[1])==0)
+    {       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc rmdir <pathname>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc rmdir test\r\n");
+            return false;
+        }
+        
+        strcpy(ftpc_src_pathname, argv[2]);
+        res = TCPIP_FTPC_RemoveDir(ftpcHandle, ftpc_src_pathname);
+        ftpc_res_print(pCmdIO,res);         
+    }
+    else if(strcmp("dele",argv[1])==0)
+    {       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc dele <pathname>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc dele test.txt\r\n");
+            return false;
+        }
+        
+        strcpy(ftpc_src_pathname, argv[2]);
+        res = TCPIP_FTPC_DeleteFile(ftpcHandle, ftpc_src_pathname);
+        ftpc_res_print(pCmdIO,res);         
+    }
+    else if(strcmp("pasv",argv[1])==0)
+    {    
+        if (argc != 2)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc pasv\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc pasv\r\n");
+            return false;
+        }
+        res = TCPIP_FTPC_SetPassiveMode(ftpcHandle);
+        ftpc_res_print(pCmdIO,res);         
+    }
+    else if(strcmp("port",argv[1])==0)
+    {    
+        static TCPIP_FTPC_DATA_CONN_TYPE ftpcDataConn;
+        IP_MULTI_ADDRESS dataServerIpAddr;
+        
+        if (argc != 4)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc port <Data socket ip address> <Data socket port>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc port 192.168.0.8 54216\r\n");
+            return false;
+        }
+        
+        if(TCPIP_Helper_StringToIPAddress(argv[2], &dataServerIpAddr.v4Add))
+        {
+            ftpcDataConn.dataServerIpAddrType = IP_ADDRESS_TYPE_IPV4;
+        }
+        else
+        {
+            (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "FTPC: Invalid DataServer IP address.\r\n");
+            return true;
+        } 
+        memcpy(&(ftpcDataConn.dataServerAddr), &(dataServerIpAddr), sizeof(IP_MULTI_ADDRESS));
+           
+        ftpcDataConn.dataServerPort = atoi(argv[3]);
+        
+        res = TCPIP_FTPC_SetActiveMode(ftpcHandle,&ftpcDataConn);
+        ftpc_res_print(pCmdIO,res);         
+    }
+    else if(strcmp("get",argv[1])==0)
+    {
+        TCPIP_FTPC_DATA_CONN_TYPE ftpcDataConn;
+        TCPIP_FTPC_FILE_OPT_TYPE fileOptions;
+        static char serverFilename[20];
+        static char clientFilename[20];
+        uint8_t opt_count = 0;
+        
+        if ((argc < 3)||(argc > 6))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc get <-a> <-p> <server_filename><client_filename>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc get -a -p test.txt 0 \r\n");
+            return false;
+        }        
+        ftpcDataConn.ftpcIsPassiveMode = false;  
+        ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_ASCII;
+        ftpcDataConn.ftpcDataTxBuffSize = 0;
+        ftpcDataConn.ftpcDataRxBuffSize = 0;
+        for(uint8_t i =1; i < argc; i++)
+        {
+            if(strcmp("-a",argv[i])==0)
+            {
+                ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_ASCII;
+                opt_count++;
+            }
+            else if(strcmp("-i",argv[i])==0)
+            {
+                ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_IMAGE;  
+                opt_count++;
+            }
+            else if(strcmp("-p",argv[i])==0)
+            {
+                ftpcDataConn.ftpcIsPassiveMode = true;
+                opt_count++;
+            }
+        }
+        
+        strcpy(serverFilename, argv[opt_count + 2]);
+        if (argc == (opt_count + 4))
+        {
+            if(strcmp("0",argv[opt_count + 3]) != 0)
+            {
+                strcpy(clientFilename, argv[opt_count + 3]);
+                fileOptions.clientPathName = clientFilename;
+            }
+            else
+            {
+                fileOptions.clientPathName = (char *)0;
+            }    
+        }
+        else
+        {
+            fileOptions.clientPathName = (char *)0;
+        } 
+        fileOptions.serverPathName = serverFilename;
+        res = TCPIP_FTPC_GetFile(ftpcHandle, &ftpcDataConn, &fileOptions, dataSktHandler);
+        ftpc_res_print(pCmdIO,res);
+    }
+    else if(strcmp("put",argv[1])==0)
+    {
+        TCPIP_FTPC_DATA_CONN_TYPE ftpcDataConn;
+        TCPIP_FTPC_FILE_OPT_TYPE fileOptions;
+        //TCPIP_FTPC_DATA_REP_TYPE ftpcDataType;
+        static char serverFilename[20];
+        static char clientFilename[20];
+        uint8_t opt_count = 0;
+        
+        if ((argc < 3)||(argc > 7))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc put <-a> <-p> <-u> <client_filename><server_filename>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc put -a -p test.txt 0 \r\n");
+            return false;
+        }
+        
+        fileOptions.store_unique = false;
+        ftpcDataConn.ftpcIsPassiveMode = false;        
+        ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_ASCII;
+        ftpcDataConn.ftpcDataTxBuffSize = 0;
+        ftpcDataConn.ftpcDataRxBuffSize = 0;
+        
+        for(uint8_t i =1; i < argc; i++)
+        {
+            if(strcmp("-a",argv[i])==0)
+            {
+                ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_ASCII;
+                opt_count++;
+            }
+            else if(strcmp("-i",argv[i])==0)
+            {
+                ftpcDataConn.ftpcDataType = TCPIP_FTPC_DATA_REP_IMAGE;  
+                opt_count++;
+            }
+            else if(strcmp("-p",argv[i])==0)
+            {
+                ftpcDataConn.ftpcIsPassiveMode = true;
+                opt_count++;
+            }
+            else if(strcmp("-u",argv[i])==0)
+            {
+                fileOptions.store_unique = true;
+                opt_count++;
+            }
+        }
+        
+        strcpy(clientFilename, argv[opt_count +  2]);        
+        if (argc == (opt_count + 4))
+        {
+            if(strcmp("0",argv[opt_count + 3]) != 0)
+            {
+                strcpy(serverFilename, argv[opt_count + 3]);
+                fileOptions.serverPathName = serverFilename;
+            }
+            else
+            {
+                fileOptions.serverPathName = (char *)0;
+            } 
+        }
+        else
+        {
+            fileOptions.serverPathName = (char *)0;
+        }
+        
+        fileOptions.clientPathName = clientFilename;
+        res = TCPIP_FTPC_PutFile(ftpcHandle,&ftpcDataConn,&fileOptions, dataSktHandler);
+        ftpc_res_print(pCmdIO,res);
+    } 
+    else if(strcmp("type",argv[1])==0)
+    {
+        TCPIP_FTPC_DATA_REP_TYPE ftpcDataType;
+       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc type <representation type : a,e,i>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc type a\r\n");
+            return false;
+        }
+        
+        if(strcmp("a",argv[2])==0)
+           ftpcDataType =  TCPIP_FTPC_DATA_REP_ASCII;
+        else if(strcmp("e",argv[2])==0)
+            ftpcDataType =  TCPIP_FTPC_DATA_REP_EBCDIC;
+        else if(strcmp("i",argv[2])==0)
+            ftpcDataType =  TCPIP_FTPC_DATA_REP_IMAGE;
+        else
+        {
+            ftpcDataType =  TCPIP_FTPC_DATA_REP_UNSUPPORTED;
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not supported Type\r\n");
+        }
+        res = TCPIP_FTPC_SetType(ftpcHandle, ftpcDataType);
+        ftpc_res_print(pCmdIO,res);        
+    }
+    else if(strcmp("stru",argv[1])==0)
+    {
+        TCPIP_FTPC_DATA_STRUCT_TYPE ftpcFileStruct;
+       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc stru <file structure : f,r,p>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc stru f\r\n");
+            return false;
+        }
+        
+        if(strcmp("f",argv[2])==0)
+           ftpcFileStruct =  TCPIP_FTPC_STRUCT_FILE;
+        else if(strcmp("r",argv[2])==0)
+            ftpcFileStruct =  TCPIP_FTPC_STRUCT_RECORD;
+        else if(strcmp("p",argv[2])==0)
+            ftpcFileStruct =  TCPIP_FTPC_STRUCT_PAGE;
+        else
+        {
+            ftpcFileStruct =  TCPIP_FTPC_STRUCT_UNSUPPORTED;
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not supported Structure\r\n");
+        }
+        res = TCPIP_FTPC_SetStruct(ftpcHandle, ftpcFileStruct);
+        ftpc_res_print(pCmdIO,res);        
+    }
+    else if(strcmp("mode",argv[1])==0)
+    {
+        TCPIP_FTPC_TRANSFER_MODE_TYPE ftpcTranMode;
+       
+        if (argc != 3)
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc mode <transfer mode : s,b,c>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc mode s\r\n");
+            return false;
+        }
+        
+        if(strcmp("s",argv[2])==0)
+           ftpcTranMode =  TCPIP_FTPC_TRANS_STREAM_MODE;
+        else if(strcmp("b",argv[2])==0)
+            ftpcTranMode =  TCPIP_FTPC_TRANS_BLOCK_MODE;
+        else if(strcmp("c",argv[2])==0)
+            ftpcTranMode =  TCPIP_FTPC_TRANS_COMPRESS_MODE;
+        else
+        {
+            ftpcTranMode =  TCPIP_FTPC_TRANS_UNSUPPORTED;
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Not supported mode\r\n");
+        }
+        res = TCPIP_FTPC_SetMode(ftpcHandle, ftpcTranMode);
+        ftpc_res_print(pCmdIO,res);        
+    }
+    else if(strcmp("nlist",argv[1])==0)
+    {
+        TCPIP_FTPC_DATA_CONN_TYPE ftpcDataConn;
+        TCPIP_FTPC_FILE_OPT_TYPE fileOptions;
+        static char serverPathname[20];
+        static char clientFilename[20];
+        uint8_t opt_count = 0;
+
+        if ((argc < 2)||(argc > 5))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc nlist -p <server_pathname><filename_to_savelist>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc -p nlist test test.txt\r\n");
+            return false;
+        }
+
+        ftpcDataConn.ftpcIsPassiveMode = false; 	
+        for(uint8_t i =1; i < argc; i++)
+        {
+            if(strcmp("-p",argv[i])==0)
+            {
+                ftpcDataConn.ftpcIsPassiveMode = true;
+                opt_count++;
+            }
+        }
+        
+        fileOptions.serverPathName = (char *)0;
+        if(argc >= (opt_count + 3))
+        {
+            if(strcmp("0",argv[opt_count + 2]) != 0)
+            {
+                strcpy(serverPathname, argv[opt_count + 2]);
+                fileOptions.serverPathName = serverPathname;
+            }		
+        }
+
+        fileOptions.clientPathName = (char *)"name_list.txt";
+        if (argc == (opt_count + 4))
+        {
+            if(strcmp("0",argv[opt_count + 3]) != 0)
+            {
+                strcpy(clientFilename, argv[opt_count + 3]);
+                fileOptions.clientPathName = clientFilename;
+            } 
+        }
+        
+        res = TCPIP_FTPC_NameList(ftpcHandle, &ftpcDataConn, &fileOptions, dataSktHandler); 
+        ftpc_res_print(pCmdIO,res); 
+    }
+    else if(strcmp("ls",argv[1])==0)
+    {
+        TCPIP_FTPC_DATA_CONN_TYPE ftpcDataConn;
+        TCPIP_FTPC_FILE_OPT_TYPE fileOptions;
+        static char serverPathname[20];        
+        static char clientFilename[20];
+        uint8_t opt_count = 0;
+
+        if ((argc < 2)||(argc > 5))
+        {
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc ls -p <server_pathname><filename_to_savelist>\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc -p ls test list.txt\r\n");
+            return false;
+        }
+
+        ftpcDataConn.ftpcIsPassiveMode = false; 	
+        for(uint8_t i =1; i < argc; i++)
+        {
+            if(strcmp("-p",argv[i])==0)
+            {
+                ftpcDataConn.ftpcIsPassiveMode = true;
+                opt_count++;
+            }
+        }
+
+        fileOptions.serverPathName = (char *)0;
+        if(argc == (opt_count + 3))
+        {
+            if(strcmp("0",argv[opt_count + 2]) != 0)
+            {
+                strcpy(serverPathname, argv[opt_count + 2]);
+                fileOptions.serverPathName = serverPathname;
+            }		
+        }
+        fileOptions.clientPathName = (char *)"list.txt";
+        if (argc == (opt_count + 4))
+        {
+            if(strcmp("0",argv[opt_count + 3]) != 0)
+            {
+                strcpy(clientFilename, argv[opt_count + 3]);
+                fileOptions.clientPathName = clientFilename;
+            } 
+        }
+                
+        res = TCPIP_FTPC_List(ftpcHandle, &ftpcDataConn, &fileOptions, dataSktHandler); 
+        ftpc_res_print(pCmdIO,res); 
+    }
+    else
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Invalid Command\r\n");
+    }
+    return false;
+}
+
+#endif
+#endif    // defined(TCPIP_STACK_USE_FTPC)
 
 

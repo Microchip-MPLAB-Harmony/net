@@ -168,6 +168,12 @@ def loadModule():
     tcpipIperfComponent.addDependency("Iperf_TCP_Dependency", "TCP", None, True, True)
     tcpipIperfComponent.addDependency("Iperf_UDP_Dependency", "UDP", None, True, True)
     tcpipIperfComponent.setDisplayType("TCP/IP Library")
+
+    tcpipFtpcComponent = Module.CreateComponent("tcpipFtpc", "FTP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ftpc.py")
+    tcpipFtpcComponent.addCapability("libtcpipFtpc","FTPC",True)
+    tcpipFtpcComponent.addDependency("FTPC_TCP_Dependency", "TCP", None, True, True)    
+    tcpipFtpsComponent.addDependency("FTPC_TcipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+    tcpipFtpcComponent.setDisplayType("TCP/IP Library")
     
     tcpipNbnsComponent = Module.CreateComponent("tcpipNbns", "NBNS", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_nbns.py")
     tcpipNbnsComponent.addCapability("libtcpipNbns","NBNS",True)

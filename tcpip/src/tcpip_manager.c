@@ -469,7 +469,10 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
     {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
-#endif    
+#endif   
+#if defined(TCPIP_STACK_USE_FTPC)
+    {TCPIP_MODULE_FTPC,        (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTPC
+#endif 
     // Add other stack modules here
      
 };

@@ -889,6 +889,33 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackFtpsPrivateHeaderFile.setType("HEADER")
     tcpipStackFtpsPrivateHeaderFile.setOverwrite(True)
     
+    # Add ftpc.h file to project
+    tcpipStackFtpcHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackFtpcHeaderFile.setSourcePath("tcpip/ftpc.h")
+    tcpipStackFtpcHeaderFile.setOutputName("ftpc.h")
+    tcpipStackFtpcHeaderFile.setDestPath("library/tcpip/")
+    tcpipStackFtpcHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
+    tcpipStackFtpcHeaderFile.setType("HEADER")
+    tcpipStackFtpcHeaderFile.setOverwrite(True)
+
+    # Add ftpc_manager.h file to project
+    tcpipStackFtpcManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackFtpcManagerHeaderFile.setSourcePath("tcpip/src/ftpc_manager.h")
+    tcpipStackFtpcManagerHeaderFile.setOutputName("ftpc_manager.h")
+    tcpipStackFtpcManagerHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackFtpcManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackFtpcManagerHeaderFile.setType("HEADER")
+    tcpipStackFtpcManagerHeaderFile.setOverwrite(True)
+    
+    # Add ftpc_private.h file to project
+    tcpipStackFtpcPrivateHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackFtpcPrivateHeaderFile.setSourcePath("tcpip/src/ftpc_private.h")
+    tcpipStackFtpcPrivateHeaderFile.setOutputName("ftpc_private.h")
+    tcpipStackFtpcPrivateHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackFtpcPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackFtpcPrivateHeaderFile.setType("HEADER")
+    tcpipStackFtpcPrivateHeaderFile.setOverwrite(True)
+    
     # Add icmp.h file to project
     tcpipStackIcmpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackIcmpHeaderFile.setSourcePath("tcpip/icmp.h")
@@ -1622,7 +1649,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackInclPath.setKey("extra-include-directories")
     tcpipStackInclPath.setValue("../src/config/"+configName+ "/library;../src/config/"+configName+ "/library/tcpip/src;../src/config/"+configName+ "/library/tcpip/src/common")
     tcpipStackInclPath.setAppend(True, ";")
-	
+    
 #########################################################################################
 #### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
     tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)

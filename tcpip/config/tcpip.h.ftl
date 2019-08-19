@@ -351,7 +351,7 @@ typedef enum
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
 	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
-
+	TCPIP_MODULE_FTPC,              /* FTP client */
     /* add other modules here */
     //
     /*  */
@@ -686,6 +686,9 @@ typedef struct
 </#if>
 <#if (tcpipFtps.TCPIP_USE_FTP_MODULE)?has_content &&  (tcpipFtps.TCPIP_USE_FTP_MODULE) == true>
 #include "tcpip/ftp.h"
+</#if>
+<#if (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT)?has_content &&  (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT) == true>
+#include "tcpip/ftpc.h"
 </#if>
 <#if (tcpipIcmp.TCPIP_STACK_USE_ICMPV4)?has_content &&  (tcpipIcmp.TCPIP_STACK_USE_ICMPV4) == true>
 #include "tcpip/icmp.h"
