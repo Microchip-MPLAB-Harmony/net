@@ -415,10 +415,19 @@ static char _Telnet_GETC(const void* cmdIoParam)
         if(avlblBytes)
         {
             bData = *linePtr++;
-            // discard consumed and unused
-            NET_PRES_SocketRead(tSkt, 0, linePtr - lineBuffer);
-            return (char)bData;
         }
+        else
+        {
+            bData = 0;
+        }
+
+        // discard consumed and unused
+        int discardBytes = linePtr - lineBuffer;
+        if(discardBytes != 0)
+        {
+            NET_PRES_SocketRead(tSkt, 0, discardBytes);
+        }
+        return (char)bData;
     }
 #endif  // TELNET_SEND_COMMANDS_TO_CONSOLE
 
