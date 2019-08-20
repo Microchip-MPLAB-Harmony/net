@@ -76,6 +76,7 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *cwd)
 static SYS_FS_SHELL_RES Shell_LastError(const SYS_FS_SHELL_OBJ* pObj);
 static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj);
 static SYS_FS_RESULT Shell_FileClose(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
+static SYS_FS_RESULT Shell_DirClose(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
 static int32_t  Shell_FileSize(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
 static int32_t  Shell_FileSeek(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle, int32_t offset, SYS_FS_FILE_SEEK_CONTROL whence);
 static int32_t  Shell_FileTell(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
@@ -98,6 +99,7 @@ static const SYS_FS_SHELL_OBJ  default_shell_obj =
     .fileDelete = Shell_FileDelete,
     .dirOpen    = Shell_DirOpen,
     .fileClose  = Shell_FileClose,
+    .dirClose   = Shell_DirClose,
     .fileSize   = Shell_FileSize,
     .fileSeek   = Shell_FileSeek,
     .fileTell   = Shell_FileTell,
@@ -497,6 +499,12 @@ static SYS_FS_RESULT Shell_FileClose(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE
     return SYS_FS_FileClose(handle);
 }
 
+static SYS_FS_RESULT Shell_DirClose(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle)
+{
+    (void)pObj;
+    return SYS_FS_DirClose(handle);
+}
+
 static int32_t Shell_FileSize(const SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle)
 {
     (void)pObj;
@@ -619,6 +627,10 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
         {   // OK, starting with ./ start with the current cwd
             fname += 2;
         }
+        else if(fname[1] == 0)
+        {   // OK, "." should still mean current directory
+            fname += 1;
+        }
         else if(fname[1] != '.' || fname[2] != '/')
         {
             return SYS_FS_SHELL_RES_BAD_ARG;
@@ -676,7 +688,7 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
     // start with root
     strcpy(absBuff, pShell->root);
     // add cwd
-    strncpy(absBuff + pShell->rootLen, pShell->cwd, cwd_len);
+    strncpy(absBuff + pShell->rootLen, pShell->cwd, cwd_len + 1);
     // add the file name
     strcpy(absBuff + pShell->rootLen + cwd_len, fname);
     absBuff[absBuffSize - 1] = 0;
