@@ -98,13 +98,16 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
     // directory open 
     SYS_FS_HANDLE (*dirOpen)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname);
 
-    // common file operations, based on a file handle
+    // common file/dir operations, based on a handle
     // the file shell object is not intended as a complete replacement of the SYS_FS file handle operations
     // it implements just the most common ones
     // by default these redirect to the SYS_FS
     // however different implementations could do this differently 
     // file close
     SYS_FS_RESULT (*fileClose)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
+
+    // dir close
+    SYS_FS_RESULT (*dirClose)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
 
     // file size
     int32_t       (*fileSize)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, SYS_FS_HANDLE handle);
