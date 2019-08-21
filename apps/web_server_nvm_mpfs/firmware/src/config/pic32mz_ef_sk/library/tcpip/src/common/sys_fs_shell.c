@@ -378,6 +378,7 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path
     if(*end_cwd != '/')
     {
         *++end_cwd = '/';
+        *++end_cwd = 0;
         len_cwd++;
     }
     pShell->cwdLen = len_cwd;
