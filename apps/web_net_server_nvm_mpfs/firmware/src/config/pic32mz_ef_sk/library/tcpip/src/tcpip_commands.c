@@ -975,6 +975,16 @@ static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     if (strcmp(argv[2], "info") == 0)
     {   // DHCPV6 info
         TCPIP_DHCPV6_CLIENT_INFO dhcpv6Info;
+        char dhcpv6StatusBuff[40];
+        IPV6_ADDR dhcpv6DnsBuff[1];
+
+        dhcpv6Info.statusBuff = dhcpv6StatusBuff;
+        dhcpv6Info.statusBuffSize = sizeof(dhcpv6StatusBuff);
+        dhcpv6Info.dnsBuff = dhcpv6DnsBuff;
+        dhcpv6Info.dnsBuffSize = sizeof(dhcpv6DnsBuff);
+        dhcpv6Info.domainBuff = 0;
+        dhcpv6Info.domainBuffSize = 0;
+
 
         if(TCPIP_DHCPV6_ClientInfoGet(netH, &dhcpv6Info))
         {
