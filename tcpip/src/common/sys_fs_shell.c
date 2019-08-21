@@ -45,7 +45,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //#define SYS_FS_SHELL_MALLOC                 malloc
 //#define SYS_FS_SHELL_FREE                   free
 
-
+// SYS_FS workaround
+// SYS_FS functions like SYS_FS_DirOpen() won't properly open a directory
+// if the directory name ends in '/'.
+// This workaround removes the trailing '/' from the path!
+// Should be fixed in the SYS_FS!
+#define SYS_FS_TRAIL_SLASH_WORKAROUND     1
 
 
 // DOM-IGNORE-END
@@ -692,6 +697,15 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
     // add the file name
     strcpy(absBuff + pShell->rootLen + cwd_len, fname);
     absBuff[absBuffSize - 1] = 0;
+#if (SYS_FS_TRAIL_SLASH_WORKAROUND != 0)
+    int absLen = strlen(absBuff);
+    char* pEnd = absBuff + absLen - 1;
+    if(*pEnd == '/')
+    {
+        *pEnd = 0;
+    }
+#endif  // (SYS_FS_TRAIL_SLASH_WORKAROUND != 0)
+
     return SYS_FS_SHELL_RES_OK;
 }
 
