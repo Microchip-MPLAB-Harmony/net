@@ -48,8 +48,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
 
-#include "system/console/sys_command.h"
+#include "system/console/sys_console.h"
+#include "system/debug/sys_debug.h"
+#include "system/command/sys_command.h"
 #include "driver/miim/drv_miim.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -198,6 +201,7 @@ static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _CommandPktLogReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogType(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
@@ -379,84 +383,84 @@ static const void*          miimCmdIoParam = 0;
 // TCPIP stack command table
 static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 {
-    {"netinfo",     _Command_NetInfo,              ": Get network information"},
-    {"defnet",      _Command_DefaultInterfaceSet,  ": Set/Get default interface"},
+    {"netinfo",     (SYS_CMD_FNC)_Command_NetInfo,              ": Get network information"},
+    {"defnet",      (SYS_CMD_FNC)_Command_DefaultInterfaceSet,  ": Set/Get default interface"},
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DHCP_CLIENT)
-    {"dhcp",        _CommandDhcpOptions,           ": DHCP client commands"},
+    {"dhcp",        (SYS_CMD_FNC)_CommandDhcpOptions,           ": DHCP client commands"},
 #endif
-    {"dhcps",       _Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
-    {"zcll",        _Command_ZcllOnOff,            ": Turn ZCLL on/off"},
-    {"setdns",      _Command_PrimaryDNSAddressSet, ": Set DNS address"},
+    {"dhcps",       (SYS_CMD_FNC)_Command_DHCPSOnOff,           ": Turn DHCP server on/off"},
+    {"zcll",        (SYS_CMD_FNC)_Command_ZcllOnOff,            ": Turn ZCLL on/off"},
+    {"setdns",      (SYS_CMD_FNC)_Command_PrimaryDNSAddressSet, ": Set DNS address"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
-    {"setip",       _Command_IPAddressSet,         ": Set IP address and mask"},
-    {"setgw",       _Command_GatewayAddressSet,    ": Set Gateway address"},
-    {"setbios",     _Command_BIOSNameSet,          ": Set host's NetBIOS name"},
-    {"setmac",      _Command_MACAddressSet,        ": Set MAC address"},
+    {"setip",       (SYS_CMD_FNC)_Command_IPAddressSet,         ": Set IP address and mask"},
+    {"setgw",       (SYS_CMD_FNC)_Command_GatewayAddressSet,    ": Set Gateway address"},
+    {"setbios",     (SYS_CMD_FNC)_Command_BIOSNameSet,          ": Set host's NetBIOS name"},
+    {"setmac",      (SYS_CMD_FNC)_Command_MACAddressSet,        ": Set MAC address"},
 #if (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
-    {"if",          _Command_NetworkOnOff,         ": Bring an interface up/down"},
+    {"if",          (SYS_CMD_FNC)_Command_NetworkOnOff,         ": Bring an interface up/down"},
 #endif  // (TCPIP_STACK_IF_UP_DOWN_OPERATION != 0)
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
-    {"stack",       _Command_StackOnOff,           ": Stack turn on/off"},
+    {"stack",       (SYS_CMD_FNC)_Command_StackOnOff,           ": Stack turn on/off"},
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-    {"heapinfo",    _Command_HeapInfo,             ": Check heap status"},
+    {"heapinfo",    (SYS_CMD_FNC)_Command_HeapInfo,             ": Check heap status"},
 #if defined(TCPIP_STACK_USE_DHCP_SERVER)
-    {"dhcpsinfo",   _Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
+    {"dhcpsinfo",   (SYS_CMD_FNC)_Command_DHCPLeaseInfo,        ": Display DHCP Server Lease Details" },
 #endif  //  defined(TCPIP_STACK_USE_DHCP_SERVER)
 #if defined(_TCPIP_COMMAND_PING4)
-    {"ping",        _CommandPing,                  ": Ping an IP address"},
+    {"ping",        (SYS_CMD_FNC)_CommandPing,                  ": Ping an IP address"},
 #endif  // defined(_TCPIP_COMMAND_PING4)
 #if defined(_TCPIP_COMMAND_PING6)
-    {"ping6",       _Command_IPv6_Ping,            ": Ping an IPV6 address"},
+    {"ping6",       (SYS_CMD_FNC)_Command_IPv6_Ping,            ": Ping an IPV6 address"},
 #endif  // defined(_TCPIP_COMMAND_PING6)
 #if defined(TCPIP_STACK_USE_IPV4)
-    {"arp",         _CommandArp,                   ": ARP commands"},
+    {"arp",         (SYS_CMD_FNC)_CommandArp,                   ": ARP commands"},
 #endif  // defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_DNS_SERVER)
-    {"dnss",        _Command_DnsServService,       ": DNS server commands"},
+    {"dnss",        (SYS_CMD_FNC)_Command_DnsServService,       ": DNS server commands"},
 #endif
 #if defined(TCPIP_STACK_USE_DNS)
-    {"dnsc",        _Command_DNS_Service,          ": DNS client commands"},
+    {"dnsc",        (SYS_CMD_FNC)_Command_DNS_Service,          ": DNS client commands"},
 #endif
-    {"macinfo",     _Command_MacInfo,              ": Check MAC statistics"},
+    {"macinfo",     (SYS_CMD_FNC)_Command_MacInfo,              ": Check MAC statistics"},
 #if defined(TCPIP_STACK_USE_TFTP_CLIENT)
-    {"tftpc",       _Command_TFTPC_Service,        ": TFTP client Service"},
+    {"tftpc",       (SYS_CMD_FNC)_Command_TFTPC_Service,        ": TFTP client Service"},
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
-    {"tftps",       _Command_TFTPServerOnOff,        ": TFTP Server Service"},
+    {"tftps",       (SYS_CMD_FNC)_Command_TFTPServerOnOff,        ": TFTP Server Service"},
 #endif
 #if defined(TCPIP_STACK_USE_DHCPV6_CLIENT)
-    {"dhcpv6",      _CommandDhcpv6Options,         ": DHCPV6 client commands"},
+    {"dhcpv6",      (SYS_CMD_FNC)_CommandDhcpv6Options,         ": DHCPV6 client commands"},
 #endif
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
-    {"http",        _Command_HttpInfo,             ": HTTP information"},
+    {"http",        (SYS_CMD_FNC)_Command_HttpInfo,             ": HTTP information"},
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
-    {"ssi",         _Command_SsiInfo,              ": SSI information"},
+    {"ssi",         (SYS_CMD_FNC)_Command_SsiInfo,              ": SSI information"},
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
-	{"mail", 	    _CommandMail,			       ": Send Mail Message"},
+	{"mail", 	    (SYS_CMD_FNC)_CommandMail,			       ": Send Mail Message"},
 #endif  // defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
 #if defined(_TCPIP_COMMANDS_MIIM)
-	{"miim", 	    _CommandMiim,			       ": MIIM commands"},
+	{"miim", 	    (SYS_CMD_FNC)_CommandMiim,			       ": MIIM commands"},
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 #if (TCPIP_UDP_COMMANDS)
-    {"udpinfo",     _Command_UdpInfo,              ": Check UDP statistics"},
+    {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
 #endif  // (TCPIP_UDP_COMMANDS)
 #if (TCPIP_TCP_COMMANDS)
-    {"tcpinfo",     _Command_TcpInfo,              ": Check TCP statistics"},
+    {"tcpinfo",     (SYS_CMD_FNC)_Command_TcpInfo,              ": Check TCP statistics"},
 #endif  // (TCPIP_TCP_COMMANDS)
 #if (TCPIP_PACKET_LOG_ENABLE)
-    {"plog",        _Command_PktLog,               ": PKT flight log"},
+    {"plog",        (SYS_CMD_FNC)_Command_PktLog,               ": PKT flight log"},
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
-    {"pktinfo",   _Command_PktInfo,                ": Check PKT allocation"},
+    {"pktinfo",   (SYS_CMD_FNC)_Command_PktInfo,                ": Check PKT allocation"},
 #endif  // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 #if defined(TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
-    {"heaplist",    _Command_HeapList,             ": List heap"},
+    {"heaplist",    (SYS_CMD_FNC)_Command_HeapList,             ": List heap"},
 #endif  // defined(TCPIP_STACK_USE_INTERNAL_HEAP_POOL)
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
-    {"announce",    _Command_Announce,             ": Announce"},
+    {"announce",    (SYS_CMD_FNC)_Command_Announce,             ": Announce"},
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 };
 
@@ -971,6 +975,16 @@ static int _CommandDhcpv6Options(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     if (strcmp(argv[2], "info") == 0)
     {   // DHCPV6 info
         TCPIP_DHCPV6_CLIENT_INFO dhcpv6Info;
+        char dhcpv6StatusBuff[40];
+        IPV6_ADDR dhcpv6DnsBuff[1];
+
+        dhcpv6Info.statusBuff = dhcpv6StatusBuff;
+        dhcpv6Info.statusBuffSize = sizeof(dhcpv6StatusBuff);
+        dhcpv6Info.dnsBuff = dhcpv6DnsBuff;
+        dhcpv6Info.dnsBuffSize = sizeof(dhcpv6DnsBuff);
+        dhcpv6Info.domainBuff = 0;
+        dhcpv6Info.domainBuffSize = 0;
+
 
         if(TCPIP_DHCPV6_ClientInfoGet(netH, &dhcpv6Info))
         {
@@ -2503,112 +2517,124 @@ static int _Command_HeapInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     TCPIP_STACK_HEAP_HANDLE heapH;
     const char* typeMsg;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-
-    if (argc < 2) {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: heapinfo 1/2/3 \r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: heapinfo 1\r\n");
-        return false;
-    }
-
-    TCPIP_STACK_HEAP_TYPE heapType = (TCPIP_STACK_HEAP_TYPE)atoi(argv[1]);
-
-    switch(heapType)
+    unsigned int hType, startType, endType;
+    bool hasArgs = false;
+    static const char* heapTypeStr[TCPIP_STACK_HEAP_TYPES] = 
     {
-        case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP:
-            typeMsg = "internal";
-            break;
+        0,              // TCPIP_STACK_HEAP_TYPE_NONE
+        "internal",     // TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP
+        "pool",         // TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL
+        "external",     // TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP
+    };
 
-        case TCPIP_STACK_HEAP_TYPE_INTERNAL_HEAP_POOL:
-            typeMsg = "pool";
-            break;
-            
-        case TCPIP_STACK_HEAP_TYPE_EXTERNAL_HEAP:
-            typeMsg = "external";
-            break;
 
-        default:
-            typeMsg = "unknown";
-            break;
+    if (argc > 1)
+    {   // there is an arg
+        hType = (unsigned int)atoi(argv[1]);
+        if(hType == TCPIP_STACK_HEAP_TYPE_NONE || hType >= TCPIP_STACK_HEAP_TYPES)
+        {
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "Unknown heap type. Use: [1, %d]\r\n", TCPIP_STACK_HEAP_TYPES - 1);
+            return false;
+        }
+        // valid
+        startType = hType;
+        endType = hType + 1;
+        hasArgs = true;
     }
-    
-    heapH = TCPIP_STACK_HeapHandleGet(heapType, 0);
-    if(heapH == 0)
+    else
+    {   // consider all types
+        startType = TCPIP_STACK_HEAP_TYPE_NONE + 1;
+        endType = TCPIP_STACK_HEAP_TYPES;
+    }
+
+    // display info for each type
+    for(hType = startType; hType < endType; hType++)
     {
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "No heap info exists for type: %s!\r\n", typeMsg);
-        return false;
-    }
+        typeMsg = heapTypeStr[hType];
+        heapH = TCPIP_STACK_HeapHandleGet(hType, 0);
+        if(heapH == 0)
+        {
+            if(hasArgs == true)
+            {
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "No heap info exists for type: %s!\r\n", typeMsg);
+            }
+            continue;
+        }
 
-    heapSize = TCPIP_HEAP_Size(heapH);
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Heap type: %s. Initial created heap size: %d Bytes\r\n", typeMsg, heapSize);
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Allocable block heap size: %d Bytes\r\n", TCPIP_HEAP_MaxSize(heapH));
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "All available heap size: %d Bytes, high watermark: %d\r\n", TCPIP_HEAP_FreeSize(heapH), TCPIP_HEAP_HighWatermark(heapH));
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Last heap error: 0x%x\r\n", TCPIP_HEAP_LastError(heapH));
+        // display heap info
+        heapSize = TCPIP_HEAP_Size(heapH);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Heap type: %s. Initial created heap size: %d Bytes\r\n", typeMsg, heapSize);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Allocable block heap size: %d Bytes\r\n", TCPIP_HEAP_MaxSize(heapH));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "All available heap size: %d Bytes, high watermark: %d\r\n", TCPIP_HEAP_FreeSize(heapH), TCPIP_HEAP_HighWatermark(heapH));
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Last heap error: 0x%x\r\n", TCPIP_HEAP_LastError(heapH));
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)    
-    nTraces = TCPIP_HEAP_TraceGetEntriesNo(heapH, true);
-    if(nTraces)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Trace info: \r\n");
-        nEntries = TCPIP_HEAP_TraceGetEntriesNo(heapH, false);
-        for(ix = 0; ix < nEntries; ix++)
+        nTraces = TCPIP_HEAP_TraceGetEntriesNo(heapH, true);
+        if(nTraces)
         {
-            if(TCPIP_HEAP_TraceGetEntry(heapH, ix, &tEntry))
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Trace info: \r\n");
+            nEntries = TCPIP_HEAP_TraceGetEntriesNo(heapH, false);
+            for(ix = 0; ix < nEntries; ix++)
             {
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "Module: %4d, totAllocated: %5d, currAllocated: %5d, totFailed: %5d, maxFailed: %5d \r\n", tEntry.moduleId, tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
+                if(TCPIP_HEAP_TraceGetEntry(heapH, ix, &tEntry))
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "Module: %4d, totAllocated: %5d, currAllocated: %5d, totFailed: %5d, maxFailed: %5d \r\n", tEntry.moduleId, tEntry.totAllocated, tEntry.currAllocated, tEntry.totFailed, tEntry.maxFailed);
+                }
+
             }
-                    
         }
-    }
 #else
-    nTraces = 0;
+        nTraces = 0;
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE)    
 
-    if(nTraces == 0)
-    {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "No Trace info exists.\r\n");
-    }
-
-#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    nEntries = TCPIP_HEAP_DistGetEntriesNo(heapH);
-    if(nEntries)
-    {
-        int     modIx;
-        TCPIP_HEAP_DIST_ENTRY distEntry;
-        int currLowHitMem = 0;
-        int currHiHitMem = 0;
-
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TCPIP Heap distribution: \n\r");
-        
-        for(ix = 0; ix < nEntries; ix++)
+        if(nTraces == 0)
         {
-            TCPIP_HEAP_DistGetEntry(heapH, ix, &distEntry);
-            
-            int entryPrint = 0;
-            struct moduleDist* pMDist = distEntry.modDist;
-            for(modIx = 0; modIx < sizeof(distEntry.modDist)/sizeof(*distEntry.modDist); modIx++, pMDist++)
-            {
-                if(pMDist->modHits)
-                {
-                    if(entryPrint == 0)
-                    {
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "[%4d,    %5d]:\n\r", distEntry.lowLimit, distEntry.highLimit);
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tcurr hits: %d, \n\r", distEntry.currHits);
-                        currLowHitMem += distEntry.currHits * distEntry.lowLimit;
-                        currHiHitMem += distEntry.currHits * distEntry.highLimit;
-                        entryPrint = 1;
-                    }
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: %d, \thits: %d, \n\r", pMDist->modId, pMDist->modHits);
-                }
-            }
-            if(distEntry.gHits)
-            {
-                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: xx \thits: %d, \n\r", distEntry.gHits);
-            }
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "No Trace info exists.\r\n");
         }
 
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "curr Low Lim: %d, curr Hi Lim: %d, max Free: %d, min Free: %d\n\r", currLowHitMem, currHiHitMem, heapSize - currLowHitMem, heapSize - currHiHitMem);
-    }
+#if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
+        nEntries = TCPIP_HEAP_DistGetEntriesNo(heapH);
+        if(nEntries)
+        {
+            int     modIx;
+            TCPIP_HEAP_DIST_ENTRY distEntry;
+            int currLowHitMem = 0;
+            int currHiHitMem = 0;
+
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TCPIP Heap distribution: \n\r");
+
+            for(ix = 0; ix < nEntries; ix++)
+            {
+                TCPIP_HEAP_DistGetEntry(heapH, ix, &distEntry);
+
+                int entryPrint = 0;
+                struct moduleDist* pMDist = distEntry.modDist;
+                for(modIx = 0; modIx < sizeof(distEntry.modDist)/sizeof(*distEntry.modDist); modIx++, pMDist++)
+                {
+                    if(pMDist->modHits)
+                    {
+                        if(entryPrint == 0)
+                        {
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "[%4d,    %5d]:\n\r", distEntry.lowLimit, distEntry.highLimit);
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tcurr hits: %d, \n\r", distEntry.currHits);
+                            currLowHitMem += distEntry.currHits * distEntry.lowLimit;
+                            currHiHitMem += distEntry.currHits * distEntry.highLimit;
+                            entryPrint = 1;
+                        }
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: %d, \thits: %d, \n\r", pMDist->modId, pMDist->modHits);
+                    }
+                }
+                if(distEntry.gHits)
+                {
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: xx \thits: %d, \n\r", distEntry.gHits);
+                }
+            }
+
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "curr Low Lim: %d, curr Hi Lim: %d, max Free: %d, min Free: %d\n\r", currLowHitMem, currHiHitMem, heapSize - currLowHitMem, heapSize - currHiHitMem);
+        }
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
+
+    }
 
     return true;
 }
@@ -3552,13 +3578,14 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
     if (argc < 2)
     {
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: http info/stat/disconnect\r\n");
         return false;
     }
 
+    httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
+
     if(strcmp(argv[1], "info") == 0)
     {
-        httpActiveConn = TCPIP_HTTP_NET_ActiveConnectionCountGet(&httpOpenConn);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections - active: %d, open: %d\r\n", httpActiveConn, httpOpenConn);
 
         for(connIx = 0; connIx < httpOpenConn; connIx++)
@@ -3586,6 +3613,17 @@ static int _Command_HttpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
         
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP connections: %d, active: %d, open: %d\r\n", httpStat.nConns, httpStat.nActiveConns, httpStat.nOpenConns);
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP pool empty: %d, max depth: %d, parse retries: %d\r\n", httpStat.dynPoolEmpty, httpStat.maxRecurseDepth, httpStat.dynParseRetry);
+    }
+    else if(strcmp(argv[1], "disconnect") == 0)
+    {
+        for(connIx = 0; connIx < httpOpenConn; connIx++)
+        {
+            TCPIP_HTTP_NET_CONN_HANDLE connHandle = TCPIP_HTTP_NET_ConnectionHandleGet(connIx);
+            NET_PRES_SKT_HANDLE_T skt_h = TCPIP_HTTP_NET_ConnectionSocketGet(connHandle);
+            NET_PRES_SocketDisconnect(skt_h);
+        }
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "HTTP disconnected %d connections, active: %d\r\n", httpOpenConn, httpActiveConn);
     }
     else
     {
@@ -4081,13 +4119,7 @@ static void _CommandMiimSetup(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoPara
         return;
     }
 
-#if defined (__PIC32MZ__)
-    miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
-#elif defined (__PIC32C__) || defined(__SAMA5D2__)
-    miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
-#else
-    miimSetup.hostClockFreq = SYS_CLK_SystemFrequencyGet();
-#endif
+    miimSetup.hostClockFreq = (uint32_t)TCPIP_INTMAC_PERIPHERAL_CLK;
     miimSetup.maxBusFreq = 2000000;
     miimSetup.setupFlags = 0;
 
@@ -4233,7 +4265,8 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     if(argc < 2)
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog show <all/unack/ack/err> - Displays the log entries: unack/pending (default), ack, all or error ones\r\n");
-        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog clear <ack/all> - Clears the log service\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog clear <all> - Clears the acknowledged log entries + persistent\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog reset <all> - Resets the log data + all masks\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog handler on/off <all> - Turns on/off the local log handler\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog type RX/TX/RXTX <clr> - Enables the log for RX, TX or both RX and TX packets\r\n");
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: plog net and none/all/ifIx ifIx ... or none/all/ifIx ifIx.... <clr> - Updates the network log mask for the interface list\r\n");
@@ -4250,6 +4283,10 @@ static int _Command_PktLog(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     else if(strcmp(argv[1], "clear") == 0)
     {
         _CommandPktLogClear(pCmdIO, argc, argv);
+    }
+    else if(strcmp(argv[1], "reset") == 0)
+    {
+        _CommandPktLogReset(pCmdIO, argc, argv);
     }
     else if(strcmp(argv[1], "handler") == 0)
     {
@@ -4400,7 +4437,7 @@ static void _CommandPktLogInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
 
 static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    // "Usage: plog clear <ack/all>"
+    // "Usage: plog clear <all>"
     const void* cmdIoParam = pCmdIO->cmdIoParam;
     bool clearPersist = false;
 
@@ -4409,10 +4446,6 @@ static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
         if(strcmp(argv[2], "all") == 0)
         {
             clearPersist = true;
-        }
-        else if(strcmp(argv[2], "ack") == 0)
-        {   // default
-            clearPersist = false;
         }
         else
         {   // unknown
@@ -4425,6 +4458,31 @@ static void _CommandPktLogClear(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** ar
 
     TCPIP_PKT_FlightLogClear(clearPersist);
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: Cleared the %s log\r\n", clearPersist ? "whole" : "acknowledged");
+}
+
+static void _CommandPktLogReset(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{
+    // "Usage: plog reset <all>"
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    bool clearMasks = false;
+
+    while(argc >= 3)
+    {
+        if(strcmp(argv[2], "all") == 0)
+        {
+            clearMasks = true;
+        }
+        else
+        {   // unknown
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "pktlog: Unknown parameter\r\n");
+            return;
+        }
+
+        break;
+    }
+
+    TCPIP_PKT_FlightLogReset(clearMasks);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "pktlog: Reset the %s log\r\n", clearMasks ? "whole" : "data");
 }
 
 static void _CommandPktLogHandler(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
@@ -4692,7 +4750,7 @@ static CMD_PKT_XTRACT_RES _CommandPktExtractMasks(int argc, char** argv, uint32_
 static void _CommandPktLogMask(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
     int logMaskOp;  // 1: net; 2: persist; 3: module; 4: socket; 0 error
-    uint32_t andMask, orMask;
+    uint32_t andMask = 0, orMask = 0;
     CMD_PKT_XTRACT_RES xtRes;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
