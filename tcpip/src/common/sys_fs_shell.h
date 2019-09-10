@@ -98,8 +98,8 @@ typedef struct _tag_SYS_FS_SHELL_OBJ
     // directory open 
     SYS_FS_HANDLE (*dirOpen)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname);
     
-    // Make directory 
-    SYS_FS_HANDLE (*MakeDir)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname);
+    // directory make 
+    SYS_FS_HANDLE (*dirMake)(const struct _tag_SYS_FS_SHELL_OBJ* pObj, const char *fname);
 
     // common file/dir operations, based on a handle
     // the file shell object is not intended as a complete replacement of the SYS_FS file handle operations
