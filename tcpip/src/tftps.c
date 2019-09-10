@@ -52,9 +52,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
-
+#include "tcpip/src/common/sys_fs_shell.h"
 #include "tftps_private.h"
-#include "tcpip/src/common/sys_fs_wrapper.h"
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -64,7 +64,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define mMIN(a, b)  ((a<b)?a:b)
 
-
+const char *tftpsLocalWebPath = LOCAL_WEBSITE_PATH;
 static TFTPS_CB            gTftpClientCB[TCPIP_TFTPS_CLIENT_NUMBER];
 static TCPIP_TFTPS_DCPT    gTftpsDcpt;
 static int                gTftpsInitCount = 0;
@@ -87,7 +87,7 @@ static uint32_t _TFTPS_Retransmit(TFTPS_CB *tftp_con);
 static TCPIP_TFTPS_RESULT _TFTPS_RRecv(TFTPS_CB   **tftp_con,uint16_t *byteReceived);
 static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint32_t bytes_received);
 static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes_received);
-static void _TFTPS_ReleaseDataSocket(TFTPS_CB   *tftp_con);
+static void _TFTPS_ReleaseResource(TFTPS_CB   *tftp_con);
 static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received);
 static TCPIP_TFTPS_RESULT _TFTPS_Error(UDP_SOCKET skt,uint16_t error_code, char *err_string);
 static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t bytes_received, 
@@ -99,7 +99,8 @@ static TCPIP_TFTPS_RESULT _TFTPS_validateClientRquest(UDP_SOCKET_INFO *sktInfo,T
 static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con);
 static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con);
 static bool _TFTPS_Send_Data_State(TFTPS_CB* tftp_con);
-
+static bool _TFTPS_ShellRegister(TFTPS_CB   *pClientCB);
+static void _TFTPS_ShellDeRegister(TFTPS_CB   *pClientCB);
 // TFTPS server state function
 // returns >= 0 the size of the option added
 // returns < 0 for failure
@@ -134,7 +135,7 @@ static bool _TFTPS_Recv_Request_State(TFTPS_CB* tftp_con)
         /* if return is equal to TFTPS_RES_CLIENT_ERROR, then close the socket*/
         if(res == TFTPS_RES_CLIENT_ERROR)
         {
-            _TFTPS_ReleaseDataSocket(tftp_con);
+            _TFTPS_ReleaseResource(tftp_con);
         }
         return 0;
     }
@@ -212,7 +213,7 @@ static bool _TFTPS_Process_Data_State(TFTPS_CB* tftp_con)
         // send event notification after file transfer completion
         _TFTPSNotifyUserClients(tftp_con,TCPIP_TFTPS_EVENT_WRITE_COMPLETED);
         // release data socket, close file descriptor and close other parameters
-        _TFTPS_ReleaseDataSocket(tftp_con);                    
+        _TFTPS_ReleaseResource(tftp_con);                    
     }
     tftp_con->smState = SM_TFTPS_RRECV;
     
@@ -359,7 +360,7 @@ bool TCPIP_TFTPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
             memset(&gTftpClientCB[client_cnt],0,sizeof(gTftpClientCB[client_cnt]));
             gTftpClientCB[client_cnt].status = TFTPS_CB_FREE;
             gTftpClientCB[client_cnt].cSkt = INVALID_UDP_SOCKET;
-            gTftpClientCB[client_cnt].file_desc = SYS_FS_HANDLE_INVALID;
+            gTftpClientCB[client_cnt].file_desc = SYS_FS_HANDLE_INVALID;            
         }
 #if (TCPIP_TFTPS_USER_NOTIFICATION != 0)
         if(TCPIP_Notification_Initialize(&gTftpsDcpt.tftpsRegisteredUsers) == false)
@@ -372,9 +373,88 @@ bool TCPIP_TFTPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
     }
     if(initFail)
     {
+        TCPIP_TFTPS_Cleanup();
         return false;
     }
     return(true);
+}
+
+static bool _TFTPS_ShellRegister(TFTPS_CB   *pClientCB)
+{
+    SYS_FS_SHELL_RES    res;
+    // SYSFS shell registration object
+    if(pClientCB != NULL)
+    {
+        if(pClientCB->tftps_shell_obj == 0)
+        {
+            pClientCB->tftps_shell_obj = (SYS_FS_SHELL_OBJ  *)SYS_FS_Shell_Create(tftpsLocalWebPath,0,0,0,&res);
+            if( pClientCB->tftps_shell_obj == 0)
+            {
+                SYS_ERROR(SYS_ERROR_ERROR, " TFTP Server: Wrapper object failure : %d ",res);
+                return false;
+            }
+        }
+    }
+    
+    return true;
+}
+
+static void _TFTPS_ShellDeRegister(TFTPS_CB   *pClientCB)
+{
+    // clean up Shell registered clients    
+
+    if(pClientCB != NULL)
+    {
+        // Wrapper object cleanup
+        if(pClientCB->tftps_shell_obj != 0)
+        {
+            (pClientCB->tftps_shell_obj->delete)(pClientCB->tftps_shell_obj);
+            pClientCB->tftps_shell_obj = 0;
+        }
+    }
+}
+
+/*
+ * clean up the TFTP server that includes close the TFTP server socket,
+ * deregister UDP signal handle, 
+ * deregister TFTP server stack signal handle
+ * de-initialize notification
+ */
+static void TCPIP_TFTPS_Cleanup(void)
+{
+    TCPIP_TFTPS_DCPT        *pTftpDcpt=NULL;
+    uint8_t                 clientCnt=0;
+    TFTPS_CB                *pClientCB=NULL;
+    pTftpDcpt = &gTftpsDcpt;
+    if(pTftpDcpt->uSkt != INVALID_UDP_SOCKET)
+    {
+        // remove UDP signal handler
+        if(gUdpTftpServerRXSigHandle)
+        {
+            TCPIP_UDP_SignalHandlerDeregister(pTftpDcpt->uSkt,gUdpTftpServerRXSigHandle);
+            gUdpTftpServerRXSigHandle = 0;
+        }
+        TCPIP_UDP_Close(pTftpDcpt->uSkt);
+        pTftpDcpt->uSkt = INVALID_UDP_SOCKET;
+    }
+
+    if(gTftpsSignalHandle)
+    {
+        _TCPIPStackSignalHandlerDeregister(gTftpsSignalHandle);
+        gTftpsSignalHandle = 0;
+    }
+    
+    for(clientCnt=0;clientCnt<TCPIP_TFTPS_CLIENT_NUMBER;clientCnt++)
+    {
+        pClientCB = &gTftpClientCB[clientCnt];
+        _TFTPS_ShellDeRegister(pClientCB);
+    }
+    
+    // Remove TFTP client register users
+#if (TCPIP_TFTPS_USER_NOTIFICATION != 0)
+    TCPIP_Notification_Deinitialize(&pTftpDcpt->tftpsRegisteredUsers, pTftpDcpt->memH);
+#endif  // (TCPIP_TFTPS_USER_NOTIFICATION != 0)
+
 }
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
@@ -397,39 +477,7 @@ void TCPIP_TFTPS_Deinitialize (const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     }
 }
 
-/*
- * clean up the TFTP server that includes close the TFTP server socket,
- * deregister UDP signal handle, 
- * deregister TFTP server stack signal handle
- * de-initialize notification
- */
-static void TCPIP_TFTPS_Cleanup(void)
-{
-    TCPIP_TFTPS_DCPT     *pTftpDcpt=NULL;
-    pTftpDcpt = &gTftpsDcpt;
-    if(pTftpDcpt->uSkt != INVALID_UDP_SOCKET)
-    {
-        // remove UDP signal handler
-        if(gUdpTftpServerRXSigHandle)
-        {
-            TCPIP_UDP_SignalHandlerDeregister(pTftpDcpt->uSkt,gUdpTftpServerRXSigHandle);
-            gUdpTftpServerRXSigHandle = 0;
-        }
-        TCPIP_UDP_Close(pTftpDcpt->uSkt);
-        pTftpDcpt->uSkt = INVALID_UDP_SOCKET;
-    }
 
-    if(gTftpsSignalHandle)
-    {
-        _TCPIPStackSignalHandlerDeregister(gTftpsSignalHandle);
-        gTftpsSignalHandle = 0;
-    }
-    // Remove TFTP client register users
-#if (TCPIP_TFTPS_USER_NOTIFICATION != 0)
-    TCPIP_Notification_Deinitialize(&pTftpDcpt->tftpsRegisteredUsers, pTftpDcpt->memH);
-#endif  // (TCPIP_TFTPS_USER_NOTIFICATION != 0)
-
-}
 #endif
 
 /*
@@ -523,7 +571,7 @@ static void TCPIP_TFTPS_Process(void)
         else
         {   // wrong internal state!
             // if the client block is reached in a undefined state, then release that client .
-             _TFTPS_ReleaseDataSocket(tftp_con);
+             _TFTPS_ReleaseResource(tftp_con);
         }        
     }
 } /* end TFTP_Server_Task */
@@ -643,18 +691,21 @@ static TFTPS_CB  *_TFTPS_GetClientCB(uint8_t client_cnt)
 }
 
 // Release the client communication socket and free the data base.
-static void _TFTPS_ReleaseDataSocket(TFTPS_CB   *tftp_con)
+static void _TFTPS_ReleaseResource(TFTPS_CB   *tftp_con)
 {
     if(tftp_con->cSkt != INVALID_UDP_SOCKET)
     {
         TCPIP_UDP_Close(tftp_con->cSkt);
         tftp_con->cSkt = INVALID_UDP_SOCKET;
     }
+    // Release TFTP server Shell registered Users
+    _TFTPS_ShellDeRegister(tftp_con);
+    
     tftp_con->status = TFTPS_CB_FREE;
     tftp_con->retransmits = 0;
     if(tftp_con->file_desc != SYS_FS_HANDLE_INVALID)
     {
-        SYS_FS_FileClose(tftp_con->file_desc);
+        tftp_con->tftps_shell_obj->fileClose(tftp_con->tftps_shell_obj,tftp_con->file_desc);
         tftp_con->file_desc = SYS_FS_HANDLE_INVALID;
     }
     tftp_con->callbackPos = 0;
@@ -793,7 +844,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_RRecv_WriteAccess(TFTPS_CB  *tftp_con,uint16_t 
     {
         if(nBytes == 0)
         {
-            _TFTPS_ReleaseDataSocket(tftp_con);
+            _TFTPS_ReleaseResource(tftp_con);
         }
         return res;
     }
@@ -856,8 +907,14 @@ static TCPIP_TFTPS_RESULT _TFTPS_RRecv(TFTPS_CB   **tftp_con,uint16_t *byteRecei
         if(_TFTPS_CreateClientSocket(pTftpCon,&sktInfo,pTftpDcpt) != true)
         {
             // release the client block, as client socket failed while opening.
-            _TFTPS_ReleaseDataSocket(pTftpCon);
+            _TFTPS_ReleaseResource(pTftpCon);
             return TFTPS_RES_SKT_ERR;
+        }
+        if(_TFTPS_ShellRegister(pTftpCon) != true)
+        {
+            // release the client block, as client socket failed while opening.
+            _TFTPS_ReleaseResource(pTftpCon);
+            return TFTPS_RES_MEMORY_ALLOC_ERR;
         }
         *tftp_con = pTftpCon;
     }
@@ -947,12 +1004,12 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                 p = rxBuf + TFTP_DATA_OFFSET;
                 /* Calculate the amount of data in the packet. */
                 wCnt = wCnt - TCPIP_TFTP_HEADER_MINSIZE;
-                SYS_FS_FileSeek(tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);                
+                tftp_con->tftps_shell_obj->fileSeek(tftp_con->tftps_shell_obj,tftp_con->file_desc,(int32_t)tftp_con->callbackPos,SYS_FS_SEEK_SET);
                 for(maxRecvByte=(bytes_received-TFTP_DATA_OFFSET);maxRecvByte>0;)
                 {
                     if(wCnt != 0)
                     {                        
-                        if(SYS_FS_FileWrite(tftp_con->file_desc,p,wCnt) == SYS_FS_HANDLE_INVALID)
+                        if(tftp_con->tftps_shell_obj->fileWrite(tftp_con->tftps_shell_obj,tftp_con->file_desc,p,wCnt) == SYS_FS_HANDLE_INVALID) 
                         {                                              
                             break;
                         }
@@ -965,7 +1022,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                         {
                             wCnt = TCPIP_UDP_ArrayGet(tftp_con->cSkt,rxBuf,mMIN(maxRecvByte, (bufferSize-TCPIP_TFTP_HEADER_MINSIZE)));
                         }
-                        tftp_con->callbackPos = SYS_FS_FileTell(tftp_con->file_desc);
+                        tftp_con->callbackPos = tftp_con->tftps_shell_obj->fileTell(tftp_con->tftps_shell_obj,tftp_con->file_desc);
                         p=rxBuf;
                         // send the error packet if SYS_FS_FileTell returns -1
                         if(tftp_con->callbackPos == -1)
@@ -991,7 +1048,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Data(TFTPS_CB *tftp_con, uint32_t bytes
                     _TFTPS_Ack(tftp_con);
                    
                     tftp_con->status = TFTPS_TRANSFER_COMPLETE;                            
-                    _TFTPS_ReleaseDataSocket(tftp_con);                    
+                    _TFTPS_ReleaseResource(tftp_con);                    
                 }        
 
                 /* Initialize retransmits. */
@@ -1087,7 +1144,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_ReadReqPacket(TFTPS_CB *tftp_con, uint3
     }
     count++;
 
-    file_desc = SYS_FS_FileOpen_Wrapper((const char*)tftp_con->file_name,SYS_FS_FILE_OPEN_READ);
+    file_desc = tftp_con->tftps_shell_obj->fileOpen(tftp_con->tftps_shell_obj,(char*)tftp_con->file_name,SYS_FS_FILE_OPEN_READ);
     if (file_desc == SYS_FS_HANDLE_INVALID)
     {
         _TFTPS_Error(tftp_con->cSkt, TFTP_FILE_NOT_FOUND_ERROR, "Error: File not Found");
@@ -1185,7 +1242,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_WriteReqPacket(TFTPS_CB *tftp_con, uint
     count++;
 
     /*  Retrieve File_Descriptor */
-    file_desc = SYS_FS_FileOpen_Wrapper((const char*)tftp_con->file_name,SYS_FS_FILE_OPEN_WRITE);
+    file_desc = tftp_con->tftps_shell_obj->fileOpen(tftp_con->tftps_shell_obj,(char*)tftp_con->file_name,SYS_FS_FILE_OPEN_WRITE);
     if (file_desc == SYS_FS_HANDLE_INVALID)
     {
         _TFTPS_Error(tftp_con->cSkt, TFTP_FILE_NOT_FOUND_ERROR, "Error: File not Found");
@@ -1295,7 +1352,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_RequestPacket(TFTPS_CB *tftp_con, uint3
             // discard the server socket received packet
             TCPIP_UDP_Discard(pTftpDcpt->uSkt);
             // close client socket ?
-            _TFTPS_ReleaseDataSocket(tftp_con);
+            _TFTPS_ReleaseResource(tftp_con);
         }
     }
     
@@ -1469,7 +1526,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Process_Ack(TFTPS_CB *tftp_con,uint16_t bytes_r
                 // send event notification after file transfer completion
                 _TFTPSNotifyUserClients(tftp_con,TCPIP_TFTPS_EVENT_READ_COMPLETED);
                  // release data socket, close file descriptor and close other parameters
-                _TFTPS_ReleaseDataSocket(tftp_con);
+                _TFTPS_ReleaseResource(tftp_con);
                 break;
             }
             /* Make sure the block number and TID are correct. */
@@ -1556,7 +1613,7 @@ static uint32_t _TFTPS_Send_Data(TFTPS_CB *tftp_con,uint16_t bytes_received)
     wrPtr=wrPtr+TFTP_DATA_OFFSET;
     maxReadByte = tftp_con->options.blksize;
 /*  Read data from the file into the the TFTP CB send buffer. */     
-	wCnt = SYS_FS_FileRead(tftp_con->file_desc, wrPtr,maxReadByte);
+    wCnt = tftp_con->tftps_shell_obj->fileRead(tftp_con->tftps_shell_obj,tftp_con->file_desc,wrPtr,maxReadByte);
     
     /* If this is the last packet update the status. */
     if (wCnt < tftp_con->options.blksize)
@@ -1779,7 +1836,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t byte
         {
             if ((uint32_t)atoi(value_holder) == 0)
             {
-                if ((tftp_con->options.tsize = SYS_FS_FileSize(tftp_con->file_desc)) > 0)
+                if((tftp_con->options.tsize = tftp_con->tftps_shell_obj->fileSize(tftp_con->tftps_shell_obj,tftp_con->file_desc)) > 0)
                 {
                     /* We only return a tsize acknowledgement on a RRQ */
                     tftp_con->options.tftpoptionAckflag.bits.tsize_ack = true;

@@ -37,13 +37,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
 // DOM-IGNORE-END
 
 #ifndef __FTP_PRIVATE_H
@@ -128,6 +121,9 @@ typedef enum _TCPIP_FTP_CMD
     TCPIP_FTP_CMD_MLSD,
     TCPIP_FTP_CMD_DELE,
     TCPIP_FTP_CMD_NOOP,
+    TCPIP_FTP_CMD_MKD,
+    TCPIP_FTP_CMD_XMKD,
+    TCPIP_FTP_CMD_XRMD,
     TCPIP_FTP_CMD_UNKNOWN,
     TCPIP_FTP_CMD_NONE,
    
@@ -152,7 +148,7 @@ typedef enum _TCPIP_FTP_RESP
 	TCPIP_FTP_RESP_DATA_NO_SOCKET,
 	TCPIP_FTP_RESP_PWD,
     TCPIP_FTP_RESP_OK,
-    TCPIP_FTP_RESP_FILE_NOT_EXIST,
+    TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN,
     TCPIP_FTP_RESP_FILE_IS_PRESENT,
     TCPIP_FTP_RESP_ENTER_PASV_MODE,
     TCPIP_FTP_RESP_FILE_ACTION_SUCCESSFUL_CLOSING_DATA_CONNECTION,
@@ -180,6 +176,7 @@ typedef union _TCPIP_FTP_Flags
 //TCPIP FTP descriptor details
 typedef struct _TCPIP_FTP_DCPT
 {
+    SYS_FS_SHELL_OBJ    *ftp_shell_obj;          // FTP wrapper object
     TCPIP_FTP_SM   		ftpSm;     // current status
     TCP_SOCKET          ftpCmdskt;    // associated FTP command socket
     TCP_SOCKET          ftpDataskt;    // associated FTP Data port socket
@@ -209,8 +206,8 @@ typedef struct _TCPIP_FTP_DCPT
 
 typedef struct  _TAG_FTP_LIST_NODE
 {
-    struct _TAG_DNS_LIST_NODE*      next;	// next node in list
-                                                // makes it valid SGL_LIST_NODE node
+    struct _TAG_FTP_LIST_NODE*      next;	// next node in list
+                                            // makes it valid SGL_LIST_NODE node
     SYS_FS_FSTAT        file_stat;
     bool        lfNamePresent;
 
