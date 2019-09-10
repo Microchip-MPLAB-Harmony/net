@@ -102,10 +102,10 @@ def instantiateComponent(tcpipSysFsWrapperComponent):
 	tcpipSysFsHeaderFtl.setMarkup(True)
 	tcpipSysFsHeaderFtl.setType("STRING")
 
-	# Add sys_fs_wrapper.c file
+	# Add sys_fs_shell.c file
 	tcpipSysFsWrapperSourceFile = tcpipSysFsWrapperComponent.createFileSymbol(None, None)
-	tcpipSysFsWrapperSourceFile.setSourcePath("tcpip/src/common/sys_fs_wrapper.c")
-	tcpipSysFsWrapperSourceFile.setOutputName("sys_fs_wrapper.c")
+	tcpipSysFsWrapperSourceFile.setSourcePath("tcpip/src/common/sys_fs_shell.c")
+	tcpipSysFsWrapperSourceFile.setOutputName("sys_fs_shell.c")
 	tcpipSysFsWrapperSourceFile.setOverwrite(True)
 	tcpipSysFsWrapperSourceFile.setDestPath("library/tcpip/src/common/")
 	tcpipSysFsWrapperSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
