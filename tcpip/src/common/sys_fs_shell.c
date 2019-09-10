@@ -77,6 +77,7 @@ static SYS_FS_HANDLE Shell_FileOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fn
 static SYS_FS_RESULT Shell_FileStat(const SYS_FS_SHELL_OBJ* pObj, const char *fname, SYS_FS_FSTAT *buf);
 static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *fname);
 static SYS_FS_HANDLE Shell_DirOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fname);
+static SYS_FS_HANDLE Shell_MkDir(const SYS_FS_SHELL_OBJ* pObj, const char *fname);
 static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *cwd);
 static SYS_FS_SHELL_RES Shell_LastError(const SYS_FS_SHELL_OBJ* pObj);
 static SYS_FS_SHELL_RES Shell_Delete(const SYS_FS_SHELL_OBJ* pObj);
@@ -103,6 +104,7 @@ static const SYS_FS_SHELL_OBJ  default_shell_obj =
     .fileStat   = Shell_FileStat, 
     .fileDelete = Shell_FileDelete,
     .dirOpen    = Shell_DirOpen,
+    .MakeDir    = Shell_MkDir,
     .fileClose  = Shell_FileClose,
     .dirClose   = Shell_DirClose,
     .fileSize   = Shell_FileSize,
@@ -330,6 +332,7 @@ const SYS_FS_SHELL_OBJ* SYS_FS_Shell_Create(const char* rootDir, SYS_FS_SHELL_CR
 
 static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path)
 {
+    SYS_FS_HANDLE fsHandle = SYS_FS_HANDLE_INVALID;
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(!pShell)
     {
@@ -371,6 +374,21 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path
     {   // failed
         return _Shell_ObjectUnlock(pShell, absRes);
     }
+    if(absRes == SYS_FS_SHELL_RES_OK)
+    {
+        // To avoid error which occurs when we change the directory 
+        // which is not present. To avoid this , SYS_FS_DirOpen() can be used to 
+        // check if the new directory path , is a valid directory.
+        fsHandle = SYS_FS_DirOpen(abs_buff);
+        if(fsHandle == SYS_FS_HANDLE_INVALID)
+        {
+             return _Shell_ObjectUnlock(pShell, absRes);
+        }
+        // after checking  we require to close this directory path.
+        SYS_FS_DirClose(fsHandle);        
+    }
+    
+    
 
     strcpy(pShell->cwd, abs_buff + pShell->rootLen);
     int len_cwd = strlen(pShell->cwd);
@@ -381,6 +399,7 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path
         *++end_cwd = 0;
         len_cwd++;
     }
+    
     pShell->cwdLen = len_cwd;
     return _Shell_ObjectUnlock(pShell, SYS_FS_SHELL_RES_OK);
 }
@@ -436,6 +455,24 @@ static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *
         if(absRes == SYS_FS_SHELL_RES_OK)
         {
             fsHandle = SYS_FS_FileDirectoryRemove(absBuff);
+        }
+    }
+    return fsHandle;
+}
+
+static SYS_FS_HANDLE Shell_MkDir(const SYS_FS_SHELL_OBJ* pObj, const char *fname)
+{
+    SYS_FS_HANDLE fsHandle = SYS_FS_HANDLE_INVALID;
+    SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
+    if(pShell)
+    {
+        char absBuff[SYS_FS_MAX_PATH + 1];
+        SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
+        _Shell_ObjectUnlock(pShell, absRes);
+
+        if(absRes == SYS_FS_SHELL_RES_OK)
+        {
+            fsHandle = SYS_FS_DirectoryMake(absBuff);
         }
     }
     return fsHandle;
