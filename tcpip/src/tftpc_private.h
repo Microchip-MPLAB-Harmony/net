@@ -31,14 +31,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-
 #ifndef __TFTPC_PRIVATE_H_
 #define __TFTPC_PRIVATE_H_
 
@@ -112,6 +104,7 @@ typedef struct
     char fileName[TCPIP_TFTP_CLIENT_MAX_HOSTNAME_LEN+1]; // file name for upload and download
     int32_t		fileDescr; // File descriptor
     uint32_t 		callbackPos;
+    SYS_FS_SHELL_OBJ    *tftpc_shell_obj;          // TFTP Client wrapper object
 } TFTP_CLIENT_VARS;
 
 // TFTP client event registration
