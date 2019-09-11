@@ -1450,10 +1450,10 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTcpipEthernetHeaderFile.setType("HEADER")
     tcpipStackTcpipEthernetHeaderFile.setOverwrite(True)
     
-    # Add sys_fs_wrapper.h file to project
+    # Add sys_fs_shell.h file to project
     tcpipStackSysFsWrapperHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysFsWrapperHeaderFile.setSourcePath("tcpip/src/common/sys_fs_wrapper.h")
-    tcpipStackSysFsWrapperHeaderFile.setOutputName("sys_fs_wrapper.h")
+    tcpipStackSysFsWrapperHeaderFile.setSourcePath("tcpip/src/common/sys_fs_shell.h")
+    tcpipStackSysFsWrapperHeaderFile.setOutputName("sys_fs_shell.h")
     tcpipStackSysFsWrapperHeaderFile.setDestPath("library/tcpip/src/common/")
     tcpipStackSysFsWrapperHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
     tcpipStackSysFsWrapperHeaderFile.setType("HEADER")
