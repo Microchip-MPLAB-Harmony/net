@@ -125,15 +125,6 @@ static const char * const sTCPIPFTPRespStr[] =
     "",  // TCPIP_FTP_RESP_NONE
 };
 
-/*
-* FTP path type 
-*/
-typedef enum _TCPIP_FTP_PATH_e
-{
-	FTP_FILE_PATH=0,				// FTP file access using File Path 
-    FTP_DIRC_PATH                   // FTP file access using Directory Path
-}TCPIP_FTP_PATH;
-
 static char *month[]= {"Jan\0","Feb\0","Mar\0","Apr\0","May\0","Jun\0","Jul\0","Aug\0","Sep\0","Oct\0","Nov\0","Dec\0"};
 
 // NLST arguments
@@ -219,7 +210,7 @@ static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt)
     SYS_FS_SHELL_RES fsRes;
   
 
-    fsRes = (pFTPDcpt->ftp_shell_obj->DirMake)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
+    fsRes = (pFTPDcpt->ftp_shell_obj->dirMake)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
     if(fsRes != SYS_FS_SHELL_RES_OK)
     {// No such directory
         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
