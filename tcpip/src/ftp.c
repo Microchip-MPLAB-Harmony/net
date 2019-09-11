@@ -219,7 +219,7 @@ static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt)
     SYS_FS_SHELL_RES fsRes;
   
 
-    fsRes = (pFTPDcpt->ftp_shell_obj->MakeDir)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
+    fsRes = (pFTPDcpt->ftp_shell_obj->DirMake)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
     if(fsRes != SYS_FS_SHELL_RES_OK)
     {// No such directory
         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
