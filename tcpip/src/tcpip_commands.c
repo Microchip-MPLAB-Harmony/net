@@ -1398,11 +1398,11 @@ static int _Command_TFTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         return true;
     }
     
-    if(strcmp("put",argv[2])==0)
+    if(stricmp("put",argv[2])==0)
     {
         cmdType = TFTP_CMD_PUT_TYPE;
     }
-    else if(strcmp("get",argv[2])==0)
+    else if(stricmp("get",argv[2])==0)
     {
         cmdType = TFTP_CMD_GET_TYPE;
     }

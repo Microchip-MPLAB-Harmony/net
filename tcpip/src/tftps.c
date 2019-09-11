@@ -698,8 +698,7 @@ static void _TFTPS_ReleaseResource(TFTPS_CB   *tftp_con)
         TCPIP_UDP_Close(tftp_con->cSkt);
         tftp_con->cSkt = INVALID_UDP_SOCKET;
     }
-    // Release TFTP server Shell registered Users
-    _TFTPS_ShellDeRegister(tftp_con);
+    
     
     tftp_con->status = TFTPS_CB_FREE;
     tftp_con->retransmits = 0;
@@ -710,6 +709,9 @@ static void _TFTPS_ReleaseResource(TFTPS_CB   *tftp_con)
     }
     tftp_con->callbackPos = 0;
     tftp_con->trans_buf = 0;
+	
+	// Release TFTP server Shell registered Users
+    _TFTPS_ShellDeRegister(tftp_con);
 }
 
 // create the Client socket for data communication after TFTP client request accepted.
