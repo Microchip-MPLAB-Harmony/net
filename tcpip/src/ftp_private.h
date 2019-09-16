@@ -89,7 +89,8 @@ typedef enum _TCPIP_FTP_CMD_SM
     TCPIP_FTP_CMD_SM_SEND_DIR,
     TCPIP_FTP_CMD_SM_SEND_DIR_HEADER,
     TCPIP_FTP_CMD_SM_SEND_DIR_DETAIL,
-    TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT
+    TCPIP_FTP_CMD_SM_WAIT_FOR_DISCONNECT,
+
 } TCPIP_FTP_CMD_SM;
 
 /*
@@ -125,8 +126,7 @@ typedef enum _TCPIP_FTP_CMD
     TCPIP_FTP_CMD_XMKD,
     TCPIP_FTP_CMD_XRMD,
     TCPIP_FTP_CMD_UNKNOWN,
-    TCPIP_FTP_CMD_NONE,
-   
+    TCPIP_FTP_CMD_NONE,  
     
 } TCPIP_FTP_CMD;
 
@@ -169,6 +169,7 @@ typedef union _TCPIP_FTP_Flags
         unsigned char userSupplied : 1;
         unsigned char loggedIn: 1;
 		unsigned char pasvMode: 1;
+        unsigned char dataRxFin: 1;
     } Bits;
     uint8_t val;
 } TCPIP_FTP_Flags;

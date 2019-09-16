@@ -176,7 +176,7 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 
 static const char TCPIP_FTP_ANNONYMOUS_USER_NAME[]    = "anonymous";
 
-static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE;
+static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE | TCPIP_TCP_SIGNAL_RX_FIN;
 
 SGL_LIST_NODE* TCPIP_FTP_LIST_Add(PROTECTED_SINGLE_LIST* FileList, TCPIP_STACK_HEAP_HANDLE heapH, size_t nBytes)
 {
@@ -424,7 +424,28 @@ void TCPIP_FTP_ServerTask(void)
 // no manager alert needed since this normally results as a higher layer (TCP) signal
 static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TCPIP_TCP_SIGNAL_TYPE sigType, const void* param)
 {
-    _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+    int         nServers=0;
+    TCPIP_FTP_DCPT* pFTPDcpt = NULL; //= (TCPIP_FTP_DCPT*)param;
+    if(sigType & TCPIP_TCP_SIGNAL_RX_DATA)
+    {
+        _TCPIPStackModuleSignalRequest(TCPIP_THIS_MODULE_ID, TCPIP_MODULE_SIGNAL_RX_PENDING, true); 
+    }
+    for(nServers = 0; nServers < ftpConfigData.nConnections; nServers++)
+    {
+        pFTPDcpt = sTCPIPFTPDcpt + nServers;
+        if(pFTPDcpt->ftpDataskt == hTCP)
+        {
+            if(sigType & TCPIP_TCP_SIGNAL_RX_FIN)
+            {
+                pFTPDcpt->ftpFlag.Bits.dataRxFin = true;
+                break;
+            }
+        }
+        else
+        {
+            continue;
+        }
+     }
 }
 
 static void TCPIP_FTP_ServerProcess(void)
@@ -1055,7 +1076,6 @@ static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt)
  */
 static void _FTP_ReleaseDataSocket(TCPIP_FTP_DCPT* pFTPDcpt)
 {
-   
     if(pFTPDcpt->ftpTcpDataSocketSignal != 0)
     {
         TCPIP_TCP_SignalHandlerDeregister(pFTPDcpt->ftpDataskt, pFTPDcpt->ftpTcpDataSocketSignal);
@@ -1205,23 +1225,10 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                 _FTP_ReleaseDataSocket(pFTPDcpt);                    
                 return true;
             }
-            wCount = TCPIP_TCP_GetIsReady(pFTPDcpt->ftpDataskt);
-            // find the last packet and check that if it is less than the 
-            // TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE
-            if(ftpConfigData.dataSktRxBuffSize != 0)
+            
+            if(pFTPDcpt->ftpFlag.Bits.dataRxFin == true)
             {
-                //if((wCount!= 0) &&((wCount < TCPIP_TCP_MAX_SEG_SIZE_TX)||(wCount < ftpConfigData.dataSktRxBuffSize)))
-                if((wCount!= 0) &&(wCount < TCPIP_TCP_MAX_SEG_SIZE_TX))
-                {
-                    ftpEndofDataCommunication = true;
-                }
-            }
-            else
-            {
-                if((wCount!= 0) && (wCount < TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE))
-                {
-                    ftpEndofDataCommunication = true;
-                }
+                ftpEndofDataCommunication = true;
             }
 
             // Get/put as many bytes as possible
@@ -1230,6 +1237,18 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
             	wCount = TCPIP_TCP_GetIsReady(pFTPDcpt->ftpDataskt);
                 if(wCount == 0)
             	{
+                    if(ftpEndofDataCommunication == true)
+                    {
+                        ftpEndofDataCommunication = false;
+                        SYS_FS_FileClose(pFTPDcpt->fileDescr);
+                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
+                        pFTPDcpt->callbackPos = 0;
+                        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
+                        pFTPDcpt->ftpFlag.Bits.pasvMode = false;
+                        _FTP_ReleaseDataSocket(pFTPDcpt);
+                        pFTPDcpt->ftpFlag.Bits.dataRxFin = false;
+                        return true;
+                    }
                     break;
                 }
                 memset(data,'\0',sizeof(data));
@@ -1260,18 +1279,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
                     {
                         pFTPDcpt->ftpSysTicklastActivity = SYS_TMR_TickCountGet();
                     }
-                    wCount -= wLen;
-                    if((wCount == 0) && (ftpEndofDataCommunication == true))
-                    {
-                        ftpEndofDataCommunication = false;
-                        SYS_FS_FileClose(pFTPDcpt->fileDescr);
-                        pFTPDcpt->fileDescr = SYS_FS_HANDLE_INVALID;
-                        pFTPDcpt->callbackPos = 0;
-                        pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_DATA_CLOSE;
-                        pFTPDcpt->ftpFlag.Bits.pasvMode = false;
-                        _FTP_ReleaseDataSocket(pFTPDcpt);
-                        return true;
-                    }
+                    wCount -= wLen;                    
                 }
             }
             status = pFTPDcpt->ftp_shell_obj->fileTell(pFTPDcpt->ftp_shell_obj,fp);
