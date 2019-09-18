@@ -5054,6 +5054,7 @@ bool dataSktHandler(TCPIP_FTPC_CONN_HANDLE_TYPE ftpcHandle, TCPIP_FTPC_DATA_EVEN
             buffCount++;
             callback_processing = false;
 #endif
+            SYS_CONSOLE_PRINT("Tx Data Len: %d\r\n",*datalen); 
             break;
         case TCPIP_FTPC_DATA_SEND_DONE:            
             SYS_CONSOLE_PRINT("Buffer Count: %d\r\n\n", buffCount);
