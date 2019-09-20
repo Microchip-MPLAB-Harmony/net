@@ -201,6 +201,7 @@ void NET_PRES_Tasks(SYS_MODULE_OBJ obj)
                         continue;                       
                     }
                     //Intentional fall through to the next state
+                    sNetPresSockets[x].provOpen = true;
                 }
                 case NET_PRES_ENC_SS_CLIENT_NEGOTIATING:
                 case NET_PRES_ENC_SS_SERVER_NEGOTIATING:
@@ -495,10 +496,14 @@ bool NET_PRES_SocketDisconnect(NET_PRES_SKT_HANDLE_T handle)
     {   // let the provide know that we start over
         if(pSkt->status > NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION)
         {
-            NET_PRES_EncProviderConnectionClose fp = pSkt->provObject->fpClose;
-            if (fp != NULL)
+            if(pSkt->provOpen)
             {
-                (*fp)(pSkt->providerData);
+                NET_PRES_EncProviderConnectionClose fp = pSkt->provObject->fpClose;
+                if (fp != NULL)
+                {
+                    (*fp)(pSkt->providerData);
+                    pSkt->provOpen = 0;
+                }
             }
             pSkt->status = NET_PRES_ENC_SS_WAITING_TO_START_NEGOTIATION;
         }
