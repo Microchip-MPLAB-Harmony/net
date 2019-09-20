@@ -40,32 +40,18 @@ def instantiateComponent(tcpipFtpcComponent):
     tcpipFtpcTickRate.setDescription("FTPC Tick Rate in msec")
     tcpipFtpcTickRate.setDefaultValue(5)
     
-    # # Transmit Buffer Size for the FTP Client Control Socket
-    # tcpipFtpcCtrlSktTxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_CTRL_SKT_TX_BUFF_SIZE", None)
-    # tcpipFtpcCtrlSktTxBuffSize.setLabel("Control Socket Transmit Buffer Size")
-    # tcpipFtpcCtrlSktTxBuffSize.setVisible(True)
-    # tcpipFtpcCtrlSktTxBuffSize.setDescription("Transmit Buffer Size for the FTPC Control Socket")
-    # tcpipFtpcCtrlSktTxBuffSize.setDefaultValue(0)
-
-    # # Receive Buffer Size for the FTP Client Control Socket
-    # tcpipFtpcCtrlSktRxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_CTRL_SKT_RX_BUFF_SIZE", None)
-    # tcpipFtpcCtrlSktRxBuffSize.setLabel("Control Socket Receive Buffer Size")
-    # tcpipFtpcCtrlSktRxBuffSize.setVisible(True)
-    # tcpipFtpcCtrlSktRxBuffSize.setDescription("Receive Buffer Size for the FTPC Control Socket")
-    # tcpipFtpcCtrlSktRxBuffSize.setDefaultValue(0)
-    
     # Transmit Buffer Size for the FTP Client Data Socket
-    tcpipFtpcDataSktTxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE", None)
-    tcpipFtpcDataSktTxBuffSize.setLabel("Data Socket Transmit Buffer Size")
+    tcpipFtpcDataSktTxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT", None)
+    tcpipFtpcDataSktTxBuffSize.setLabel("Default Data Socket Transmit Buffer Size")
     tcpipFtpcDataSktTxBuffSize.setVisible(True)
-    tcpipFtpcDataSktTxBuffSize.setDescription("Transmit Buffer Size for the FTPC Data Socket")
+    tcpipFtpcDataSktTxBuffSize.setDescription("Default Transmit Buffer Size for the FTPC Data Socket")
     tcpipFtpcDataSktTxBuffSize.setDefaultValue(0)
 
     # Receive Buffer Size for the FTP Client Data Socket
-    tcpipFtpcDataSktRxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE", None)
-    tcpipFtpcDataSktRxBuffSize.setLabel("Data Socket Receive Buffer Size")
+    tcpipFtpcDataSktRxBuffSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT", None)
+    tcpipFtpcDataSktRxBuffSize.setLabel("Default Data Socket Receive Buffer Size")
     tcpipFtpcDataSktRxBuffSize.setVisible(True)
-    tcpipFtpcDataSktRxBuffSize.setDescription("Receive Buffer Size for the FTPC Data Socket")
+    tcpipFtpcDataSktRxBuffSize.setDescription("Default Receive Buffer Size for the FTPC Data Socket")
     tcpipFtpcDataSktRxBuffSize.setDefaultValue(0)
     
     # FTP Client request Time-Out

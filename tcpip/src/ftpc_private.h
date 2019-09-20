@@ -291,6 +291,8 @@ typedef struct
     const void* memH;           // memory handle                                 
     uint32_t    ftpcTmo; 		// timeout for reply on FTP Control connection and Data Connection,
                                 // in seconds; Should be adjusted according to the server responsivity
+    uint16_t    data_tx_buffsize_dflt; //Data Socket Transmit Buffer default size
+    uint16_t    data_rx_buffsize_dflt; //Data Socket Receive Buffer default size
 }TCPIP_FTPC_MODULE_DCPT_TYPE;
 // *****************************************************************************
 /*

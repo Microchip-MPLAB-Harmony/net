@@ -518,8 +518,10 @@ const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
 /*** FTP Client Initialization Data ***/
 const TCPIP_FTPC_MODULE_CONFIG_TYPE tcpipFTPClientInitData =
 { 
-    .nMaxClients   	= TCPIP_FTPC_MAX_NUM_CLIENT,
-    .ftpcTmo		= TCPIP_FTPC_TMO,
+    .nMaxClients   			= TCPIP_FTPC_MAX_NUM_CLIENT,
+	.data_tx_buffsize_dflt 	= TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT,
+	.data_rx_buffsize_dflt 	= TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT,	
+    .ftpcTmo				= TCPIP_FTPC_TMO,
 };
 </#if>
 

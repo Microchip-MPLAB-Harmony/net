@@ -182,6 +182,8 @@ bool TCPIP_FTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         ftpcGlobalConfig.memH = stackCtrl->memH;
         ftpcGlobalConfig.ftpcTmo = pftpcConfig->ftpcTmo > TCPIP_FTPC_MIN_TMO ? 
                                         pftpcConfig->ftpcTmo : TCPIP_FTPC_MIN_TMO;		
+        ftpcGlobalConfig.data_tx_buffsize_dflt = pftpcConfig->data_tx_buffsize_dflt;
+        ftpcGlobalConfig.data_rx_buffsize_dflt = pftpcConfig->data_rx_buffsize_dflt;
 	}
 	
 	ftpcInitCount++;
@@ -3245,9 +3247,9 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcSetDataSktBuff(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     }
     else
     {
-        if(TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE)
+        if(ftpcGlobalConfig.data_tx_buffsize_dflt )
         {
-            pDcpt->ftpcDataConnection.ftpcDataTxBuffSize = TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE;
+            pDcpt->ftpcDataConnection.ftpcDataTxBuffSize = ftpcGlobalConfig.data_tx_buffsize_dflt ;
             //set the socket Tx buffer size
             NET_PRES_SocketOptionsSet(pDcpt->ftpcSocket.ftpcDataSkt, 
                 TCP_OPTION_TX_BUFF, (void *)(unsigned int)(pDcpt->ftpcDataConnection.ftpcDataTxBuffSize));
@@ -3270,9 +3272,9 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcSetDataSktBuff(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     }
     else
     {
-        if(TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE)
+        if(ftpcGlobalConfig.data_rx_buffsize_dflt )
         {
-            pDcpt->ftpcDataConnection.ftpcDataRxBuffSize  = TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE;
+            pDcpt->ftpcDataConnection.ftpcDataRxBuffSize  = ftpcGlobalConfig.data_rx_buffsize_dflt ;
             //set the socket Rx buffer size
             NET_PRES_SocketOptionsSet(pDcpt->ftpcSocket.ftpcDataSkt, TCP_OPTION_RX_BUFF, 
                     (void *)(unsigned int)(pDcpt->ftpcDataConnection.ftpcDataRxBuffSize ));
