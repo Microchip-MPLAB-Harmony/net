@@ -1478,13 +1478,13 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTcpipEthernetHeaderFile.setOverwrite(True)
     
     # Add sys_fs_shell.h file to project
-    tcpipStackSysFsWrapperHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysFsWrapperHeaderFile.setSourcePath("tcpip/src/common/sys_fs_shell.h")
-    tcpipStackSysFsWrapperHeaderFile.setOutputName("sys_fs_shell.h")
-    tcpipStackSysFsWrapperHeaderFile.setDestPath("library/tcpip/src/common/")
-    tcpipStackSysFsWrapperHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
-    tcpipStackSysFsWrapperHeaderFile.setType("HEADER")
-    tcpipStackSysFsWrapperHeaderFile.setOverwrite(True)
+    tcpipStackSysFsShellHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackSysFsShellHeaderFile.setSourcePath("tcpip/src/common/sys_fs_shell.h")
+    tcpipStackSysFsShellHeaderFile.setOutputName("sys_fs_shell.h")
+    tcpipStackSysFsShellHeaderFile.setDestPath("library/tcpip/src/common/")
+    tcpipStackSysFsShellHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
+    tcpipStackSysFsShellHeaderFile.setType("HEADER")
+    tcpipStackSysFsShellHeaderFile.setOverwrite(True)
 
     # file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
     tcpipStackNetPresHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -1536,6 +1536,16 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHelpersSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
     tcpipStackHelpersSourceFile.setType("SOURCE")
     tcpipStackHelpersSourceFile.setEnabled(True)    
+    
+    # file TCPIP_COMMON_SYS_FS_SHELL_C "$HARMONY_VERSION_PATH/framework/tcpip/src/common/sys_fs_shell.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/common/sys_fs_shell.c"
+    tcpipStackSysFsShellSourceFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackSysFsShellSourceFile.setSourcePath("tcpip/src/common/sys_fs_shell.c")
+    tcpipStackSysFsShellSourceFile.setOutputName("sys_fs_shell.c")
+    tcpipStackSysFsShellSourceFile.setOverwrite(True)
+    tcpipStackSysFsShellSourceFile.setDestPath("library/tcpip/src/")
+    tcpipStackSysFsShellSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
+    tcpipStackSysFsShellSourceFile.setType("SOURCE")
+    tcpipStackSysFsShellSourceFile.setEnabled(True)    
     
     # file TCPIP_HASH_FNV_C "$HARMONY_VERSION_PATH/framework/tcpip/src/hash_fnv.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/hash_fnv.c"
     tcpipStackHashFnvSourceFile = tcpipStackComponent.createFileSymbol(None, None)
