@@ -88,6 +88,14 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetFilenameLenMax.setDefaultValue(25)
 	#tcpipHttpNetFilenameLenMax.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
+	# Default Web page sdirectory
+	tcpipHttpNetWebDir = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEB_DIR", None)
+	tcpipHttpNetWebDir.setLabel("Web Pages Directory")
+	tcpipHttpNetWebDir.setVisible(True)
+	tcpipHttpNetWebDir.setDescription("Web Pages Directory")
+	tcpipHttpNetWebDir.setDefaultValue("/mnt/mchpSite1/")
+	#tcpipHttpNetWebDir.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+
 	# Enable Update via HTTP NET
 	tcpipHttpNetFileUpload = tcpipHttpNetComponent.createBooleanSymbol("TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE", None)
 	tcpipHttpNetFileUpload.setLabel("Enable Update via HTTP NET")

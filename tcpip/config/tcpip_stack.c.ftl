@@ -130,6 +130,7 @@ const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
     .connTimeout        = TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
     .http_malloc_fnc    = TCPIP_HTTP_NET_MALLOC_FUNC,
     .http_free_fnc      = TCPIP_HTTP_NET_FREE_FUNC,
+    .web_dir            = TCPIP_HTTP_NET_WEB_DIR, 
 };
 </#if>
 
