@@ -88,7 +88,7 @@ def instantiateComponent(tcpipHttpNetComponent):
 	tcpipHttpNetFilenameLenMax.setDefaultValue(25)
 	#tcpipHttpNetFilenameLenMax.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
-	# Default Web page sdirectory
+	# Default Web pages directory
 	tcpipHttpNetWebDir = tcpipHttpNetComponent.createStringSymbol("TCPIP_HTTP_NET_WEB_DIR", None)
 	tcpipHttpNetWebDir.setLabel("Web Pages Directory")
 	tcpipHttpNetWebDir.setVisible(True)
