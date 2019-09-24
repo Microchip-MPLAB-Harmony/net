@@ -1537,16 +1537,6 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHelpersSourceFile.setType("SOURCE")
     tcpipStackHelpersSourceFile.setEnabled(True)    
     
-    # file TCPIP_COMMON_SYS_FS_SHELL_C "$HARMONY_VERSION_PATH/framework/tcpip/src/common/sys_fs_shell.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/common/sys_fs_shell.c"
-    tcpipStackSysFsShellSourceFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysFsShellSourceFile.setSourcePath("tcpip/src/common/sys_fs_shell.c")
-    tcpipStackSysFsShellSourceFile.setOutputName("sys_fs_shell.c")
-    tcpipStackSysFsShellSourceFile.setOverwrite(True)
-    tcpipStackSysFsShellSourceFile.setDestPath("library/tcpip/src/")
-    tcpipStackSysFsShellSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
-    tcpipStackSysFsShellSourceFile.setType("SOURCE")
-    tcpipStackSysFsShellSourceFile.setEnabled(True)    
-    
     # file TCPIP_HASH_FNV_C "$HARMONY_VERSION_PATH/framework/tcpip/src/hash_fnv.c" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/hash_fnv.c"
     tcpipStackHashFnvSourceFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackHashFnvSourceFile.setSourcePath("tcpip/src/hash_fnv.c")
