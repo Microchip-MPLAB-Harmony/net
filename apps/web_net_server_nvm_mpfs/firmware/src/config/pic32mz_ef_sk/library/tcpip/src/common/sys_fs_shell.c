@@ -139,9 +139,9 @@ typedef struct _tag_SHELL_OBJ_INSTANCE
 #endif  // (SYS_FS_SHELL_MTHREAD_PROTECTION != 0)
     uint8_t              createFlags;               // SYS_FS_SHELL_CREATE_FLAGS
     // root path; can never go higher than this
-    char                root[SYS_FS_MAX_PATH + 1];  // formatted as "/srv/ftp", or "" : no trailing /
+    char                root[SYS_FS_FILE_NAME_LEN + 1];  // formatted as "/srv/ftp", or "" : no trailing /
     // current working directory
-    char                cwd[SYS_FS_MAX_PATH + 1];  // formatted as "/dir/", or "/", or "/dir/dir/dir/";
+    char                cwd[SYS_FS_FILE_NAME_LEN + 1];  // formatted as "/dir/", or "/", or "/dir/dir/dir/";
                                                         // leading /, trailing /
                                                         // abs path is always: (root + cwd)
     //
@@ -346,8 +346,8 @@ static SYS_FS_SHELL_RES Shell_Cwd(const SYS_FS_SHELL_OBJ* pObj, const char *path
     }
 
     bool need_end = false;
-    char path_buff[SYS_FS_MAX_PATH + 1];
-    char abs_buff[SYS_FS_MAX_PATH + 1];
+    char path_buff[SYS_FS_FILE_NAME_LEN + 1];
+    char abs_buff[SYS_FS_FILE_NAME_LEN + 1];
 
     if(path[len_path - 1] != '/')
     {   // we need to add this
@@ -405,7 +405,7 @@ static SYS_FS_HANDLE Shell_FileOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fn
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(pShell)
     {
-        char absBuff[SYS_FS_MAX_PATH + 1];
+        char absBuff[SYS_FS_FILE_NAME_LEN + 1];
         SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
         _Shell_ObjectUnlock(pShell, absRes);
 
@@ -424,7 +424,7 @@ static SYS_FS_RESULT Shell_FileStat(const SYS_FS_SHELL_OBJ* pObj, const char *fn
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(pShell)
     {
-        char absBuff[SYS_FS_MAX_PATH + 1];
+        char absBuff[SYS_FS_FILE_NAME_LEN + 1];
         SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
         _Shell_ObjectUnlock(pShell, absRes);
 
@@ -442,7 +442,7 @@ static SYS_FS_RESULT Shell_FileDelete(const SYS_FS_SHELL_OBJ* pObj, const char *
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(pShell)
     {
-        char absBuff[SYS_FS_MAX_PATH + 1];
+        char absBuff[SYS_FS_FILE_NAME_LEN + 1];
 
         SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
         _Shell_ObjectUnlock(pShell, absRes);
@@ -461,7 +461,7 @@ static SYS_FS_HANDLE Shell_DirMake(const SYS_FS_SHELL_OBJ* pObj, const char *fna
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(pShell)
     {
-        char absBuff[SYS_FS_MAX_PATH + 1];
+        char absBuff[SYS_FS_FILE_NAME_LEN + 1];
         SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
         _Shell_ObjectUnlock(pShell, absRes);
 
@@ -479,7 +479,7 @@ static SYS_FS_HANDLE Shell_DirOpen(const SYS_FS_SHELL_OBJ* pObj, const char *fna
     SHELL_OBJ_INSTANCE *pShell = _Shell_ObjectLock(pObj);
     if(pShell)
     {
-        char absBuff[SYS_FS_MAX_PATH + 1];
+        char absBuff[SYS_FS_FILE_NAME_LEN + 1];
         SYS_FS_SHELL_RES absRes = Shell_FileAbsPath(pShell, fname, absBuff, sizeof(absBuff));
         _Shell_ObjectUnlock(pShell, absRes);
 
