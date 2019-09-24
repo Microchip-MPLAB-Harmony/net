@@ -98,6 +98,7 @@ const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
     .configFlags	= TCPIP_HTTP_CONFIG_FLAGS,
     .http_malloc_fnc    = TCPIP_HTTP_MALLOC_FUNC,
     .http_free_fnc      = TCPIP_HTTP_FREE_FUNC,
+    .web_dir            = TCPIP_HTTP_WEB_DIR, 
 };
 </#if>
 

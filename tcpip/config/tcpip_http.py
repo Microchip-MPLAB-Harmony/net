@@ -91,6 +91,14 @@ def instantiateComponent(tcpipHttpComponent):
 	tcpipHttpDefaultLenMax.setDefaultValue(10)
 	#tcpipHttpDefaultLenMax.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_SERVER"])
 
+	# Default Web pages directory
+	tcpipHttpWebDir = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_WEB_DIR", None)
+	tcpipHttpWebDir.setLabel("Web Pages Directory")
+	tcpipHttpWebDir.setVisible(True)
+	tcpipHttpWebDir.setDescription("Web Pages Directory")
+	tcpipHttpWebDir.setDefaultValue("/mnt/mchpSite1/")
+	#tcpipHttpWebDir.setDependencies(tcpipHttpMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
+
 	# Enable Update via HTTP
 	tcpipHttpFileUpload = tcpipHttpComponent.createBooleanSymbol("TCPIP_HTTP_FILE_UPLOAD_ENABLE", None)
 	tcpipHttpFileUpload.setLabel("Enable Update via HTTP")
