@@ -1373,26 +1373,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_version(TCPIP_HTTP_NET_CONN_HANDLE con
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_drive(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_DRIVE, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fstype(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-<#if ((tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER?has_content) && (tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER  == true))> 
-<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE?has_content >
-<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "FLASH">
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_MPFS_STRING, false);
-<#elseif tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "SDCARD">
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_FATFS_STRING, false);
-</#if>
-</#if>
-</#if>
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_cookiename(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     const char *ptr;
