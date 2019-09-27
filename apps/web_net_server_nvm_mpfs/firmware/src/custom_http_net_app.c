@@ -1364,18 +1364,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_version(TCPIP_HTTP_NET_CONN_HANDLE con
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_drive(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_DRIVE, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fstype(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_MPFS_STRING, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_cookiename(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     const char *ptr;

@@ -64,8 +64,6 @@ static HTTP_APP_DYNVAR_ENTRY HTTP_APP_DynVarTbl[] =
 {"led",					TCPIP_HTTP_Print_led},
 {"ledSelected",					TCPIP_HTTP_Print_ledSelected},
 {"version",					TCPIP_HTTP_Print_version},
-{"drive",					TCPIP_HTTP_Print_drive},
-{"fstype",					TCPIP_HTTP_Print_fstype},
 {"btn",					TCPIP_HTTP_Print_btn},
 {"pot",					TCPIP_HTTP_Print_pot},
 {"uploadedmd5",					TCPIP_HTTP_Print_uploadedmd5},

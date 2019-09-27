@@ -351,7 +351,7 @@ typedef enum
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
 	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
-
+	TCPIP_MODULE_FTPC,              /* FTP client */
     /* add other modules here */
     //
     /*  */
