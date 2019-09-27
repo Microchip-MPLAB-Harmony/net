@@ -402,6 +402,7 @@ extern "C" {
 #define TCPIP_HTTP_SKT_TX_BUFF_SIZE		    		0
 #define TCPIP_HTTP_SKT_RX_BUFF_SIZE		    		0
 #define TCPIP_HTTP_CONFIG_FLAGS		        		1
+#define TCPIP_HTTP_WEB_DIR		        		    "/mnt/mchpSite1/"
 #define TCPIP_HTTP_USE_POST
 #define TCPIP_HTTP_USE_COOKIES
 #define TCPIP_HTTP_USE_BASE64_DECODE

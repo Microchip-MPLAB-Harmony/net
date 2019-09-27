@@ -1,4 +1,4 @@
- /*********************************************************************
+/*********************************************************************
 HTTP Application callback source file 
 
 Company:
@@ -25,21 +25,20 @@ Copyright (C) 2012-2018 Microchip Technology Inc. and its subsidiaries
  use of third party software (including open source software) that may
  accompany Microchip software.
 
-THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER 
-EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED 
-WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR 
-PURPOSE.
-
-IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE, 
-INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND 
-WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS 
-BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE 
-FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN 
-ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
-THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
-*****************************************************************************/
-
+ THIS SOFTWARE IS SUPPLIED BY MICROCHIP "AS IS". NO WARRANTIES, WHETHER
+ EXPRESS, IMPLIED OR STATUTORY, APPLY TO THIS SOFTWARE, INCLUDING ANY IMPLIED
+ WARRANTIES OF NON-INFRINGEMENT, MERCHANTABILITY, AND FITNESS FOR A PARTICULAR
+ PURPOSE.
  
+ IN NO EVENT WILL MICROCHIP BE LIABLE FOR ANY INDIRECT, SPECIAL, PUNITIVE,
+ INCIDENTAL OR CONSEQUENTIAL LOSS, DAMAGE, COST OR EXPENSE OF ANY KIND
+ WHATSOEVER RELATED TO THE SOFTWARE, HOWEVER CAUSED, EVEN IF MICROCHIP HAS
+ BEEN ADVISED OF THE POSSIBILITY OR THE DAMAGES ARE FORESEEABLE. TO THE
+ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
+ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
+ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
+ *********************************************************************/
+
 #include "tcpip/tcpip.h"
 
 void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
@@ -51,8 +50,6 @@ void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_led(HTTP_CONN_HANDLE connHandle,uint16_t);
 void TCPIP_HTTP_Print_ledSelected(HTTP_CONN_HANDLE connHandle,uint16_t,uint16_t);
 void TCPIP_HTTP_Print_version(HTTP_CONN_HANDLE connHandle);
-void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle);
-void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_btn(HTTP_CONN_HANDLE connHandle,uint16_t);
 void TCPIP_HTTP_Print_pot(HTTP_CONN_HANDLE connHandle);
 void TCPIP_HTTP_Print_uploadedmd5(HTTP_CONN_HANDLE connHandle);
@@ -84,7 +81,6 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
     TCP_SOCKET sktHTTP; 
     switch(callbackID)
     {
-	
         case 0x00000000:
 			TCPIP_HTTP_FileInclude(connHandle,(const uint8_t *)"header.inc");
 			break;
@@ -128,111 +124,105 @@ void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID)
 			TCPIP_HTTP_Print_version(connHandle);
 			break;
         case 0x0000000e:
-			TCPIP_HTTP_Print_drive(connHandle);
-			break;
-        case 0x0000000f:
-			TCPIP_HTTP_Print_fstype(connHandle);
-			break;
-        case 0x00000010:
 			TCPIP_HTTP_Print_led(connHandle,0);
 			break;
-        case 0x00000011:
+        case 0x0000000f:
 			TCPIP_HTTP_Print_btn(connHandle,0);
 			break;
-        case 0x00000012:
+        case 0x00000010:
 			TCPIP_HTTP_Print_btn(connHandle,1);
 			break;
-        case 0x00000013:
+        case 0x00000011:
 			TCPIP_HTTP_Print_btn(connHandle,2);
 			break;
-        case 0x00000014:
+        case 0x00000012:
 			TCPIP_HTTP_Print_pot(connHandle);
 			break;
-        case 0x00000015:
+        case 0x00000013:
 			TCPIP_HTTP_Print_uploadedmd5(connHandle);
 			break;
-        case 0x00000016:
+        case 0x00000014:
 			TCPIP_HTTP_Print_snmp_en(connHandle);
 			break;
-        case 0x00000017:
+        case 0x00000015:
 			TCPIP_HTTP_Print_read_comm(connHandle,0);
 			break;
-        case 0x00000018:
+        case 0x00000016:
 			TCPIP_HTTP_Print_read_comm(connHandle,1);
 			break;
-        case 0x00000019:
+        case 0x00000017:
 			TCPIP_HTTP_Print_read_comm(connHandle,2);
 			break;
-        case 0x0000001a:
+        case 0x00000018:
 			TCPIP_HTTP_Print_write_comm(connHandle,0);
 			break;
-        case 0x0000001b:
+        case 0x00000019:
 			TCPIP_HTTP_Print_write_comm(connHandle,1);
 			break;
-        case 0x0000001c:
+        case 0x0000001a:
 			TCPIP_HTTP_Print_write_comm(connHandle,2);
 			break;
-        case 0x0000001d:
+        case 0x0000001b:
 			TCPIP_HTTP_Print_status_fail(connHandle);
 			break;
-        case 0x0000001e:
+        case 0x0000001c:
 			TCPIP_HTTP_Print_config_mac(connHandle);
 			break;
-        case 0x0000001f:
+        case 0x0000001d:
 			TCPIP_HTTP_Print_config_hostname(connHandle);
 			break;
-        case 0x00000020:
+        case 0x0000001e:
 			TCPIP_HTTP_Print_config_dhcpchecked(connHandle);
 			break;
-        case 0x00000021:
+        case 0x0000001f:
 			TCPIP_HTTP_Print_config_ip(connHandle);
 			break;
-        case 0x00000022:
+        case 0x00000020:
 			TCPIP_HTTP_Print_config_gw(connHandle);
 			break;
-        case 0x00000023:
+        case 0x00000021:
 			TCPIP_HTTP_Print_config_subnet(connHandle);
 			break;
-        case 0x00000024:
+        case 0x00000022:
 			TCPIP_HTTP_Print_config_dns1(connHandle);
 			break;
-        case 0x00000025:
+        case 0x00000023:
 			TCPIP_HTTP_Print_config_dns2(connHandle);
 			break;
-        case 0x00000026:
+        case 0x00000024:
 			TCPIP_HTTP_Print_reboot(connHandle);
 			break;
-        case 0x00000027:
+        case 0x00000025:
 			TCPIP_HTTP_Print_rebootaddr(connHandle);
 			break;
-        case 0x00000028:
+        case 0x00000026:
 			TCPIP_HTTP_Print_status_ok(connHandle);
 			break;
-        case 0x00000029:
+        case 0x00000027:
 			TCPIP_HTTP_Print_smtps_en(connHandle);
 			break;
-        case 0x0000002a:
+        case 0x00000028:
 			TCPIP_HTTP_Print_ddns_status(connHandle);
 			break;
-        case 0x0000002b:
+        case 0x00000029:
 			TCPIP_HTTP_Print_ddns_status_msg(connHandle);
 			break;
-        case 0x0000002c:
+        case 0x0000002a:
 			TCPIP_HTTP_Print_ddns_service(connHandle,0);
 			break;
-        case 0x0000002d:
+        case 0x0000002b:
 			TCPIP_HTTP_Print_ddns_service(connHandle,1);
 			break;
-        case 0x0000002e:
+        case 0x0000002c:
 			TCPIP_HTTP_Print_ddns_service(connHandle,2);
 			break;
-        case 0x0000002f:
+        case 0x0000002d:
 			TCPIP_HTTP_Print_ddns_user(connHandle);
 			break;
-        case 0x00000030:
+        case 0x0000002e:
 			TCPIP_HTTP_Print_ddns_pass(connHandle);
 			break;
-        case 0x00000031:
+        case 0x0000002f:
 			TCPIP_HTTP_Print_ddns_host(connHandle);
 			break;
         default:
