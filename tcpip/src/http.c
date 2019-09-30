@@ -2165,7 +2165,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                     if(pHttpCon->uploadBufferStart == 0)
                     {
                         pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
-                        SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH/);
+                        SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
                     }
 
                     if(pHttpCon->uploadBufferStart != 0)

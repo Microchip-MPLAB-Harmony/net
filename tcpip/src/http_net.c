@@ -2789,7 +2789,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
                 pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
 
-                SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH/);
+                SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
                 pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_WRITE;
                 return TCPIP_HTTP_NET_IO_RES_WAITING;
             }

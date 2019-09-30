@@ -133,7 +133,7 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpMpfsNvmDiskPath.setDependencies(tcpipHttpFileUploadVisible, ["TCPIP_HTTP_FILE_UPLOAD_ENABLE"])   
     
     # MPFS NVM Disk Number
-    tcpipHttpMpfsNvmDiskNum = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_NET_MPFS_NVM_NUM", tcpipHttpFileUpload)
+    tcpipHttpMpfsNvmDiskNum = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_MPFS_NVM_NUM", tcpipHttpFileUpload)
     tcpipHttpMpfsNvmDiskNum.setLabel("MPFS NVM Disk Number")
     tcpipHttpMpfsNvmDiskNum.setVisible(False)
     tcpipHttpMpfsNvmDiskNum.setDescription("MPFS NVM Disk Number")
