@@ -45,16 +45,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 
-#define NVM_DRIVER_V080_WORKAROUND
-
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 
 #if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
-#if defined (NVM_DRIVER_V080_WORKAROUND)
-#define MPFS_UPLOAD_DISK_NO         0
-#endif
-
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
@@ -1992,13 +1986,13 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessPost(TCPIP_HTTP_NET_CONN* pHttpCon
 #endif
         {
             // Run the application callback TCPIP_HTTP_NET_ConnectionPostExecute()
-#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
             if(pHttpCon->httpStatus >= TCPIP_HTTP_NET_STAT_UPLOAD_STARTED && pHttpCon->httpStatus <= TCPIP_HTTP_NET_STAT_UPLOAD_ERROR)
             {
                 ioRes = TCPIP_HTTP_NET_FSUpload(pHttpCon);
             }
             else
-#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
             {
                 if(httpUserCback && httpUserCback->postExecute)
                 {
@@ -2731,7 +2725,7 @@ static TCPIP_HTTP_NET_READ_STATUS _HTTP_ReadTo(TCPIP_HTTP_NET_CONN* pHttpCon, ui
     the FS image could be stored (EEPROM, flash, etc.)
 
   ***************************************************************************/
-#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 #define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHttpCon)
 {
@@ -2911,7 +2905,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
     return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
 }
 
-#endif //defined (TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif //defined (TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 // the default file include dynamic variable HTTP operation
 static TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DefaultIncludeFile(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
