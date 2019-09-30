@@ -2165,7 +2165,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                     if(pHttpCon->uploadBufferStart == 0)
                     {
                         pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
-                        SYS_FS_Unmount(LOCAL_WEBSITE_PATH);
+                        SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH/);
                     }
 
                     if(pHttpCon->uploadBufferStart != 0)
@@ -2261,7 +2261,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                 (*http_free_fnc)(pHttpCon->uploadBufferStart);
                 pHttpCon->uploadBufferStart = 0;
 
-                if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
+                if(SYS_FS_Mount(MPFS_UPLOAD_NVM_VOL, MPFS_UPLOAD_MOUNT_PATH, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
                 {
                     pHttpCon->sm = SM_HTTP_PROCESS_REQUEST;
                     SYS_CONSOLE_MESSAGE("\r\nMPFSUPLOAD completed\r\n");
