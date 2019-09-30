@@ -25,13 +25,15 @@
 ################################################################################
 #### Business Logic ####
 ################################################################################
-# autoConnectTableCRYPTOHttp = [["tcpipHttp", "Http_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-autoConnectTableCRYPTOHttp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-# autoConnectTableCRYPTOHttpNet = [["tcpipHttpNet", "HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-# autoConnectTableCRYPTOHttpNet = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-# autoConnectTableCRYPTOSnmp = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_Crypto_Dependency", "lib_crypto", "lib_crypto"]]
-# autoConnectTableNetPresBSD = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipBerkeleyApi:BSD_NETPRES_Dependency"]]
-# autoConnectTableNetPresSMTPC = [["netPres_0", "libNetPres","TCP/IP STACK", "APPLICATION LAYER:tcpipSmtpc:Smtpc_NetPres_Dependency"]]
+autoConnectTableFTPSFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipFtps:Ftps_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableFTPCFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipFtpc:FTPC_TcipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableHTTPNETFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttpNet:HttpNet_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableHTTPFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipHttp:Http_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableSMTPCFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSmtpc:Smtpc_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableSNMPFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipSnmp:Snmp_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableTFTPCFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipTftpc:Tftpc_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+autoConnectTableTFTPSFS = [["TCP/IP STACK", "APPLICATION LAYER:tcpipTftps:Tftps_TcpipFs_Dependency", "sys_fs", "sys_fs"]]
+
 ############################################################################
 #### Code Generation ####
 ############################################################################
@@ -283,11 +285,8 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipBerkeleyApi"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "libtcpipBerkeleyApi")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipBerkeleyApi", "BSD_NETPRES_Dependency")
-        # tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipBerkeleyApi:BSD_NETPRES_Dependency")
         if(Database.getComponentByID("netPres") == None):
             res = Database.activateComponents(["netPres"])  
-            # res = Database.connectDependencies(autoConnectTableNetPresBSD)
         
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
@@ -362,35 +361,46 @@ def tcpipAutoConfigDNSSERVEREnable(symbol, event):
 
 def tcpipAutoConfigFTPSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipFtps"],"APPLICATION LAYER", False) 
-        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipFtps", "libtcpipFtps")
-
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)  
+        
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipFtps", "Ftps_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipFtps:Ftps_TcpipFs_Dependency")
+        res = Database.connectDependencies(autoConnectTableFTPSFS)
+        
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
             Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
     else:
-        res = Database.deactivateComponents(["tcpipFtps"])
+        if(Database.getComponentByID("tcpipFtps") != None):
+            res = Database.deactivateComponents(["tcpipFtps"])
 
 
 def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipFtpc"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipFtpc", "libtcpipFtpc")
         if(Database.getComponentByID("netPres") == None):
             res = Database.activateComponents(["netPres"])
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)  
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipFtpc", "FTPC_TcipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipFtpc:FTPC_TcipFs_Dependency")
+        res = Database.connectDependencies(autoConnectTableFTPCFS)
+            
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
     else:
-        res = Database.deactivateComponents(["tcpipFtpc"])
+        if(Database.getComponentByID("tcpipFtpc") != None):
+            res = Database.deactivateComponents(["tcpipFtpc"])
         
 def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
@@ -399,21 +409,15 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipHttpNet"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "libtcpipHttpNet")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_Crypto_Dependency")
-        # tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_Crypto_Dependency")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_NetPres_Dependency")
-        # tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_NetPres_Dependency")
-        
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
             
         if(Database.getComponentByID("netPres") == None):
             res = Database.activateComponents(["netPres"])  
-        # res = Database.activateComponents(["lib_crypto"], Database.getRootGroup().getID(), True)  
-        # if(Database.getComponentByID("lib_crypto") == None):
-            # res = Database.activateComponents(["lib_crypto"])
-        # res = Database.connectDependencies(autoConnectTableCRYPTOHttpNet)
-        
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttpNet", "HttpNet_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttpNet:HttpNet_TcpipFs_Dependency")     
+        res = Database.connectDependencies(autoConnectTableHTTPNETFS)
+                
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
     else:
@@ -426,14 +430,14 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipHttp"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "libtcpipHttp")
-        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "Http_Crypto_Dependency")
-        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttp:Http_Crypto_Dependency")
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
-            
-        # res = Database.activateComponents(["lib_crypto"], Database.getRootGroup().getID(), True)  
+          
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipHttp", "Http_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipHttp:Http_TcpipFs_Dependency")     
+        res = Database.connectDependencies(autoConnectTableHTTPFS)
+        
         res = Database.activateComponents(["lib_crypto"])
-        res = Database.connectDependencies(autoConnectTableCRYPTOHttp)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
     else:
@@ -486,18 +490,20 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipSmtpc"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "libtcpipSmtpc")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "Smtpc_NetPres_Dependency")
-        # tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSmtpc:Smtpc_NetPres_Dependency")
+        
         if(Database.getComponentByID("netPres") == None):
             res = Database.activateComponents(["netPres"])  
-            # res = Database.connectDependencies(autoConnectTableNetPresSMTPC)
+        
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSmtpc", "Smtpc_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSmtpc:Smtpc_TcpipFs_Dependency")     
+        res = Database.connectDependencies(autoConnectTableSMTPCFS)
         
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
         if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
             Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)
             
     else:
         # this assumes that tcpipSmtpc is present in the graph, if the protocol is removed then this fails
@@ -510,13 +516,12 @@ def tcpipAutoConfigSNMPEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipSnmp"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "libtcpipSnmp")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_Crypto_Dependency")
-        # tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSnmp:Snmp_Crypto_Dependency")
-        # res = Database.activateComponents(["lib_crypto"])
-        # res = Database.connectDependencies(autoConnectTableCRYPTOSnmp)
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_TcpipFs_Dependency")
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)  
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmp", "Snmp_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipSnmp:Snmp_TcpipFs_Dependency")     
+        res = Database.connectDependencies(autoConnectTableSNMPFS)
+        
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
             Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
     else:
@@ -551,8 +556,6 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipTelnet"],"APPLICATION LAYER", False)   
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "libtcpipTelnet")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTelnet", "Telnet_NetPres_Dependency")
-        # tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipTelnet:Telnet_NetPres_Dependency")
         
         if(Database.getComponentByID("netPres") == None):
             res = Database.activateComponents(["netPres"])
@@ -564,13 +567,17 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
     
 def tcpipAutoConfigTFTPCLIENTEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipTftpc"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTftpc", "libtcpipTftpc")
-        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTftpc", "Tftpc_TcpipFs_Dependency")
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)  
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTftpc", "Tftpc_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipTftpc:Tftpc_TcpipFs_Dependency")     
+        res = Database.connectDependencies(autoConnectTableTFTPCFS)
+         
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
             Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
@@ -580,12 +587,17 @@ def tcpipAutoConfigTFTPCLIENTEnable(symbol, event):
     
 def tcpipAutoConfigTFTPSERVEREnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
     enableTcpipAutoConfigApps(True)
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipTftps"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTftps", "libtcpipTftps")
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_SysFSWrapper", True, 2)  
+        if(Database.getComponentByID("sys_fs") == None):    
+            res = Database.activateComponents(["sys_fs"])
+        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipTftps", "Tftps_TcpipFs_Dependency")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("APPLICATION LAYER", "tcpipTftps:Tftps_TcpipFs_Dependency")     
+        res = Database.connectDependencies(autoConnectTableTFTPSFS)
+        
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
             Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
