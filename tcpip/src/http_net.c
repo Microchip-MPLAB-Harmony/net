@@ -2789,7 +2789,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
                 pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
 
-                SYS_FS_Unmount(LOCAL_WEBSITE_PATH);
+                SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH/);
                 pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_WRITE;
                 return TCPIP_HTTP_NET_IO_RES_WAITING;
             }
@@ -2866,7 +2866,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 (*http_free_fnc)(pHttpCon->uploadBufferStart);
                 pHttpCon->uploadBufferStart = 0;
 
-                if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
+                if(SYS_FS_Mount(MPFS_UPLOAD_NVM_VOL, MPFS_UPLOAD_MOUNT_PATH, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
                 {
                     _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE, pHttpCon->fileName);
                     pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_OK;

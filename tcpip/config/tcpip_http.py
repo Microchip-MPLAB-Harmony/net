@@ -125,7 +125,7 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpMpfsNvmMountPath.setDependencies(tcpipHttpFileUploadVisible, ["TCPIP_HTTP_FILE_UPLOAD_ENABLE"])
     
     # MPFS NVM Disk Path
-    tcpipHttpMpfsNvmDiskPath = tcpipHttpComponent.createStringSymbol("TCPIP_SYS_FS_NVM_VOL", tcpipHttpFileUpload)
+    tcpipHttpMpfsNvmDiskPath = tcpipHttpComponent.createStringSymbol("TCPIP_HTTP_MPFS_NVM_VOL", tcpipHttpFileUpload)
     tcpipHttpMpfsNvmDiskPath.setLabel("MPFS NVM Disk Path")
     tcpipHttpMpfsNvmDiskPath.setVisible(False)
     tcpipHttpMpfsNvmDiskPath.setDescription("MPFS NVM Disk Path")
