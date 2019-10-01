@@ -167,7 +167,6 @@ void APP_Tasks ( void )
     }
 #endif  // (APP_DEBUG_ON != 0)
 
-    SYS_CMD_READY_TO_READ();
     switch ( appData.state )
     {
         case APP_VERIFY_WRITE_DISK:

@@ -241,7 +241,6 @@ void APP_Tasks ( void )
                     SYS_CONSOLE_PRINT("%d.%d.%d.%d \r\n", ipAddr.v[0], ipAddr.v[1], ipAddr.v[2], ipAddr.v[3]);
                 }
             }
-            SYS_CMD_READY_TO_READ();
             break;
 
         default:

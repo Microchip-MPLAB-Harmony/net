@@ -135,7 +135,6 @@ void APP_Tasks ( void )
     const char          *netName, *netBiosName;
     static uint32_t     startTick = 0;
 
-    SYS_CMD_READY_TO_READ();
     switch(appData.state)
     {
         case APP_MOUNT_DISK:

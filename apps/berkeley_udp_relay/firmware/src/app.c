@@ -238,7 +238,6 @@ void APP_Tasks(void) {
             break;
         case APP_STATE_READY_TO_START:
         {
-            SYS_CMD_READY_TO_READ();
             if (appData.serviceStarted) {
                 appData.clientState = APP_STATE_DNS_LOOKUP;
                 appData.serverState = APP_STATE_SERVER_CREATE_SOCKET;
@@ -249,7 +248,6 @@ void APP_Tasks(void) {
         }
         case APP_STATE_STARTED:
         {
-            SYS_CMD_READY_TO_READ();
             if (appData.serviceStarted) {
                 _APP_ClientTasks();
                 _APP_ServerTasks();
