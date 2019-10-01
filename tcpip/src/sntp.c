@@ -615,6 +615,7 @@ static void TCPIP_SNTP_Process(void)
 
             if(pSntpIf == 0)
             {   // wait some more
+                TCPIP_SNTP_SetNewState(SM_SHORT_WAIT);
                 TCPIP_SNTP_SetError(SNTP_RES_NTP_IF_ERR, TCPIP_SNTP_EVENT_IF_ERROR); 
                 break;
             }
