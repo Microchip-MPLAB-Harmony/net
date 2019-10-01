@@ -206,8 +206,6 @@ void APP_Tasks ( void )
 
         case APP_TCPIP_WAITING_FOR_COMMAND:
         {
-            SYS_CMD_READY_TO_READ();
-
             if (APP_URL_Buffer[0] != '\0')
             {
                 TCPIP_DNS_RESULT result;

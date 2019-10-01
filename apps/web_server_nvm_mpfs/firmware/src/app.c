@@ -238,8 +238,6 @@ void APP_Tasks ( void )
                 }
             }
 
-            SYS_CMD_READY_TO_READ();
-
             break;
 
         default:

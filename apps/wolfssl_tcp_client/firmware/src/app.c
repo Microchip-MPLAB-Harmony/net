@@ -178,7 +178,6 @@ void APP_Tasks(void) {
             break;
         }
         case APP_TCPIP_WAITING_FOR_COMMAND:
-            SYS_CMD_READY_TO_READ();
             break;
         case APP_TCPIP_PROCESS_COMMAND:
         {

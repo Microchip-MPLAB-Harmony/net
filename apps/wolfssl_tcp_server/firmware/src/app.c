@@ -119,7 +119,6 @@ void APP_Tasks(void) {
     int i, nNets;
     TCPIP_NET_HANDLE netH;
     /* Check the application's current state. */
-    SYS_CMD_READY_TO_READ();
     switch (appData.state) {
         case APP_STATE_INIT:
             tcpipStat = TCPIP_STACK_Status(sysObj.tcpip);

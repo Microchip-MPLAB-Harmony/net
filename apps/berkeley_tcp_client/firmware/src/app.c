@@ -195,14 +195,11 @@ void APP_Tasks(void) {
         }
         case APP_TCPIP_WAITING_FOR_COMMAND_READY:
         {
-            SYS_CMD_READY_TO_READ();
             appData.state = APP_TCPIP_WAITING_FOR_COMMAND_INPUT;
         }
             break;
         case APP_TCPIP_WAITING_FOR_COMMAND_INPUT:
         {
-            SYS_CMD_READY_TO_READ();
-
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
             if (APP_URL_Buffer[0] != '\0') {
                 if (_APP_ParseUrl(APP_URL_Buffer, &appData.host, &appData.path, &appData.port)) {

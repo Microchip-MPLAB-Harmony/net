@@ -137,7 +137,6 @@ void APP_Tasks ( void )
     int                 i, nNets;
     TCPIP_NET_HANDLE    netH;
 
-    SYS_CMD_READY_TO_READ();
     switch(appData.state)
     {
         case APP_TCPIP_WAIT_INIT:
