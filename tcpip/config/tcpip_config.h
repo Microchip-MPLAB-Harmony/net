@@ -277,6 +277,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Each entry takes approx 24 bytes
 #define TCPIP_PKT_LOG_SIZE     40
 
+// This setting enables/disables the processing of the RX packets
+// by an external handler
+// The user of the stack can register an external function to 
+// process the incoming packets
+// If true, the functionality is built in and could be used by the application
+// If false, the functionality does not exist and the generated code is slightly smaller 
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS true
 
 // TCPIP task processing rate, in milliseconds.
 // The TCP/IP task will require a timer event with this rate

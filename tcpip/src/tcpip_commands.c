@@ -5622,7 +5622,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     return false;
 }
 
-#endif
-#endif    // defined(TCPIP_STACK_USE_FTPC)
+#endif // defined(TCPIP_STACK_USE_FTPC)
+#endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 
 
