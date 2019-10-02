@@ -156,6 +156,13 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
     tcpipStackPktLogSize.setDefaultValue(40)
     tcpipStackPktLogSize.setDependencies(tcpipStackMenuVisible, ["TCPIP_PACKET_LOG_ENABLE"])    
+
+    # Enable External Packet Processing
+    tcpipStackExtPktProcess= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EXTERN_PACKET_PROCESS", None)
+    tcpipStackExtPktProcess.setLabel("Enable External Packet Processing")
+    tcpipStackExtPktProcess.setVisible(True)
+    tcpipStackExtPktProcess.setDescription("Allows External Processing of RX Packets")
+    tcpipStackExtPktProcess.setDefaultValue(False)
     
     # RTOS Configuration
     tcpipStackRtosMenu = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_RTOS_MENU", None)

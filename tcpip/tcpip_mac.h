@@ -579,6 +579,8 @@ typedef enum
     /* TX: Packet was rejected by the IP layer */
     TCPIP_MAC_PKT_ACK_IP_REJECT_ERR     = -18,  
 
+    /* RX: packet was dropped because it was processed externally */
+    TCPIP_MAC_PKT_ACK_EXTERN           = -19,
 }TCPIP_MAC_PKT_ACK_RES;
 
 
