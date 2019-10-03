@@ -36,13 +36,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_SNMP_SERVER
 
 #include "tcpip/src/tcpip_private.h"
@@ -88,7 +81,7 @@ static SNMP_STACK_DCPT_STUB*  SnmpStackDcptMemStubPtr=0;
 // file shell object for file access
 static const SYS_FS_SHELL_OBJ*  snmpFileShell = 0;
 TCPIP_SNMP_DCPT gSnmpDcpt;
-const char *snmpMountPath = LOCAL_WEBSITE_PATH;
+const char *snmpMountPath = TCPIP_SNMP_MOUNT_POINT;
 #if defined (TCPIP_STACK_USE_IPV6)
 static void SNMP_IPV6_Notify(TCPIP_NET_HANDLE hNet, uint8_t evType, const void * param);
 #endif

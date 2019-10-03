@@ -98,6 +98,13 @@ def instantiateComponent(tcpipTftpsComponent):
 	tcpipTftpsFileNameLength.setDescription("TFTP Server default file name length")
 	tcpipTftpsFileNameLength.setDefaultValue(64)
 	#tcpipTftpsFileNameLength.setDependencies(tcpipTftpsMenuVisibleSingle, ["TCPIP_USE_TFTPS_MODULE"])
+	
+	# Default TFTP Server Mount point directory
+	tcpipTftpsRootDir = tcpipTftpsComponent.createStringSymbol("TCPIP_TFTPS_MOUNT_POINT", None)
+	tcpipTftpsRootDir.setLabel("Root Directory Path")
+	tcpipTftpsRootDir.setVisible(True)
+	tcpipTftpsRootDir.setDescription("Root Directory Path")
+	tcpipTftpsRootDir.setDefaultValue("/mnt/mchpSite1/")
 
 	# Enable User Notification
 	tcpipTftpsUsrNotify = tcpipTftpsComponent.createBooleanSymbol("TCPIP_TFTPS_USER_NOTIFICATION", None)

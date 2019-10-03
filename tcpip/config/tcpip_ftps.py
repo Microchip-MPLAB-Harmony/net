@@ -133,6 +133,13 @@ def instantiateComponent(tcpipFtpsComponent):
 	tcpipFtpsSourceFile.setEnabled(True)
 	#tcpipFtpsSourceFile.setDependencies(tcpipFtpsGenSourceFile, ["TCPIP_USE_FTP_MODULE"])
 
+	# Default FTP Mount point directory
+	tcpipFtpRootDir = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_MOUNT_POINT", None)
+	tcpipFtpRootDir.setLabel("Root Directory Path")
+	tcpipFtpRootDir.setVisible(True)
+	tcpipFtpRootDir.setDescription("Root Directory Path")
+	tcpipFtpRootDir.setDefaultValue("/mnt/mchpSite1/")
+
 	
 def tcpipFtpsMenuVisible(symbol, event):
 	if (event["value"] == True):

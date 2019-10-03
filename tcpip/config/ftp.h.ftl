@@ -53,6 +53,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_FTP_USER_NAME		        		"${TCPIP_FTP_USER_NAME}"
 #define TCPIP_FTP_PASSWORD		        		"${TCPIP_FTP_PASSWORD}"
 #define TCPIP_FTP_TIMEOUT						${TCPIP_FTP_TIMEOUT}
+<#if TCPIP_FTP_MOUNT_POINT?has_content>
+#define TCPIP_FTP_MOUNT_POINT					"${TCPIP_FTP_MOUNT_POINT}"
+<#else>
+#define TCPIP_FTP_MOUNT_POINT 					"\"
+</#if>
 
 /***Comment this line out to disable MPFS***/
 <#if TCPIP_FTP_PUT_ENABLED == true>
