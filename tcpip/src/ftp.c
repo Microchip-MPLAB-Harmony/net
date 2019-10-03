@@ -46,7 +46,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_FTP_SERVER)
 #include "tcpip/src/ftp_private.h"
 
-#define FTP_SERVER_FILE_PATH LOCAL_WEBSITE_PATH 
+#define FTP_SERVER_FILE_PATH TCPIP_FTP_MOUNT_POINT
 
 static TCPIP_FTP_MODULE_CONFIG_DATA ftpConfigData;
 // This variable is used to check if the PUT command is completed successfully 
@@ -206,7 +206,7 @@ static bool TCPIP_FTP_Verify(uint8_t* login,uint8_t* password)
 
 static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt)
 {
-    char ftpMsg[SYS_FS_MAX_PATH+10]; // 10 for extra parameter
+    char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
     SYS_FS_SHELL_RES fsRes;
   
 
@@ -639,7 +639,7 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
             break;
         case TCPIP_FTP_CMD_FEAT:
             {
-                char ftpMsg[SYS_FS_MAX_PATH+10]; // 10 for extra parameter
+                char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
                 memset(ftpMsg,0,sizeof(ftpMsg));
                 sprintf(ftpMsg,"211-features:\r\n");
                 if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
@@ -719,12 +719,12 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
         case TCPIP_FTP_CMD_XPWD:
         case TCPIP_FTP_CMD_PWD:
         {
-            char cwd[SYS_FS_MAX_PATH+1];
-            char ftpMsg[SYS_FS_MAX_PATH+10]; // 10 for extra parameter
+            char cwd[SYS_FS_FILE_NAME_LEN+1];
+            char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
             SYS_FS_SHELL_RES shellRes;
             memset(cwd,0,sizeof(cwd));
             // Get current directory -
-            shellRes = (pFTPDcpt->ftp_shell_obj->cwdGet)(pFTPDcpt->ftp_shell_obj,cwd,SYS_FS_MAX_PATH);
+            shellRes = (pFTPDcpt->ftp_shell_obj->cwdGet)(pFTPDcpt->ftp_shell_obj,cwd,SYS_FS_FILE_NAME_LEN);
             if(shellRes != SYS_FS_SHELL_RES_OK)
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
@@ -747,19 +747,19 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
 
         case TCPIP_FTP_CMD_CWD:
         {          
-            char ftpMsg[SYS_FS_MAX_PATH+10]; // 10 for extra parameter
+            char ftpMsg[SYS_FS_FILE_NAME_LEN+10]; // 10 for extra parameter
 
             // check if the CWD is Same as the LOCAL_WEBSITE_PATH
             // change the directory to root path and then change path
             
-            char cwd[SYS_FS_MAX_PATH+1];
+            char cwd[SYS_FS_FILE_NAME_LEN+1];
             fsWrapperRes = (pFTPDcpt->ftp_shell_obj->cwdSet)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
             if(fsWrapperRes != SYS_FS_SHELL_RES_OK)
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
                 return true;
             }
-            fsWrapperRes = (pFTPDcpt->ftp_shell_obj->cwdGet)(pFTPDcpt->ftp_shell_obj,cwd,SYS_FS_MAX_PATH);
+            fsWrapperRes = (pFTPDcpt->ftp_shell_obj->cwdGet)(pFTPDcpt->ftp_shell_obj,cwd,SYS_FS_FILE_NAME_LEN);
             if(fsWrapperRes != SYS_FS_SHELL_RES_OK)
             {
                 pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
@@ -1297,7 +1297,7 @@ static bool TCPIP_FTP_FilePut(TCPIP_FTP_DCPT* pFTPDcpt)
 static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
 {
     uint16_t wCount=0;
-    char longFileName[SYS_FS_MAX_PATH];
+    char longFileName[SYS_FS_FILE_NAME_LEN];
     static uint8_t fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN+
                     TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN+
                     TCPIP_FTP_MAX_FILE_SIZE_STR_LEN+
@@ -1396,7 +1396,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
              // structure needs to be initialized with address of proper buffer.
             memset(longFileName,0,sizeof(longFileName));
             fs_stat.lfname = longFileName;
-            fs_stat.lfsize = SYS_FS_MAX_PATH;
+            fs_stat.lfsize = SYS_FS_FILE_NAME_LEN;
             fp = pFTPDcpt->fileDescr;
             if(TCPIP_Helper_ProtectedSingleListInitialize(&DirectoryFileList)!= true)
             {
@@ -1794,7 +1794,7 @@ static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile)
 
 static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
 {
-    char longFileName[SYS_FS_MAX_PATH];
+    char longFileName[SYS_FS_FILE_NAME_LEN];
     uint16_t wCount=0;
     static uint8_t fileNameList[TCPIP_FTP_MAX_FILE_NAME_LEN+
                     TCPIP_FTP_MAX_FILE_DATE_TIME_STR_LEN+
@@ -1866,7 +1866,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             }
             if(cmdWithArg)
             { // argument two will be the file name
-                if(strlen((char*)pFTPDcpt->ftp_argv[2]) > SYS_FS_MAX_PATH)
+                if(strlen((char*)pFTPDcpt->ftp_argv[2]) > SYS_FS_FILE_NAME_LEN)
                 {// File not found, so abort
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
                     _FTP_ReleaseDataSocket(pFTPDcpt);  
@@ -1876,7 +1876,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             }
             else
             { // argument first will be the file name
-                if(strlen((char*)pFTPDcpt->ftp_argv[1]) > SYS_FS_MAX_PATH)
+                if(strlen((char*)pFTPDcpt->ftp_argv[1]) > SYS_FS_FILE_NAME_LEN)
                 {// File not found, so abort
                     pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_FILE_NOT_EXIST_OR_ACTION_NOTTAKEN;
                     _FTP_ReleaseDataSocket(pFTPDcpt);  
@@ -2092,7 +2092,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             // If long file name is used, the following elements of the "stat"
              // structure needs to be initialized with address of proper buffer.
             fs_stat.lfname = longFileName;
-            fs_stat.lfsize = SYS_FS_MAX_PATH;
+            fs_stat.lfsize = SYS_FS_FILE_NAME_LEN;
             fp = pFTPDcpt->fileDescr;
             if(TCPIP_Helper_ProtectedSingleListInitialize(&DirectoryFileList) != true)
             {

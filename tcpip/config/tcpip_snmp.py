@@ -47,7 +47,14 @@ def instantiateComponent(tcpipSnmpComponent):
 	tcpipSnmpTskProcRate.setDescription("SNMP process rate")
 	tcpipSnmpTskProcRate.setDefaultValue(200)
 	#tcpipSnmpTskProcRate.setDependencies(tcpipSnmpMenuVisibleSingle, ["TCPIP_USE_SNMP"])
-
+	
+	# Default SNMP Mount point directory
+	tcpipSnmpRootDir = tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_MOUNT_POINT", None)
+	tcpipSnmpRootDir.setLabel("Root Directory Path")
+	tcpipSnmpRootDir.setVisible(True)
+	tcpipSnmpRootDir.setDescription("Root Directory Path")
+	tcpipSnmpRootDir.setDefaultValue("/mnt/mchpSite1/")
+	
 	# BIB file name
 	tcpipSnmpBibFileName = tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_BIB_FILE_NAME", None)
 	tcpipSnmpBibFileName.setLabel("BIB file name")

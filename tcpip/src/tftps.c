@@ -64,7 +64,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define mMIN(a, b)  ((a<b)?a:b)
 
-const char *tftpsLocalWebPath = LOCAL_WEBSITE_PATH;
+const char *tftpsLocalWebPath = TCPIP_TFTPS_MOUNT_POINT;
 static TFTPS_CB            gTftpClientCB[TCPIP_TFTPS_CLIENT_NUMBER];
 static TCPIP_TFTPS_DCPT    gTftpsDcpt;
 static int                gTftpsInitCount = 0;
