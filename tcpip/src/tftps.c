@@ -348,7 +348,10 @@ bool TCPIP_TFTPS_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, cons
         gUdpTftpServerRXSigHandle = 0;
         gTftpsDcpt.uSkt    = INVALID_UDP_SOCKET;
         gTftpsDcpt.memH    = stackCtrl->memH;
-        
+        if(tftpsData->mountPath != 0)
+        {
+            tftpsLocalWebPath = tftpsData->mountPath;
+        }
         // create the TFTP signal handler
         gTftpsSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_TFTPS_Task, TCPIP_TFTPS_TASK_TICK_RATE); 
         if(gTftpsSignalHandle == 0)

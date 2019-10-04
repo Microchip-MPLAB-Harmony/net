@@ -463,7 +463,7 @@ const TCPIP_TFTPC_MODULE_CONFIG tcpipTFTPCInitData =
 /*** TFTP Server Initialization Data ***/
 const TCPIP_TFTPS_MODULE_CONFIG tcpipTFTPSInitData =
 {
-    0
+    .mountPath				= TCPIP_TFTPS_MOUNT_POINT,
 };
 </#if>
 
@@ -513,6 +513,7 @@ const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
     .dataSktRxBuffSize	= TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE,
     .userName			= TCPIP_FTP_USER_NAME,
     .password		    = TCPIP_FTP_PASSWORD,
+	.mountPath			= TCPIP_FTP_MOUNT_POINT,
 };
 </#if>
 
@@ -707,6 +708,7 @@ const TCPIP_SNMP_MODULE_CONFIG tcpipSNMPInitData =
 	.usm_config             = NULL,
 	.trap_target_config     = NULL,
 </#if>
+	.mountPath				= TCPIP_SNMP_MOUNT_POINT,
 };
 </#if>
 
