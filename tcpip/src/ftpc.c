@@ -2272,10 +2272,11 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateWaitPasvDataConnect(TCPIP_FTPC_DCPT_TYPE
 
 static void ftpc_process_pasv_response(TCPIP_FTPC_DCPT_TYPE* pDcpt)
 {    
+    int i;
     char * buff; 
     char pasv_response[6];
     
-    for(unsigned int i = 6; i>0; i--)
+    for(i = 6; i>0; i--)
     {
        buff = strrchr(pDcpt->ftpcCtrlRxBuff, ',');
        if(!buff)
