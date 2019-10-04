@@ -88,6 +88,16 @@ typedef struct
     uint16_t    dataSktRxBuffSize;  // size of Data Socket RX buffer for the associated socket; leave 0 for default
     char     *userName; // FTP login User name. Size should not exceed more than  TCPIP_FTP_USER_NAME_LEN
     char     *password; // FTP login password. Size should not exceed more than TCPIP_FTP_PASSWD_LEN
+    // The FTP server will access files located under this top directory.
+    // No access is possible above this directory.
+    // As a good practice to follow, use something like: "/mnt_point/webpages/"
+    // to limit an external user access to this only directory in the file system
+    // when accessing files.
+    // NOTE: to allow access to the whole file system use the root directory:
+    // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
+    // But this usage should be discouraged because it gives HTTP access
+    // to all system files.
+    const char* mountPath;
 } TCPIP_FTP_MODULE_CONFIG;
 
 // *****************************************************************************

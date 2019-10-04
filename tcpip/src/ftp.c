@@ -269,7 +269,11 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         ftpConfigData.dataSktTxBuffSize = ftpData->dataSktTxBuffSize;
         strncpy(ftpConfigData.userName, ftpData->userName, TCPIP_FTP_USER_NAME_LEN);
         strncpy(ftpConfigData.password, ftpData->password, TCPIP_FTP_PASSWD_LEN);
-
+        // Get the mount path from the Initialization data
+        if(ftpData->mountPath != 0)
+        {
+            ftpLocalWebPath = ftpData->mountPath;
+        }
         sTCPIPFtpMemH = stackData->memH;
         
         sTCPIPFTPDcpt = (TCPIP_FTP_DCPT*)TCPIP_HEAP_Calloc(sTCPIPFtpMemH, ftpConfigData.nConnections, sizeof(TCPIP_FTP_DCPT));
@@ -307,6 +311,7 @@ bool TCPIP_FTP_ServerInitialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
             pDcpt->callbackPos = 0;
             pDcpt->ftpTcpDataSocketSignal=0;
             pDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
+            
             pDcpt->ftp_shell_obj = (SYS_FS_SHELL_OBJ  *)SYS_FS_Shell_Create(ftpLocalWebPath,0,0,0,&res);
             if(pDcpt->ftp_shell_obj == 0)
             {

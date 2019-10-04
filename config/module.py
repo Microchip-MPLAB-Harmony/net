@@ -223,7 +223,7 @@ def loadModule():
     tcpipTftpsComponent.addDependency("Tftps_IPv4_Dependency", "IPv4", None, True, True)
     tcpipTftpsComponent.addDependency("Tftps_UDP_Dependency", "UDP", None, True, True)  
     #tcpipTftpsComponent.addDependency("Tftps_MAC_Dependency", "MAC")
-    tcpipTftpsComponent.addDependency("Tftps_TcpipFs_Dependency", "SYS_FS", "TFTPC-SYSFS", False, False)
+    tcpipTftpsComponent.addDependency("Tftps_TcpipFs_Dependency", "SYS_FS", "TFTPS-SYSFS", False, False)
     tcpipTftpsComponent.setDisplayType("TCP/IP Library")
     
     tcpipZeroConfComponent = Module.CreateComponent("tcpipZeroConf", "ZEROCONF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_zeroconf.py")

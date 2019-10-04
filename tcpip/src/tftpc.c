@@ -41,7 +41,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip_private.h"
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_TFTP_CLIENT)
-#include "tcpip/src/common/sys_fs_shell.h"
+#include "system/fs/sys_fs.h"
 #include "tftpc_private.h"
 
 #if defined(TCPIP_TFTPC_DEBUG)
@@ -72,8 +72,6 @@ static void TCPIP_TFTPC_Cleanup(void);
 #else
 #define TCPIP_TFTPC_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
-
-const char *tftpcLocalWebPath = LOCAL_WEBSITE_PATH;
 
 static void _TFTPSendFileName(TFTP_OPCODE opcode, uint8_t *fileName);
 static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode);
@@ -125,7 +123,7 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
     TFTP_CLIENT_VARS*   pClient;
     uint16_t            bufferSize;
     uint16_t            totalBufferSize;
-    SYS_FS_SHELL_RES    res;
+
     if(stackData->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
@@ -162,14 +160,6 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         tftpcSignalHandle =_TCPIPStackSignalHandlerRegister(TCPIP_THIS_MODULE_ID, TCPIP_TFTPC_Task, TCPIP_TFTPC_TASK_TICK_RATE);
         if(tftpcSignalHandle == 0)
         {   // cannot create the SNTP timer
-            TCPIP_TFTPC_Cleanup();
-            return false;
-        }
-        
-        pClient->tftpc_shell_obj = (SYS_FS_SHELL_OBJ  *)SYS_FS_Shell_Create(tftpcLocalWebPath,0,0,0,&res);
-        if(pClient->tftpc_shell_obj == 0)
-        {
-            SYS_ERROR(SYS_ERROR_ERROR, " TFTP Client: Wrapper object failure : %d",res);
             TCPIP_TFTPC_Cleanup();
             return false;
         }
@@ -214,13 +204,6 @@ static void TCPIP_TFTPC_Cleanup(void)
     {
         _TCPIPStackSignalHandlerDeregister(tftpcSignalHandle);
         tftpcSignalHandle = 0;
-    }
-    
-    // Wrapper object cleanup
-    if(pClient->tftpc_shell_obj != 0)
-    {
-        (pClient->tftpc_shell_obj->delete)(pClient->tftpc_shell_obj);
-        pClient->tftpc_shell_obj = 0;
     }
     tftpcInitCount = 0;
 
@@ -563,13 +546,13 @@ static void TCPIP_TFTPC_Process(void)
                             pClient->smState = SM_TFTP_END;
                             return;
                         }                        
-                        (pClient->tftpc_shell_obj->fileSeek)(pClient->tftpc_shell_obj,pClient->fileDescr,(int32_t)pClient->callbackPos,SYS_FS_SEEK_SET);
+                        SYS_FS_FileSeek(pClient->fileDescr,(int32_t)pClient->callbackPos,SYS_FS_SEEK_SET);                    
                     }
                     wCount = TCPIP_TFTP_CLIENT_MAX_BUFFER_SIZE -5;  // first 512 bytes
-                    wLen = (pClient->tftpc_shell_obj->fileRead)(pClient->tftpc_shell_obj,pClient->fileDescr,data,wCount);
+                    wLen = SYS_FS_FileRead(pClient->fileDescr,data,wCount);
                     if(wLen == 0)
                     {// If no bytes were read, an EOF was reached
-                        (pClient->tftpc_shell_obj->fileClose)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                        SYS_FS_FileClose(pClient->fileDescr);
                         pClient->fileDescr = -1;
                         pClient->callbackPos = 0;
                         pClient->smState = SM_TFTP_END;
@@ -596,7 +579,7 @@ static void TCPIP_TFTPC_Process(void)
                         // flush the bytes
                         _tftpFlags.bits.bIsFlushed = true;
                         // Save the new address and close the file
-                        status = (pClient->tftpc_shell_obj->fileTell)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                        status = SYS_FS_FileTell(pClient->fileDescr);
                         if(status == -1)
                             pClient->callbackPos = 0;
                         else
@@ -611,7 +594,7 @@ static void TCPIP_TFTPC_Process(void)
                 case TFTP_NOT_READY:
                     if(pClient->fileDescr != -1)
                     {
-                        (pClient->tftpc_shell_obj->fileClose)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                        SYS_FS_FileClose(pClient->fileDescr);
                         pClient->fileDescr = -1;
                     }
                     pClient->callbackPos = 0;
@@ -620,7 +603,7 @@ static void TCPIP_TFTPC_Process(void)
                     _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_DECLINE,0,0);
                     break;
                 case  TFTP_END_OF_FILE:
-                    (pClient->tftpc_shell_obj->fileClose)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                    SYS_FS_FileClose(pClient->fileDescr);
                     pClient->fileDescr = -1;
                     pClient->callbackPos = 0;
                     pClient->smState = SM_TFTP_END;
@@ -648,13 +631,13 @@ static void TCPIP_TFTPC_Process(void)
                             pClient->smState = SM_TFTP_END;
                             return;
                         }                   
-                        (pClient->tftpc_shell_obj->fileSeek)(pClient->tftpc_shell_obj,pClient->fileDescr,(int32_t)pClient->callbackPos,SYS_FS_SEEK_SET);
+                        SYS_FS_FileSeek(pClient->fileDescr,(int32_t)pClient->callbackPos,SYS_FS_SEEK_SET);                     
                     }              
                     // first 512 bytes
-                    wLen = (pClient->tftpc_shell_obj->fileWrite)(pClient->tftpc_shell_obj,pClient->fileDescr,data,wCount);
+                    wLen = SYS_FS_FileWrite(pClient->fileDescr,data,wCount);
                     if(wLen == -1)
                     {// If no bytes were read, an EOF was reached
-                        (pClient->tftpc_shell_obj->fileClose)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                        SYS_FS_FileClose(pClient->fileDescr);
                         pClient->fileDescr = -1;
                         pClient->callbackPos = 0;
                         pClient->smState = SM_TFTP_END;
@@ -666,7 +649,7 @@ static void TCPIP_TFTPC_Process(void)
                     else
                     {   
                         // Save the new address
-                        status = (pClient->tftpc_shell_obj->fileTell)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                        status = SYS_FS_FileTell(pClient->fileDescr);
                         if(status == -1)
                             pClient->callbackPos = 0;
                         else
@@ -684,7 +667,7 @@ static void TCPIP_TFTPC_Process(void)
                 case TFTP_NOT_READY:                
                     if(pClient->fileDescr != -1)
     				{
-                        (pClient->tftpc_shell_obj->fileClose)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                        SYS_FS_FileClose(pClient->fileDescr);
                         pClient->fileDescr = -1;
                     }                
                     pClient->callbackPos = 0;
@@ -693,7 +676,7 @@ static void TCPIP_TFTPC_Process(void)
                     _TFTPNotifyClients(pTftpcIf,TFTPC_EVENT_DECLINE,0,0);
                     break;
                 case  TFTP_END_OF_FILE:                   
-                    (pClient->tftpc_shell_obj->fileClose)(pClient->tftpc_shell_obj,pClient->fileDescr);
+                    SYS_FS_FileClose(pClient->fileDescr);
                     pClient->fileDescr = -1;
                     pClient->callbackPos = 0;
                     pClient->smState = SM_TFTP_END;
@@ -769,11 +752,11 @@ static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode)
 
     if(mode == TFTP_FILE_MODE_WRITE)
     {
-        fp = (pClient->tftpc_shell_obj->fileOpen)(pClient->tftpc_shell_obj,(const char*)fileName,SYS_FS_FILE_OPEN_READ);
+        fp = SYS_FS_FileOpen((const char*)fileName,SYS_FS_FILE_OPEN_READ);
     }
     else
     {
-        fp = (pClient->tftpc_shell_obj->fileOpen)(pClient->tftpc_shell_obj,(const char*)fileName,SYS_FS_FILE_OPEN_WRITE);
+        fp = SYS_FS_FileOpen((const char*)fileName,SYS_FS_FILE_OPEN_WRITE);
     }
 
     if(fp == SYS_FS_HANDLE_INVALID)

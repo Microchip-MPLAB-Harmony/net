@@ -67,7 +67,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Placeholder for TFTPS Module Configuration
 typedef struct
 {
-    void* reserved;
+    // The TFTP server will access files located under this top directory.
+    // No access is possible above this directory.
+    // As a good practice to follow, use something like: "/mnt_point/webpages/"
+    // to limit an external user access to this only directory in the file system
+    // when accessing files.
+    // NOTE: to allow access to the whole file system use the root directory:
+    // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
+    // But this usage should be discouraged because it gives HTTP access
+    // to all system files.
+    const char* mountPath;
 } TCPIP_TFTPS_MODULE_CONFIG;
 
 

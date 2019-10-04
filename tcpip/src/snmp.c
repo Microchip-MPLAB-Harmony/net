@@ -466,6 +466,10 @@ bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         }
         // create the SYS_FS shell
         SYS_FS_SHELL_RES shellRes;
+        if(snmpData->mountPath != 0)
+        {
+            snmpMountPath = snmpData->mountPath;
+        }
         snmpFileShell = (SYS_FS_SHELL_OBJ*)SYS_FS_Shell_Create(snmpMountPath,0,0,0,&shellRes);
         if(snmpFileShell == 0)
         {
