@@ -470,8 +470,8 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
     {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
 #endif   
-#if defined(TCPIP_STACK_USE_FTPC)
-    {TCPIP_MODULE_FTPC,        (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTPC
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
 #endif 
     // Add other stack modules here
      
@@ -574,7 +574,12 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_SMTPC)
     {TCPIP_MODULE_SMTPC,        (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize},          // TCPIP_MODULE_SMTPC
 #endif
-    
+#if defined(TCPIP_STACK_USE_TFTP_SERVER)
+    {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
+#endif   
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
+#endif 
     // Add other stack modules here
      
 };

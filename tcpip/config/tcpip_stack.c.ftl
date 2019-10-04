@@ -913,7 +913,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_FTP_SERVER,       &tcpipFTPInitData},             // TCPIP_MODULE_FTP
 </#if>
 <#if (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT)?has_content && (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT) == true>
-	{TCPIP_MODULE_FTPC,             &tcpipFTPClientInitData},       // TCPIP_MODULE_FTP_CLIENT
+	{TCPIP_MODULE_FTP_CLIENT,       &tcpipFTPClientInitData},       // TCPIP_MODULE_FTP_CLIENT
 </#if>
 <#if (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER)?has_content && (tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER) == true>
     {TCPIP_MODULE_HTTP_SERVER,      &tcpipHTTPInitData},            // TCPIP_MODULE_HTTP_SERVER

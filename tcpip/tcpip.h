@@ -327,7 +327,7 @@ typedef enum
     TCPIP_MODULE_TCP,
     TCPIP_MODULE_IGMP,      /* IGMP host module */
 
-    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 36 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 19 /*DOM-IGNORE-END*/
     TCPIP_MODULE_DHCP_CLIENT  /*DOM-IGNORE-BEGIN*/ = TCPIP_MODULE_LAYER3 /*DOM-IGNORE-END*/,
     TCPIP_MODULE_DHCP_SERVER,
     TCPIP_MODULE_ANNOUNCE,
@@ -336,9 +336,9 @@ typedef enum
     TCPIP_MODULE_ZCLL,              /* Zero Config Link Local */
     TCPIP_MODULE_MDNS,              /* Bonjour/mDNS */
     TCPIP_MODULE_NBNS,
-    TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 21 - 30 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 20 - 29 /*DOM-IGNORE-END*/
+    TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
     TCPIP_MODULE_SNTP,
     TCPIP_MODULE_FTP_SERVER,
     TCPIP_MODULE_HTTP_SERVER,
@@ -348,15 +348,16 @@ typedef enum
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
     TCPIP_MODULE_BERKELEY,
-    TCPIP_MODULE_REBOOT_SERVER,
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 31 - 36 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 37 /*DOM-IGNORE-END*/
+    TCPIP_MODULE_REBOOT_SERVER,
     TCPIP_MODULE_COMMAND,
     TCPIP_MODULE_IPERF,
     TCPIP_MODULE_TFTP_CLIENT,       /* TFTP client module */
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
 	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
+	TCPIP_MODULE_FTP_CLIENT,        /* FTP client */
 
     /* add other modules here */
     //

@@ -35,13 +35,13 @@ CONSEQUENTIAL DAMAGES, LOST PROFITS OR LOST DATA, COST OF PROCUREMENT OF
 SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
 (INCLUDING BUT NOT LIMITED TO ANY DEFENSE THEREOF), OR OTHER SIMILAR COSTS.
 *******************************************************************************/
-#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_FTPC
+#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_FTP_CLIENT
 
 #include "tcpip/src/tcpip_private.h"
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/fs/sys_fs.h"
 
-#if defined(TCPIP_STACK_USE_FTPC)
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
 #include "tcpip/src/ftpc_private.h"
 
 
@@ -3317,4 +3317,4 @@ static bool ftpcDataEvent(TCPIP_FTPC_DCPT_TYPE* pDcpt, TCPIP_FTPC_DATA_EVENT_TYP
         return false;
 }
 
-#endif //#if defined(TCPIP_STACK_USE_FTPC)
+#endif //#if defined(TCPIP_STACK_USE_FTP_CLIENT)

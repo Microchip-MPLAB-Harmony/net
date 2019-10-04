@@ -361,12 +361,12 @@ typedef struct
     TCPIP_SNMPV3_TARGET_ENTRY_CONFIG *trap_target_config; /* SNMPv3 trap configuration*/
     // The SNMP server will access snmp.bib file or other MIB files located under this top directory.
     // No access is possible above this directory.
-    // As a good practice to follow, use something like: "/mnt_point/webpages/"
+    // As a good practice to follow, use something like: "/mnt_point/snmp/"
     // to limit an external user access to this only directory in the file system
     // when accessing files.
     // NOTE: to allow access to the whole file system use the root directory:
     // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
-    // But this usage should be discouraged because it gives SNMP Server to access
+    // But this usage should be discouraged because it gives SNMP Server access
     // to all system files.
     const char* mountPath;
 } TCPIP_SNMP_MODULE_CONFIG;

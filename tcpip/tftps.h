@@ -69,12 +69,12 @@ typedef struct
 {
     // The TFTP server will access files located under this top directory.
     // No access is possible above this directory.
-    // As a good practice to follow, use something like: "/mnt_point/webpages/"
+    // As a good practice to follow, use something like: "/mnt_point/tftps/"
     // to limit an external user access to this only directory in the file system
     // when accessing files.
     // NOTE: to allow access to the whole file system use the root directory:
     // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
-    // But this usage should be discouraged because it gives TFTP Server to access
+    // But this usage should be discouraged because it gives TFTP Server access
     // to all system files.
     const char* mountPath;
 } TCPIP_TFTPS_MODULE_CONFIG;
