@@ -74,7 +74,7 @@ typedef struct
     // when accessing files.
     // NOTE: to allow access to the whole file system use the root directory:
     // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
-    // But this usage should be discouraged because it gives HTTP access
+    // But this usage should be discouraged because it gives TFTP Server to access
     // to all system files.
     const char* mountPath;
 } TCPIP_TFTPS_MODULE_CONFIG;
