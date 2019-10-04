@@ -135,9 +135,9 @@ def instantiateComponent(tcpipFtpsComponent):
 
 	# Default FTP Mount point directory
 	tcpipFtpRootDir = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_MOUNT_POINT", None)
-	tcpipFtpRootDir.setLabel("Root Directory Path")
+	tcpipFtpRootDir.setLabel("FTP Server Root Directory Path")
 	tcpipFtpRootDir.setVisible(True)
-	tcpipFtpRootDir.setDescription("Root Directory Path")
+	tcpipFtpRootDir.setDescription("FTP Server Root Directory Path")
 	tcpipFtpRootDir.setDefaultValue("/mnt/mchpSite1/")
 
 	

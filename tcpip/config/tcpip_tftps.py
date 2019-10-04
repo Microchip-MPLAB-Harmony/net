@@ -101,9 +101,9 @@ def instantiateComponent(tcpipTftpsComponent):
 	
 	# Default TFTP Server Mount point directory
 	tcpipTftpsRootDir = tcpipTftpsComponent.createStringSymbol("TCPIP_TFTPS_MOUNT_POINT", None)
-	tcpipTftpsRootDir.setLabel("Root Directory Path")
+	tcpipTftpsRootDir.setLabel("TFTP Server Root Directory Path")
 	tcpipTftpsRootDir.setVisible(True)
-	tcpipTftpsRootDir.setDescription("Root Directory Path")
+	tcpipTftpsRootDir.setDescription("TFTP Server Root Directory Path")
 	tcpipTftpsRootDir.setDefaultValue("/mnt/mchpSite1/")
 
 	# Enable User Notification

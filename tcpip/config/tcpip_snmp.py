@@ -50,9 +50,9 @@ def instantiateComponent(tcpipSnmpComponent):
 	
 	# Default SNMP Mount point directory
 	tcpipSnmpRootDir = tcpipSnmpComponent.createStringSymbol("TCPIP_SNMP_MOUNT_POINT", None)
-	tcpipSnmpRootDir.setLabel("Root Directory Path")
+	tcpipSnmpRootDir.setLabel("SNMP Server Root Directory Path")
 	tcpipSnmpRootDir.setVisible(True)
-	tcpipSnmpRootDir.setDescription("Root Directory Path")
+	tcpipSnmpRootDir.setDescription("SNMP Server Root Directory Path")
 	tcpipSnmpRootDir.setDefaultValue("/mnt/mchpSite1/")
 	
 	# BIB file name
