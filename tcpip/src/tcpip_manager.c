@@ -4338,9 +4338,9 @@ static void _TCPIPCopyMacAliasIf(TCPIP_NET_IF* pAliasIf, TCPIP_NET_IF* pPriIf)
 
 // external packet processing
 #if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
-TCPIP_PACKET_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
+TCPIP_STACK_PROCESS_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
 {
-    TCPIP_PACKET_HANDLE pHandle = 0;
+    TCPIP_STACK_PROCESS_HANDLE pHandle = 0;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
 
@@ -4355,7 +4355,7 @@ TCPIP_PACKET_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCP
     return pHandle;
 }
 
-bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_PACKET_HANDLE pktHandle)
+bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle)
 {
     bool res = false;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);

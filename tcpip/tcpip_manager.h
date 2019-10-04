@@ -390,7 +390,7 @@ typedef void (*TCPIP_MODULE_SIGNAL_FUNC)(TCPIP_MODULE_SIGNAL_HANDLE sigHandle,
 // *****************************************************************************
 /*
   Type:
-    TCPIP_PACKET_HANDLE
+    TCPIP_STACK_PROCESS_HANDLE
 
   Summary:
     Defines a TCPIP stack packet processing handle.
@@ -400,7 +400,7 @@ typedef void (*TCPIP_MODULE_SIGNAL_FUNC)(TCPIP_MODULE_SIGNAL_HANDLE sigHandle,
     packet processing registration by the stack clients.
 
 */
-typedef const void* TCPIP_PACKET_HANDLE;
+typedef const void* TCPIP_STACK_PROCESS_HANDLE;
 
 // *****************************************************************************
 /* TCPIP packet handler Pointer
@@ -435,6 +435,9 @@ typedef const void* TCPIP_PACKET_HANDLE;
     The packet handler is called in the TCP/IP stack manager context.
     The handler should be kept as short as possible as it affects the processing of all the other
     RX traffic.
+
+    The packet is passed to the external handler as it comes from the MAC,
+    no processing is done on it.
 
     Important!
     When the packet handler returns true, once it's done processing the packet,
@@ -2362,7 +2365,7 @@ TCPIP_MODULE_SIGNAL    TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE moduleId);
 //*******************************************************************************
 /*
   Function:
-    TCPIP_PACKET_HANDLE    TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
+    TCPIP_STACK_PROCESS_HANDLE    TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
 
   Summary:
     Sets a new packet processing handler.
@@ -2383,12 +2386,12 @@ TCPIP_MODULE_SIGNAL    TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE moduleId);
     handlerParam    - packet handler parameter
 
   Returns:
-    - a valid TCPIP_PACKET_HANDLE - if the operation succeeded
+    - a valid TCPIP_STACK_PROCESS_HANDLE - if the operation succeeded
     - NULL - if the operation failed
 
   Example:
     <code>
-    TCPIP_PACKET_HANDLE pktHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPktHandler, myParam );
+    TCPIP_STACK_PROCESS_HANDLE pktHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPktHandler, myParam );
     </code>
 
   Remarks:
@@ -2399,13 +2402,13 @@ TCPIP_MODULE_SIGNAL    TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE moduleId);
     Exists only if TCPIP_STACK_EXTERN_PACKET_PROCESS is true 
 
   */
-TCPIP_PACKET_HANDLE     TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam);
+TCPIP_STACK_PROCESS_HANDLE     TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam);
 
 
 //*******************************************************************************
 /*
   Function:
-    bool    TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_PACKET_HANDLE pktHandle);
+    bool    TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle);
 
   Summary:
     Deregisters a previously registered packet handler.
@@ -2428,7 +2431,7 @@ TCPIP_PACKET_HANDLE     TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet,
 
   Example:
     <code>
-    TCPIP_PACKET_HANDLE myHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPacketHandler, myParam );
+    TCPIP_STACK_PROCESS_HANDLE myHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPacketHandler, myParam );
     // process incoming packets
     // now we're done with it
     TCPIP_STACK_PacketHandlerDeregister(hNet, myHandle);
@@ -2438,7 +2441,7 @@ TCPIP_PACKET_HANDLE     TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet,
     Exists only if TCPIP_STACK_EXTERN_PACKET_PROCESS is true 
 
   */
-bool    TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_PACKET_HANDLE pktHandle);
+bool    TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle);
 
 
 // *****************************************************************************

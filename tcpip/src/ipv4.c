@@ -38,10 +38,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 
-
-
-
-
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_IPV4
 
 #include "tcpip/src/tcpip_private.h"
@@ -90,6 +86,10 @@ typedef enum
 }TCPIP_IPV4_DEST_TYPE;
 
 
+#if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+static TCPIP_IPV4_PACKET_HANDLER ipv4PktHandler = 0;
+static const void* ipv4PktHandlerParam;
+#endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
 /************************************************************************/
 /****************               Prototypes               ****************/
@@ -329,6 +329,10 @@ bool TCPIP_IPV4_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const
             }
 
             iniRes = TCPIP_Notification_Initialize(&ipv4PacketFilters);
+
+#if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+            ipv4PktHandler = 0;
+#endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
             break;
         }
@@ -799,7 +803,7 @@ static void TCPIP_IPV4_Process(void)
     bool         pktAccepted;
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_STACK_MODULE destId;
-    bool        isFragment = 0;
+    bool        isFragment;
 
     // extract queued IPv4 packets
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
@@ -808,10 +812,12 @@ static void TCPIP_IPV4_Process(void)
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
         while(true)
         {
+            isFragment = 0;
             destId = TCPIP_MODULE_NONE;
             ackRes = TCPIP_MAC_PKT_ACK_NONE;
-            pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
 
+
+            pHeader = (IPV4_HEADER*)pRxPkt->pNetLayer;
             // Make sure that this is an IPv4 packet.
             if((pHeader->Version) != IPv4_VERSION)
             {
@@ -837,6 +843,18 @@ static void TCPIP_IPV4_Process(void)
                 ackRes = TCPIP_MAC_PKT_ACK_SOURCE_ERR;
                 break;
             }
+
+#if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+            if(ipv4PktHandler != 0)
+            {
+                bool was_processed = (*ipv4PktHandler)(pNetIf, pRxPkt, ipv4PktHandlerParam);
+                if(was_processed)
+                {
+                    TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                    break;
+                }
+            }
+#endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
             // Validate the IP header.  If it is correct, the checksum 
             // will come out to 0x0000 (because the header contains a 
@@ -948,7 +966,7 @@ static void TCPIP_IPV4_Process(void)
         {   // unknown/unsupported; discard
             TCPIP_PKT_PacketAcknowledge(pRxPkt, ackRes); 
         }
-        else if(!isFragment) 
+        else if(!isFragment && destId != TCPIP_MODULE_NONE) 
         {   // forward this packet and signal
             _TCPIPStackModuleRxInsert(destId, pRxPkt, true);
         }
@@ -1861,6 +1879,41 @@ static void TCPIP_IPV4_FragmentTxInsertToRx(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACK
 
 
 #endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+
+// external packet processing
+#if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+TCPIP_IPV4_PROCESS_HANDLE TCPIP_IPV4_PacketHandlerRegister(TCPIP_IPV4_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    TCPIP_IPV4_PROCESS_HANDLE pHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv4PktHandler == 0)
+    {
+        ipv4PktHandlerParam = handlerParam;
+        ipv4PktHandler = pktHandler;
+        pHandle = pktHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return pHandle;
+}
+
+bool TCPIP_IPV4_PacketHandlerDeregister(TCPIP_IPV4_PROCESS_HANDLE pktHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv4PktHandler == pktHandle)
+    {
+        ipv4PktHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
 
 #endif  // defined(TCPIP_STACK_USE_IPV4)
