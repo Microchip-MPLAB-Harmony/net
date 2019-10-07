@@ -125,5 +125,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // This is the Maximum RX fragmented buffer size.
 #define TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE 1514
 
+// This setting enables/disables the processing of the RX packets
+// by an external handler
+// The user of the IPv6 can register an external function to 
+// process the incoming packets
+// If true, the functionality is built in and could be used by the application
+// If false, the functionality does not exist and the generated code is slightly smaller 
+#define TCPIP_IPV6_EXTERN_PACKET_PROCESS true
+
 
 #endif  // _IPv6_CONFIG_H_

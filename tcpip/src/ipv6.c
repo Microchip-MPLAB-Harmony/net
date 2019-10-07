@@ -160,6 +160,10 @@ static uint32_t        ulaOperStartTick;
 
 #endif  // (TCPIP_IPV6_ULA_GENERATE_ENABLE != 0)
 
+#if (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
+static TCPIP_IPV6_PACKET_HANDLER ipv6PktHandler = 0;
+static const void* ipv6PktHandlerParam;
+#endif  // (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
 
 /************************************************************************/
 /****************               Prototypes               ****************/
@@ -266,6 +270,10 @@ bool TCPIP_IPV6_Initialize(const TCPIP_STACK_MODULE_CTRL* const pStackInit, cons
                 }
 
                 iniRes = TCPIP_Helper_ProtectedSingleListInitialize (&ipv6QueuedPackets);
+
+#if (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
+                ipv6PktHandler = 0;
+#endif  // (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
 
                 break;
             }
@@ -2587,6 +2595,17 @@ static void TCPIP_IPV6_ProcessPackets(void)
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
+#if (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
+        if(ipv6PktHandler != 0)
+        {
+            bool was_processed = (*ipv6PktHandler)((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, ipv6PktHandlerParam);
+            if(was_processed)
+            {
+                TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                continue;
+            }
+        }
+#endif  // (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
         TCPIP_IPV6_Process ((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt);
     }
 }
@@ -3933,6 +3952,42 @@ int TCPIP_IPV6_MaxDatagramDataSizeGet(TCPIP_NET_HANDLE netH)
 
     return 0;
 }
+
+// external packet processing
+#if (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
+TCPIP_IPV6_PROCESS_HANDLE TCPIP_IPV6_PacketHandlerRegister(TCPIP_IPV6_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    TCPIP_IPV6_PROCESS_HANDLE pHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv6PktHandler == 0)
+    {
+        ipv6PktHandlerParam = handlerParam;
+        ipv6PktHandler = pktHandler;
+        pHandle = pktHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return pHandle;
+}
+
+bool TCPIP_IPV6_PacketHandlerDeregister(TCPIP_IPV6_PROCESS_HANDLE pktHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(ipv6PktHandler == pktHandle)
+    {
+        ipv6PktHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
+
 
 #endif  // defined(TCPIP_STACK_USE_IPV6)
 
