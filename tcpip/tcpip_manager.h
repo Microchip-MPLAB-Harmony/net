@@ -436,8 +436,9 @@ typedef const void* TCPIP_STACK_PROCESS_HANDLE;
     The handler should be kept as short as possible as it affects the processing of all the other
     RX traffic.
 
-    The packet is passed to the external handler as it comes from the MAC,
-    no processing is done on it.
+    Before calling the external packet handler 
+    - the rxPkt->pktIf points to the interface receiving the packet
+    - no other processing/checks are done!
 
     Important!
     When the packet handler returns true, once it's done processing the packet,

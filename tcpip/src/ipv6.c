@@ -2598,7 +2598,7 @@ static void TCPIP_IPV6_ProcessPackets(void)
 #if (TCPIP_IPV6_EXTERN_PACKET_PROCESS != 0)
         if(ipv6PktHandler != 0)
         {
-            bool was_processed = (*ipv6PktHandler)((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, ipv6PktHandlerParam);
+            bool was_processed = (*ipv6PktHandler)(pRxPkt->pktIf, pRxPkt, ipv6PktHandlerParam);
             if(was_processed)
             {
                 TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
