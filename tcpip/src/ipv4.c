@@ -810,6 +810,18 @@ static void TCPIP_IPV4_Process(void)
     {
         // log the packet
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
+#if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+        if(ipv4PktHandler != 0)
+        {
+            bool was_processed = (*ipv4PktHandler)(pRxPkt->pktIf, pRxPkt, ipv4PktHandlerParam);
+            if(was_processed)
+            {
+                TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                continue;
+            }
+        }
+#endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
+
         while(true)
         {
             isFragment = 0;
@@ -843,18 +855,6 @@ static void TCPIP_IPV4_Process(void)
                 ackRes = TCPIP_MAC_PKT_ACK_SOURCE_ERR;
                 break;
             }
-
-#if (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
-            if(ipv4PktHandler != 0)
-            {
-                bool was_processed = (*ipv4PktHandler)(pNetIf, pRxPkt, ipv4PktHandlerParam);
-                if(was_processed)
-                {
-                    TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
-                    break;
-                }
-            }
-#endif  // (TCPIP_IPV4_EXTERN_PACKET_PROCESS != 0)
 
             // Validate the IP header.  If it is correct, the checksum 
             // will come out to 0x0000 (because the header contains a 

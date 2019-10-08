@@ -431,15 +431,10 @@ typedef const void* TCPIP_IPV4_PROCESS_HANDLE;
     The handler should be kept as short as possible as it affects the processing of all the other
     IPv4 RX traffic.
 
-    The rxPkt->pNetLayer points to an IPV4_HEADER data structure.
-    Before calling the external packet handler minimal checks are done on the packet
-    (and if these checks fail, the packet will be immediately discarded):
-    - correct header version
-    - correct header length
-    - correct packet source address 
-    Also:
-    - the rxPkt->pktIf is updated
-    - checksum is NOT verified!
+    Before calling the external packet handler 
+    - the rxPkt->pNetLayer points to an IPV4_HEADER data structure.
+    - the rxPkt->pktIf points to the interface receiving the packet
+    - no other checks are done! (checksum, versions, etc.)
 
     Important!
     When the packet handler returns true, once it's done processing the packet,
