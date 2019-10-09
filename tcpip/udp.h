@@ -103,7 +103,7 @@ typedef int16_t UDP_SOCKET;
 // *****************************************************************************
 /*
   Structure:
-    UDP_SOCKET_OPTION
+    UDP_SOCKET_INFO
 
   Summary:
     Information about a UDP socket
