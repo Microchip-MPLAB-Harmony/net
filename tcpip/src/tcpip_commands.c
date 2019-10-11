@@ -51,7 +51,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/console/sys_console.h"
 #include "system/debug/sys_debug.h"
 #include "system/command/sys_command.h"
-#include "driver/miim/drv_miim.h"
 #include "net_pres/pres/net_pres_socketapi.h"
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
@@ -66,6 +65,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 #if (DRV_MIIM_COMMANDS != 0)
+#include "driver/miim/drv_miim.h"
 #define _TCPIP_COMMANDS_MIIM
 #endif
 
