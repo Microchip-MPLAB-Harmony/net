@@ -52,7 +52,11 @@ const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
 /*** telnet Server Initialization Data ***/
 const TCPIP_TELNET_MODULE_CONFIG tcpipTelnetInitData =
 { 
-    0
+    .nConnections   = TCPIP_TELNET_MAX_CONNECTIONS,
+    .sktTxBuffSize  = TCPIP_TELNET_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize  = TCPIP_TELNET_SKT_RX_BUFF_SIZE,
+    .listenPort     = TCPIP_TELNET_LISTEN_PORT,
+    .configFlags    = TCPIP_TELNET_CONFIG_FLAGS,
 };
 </#if>
 
