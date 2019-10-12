@@ -23,6 +23,7 @@
 ##############################################################################
 autoConnectTableGMAC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvGmac:libdrvGmac"]]
 autoConnectTableEthmac = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvPic32mEthmac:libdrvPic32mEthmac"]]
+autoConnectTableWINC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvWifiWinc:libdrvWincMac"]]
 ################################################################################
 #### Business Logic ####
 ################################################################################
@@ -93,6 +94,13 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigLAN8740.setVisible(True)
     tcpipAutoConfigLAN8740.setDescription("Enable LAN8740")
     tcpipAutoConfigLAN8740.setDependencies(tcpipAutoConfigLAN8740Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8740"])       
+
+    # Enable WINC MAC
+    tcpipAutoConfigWINC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_WINC", None)
+    tcpipAutoConfigWINC.setLabel("WINC")
+    tcpipAutoConfigWINC.setVisible(True)
+    tcpipAutoConfigWINC.setDescription("Enable WINC")
+    tcpipAutoConfigWINC.setDependencies(tcpipAutoConfigWINCEnable, ["TCPIP_AUTOCONFIG_ENABLE_WINC"])    
 ########################################################################################################
 def finalizeComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
@@ -211,4 +219,18 @@ def tcpipAutoConfigLAN8740Enable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyLan8740"])
-    
+
+def tcpipAutoConfigWINCEnable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvWifiWinc"],"DRIVER LAYER")   
+        Database.setSymbolValue("drvWifiWinc", "DRV_WIFI_WINC_DRIVER_MODE", "Ethernet Mode")
+        Database.setSymbolValue("drvWifiWinc", "DRV_WIFI_WINC_USE_TCPIP_STACK", True)
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvWifiWinc", "libdrvWincMac")
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvWifiWinc", "spi")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvWifiWinc:spi")
+        res = Database.connectDependencies(autoConnectTableWINC)        
+    else:
+        res = Database.deactivateComponents(["drvWifiWinc"])            

@@ -391,7 +391,7 @@ typedef enum
 #define TCPIP_STACK_IF_NAME_97J60           "97J60"
 #define TCPIP_STACK_IF_NAME_PIC32INT        "PIC32INT"
 #define TCPIP_STACK_IF_NAME_MRF24WN         "MRF24WN"
-#define TCPIP_STACK_IF_NAME_WINC1500        "WINC1500"
+#define TCPIP_STACK_IF_NAME_WINC	        "WINC"
 #define TCPIP_STACK_IF_NAME_WILC1000        "WILC1000"
 
 /* alias for unknown interface */
