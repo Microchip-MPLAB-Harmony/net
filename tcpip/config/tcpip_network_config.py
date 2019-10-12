@@ -219,7 +219,7 @@ def tcpipNetHostNameUpdate(symbol, event):
                     symbol.setValue("MCHPENC28_E",1)
                 else:
                     # Implement dhcp server client dependency
-                    if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
+                    if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000")):
                         symbol.setValue("MCHPBOARD_W",1)
                     else:
                         symbol.setValue("",1)
@@ -261,7 +261,7 @@ def tcpipNetIpAddrUpdate(symbol, event):
                 if(tcpipInterfaceName == "ENC28J60"):
                     symbol.setValue("192.168.100.13",1)
                 else:
-                    if ((tcpipDhcpc == False) and (tcpipDhcps== False) and ((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000"))):
+                    if ((tcpipDhcpc == False) and (tcpipDhcps== False) and ((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000"))):
                         symbol.setValue("192.168.1.2",1)
                     else:
                         symbol.setValue("0.0.0.0",1)
@@ -284,7 +284,7 @@ def tcpipNetGatewayIpAddrUpdate(symbol, event):
         if(tcpipInterfaceName == "ENC28J60"):
             symbol.setValue("192.168.100.2",1)
         else:
-            if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
+            if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000")):
                 symbol.setValue("192.168.1.1",1)
             else:                   
                 # ToDo Implement PIC32WK dependency
@@ -307,7 +307,7 @@ def tcpipNetPrimDnsIpAddrUpdate(symbol, event):
         if(tcpipInterfaceName == "ENC28J60"):
             symbol.setValue("192.168.100.2",1)
         else:
-            if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC1500") or (tcpipInterfaceName == "WILC1000")):
+            if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000")):
                 symbol.setValue("192.168.1.1",1)
             else:                   
                 # ToDo Implement PIC32WK dependency
@@ -339,8 +339,8 @@ def tcpipNetMACDrvObjUpdate(symbol, event):
                     if(tcpipInterfaceName == "MRF24WN"):
                         symbol.setValue("WDRV_MRF24WN_MACObject",1)
                     else:
-                        if(tcpipInterfaceName == "WINC1500"):
-                            symbol.setValue("WDRV_WINC1500_MACObject",1)
+                        if(tcpipInterfaceName == "WINC"):
+                            symbol.setValue("WDRV_WINC_MACObject",1)
                         else:   
                             if(tcpipInterfaceName == "WILC1000"):
                                 symbol.setValue("WDRV_WILC1000_MACObject",1)

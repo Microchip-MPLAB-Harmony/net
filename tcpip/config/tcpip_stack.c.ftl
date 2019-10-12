@@ -415,26 +415,6 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 
 
 
-<#if CONFIG_USE_DRV_WIFI?has_content && CONFIG_USE_DRV_WIFI == true >
-<#if DRV_WIFI_DEVICE?has_content >
-<#if DRV_WIFI_DEVICE == "MRF24WN" >
-/*** Wi-Fi Interface MRF24WN Initialization Data ***/
-const TCPIP_MODULE_MAC_MRF24WN_CONFIG macMRF24WNConfigData = {
-    0
-};
-<#elseif DRV_WIFI_DEVICE == "WINC1500">
-/*** Wi-Fi Interface WINC1500 Initialization Data ***/
-const TCPIP_MODULE_MAC_WINC1500_CONFIG macWINC1500ConfigData = {
-    0
-};
-<#elseif DRV_WIFI_DEVICE == "WILC1000">
-/*** Wi-Fi Interface WILC1000 Initialization Data ***/
-const TCPIP_MODULE_MAC_WILC1000_CONFIG macWILC1000ConfigData = {
-    0
-};
-</#if>
-</#if>
-</#if>
 
 
 <#if (tcpipDdns.TCPIP_USE_DDNS)?has_content && (tcpipDdns.TCPIP_USE_DDNS) == true>
@@ -982,22 +962,8 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
 </#if>
 
-<#if CONFIG_USE_DRV_WIFI?has_content && CONFIG_USE_DRV_WIFI == true >
-<#if DRV_WIFI_DEVICE?has_content >
- <#if DRV_WIFI_DEVICE == "MRF24WN" >
-	<#if checkInterface("MRF24WN")>
-    {TCPIP_MODULE_MAC_MRF24WN,      &macMRF24WNConfigData},         // TCPIP_MODULE_MAC_MRF24WN
-	</#if>
- <#elseif DRV_WIFI_DEVICE == "WINC1500">
-    <#if checkInterface("WINC1500")>
-    {TCPIP_MODULE_MAC_WINC1500,     &macWINC1500ConfigData},        // TCPIP_MODULE_MAC_WINC1500
-	</#if>
- <#elseif DRV_WIFI_DEVICE == "WILC1000">
-    <#if checkInterface("WILC1000")>
-    {TCPIP_MODULE_MAC_WILC1000,     &macWILC1000ConfigData},        // TCPIP_MODULE_MAC_WILC1000
-	</#if>
- </#if>
-</#if>
+<#if checkInterface("WINC")>
+    {TCPIP_MODULE_MAC_WINC,         0},					            // TCPIP_MODULE_MAC_WINC
 </#if>
 <#if checkInterface("ENCX24J600")>
     {TCPIP_MODULE_MAC_ENCJ600,      &drvEncX24j600InitDataIdx0},    // TCPIP_MODULE_MAC_ENCJ600
