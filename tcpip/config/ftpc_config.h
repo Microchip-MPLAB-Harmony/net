@@ -58,7 +58,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // if 0, the TCP Socket Receive buffer size will be used by FTPC data socket
 #define TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT         	(0)
 
-// Specify the time-out for FTP Client commands to wait for the response from FTP server
+// Specify the time-out for FTP Client commands to wait for the response
+// from FTP server, in seconds
 #define TCPIP_FTPC_TMO           (2) 
 
 // Specify the number of simultaneous FTP Clients supported.
