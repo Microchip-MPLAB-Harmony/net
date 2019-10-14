@@ -21,6 +21,20 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+TCPIP_TELNET_AUTH_TYPES = ["Run Time Authentication", "OBSOLETE Build Time Authentication"]
+
+def tcpipTelnetAuthInfoVisible(symbol, event):
+    if (event["value"] == "Run Time Authentication"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipTelnetObsAuthVisible(symbol, event):
+    if (event["value"] == "Run Time Authentication"):
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
+
     
 def instantiateComponent(tcpipTelnetComponent):
     print("TCPIP Telnet Component")
@@ -111,66 +125,36 @@ def instantiateComponent(tcpipTelnetComponent):
     tcpipTelnetConfigPassControl.setDefaultValue(False)
     #tcpipTelnetConfigPassControl.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
 
-    # telnet Authentication Menu
-    tcpipTelnetAuthMenu = tcpipTelnetComponent.createMenuSymbol(None, None)
-    tcpipTelnetAuthMenu.setLabel("telnet Authentication")
-    tcpipTelnetAuthMenu.setVisible(True)
-    tcpipTelnetAuthMenu.setDescription("telnet Authentication Settings")
-    #tcpipTelnetAuthMenu.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
-
-    # telnet Run Menu
-    tcpipTelnetRunMenu = tcpipTelnetComponent.createMenuSymbol("TCPIP_TELNET_RUN_MENU", tcpipTelnetAuthMenu)
-    tcpipTelnetRunMenu.setLabel("Run Time User Authentication")
-    tcpipTelnetRunMenu.setVisible(True)
-    tcpipTelnetRunMenu.setDescription("telnet Calls Authentication Handler at Run Time")
-    #tcpipTelnetRunMenu.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
-
-    # telnet Run time Authentication
-    tcpipTelnetRunAuth = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_RUN_AUTHENTICATION", tcpipTelnetRunMenu)
-    tcpipTelnetRunAuth.setLabel("Enable Run Time Authentication")
-    tcpipTelnetRunAuth.setVisible(True)
-    tcpipTelnetRunAuth.setDescription("Enable Run Time User Authentication")
-    tcpipTelnetRunAuth.setDefaultValue(True)
-    #tcpipTelnetRunAuth.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+    # telnet Authentication Selection
+    tcpipTelnetAuth= tcpipTelnetComponent.createComboSymbol("TCPIP_TELNET_AUTH_CONFIG", None, TCPIP_TELNET_AUTH_TYPES)
+    tcpipTelnetAuth.setLabel("Select telnet Authentication")
+    tcpipTelnetAuth.setVisible(True)
+    tcpipTelnetAuth.setDescription("telnet Authentication Selection")
+    tcpipTelnetAuth.setDefaultValue("Run Time Authentication")
 
     # telnet Connection info Authentication
-    tcpipTelnetAuthInfo = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_AUTHENTICATION_CONN_INFO", tcpipTelnetRunMenu)
-    tcpipTelnetAuthInfo.setLabel("Authentication Connection Info")
+    tcpipTelnetAuthInfo = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_AUTHENTICATION_CONN_INFO", tcpipTelnetAuth)
+    tcpipTelnetAuthInfo.setLabel("Connection Info Used for Authentication ")
     tcpipTelnetAuthInfo.setVisible(True)
-    tcpipTelnetAuthInfo.setDescription("Connection Info passed to the Authentication Handler")
+    tcpipTelnetAuthInfo.setDescription("Connection Info is Passed to the Authentication Handler")
     tcpipTelnetAuthInfo.setDefaultValue(True)
-    #tcpipTelnetAuthInfo.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
-
-    # telnet Obsolete Menu
-    tcpipTelnetObsMenu = tcpipTelnetComponent.createMenuSymbol("TCPIP_TELNET_OBS_MENU", tcpipTelnetAuthMenu)
-    tcpipTelnetObsMenu.setLabel("Obsolete Build Time Authentication")
-    tcpipTelnetObsMenu.setVisible(True)
-    tcpipTelnetObsMenu.setDescription("OBSOLETE Build Time Authentication")
-    #tcpipTelnetObsMenu.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
-
-    # telnet Obsolete Authentication
-    tcpipTelnetObsAuth = tcpipTelnetComponent.createBooleanSymbol("TCPIP_TELNET_OBS_AUTHENTICATION", tcpipTelnetObsMenu)
-    tcpipTelnetObsAuth.setLabel("Enable Obsolete Build Time Authentication")
-    tcpipTelnetObsAuth.setVisible(True)
-    tcpipTelnetObsAuth.setDescription("Enable OBSOLETE Build Time Authentication")
-    tcpipTelnetObsAuth.setDefaultValue(False)
-    #tcpipTelnetObsAuth.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+    tcpipTelnetAuthInfo.setDependencies(tcpipTelnetAuthInfoVisible, ["TCPIP_TELNET_AUTH_CONFIG"])
 
     # Telnet User Name
-    tcpipTelnetUsrName = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_USERNAME", tcpipTelnetObsMenu)
+    tcpipTelnetUsrName = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_USERNAME", tcpipTelnetAuth)
     tcpipTelnetUsrName.setLabel("User Name")
     tcpipTelnetUsrName.setVisible(True)
     tcpipTelnetUsrName.setDescription("Telnet User Name")
     tcpipTelnetUsrName.setDefaultValue("admin")
-    #tcpipTelnetUsrName.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+    tcpipTelnetUsrName.setDependencies(tcpipTelnetObsAuthVisible, ["TCPIP_TELNET_AUTH_CONFIG"])
 
     # Telnet Password
-    tcpipTelnetPswd = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_PASSWORD", tcpipTelnetObsMenu)
+    tcpipTelnetPswd = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_PASSWORD", tcpipTelnetAuth)
     tcpipTelnetPswd.setLabel("Password")
     tcpipTelnetPswd.setVisible(True)
     tcpipTelnetPswd.setDescription("Telnet Password")
     tcpipTelnetPswd.setDefaultValue("microchip")
-    #tcpipTelnetPswd.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
+    tcpipTelnetPswd.setDependencies(tcpipTelnetObsAuthVisible, ["TCPIP_TELNET_AUTH_CONFIG"])
 
     # Task Rate in ms
     tcpipTelnetTskTickRate = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_TASK_TICK_RATE", None)
