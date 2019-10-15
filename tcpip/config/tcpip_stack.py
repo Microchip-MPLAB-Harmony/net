@@ -44,20 +44,25 @@ def instantiateComponent(tcpipStackComponent):
     processor = Variables.get("__PROCESSOR")
 
     # Enable dependent Harmony core components
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True, 2)
+    # Enable "Generate Harmony Driver Common Files" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON", True)
+
+    # Enable "Generate Harmony System Service Common Files" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
+        
+    # Enable "Enable System Interrupt" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_INT") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_INT", True)
+        
+    # Enable "Enable OSAL" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_OSAL") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_OSAL", True)
     
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON", True, 2)
-
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_INT")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_INT", True, 2)
-
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_OSAL")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_OSAL", True, 2)
-
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_APP_FILE")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_APP_FILE", True, 2)
+    # Enable "Enable APP FILE" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_APP_FILE") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_APP_FILE", True)
     
     # TCP/IP Stack Enable 
     tcpipStackEnable = tcpipStackComponent.createBooleanSymbol("USE_TCPIP_STACK", None)
