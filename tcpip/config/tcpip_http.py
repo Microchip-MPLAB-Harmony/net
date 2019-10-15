@@ -371,3 +371,8 @@ def tcpipHttpGenSourceFile(sourceFile, event):
 
 def destroyComponent(component):
     Database.setSymbolValue("tcpipHttp", "TCPIP_STACK_USE_HTTP_SERVER", False, 2)
+    
+def onAttachmentConnected(source, target):
+    if (source["id"] == "Http_TcpipFs_Dependency"): 
+        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT") != True):
+            Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT", True)
