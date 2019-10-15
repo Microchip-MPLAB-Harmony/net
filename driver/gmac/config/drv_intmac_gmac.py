@@ -53,7 +53,7 @@ def instantiateComponent(drvGmacComponent):
             if(Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Enable")) != True):
                 Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Enable"), True)
                 Database.setSymbolValue("core", ("MPU_Region_Name" + str(i)), "GMAC Descriptor")
-                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Address"), Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Address")) + 541454336) 
+                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Address"), Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Address")) + 0x2045F000) 
                 Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Size"), 7)
                 Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Type"), 5)
                 Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Access"), 3)
