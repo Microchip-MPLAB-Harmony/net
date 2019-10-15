@@ -1489,6 +1489,16 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTcpipEthernetHeaderFile.setType("HEADER")
     tcpipStackTcpipEthernetHeaderFile.setOverwrite(True)
  
+ 
+    tcpipStackFtpsEn = Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE")
+    tcpipStackFtpcEn = Database.getSymbolValue("tcpipFtpc","TCPIP_STACK_USE_FTP_CLIENT")
+    tcpipStackHttpNetEn = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
+    tcpipStackHttpEn = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
+    tcpipStackSmtpcEn = Database.getSymbolValue("tcpipSmtpc","TCPIP_USE_SMTPC_CLIENT")
+    tcpipStackSnmpEn = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
+    tcpipStackTftpcEn = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
+    tcpipStackTftpsEn = Database.getSymbolValue("tcpipTftps","TCPIP_USE_TFTPS_MODULE")
+    
     # Add sys_fs_shell.c file to project
     tcpipStackSysFsShellSourceFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysFsShellSourceFile.setSourcePath("tcpip/src/common/sys_fs_shell.c")
@@ -1497,7 +1507,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysFsShellSourceFile.setDestPath("library/tcpip/src/common/")
     tcpipStackSysFsShellSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
     tcpipStackSysFsShellSourceFile.setType("SOURCE")
-    tcpipStackSysFsShellSourceFile.setEnabled(False)   
+    tcpipStackSysFsShellSourceFile.setEnabled(tcpipStackFtpsEn or tcpipStackFtpcEn or tcpipStackHttpNetEn or tcpipStackHttpEn or tcpipStackSmtpcEn or tcpipStackSnmpEn or tcpipStackTftpcEn or tcpipStackTftpsEn)   
     tcpipStackSysFsShellSourceFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
     
     # Add sys_fs_shell.h file to project
@@ -1507,7 +1517,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysFsShellHeaderFile.setDestPath("library/tcpip/src/common/")
     tcpipStackSysFsShellHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
     tcpipStackSysFsShellHeaderFile.setType("HEADER")
-    tcpipStackSysFsShellHeaderFile.setOverwrite(False)
+    tcpipStackSysFsShellHeaderFile.setOverwrite(True)
     tcpipStackSysFsShellHeaderFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
 
     # file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
