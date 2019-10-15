@@ -21,7 +21,7 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-TCPIP_TELNET_AUTH_TYPES = ["Run Time Authentication", "OBSOLETE Build Time Authentication"]
+TCPIP_TELNET_AUTH_TYPES = ["Run Time Authentication", "(OBSOLETE) Build Time Authentication"]
 
 def tcpipTelnetAuthInfoVisible(symbol, event):
     if (event["value"] == "Run Time Authentication"):
@@ -143,7 +143,7 @@ def instantiateComponent(tcpipTelnetComponent):
     # Telnet User Name
     tcpipTelnetUsrName = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_USERNAME", tcpipTelnetAuth)
     tcpipTelnetUsrName.setLabel("User Name")
-    tcpipTelnetUsrName.setVisible(True)
+    tcpipTelnetUsrName.setVisible(False)
     tcpipTelnetUsrName.setDescription("Telnet User Name")
     tcpipTelnetUsrName.setDefaultValue("admin")
     tcpipTelnetUsrName.setDependencies(tcpipTelnetObsAuthVisible, ["TCPIP_TELNET_AUTH_CONFIG"])
@@ -151,7 +151,7 @@ def instantiateComponent(tcpipTelnetComponent):
     # Telnet Password
     tcpipTelnetPswd = tcpipTelnetComponent.createStringSymbol("TCPIP_TELNET_PASSWORD", tcpipTelnetAuth)
     tcpipTelnetPswd.setLabel("Password")
-    tcpipTelnetPswd.setVisible(True)
+    tcpipTelnetPswd.setVisible(False)
     tcpipTelnetPswd.setDescription("Telnet Password")
     tcpipTelnetPswd.setDefaultValue("microchip")
     tcpipTelnetPswd.setDependencies(tcpipTelnetObsAuthVisible, ["TCPIP_TELNET_AUTH_CONFIG"])
