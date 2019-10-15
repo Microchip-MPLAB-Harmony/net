@@ -49,23 +49,25 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
 #define TCPIP_FTPC_TASK_TICK_RATE              (5)
 
-// Specify Default Transmit Buffer Size for the FTP Client Data Socket
+// Specify the Default Transmit Buffer Size for the FTP Client Data Socket
 // if 0, the TCP Socket Transmit buffer size will be used by FTPC data socket
 #define TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT      		(0)
 
 
-// Specify Default Receive Buffer Size for the FTP Client Data Socket
+// Specify the Default Receive Buffer Size for the FTP Client Data Socket
 // if 0, the TCP Socket Receive buffer size will be used by FTPC data socket
 #define TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT         	(0)
 
-// Specify the time-out for FTP Client commands to wait for the response
-// from FTP server, in seconds
+// Specify the time-out for FTP Client commands, in seconds
+// This is the time to wait for a response from FTP server
 #define TCPIP_FTPC_TMO           (2) 
 
-// Specify the number of simultaneous FTP Clients supported.
+// Specify the maximum number of supported simultaneous FTP
+// client connections.
 #define TCPIP_FTPC_MAX_NUM_CLIENT                 (3)
 
-// Specify whether FTPC Command service is enabled.
+// Specify whether FTP Client command in the tcpip_commands
+// is enabled.
 #define TCPIP_FTPC_COMMANDS                 false
 
 
