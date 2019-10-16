@@ -191,7 +191,7 @@ static void     _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifI
 
 static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_TYPE qType);
 
-static void     _IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, int ifIx, uint32_t tTransmit);
+static void     _IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, int ifIx, uint32_t tTransmit, bool insert);
 
 static int      _IGMP_GenerateGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGq);
 
@@ -199,7 +199,7 @@ static bool     _IGMP_SendQueryReport(TCPIP_IGMP_QUERY_REPORT_NODE* pQNode, int 
 
 static void     _IGMP_InitGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, IPV4_ADDR groupAddress, int ifIx, uint32_t tTransmit);
 
-static void     _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, int nRecSources, uint32_t* pRecSources);
+static void     _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, int nRecSources, uint32_t* pRecSources, bool insert);
 
 static bool     _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGrpNode);
 
@@ -3164,7 +3164,7 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     tReport = SYS_TMR_TickCountGet() + (SYS_RANDOM_PseudoGet() % maxRespTime) * SYS_TMR_TickCounterFrequencyGet() / 1000;
 
     igmpListsLock();
-    pGq = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GENERAL, 0, ifIx, true);
+    pGq = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GENERAL, 0, ifIx, false);
     igmpListsUnlock();
 
     // check the current status report rules
@@ -3177,14 +3177,16 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     // #2 rule: if a GQ was received, schedule it and cancel a previous GQ
     if(qType == TCPIP_IGMP_QUERY_GENERAL)
     {
+        bool insert = false;
         if(pGq == 0)
         {   // couldn't find an old GQ report
             pGq = (TCPIP_IGMP_GEN_QUERY_REPORT_NODE*)_IGMP_GetNewQueryReport(TCPIP_IGMP_QUERY_GENERAL);
+            insert = true;
         }
 
         if(pGq != 0)
         {   // prepare the GQ report and schedule it;
-            _IGMP_ScheduleGenQueryReport(pGq, ifIx, tReport);
+            _IGMP_ScheduleGenQueryReport(pGq, ifIx, tReport, insert);
         }
         else
         {   // couldn't find a slot for the new GQ report; should NOT happen!
@@ -3196,7 +3198,7 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
 
     // #3 rule: GSQ or GSSQ received; if no pending response, then schedule a group report 
     igmpListsLock();
-    pGsq = (TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GROUP_SPEC, groupAddress.Val, ifIx, true);
+    pGsq = (TCPIP_IGMP_GROUP_QUERY_REPORT_NODE*)_IGMP_FindScheduledQueryReport(TCPIP_IGMP_QUERY_GROUP_SPEC, groupAddress.Val, ifIx, false);
     igmpListsUnlock();
     if(pGsq == 0)
     {
@@ -3204,7 +3206,7 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
         if(pGsq != 0)
         {
             _IGMP_InitGroupQueryReport(pGsq, groupAddress, ifIx, tReport);
-            _IGMP_SourceScheduleGroupQueryReport(pGsq, nSources, pQuery->sources);
+            _IGMP_SourceScheduleGroupQueryReport(pGsq, nSources, pQuery->sources, true);
         }
         else
         {   // couldn't find a slot for the new group report
@@ -3226,11 +3228,16 @@ static void _IGMP_ProcessV3Query(TCPIP_IGMPv3_QUERY_MESSAGE* pQuery, int ifIx)
     }
 
     // #5 rule: GSSQ received and pending GSSQ, then schedule an augumented GSSQ 
+    if(tReport < pGsq->tTransmit)
+    {
+        pGsq->tTransmit = tReport;
+    }
+    
     newReqSources.nSources = nSources;
     memcpy(&newReqSources, pQuery->sources, nSources * sizeof(newReqSources.sourceAddresses[0]));
     
     _IGMP_UnionSources(&newReqSources, &pGsq->qSources[0].repSources, &unionSources);
-    _IGMP_SourceScheduleGroupQueryReport(pGsq, unionSources.nSources, unionSources.sourceAddresses);
+    _IGMP_SourceScheduleGroupQueryReport(pGsq, unionSources.nSources, unionSources.sourceAddresses, false);
     
 
 }
@@ -3372,15 +3379,18 @@ static bool _IGMP_GenerateGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* p
 
 
 // sets up a Gen Query node and inserts it in a Gen Query report list
-static void _IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, int ifIx, uint32_t tTransmit)
+static void _IGMP_ScheduleGenQueryReport(TCPIP_IGMP_GEN_QUERY_REPORT_NODE* pGQNode, int ifIx, uint32_t tTransmit, bool insert)
 {
     pGQNode->ifIx = ifIx;
     pGQNode->queryType = TCPIP_IGMP_QUERY_GENERAL;
     pGQNode->tTransmit = tTransmit;
 
-    igmpListsLock();
-    TCPIP_Helper_SingleListTailAdd(&igmpGenQueryReportList, (SGL_LIST_NODE*)pGQNode);
-    igmpListsUnlock();
+    if(insert)
+    {
+        igmpListsLock();
+        TCPIP_Helper_SingleListTailAdd(&igmpGenQueryReportList, (SGL_LIST_NODE*)pGQNode);
+        igmpListsUnlock();
+    }
 }
 
 // initializes a Group Query node in a GS mode (no sources updated) 
@@ -3396,7 +3406,7 @@ static void _IGMP_InitGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNod
 }
 
 // sets up a Group Query node with sources and inserts it in a Group Query report list
-static void _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, int nRecSources, uint32_t* pRecSources)
+static void _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_NODE* pGNode, int nRecSources, uint32_t* pRecSources, bool insert)
 {
     pGNode->queryType = nRecSources == 0 ? TCPIP_IGMP_QUERY_GROUP_SPEC : TCPIP_IGMP_QUERY_GROUP_SOURCE_SPEC;
     pGNode->qSources[0].repSources.nSources = nRecSources;
@@ -3415,9 +3425,12 @@ static void _IGMP_SourceScheduleGroupQueryReport(TCPIP_IGMP_GROUP_QUERY_REPORT_N
         memcpy(pGNode->qSources[0].repSources.sourceAddresses, pRecSources, nRecSources * sizeof(*pRecSources));
     }
 
-    igmpListsLock();
-    TCPIP_Helper_SingleListTailAdd(&igmpGroupQueryReportList, (SGL_LIST_NODE*)pGNode);
-    igmpListsUnlock();
+    if(insert)
+    {
+        igmpListsLock();
+        TCPIP_Helper_SingleListTailAdd(&igmpGroupQueryReportList, (SGL_LIST_NODE*)pGNode);
+        igmpListsUnlock();
+    }
 
 }
 
