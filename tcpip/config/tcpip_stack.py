@@ -1506,8 +1506,8 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysFsShellSourceFile.setOverwrite(True)
     tcpipStackSysFsShellSourceFile.setDestPath("library/tcpip/src/common/")
     tcpipStackSysFsShellSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
-    tcpipStackSysFsShellSourceFile.setType("SOURCE")
-    tcpipStackSysFsShellSourceFile.setEnabled(tcpipStackFtpsEn or tcpipStackFtpcEn or tcpipStackHttpNetEn or tcpipStackHttpEn or tcpipStackSmtpcEn or tcpipStackSnmpEn or tcpipStackTftpcEn or tcpipStackTftpsEn)   
+    tcpipStackSysFsShellSourceFile.setType("SOURCE")  
+    tcpipStackSysFsShellSourceFile.setEnabled((tcpipStackFtpsEn == True) or (tcpipStackFtpcEn == True) or (tcpipStackHttpNetEn == True) or (tcpipStackHttpEn == True) or (tcpipStackSmtpcEn == True) or (tcpipStackSnmpEn == True) or (tcpipStackTftpcEn == True) or (tcpipStackTftpsEn == True))
     tcpipStackSysFsShellSourceFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
     
     # Add sys_fs_shell.h file to project
