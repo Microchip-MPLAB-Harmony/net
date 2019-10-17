@@ -1,0 +1,586 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<Configuration>
+  <Configurator>
+    <Name dnOrder="0" value="pic32mz_das_sk"/>
+    <Processor dnOrder="1" value="PIC32MZ2064DAS169"/>
+    <Harmony dnOrder="2" path="../../../.."/>
+    <Manifest dnOrder="3">
+      <Files dnOrder="0">
+        <File dnOrder="0">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">arp.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">6BDD0ABA75AF08E642CC6E37443595A2</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6BDD0ABA75AF08E642CC6E37443595A2</UserChecksum>
+        </File>
+        <File dnOrder="1">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">bsp.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/bsp/</LogicalPath>
+          <PhysicalPath dnOrder="3">/bsp/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">2F6CC050E57B9E5BA8A6C6C9A2D8F09A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2F6CC050E57B9E5BA8A6C6C9A2D8F09A</UserChecksum>
+        </File>
+        <File dnOrder="2">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">dhcp.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">9348C44DC1EBFF298D9FE86F7F254152</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9348C44DC1EBFF298D9FE86F7F254152</UserChecksum>
+        </File>
+        <File dnOrder="3">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">drv_eth_pic32_lib.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">4E625CE7E9CA9BB2B4D2F8D3AB46E81B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4E625CE7E9CA9BB2B4D2F8D3AB46E81B</UserChecksum>
+        </File>
+        <File dnOrder="4">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">drv_ethmac.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">C3807607B54610118F8898D406E07D67</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C3807607B54610118F8898D406E07D67</UserChecksum>
+        </File>
+        <File dnOrder="5">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">drv_ethmac_lib.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">797AC90C0306B7355E99B121F2DD863C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">797AC90C0306B7355E99B121F2DD863C</UserChecksum>
+        </File>
+        <File dnOrder="6">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">drv_ethphy.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethphy/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">075C33F9D65FFFC7A43FF9F0342A6384</GeneratedChecksum>
+          <UserChecksum dnOrder="5">075C33F9D65FFFC7A43FF9F0342A6384</UserChecksum>
+        </File>
+        <File dnOrder="7">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">drv_extphy_smsc8740.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethphy/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">FD14D24EC9E628D08606DBC59548594E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FD14D24EC9E628D08606DBC59548594E</UserChecksum>
+        </File>
+        <File dnOrder="8">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">drv_miim.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/miim/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">A4A93DF292ED0C565A47AA6AB84E5210</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A4A93DF292ED0C565A47AA6AB84E5210</UserChecksum>
+        </File>
+        <File dnOrder="9">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">exceptions.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">3477C6F788508451FADB8F17D7E78273</GeneratedChecksum>
+          <UserChecksum dnOrder="5">3477C6F788508451FADB8F17D7E78273</UserChecksum>
+        </File>
+        <File dnOrder="10">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">icmp.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">4A76E2ED7F911EE14843B7E2FA9664EA</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4A76E2ED7F911EE14843B7E2FA9664EA</UserChecksum>
+        </File>
+        <File dnOrder="11">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">initialization.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">B0057803CAD6C00B6863C4B8DCC6DA61</GeneratedChecksum>
+          <UserChecksum dnOrder="5">164E598D52B2B5229A6CBC716D31EDA8</UserChecksum>
+        </File>
+        <File dnOrder="12">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">interrupts.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">498870FEFE8133A85AD7AEF0D1BE1788</GeneratedChecksum>
+          <UserChecksum dnOrder="5">498870FEFE8133A85AD7AEF0D1BE1788</UserChecksum>
+        </File>
+        <File dnOrder="13">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">iperf.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">E01D9C4A1E16CF63EF3D759C84D53514</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E01D9C4A1E16CF63EF3D759C84D53514</UserChecksum>
+        </File>
+        <File dnOrder="14">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">ipv4.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">13D20AE335F6F6E2F6775F410E360F8F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">13D20AE335F6F6E2F6775F410E360F8F</UserChecksum>
+        </File>
+        <File dnOrder="15">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">main.c</Name>
+          <LogicalPath dnOrder="2"/>
+          <PhysicalPath dnOrder="3">/../../</PhysicalPath>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
+        </File>
+        <File dnOrder="16">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">nbns.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">3D1FBA1F5B3DFFA1B419A579EA0D8600</GeneratedChecksum>
+          <UserChecksum dnOrder="5">3D1FBA1F5B3DFFA1B419A579EA0D8600</UserChecksum>
+        </File>
+        <File dnOrder="17">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_clk.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">E051FE227669F2226ABE9D0ECA4AD308</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8CD18ADCCE33CE6259A75E5D4579FA29</UserChecksum>
+        </File>
+        <File dnOrder="18">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_coretimer.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/coretimer/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/coretimer/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">2FEFEA0D4E94F5A5F3D76BAEC3D602E5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2FEFEA0D4E94F5A5F3D76BAEC3D602E5</UserChecksum>
+        </File>
+        <File dnOrder="19">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_evic.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">1F2648F90BE17B96A968357D306C38BE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1F2648F90BE17B96A968357D306C38BE</UserChecksum>
+        </File>
+        <File dnOrder="20">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_gpio.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">D2BFA96D26E7292BFFA576DE0D6B2B4D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D2BFA96D26E7292BFFA576DE0D6B2B4D</UserChecksum>
+        </File>
+        <File dnOrder="21">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">plib_uart2.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">E1EEB80FEF0FCB3ADC12047B090AC249</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E1EEB80FEF0FCB3ADC12047B090AC249</UserChecksum>
+        </File>
+        <File dnOrder="22">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_command.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/command/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/command/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">626446F32CADEDF43877BF2AB1D35E2C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">626446F32CADEDF43877BF2AB1D35E2C</UserChecksum>
+        </File>
+        <File dnOrder="23">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_console.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/console/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/console/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">11DBED3EBA5848386C91E11BD79A720A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">11DBED3EBA5848386C91E11BD79A720A</UserChecksum>
+        </File>
+        <File dnOrder="24">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_console_local.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/console/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/console/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5BA0902794A8669B3FE37E8A8BEE9D65</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5BA0902794A8669B3FE37E8A8BEE9D65</UserChecksum>
+        </File>
+        <File dnOrder="25">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_console_uart.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/console/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/console/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">635C7CC6CC208FC8B7FAC29E4809C3E8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">635C7CC6CC208FC8B7FAC29E4809C3E8</UserChecksum>
+        </File>
+        <File dnOrder="26">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_console_uart.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/console/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/console/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">C514492B43B820E1241D77EA36A5A68D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C514492B43B820E1241D77EA36A5A68D</UserChecksum>
+        </File>
+        <File dnOrder="27">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_console_uart_definitions.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/console/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/console/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">4AA93FD1E4FEEF15802C414B8519EC36</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4AA93FD1E4FEEF15802C414B8519EC36</UserChecksum>
+        </File>
+        <File dnOrder="28">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_debug.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/debug/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/debug/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">310F44D37E7B3DD7CF26883E248AB57B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">310F44D37E7B3DD7CF26883E248AB57B</UserChecksum>
+        </File>
+        <File dnOrder="29">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_debug_local.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/debug/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/debug/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">F742867E842AA6D9ECBFA4EFF7132402</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F742867E842AA6D9ECBFA4EFF7132402</UserChecksum>
+        </File>
+        <File dnOrder="30">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">sys_time.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/time/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/time/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">70DAE413C209782D51F61D7C896593FB</GeneratedChecksum>
+          <UserChecksum dnOrder="5">70DAE413C209782D51F61D7C896593FB</UserChecksum>
+        </File>
+        <File dnOrder="31">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">tasks.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">9526430D49D677161D810848AE820A78</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9526430D49D677161D810848AE820A78</UserChecksum>
+        </File>
+        <File dnOrder="32">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">tcp.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">9F182FDB631CE784E768E84E946D11C7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9F182FDB631CE784E768E84E946D11C7</UserChecksum>
+        </File>
+        <File dnOrder="33">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">tcpip_announce.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">29E39BA3F71481054513478CC6C7A285</GeneratedChecksum>
+          <UserChecksum dnOrder="5">29E39BA3F71481054513478CC6C7A285</UserChecksum>
+        </File>
+        <File dnOrder="34">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">tcpip_commands.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">7D9B93989145707B4FB16C210C95F846</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7D9B93989145707B4FB16C210C95F846</UserChecksum>
+        </File>
+        <File dnOrder="35">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">udp.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">CFF81181FEB2AD7ED1A70EE0F4A29CF5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CFF81181FEB2AD7ED1A70EE0F4A29CF5</UserChecksum>
+        </File>
+        <File dnOrder="36">
+          <Type dnOrder="0">SOURCE</Type>
+          <Name dnOrder="1">xc32_monitor.c</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/stdio/</LogicalPath>
+          <PhysicalPath dnOrder="3">/stdio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">0CDCE9B6891797FCD2AEA243F841353F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0CDCE9B6891797FCD2AEA243F841353F</UserChecksum>
+        </File>
+        <File dnOrder="37">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">_eth_dcpt_lists.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">B0A91433DD43B08C684D8F9A911B177C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B0A91433DD43B08C684D8F9A911B177C</UserChecksum>
+        </File>
+        <File dnOrder="38">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">bsp.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/bsp/</LogicalPath>
+          <PhysicalPath dnOrder="3">/bsp/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">1CC4A4F2A70990A31F79E1541BB62BE6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1CC4A4F2A70990A31F79E1541BB62BE6</UserChecksum>
+        </File>
+        <File dnOrder="39">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">configuration.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">41A355CFC5613B73A4EAC0EBE2B5C563</GeneratedChecksum>
+          <UserChecksum dnOrder="5">41A355CFC5613B73A4EAC0EBE2B5C563</UserChecksum>
+        </File>
+        <File dnOrder="40">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">definitions.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">33E458D283A83573E01B40A19028BC2F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">AB701C6BA063EB9A25D75BB43C944AB7</UserChecksum>
+        </File>
+        <File dnOrder="41">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">device.h</Name>
+          <LogicalPath dnOrder="2">packs/PIC32MZ2064DAS169_DFP/</LogicalPath>
+          <PhysicalPath dnOrder="3">/../../packs/PIC32MZ2064DAS169_DFP/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5D5C52527AB1435153DB9B50ADE6B79D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5D5C52527AB1435153DB9B50ADE6B79D</UserChecksum>
+        </File>
+        <File dnOrder="42">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_eth_pic32_lib.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">48E6786CF0AFE8287E0EB52359483A89</GeneratedChecksum>
+          <UserChecksum dnOrder="5">48E6786CF0AFE8287E0EB52359483A89</UserChecksum>
+        </File>
+        <File dnOrder="43">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_ethmac.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">F0FD687F00DD012EC6592B767F559F84</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F0FD687F00DD012EC6592B767F559F84</UserChecksum>
+        </File>
+        <File dnOrder="44">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_ethmac_lib.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">A3AECC00BD8E6CCF705DF109101650DE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A3AECC00BD8E6CCF705DF109101650DE</UserChecksum>
+        </File>
+        <File dnOrder="45">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_ethmac_local.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethmac/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethmac/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">85EBBF0204A53FB327C039A853A3E5E3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">85EBBF0204A53FB327C039A853A3E5E3</UserChecksum>
+        </File>
+        <File dnOrder="46">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_ethphy.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethphy/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethphy/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">23553F32930FE81E131D17012FFCC39F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">23553F32930FE81E131D17012FFCC39F</UserChecksum>
+        </File>
+        <File dnOrder="47">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_ethphy_local.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethphy/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethphy/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">0C44C7ABE3EAAA00A06187C725F40595</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0C44C7ABE3EAAA00A06187C725F40595</UserChecksum>
+        </File>
+        <File dnOrder="48">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_extphy_regs.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethphy/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">7903EEEDDF8FF93523B69EEEB1056519</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7903EEEDDF8FF93523B69EEEB1056519</UserChecksum>
+        </File>
+        <File dnOrder="49">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_extphy_smsc8740.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/ethphy/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/ethphy/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5A6227E8B683F008D9B1CF9D2B26C5D9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5A6227E8B683F008D9B1CF9D2B26C5D9</UserChecksum>
+        </File>
+        <File dnOrder="50">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_miim.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/miim/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/miim/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">CCB1F6B894C7236C9630C0BEBADA0667</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CCB1F6B894C7236C9630C0BEBADA0667</UserChecksum>
+        </File>
+        <File dnOrder="51">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_miim_config.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/miim/config/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/miim/config/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">CA63D319BC05B394CFF2D8F4F1AA407F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">CA63D319BC05B394CFF2D8F4F1AA407F</UserChecksum>
+        </File>
+        <File dnOrder="52">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_miim_local.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/miim/src/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/miim/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">1EF1EE715C49735F516572B5E4CF614E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1EF1EE715C49735F516572B5E4CF614E</UserChecksum>
+        </File>
+        <File dnOrder="53">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">drv_miim_mapping.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/driver/miim/src/dynamic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">BFC3A3373F7D318D8FF046C7402DB7A6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BFC3A3373F7D318D8FF046C7402DB7A6</UserChecksum>
+        </File>
+        <File dnOrder="54">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_clk.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/clk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/clk/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">7066CC390335CF75126E2A50C46E3BDD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">7066CC390335CF75126E2A50C46E3BDD</UserChecksum>
+        </File>
+        <File dnOrder="55">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_coretimer.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/coretimer/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/coretimer/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">77E2C83A700CD1F724CFD90ED3AA2B71</GeneratedChecksum>
+          <UserChecksum dnOrder="5">77E2C83A700CD1F724CFD90ED3AA2B71</UserChecksum>
+        </File>
+        <File dnOrder="56">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_evic.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/evic/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/evic/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">C4A57B6C13A85773816473616994AAFE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C4A57B6C13A85773816473616994AAFE</UserChecksum>
+        </File>
+        <File dnOrder="57">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_gpio.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/gpio/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/gpio/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">51578B3377EE8AA07F235572C09C9092</GeneratedChecksum>
+          <UserChecksum dnOrder="5">51578B3377EE8AA07F235572C09C9092</UserChecksum>
+        </File>
+        <File dnOrder="58">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_uart2.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">2581ECE1B0699573C2B4A4A32E52BE34</GeneratedChecksum>
+          <UserChecksum dnOrder="5">2581ECE1B0699573C2B4A4A32E52BE34</UserChecksum>
+        </File>
+        <File dnOrder="59">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">plib_uart_common.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
+          <PhysicalPath dnOrder="3">/peripheral/uart/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">ACBD2B4A88E233BD4B260CD136DA33A8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">ACBD2B4A88E233BD4B260CD136DA33A8</UserChecksum>
+        </File>
+        <File dnOrder="60">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_command.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/command/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/command/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">EC8319EE2EDCC51C2A9A1774BB898E46</GeneratedChecksum>
+          <UserChecksum dnOrder="5">EC8319EE2EDCC51C2A9A1774BB898E46</UserChecksum>
+        </File>
+        <File dnOrder="61">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_console.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/console/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/console/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">133B4854322EF5DEAFDAD339FD7B1F40</GeneratedChecksum>
+          <UserChecksum dnOrder="5">133B4854322EF5DEAFDAD339FD7B1F40</UserChecksum>
+        </File>
+        <File dnOrder="62">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_debug.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/debug/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/debug/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">8E56B89573C6F7A85F411BC931C64B3F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8E56B89573C6F7A85F411BC931C64B3F</UserChecksum>
+        </File>
+        <File dnOrder="63">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_ports.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/ports/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/ports/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">6348A6C05D5693300B296BD46CCC535D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6348A6C05D5693300B296BD46CCC535D</UserChecksum>
+        </File>
+        <File dnOrder="64">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_ports_mapping.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/ports/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/ports/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">BC6E1661BF4CAC21B70F5F56A0D7BBDB</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BC6E1661BF4CAC21B70F5F56A0D7BBDB</UserChecksum>
+        </File>
+        <File dnOrder="65">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_time.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/time/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/time/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">5B1C0201624F17531B457421E59F38CD</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5B1C0201624F17531B457421E59F38CD</UserChecksum>
+        </File>
+        <File dnOrder="66">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_time_definitions.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/time/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/time/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">F8165EAB8A02643100386E92CD7EB3C6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F8165EAB8A02643100386E92CD7EB3C6</UserChecksum>
+        </File>
+        <File dnOrder="67">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">sys_time_local.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/system/time/</LogicalPath>
+          <PhysicalPath dnOrder="3">/system/time/src/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">62F39464265EC34979649F761FB4FE57</GeneratedChecksum>
+          <UserChecksum dnOrder="5">62F39464265EC34979649F761FB4FE57</UserChecksum>
+        </File>
+        <File dnOrder="68">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">toolchain_specifics.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4">F7924D60AC5CC08996AB2DAEC62D3C54</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F7924D60AC5CC08996AB2DAEC62D3C54</UserChecksum>
+        </File>
+        <File dnOrder="69">
+          <Type dnOrder="0">HEADER</Type>
+          <Name dnOrder="1">user.h</Name>
+          <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
+          <PhysicalPath dnOrder="3">/</PhysicalPath>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
+        </File>
+      </Files>
+      <Settings dnOrder="1">
+        <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src;../src/config/pic32mz_das_sk;../src/packs/PIC32MZ2064DAS169_DFP;;../src/mips"/>
+        <Setting category="C32-LD" dnOrder="1" key="heap-size" value="125000"/>
+        <Setting category="C32-LD" dnOrder="2" key="no-device-startup-code" value="true"/>
+        <Setting category="C32-LD" dnOrder="3" key="preprocessor-macros" value=""/>
+      </Settings>
+    </Manifest>
+    <Settings dnOrder="4">
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.0.81\atdf\PIC32MZ2064DAS169.atdf"/>
+      <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
+      <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
+    </Settings>
+  </Configurator>
+</Configuration>
