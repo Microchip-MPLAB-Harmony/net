@@ -786,6 +786,45 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr)
 }
 
 /****************************************************************************
+ * Function:    DRV_PIC32CGMAC_LibRxBuffersCountGet
+ * Summary :    Returns the number of pending RX buffers and scheduled buffers in the GMAC queues.
+ *****************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs)
+{
+    int pend_buffer_cnt = 0;
+    int sched_buffer_cnt = 0;
+    
+     
+    for(uint16_t queue_idx=0; queue_idx < DRV_GMAC_NUMBER_OF_QUEUES; queue_idx++)	
+    {
+        for(uint16_t desc_idx=0; desc_idx < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDescCnt; desc_idx++)
+        {                
+            if ((pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc[desc_idx].rx_desc_buffaddr.val) & GMAC_ADDRESS_MASK)
+            {
+                if ((pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc[desc_idx].rx_desc_buffaddr.val) & GMAC_RX_OWNERSHIP_BIT)
+                {
+                    pend_buffer_cnt++;
+                }
+                else
+                {
+                    sched_buffer_cnt++;
+                }
+            }
+        }
+    }
+    
+    if(pendBuffs)
+    {
+        *pendBuffs = pend_buffer_cnt;
+    }
+    if(schedBuffs)
+    {
+        *schedBuffs = sched_buffer_cnt;
+    }
+    return DRV_PIC32CGMAC_RES_OK;
+}
+
+/****************************************************************************
  * Function:        _MacPacketAck
  * Summary: ACK function to free the RX/TX packet
  *****************************************************************************/
