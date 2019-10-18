@@ -43,12 +43,15 @@
               </logicalFolder>
               <itemPath>../src/config/pic32mz_ef_sk/driver/miim/drv_miim.h</itemPath>
             </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk/driver/driver.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/driver/driver_common.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/helpers.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/ndp_manager.h</itemPath>
@@ -193,16 +196,20 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="command" projectFiles="true">
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/command/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
+            <logicalFolder name="f6" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/console/sys_console.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="debug" projectFiles="true">
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="ports" projectFiles="true">
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/int/sys_int.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/int/sys_int_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="ports" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/ports/sys_ports.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/ports/sys_ports_mapping.h</itemPath>
             </logicalFolder>
@@ -215,12 +222,22 @@
             <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/sys_random_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/sys_reset_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/system.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/system_common.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/system_module.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/pic32mz_ef_sk/system_config.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/system_definitions.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk/user.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk/configuration.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/definitions.h</itemPath>
         </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="osal" projectFiles="true">
+        <itemPath>../src/config/pic32mz_ef_sk/osal/osal.h</itemPath>
+        <itemPath>../src/config/pic32mz_ef_sk/osal/osal_definitions.h</itemPath>
+        <itemPath>../src/config/pic32mz_ef_sk/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
         <logicalFolder name="f1"
@@ -229,6 +246,7 @@
           <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
+      <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -317,21 +335,21 @@
             <itemPath>../src/config/pic32mz_ef_sk/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f2" displayName="command" projectFiles="true">
+            <logicalFolder name="f3" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="console" projectFiles="true">
+            <logicalFolder name="f5" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="debug" projectFiles="true">
+            <logicalFolder name="f4" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/debug/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="int" projectFiles="true">
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
@@ -339,13 +357,13 @@
             </logicalFolder>
             <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.c</itemPath>
           </logicalFolder>
+          <itemPath>../src/config/pic32mz_ef_sk/tasks.c</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/initialization.c</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/interrupts.c</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
       <itemPath>../src/app.c</itemPath>
-      <itemPath>../src/config/pic32mz_ef_sk/tasks.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"
