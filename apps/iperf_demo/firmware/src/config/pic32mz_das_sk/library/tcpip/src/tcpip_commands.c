@@ -51,7 +51,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/console/sys_console.h"
 #include "system/debug/sys_debug.h"
 #include "system/command/sys_command.h"
+
+#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 #include "net_pres/pres/net_pres_socketapi.h"
+#endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 

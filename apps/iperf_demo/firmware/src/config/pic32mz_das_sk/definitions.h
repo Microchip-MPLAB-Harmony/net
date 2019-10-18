@@ -58,7 +58,9 @@
 #include "system/sys_clk_h2_adapter.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_reset_h2_adapter.h"
+#include "system/int/sys_int.h"
 #include "system/ports/sys_ports.h"
+#include "osal/osal.h"
 #include "system/command/sys_command.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/gpio/plib_gpio.h"
@@ -68,6 +70,8 @@
 #include "system/console/src/sys_console_uart_definitions.h"
 #include "bsp/bsp.h"
 #include "app.h"
+
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -188,9 +192,6 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
-    SYS_MODULE_OBJ  drvMemory0;
-    SYS_MODULE_OBJ  netPres;
-
     SYS_MODULE_OBJ  sysConsole0;
 
 
