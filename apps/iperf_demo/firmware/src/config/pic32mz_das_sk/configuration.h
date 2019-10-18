@@ -304,6 +304,64 @@ extern "C" {
 
 
 
+/*** TCPIP Heap Configuration ***/
+
+#define TCPIP_STACK_USE_INTERNAL_HEAP
+#define TCPIP_STACK_DRAM_SIZE                       39250
+#define TCPIP_STACK_DRAM_RUN_LIMIT                  2048
+
+#define TCPIP_STACK_MALLOC_FUNC                     malloc
+
+#define TCPIP_STACK_CALLOC_FUNC                     calloc
+
+#define TCPIP_STACK_FREE_FUNC                       free
+
+
+
+#define TCPIP_STACK_HEAP_USE_FLAGS                   TCPIP_STACK_HEAP_FLAG_ALLOC_UNCACHED
+
+#define TCPIP_STACK_HEAP_USAGE_CONFIG                TCPIP_STACK_HEAP_USE_DEFAULT
+
+#define TCPIP_STACK_SUPPORTED_HEAPS                  1
+
+
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: TCPIP Stack Configuration
+// *****************************************************************************
+// *****************************************************************************
+
+#define TCPIP_STACK_USE_IPV4
+#define TCPIP_STACK_USE_TCP
+#define TCPIP_STACK_USE_UDP
+
+#define TCPIP_STACK_TICK_RATE		        		5
+#define TCPIP_STACK_SECURE_PORT_ENTRIES             10
+
+#define TCPIP_STACK_ALIAS_INTERFACE_SUPPORT   false
+
+#define TCPIP_PACKET_LOG_ENABLE     0
+
+/* TCP/IP stack event notification */
+#define TCPIP_STACK_USE_EVENT_NOTIFICATION
+#define TCPIP_STACK_USER_NOTIFICATION   false
+#define TCPIP_STACK_DOWN_OPERATION   true
+#define TCPIP_STACK_IF_UP_DOWN_OPERATION   true
+#define TCPIP_STACK_MAC_DOWN_OPERATION  true
+#define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
+#define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
+
+
+
+
+
+/*** TCP/IP Configuration ***/
+
+
+
 /*** announce Configuration ***/
 #define TCPIP_STACK_USE_ANNOUNCE
 #define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512

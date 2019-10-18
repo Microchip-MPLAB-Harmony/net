@@ -50,6 +50,7 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#include "configuration.h"
 #include "definitions.h"
 
 
@@ -83,6 +84,10 @@ void SYS_Tasks ( void )
 
     /* Maintain Middleware & Other Libraries */
     
+TCPIP_STACK_Task(sysObj.tcpip);
+
+
+
 
     /* Maintain the application's state machine. */
         /* Call Application task APP. */

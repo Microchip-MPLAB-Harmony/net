@@ -506,6 +506,9 @@ void SYS_Initialize ( void* data )
 
 
 
+    APP_Initialize();
+
+
     EVIC_Initialize();
 
 	/* Enable global interrupts */
