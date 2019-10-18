@@ -107,6 +107,9 @@ static TCPIP_PKT_LOG_ENTRY  _pktLogTbl[TCPIP_PKT_LOG_SIZE];
 static TCPIP_PKT_LOG_INFO   _pktLogInfo;  // global log counters  
 
 static int                  _pktOverwriteIx;    // simple LRU displacement pointer
+
+static void                 _TCPIP_PKT_LogInit(bool resetAll);
+
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
 
@@ -139,10 +142,7 @@ bool TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CON
 #endif  // defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 
 #if (TCPIP_PACKET_LOG_ENABLE)
-        memset(_pktLogTbl, 0, sizeof(_pktLogTbl));
-        memset(&_pktLogInfo, 0, sizeof(_pktLogInfo));
-        _pktLogInfo.nEntries = sizeof(_pktLogTbl) / sizeof(*_pktLogTbl);
-        _pktOverwriteIx = 0;
+        _TCPIP_PKT_LogInit(true);
         // construct the start netLogMask
         int ix;
         for(ix = 0; ix < nNets; ix++, pNetConf++)
@@ -806,6 +806,27 @@ static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_LogDiscardEntry
 
 }
 
+// initializes the log
+// if resetAll is specified then all the info is cleared
+// otherwise the current masks are retained
+static void _TCPIP_PKT_LogInit(bool resetAll)
+{
+    memset(_pktLogTbl, 0, sizeof(_pktLogTbl));
+    _pktOverwriteIx = 0;
+
+    if(resetAll)
+    {
+        memset(&_pktLogInfo, 0, sizeof(_pktLogInfo));
+        _pktLogInfo.nEntries = sizeof(_pktLogTbl) / sizeof(*_pktLogTbl);
+    }
+    else
+    {
+        _pktLogInfo.nUsed = 0;
+        _pktLogInfo.nPersistent = 0;
+        _pktLogInfo.nFailed = 0;
+    }
+}
+
 // finds a log entry that matches the pPkt
 // if itExists == true, then only an existing packet is searched for
 static TCPIP_PKT_LOG_ENTRY* _TCPIP_PKT_LogFindEntry(TCPIP_MAC_PACKET* pPkt, int moduleId, bool itExists)
@@ -1325,6 +1346,10 @@ void TCPIP_PKT_FlightLogClear(bool clrPersist)
     }
 }
 
+void TCPIP_PKT_FlightLogReset(bool resetMasks)
+{
+    _TCPIP_PKT_LogInit(resetMasks);
+}
 
 #endif  //  (TCPIP_PACKET_LOG_ENABLE)
 
