@@ -53,17 +53,18 @@
 #include "configuration.h"
 #include "definitions.h"
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: RTOS "Tasks" Routine
 // *****************************************************************************
 // *****************************************************************************
 
-void _NET_PRES_Tasks(  void *pvParameters  )
+void _TCPIP_STACK_Task(  void *pvParameters  )
 {
     while(1)
     {
-        NET_PRES_Tasks(sysObj.netPres);
+        TCPIP_STACK_Task(sysObj.tcpip);
         vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
@@ -77,16 +78,6 @@ void _APP_Tasks(  void *pvParameters  )
     {
         APP_Tasks();
         vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}
-
-
-void _TCPIP_STACK_Task(  void *pvParameters  )
-{
-    while(1)
-    {
-        TCPIP_STACK_Task(sysObj.tcpip);
-        vTaskDelay(1 / portTICK_PERIOD_MS);
     }
 }
 
@@ -111,17 +102,6 @@ void _DRV_MIIM_Task(  void *pvParameters  )
 }
 
 
-void _SYS_FS_Tasks(  void *pvParameters  )
-{
-    while(1)
-    {
-        SYS_FS_Tasks();
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}
-
-
-
 
 // *****************************************************************************
 // *****************************************************************************
@@ -136,7 +116,6 @@ void _SYS_FS_Tasks(  void *pvParameters  )
   Remarks:
     See prototype in system/common/sys_module.h.
 */
-
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
@@ -150,19 +129,9 @@ void SYS_Tasks ( void )
 
 
 
-    xTaskCreate( _SYS_FS_Tasks,
-        "SYS_FS_TASKS",
-        SYS_FS_STACK_SIZE,
-        (void*)NULL,
-        SYS_FS_PRIORITY,
-        (TaskHandle_t*)NULL
-    );
-
-
 
     /* Maintain Device Drivers */
-    
-    xTaskCreate( _DRV_MIIM_Task,
+        xTaskCreate( _DRV_MIIM_Task,
         "DRV_MIIM_Tasks",
         DRV_MIIM_RTOS_STACK_SIZE,
         (void*)NULL,
@@ -175,16 +144,6 @@ void SYS_Tasks ( void )
 
     /* Maintain Middleware & Other Libraries */
     
-    xTaskCreate( _NET_PRES_Tasks,
-        "NET_PRES_Tasks",
-        NET_PRES_RTOS_STACK_SIZE,
-        (void*)NULL,
-        NET_PRES_RTOS_TASK_PRIORITY,
-        (TaskHandle_t*)NULL
-    );
-
-
-
     xTaskCreate( _TCPIP_STACK_Task,
         "TCPIP_STACK_Tasks",
         TCPIP_RTOS_STACK_SIZE,
@@ -215,7 +174,6 @@ void SYS_Tasks ( void )
     vTaskStartScheduler(); /* This function never returns. */
 
 }
-
 
 /*******************************************************************************
  End of File

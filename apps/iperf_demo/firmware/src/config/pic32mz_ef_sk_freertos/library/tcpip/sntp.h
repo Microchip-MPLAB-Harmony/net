@@ -68,6 +68,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef struct
 {
     const char*     ntp_server;             // the NTP server to contact; name or IP address
+                                            // if NULL or empty, SNTP won't attempt any connection
     const char*     ntp_interface;          // the default NTP interface to use
     IP_ADDRESS_TYPE ntp_connection_type;    // the IPv4/IPv6 connection type
     uint32_t        ntp_reply_timeout;      // timeout for the server reply in seconds
@@ -275,7 +276,7 @@ typedef const void* TCPIP_SNTP_HANDLE;
     ntpConnType     - type of connection to make: IPv4 or IPv6
                       if IP_ADDRESS_TYPE_ANY, the current setting is not changed
     ntpServer       - the NTP server to be used; name or an IP address can be used
-                      if 0, the current NTP server is not changed
+                      if NULL or empty, SNTP won't attempt any connection
 
   Returns:
     - SNTP_RES_OK - if the call succeeded
