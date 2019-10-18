@@ -469,7 +469,10 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
     {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
-#endif    
+#endif   
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,        (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},      // TCPIP_MODULE_FTP_CLIENT
+#endif 
     // Add other stack modules here
      
 };
@@ -571,7 +574,12 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_SMTPC)
     {TCPIP_MODULE_SMTPC,        (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize},          // TCPIP_MODULE_SMTPC
 #endif
-    
+#if defined(TCPIP_STACK_USE_TFTP_SERVER)
+    {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
+#endif   
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,        (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},      // TCPIP_MODULE_FTP_CLIENT
+#endif 
     // Add other stack modules here
      
 };
@@ -1737,6 +1745,20 @@ static uint32_t _TCPIPProcessMacPackets(bool signal)
         // get the packet type
         frameType = TCPIP_Helper_ntohs(pMacHdr->Type);
 
+#if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+        TCPIP_NET_IF* pNetIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
+        TCPIP_STACK_PACKET_HANDLER pktHandler = pNetIf->pktHandler;
+        if(pktHandler != 0)
+        {
+            bool was_processed = (*pktHandler)(pNetIf, pRxPkt, frameType, pNetIf->pktHandlerParam);
+            if(was_processed)
+            {
+                TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                continue;
+            }
+        }
+            
+#endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
         frameFound = false;
         pFrameEntry = TCPIP_FRAME_PROCESS_TBL;
         for(frameIx = 0; frameIx < sizeof(TCPIP_FRAME_PROCESS_TBL) / sizeof(*TCPIP_FRAME_PROCESS_TBL); frameIx++, pFrameEntry++)
@@ -4318,6 +4340,44 @@ static void _TCPIPCopyMacAliasIf(TCPIP_NET_IF* pAliasIf, TCPIP_NET_IF* pPriIf)
 }
 
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+
+// external packet processing
+#if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+TCPIP_STACK_PROCESS_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    TCPIP_STACK_PROCESS_HANDLE pHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
+
+    if(pNetIf != 0 && pNetIf->pktHandler == 0)
+    {
+        pNetIf->pktHandlerParam = handlerParam;
+        pNetIf->pktHandler = pktHandler;
+        pHandle = pktHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return pHandle;
+}
+
+bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(hNet);
+
+    if(pNetIf != 0 && pNetIf->pktHandler == pktHandle)
+    {
+        pNetIf->pktHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
 
 // debugging features
 //
