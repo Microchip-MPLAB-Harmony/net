@@ -120,8 +120,6 @@ static const char * const sTCPIPFTPRespStr[] =
     "421 Service not available, closing control connection\r\n", // TCPIP_FTP_RESP_FILESYSTEM_FAIL
     "215 UNIX Type: L8\r\n",  // TCPIP_FTP_RESP_SYST
     "250 Requested File Action Okay,Completed\r\n", // TCPIP_FTP_FILE_ACTION_OK
-    "552 Requested action aborted\r\n", // TCPIP_FTP_ACTION_ABORTED
-    "521 taking no action. Directory already present.", // TCPIP_FTP_DIR_ALREADY_PRESENT
     "",  // TCPIP_FTP_RESP_NONE
 };
 
@@ -154,6 +152,7 @@ static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
 //static bool TCPIP_FTP_NameListCmd(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
 static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt);
 static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt);
+static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt);
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 static void TCPIP_FTP_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackData);
@@ -991,8 +990,9 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
         case TCPIP_FTP_CMD_XRMD:
         case TCPIP_FTP_CMD_DELE: // remove a file or a directory
             if(pFTPDcpt->ftpFlag.Bits.loggedIn)
-            {
-                SYS_FS_RESULT result = (pFTPDcpt->ftp_shell_obj->fileDelete)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
+            {                
+                SYS_FS_RESULT   result = TCPIP_FTP_RemoveFile(pFTPDcpt);                
+                
                 if(result == SYS_FS_RES_SUCCESS)
                 {
                     pFTPDcpt->ftpResponse = TCPIP_FTP_FILE_ACTION_OK;
@@ -1893,7 +1893,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
         case TCPIP_FTP_CMD_SM_SEND:
             if(cmdWithArg)
             { // argument two will be the file name
-                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,(const char *)pFTPDcpt->ftp_argv[2], &fs_stat) != SYS_FS_RES_SUCCESS)
+                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,(const char *)pFTPDcpt->ftp_argv[2], &fs_stat) != SYS_FS_HANDLE_INVALID)
                 {
                     if(!(fs_stat.fattrib & SYS_FS_ATTR_DIR))
                     {  // transmit the remaining bytes
@@ -1914,7 +1914,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             }
             else
             {
-                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,(const char *)pFTPDcpt->ftp_argv[1], &fs_stat) != SYS_FS_RES_SUCCESS)
+                if((pFTPDcpt->ftp_shell_obj->fileStat)(pFTPDcpt->ftp_shell_obj,(const char *)pFTPDcpt->ftp_argv[1], &fs_stat) != SYS_FS_HANDLE_INVALID)
                 {
                     if(!(fs_stat.fattrib & SYS_FS_ATTR_DIR))
                     {  // transmit the remaining bytes
@@ -2290,6 +2290,35 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             break;
     }
     return false;
+}
+/*
+ * Remove the file or directory for the FTP command "delete" or "rmdir"
+ */
+static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt)
+{
+    SYS_FS_ERROR    fs_err;
+    SYS_FS_RESULT   result;
+    char            ftpMsg[128];
+
+    result = (pFTPDcpt->ftp_shell_obj->fileDelete)(pFTPDcpt->ftp_shell_obj,(const char*)pFTPDcpt->ftp_argv[1]);
+    if(result == SYS_FS_HANDLE_INVALID)
+    {
+        fs_err = SYS_FS_Error();
+        if(fs_err == SYS_FS_ERROR_DENIED)
+        {
+            memset(ftpMsg,0,sizeof(ftpMsg));
+            sprintf(ftpMsg,"550 \"%s\" Directory is not empty! \r\n",pFTPDcpt->ftp_argv[1]);
+            if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
+            {
+                pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
+                pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
+                return true;
+            }
+            TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
+            TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
+        }
+    }
+    return result;
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_FTP_SERVER)
 
