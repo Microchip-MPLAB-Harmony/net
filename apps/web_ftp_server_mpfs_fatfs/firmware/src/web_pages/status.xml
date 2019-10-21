@@ -1,0 +1,9 @@
+<response>
+<led0>~led(0)~</led0>
+<led1>~led(1)~</led1>
+<led2>~led(2)~</led2>
+<btn0>~btn(0)~</btn0>
+<btn1>~btn(1)~</btn1>
+<btn2>~btn(2)~</btn2>
+<pot0>~pot~</pot0>
+</response>
