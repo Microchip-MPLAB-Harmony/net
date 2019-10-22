@@ -607,6 +607,53 @@ typedef struct
 }TCPIP_STACK_MODULE_CONFIG;
 
 // *****************************************************************************
+/* TCP/IP stack initialization callback
+
+  Summary:
+    Definition to represent a TCP/IP stack initialization callback function.
+
+  Description:
+    This type describes a TCP/IP stack initialization callback function type
+    that's passed to the stack at the initialization time.
+
+   Parameters:
+    ppStackInit  - Pointer to the address of the initialization data.
+              It should be updated to a TCPIP_STACK_INIT pointer that carries the stack initialization data:
+                -    pNetConf  	 - pointer to an array of TCPIP_NETWORK_CONFIG to support
+                -    nNets       - number of network configurations in the array
+                -    pModConfig  - pointer to an array of TCPIP_STACK_MODULE_CONFIG
+                -    nModules    - number of modules to initialize 
+  
+  Returns:
+    >  0    - the initialization is pending. The stack is required to call again the callback
+
+    == 0    - the initialization data is ready and the ppStackInit has been properly updated
+              stack initialization should proceed
+
+    <  0    - some error occurred, the stack initialization should be aborted
+
+  Remarks:
+    This callback is part of the initialization data that's passed to the stack
+    at initialization
+
+    If the callback is NULL, then the stack initialization will proceed immediately with the
+    data presented in the TCPIP_STACK_INIT.
+
+    If the callback is not NULL, then the initialization of the stack will be delayed
+    and it will be performed in the TCPIP_STACK_Task() function.
+    The TCPIP_STACK_Task() will keep calling the callback function until this returns 
+    ready or an error condition.
+
+    The ppStackInit will be used in the TCPIP_STACK_Task() context.
+    It has to point to a persistent data structure that won't go 
+    out of scope until the stack initialization is finished!
+
+*/
+struct TCPIP_STACK_INIT;
+typedef int (*TCPIP_STACK_INIT_CALLBACK)(const struct TCPIP_STACK_INIT** ppStackInit);
+
+
+// *****************************************************************************
 /* TCP/IP stack initialization/configuration structure
 
   Summary:
@@ -621,7 +668,7 @@ typedef struct
     TCPIP_STACK_Initialize.
 */
 
-typedef struct
+typedef struct TCPIP_STACK_INIT
 {
     /* system module initialization     */
     SYS_MODULE_INIT                     moduleInit; 
@@ -633,6 +680,8 @@ typedef struct
     const TCPIP_STACK_MODULE_CONFIG*    pModConfig; 
     /* number of modules in the array  */
     int                                 nModules;   
+    /* initialization callback */
+    TCPIP_STACK_INIT_CALLBACK           initCback;
 }TCPIP_STACK_INIT;
 
 //DOM-IGNORE-BEGIN
@@ -641,7 +690,11 @@ typedef struct
 #endif
 //DOM-IGNORE-END
 
-
+// *****************************************************************************
+// *****************************************************************************
+// Section: TCPIP Stack Modules Include
+// *****************************************************************************
+// *****************************************************************************
 #include "tcpip/tcpip_common_ports.h"
 
 #include "tcpip/tcpip_mac.h"

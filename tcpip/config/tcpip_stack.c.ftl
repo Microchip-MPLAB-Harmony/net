@@ -1030,6 +1030,10 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
  *
  ********************************************************************/
 
+<#if (TCPIP_STACK_ENABLE_INIT_CALLBACK) == true && (TCPIP_STACK_INIT_CALLBACK)?has_content >
+extern int ${TCPIP_STACK_INIT_CALLBACK}( const struct TCPIP_STACK_INIT** ppStackInit );
+</#if>
+
 SYS_MODULE_OBJ TCPIP_STACK_Init()
 {
     TCPIP_STACK_INIT    tcpipInit;
@@ -1038,6 +1042,11 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
     tcpipInit.nNets = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
     tcpipInit.pModConfig = TCPIP_STACK_MODULE_CONFIG_TBL;
     tcpipInit.nModules = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
+<#if (TCPIP_STACK_ENABLE_INIT_CALLBACK) == true && (TCPIP_STACK_INIT_CALLBACK)?has_content >
+    tcpipInit.initCback = ${TCPIP_STACK_INIT_CALLBACK};
+<#else>
+    tcpipInit.initCback = 0;
+</#if>
 
     return TCPIP_STACK_Initialize(0, &tcpipInit.moduleInit);
 }
