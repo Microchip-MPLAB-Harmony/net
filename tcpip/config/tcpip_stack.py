@@ -274,6 +274,23 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapStackPoolExpnSize.setDescription("The Expansion Size for the Internal Heap Pool")
     tcpipStackHeapStackPoolExpnSize.setDefaultValue(51200)
     tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
+
+    # Enable TCP/IP stack Initialization callback 
+    tcpipStackEnableInitCback= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ENABLE_INIT_CALLBACK", None)
+    tcpipStackEnableInitCback.setLabel("Enable Stack Initialization Callback")
+    tcpipStackEnableInitCback.setVisible(True)
+    tcpipStackEnableInitCback.setDescription("Enable Stack Initialization Callback")
+    tcpipStackEnableInitCback.setDefaultValue(False)
+
+    # Callback Function
+    tcpipStackInitCback = tcpipStackComponent.createStringSymbol("TCPIP_STACK_INIT_CALLBACK", tcpipStackEnableInitCback)
+    tcpipStackInitCback.setLabel("Stack Initialization Callback Function")
+    tcpipStackInitCback.setVisible(False)
+    tcpipStackInitCback.setDescription("Callback Function to be called at the Stack Initialization")
+    tcpipStackInitCback.setDefaultValue("TCPIP_STACK_InitCallback")
+    tcpipStackInitCback.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_ENABLE_INIT_CALLBACK"])
+    
+    
     
     # source "$HARMONY_VERSION_PATH/framework/tcpip/config/tcpip_pool_idx.ftl" 20 instances
     #####################################################################################################
@@ -1956,3 +1973,5 @@ def genRtosTask(symbol, event):
 
 def destroyComponent(component):
     Database.setSymbolValue("tcpipStack", "USE_TCPIP_STACK", False, 2)
+
+
