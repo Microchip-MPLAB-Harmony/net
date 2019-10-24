@@ -45,21 +45,19 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 
-#define NVM_DRIVER_V080_WORKAROUND
-
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 
-#if defined (NVM_DRIVER_V080_WORKAROUND)
-#define MPFS_UPLOAD_DISK_NO         0
-#endif
-
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE   (4 * 1024)
 
-#include "tcpip/src/common/sys_fs_wrapper.h"
+#include "system/fs/sys_fs_media_manager.h"
+#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
+
+#include "tcpip/src/common/sys_fs_shell.h"
 
 #include "http_net_private.h"
 #include "net_pres/pres/net_pres_socketapi.h"
@@ -365,6 +363,9 @@ static void* (*http_malloc_fnc)(size_t bytes) = 0; // HTTP malloc
 static void  (*http_free_fnc)(void* ptr) = 0;      // HTTP free
 #endif  // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0) || (TCPIP_HTTP_NET_SSI_PROCESS != 0) || defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
+// file shell object for file access
+static const SYS_FS_SHELL_OBJ*  httpFileShell = 0;
+
     
 // global HTTP statistics
 static uint32_t             httpDynPoolEmpty = 0;          // dynamic variables buffer pool empty condition counter
@@ -391,7 +392,7 @@ static uint16_t _HTTP_SktFifoRxFree(NET_PRES_SKT_HANDLE_T skt);
 
 static bool _HTTP_DataTryOutput(TCPIP_HTTP_NET_CONN* pHttpCon, const char* data, uint16_t dataLen, uint16_t checkLen);
 
-static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* findStr, uint16_t wStart, uint16_t wSearchLen);
+static uint32_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* findStr, uint16_t wStart, uint16_t wSearchLen);
 
 static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen);
 
@@ -799,7 +800,7 @@ static void _HTTP_CloseConnections(TCPIP_NET_IF* pNetIf)
             {
                 if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
                 {
-                    SYS_FS_FileClose(pHttpCon->file);
+                    (*httpFileShell->fileClose)(httpFileShell, pHttpCon->file);
                     pHttpCon->file = SYS_FS_HANDLE_INVALID;
                     _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHttpCon->fileName);
                 }
@@ -867,6 +868,12 @@ static void _HTTP_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     {
         _TCPIPStackSignalHandlerDeregister(httpSignalHandle);
         httpSignalHandle = 0;
+    }
+
+    if(httpFileShell != 0)
+    {
+        (*httpFileShell->delete)(httpFileShell);
+        httpFileShell = 0;
     }
 
 #if (TCPIP_HTTP_NET_SSI_PROCESS != 0)
@@ -1071,25 +1078,39 @@ bool TCPIP_HTTP_NET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
             pHttpData += httpInitData->dataLen;
         }
 
+        if(initFail == false)
+        {   // continue initialization 
+            SYS_FS_SHELL_RES shellRes;
+            const char* web_dir = httpInitData->web_dir;
+            httpFileShell = SYS_FS_Shell_Create(web_dir, 0, 0, 0, &shellRes);
+            if(httpFileShell == 0)
+            {
+                SYS_ERROR(SYS_ERROR_WARNING, " HTTP: FS Shell creation for directory: %s Failed: %d!\r\n", web_dir, shellRes);
+                initFail = true;
+                break;
+            }
+
 #if (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
-        // initialize the dynamic variables buffer pool
-        TCPIP_Helper_SingleListInitialize (&httpDynVarPool);
-        TCPIP_HTTP_DYNVAR_BUFF_DCPT* pDynDcpt = httpAllocDynDcpt; 
-        for(connIx = 0; connIx < httpDynDescriptorsNo; connIx++, pDynDcpt++)
-        {
-            TCPIP_Helper_SingleListTailAdd(&httpDynVarPool, (SGL_LIST_NODE*)pDynDcpt);
-        } 
+            // initialize the dynamic variables buffer pool
+            TCPIP_Helper_SingleListInitialize (&httpDynVarPool);
+            TCPIP_HTTP_DYNVAR_BUFF_DCPT* pDynDcpt = httpAllocDynDcpt; 
+            for(connIx = 0; connIx < httpDynDescriptorsNo; connIx++, pDynDcpt++)
+            {
+                TCPIP_Helper_SingleListTailAdd(&httpDynVarPool, (SGL_LIST_NODE*)pDynDcpt);
+            } 
 #endif  // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
 
-        // initialize the chunk pool
-        TCPIP_Helper_SingleListInitialize (&httpChunkPool);
-        TCPIP_HTTP_CHUNK_DCPT* pChDcpt = httpAllocChunks; 
-        for(connIx = 0; connIx < httpChunksNo; connIx++, pChDcpt++)
-        {
-            TCPIP_Helper_SingleListTailAdd(&httpChunkPool, (SGL_LIST_NODE*)pChDcpt);
-        } 
+            // initialize the chunk pool
+            TCPIP_Helper_SingleListInitialize (&httpChunkPool);
+            TCPIP_HTTP_CHUNK_DCPT* pChDcpt = httpAllocChunks; 
+            for(connIx = 0; connIx < httpChunksNo; connIx++, pChDcpt++)
+            {
+                TCPIP_Helper_SingleListTailAdd(&httpChunkPool, (SGL_LIST_NODE*)pChDcpt);
+            } 
 
-        // postpone the SSI variables initialization
+            // postpone the SSI variables initialization
+        }
+
         break;
     }
 
@@ -1331,7 +1352,7 @@ static bool _HTTP_HeaderParseAuthorization(TCPIP_HTTP_NET_CONN* pHttpCon)
     _HTTP_ConnectionDiscard(pHttpCon, 6);
 
     // Find the terminating CRLF, make sure it's a multiple of four and limit the size
-    len = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+    len = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     len += 3;
     len &= 0xfc;
     len = mMIN(len, sizeof(inBuff)-4);
@@ -1402,7 +1423,7 @@ static bool _HTTP_HeaderParseCookie(TCPIP_HTTP_NET_CONN* pHttpCon)
     uint16_t lenA, lenB;
 
     // Verify there's enough space
-    lenB = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+    lenB = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     if(lenB >= (uint16_t)(pHttpCon->httpData + httpConnDataSize - pHttpCon->ptrData - 2))
     {   // If not, overflow
         pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_OVERFLOW;
@@ -1432,7 +1453,7 @@ static bool _HTTP_HeaderParseCookie(TCPIP_HTTP_NET_CONN* pHttpCon)
         }
 
         // Find the new distance to the CRLF
-        lenB = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+        lenB = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     }
 
     return true;
@@ -1472,7 +1493,7 @@ static bool _HTTP_HeaderParseContentLength(TCPIP_HTTP_NET_CONN* pHttpCon)
     uint8_t buf[10];
 
     // Read up to the CRLF (max 9 bytes)
-    len = _HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
+    len = (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, TCPIP_HTTP_NET_CRLF, 0, 0);
     if(len >= sizeof(buf))
     {
         pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_BAD_REQUEST;
@@ -1643,6 +1664,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileUpload(TCPIP_HTTP_NET_CONN* pHtt
         }
         else
         {
+            pHttpCon->flags.uploadPhase = 0;
             pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_STARTED;
         }
 
@@ -1669,7 +1691,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileOpen(TCPIP_HTTP_NET_CONN* pHttpC
     // String starts at 2nd character, because the first is always a '/'
     if(pHttpCon->httpData[lenB-1] != '/')
     {
-        pHttpCon->file = SYS_FS_FileOpen_Wrapper((char *)&pHttpCon->httpData[1], SYS_FS_FILE_OPEN_READ);
+        pHttpCon->file = (*httpFileShell->fileOpen)(httpFileShell, (char *)&pHttpCon->httpData[1], SYS_FS_FILE_OPEN_READ);
     }
 
     // If the open fails, then add our default name and try again
@@ -1685,7 +1707,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ParseFileOpen(TCPIP_HTTP_NET_CONN* pHttpC
         lenB += strlen(TCPIP_HTTP_NET_DEFAULT_FILE);
 
         // Try to open again
-        pHttpCon->file = SYS_FS_FileOpen_Wrapper((char *)&pHttpCon->httpData[1], SYS_FS_FILE_OPEN_READ);
+        pHttpCon->file = (*httpFileShell->fileOpen)(httpFileShell, (char *)&pHttpCon->httpData[1], SYS_FS_FILE_OPEN_READ);
     }
 
     if(pHttpCon->file == SYS_FS_HANDLE_INVALID)
@@ -1964,13 +1986,13 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessPost(TCPIP_HTTP_NET_CONN* pHttpCon
 #endif
         {
             // Run the application callback TCPIP_HTTP_NET_ConnectionPostExecute()
-#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
             if(pHttpCon->httpStatus >= TCPIP_HTTP_NET_STAT_UPLOAD_STARTED && pHttpCon->httpStatus <= TCPIP_HTTP_NET_STAT_UPLOAD_ERROR)
             {
                 ioRes = TCPIP_HTTP_NET_FSUpload(pHttpCon);
             }
             else
-#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
             {
                 if(httpUserCback && httpUserCback->postExecute)
                 {
@@ -2110,7 +2132,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ServeHeaders(TCPIP_HTTP_NET_CONN* pHttpCo
 
     // Output the gzip encoding header if needed
     fileGzipped = 0;
-    if(SYS_FS_FileStat_Wrapper((const char *)&pHttpCon->fileName, &fs_attr) != SYS_FS_HANDLE_INVALID)
+    if((*httpFileShell->fileStat)(httpFileShell, (const char *)&pHttpCon->fileName, &fs_attr) != SYS_FS_HANDLE_INVALID)
     {
         if (fs_attr.fattrib == SYS_FS_ATTR_ZIP_COMPRESSED)
         {
@@ -2299,7 +2321,7 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessDone(TCPIP_HTTP_NET_CONN* pHttpCon
     {  // keep connection open; Make sure any opened files are closed
         if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
         {
-            SYS_FS_FileClose(pHttpCon->file);
+            (*httpFileShell->fileClose)(httpFileShell, pHttpCon->file);
             _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHttpCon->fileName);
             pHttpCon->file = SYS_FS_HANDLE_INVALID;
         }
@@ -2324,7 +2346,7 @@ static bool _HTTP_ConnCleanDisconnect(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_
     // Make sure any opened files are closed
     if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
     {
-        SYS_FS_FileClose(pHttpCon->file);
+        (*httpFileShell->fileClose)(httpFileShell, pHttpCon->file);
         _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHttpCon->fileName);
         pHttpCon->file = SYS_FS_HANDLE_INVALID;
     }
@@ -2703,7 +2725,7 @@ static TCPIP_HTTP_NET_READ_STATUS _HTTP_ReadTo(TCPIP_HTTP_NET_CONN* pHttpCon, ui
     the FS image could be stored (EEPROM, flash, etc.)
 
   ***************************************************************************/
-#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 #define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHttpCon)
 {
@@ -2716,25 +2738,38 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
     {
         // New upload, so look for the CRLFCRLF
         case TCPIP_HTTP_NET_STAT_UPLOAD_STARTED:
-            pHttpCon->uploadSectNo = 0;
-            lenA = _HTTP_ConnectionStringFind(pHttpCon, "\r\n\r\n", 0, 0);
+            if(pHttpCon->flags.uploadPhase == 0)
+            {   // just starting
+                pHttpCon->uploadSectNo = 0;
+                uint32_t peekRes = _HTTP_ConnectionStringFind(pHttpCon, "\r\n\r\n", 0, 0);
 
-            if(lenA == 0xffff)
-            {   // End of line not found, remove as much as possible
-                lenA = _HTTP_ConnectionDiscard(pHttpCon, NET_PRES_SocketReadIsReady(pHttpCon->socket) - 4);
-                pHttpCon->byteCount -= lenA;
+                if((uint16_t)peekRes == 0xffff)
+                {   // End of line not found, remove as much as possible
+                    lenA = peekRes >> 16;   // get the # of bytes safe to remove
+                    if(lenA > 4)
+                    {
+                        lenA = _HTTP_ConnectionDiscard(pHttpCon, lenA - 4);
+                        pHttpCon->byteCount -= lenA;
+                    }
+                    break;
+                }
+
+                // Found end of line, so remove all data up to and including
+                lenA = _HTTP_ConnectionDiscard(pHttpCon, (uint16_t)peekRes + 4);
+                pHttpCon->byteCount -= (lenA + 4);
+
+                pHttpCon->flags.uploadPhase = 1;
                 break;
             }
-
-            // Found end of line, so remove all data up to and including
-            lenA = _HTTP_ConnectionDiscard(pHttpCon, lenA + 4);
-            pHttpCon->byteCount -= (lenA + 4);
-
+            // waiting for the signature
             // Make sure first 6 bytes are also in
             if(NET_PRES_SocketReadIsReady(pHttpCon->socket) < sizeof(MPFS_SIGNATURE) - 1 )
             {
                 return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
             }
+
+            // reset the phase, we're done
+            pHttpCon->flags.uploadPhase = 0;
 
             lenA = NET_PRES_SocketRead(pHttpCon->socket, mpfsBuffer, sizeof(MPFS_SIGNATURE) - 1);
             pHttpCon->byteCount -= lenA;
@@ -2754,7 +2789,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
                 pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
 
-                SYS_FS_Unmount_Wrapper(pHttpCon->fileName);
+                SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
                 pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_WRITE;
                 return TCPIP_HTTP_NET_IO_RES_WAITING;
             }
@@ -2831,7 +2866,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 (*http_free_fnc)(pHttpCon->uploadBufferStart);
                 pHttpCon->uploadBufferStart = 0;
 
-                if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
+                if(SYS_FS_Mount(MPFS_UPLOAD_NVM_VOL, MPFS_UPLOAD_MOUNT_PATH, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
                 {
                     _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE, pHttpCon->fileName);
                     pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_OK;
@@ -2870,7 +2905,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
     return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
 }
 
-#endif //defined (TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif //defined (TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 // the default file include dynamic variable HTTP operation
 static TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DefaultIncludeFile(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack)
@@ -2905,7 +2940,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_IncludeFile(TCPIP_HTTP_NET_CONN* pHttpCon, TCP
 
 
     // avoid creating a new chunk for a file that cannot be opened
-    if(fName == 0 || (fp = SYS_FS_FileOpen_Wrapper(fName, SYS_FS_FILE_OPEN_READ)) == SYS_FS_HANDLE_INVALID)
+    if(fName == 0 || (fp = (*httpFileShell->fileOpen)(httpFileShell, fName, SYS_FS_FILE_OPEN_READ)) == SYS_FS_HANDLE_INVALID)
     {   // File not found, so abort
         _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_OPEN_ERROR, fName);
         return TCPIP_HTTP_CHUNK_RES_FILE_ERR;
@@ -3080,7 +3115,7 @@ int TCPIP_HTTP_NET_ActiveConnectionCountGet(int* pOpenCount)
 uint16_t TCPIP_HTTP_NET_ConnectionStringFind(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const char* str, uint16_t startOffs, uint16_t searchLen)
 {
     TCPIP_HTTP_NET_CONN* pHttpCon = (TCPIP_HTTP_NET_CONN*)connHandle;
-    return _HTTP_ConnectionStringFind(pHttpCon, str, startOffs, searchLen);
+    return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, str, startOffs, searchLen);
 }
 
 
@@ -3194,7 +3229,10 @@ static bool _HTTP_DataTryOutput(TCPIP_HTTP_NET_CONN* pHttpCon, const char* data,
 
 
 // Note that the search will fail if there's more data in the TCP socket than could be read at once.
-static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* str, uint16_t startOffs, uint16_t searchLen)
+// returns a 32 bit word:
+//      - hi 16 bits hold the peeked at data, i.e. the number of bytes to safely remove, if needed
+//      - low 16 bits is 0xffff if not found or offset where the string was found
+static uint32_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const char* str, uint16_t startOffs, uint16_t searchLen)
 {
     uint16_t    peekOffs, peekReqLen, peekSize, avlblBytes;
     char*   queryStr;
@@ -3218,6 +3256,7 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
     }
 
     uint16_t retCode = 0xffff;
+    peekSize = 0;
     // sanity check
     if(findLen < httpPeekBufferSize)
     {   // make sure enough room to find such string
@@ -3240,7 +3279,7 @@ static uint16_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
 
 
     (*http_free_fnc)(srchBuff);
-    return retCode;
+    return ((uint32_t)peekSize << 16) | retCode;
 }
 
 static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t cFind, uint16_t wStart, uint16_t wSearchLen)
@@ -3249,7 +3288,7 @@ static uint16_t _HTTP_ConnectionCharFind(TCPIP_HTTP_NET_CONN* pHttpCon, uint8_t 
     srchBuff[0] = cFind;
     srchBuff[1] = 0;
 
-	return _HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
+	return (uint16_t)_HTTP_ConnectionStringFind(pHttpCon, srchBuff, wStart, wSearchLen);
 }
 
 
@@ -3466,7 +3505,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, SY
             SYS_FS_FSTAT fs_attr = {0};
             bool fileGzipped = false;
 
-            if(SYS_FS_FileStat_Wrapper(fName, &fs_attr) != SYS_FS_HANDLE_INVALID)
+            if((*httpFileShell->fileStat)(httpFileShell, fName, &fs_attr) != SYS_FS_HANDLE_INVALID)
             {
                 if (fs_attr.fattrib == SYS_FS_ATTR_ZIP_COMPRESSED)
                 {
@@ -3483,7 +3522,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, SY
             }
         }
 
-        int32_t fileSize =  SYS_FS_FileSize(fH);
+        int32_t fileSize =  (*httpFileShell->fileSize)(httpFileShell, fH);
         if(fileSize == 0 || fileSize == -1)
         {   // still invalid
             evType = TCPIP_HTTP_NET_EVENT_FILE_SIZE_ERROR;
@@ -3519,7 +3558,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_AddFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon, SY
     {   // some error occurred
         if(fH != SYS_FS_HANDLE_INVALID)
         {
-            SYS_FS_FileClose(fH);
+            (*httpFileShell->fileClose)(httpFileShell, fH);
             _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, fName);
         }
         if(pChDcpt != 0)
@@ -3648,7 +3687,7 @@ static void _HTTP_FreeChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DCPT
     {
         if(pHead->fileChDcpt.fHandle != SYS_FS_HANDLE_INVALID)
         {
-            SYS_FS_FileClose(pHead->fileChDcpt.fHandle);
+            (*httpFileShell->fileClose)(httpFileShell, pHead->fileChDcpt.fHandle);
             _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FILE_CLOSE, pHead->chunkFName);
         }
 
@@ -3663,6 +3702,19 @@ static void _HTTP_FreeChunk(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DCPT
         if(pHead->dynChDcpt.pDynAllocDcpt != 0)
         {   // dynamic variable chunk with allocated dyn var user space
             (*http_free_fnc)(pHead->dynChDcpt.pDynAllocDcpt);
+        }
+        // check if there are dynamic buffers that are not freed
+        TCPIP_HTTP_DYNVAR_BUFF_DCPT* pDynDcpt;
+        while((pDynDcpt = (TCPIP_HTTP_DYNVAR_BUFF_DCPT*)TCPIP_Helper_SingleListHeadRemove(&pChDcpt->dynChDcpt.dynBuffList)) != 0)
+        {
+            if((pDynDcpt->dynFlags & TCPIP_HTTP_DYNVAR_BUFF_FLAG_ACK) != 0)
+            {   // needs acknowlegment
+                if(httpUserCback != 0 && httpUserCback->dynamicAck != 0)
+                {
+                    (*httpUserCback->dynamicAck)(pHttpCon, pDynDcpt->dynBuffer, httpUserCback);
+                }
+            }
+            _HTTP_ReleaseDynBuffDescriptor(pDynDcpt);
         }
     }
 #endif // (TCPIP_HTTP_NET_DYNVAR_PROCESS != 0)
@@ -3823,7 +3875,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_ProcessFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon
                     fileBytes = chunkBufferSize;
                 }
 
-                fileReadBytes = SYS_FS_FileRead(pChDcpt->fileChDcpt.fHandle, fileBuffer, fileBytes);
+                fileReadBytes = (*httpFileShell->fileRead)(httpFileShell, pChDcpt->fileChDcpt.fHandle, fileBuffer, fileBytes);
 
                 if(fileReadBytes != fileBytes)
                 {   // one chunk at a time. can abort if error because no new chunk was written!
@@ -3942,7 +3994,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_ProcessFileChunk(TCPIP_HTTP_NET_CONN* pHttpCon
         // finally update the file offset
         if(fileReadBytes != fileBytes)
         {   // readjust if we read too much
-            SYS_FS_FileSeek(pChDcpt->fileChDcpt.fHandle, -(fileReadBytes - fileBytes), SYS_FS_SEEK_CUR);
+            (*httpFileShell->fileSeek)(httpFileShell, pChDcpt->fileChDcpt.fHandle, -(fileReadBytes - fileBytes), SYS_FS_SEEK_CUR);
         }
 
         // continue: either done, or send out data and do more, or process the dynStart
@@ -4183,7 +4235,7 @@ static bool  _HTTP_DynVarExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK
         {
             len = TCPIP_HTTP_NET_DYNVAR_MAX_LEN;
         }
-        fileLen = SYS_FS_FileRead(pFileChDcpt->fileChDcpt.fHandle, dynVarBuff, len);
+        fileLen = (*httpFileShell->fileRead)(httpFileShell, pFileChDcpt->fileChDcpt.fHandle, dynVarBuff, len);
 
         if(fileLen != len)
         {   // couldn't read data?
@@ -4335,7 +4387,7 @@ static bool  _HTTP_DynVarExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK
     extraLen = fileLen - (endDynName - dynVarBuff);
     if(extraLen)
     {
-        SYS_FS_FileSeek(pFileChDcpt->fileChDcpt.fHandle, -extraLen, SYS_FS_SEEK_CUR);
+        (*httpFileShell->fileSeek)(httpFileShell, pFileChDcpt->fileChDcpt.fHandle, -extraLen, SYS_FS_SEEK_CUR);
     }
 
     // adjust the file byte counters with read characters
@@ -4754,7 +4806,7 @@ static bool  _HTTP_SSIExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DC
         {
             len = TCPIP_HTTP_NET_SSI_CMD_MAX_LEN;
         }
-        fileLen = SYS_FS_FileRead(pFileChDcpt->fileChDcpt.fHandle, ssiBuff, len);
+        fileLen = (*httpFileShell->fileRead)(httpFileShell, pFileChDcpt->fileChDcpt.fHandle, ssiBuff, len);
         if(fileLen != len)
         {   // couldn't read data?
             evInfo = pFileChDcpt->chunkFName;
@@ -4897,7 +4949,7 @@ static bool  _HTTP_SSIExtract(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_HTTP_CHUNK_DC
     extraLen = fileLen - (endSsiCmd - ssiBuff);
     if(extraLen)
     {
-        SYS_FS_FileSeek(pFileChDcpt->fileChDcpt.fHandle, -extraLen, SYS_FS_SEEK_CUR);
+        (*httpFileShell->fileSeek)(httpFileShell, pFileChDcpt->fileChDcpt.fHandle, -extraLen, SYS_FS_SEEK_CUR);
     }
 
     // adjust the file byte counters with read characters

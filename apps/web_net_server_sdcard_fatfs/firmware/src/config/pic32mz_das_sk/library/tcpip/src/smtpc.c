@@ -52,7 +52,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 #include "net_pres/pres/net_pres_socketapi.h"
 
-#include "tcpip/src/common/sys_fs_wrapper.h"
+#include "system/fs/sys_fs.h"
 
 #if defined(TCPIP_STACK_USE_SMTPC)
 
@@ -1930,10 +1930,20 @@ static TCPIP_SMTPC_STATUS smtpDcptRxProcEhlo(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, co
     }
 
     // start TLS?
+    bool doTls = false;
     if(pDcpt->currStat == TCPIP_SMTPC_STAT_EHLO_PLAIN_WAIT && (pDcpt->smtpMailMessage.messageFlags & TCPIP_SMTPC_MAIL_FLAG_SKIP_TLS) == 0) 
     {
         if((pDcpt->smtpMailMessage.messageFlags & TCPIP_SMTPC_MAIL_FLAG_FORCE_TLS) != 0 || (pDcpt->dcptFlags & TCPIP_SMTPC_SERVER_FLAG_TLS) != 0)
-        {   // start TLS
+        {   // either TLS is forced or the server expects it
+            doTls = true;
+        }
+    }
+
+    if(doTls)
+    {
+        bool tlsSupported = NET_PRES_SocketIsOpenModeSupported(0, NET_PRES_SKT_ENCRYPTED_STREAM_CLIENT);
+        if(tlsSupported)
+        {
             return TCPIP_SMTPC_STAT_TLS_START;
         } 
     }
@@ -2692,7 +2702,7 @@ static bool smtpFileInit(TCPIP_SMTP_READ_DCPT* pRdDcpt, const char* name, const 
     {
         if(pRdFile->fName == 0 && pRdFile->fHandle == SYS_FS_HANDLE_INVALID)
         {   // clean
-            SYS_FS_HANDLE fHandle = SYS_FS_FileOpen_Wrapper(name, SYS_FS_FILE_OPEN_READ);
+            SYS_FS_HANDLE fHandle = SYS_FS_FileOpen(name, SYS_FS_FILE_OPEN_READ);
             if(fHandle == SYS_FS_HANDLE_INVALID)
             {
                 return false;

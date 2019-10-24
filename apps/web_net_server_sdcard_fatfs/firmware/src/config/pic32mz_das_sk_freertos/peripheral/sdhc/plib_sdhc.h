@@ -69,6 +69,14 @@ bool SDHC_IsDatLineBusy ( void );
 
 bool SDHC_IsWriteProtected ( void );
 
+void SDHC_CardDetectEnable( void );
+
+void SDHC_CardDetectDisable( void );
+
+void SDHC_WriteProtectEnable( void );
+
+void SDHC_WriteProtectDisable( void );
+
 bool SDHC_IsCardAttached ( void );
 
 bool SDHC_ClockSet ( uint32_t clock);

@@ -263,6 +263,14 @@ void APP_Tasks( void );
 #define APP_LED_3StateClear()       LED3_Clear()
 #define APP_LED_3StateToggle()      LED3_Toggle()
 #endif
+
+// Application SYS_FS mount points
+// Adjust as needed
+#define APP_SYS_FS_SD_VOL          "/dev/mmcblka1"
+#define APP_SYS_FS_MOUNT_POINT      "/mnt/mchpSite1"
+#define APP_SYS_FS_TYPE             FAT
+#define APP_SYS_FS_TYPE_STRING      "FATFS"
+
 #endif /* _APP_H */
 
 //DOM-IGNORE-BEGIN
