@@ -79,7 +79,7 @@ static const void*  SnmpStackMemH = 0;        // memory handle
 static SNMP_STACK_DCPT_STUB*  SnmpStackDcptMemStubPtr=0;
 
 // file shell object for file access
-static const SYS_FS_SHELL_OBJ*  snmpFileShell = 0;
+const SYS_FS_SHELL_OBJ*  snmpFileShell = 0;
 TCPIP_SNMP_DCPT gSnmpDcpt;
 const char *snmpMountPath = TCPIP_SNMP_MOUNT_POINT;
 #if defined (TCPIP_STACK_USE_IPV6)
