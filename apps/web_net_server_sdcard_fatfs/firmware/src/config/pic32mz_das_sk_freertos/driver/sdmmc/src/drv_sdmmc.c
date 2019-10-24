@@ -1663,12 +1663,38 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                 /* Check the Present state register to see if the card is inserted */
                 if (dObj->sdmmcPlib->sdhostIsCardAttached ())
                 {
+                    /* Start the debounce timer */
+                    dObj->taskState = DRV_SDMMC_TASK_START_CD_LINE_DEBOUNCE_TIMER;
+                }
+            }
+            break;
+
+        case DRV_SDMMC_TASK_START_CD_LINE_DEBOUNCE_TIMER:
+            if (SYS_TIME_DelayMS(250, &(dObj->tmrHandle)) == SYS_TIME_SUCCESS)
+            {
+                dObj->taskState = DRV_SDMMC_TASK_WAIT_CD_LINE_DEBOUNCE_TIMEOUT;
+            }
+            else
+            {
+                // Keep trying until a valid timer handle is obtained
+            }
+            break;
+
+        case DRV_SDMMC_TASK_WAIT_CD_LINE_DEBOUNCE_TIMEOUT:
+            if (SYS_TIME_DelayIsComplete(dObj->tmrHandle) == true)
+            {
+                if (dObj->sdmmcPlib->sdhostIsCardAttached ())
+                {
                     _DRV_SDMMC_InitCardContext((uint32_t)object, &dObj->cardCtxt);
                     dObj->sdmmcPlib->sdhostInitModule();
                     dObj->cardCtxt.currentSpeed = DRV_SDMMC_CLOCK_FREQ_400_KHZ;
 
-                    /* Kick start the card initialization. */
+                    /* Debounce delay has elapsed. Kick start initialization. */
                     dObj->taskState = DRV_SDMMC_TASK_MEDIA_INIT;
+                }
+                else
+                {
+                    dObj->taskState = DRV_SDMMC_TASK_WAIT_FOR_DEVICE_ATTACH;
                 }
             }
             break;
@@ -1747,7 +1773,11 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                     break;
                 }
 
-                if (dObj->sdmmcPlib->sdhostIsCardAttached != NULL)
+                if (dObj->cardDetectionMethod == DRV_SDMMC_CD_METHOD_POLLING)
+                {
+                    /* Assume card is attached */
+                }
+                else
                 {
                     if (dObj->sdmmcPlib->sdhostIsCardAttached () == false)
                     {
@@ -1755,10 +1785,6 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                         dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
                         break;
                     }
-                }
-                else
-                {
-                    /* Assume card is attached */
                 }
 
                 currentBufObj->status = DRV_SDMMC_COMMAND_IN_PROGRESS;
@@ -1843,7 +1869,7 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                         dObj->taskState = DRV_SDMMC_TASK_HANDLE_CARD_DETACH;
                     }
                 }
-                
+
             }
             break;
 

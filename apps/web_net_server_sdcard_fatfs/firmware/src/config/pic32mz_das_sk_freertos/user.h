@@ -19,9 +19,6 @@
 #ifndef USER_H
 #define USER_H
 
-#include "bsp/bsp.h"
-#include "toolchain_specifics.h"
-
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
@@ -35,8 +32,7 @@ extern "C" {
 // Section: User Configuration macros
 // *****************************************************************************
 // *****************************************************************************
-#define LED_ON()                    LED1_On()
-#define BUFFER_ATTRIBUTES           __COHERENT __ALIGNED(32)
+
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

@@ -71,7 +71,7 @@
 #pragma config POSCBOOST =  ON
 #pragma config POSCFGAIN =  GAIN_G3
 #pragma config POSCAGCDLY = POSCAGCDLY1
-#pragma config POSCAGC =      ON
+#pragma config POSCAGC =      OFF
 #pragma config EJTAGBEN =   NORMAL
 
 /*** DEVCFG1 ***/
@@ -79,7 +79,7 @@
 #pragma config DMTINTV =    WIN_127_128
 #pragma config FSOSCEN =    ON
 #pragma config IESO =       ON
-#pragma config POSCMOD =    OFF
+#pragma config POSCMOD =    EC
 #pragma config OSCIOFNC =   OFF
 #pragma config FCKSM =      CSECME
 #pragma config WDTPS =      PS1048576
@@ -106,7 +106,6 @@
 
 /*** DEVCFG3 ***/
 #pragma config USERID =     0xffff
-#pragma config EXTDDRSIZE = DDR_SIZE_128MB
 #pragma config FMIIEN =     OFF
 #pragma config FETHIO =     ON
 #pragma config PGL1WAY =    ON
@@ -175,8 +174,8 @@ const DRV_SDMMC_INIT drvSDMMC0InitData =
     .bufferObjPoolSize              = DRV_SDMMC_QUEUE_SIZE_IDX0,
     .clientObjPool                  = (uintptr_t)&drvSDMMC0ClientObjPool[0],
     .numClients                     = DRV_SDMMC_CLIENTS_NUMBER_IDX0,
-    .cardDetectionMethod            = DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
-    .cardDetectionPollingIntervalMs = 100,
+    .cardDetectionMethod            = (DRV_SDMMC_CD_METHOD)DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
+    .cardDetectionPollingIntervalMs = 0,
     .isWriteProtectCheckEnabled     = false,
     .speedMode                      = (DRV_SDMMC_SPEED_MODE)DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
     .busWidth                       = (DRV_SDMMC_BUS_WIDTH)DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
@@ -303,8 +302,8 @@ static const NET_PRES_INST_DATA netPresCfgs[] =
         .pTransObject_sc = &netPresTransObject0SC,
         .pTransObject_ds = &netPresTransObject0DS,
         .pTransObject_dc = &netPresTransObject0DC,
-        .pProvObject_ss = NULL,
-        .pProvObject_sc = NULL,
+        .pProvObject_ss = &net_pres_EncProviderStreamServer0,
+        .pProvObject_sc = &net_pres_EncProviderStreamClient0,
         .pProvObject_ds = NULL,
         .pProvObject_dc = NULL,
     },
@@ -382,6 +381,7 @@ const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
     .connTimeout        = TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
     .http_malloc_fnc    = TCPIP_HTTP_NET_MALLOC_FUNC,
     .http_free_fnc      = TCPIP_HTTP_NET_FREE_FUNC,
+    .web_dir            = TCPIP_HTTP_NET_WEB_DIR, 
 };
 
 /*** SNTP Client Initialization Data ***/
@@ -470,6 +470,7 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     .pPhyInit               = &tcpipPhyInitData,
 };
+
 
 
 
@@ -688,6 +689,17 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .deviceIndex = 0,
 };
 
+// </editor-fold>
+
+
+const SYS_CMD_INIT sysCmdInit =
+{
+    .moduleInit = {0},
+    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
+	.consoleIndex = 0,
+};
+
+
 const SYS_DEBUG_INIT debugInit =
 {
     .moduleInit = {0},
@@ -695,12 +707,6 @@ const SYS_DEBUG_INIT debugInit =
     .consoleIndex = 0,
 };
 
-const SYS_CMD_INIT sysCmdInit =
-{
-    .moduleInit = {0},
-    .consoleCmdIOParam = SYS_CMD_SINGLE_CHARACTER_READ_CONSOLE_IO_PARAM,
-};
-// </editor-fold>
 
 
 
@@ -729,7 +735,6 @@ void SYS_Initialize ( void* data )
     CFGCONbits.ECCCON = 3;
 
 
-
 	SDHC_Initialize();
 
     CORETIMER_Initialize();
@@ -747,8 +752,11 @@ void SYS_Initialize ( void* data )
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);
-    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+
     SYS_CMD_Initialize((SYS_MODULE_INIT*)&sysCmdInit);
+
+    sysObj.sysDebug = SYS_DEBUG_Initialize(SYS_DEBUG_INDEX_0, (SYS_MODULE_INIT*)&debugInit);
+
 
 
     sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
