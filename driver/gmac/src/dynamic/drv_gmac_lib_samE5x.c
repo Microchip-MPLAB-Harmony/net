@@ -64,7 +64,7 @@ typedef struct
 #define GMAC_RX_DYNAMIC_BUFFERS	0
 
 // place the descriptors in 8-byte aligned memory region
-__attribute__((__aligned__(8))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
+static __attribute__((__aligned__(8))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
 /****************************************************************************
  * Function:        DRV_PIC32CGMAC_LibInit
  * Summary: Initialize GMAC peripheral registers
