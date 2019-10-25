@@ -873,7 +873,7 @@ TCPIP_TELNET_HANDLE TCPIP_TELNET_AuthenticationRegister(TCPIP_TELNET_AUTH_HANDLE
     {
         telnetAuthHParam = handlerParam;
         telnetAuthHandler = authHandler;
-        tHandle = authHandler;
+        tHandle = (TCPIP_TELNET_HANDLE) authHandler;
     }
 
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
@@ -885,7 +885,7 @@ bool TCPIP_TELNET_AuthenticationDeregister(TCPIP_TELNET_HANDLE authHandle)
     bool res = false;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
 
-    if(telnetAuthHandler == authHandle)
+    if(telnetAuthHandler == (TCPIP_TELNET_AUTH_HANDLER) authHandle)
     {
         telnetAuthHandler = 0;
         res = true;
