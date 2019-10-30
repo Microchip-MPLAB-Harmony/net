@@ -728,7 +728,7 @@
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
-              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_2.c</itemPath>
+              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_3.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
@@ -908,7 +908,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="122400"/>
+        <property key="heap-size" value="182960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -1025,6 +1025,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="400000-5fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/microchip/h3/net/apps/wolfssl_tcp_client/firmware/sam_e70_xplained_ultra_rtos.X/debug/sam_e70_xplained_ultra_rtos/sam_e70_xplained_ultra_rtos_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
