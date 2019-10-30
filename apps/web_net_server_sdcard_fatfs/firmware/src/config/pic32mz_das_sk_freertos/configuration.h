@@ -236,8 +236,8 @@ extern "C" {
 #define TCPIP_HTTP_NET_USE_COOKIES
 #define TCPIP_HTTP_NET_USE_AUTHENTICATION
 #define TCPIP_HTTP_NET_MAX_DATA_LEN		        		100
-#define TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE		    		1024
-#define TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE		    		1024
+#define TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE		    		2048
+#define TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE		    		2048
 #define TCPIP_HTTP_NET_LISTEN_PORT		    		    443
 #define TCPIP_HTTP_NET_CONFIG_FLAGS                       \
                                                         TCPIP_HTTP_NET_MODULE_FLAG_SECURE_DEFAULT |\
