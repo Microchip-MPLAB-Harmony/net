@@ -227,6 +227,8 @@ static const TCPIP_FRAME_PROCESS_ENTRY TCPIP_FRAME_PROCESS_TBL [] =
 
 static SYS_STATUS       tcpip_stack_status = SYS_STATUS_UNINITIALIZED;
 
+static TCPIP_STACK_INIT_CALLBACK tcpip_stack_init_cb;    // callback to be called at init
+
 static TCPIP_STACK_HEAP_CONFIG  tcpip_heap_config = { 0 };      // copy of the heap that the stack uses
 
 
@@ -272,6 +274,10 @@ static void _TCPIP_NetIfEvent(TCPIP_NET_IF* pNetIf, TCPIP_MAC_EVENT event, bool 
 static TCPIP_MODULE_SIGNAL  _TCPIPStackManagerSignalClear(TCPIP_MODULE_SIGNAL clrMask);
 
 static void     TCPIP_STACK_KillStack(void);
+
+static bool     _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init);
+
+static void     _TCPIP_InitCallback(TCPIP_STACK_INIT_CALLBACK cback);
 
 #if !defined(TCPIP_STACK_APP_EXECUTE_MODULE_TASKS)
 static void _TCPIPStackExecuteModules(void);
@@ -470,8 +476,8 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
     {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
 #endif   
-#if defined(TCPIP_STACK_USE_FTPC)
-    {TCPIP_MODULE_FTPC,        (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTPC
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
 #endif 
     // Add other stack modules here
      
@@ -574,13 +580,80 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_SMTPC)
     {TCPIP_MODULE_SMTPC,        (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize},          // TCPIP_MODULE_SMTPC
 #endif
-    
+#if defined(TCPIP_STACK_USE_TFTP_SERVER)
+    {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
+#endif   
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
+#endif 
     // Add other stack modules here
      
 };
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
+{
+
+    if(tcpipNetIf != 0)
+    {   // already up and running
+        return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
+    }
+
+    if(init == 0)
+    {   // no initialization data passed
+        return SYS_MODULE_OBJ_INVALID;
+    }
+
+    // start stack initialization
+    totTcpipEventsCnt = 0;
+
+    newTcpipErrorEventCnt = 0;
+    newTcpipStackEventCnt = 0;
+    newTcpipTickAvlbl = 0;
+
+    memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
+
+    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \n\r");
+
+    tcpip_stack_status = SYS_STATUS_BUSY;
+    if((tcpip_stack_init_cb = ((TCPIP_STACK_INIT*)init)->initCback) == 0)
+    {   // perform the immediate initialization
+        bool init_res = _TCPIP_DoInitialize((const TCPIP_STACK_INIT*)init);
+        return init_res ? (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data : SYS_MODULE_OBJ_INVALID;
+    }
+
+    // continue initialization in TCPIP_STACK_Task()
+    return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
+
+}
+
+// calls the user initialization callback
+// as part of the stack initialization
+static void _TCPIP_InitCallback(TCPIP_STACK_INIT_CALLBACK cback)
+{
+    const TCPIP_STACK_INIT* pInit;
+
+    int cRes = (*cback)(&pInit);
+
+    if(cRes > 0)
+    {   // pending
+        return;
+    }
+
+    if (cRes == 0 && pInit != 0)
+    {   // we're good to go
+        _TCPIP_DoInitialize(pInit);
+    }
+    else
+    {   // some error has occurred
+        tcpip_stack_status = SYS_STATUS_UNINITIALIZED;
+    }
+}
+
+// performs the stack initialization
+// returns true if succesful
+// false otherwise
+static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
 {
     int                     netIx, ix;
     int                     initFail;
@@ -595,46 +668,25 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
     const TCPIP_MAC_OBJECT*  pPriMac; 
     IPV4_ADDR               dupIpAddr;
 
-    if(tcpipNetIf != 0)
-    {   // already up and running
-        return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
-    }
 
-    if(init == 0)
-    {   // no initialization data passed
-        return SYS_MODULE_OBJ_INVALID;
-    }
-
-    pUsrConfig = ((TCPIP_STACK_INIT*)init)->pNetConf;
-    nNets = ((TCPIP_STACK_INIT*)init)->nNets;
-    pModConfig = ((TCPIP_STACK_INIT*)init)->pModConfig;
-    nModules = ((TCPIP_STACK_INIT*)init)->nModules;
+    pUsrConfig = init->pNetConf;
+    nNets = init->nNets;
+    pModConfig = init->pModConfig;
+    nModules = init->nModules;
 
     // minimum sanity check
     if(nNets == 0 || pUsrConfig == 0 || pUsrConfig->pMacObject == 0 || pModConfig == 0 || nModules == 0)
     {   // cannot run with no interface/init data
-        return SYS_MODULE_OBJ_INVALID;
+        return false;
     }
 
     // snapshot of the initialization data
-    tcpip_init_data = *((TCPIP_STACK_INIT*)init);
+    tcpip_init_data = *init;
     
-    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \n\r");
-
-
     while(true)
     {
         initFail = 0;
 
-        totTcpipEventsCnt = 0;
-
-        newTcpipErrorEventCnt = 0;
-        newTcpipStackEventCnt = 0;
-        newTcpipTickAvlbl = 0;
-
-        // start stack initialization
-
-        memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
 
         // find the heap settings
         pHeapConfig = _TCPIP_STACK_FindModuleData(TCPIP_MODULE_MANAGER, pModConfig, nModules);
@@ -805,7 +857,7 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
 
         // start the aliases, if any
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-        pUsrConfig = ((TCPIP_STACK_INIT*)init)->pNetConf;
+        pUsrConfig = init->pNetConf;
         for(netIx = 0, pIf = tcpipNetIf; netIx < nNets && !initFail; netIx++, pIf++, pUsrConfig++)
         {
             if(_TCPIPStackNetIsPrimary(pIf))
@@ -853,17 +905,16 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             SYS_ERROR_PRINT(SYS_ERROR_WARNING, TCPIP_STACK_HDR_MESSAGE "Dynamic memory is low: %d\r\n", heapLeft);
         }
 #endif  // !defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
-        // continue initialization in TCPIP_STACK_Task()
-        tcpip_stack_status = SYS_STATUS_BUSY;
-        return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
+        return true;
     }
 
 
     SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \n\r", initFail);
     TCPIP_STACK_KillStack();
-    return SYS_MODULE_OBJ_INVALID;
+    return false;
 
 }
+
 
 /*********************************************************************
  * Function:        bool TCPIP_STACK_BringNetUp(TCPIP_NET_IF* pNetIf, const TCPIP_NETWORK_CONFIG* pNetConf, const TCPIP_STACK_MODULE_CONFIG* pModConfig, int nModules)
@@ -1325,13 +1376,19 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
     TCPIP_EVENT_LIST_NODE* tNode;
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION) && (TCPIP_STACK_USER_NOTIFICATION != 0)   
 
-    if(object != (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data || tcpipNetIf == 0)
+    if(object != (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data)
     {   // invalid handle/nothing to do
         return;
     }
 
     if(tcpip_stack_status != SYS_STATUS_BUSY && tcpip_stack_status != SYS_STATUS_READY)
     {   // some error state
+        return;
+    }
+
+    if(tcpipNetIf == 0)
+    {   // call the user callback...
+        _TCPIP_InitCallback(tcpip_stack_init_cb);
         return;
     }
 
@@ -4338,9 +4395,9 @@ static void _TCPIPCopyMacAliasIf(TCPIP_NET_IF* pAliasIf, TCPIP_NET_IF* pPriIf)
 
 // external packet processing
 #if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
-TCPIP_PACKET_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
+TCPIP_STACK_PROCESS_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
 {
-    TCPIP_PACKET_HANDLE pHandle = 0;
+    TCPIP_STACK_PROCESS_HANDLE pHandle = 0;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
 
@@ -4355,7 +4412,7 @@ TCPIP_PACKET_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCP
     return pHandle;
 }
 
-bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_PACKET_HANDLE pktHandle)
+bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle)
 {
     bool res = false;
     OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);

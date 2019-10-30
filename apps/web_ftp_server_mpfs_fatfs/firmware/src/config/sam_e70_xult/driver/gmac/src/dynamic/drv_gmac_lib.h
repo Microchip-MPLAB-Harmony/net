@@ -942,6 +942,30 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibSetMacAddr (const uint8_t * pMacAddr);
   ************************************************************************/
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr);
 
+/*******************************************************************************
+  Function:
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs)
+
+  Summary:
+    Returns the number of pending RX buffers and scheduled buffers in the GMAC queues.
+  Description:
+    This function count the number of pending RX buffers and scheduled buffers in the GMAC queues
+    from GMAC RX descriptors
+
+  Precondition:
+    pMACDrv       - driver instance.
+    pendBuffs     - pointer to an address to store the number of pending buffers
+    schedBuffs    - pointer to an address to store the number of scheduled buffers 
+
+  Parameters:
+    pMacAddr -  address of MAC Address array.
+
+  Returns:
+    DRV_PIC32CGMAC_RESULT
+
+  ************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs);
+
 /*******************************************************************************/
 //Clear the Tx node in the single linked list
 static inline void _Clear_TxNode(DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxNode)

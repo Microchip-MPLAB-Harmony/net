@@ -151,9 +151,9 @@ typedef enum
     TCPIP_MODULE_MAC_MRF24WN        = 0x1060,
     TCPIP_MODULE_MAC_MRF24WN_0      = 0x1060,   // alternate numbered name
 
-    // External WINC1500 Wi-Fi MAC: room for 16 WINC1500 devices
-    TCPIP_MODULE_MAC_WINC1500       = 0x1070,
-    TCPIP_MODULE_MAC_WINC1500_0     = 0x1070,   // alternate numbered name
+    // External WINC Wi-Fi MAC: room for 16 WINC devices
+    TCPIP_MODULE_MAC_WINC			= 0x1070,
+    TCPIP_MODULE_MAC_WINC_0			= 0x1070,   // alternate numbered name
 
     // External WILC1000 Wi-Fi MAC: room for 16 WILC1000 devices
     TCPIP_MODULE_MAC_WILC1000       = 0x1080,
