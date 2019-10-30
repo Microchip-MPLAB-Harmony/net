@@ -142,7 +142,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/ndp_manager.h</itemPath>
@@ -172,6 +172,8 @@
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/src/telnet_manager.h</itemPath>
@@ -235,6 +237,7 @@
               <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_sw/library/tcpip/ddns.h</itemPath>
@@ -403,6 +406,9 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
@@ -707,14 +713,14 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="3.0.27"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -773,7 +779,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e54_xpro_sw/library;../src/config/sam_e54_xpro_sw/library/tcpip/src;../src/config/sam_e54_xpro_sw/library/tcpip/src/common;../src;../src/config/sam_e54_xpro_sw;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl"/>
+                  value="../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/sam_e54_xpro_sw/library;../src/config/sam_e54_xpro_sw/library/tcpip/src;../src/config/sam_e54_xpro_sw/library/tcpip/src/common;../src;../src/config/sam_e54_xpro_sw;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -814,6 +820,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
@@ -834,7 +843,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="64960"/>
+        <property key="heap-size" value="96960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
