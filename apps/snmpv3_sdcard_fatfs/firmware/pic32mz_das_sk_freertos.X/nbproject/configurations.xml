@@ -1066,7 +1066,7 @@
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
         <property key="programmerToGoFilePath"
-                  value="D:/microchip/h3/net/apps/web_net_server_sdcard_fatfs/firmware/pic32mz_das_sk_freertos.X/debug/pic32mz_das_sk_freertos/pic32mz_das_sk_freertos_ptg"/>
+                  value="D:/microchip/h3/net/apps/snmpv3_sdcard_fatfs/firmware/pic32mz_das_sk_freertos.X/debug/pic32mz_das_sk_freertos/pic32mz_das_sk_freertos_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
