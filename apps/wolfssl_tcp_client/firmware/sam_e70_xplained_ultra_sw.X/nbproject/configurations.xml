@@ -5,340 +5,6 @@
                    displayName="Header Files"
                    projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f2"
-                       displayName="sam_e70_xplained_ultra"
-                       projectFiles="true">
-          <logicalFolder name="f3" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/sam_e70_xplained_ultra/bsp/bsp.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/crypto.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/aes.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/arc4.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/asn.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/asn_public.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/async.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/camellia.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/certs_test.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/chacha.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/chacha20_poly1305.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/cmac.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/coding.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/compress.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_rng_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/curve25519.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/des3.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/dh.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha_sam6156.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_aes_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_aes_sam6149.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_aes_hwInt.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha1_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha256_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha224_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_aes_u2238.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha384_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha512_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_tdes_hw.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_tdes_sam6150.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_tdes_hwInt.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/dsa.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ecc.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ed25519.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/error-crypt.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/fe_operations.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/pic32mz-crypt.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/fips_test.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ge_operations.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/hash.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/hc128.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/hmac.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/idea.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/integer.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/logging.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/md2.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/md4.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/md5.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/mem_track.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/memory.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/misc.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/mpi_class.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/mpi_superclass.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/pkcs11.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/pkcs12.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/pkcs7.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/poly1305.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/pwdbased.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/rabbit.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/random.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ripemd.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/rsa.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/selftest.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/settings.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/sha.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/sha256.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/sha3.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/sha512.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/signature.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/sniffer.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/sniffer_error.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/srp.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ssl.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/tfm.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/types.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/version.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/visibility.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/wc_encrypt.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/wc_pkcs11.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/wc_port.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/wolfevent.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/wolfio.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/wolfmath.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/crc32.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/deflate.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/inffast.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/inffixed.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/inflate.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/inftrees.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/trees.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/zconf.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/zutil.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/zlib.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f6" displayName="driver" projectFiles="true">
-            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/sam_e70_xplained_ultra/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xplained_ultra/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h</itemPath>
-                </logicalFolder>
-                <itemPath>../src/config/sam_e70_xplained_ultra/driver/ethphy/src/drv_ethphy_local.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/sam_e70_xplained_ultra/driver/ethphy/drv_ethphy.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="gmac" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/sam_e70_xplained_ultra/driver/gmac/src/dynamic/_gmac_dcpt_lists.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xplained_ultra/driver/gmac/src/dynamic/drv_gmac_lib.h</itemPath>
-                </logicalFolder>
-                <itemPath>../src/config/sam_e70_xplained_ultra/driver/gmac/src/drv_gmac_local.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/sam_e70_xplained_ultra/driver/gmac/drv_gmac.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/sam_e70_xplained_ultra/driver/miim/config/drv_miim_config.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/sam_e70_xplained_ultra/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
-                </logicalFolder>
-                <itemPath>../src/config/sam_e70_xplained_ultra/driver/miim/src/drv_miim_local.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/sam_e70_xplained_ultra/driver/miim/drv_miim.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/sam_e70_xplained_ultra/driver/driver.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/driver/driver_common.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
-            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
-                </logicalFolder>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ndp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ndp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ipv4_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ipv4_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ipv6_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ipv6_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/icmp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/icmpv6_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/arp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/arp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/udp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/udp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dhcp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dhcp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dhcps_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dhcps_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/zero_conf_helper.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/zero_conf_link_local_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/zero_conf_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dns_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dns_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dnss_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dnss_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ftp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ftp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/nbns_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ddns_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/telnet_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/smtp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/sntp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/http_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/http_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/http_net_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/http_net_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/snmp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/snmp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/snmpv3_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_announce_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/smtpc_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/smtpc_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/igmp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/igmp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tftpc_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tftpc_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tftps_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tftps_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_reboot_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/iperf_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_commands_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/hash_fnv.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/link_list.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/oahash.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_helpers_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_manager_control.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_module_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_notify.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_packet.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_types.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/berkeley_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dhcpv6_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dhcpv6_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/lldp_manager.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/lldp_private.h</itemPath>
-                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/lldp_tlv.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_common_ports.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_mac.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_mac_object.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_manager.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_heap.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_helpers.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ndp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ipv4.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ipv6.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/icmpv6.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dhcpv6.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/arp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/udp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/berkeley_api.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dhcp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dhcps.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/zero_conf_link_local.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/zero_conf_multicast_dns.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dns.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dnss.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ftp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/icmp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/nbns.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ddns.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/telnet.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/smtp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/sntp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/http.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/http_net.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/snmp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/snmpv3.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_announce.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/lldp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/smtpc.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/igmp.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tftpc.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tftps.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_reboot.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/iperf.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_commands.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/tcpip_ethernet.h</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
-            <logicalFolder name="f1" displayName="pres" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/src/net_pres_local.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres_certstore.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres_socketapi.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres_transportapi.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/net_pres/pres/net_pres_enc_glue.h</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f3" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/clk/plib_clk.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f6" displayName="mpu" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/mpu/plib_mpu.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/mpu/plib_mpu_local.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="nvic" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/nvic/plib_nvic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="pio" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/pio/plib_pio.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="tc" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/tc/plib_tc0.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/tc/plib_tc_common.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="usart" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/usart/plib_usart_common.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/peripheral/usart/plib_usart1.h</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f2" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="cache" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/cache/sys_cache.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/console/sys_console.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/console/sys_command.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="int" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/int/sys_int.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/int/sys_int_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="time" projectFiles="true">
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/time/sys_time.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/time/sys_time_definitions.h</itemPath>
-              <itemPath>../src/config/sam_e70_xplained_ultra/system/time/src/sys_time_local.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/sys_reset_h2_adapter.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/system.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/system_common.h</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/system/system_module.h</itemPath>
-          </logicalFolder>
-          <itemPath>../src/config/sam_e70_xplained_ultra/config.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/system_config.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/system_definitions.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/user.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/configuration.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/device_cache.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/toolchain_specifics.h</itemPath>
-          <itemPath>../src/config/sam_e70_xplained_ultra/definitions.h</itemPath>
-        </logicalFolder>
         <logicalFolder name="f1"
                        displayName="sam_e70_xplained_ultra_sw"
                        projectFiles="true">
@@ -483,7 +149,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/ndp_manager.h</itemPath>
@@ -513,6 +179,8 @@
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/telnet_manager.h</itemPath>
@@ -576,6 +244,7 @@
               <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra_sw/library/tcpip/ddns.h</itemPath>
@@ -739,6 +408,9 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
@@ -1049,14 +721,14 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.15</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.29"/>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
+        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.40"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -1115,7 +787,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e70_xplained_ultra_sw/library;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common;../src;../src/config/sam_e70_xplained_ultra_sw;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/sam_e70_xplained_ultra/library;../src/config/sam_e70_xplained_ultra/library/tcpip/src;../src/config/sam_e70_xplained_ultra/library/tcpip/src/common;../src/config/sam_e70_xplained_ultra"/>
+                  value="../src/config/sam_e70_xplained_ultra/library;../src/config/sam_e70_xplained_ultra/library/tcpip/src;../src/config/sam_e70_xplained_ultra/library/tcpip/src/common;../src/config/sam_e70_xplained_ultra;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/sam_e70_xplained_ultra_sw/library;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common;../src;../src/config/sam_e70_xplained_ultra_sw;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -1156,6 +828,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>

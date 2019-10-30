@@ -61,7 +61,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-#if defined (__PIC32MZ__)
+#if defined (__PIC32MZ__) || (__PIC32MX__)
 #include "driver/ethmac/src/dynamic/drv_eth_pic32_lib.h"
 #endif
 

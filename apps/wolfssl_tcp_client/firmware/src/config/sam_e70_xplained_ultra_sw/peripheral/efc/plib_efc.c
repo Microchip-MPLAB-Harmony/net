@@ -149,7 +149,7 @@ bool EFC_IsBusy(void)
 EFC_ERROR EFC_ErrorGet( void )
 {
     status |= EFC_REGS->EEFC_FSR;
-    return status;
+    return (EFC_ERROR)status;
 }
 
 

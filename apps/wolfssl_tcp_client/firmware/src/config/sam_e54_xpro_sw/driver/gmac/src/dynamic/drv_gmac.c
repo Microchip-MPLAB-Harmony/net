@@ -37,11 +37,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // All pause capabilities our MAC supports
 #define DRV_GMAC_PAUSE_CPBL_MASK     (TCPIP_ETH_PAUSE_TYPE_ALL)
 
-//GMAC TX interrupt enabled
-#if defined(PIC32C_GMAC_ISR_TX)	
-	volatile uint32_t tx_interrupt = false;
-#endif
-
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -684,7 +679,7 @@ void DRV_GMAC_Close( DRV_HANDLE hMac )
 
 TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)  
 {
-	TCPIP_MAC_RES       macRes;
+	TCPIP_MAC_RES       macRes = TCPIP_MAC_RES_PACKET_ERR;
 	DRV_GMAC_DRIVER * pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 	DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxQueueNode;
 	GMAC_QUE_LIST queueIdx = GMAC_QUE_0;	
@@ -719,7 +714,7 @@ TCPIP_MAC_RES DRV_GMAC_PacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * ptrPacket)
 		}
 	}
 	
-	macRes = _MacTxPendingPackets(pMACDrv,queueIdx);
+	_MacTxPendingPackets(pMACDrv,queueIdx);
 	_MACTxAcknowledgeEth(pMACDrv,queueIdx);	
 
 	_DRV_GMAC_TxUnlock(pMACDrv);
@@ -1106,6 +1101,9 @@ TCPIP_MAC_RES DRV_GMAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* p
     
 	if(pRxStatistics)
 	{
+        _DRV_GMAC_RxLock(pMACDrv);
+		DRV_PIC32CGMAC_LibRxBuffersCountGet(pMACDrv, &pMACDrv->sGmacData._rxStat.nRxPendBuffers, &pMACDrv->sGmacData._rxStat.nRxSchedBuffers);
+		_DRV_GMAC_RxUnlock(pMACDrv);
 		*pRxStatistics = pMACDrv->sGmacData._rxStat;
 	}
 	if(pTxStatistics)
@@ -1181,26 +1179,10 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 // acknowledge the ETHC packets
 static void _MACTxAcknowledgeEth(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LIST queueIdx)  
 {
-
-#if !defined(PIC32C_GMAC_ISR_TX)	
 	//Clear the TXCOMP transmit status, if set
 	GMAC_REGS->GMAC_TSR = GMAC_TSR_TXCOMP_Msk;
 	DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
-
-#else
-	// Tx complete flag set in GMAC ISR?
-	if(tx_interrupt==true)
-	{
-		tx_interrupt = false;
-		DRV_PIC32CGMAC_LibTxAckPacket(pMACDrv,queueIdx);
-
-	}
-#endif  // defined(PIC32C_GMAC_ISR_TX)
-
 }
-
-
-
 
 
 // transmits pending packets, if any
@@ -1218,7 +1200,7 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 	
 
     //packet in queue for transmission
-	while(((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.head) != 0) && (ethRes != DRV_PIC32CGMAC_RES_NO_DESCRIPTORS))
+	while(((pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue.nNodes) != 0) && (ethRes != DRV_PIC32CGMAC_RES_NO_DESCRIPTORS))
 	{
 		ethRes = DRV_PIC32CGMAC_LibTxSendPacket(pMACDrv, queueIdx);
         
@@ -1294,20 +1276,42 @@ static void _MACCleanup(DRV_GMAC_DRIVER * pMACDrv )
 
 static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 {
-	GMAC_QUE_LIST queueIdx;
+	DRV_PIC32CGMAC_SGL_LIST_NODE*   pRxBuffQueueNode;
+    TCPIP_MAC_PACKET* pRxPkt;
+    GMAC_QUE_LIST queueIdx;
 	uint8_t index = 0;
-	//free all the rx packets linked to all Queues.
+    
+	//free all the Rx packets linked to New and Ack Queues.
 	for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
-	{
-		//free all the rx packets linked to rx descriptors of this Queue
-		for(index = 0; index < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt; index++ )
+	{	
+        //Free all Rx packets and queue nodes in Ack Queue
+        while((pRxBuffQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._RxBuffAckQueue))!= NULL)
+        {
+            // Get Rx Packet in the queue node
+            pRxPkt = (TCPIP_MAC_PACKET*)(pRxBuffQueueNode->data);
+            // Free the Rx packet
+            (*pMACDrv->sGmacData.pktFreeF)(pRxPkt);            
+            //Free the queue node
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pRxBuffQueueNode);
+        }
+        
+        //Free all Rx packet and queue node in New Queue
+        while((pRxBuffQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._RxBuffNewQueue))!= NULL)
+        {
+            // Get Rx Packet in the queue node
+            pRxPkt = (TCPIP_MAC_PACKET*)(pRxBuffQueueNode->data);
+            // Free the Rx packet
+            (*pMACDrv->sGmacData.pktFreeF)(pRxPkt);            
+            //Free the queue node
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pRxBuffQueueNode);            
+        }        
+        //set rx descriptors to default
+        for(index = 0; index < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt; index++ )
 		{
-			if(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] != 0)
-            {
-				(*pMACDrv->sGmacData.pktFreeF)(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index]);
-                pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] = 0; //remove rx packet from rx desc
-                pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_buffaddr.val &= ~GMAC_ADDRESS_MASK; //clear the buffer address bitfields                
-            }
+            pMACDrv->sGmacData.gmac_queue[queueIdx].nRxDescIndex = 0;
+			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[index] = 0;
+			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_buffaddr.val = 0;
+			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_status.val = 0;
 		}
         __DMB();
 	}
@@ -1629,11 +1633,6 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 	if(enable)
 	{
 		GMAC_EVENTS  ethSetEvents;
-       
-#if !defined(PIC32C_GMAC_ISR_TX)
-        //mask TX DONE event/interrupt when TX Interrupt processing is disabled
-        macEvMask &= ~TCPIP_MAC_EV_TX_DONE;
-#endif  // defined(PIC32C_GMAC_ISR_TX)
         
 		ethSetEvents = _XtlEventsTcp2Eth(macEvMask);
 
@@ -1874,10 +1873,6 @@ void DRV_GMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
 	// process interrupts
 	pDcpt = &pMACDrv->sGmacData._pic32c_ev_group_dcpt;
 	currGroupEvents = currEthEvents & pDcpt->_EthEnabledEvents;     //  keep just the relevant ones
-
-#if defined(PIC32C_GMAC_ISR_TX)
-	tx_interrupt = ((currGroupEvents & GMAC_EV_TXCOMPLETE) != 0);
-#endif  // defined(PIC32C_GMAC_ISR_TX)
 
 	if(currGroupEvents)
 	{
