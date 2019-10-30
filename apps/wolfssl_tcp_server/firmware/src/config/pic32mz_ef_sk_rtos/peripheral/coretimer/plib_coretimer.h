@@ -41,6 +41,7 @@
 #define PLIB_CORETIMER_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 #ifdef __cplusplus // Provide C++ Compatibility
 	extern "C" {

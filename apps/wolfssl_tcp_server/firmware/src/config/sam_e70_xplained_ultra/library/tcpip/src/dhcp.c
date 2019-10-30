@@ -2721,7 +2721,7 @@ static UDP_SOCKET _DHCPOpenSocket(void)
         if(txBuffSize < TCPIP_DHCP_MIN_UDP_TX_BUFFER_SIZE)
         {
             txBuffSize = TCPIP_DHCP_MIN_UDP_TX_BUFFER_SIZE;
-            if(!TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_TX_BUFF, (void*)&txBuffSize))
+            if(!TCPIP_UDP_OptionsSet(dhcpSkt, UDP_OPTION_TX_BUFF, (void*)(uintptr_t)txBuffSize))
             {
                 break;
             }

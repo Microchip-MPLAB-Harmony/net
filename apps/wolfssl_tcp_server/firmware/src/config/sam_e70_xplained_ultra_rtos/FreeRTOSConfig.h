@@ -47,10 +47,10 @@
 #define configCPU_CLOCK_HZ                      ( 300000000UL )
 #define configTICK_RATE_HZ                      ( ( TickType_t ) 1000 )
 #define configMAX_PRIORITIES                    ( 5UL )
-#define configMINIMAL_STACK_SIZE                ( 128 )
+#define configMINIMAL_STACK_SIZE                ( 1024 )
 #define configSUPPORT_DYNAMIC_ALLOCATION        1
 #define configSUPPORT_STATIC_ALLOCATION         0
-#define configTOTAL_HEAP_SIZE                   ( ( size_t ) 64960 )
+#define configTOTAL_HEAP_SIZE                   ( ( size_t ) 40960 )
 #define configMAX_TASK_NAME_LEN                 ( 16 )
 #define configUSE_16_BIT_TICKS                  0
 #define configIDLE_SHOULD_YIELD                 1

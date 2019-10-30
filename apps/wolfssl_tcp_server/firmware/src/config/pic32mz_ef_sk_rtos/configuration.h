@@ -228,7 +228,6 @@ extern "C" {
 /******************************************************************************/
 
 #define HAVE_AES_DECRYPT
-#define HAVE_AES_ECB
 #define WOLFSSL_ALT_NAMES
 #define WOLFSSL_DER_LOAD
 #define KEEP_OUR_CERT
@@ -292,6 +291,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -360,11 +360,14 @@ extern "C" {
 
 /* Net Pres RTOS Configurations*/
 #define NET_PRES_RTOS_STACK_SIZE           8192
-#define NET_PRES_RTOS_TASK_PRIORITY             1
+#define NET_PRES_RTOS_TASK_PRIORITY             1	
+	
+#define FREERTOS
 
 
 
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -416,6 +419,7 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -455,6 +459,7 @@ extern "C" {
 #define TCPIP_UDP_USE_TX_CHECKSUM             			true
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -472,7 +477,6 @@ extern "C" {
 #define DRV_ETHPHY_NEG_INIT_TMO		    			1
 #define DRV_ETHPHY_NEG_DONE_TMO		    			2000
 #define DRV_ETHPHY_RESET_CLR_TMO					500
-#define DRV_ETHPHY_USE_DRV_MIIM                     true
 
 
 
@@ -497,26 +501,18 @@ extern "C" {
 #define TFM_TIMING_RESISTANT
 #define USE_CERT_BUFFERS_2048
 #define NO_BIG_INT
-#define HAVE_MICROCHIP_HARMONY3_HW_SHA1
-#define HAVE_MICROCHIP_HARMONY3_HW_AES
 #define WOLFSSL_AES_COUNTER
-#define HAVE_AES_ECB
 #define HAVE_AES_CBC
 #define HAVE_AESGCM
-#define HAVE_MICROCHIP_HARMONY3_HW_SHA256
-#define CONFIG_HAVE_XDMAC
-#define HAVE_MICROCHIP_HARMONY3_HW_RNG
+#define WOLFSSL_SHA224
 #define WOLFSSL_SHA512
 #define WOLFSSL_SHA384
 #define HAVE_ECC
 #define USE_FAST_MATH
 #define WOLFSSL_STATIC_RSA
-#define HAVE_MICROCHIP_HARMONY3_HW_TDES
+#define NO_DES3
 #define WOLFSSL_AES_COUNTER
-#define WOLFSSL_AES_DIRECT
-#define WOLFSSL_PIC32MZ_HASH
-#define WOLFSSL_MICROCHIP_PIC32MZ
-#define WOLFSSL_PIC32MZ_RNG
+#define NO_RNG_TEST
 
 
 

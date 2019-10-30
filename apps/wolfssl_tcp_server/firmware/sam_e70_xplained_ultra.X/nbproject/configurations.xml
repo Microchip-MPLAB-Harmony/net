@@ -149,7 +149,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ndp_manager.h</itemPath>
@@ -179,6 +179,8 @@
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/src/telnet_manager.h</itemPath>
@@ -242,6 +244,7 @@
               <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/sam_e70_xplained_ultra/library/tcpip/ddns.h</itemPath>
@@ -405,6 +408,9 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
@@ -555,11 +561,6 @@
             <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/zutil.c</itemPath>
             <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/inftrees.c</itemPath>
             <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/zlib-1.2.7/inffast.c</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_rng_sam6334.c</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha1_sam11105.c</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha224_sam11105.c</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_sha256_sam11105.c</itemPath>
-            <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/crypt_aes_sam6149.c</itemPath>
             <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/rsa.c</itemPath>
             <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ecc.c</itemPath>
             <itemPath>../src/config/sam_e70_xplained_ultra/crypto/src/ecc_fp.c</itemPath>
@@ -718,14 +719,14 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>EdbgTool</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.29"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.40"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -784,7 +785,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e70_xplained_ultra/library;../src/config/sam_e70_xplained_ultra/library/tcpip/src;../src/config/sam_e70_xplained_ultra/library/tcpip/src/common;../src;../src/config/sam_e70_xplained_ultra;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfcrypt_support;../src/third_party/wolfssl"/>
+                  value="../src/third_party/wolfcrypt_support;../src/third_party/wolfssl;../src/config/sam_e70_xplained_ultra/library;../src/config/sam_e70_xplained_ultra/library/tcpip/src;../src/config/sam_e70_xplained_ultra/library/tcpip/src/common;../src;../src/config/sam_e70_xplained_ultra;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -825,6 +826,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
