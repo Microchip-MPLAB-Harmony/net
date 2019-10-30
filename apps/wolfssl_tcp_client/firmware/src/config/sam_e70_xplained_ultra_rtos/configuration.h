@@ -103,7 +103,7 @@ extern "C" {
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                256
+#define SYS_CMD_RTOS_STACK_SIZE                1024
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
@@ -139,7 +139,7 @@ extern "C" {
 
 
 /* MIIM RTOS Configurations*/
-#define DRV_MIIM_RTOS_STACK_SIZE           1024
+#define DRV_MIIM_RTOS_STACK_SIZE           4096
 #define DRV_MIIM_RTOS_TASK_PRIORITY             1
 
 
@@ -381,7 +381,7 @@ extern "C" {
 
 /*** TCP/IP Configuration ***/
 /* TCP/IP RTOS Configurations*/
-#define TCPIP_RTOS_STACK_SIZE           1024
+#define TCPIP_RTOS_STACK_SIZE           4096
 #define TCPIP_RTOS_PRIORITY             1
 
 

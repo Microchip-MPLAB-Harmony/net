@@ -308,7 +308,7 @@
           <LogicalPath dnOrder="2">config/sam_e70_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">AC89AA0F2AF07C0733678D30AE1A5E02</GeneratedChecksum>
-          <UserChecksum dnOrder="5">AC89AA0F2AF07C0733678D30AE1A5E02</UserChecksum>
+          <UserChecksum dnOrder="5">AC1FA9E972264D4DEEBEE25DF13AA43E</UserChecksum>
         </File>
         <File dnOrder="38">
           <Type dnOrder="0">SOURCE</Type>
@@ -376,11 +376,11 @@
         </File>
         <File dnOrder="46">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">heap_2.c</Name>
+          <Name dnOrder="1">heap_3.c</Name>
           <LogicalPath dnOrder="2">FreeRTOS/Source/portable/MemMang/</LogicalPath>
           <PhysicalPath dnOrder="3">/../../third_party/rtos/FreeRTOS/Source/portable/MemMang/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CD74410BAF75B11A2E85FA34A02A7116</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CD74410BAF75B11A2E85FA34A02A7116</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4AAB7B46D0C9182418F290DDDF0FB231</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4AAB7B46D0C9182418F290DDDF0FB231</UserChecksum>
         </File>
         <File dnOrder="47">
           <Type dnOrder="0">SOURCE</Type>
@@ -931,8 +931,8 @@
           <Name dnOrder="1">tasks.c</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7A7CB8EA613F9A54EA12AAAD68A15324</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7A7CB8EA613F9A54EA12AAAD68A15324</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D179E627C85FCA0DA99C76D274A03810</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D179E627C85FCA0DA99C76D274A03810</UserChecksum>
         </File>
         <File dnOrder="116">
           <Type dnOrder="0">SOURCE</Type>
@@ -1123,8 +1123,8 @@
           <Name dnOrder="1">FreeRTOSConfig.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xplained_ultra_rtos</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">B7CB6970122F080E2F331F66544EE12C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B7CB6970122F080E2F331F66544EE12C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">538B652E409CB530F2C25168610E3E49</GeneratedChecksum>
+          <UserChecksum dnOrder="5">538B652E409CB530F2C25168610E3E49</UserChecksum>
         </File>
         <File dnOrder="140">
           <Type dnOrder="0">HEADER</Type>
@@ -1499,8 +1499,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D61E27FD58E052A65135238692417E05</GeneratedChecksum>
-          <UserChecksum dnOrder="5">58AC6F06A8E3118A07A625DC400AF798</UserChecksum>
+          <GeneratedChecksum dnOrder="4">734B9DA540D2F5FA7EB06C57161ABC06</GeneratedChecksum>
+          <UserChecksum dnOrder="5">734B9DA540D2F5FA7EB06C57161ABC06</UserChecksum>
         </File>
         <File dnOrder="187">
           <Type dnOrder="0">HEADER</Type>
@@ -4302,7 +4302,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src/third_party/wolfssl"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="4" key="extra-include-directories" value="../src;../src/config/sam_e70_xplained_ultra_rtos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32" dnOrder="5" key="preprocessor-macros" value="HAVE_CONFIG_H"/>
-        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="122400"/>
+        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="182960"/>
         <Setting category="C32-LD" dnOrder="7" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="8" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="9" key="mdtcm" value=""/>
