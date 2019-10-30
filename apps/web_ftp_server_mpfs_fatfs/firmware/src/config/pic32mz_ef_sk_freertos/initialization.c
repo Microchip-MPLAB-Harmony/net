@@ -613,7 +613,7 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
     },
 };
 
-
+const size_t TCPIP_HOSTS_CONFIGURATION_SIZE = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
@@ -644,6 +644,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
 };
 
+const size_t TCPIP_STACK_MODULE_CONFIG_TBL_SIZE = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
 /*********************************************************************
  * Function:        SYS_MODULE_OBJ TCPIP_STACK_Init()
  *
@@ -665,14 +666,16 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
  *
  ********************************************************************/
 
+
 SYS_MODULE_OBJ TCPIP_STACK_Init()
 {
     TCPIP_STACK_INIT    tcpipInit;
 
     tcpipInit.pNetConf = TCPIP_HOSTS_CONFIGURATION;
-    tcpipInit.nNets = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
+    tcpipInit.nNets = TCPIP_HOSTS_CONFIGURATION_SIZE;
     tcpipInit.pModConfig = TCPIP_STACK_MODULE_CONFIG_TBL;
-    tcpipInit.nModules = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
+    tcpipInit.nModules = TCPIP_STACK_MODULE_CONFIG_TBL_SIZE;
+    tcpipInit.initCback = 0;
 
     return TCPIP_STACK_Initialize(0, &tcpipInit.moduleInit);
 }
@@ -780,6 +783,8 @@ const SYS_DEBUG_INIT debugInit =
     Initializes the board, services, drivers, application and other modules.
 
   Remarks:
+  	Don't Modify the sequency of Initialization.
+  	Memory driver should be initialized before SDSPI driver initialization
  */
 
 void SYS_Initialize ( void* data )

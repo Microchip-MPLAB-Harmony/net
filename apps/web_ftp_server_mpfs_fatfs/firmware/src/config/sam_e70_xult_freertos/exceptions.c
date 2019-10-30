@@ -64,16 +64,15 @@ void NonMaskableInt_Handler(void)
     {
     }
 }
-int test = 0;
+
 void HardFault_Handler(void)
 {
-//#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
-//   __builtin_software_breakpoint();
-//#endif
-//   while (1)
-//   {
-//   }
-    test = 8888;
+#if defined(__DEBUG) || defined(__DEBUG_D) && defined(__XC32)
+   __builtin_software_breakpoint();
+#endif
+   while (1)
+   {
+   }
 }
 
 void DebugMonitor_Handler(void)

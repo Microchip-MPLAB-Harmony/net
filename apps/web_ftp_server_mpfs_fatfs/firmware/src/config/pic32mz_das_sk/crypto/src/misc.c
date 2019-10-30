@@ -276,10 +276,10 @@ STATIC WC_INLINE int ConstantCompare(const byte* a, const byte* b, int length)
     #if defined(HAVE_FIPS) && !defined(min) /* so ifdef check passes */
         #define min min
     #endif
-//    STATIC WC_INLINE word32 min(word32 a, word32 b)
-//    {
-//        return a > b ? b : a;
-//    }
+    STATIC WC_INLINE word32 min(word32 a, word32 b)
+    {
+        return a > b ? b : a;
+    }
 #endif /* !WOLFSSL_HAVE_MIN */
 
 #ifndef WOLFSSL_HAVE_MAX
@@ -287,10 +287,10 @@ STATIC WC_INLINE int ConstantCompare(const byte* a, const byte* b, int length)
     #if defined(HAVE_FIPS) && !defined(max) /* so ifdef check passes */
         #define max max
     #endif
-//    STATIC WC_INLINE word32 max(word32 a, word32 b)
-//    {
-//        return a > b ? a : b;
-//    }
+    STATIC WC_INLINE word32 max(word32 a, word32 b)
+    {
+        return a > b ? a : b;
+    }
 #endif /* !WOLFSSL_HAVE_MAX */
 
 #ifndef WOLFSSL_NO_INT_ENCODE

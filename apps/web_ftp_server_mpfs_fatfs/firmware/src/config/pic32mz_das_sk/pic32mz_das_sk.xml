@@ -3112,6 +3112,18 @@
           </Values>
         </Boolean>
       </Symbols>
+      <Attachments dnOrder="1">
+        <DirectCapability dnOrder="0" id="lib_wolfssl">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0">netPres_0</Value>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0">NetPres_Crypto_Dependency</Value>
+            </String>
+          </Attributes>
+        </DirectCapability>
+      </Attachments>
     </UniqueComponent>
     <GeneratorComponent dnOrder="9" id="netPres">
       <Symbols dnOrder="0">
@@ -3281,6 +3293,18 @@
               </Values>
             </Boolean>
           </Symbols>
+          <Attachments dnOrder="1">
+            <DirectDependency dnOrder="0" id="NetPres_Crypto_Dependency">
+              <Attributes dnOrder="0">
+                <String dnOrder="0" id="targetComponentID">
+                  <Value dnOrder="0">lib_wolfssl</Value>
+                </String>
+                <String dnOrder="1" id="targetAttachmentID">
+                  <Value dnOrder="0">lib_wolfssl</Value>
+                </String>
+              </Attributes>
+            </DirectDependency>
+          </Attachments>
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
@@ -3607,6 +3631,11 @@
                     <User dnOrder="0" value="true"/>
                   </Values>
                 </Boolean>
+                <Boolean dnOrder="8" id="TCPIP_AUTOCONFIG_SYS_FS_CONNECT">
+                  <Values dnOrder="0">
+                    <Dynamic dnOrder="0" id="tcpipFtps" value="true"/>
+                  </Values>
+                </Boolean>
               </Symbols>
             </UniqueComponent>
             <UniqueComponent dnOrder="1" id="tcpipAnnounce"/>
@@ -3650,17 +3679,7 @@
             <UniqueComponent dnOrder="8" id="tcpipSntp"/>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet"/>
-            <Attachment dnOrder="1" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
-            <Attachment dnOrder="2" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
-            <Attachment dnOrder="3" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet"/>
-            <Attachment dnOrder="4" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet"/>
-            <Attachment dnOrder="5" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
-            <Attachment dnOrder="6" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
-            <Attachment dnOrder="7" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet"/>
-            <Attachment dnOrder="8" id="Ftps_TcpipFs_Dependency" namespace="tcpipFtps" targetAttachmentID="TCP/IP STACK:tcpipFtps:Ftps_TcpipFs_Dependency" targetComponentID="TCP/IP STACK"/>
-            <Attachment dnOrder="9" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
-            <Attachment dnOrder="10" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet"/>
+            <Attachment dnOrder="0" id="Ftps_TcpipFs_Dependency" namespace="tcpipFtps" targetAttachmentID="TCP/IP STACK:tcpipFtps:Ftps_TcpipFs_Dependency" targetComponentID="TCP/IP STACK"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="BASIC CONFIGURATION" dnOrder="1" id="BASIC CONFIGURATION">
@@ -3684,7 +3703,31 @@
                 </Boolean>
               </Symbols>
             </UniqueComponent>
-            <UniqueComponent dnOrder="1" id="tcpipCmd"/>
+            <UniqueComponent dnOrder="1" id="tcpipCmd">
+              <Symbols dnOrder="0">
+                <Integer dnOrder="0" id="TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE">
+                  <Attributes dnOrder="0">
+                    <Boolean dnOrder="0" id="visible">
+                      <Value dnOrder="0">true</Value>
+                    </Boolean>
+                  </Attributes>
+                </Integer>
+                <Integer dnOrder="1" id="TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE">
+                  <Attributes dnOrder="0">
+                    <Boolean dnOrder="0" id="visible">
+                      <Value dnOrder="0">true</Value>
+                    </Boolean>
+                  </Attributes>
+                </Integer>
+                <Boolean dnOrder="2" id="TCPIP_STACK_COMMANDS_STORAGE_ENABLE">
+                  <Attributes dnOrder="0">
+                    <Boolean dnOrder="0" id="visible">
+                      <Value dnOrder="0">true</Value>
+                    </Boolean>
+                  </Attributes>
+                </Boolean>
+              </Symbols>
+            </UniqueComponent>
             <GeneratorComponent dnOrder="2" id="tcpipNetConfig">
               <Instances dnOrder="0">
                 <InstanceComponent dnOrder="0" id="tcpipNetConfig" instance="0">
@@ -3747,13 +3790,11 @@
             </GeneratorComponent>
             <UniqueComponent dnOrder="3" id="tcpipStack">
               <Symbols dnOrder="0">
-                <Boolean dnOrder="0" id="TCPIP_STACK_INTERFACE_CHANGE_SIGNALING">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="visible">
-                      <Value dnOrder="0">true</Value>
-                    </Boolean>
-                  </Attributes>
-                </Boolean>
+                <Integer dnOrder="0" id="TCPIP_STACK_DRAM_SIZE">
+                  <Values dnOrder="0">
+                    <User dnOrder="0" value="49960"/>
+                  </Values>
+                </Integer>
               </Symbols>
             </UniqueComponent>
           </Children>
@@ -3864,17 +3905,7 @@
         </GroupComponent>
       </Children>
       <Attachments dnOrder="1">
-        <Attachment dnOrder="0" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="1" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="2" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="3" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="4" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="5" id="tcpipFtps:Ftps_TcpipFs_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
-        <Attachment dnOrder="6" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="7" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="8" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="9" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="10" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
+        <Attachment dnOrder="0" id="tcpipFtps:Ftps_TcpipFs_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
       </Attachments>
     </GroupComponent>
     <UniqueComponent dnOrder="18" id="uart2">
@@ -3915,39 +3946,58 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="0" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="BSP_PIC32MZ_DA_Starter_Kit" x="340" y="20"/>
+        <ElementPosition dnOrder="1" id="HarmonyCore" x="3" y="58"/>
+        <ElementPosition dnOrder="2" id="TCP/IP STACK" x="604" y="443"/>
+        <ElementPosition dnOrder="3" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="4" id="core_timer" x="782" y="60"/>
+        <ElementPosition dnOrder="5" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="6" id="drv_memory" x="177" y="146"/>
+        <ElementPosition dnOrder="7" id="drv_sdmmc" x="175" y="342"/>
+        <ElementPosition dnOrder="8" id="lib_crypto" x="206" y="57"/>
+        <ElementPosition dnOrder="9" id="lib_wolfssl" x="808" y="218"/>
+        <ElementPosition dnOrder="10" id="netPres" x="1013" y="174"/>
+        <ElementPosition dnOrder="11" id="nvm" x="0" y="190"/>
+        <ElementPosition dnOrder="12" id="sdhc" x="0" y="426"/>
+        <ElementPosition dnOrder="13" id="sys_command" x="638" y="293"/>
+        <ElementPosition dnOrder="14" id="sys_console" x="462" y="150"/>
+        <ElementPosition dnOrder="15" id="sys_debug" x="651" y="140"/>
+        <ElementPosition dnOrder="16" id="sys_fs" x="421" y="370"/>
+        <ElementPosition dnOrder="17" id="sys_time" x="968" y="14"/>
+        <ElementPosition dnOrder="18" id="uart2" x="317" y="212"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="2" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipAnnounce" x="320" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipDhcp" x="480" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipDns" x="620" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpipFtps" x="30" y="60"/>
-        <ElementPosition dnOrder="4" id="tcpipHttpNet" x="170" y="140"/>
-        <ElementPosition dnOrder="5" id="tcpipNbns" x="350" y="140"/>
-        <ElementPosition dnOrder="6" id="tcpipSmtpc" x="490" y="140"/>
-        <ElementPosition dnOrder="7" id="tcpipSntp" x="30" y="180"/>
+        <ElementPosition dnOrder="2" id="tcpipDns" x="30" y="60"/>
+        <ElementPosition dnOrder="3" id="tcpipFtps" x="170" y="60"/>
+        <ElementPosition dnOrder="4" id="tcpipHttpNet" x="310" y="140"/>
+        <ElementPosition dnOrder="5" id="tcpipNbns" x="470" y="140"/>
+        <ElementPosition dnOrder="6" id="tcpipSmtpc" x="30" y="160"/>
+        <ElementPosition dnOrder="7" id="tcpipSntp" x="170" y="180"/>
         <ElementPosition dnOrder="8" id="tcpip_apps_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="1" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="3" id="BASIC CONFIGURATION">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipCmd" x="190" y="160"/>
-        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="30" y="60"/>
+        <ElementPosition dnOrder="0" id="tcpipCmd" x="30" y="60"/>
+        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
         <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
         <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="NETWORK LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="30" y="60"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipIPv6" x="170" y="60"/>
-        <ElementPosition dnOrder="3" id="tcpipIcmp" x="30" y="140"/>
-        <ElementPosition dnOrder="4" id="tcpipIcmpv6" x="310" y="140"/>
-        <ElementPosition dnOrder="5" id="tcpipNdp" x="170" y="200"/>
-        <ElementPosition dnOrder="6" id="tcpip_network_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="DRIVER LAYER">
+    <ComponentGraph dnOrder="4" id="DRIVER LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="30" y="60"/>
         <ElementPosition dnOrder="1" id="drvMiim" x="150" y="60"/>
@@ -3955,45 +4005,26 @@
         <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="TRANSPORT LAYER">
+    <ComponentGraph dnOrder="5" id="TCP/IP STACK">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="30" y="60"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="5"/>
-    <ComponentGraph dnOrder="6" id="TCP/IP STACK">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="331" y="135"/>
+        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="60" y="142"/>
         <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="170" y="60"/>
         <ElementPosition dnOrder="2" id="DRIVER LAYER" x="30" y="60"/>
         <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
         <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="6" id="NETWORK LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="BSP_PIC32MZ_DA_Starter_Kit" x="340" y="20"/>
-        <ElementPosition dnOrder="1" id="HarmonyCore" x="39" y="83"/>
-        <ElementPosition dnOrder="2" id="TCP/IP STACK" x="569" y="413"/>
-        <ElementPosition dnOrder="3" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="4" id="core_timer" x="822" y="62"/>
-        <ElementPosition dnOrder="5" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="6" id="drv_memory" x="177" y="197"/>
-        <ElementPosition dnOrder="7" id="drv_sdmmc" x="181" y="389"/>
-        <ElementPosition dnOrder="8" id="lib_crypto" x="206" y="57"/>
-        <ElementPosition dnOrder="9" id="lib_wolfssl" x="6" y="344"/>
-        <ElementPosition dnOrder="10" id="netPres" x="555" y="15"/>
-        <ElementPosition dnOrder="11" id="nvm" x="0" y="256"/>
-        <ElementPosition dnOrder="12" id="sdhc" x="14" y="468"/>
-        <ElementPosition dnOrder="13" id="sys_command" x="638" y="293"/>
-        <ElementPosition dnOrder="14" id="sys_console" x="462" y="150"/>
-        <ElementPosition dnOrder="15" id="sys_debug" x="651" y="140"/>
-        <ElementPosition dnOrder="16" id="sys_fs" x="421" y="336"/>
-        <ElementPosition dnOrder="17" id="sys_time" x="1041" y="6"/>
-        <ElementPosition dnOrder="18" id="uart2" x="317" y="212"/>
+        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipIPv6" x="170" y="60"/>
+        <ElementPosition dnOrder="3" id="tcpipIcmp" x="30" y="60"/>
+        <ElementPosition dnOrder="4" id="tcpipIcmpv6" x="310" y="140"/>
+        <ElementPosition dnOrder="5" id="tcpipNdp" x="30" y="160"/>
+        <ElementPosition dnOrder="6" id="tcpip_network_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="7"/>
   </UserData>
 </Configuration>

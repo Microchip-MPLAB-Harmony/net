@@ -822,8 +822,14 @@
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
@@ -841,8 +847,23 @@
           <itemPath>../src/web_pages/protect/index.htm</itemPath>
           <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
           <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
@@ -875,10 +896,10 @@
         <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
         <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
       </logicalFolder>
-      <itemPath>../src/mpfs_net_img.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
+      <itemPath>../src/mpfs_net_img.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
     <logicalFolder name="ExternalFiles"

@@ -51,8 +51,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/console/sys_console.h"
 #include "system/debug/sys_debug.h"
 #include "system/command/sys_command.h"
-#include "driver/miim/drv_miim.h"
+
+#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 #include "net_pres/pres/net_pres_socketapi.h"
+#endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -66,6 +68,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 #if (DRV_MIIM_COMMANDS != 0)
+#include "driver/miim/drv_miim.h"
 #define _TCPIP_COMMANDS_MIIM
 #endif
 
@@ -379,7 +382,7 @@ static const void*          miimCmdIoParam = 0;
 
 #define         TCPIP_MIIM_COMMAND_TASK_RATE  100   // milliseconds
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
-#if defined(TCPIP_STACK_USE_FTPC) && defined(TCPIP_FTPC_COMMANDS)
+#if defined(TCPIP_STACK_USE_FTP_CLIENT) && defined(TCPIP_FTPC_COMMANDS)
 static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif
 // TCPIP stack command table
@@ -464,9 +467,9 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
     {"announce",    (SYS_CMD_FNC)_Command_Announce,             ": Announce"},
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
-#if defined(TCPIP_STACK_USE_FTPC)  && defined(TCPIP_FTPC_COMMANDS)
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)  && defined(TCPIP_FTPC_COMMANDS)
     {"ftpc", (SYS_CMD_FNC)_Command_FTPC_Service,   ": Connect FTP Client to Server"},
-#endif  // (TCPIP_STACK_USE_FTPC)    
+#endif  // (TCPIP_STACK_USE_FTP_CLIENT)    
     
 };
 
@@ -4943,7 +4946,7 @@ static int _Command_Announce(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 }
 #endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_ANNOUNCE)
 
-#if defined(TCPIP_STACK_USE_FTPC) && defined(TCPIP_FTPC_COMMANDS)
+#if defined(TCPIP_STACK_USE_FTP_CLIENT) && defined(TCPIP_FTPC_COMMANDS)
 
 //Disable the following define to retrieve file for transmission from file system
 //#define FTPC_CALLBACK_TX_PROCESSING
@@ -5622,7 +5625,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     return false;
 }
 
-#endif // defined(TCPIP_STACK_USE_FTPC)
+#endif // defined(TCPIP_STACK_USE_FTP_CLIENT)
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 
 
