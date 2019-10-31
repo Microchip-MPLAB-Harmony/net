@@ -227,8 +227,10 @@ def instantiateComponent(tcpipStackComponent):
         tcpipStackDeviceFamily.setDefaultValue("SAME54")
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         tcpipStackDeviceFamily.setDefaultValue("PIC32M")
-    elif "ATSAMA5" in Variables.get("__PROCESSOR"):
+    elif "SAMA5" in Variables.get("__PROCESSOR"):
         tcpipStackDeviceFamily.setDefaultValue("SAMA5")
+    elif "SAM9X6" in Variables.get("__PROCESSOR"):
+        tcpipStackDeviceFamily.setDefaultValue("SAM9X6")
         
     ###########################################################################################
     ###########################################################################################
@@ -1653,8 +1655,9 @@ def instantiateComponent(tcpipStackComponent):
     # ifblock !DSTBDPIC32CZ
     # file TCPIP_HELPERS_C_32 "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_helper_c32.S" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_helper_c32.S"
     # endif
-    
-    if not Peripheral.moduleExists("GMAC"):
+    if(     not Peripheral.moduleExists("GMAC")
+        and not Peripheral.moduleExists("EMAC")
+    ):
         tcpipStackTcpipHelpersC32SourceFile = tcpipStackComponent.createFileSymbol(None, None)
         tcpipStackTcpipHelpersC32SourceFile.setSourcePath("tcpip/src/tcpip_helper_c32.S")
         tcpipStackTcpipHelpersC32SourceFile.setOutputName("tcpip_helper_c32.S")
