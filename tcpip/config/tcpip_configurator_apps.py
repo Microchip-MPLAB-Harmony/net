@@ -129,7 +129,9 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
     tcpipAutoConfigHTTP_NET_SERVER.setDescription("Enable HTTP_NET_SERVER")
     tcpipAutoConfigHTTP_NET_SERVER.setDependencies(tcpipAutoConfigHTTPNETSERVEREnable, ["TCPIP_AUTOCONFIG_ENABLE_HTTP_NET_SERVER"])
 
-    if "SAMA5" not in processor:
+    if(     ("SAMA5" not in processor)
+        and ("SAM9X6" not in processor)
+    ):
         # Enable HTTP_SERVER
         tcpipAutoConfigHTTP_SERVER = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_HTTP_SERVER", None)
         tcpipAutoConfigHTTP_SERVER.setLabel("HTTP SERVER")
@@ -164,8 +166,10 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
     tcpipAutoConfigSMTP_CLIENT.setVisible(True)
     tcpipAutoConfigSMTP_CLIENT.setDescription("Enable SMTP_CLIENT")
     tcpipAutoConfigSMTP_CLIENT.setDependencies(tcpipAutoConfigSMTPCLIENTEnable, ["TCPIP_AUTOCONFIG_ENABLE_SMTP_CLIENT"])
-    
-    if "SAMA5" not in processor:
+
+    if(     ("SAMA5" not in processor)
+        and ("SAM9X6" not in processor)
+    ):
         # Enable SNMP
         tcpipAutoConfigSNMP = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SNMP", None)
         tcpipAutoConfigSNMP.setLabel("SNMP")

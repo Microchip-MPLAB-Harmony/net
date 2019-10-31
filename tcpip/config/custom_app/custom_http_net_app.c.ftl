@@ -41,9 +41,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 <#if lib_crypto?? >
 #include "crypto/crypto.h"
-#if defined(__SAMA5D2__)
-#error  "Crypto is not currently supported on SAMA5D2!"  
-#endif
 </#if>
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"

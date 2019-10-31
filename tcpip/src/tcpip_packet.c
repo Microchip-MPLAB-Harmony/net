@@ -32,7 +32,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-#if defined(__PIC32C__) || defined(__SAMA5D2__)
+#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
 // 32-byte cache alignment for PIC32C
 #define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 32
 #endif
@@ -65,6 +65,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #if defined(TCPIP_IF_PIC32WK)
     #define TCPIP_MAC_FRAME_OFFSET      (34+4)  // bytes to store the packet pointer
+#elif defined( TCPIP_IF_EMAC0 ) || defined( TCPIP_IF_EMAC1)
+    #define TCPIP_MAC_FRAME_OFFSET      (4+2)       // 4 bytes above segment to indicate parent packet, 2 for alignment
 #else // including interfaces such as MRF24WN, WINC1500 and WILC1000
     #define TCPIP_MAC_FRAME_OFFSET      2
 #endif
@@ -656,14 +658,13 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
     }
 
     pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
-#if !defined(__PIC32C__) && !defined(__SAMA5D2__)
+
     allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET;
-#else
-    allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1);
-    //Allocation length should be multiple of cache line size
-    if(allocLen % TCPIP_SEGMENT_CACHE_ALIGN_SIZE)
-        allocLen = allocLen + TCPIP_SEGMENT_CACHE_ALIGN_SIZE - (allocLen % TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
-#endif    
+
+#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
+    // Allocation length should be multiple of cache line size
+    allocLen = ((allocLen + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+#endif  // defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
     pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc(pktMemH, allocLen);
 
     if(pPkt)
@@ -675,10 +676,17 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, T
 
         pSeg->segSize = segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
-        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
 #if defined(__PIC32C__) || defined(__SAMA5D2__)
-        //assign the data segment cache-aligned
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
+        // assign the data segment cache-aligned
         pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
+#elif defined(__SAM9X60__)
+        pSeg->segLoad = (uint8_t *)(pSeg + 1);
+        // assign the data segment cache-aligned
+        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
+        pSeg->segLoad += TCPIP_MAC_FRAME_OFFSET;
+#else
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
 #endif        
         pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
@@ -732,14 +740,13 @@ void _TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt)
     {   // we don't deallocate static packets
         TCPIP_MAC_DATA_SEGMENT  *pSeg, *pNSeg;
 
-        for(pSeg = pPkt->pDSeg; pSeg != 0 ; )
+        for( pSeg = pPkt->pDSeg; pSeg != 0; pSeg = pNSeg )
         {
             pNSeg = pSeg->next;
             if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
             {
                 TCPIP_HEAP_Free(pktMemH, pSeg);
             }
-            pSeg = pNSeg;
         }
 
         TCPIP_HEAP_Free(pktMemH, pPkt);
