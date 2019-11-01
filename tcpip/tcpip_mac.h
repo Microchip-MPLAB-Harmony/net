@@ -1644,7 +1644,7 @@ typedef struct
     int     nRxFragmentErrors;
 	
     /*  number of occurences of 'RX Buffer Not Available' */
-    int32_t     nRxBuffNotAvailable;
+    int    nRxBuffNotAvailable;
 
 }TCPIP_MAC_RX_STATISTICS;
 
