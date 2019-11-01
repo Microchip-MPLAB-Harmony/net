@@ -71,10 +71,6 @@ def instantiateComponent(tcpipAutoConfigNetworkComponent):
     tcpipAutoConfigIPv4.setVisible(True)
     tcpipAutoConfigIPv4.setDescription("Enable IPv4")
     tcpipAutoConfigIPv4.setDependencies(tcpipAutoConfigIPv4Enable, ["TCPIP_AUTOCONFIG_ENABLE_IPV4"])
-    if( 	("SAMA5" in processor)
-		or  ("SAM9X6" in processor)
-	):
-        tcpipAutoConfigIPv4.setReadOnly(True)
 
     # Enable IPv6
     tcpipAutoConfigIPv6 = tcpipAutoConfigNetworkComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IPV6", None)
