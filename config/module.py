@@ -237,6 +237,13 @@ def loadModule():
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addCapability("libdrvGmac","MAC")
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)  
+    elif Peripheral.moduleExists("EMAC"):
+        aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/internalMacDrvr.py")
+        aDrvMacComponent_0.addCapability( "libdrvMac0", "MAC")
+        aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, True, True)
+        aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/internalMacDrvr.py")
+        aDrvMacComponent_1.addCapability( "libdrvMac1", "MAC")
+        aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, True, True)
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")

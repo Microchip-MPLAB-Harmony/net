@@ -50,8 +50,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetConfigEnable.setLabel("Network interface Enable")
     tcpipNetConfigEnable.setVisible(False)
     tcpipNetConfigEnable.setValue(True,1)
-    print(tcpipNetConfigEnable.getID())
-    
+
     # Network interface name
     tcpipNetIfName = tcpipNetConfigComponent.createStringSymbol("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX" + str(index),None)   
     tcpipNetIfName.setLabel("Interface")
@@ -192,171 +191,143 @@ def instantiateComponent(tcpipNetConfigComponent, index):
 ###############################################################################################################         
 def tcpipNetConfigMenuVisible(symbol, event):
     if (event["value"] == True):
-        print("Net Config Menu Visible.")       
         symbol.setVisible(True)
     else:
-        print("Net Config Menu Invisible.")
         symbol.setVisible(False)
 
         
 def tcpipNetHostNameUpdate(symbol, event):
-    print("Start tcpipNetHostNameUpdate")
-    #print(symbol.getID())
-    #print(event["id"])
-
-    tcpipInterfaceName = event["value"]
+    interfaceToHostName = {
+        'ETHMAC':       'MCHPBOARD_E',
+        'GMAC':         'MCHPBOARD_C',
+        'ENCX24J600':   'MCHPENCX24_E',
+        'ENC28J60':     'MCHPENC28_E',
+        'EMAC0':        'SAM9X60_EK',
+        'EMAC1':        'SAM9X60_EK',
+        'MRF24WN':      'MCHPBOARD_W',
+        'WINC':         'MCHPBOARD_W',
+        'WINC1500':     'MCHPBOARD_W',
+        'WILC1000':     'MCHPBOARD_W',
+    }
+    print "tcpipNetHostNameUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
-    if(tcpipInterfaceName == "ETHMAC"):
-        symbol.setValue("MCHPBOARD_E",1)
-    else:
-        if(tcpipInterfaceName == "GMAC"):
-            symbol.setValue("MCHPBOARD_C",1)
-        else:
-            if(tcpipInterfaceName == "ENCX24J600"):
-                symbol.setValue("MCHPENCX24_E",1)
-            else:
-                if(tcpipInterfaceName == "ENC28J60"):
-                    symbol.setValue("MCHPENC28_E",1)
-                else:
-                    # Implement dhcp server client dependency
-                    if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000")):
-                        symbol.setValue("MCHPBOARD_W",1)
-                    else:
-                        symbol.setValue("",1)
-    
-    print("END tcpipNetHostNameUpdate")
+    symbol.setValue( interfaceToHostName.get( event[ "value" ], '' ) )
+    print "tcpipNetHostNameUpdate: symbol.getValue()=" + str( symbol.getValue() )
 
     
 def tcpipNetMacAddrUpdate(symbol, event):   
-    print("Start tcpipNetMacAddrUpdate")
+    interfaceToMacAddress = {
+        'GMAC':         '00:04:25:1C:A0:02',
+        'EMAC0':        '00:04:25:1C:A0:03',
+        'EMAC1':        '00:04:25:1C:A0:04',
+    }
+    print "tcpipNetMacAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     tcpipInterfaceName = event["value"]
     symbol.clearValue()
-    if(tcpipInterfaceName == "GMAC"):
-        symbol.setValue("00:04:25:1C:A0:02",1)
+    macAddress = interfaceToMacAddress.get( tcpipInterfaceName, '' )
+    if len( macAddress ):
+        symbol.setValue( macAddress )
     else:
-		if(tcpipInterfaceName == "ETHMAC"):
-			if "DA" in Variables.get("__PROCESSOR"):
-				symbol.setValue("c4:de:39:75:d8:80",1)
+        if( tcpipInterfaceName == "ETHMAC" ):
+            if "DA" in Variables.get("__PROCESSOR"):
+                symbol.setValue( "c4:de:39:75:d8:80" )
+    print "tcpipNetMacAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
 
-    print("END tcpipNetMacAddrUpdate")  
 
-def tcpipNetIpAddrUpdate(symbol, event):    
-    print("Start tcpipNetIpAddrUpdate")
-
-    tcpipDhcpc = Database.getSymbolValue("tcpipDhcp","TCPIP_STACK_USE_DHCP_CLIENT")
-    tcpipDhcps = Database.getSymbolValue("tcpipDhcps","TCPIP_STACK_USE_DHCP_SERVER")
-    
-    tcpipInterfaceName = event["value"]
-    
+def tcpipNetIpAddrUpdate(symbol, event):
+    tcpipInterfaceName = event[ "value" ]
+    interfaceToIpAddress = {
+        'ETHMAC':       '192.168.100.10',
+        'GMAC':         '192.168.100.11',
+        'ENCX24J600':   '192.168.100.12',
+        'ENC28J60':     '192.168.100.13',
+        'EMAC0':        '192.168.100.14',
+        'EMAC1':        '192.168.100.15',
+        'MRF24WN':      '192.168.1.2',
+        'WINC':         '192.168.1.2',
+        'WINC1500':     '192.168.1.2',
+        'WILC1000':     '192.168.1.2',
+    }
+    ipAddress = interfaceToIpAddress.get( tcpipInterfaceName, '0.0.0.0' )
+    print "tcpipNetIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
+    if(     (tcpipInterfaceName == "MRF24WN")
+        or  (tcpipInterfaceName == "WINC1500")
+        or  (tcpipInterfaceName == "WILC1000")
+    ):
+        tcpipDhcpc = Database.getSymbolValue( "tcpipDhcp",  "TCPIP_STACK_USE_DHCP_CLIENT" )
+        tcpipDhcps = Database.getSymbolValue( "tcpipDhcps", "TCPIP_STACK_USE_DHCP_SERVER" )
+        if( (tcpipDhcpc != False) or (tcpipDhcps != False) ):
+            ipAddress = '0.0.0.0'
     symbol.clearValue()
-    if(tcpipInterfaceName == "ETHMAC"):
-        symbol.setValue("192.168.100.10",1)
-    else:
-        if(tcpipInterfaceName == "GMAC"):
-            symbol.setValue("192.168.100.11",1)
-        else:
-            if(tcpipInterfaceName == "ENCX24J600"):
-                symbol.setValue("192.168.100.12",1)
-            else:
-                if(tcpipInterfaceName == "ENC28J60"):
-                    symbol.setValue("192.168.100.13",1)
-                else:
-                    if ((tcpipDhcpc == False) and (tcpipDhcps== False) and ((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000"))):
-                        symbol.setValue("192.168.1.2",1)
-                    else:
-                        symbol.setValue("0.0.0.0",1)
-                        
-    
-    print("END tcpipNetIpAddrUpdate")   
+    symbol.setValue( ipAddress )
+    print "tcpipNetIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
+
 
 def tcpipNetGatewayIpAddrUpdate(symbol, event): 
-    print("Start tcpipNetGatewayIpAddrUpdate")
-    #print(symbol.getID())
-    #print(event["id"])
-    #tcpipGatewayIpAddrIndex = int(symbol.getID().strip("TCPIP_NETWORK_DEFAULT_GATEWAY_IDX"))
-        
-    #print(tcpipGatewayIpAddrIndex)
-    tcpipInterfaceName = event["value"] 
+    interfaceToIpAddress = {
+        'ETHMAC':       '192.168.100.1',
+        'GMAC':         '192.168.100.1',
+        'ENCX24J600':   '192.168.100.1',
+        'ENC28J60':     '192.168.100.2',
+        'EMAC0':        '192.168.100.1',
+        'EMAC1':        '192.168.100.2',
+        'MRF24WN':      '192.168.1.1',
+        'WINC':         '192.168.1.1',
+        'WINC1500':     '192.168.1.1',
+        'WILC1000':     '192.168.1.1',
+    }
+    print "tcpipNetGatewayIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
-    if((tcpipInterfaceName == "ETHMAC") or (tcpipInterfaceName == "GMAC") or (tcpipInterfaceName == "ENCX24J600")):
-        symbol.setValue("192.168.100.1",1)
-    else:
-        if(tcpipInterfaceName == "ENC28J60"):
-            symbol.setValue("192.168.100.2",1)
-        else:
-            if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000")):
-                symbol.setValue("192.168.1.1",1)
-            else:                   
-                # ToDo Implement PIC32WK dependency
-                symbol.setValue("0.0.0.0",1)
+    symbol.setValue( interfaceToIpAddress.get( event[ "value" ], '0.0.0.0' ) )
     
-    print("END tcpipNetGatewayIpAddrUpdate")        
+    print "tcpipNetGatewayIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     
 def tcpipNetPrimDnsIpAddrUpdate(symbol, event): 
-    print("Start tcpipNetPrimDnsIpAddrUpdate")
-    #print(symbol.getID())
-    #print(event["id"])
-    #tcpipGatewayIpAddrIndex = int(symbol.getID().strip("TCPIP_NETWORK_DEFAULT_DNS_IDX"))
-        
-    #print(tcpipGatewayIpAddrIndex)
-    tcpipInterfaceName = event["value"]
+    interfaceToIpAddress = {
+        'ETHMAC':       '192.168.100.1',
+        'GMAC':         '192.168.100.1',
+        'ENCX24J600':   '192.168.100.1',
+        'ENC28J60':     '192.168.100.2',
+        'EMAC0':        '192.168.100.1',
+        'EMAC1':        '192.168.100.2',
+        'MRF24WN':      '192.168.1.1',
+        'WINC':         '192.168.1.1',
+        'WINC1500':     '192.168.1.1',
+        'WILC1000':     '192.168.1.1',
+    }
+    print "tcpipNetPrimDnsIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     symbol.clearValue()
-    if((tcpipInterfaceName == "ETHMAC") or (tcpipInterfaceName == "GMAC") or (tcpipInterfaceName == "ENCX24J600")):
-        symbol.setValue("192.168.100.1",1)
-    else:
-        if(tcpipInterfaceName == "ENC28J60"):
-            symbol.setValue("192.168.100.2",1)
-        else:
-            if((tcpipInterfaceName == "MRF24WN") or (tcpipInterfaceName == "WINC") or (tcpipInterfaceName == "WILC1000")):
-                symbol.setValue("192.168.1.1",1)
-            else:                   
-                # ToDo Implement PIC32WK dependency
-                symbol.setValue("0.0.0.0",1)
-        
-    print("END tcpipNetPrimDnsIpAddrUpdate")
+    symbol.setValue( interfaceToIpAddress.get( event[ "value" ], '0.0.0.0' ) )
+    print "tcpipNetPrimDnsIpAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
 
-def tcpipNetMACDrvObjUpdate(symbol, event): 
-    print("Start tcpipNetMACDrvObjUpdate")
-    #print(symbol.getID())
-    #print(event["id"])
-    #tcpipIpAddrIndex = int(symbol.getID().strip("TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX"))
-        
-    #print(tcpipIpAddrIndex)
-    tcpipInterfaceName = event["value"]
-    
-    if(tcpipInterfaceName == "ETHMAC"):
-        symbol.setValue("DRV_ETHMAC_PIC32MACObject",1)
-    else:
-        if(tcpipInterfaceName == "GMAC"):
-            symbol.setValue("DRV_GMAC_Object",1)
-        else:
-            if(tcpipInterfaceName == "ENCX24J600"):
-                symbol.setValue("DRV_ENCX24J600_MACObject",1)
-            else:
-                if(tcpipInterfaceName == "ENC28J60"):
-                    symbol.setValue("DRV_ENC28J60_MACObject",1)
-                else:
-                    if(tcpipInterfaceName == "MRF24WN"):
-                        symbol.setValue("WDRV_MRF24WN_MACObject",1)
-                    else:
-                        if(tcpipInterfaceName == "WINC"):
-                            symbol.setValue("WDRV_WINC_MACObject",1)
-                        else:   
-                            if(tcpipInterfaceName == "WILC1000"):
-                                symbol.setValue("WDRV_WILC1000_MACObject",1)
-                            else:   
-                                # ToDo implment PIC32WK dependency
-                                symbol.setValue("",1)
 
-    print("END tcpipNetMACDrvObjUpdate")    
+def tcpipNetMACDrvObjUpdate(symbol, event):
+    interfaceToMacObject = {
+        'ETHMAC':       'DRV_ETHMAC_PIC32MACObject',
+        'GMAC':         'DRV_GMAC_Object',
+        'ENCX24J600':   'DRV_ENCX24J600_MACObject',
+        'ENC28J60':     'DRV_ENC28J60_MACObject',
+        'EMAC0':        'DRV_EMAC0_Object',
+        'EMAC1':        'DRV_EMAC1_Object',
+        'MRF24WN':      'WDRV_MRF24WN_MACObject',
+        'WINC':         'WDRV_WINC_MACObject',
+        'WINC1500':     'WDRV_WINC1500_MACObject',
+        'WILC1000':     'WDRV_WILC1000_MACObject',
+    }
+    print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
+    symbol.clearValue()
+    symbol.setValue( interfaceToMacObject.get( event[ "value" ], '' ) )
+    print "tcpipNetMACDrvObjUpdate: symbol.getValue()=" + str( symbol.getValue() )
+
     
 ############################################################################################################### 
 def onAttachmentConnected(source, target):
     if (source["id"] == "NETCONFIG_MAC_Dependency"):
         tcpipNetConfigIndex = int(source["component"].getID().strip("tcpipNetConfig_"))
         macInterface = source["component"].getSymbolByID("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))
-        macInterface.clearValue()
-        macInterface.setValue(target["component"].getDisplayName(), 2)
+        if( macInterface ):
+            macInterface.clearValue()
+            macInterface.setValue( target["component"].getDisplayName() )
 
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "NETCONFIG_MAC_Dependency"):    

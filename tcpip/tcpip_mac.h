@@ -1625,23 +1625,23 @@ typedef struct
 typedef struct
 {
     /*  number of OK RX packets */
-    int32_t     nRxOkPackets;
+    int     nRxOkPackets;
 
     /*  number of unacknowledged pending RX buffers in the driver queues. */
     /*  If each incoming packet fits within a RX buffer (the RX buffer is large enough) */
     /*  than this corresponds to the number of unacknowledged pending RX packets. */
     /*  Otherwise the number of packets is less than the pending buffers. */
-    int32_t     nRxPendBuffers;
+    int     nRxPendBuffers;
 
     /*  number of currently scheduled RX buffers in the driver queues. */
     /* These are available buffers, ready to receive data */
-    int32_t     nRxSchedBuffers;
+    int     nRxSchedBuffers;
 
     /*  number of RX packets with errors */
-    int32_t     nRxErrorPackets;
+    int     nRxErrorPackets;
 
     /*  number of RX fragmentation errors */
-    int32_t     nRxFragmentErrors;
+    int     nRxFragmentErrors;
 	
     /*  number of occurences of 'RX Buffer Not Available' */
     int32_t     nRxBuffNotAvailable;
@@ -1666,19 +1666,19 @@ typedef struct
 typedef struct
 {
     /*  number of OK transmitted packets */
-    int32_t     nTxOkPackets;
+    int     nTxOkPackets;
 
     /*  number of unacknowledged pending TX buffers in the driver queues. */
     /*  This is equal with pending TX packets when each packet */
     /*  is contained within a TX buffer. */
-    int32_t     nTxPendBuffers;
+    int     nTxPendBuffers;
 
     /*  number of packets that could not be transmitted */
-    int32_t     nTxErrorPackets;
+    int     nTxErrorPackets;
 
     /*  number of times the TX queue was full */
     /*  this may signal that the number of TX descriptors is too small */
-    int32_t     nTxQueueFull;
+    int     nTxQueueFull;
 
 }TCPIP_MAC_TX_STATISTICS;
 

@@ -61,13 +61,170 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Section: Data Type Definitions
 // *****************************************************************************
 // *****************************************************************************
-#if defined (__PIC32MZ__) || (__PIC32MX__)
+<#if (drvPic32mEthmac.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmac.TCPIP_USE_ETH_MAC == true)>
 #include "driver/ethmac/src/dynamic/drv_eth_pic32_lib.h"
-#endif
+</#if>
 
+<#if ((drvEmac0.TCPIP_USE_EMAC0)?has_content && (drvEmac0.TCPIP_USE_EMAC0 == true)) || ((drvEmac1.TCPIP_USE_EMAC1)?has_content && (drvEmac1.TCPIP_USE_EMAC1 == true))>
+static  __inline__ DRV_MIIM_RESULT
+__attribute__((always_inline)) _DRV_MIIM_ETH_ENABLE( uintptr_t ethPhyId )
+{
+    return DRV_MIIM_RES_OK;
+}
 
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_MII_RELEASE_RESET( uintptr_t ethPhyId )
+{
+}
 
-#if defined (__PIC32C__) || defined(__SAMA5D2__)
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_SETUP_PREAMBLE(
+    uintptr_t               ethPhyId,
+    const DRV_MIIM_SETUP *  pSetUp
+    )
+{
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_SCAN_INCREMENT(
+    uintptr_t               ethPhyId,
+    const DRV_MIIM_SETUP *  pSetUp
+    )
+{
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_MNGMNT_PORT_ENABLE( uintptr_t ethPhyId )
+{
+    emac_registers_t * macRegs = (emac_registers_t *) ethPhyId; // EMAC0_REGS or EMAC1_REGS
+    if( EMAC_NCR_MPE_Msk != (macRegs->EMAC_NCR & EMAC_NCR_MPE_Msk) )
+    {   // once enabled should not toggle RE or TE because that will
+        uint32_t tenRenSettings = macRegs->EMAC_NCR & (EMAC_NCR_RE_Msk | EMAC_NCR_TE_Msk);
+        if( !tenRenSettings )
+        {   // REN and TEN are both disabled
+            macRegs->EMAC_NCR |=  EMAC_NCR_MPE_Msk;
+        }
+        else
+        {   // changing TEN will cause emac DMA to reset to first queue
+            macRegs->EMAC_NCR &= ~tenRenSettings;
+            macRegs->EMAC_NCR |= EMAC_NCR_MPE_Msk;
+            macRegs->EMAC_NCR |= tenRenSettings;
+        }
+    }
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_MNGMNT_PORT_DISABLE( uintptr_t ethPhyId )
+{
+}
+static  __inline__ bool
+__attribute__((always_inline)) _DRV_MIIM_IS_BUSY( uintptr_t ethPhyId )
+{
+    emac_registers_t * macRegs = (emac_registers_t *) ethPhyId; // EMAC0_REGS or EMAC1_REGS
+   if ((macRegs->EMAC_NSR & EMAC_NSR_IDLE_Msk) != EMAC_NSR_IDLE_Msk)
+       return true;
+   else
+       return false;
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_PHYADDR_SET(
+    uintptr_t           ethPhyId,
+    DRV_MIIM_OP_DCPT *  pOpDcpt
+    )
+{
+}
+static  __inline__ DRV_MIIM_TXFER_STAT
+__attribute__((always_inline)) _DRV_MIIM_OP_SCAN_ENABLE( uintptr_t ethPhyId )
+{
+     return DRV_MIIM_TXFER_SCAN_STALE;
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_OP_WRITE_DATA(
+    uintptr_t           ethPhyId,
+    DRV_MIIM_OP_DCPT *  pOpDcpt
+    )
+{
+    emac_registers_t * macRegs = (emac_registers_t *) ethPhyId; // EMAC0_REGS or EMAC1_REGS
+    macRegs->EMAC_MAN = EMAC_MAN_SOF( 1 )       // clause 22 start of frame
+                        | EMAC_MAN_RW( 1 )      // write
+                        | EMAC_MAN_PHYA( pOpDcpt->phyAdd )
+                        | EMAC_MAN_REGA( pOpDcpt->regIx )
+                        | EMAC_MAN_CODE( 2 )
+                        | EMAC_MAN_DATA( pOpDcpt->opData )
+                        ;
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_WRITE_START( uintptr_t ethPhyId )
+{
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_OP_READ_START(
+    uintptr_t           ethPhyId,
+    DRV_MIIM_OP_DCPT *  pOpDcpt
+    )
+{
+    emac_registers_t * macRegs = (emac_registers_t *) ethPhyId; // EMAC0_REGS or EMAC1_REGS
+    macRegs->EMAC_MAN = EMAC_MAN_SOF( 1 )       // clause 22 start of frame
+                        | EMAC_MAN_RW( 2 )      // read
+                        | EMAC_MAN_PHYA( pOpDcpt->phyAdd )
+                        | EMAC_MAN_REGA( pOpDcpt->regIx )
+                        | EMAC_MAN_CODE( 2 )
+                        | EMAC_MAN_DATA( pOpDcpt->opData )
+                        ;
+}
+static  __inline__ uint16_t
+__attribute__((always_inline)) _DRV_MIIM_OP_READ_DATA_GET( uintptr_t ethPhyId )
+{
+    emac_registers_t * macRegs = (emac_registers_t *) ethPhyId; // EMAC0_REGS or EMAC1_REGS
+    return (uint16_t)(macRegs->EMAC_MAN & EMAC_MAN_DATA_Msk);
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_CLEAR_DATA_VALID( uintptr_t ethPhyId )
+{
+}
+static  __inline__ bool
+__attribute__((always_inline)) _DRV_MIIM_IS_DATA_VALID( uintptr_t ethPhyId )
+{
+    return false;
+}
+static  __inline__ void
+__attribute__((always_inline)) _DRV_MIIM_SCAN_DISABLE( uintptr_t ethPhyId )
+{
+}
+static  __inline__ void __attribute__((always_inline)) _DRV_MIIM_SMI_CLOCK_SET(uintptr_t ethphyId, uint32_t hostClock, uint32_t maxMIIMClock )
+{ 
+	emac_registers_t *  macRegs = (emac_registers_t *) ethPhyId; // EMAC0_REGS or EMAC1_REGS
+    uint32_t            tenRenSettings = macRegs->EMAC_NCR & (EMAC_NCR_RE_Msk | EMAC_NCR_TE_Msk);
+    uint32_t            clockDivider;
+    uint32_t            mdcDiv;
+    mdcDiv = hostClock / maxMiimClock;
+    if( mdcDiv <= 8 )
+    {
+        clockDivider = EMAC_NCFGR_CLK_MCK_8;
+    }
+    else if( mdcDiv <= 16 )
+    {
+        clockDivider = EMAC_NCFGR_CLK_MCK_16;
+    }
+    else if( mdcDiv <= 32 )
+    {
+        clockDivider = EMAC_NCFGR_CLK_MCK_32;
+    }
+    else
+    {
+        clockDivider = EMAC_NCFGR_CLK_MCK_64;
+    }
+    if( !tenRenSettings )
+    {   // REN and TEN are both disabled
+        macRegs->EMAC_NCFGR |= clockDivider;
+    }
+    else
+    {   // changing TEN will cause emac DMA to reset to first queue
+        macRegs->EMAC_NCR &= ~tenRenSettings;
+        macRegs->EMAC_NCFGR |= clockDivider;
+        macRegs->EMAC_NCR |= tenRenSettings;
+    }	
+} 
+</#if>
+
+<#if (drvGmac.TCPIP_USE_ETH_MAC)?has_content && (drvGmac.TCPIP_USE_ETH_MAC == true)>
     //*****************************************************************************
     /* MII Clock Selection
 
@@ -227,9 +384,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         GMAC_REGS->GMAC_NCR |= GMAC_NCR_TXEN_Msk; 
         GMAC_REGS->GMAC_NCR |= GMAC_NCR_RXEN_Msk;	
     } 
-    
-#else   
+</#if>    
 
+<#if (drvPic32mEthmac.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmac.TCPIP_USE_ETH_MAC == true)>
    static const short _MIIMClockDivisorTable[]=
     {
         4, 6, 8, 10, 14, 20, 28, 40, 
@@ -385,8 +542,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         DRV_ETH_MIIMClockSet(ethId, ix + 1);  // program the clock*/
 
     }
+</#if>
 
-#endif  //defined (__PIC32C__) || defined(__SAMA5D2__)
 #endif //#ifndef _DRV_MIIM_MAPPING_H
 
 /*******************************************************************************
