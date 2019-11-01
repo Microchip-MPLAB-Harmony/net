@@ -122,7 +122,7 @@ Before using MPLAB Harmony Net, ensure that the following are installed:
 
 - [MPLAB® X IDE v5.25](https://www.microchip.com/mplab/mplab-x-ide) or later
 - [MPLAB® XC32 C/C++ Compiler v2.30](https://www.microchip.com/mplab/compilers) or later
-- [IAR Embedded Workbench for ARM - version 8.32.1] (https://www.iar.com/iar-embedded-workbench/) or later for SAMA5D2, SAM9X60 projects
+- [IAR Embedded Workbench for ARM - version 8.32.1](https://www.iar.com/iar-embedded-workbench/) or later for SAMA5D2, SAM9X60 projects
 - Harmony net repository, 3.5.0
 
 In order to regenerate source code for any of the applications, you will also need to use the following versions of the dependent modules:
@@ -219,22 +219,27 @@ The current known issues are as follows:
     - Do NOT overwrite the workaround when regenerating the project.
     - This is a known SYS_FS issue which will be solved in a future release.
 
-* SAMA5D2, SAM9X60 projects known issues:
+
+* SAM9X60 projects:
     - SAM9x60 projects work with optimization 0 only
+    - The application code uses a Phy reset function
+        - This is caused by a bug on the SAM9X60-EK board (KSZ8081 too sensitive to a jittery clock source)
+    - The processor selection for debugging should be ARM926EJ-S
+
+* For all the IAR projects:
+    - The 'VLA -- variable length arrays' must be allowed in the compiler configuration.
+    - Suppress the diagnostics Pe186, Pe188, Pe1029
+
+* SAMA5D2, SAM9X60 IAR projects known issues:
     - The SNMP protocol and corresponding demo applications is not be available.
     - IPv6 ULA generation is not available
     - ZCLL module is not supported
     - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer with wolfSSL encryption has not yet been fully tested for these projects. This will be done in a future release.
     - A workaround for the QSPI plib is in place for this release. When regenerating the code, the workaround must NOT be overwritten.
-
-* For all the IAR projects:
-    - The 'VLA -- variable length arrays' must be allowed in the compiler configuration.
-    - Suppress the diagnostics Pe186, Pe188
     - The SAMA5D2 projects need the symbols defined: \_\_SAMA5D2\_\_, \_\_PIC32C\_\_
 
 * The code has been updated to allow the integrating of the WINC driver to the H3 TCP/IP Stack.
     - However the WINC support is not yet available. It will be added in a future release.
-
 
 Older known issues:
 
