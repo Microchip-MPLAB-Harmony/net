@@ -37,15 +37,16 @@ def instantiateComponent(drvMiimComponent):
     drvMiimModuleId = drvMiimComponent.createStringSymbol("DRV_MIIM_ETH_MODULE_ID", None) 
     drvMiimModuleId.setLabel("ETH Module ID")
     drvMiimModuleId.setVisible(True)
-    #drvMiimModuleId.setVisible(False)
     drvMiimModuleId.setDescription("Ethernet MAC Module ID")    
-    if Peripheral.moduleExists("GMAC"):
-        drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS")
-    elif Peripheral.moduleExists("EMAC"):
-        drvMiimModuleId.setDefaultValue("EMAC0_BASE_ADDRESS")
-    else:
-        drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS")
-
+    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)):    
+        drvMiimModuleId.setDefaultValue("GMAC_BASE_ADDRESS") 
+    elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):    
+        drvMiimModuleId.setDefaultValue("_ETH_BASE_ADDRESS") 
+    elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
+        drvMiimModuleId.setDefaultValue("EMAC0_BASE_ADDRESS") 
+    elif ((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)):    
+        drvMiimModuleId.setDefaultValue("EMAC1_BASE_ADDRESS") 
+    drvMiimModuleId.setDependencies(drvMiimSetIntMacId,["drvGmac.TCPIP_USE_ETH_MAC","drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvEmac0.TCPIP_USE_EMAC0", "drvEmac1.TCPIP_USE_EMAC1"])
 
     # Number of Driver Instances
     drvMiimInstnNum = drvMiimComponent.createIntegerSymbol("DRV_MIIM_INSTANCES_NUMBER", None)
@@ -291,6 +292,16 @@ def drvMiimRTOSTaskDelayMenu(symbol, event):
         symbol.setVisible(True)
     else:
         symbol.setVisible(False)
+        
+def drvMiimSetIntMacId(symbol, event):
+    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)): 
+        symbol.setValue("GMAC_BASE_ADDRESS")
+    elif ((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):
+        symbol.setValue("_ETH_BASE_ADDRESS")
+    elif ((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)):    
+        symbol.setValue("EMAC0_BASE_ADDRESS")
+    elif ((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)):    
+        symbol.setValue("EMAC1_BASE_ADDRESS")    
 
 def genRtosTask(symbol, event):
     symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))
