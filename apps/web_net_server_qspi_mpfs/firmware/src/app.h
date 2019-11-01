@@ -75,15 +75,30 @@ extern "C" {
 
 #define APP_DEBUG_ON                0   // display app state and debug messages
 
+#ifdef __SAM9X60__
+#define LED_AH_PB11_Get() (PIOB_REGS->PIO_PDSR & (1<<11))
+#define LED_AH_PB12_Get() (PIOB_REGS->PIO_PDSR & (1<<12))
+#define LED_AH_PB13_Get() (PIOB_REGS->PIO_PDSR & (1<<13))
+
+#define APP_LED_2StateGet()         LED_AH_PB12_Get()
+#define APP_LED_3StateGet()         LED_AH_PB13_Get()
+  
+#define APP_SWITCH_1StateGet()      SW1_Get()
+#define APP_LED_1StateGet()         LED_AH_PB11_Get()
+#define APP_LED_1StateSet()         LED_AH_PB11_On()
+#define APP_LED_1StateClear()       LED_AH_PB11_Off()
+#define APP_LED_1StateToggle()      LED_AH_PB11_Toggle()
+#else
 #define APP_SWITCH_1StateGet()      SWITCH_Get()
-#define APP_LED_1StateSet()         LED1_Set()
 #define APP_LED_1StateGet()         LED1_Get()
+#define APP_LED_1StateSet()         LED1_Set()
 #define APP_LED_1StateClear()       LED1_Clear()
 #define APP_LED_1StateToggle()      LED1_Toggle()
+#endif 
 
 // Application SYS_FS mount points
 // Adjust as needed
-#define APP_SYS_FS_NVM_VOL          "/dev/nvma1"
+#define APP_SYS_FS_NVM_VOL          "/dev/mtda1"
 #define APP_SYS_FS_MOUNT_POINT      "/mnt/mchpSite1"
 #define APP_SYS_FS_TYPE             MPFS2
 #define APP_SYS_FS_TYPE_STRING      "MPFS2"

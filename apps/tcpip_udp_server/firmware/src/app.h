@@ -200,12 +200,6 @@ void APP_Tasks ( void );
 
 #endif /* _APP_H */
 
-//DOM-IGNORE-BEGIN
-#ifdef __cplusplus
-}
-#endif
-//DOM-IGNORE-END
-
 /*******************************************************************************
  End of File
  */
