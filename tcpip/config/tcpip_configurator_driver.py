@@ -23,6 +23,8 @@
 ##############################################################################
 autoConnectTableGMAC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvGmac:libdrvGmac"]]
 autoConnectTableEthmac = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvPic32mEthmac:libdrvPic32mEthmac"]]
+autoConnectTableEMAC0 = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvEmac0:libdrvMac0"]]
+autoConnectTableEMAC1 = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvEmac1:libdrvMac1"]]
 autoConnectTableWINC = [["BASIC CONFIGURATION", "tcpipNetConfig_0:NETCONFIG_MAC_Dependency", "DRIVER LAYER", "drvWifiWinc:libdrvWincMac"]]
 ################################################################################
 #### Business Logic ####
@@ -54,11 +56,22 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
         tcpipAutoConfigGMAC.setDependencies(tcpipAutoConfigGMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_GMAC"])    
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         # Enable Ethernet MAC
-        tcpipAutoConfigEthmac = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_EMAC", None)
+        tcpipAutoConfigEthmac = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ETHMAC", None)
         tcpipAutoConfigEthmac.setLabel("ETHMAC")
         tcpipAutoConfigEthmac.setVisible(True)
         tcpipAutoConfigEthmac.setDescription("Enable ETHMAC")
-        tcpipAutoConfigEthmac.setDependencies(tcpipAutoConfigETHMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_EMAC"])  
+        tcpipAutoConfigEthmac.setDependencies(tcpipAutoConfigETHMACEnable, ["TCPIP_AUTOCONFIG_ENABLE_ETHMAC"])  
+    elif Peripheral.moduleExists( "EMAC" ):
+        tcpipAutoConfigEMAC0 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_EMAC0", None)
+        tcpipAutoConfigEMAC0.setLabel("EMAC0")
+        tcpipAutoConfigEMAC0.setVisible(True)
+        tcpipAutoConfigEMAC0.setDescription("Enable EMAC0")
+        tcpipAutoConfigEMAC0.setDependencies(tcpipAutoConfigEMAC0Enable, ["TCPIP_AUTOCONFIG_ENABLE_EMAC0"])     
+        tcpipAutoConfigEMAC1 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_EMAC1", None)
+        tcpipAutoConfigEMAC1.setLabel("EMAC1")
+        tcpipAutoConfigEMAC1.setVisible(True)
+        tcpipAutoConfigEMAC1.setDescription("Enable EMAC1")
+        tcpipAutoConfigEMAC1.setDependencies(tcpipAutoConfigEMAC1Enable, ["TCPIP_AUTOCONFIG_ENABLE_EMAC1"]) 
         
     # Enable MIIM_Driver
     tcpipAutoConfigMIIM_Driver = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", None)
@@ -175,7 +188,25 @@ def tcpipAutoConfigETHMACEnable(symbol, event):
     else:
         res = Database.deactivateComponents(["drvPic32mEthmac"])
     
+def tcpipAutoConfigEMAC0Enable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvEmac0"],"DRIVER LAYER")   
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvEmac0", "libdrvMac0")
+        res = Database.connectDependencies(autoConnectTableEMAC0)
+    else:
+        res = Database.deactivateComponents(["drvEmac0"])
     
+def tcpipAutoConfigEMAC1Enable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True):
+        res = Database.activateComponents(["drvEmac1"],"DRIVER LAYER")   
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvEmac1", "libdrvMac1")
+        res = Database.connectDependencies(autoConnectTableEMAC1)
+    else:
+        res = Database.deactivateComponents(["drvEmac1"])
 def tcpipAutoConfigMIIMDriverEnable(symbol, event):
     enableTcpipAutoConfigDrv(True)
     if (event["value"] == True):
