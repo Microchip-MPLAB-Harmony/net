@@ -191,12 +191,12 @@ def sendRmiiUpdate( symbol, event ):
     global userMacChoiceId
     global phyComponent
 
-    if len( phyComponent ):
-        Database.sendMessage( phyComponent, 'MII_CHANGE',
-                            {   'PhyComponent':phyComponent,
-                                'UseRmii':event[ 'value' ],
-                            }
-                        )
+    # if len( phyComponent ):
+        # Database.sendMessage( phyComponent, 'MII_CHANGE',
+                            # {   'PhyComponent':phyComponent,
+                                # 'UseRmii':event[ 'value' ],
+                            # }
+                        # )
 
 
 def setVisibleMatching( symbol, event ):
@@ -240,14 +240,14 @@ def finalizeComponent( macComponent ):
 def sendStateChangeMessage( aRecipient, aState ):
     global macComponentId
     global macBaseAddressValue
-    return Database.sendMessage( aRecipient, 'MAC_STATE_CHANGE',
-                                    {   'ComponentId':macComponentId,
-                                        'ChoiceId':userMacChoiceId,
-                                        'MacBaseAddress':macBaseAddressValue,
-                                        'DefaultMacDriverCode':defaultMacDriverCode,
-                                        'State':aState,
-                                    }
-                                )
+    # return Database.sendMessage( aRecipient, 'MAC_STATE_CHANGE',
+                                    # {   'ComponentId':macComponentId,
+                                        # 'ChoiceId':userMacChoiceId,
+                                        # 'MacBaseAddress':macBaseAddressValue,
+                                        # 'DefaultMacDriverCode':defaultMacDriverCode,
+                                        # 'State':aState,
+                                    # }
+                                # )
 
 
 def instantiateComponent( macComponent ):
@@ -646,7 +646,7 @@ def instantiateComponent( macComponent ):
 
     # Add to system_config.h
     headerFileFtl = macComponent.createFileSymbol( None, None )
-    headerFileFtl.setSourcePath( cfgPath + "mac_drvr_configuration.h.ftl" )
+    headerFileFtl.setSourcePath( cfgPath + "drv_intmac_emac.h.ftl" )
     headerFileFtl.setOutputName( "core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION" )
     headerFileFtl.setMarkup( True )
     headerFileFtl.setType( "STRING" )
