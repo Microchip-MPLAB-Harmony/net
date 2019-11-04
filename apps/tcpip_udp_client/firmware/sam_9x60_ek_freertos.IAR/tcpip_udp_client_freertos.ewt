@@ -3160,7 +3160,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\mac_drvr_lib_SAM9X60.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_statistics.c</name>

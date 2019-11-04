@@ -53,7 +53,7 @@
 #include "peripheral/tc/plib_tc0.h"
 #include "system/time/sys_time.h"
 #include "library/tcpip/tcpip.h"
-#include "driver/emac/mac_drvr.h"
+#include "driver/emac/drv_emac.h"
 #include "driver/miim/drv_miim.h"
 #include "system/sys_time_h2_adapter.h"
 #include "system/sys_clk_h2_adapter.h"

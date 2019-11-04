@@ -238,10 +238,10 @@
             <path>\peripheral\clk\plib_clk.h</path>
             <path>\peripheral\pio\plib_pio.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
-            <path>\driver\emac\mac_drvr.h</path>
-            <path>\driver\emac\src\mac_drvr_local.h</path>
-            <path>\driver\emac\src\dynamic\mac_dcpt_lists.h</path>
-            <path>\driver\emac\src\dynamic\mac_drvr_lib.h</path>
+            <path>\driver\emac\drv_emac.h</path>
+            <path>\driver\emac\src\drv_emac_local.h</path>
+            <path>\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</path>
+            <path>\driver\emac\src\dynamic\drv_emac_lib.h</path>
             <path>\driver\miim\drv_miim.h</path>
             <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
@@ -304,9 +304,9 @@
             <path>\peripheral\aic\plib_aic.c</path>
             <path>\cstartup.s</path>
             <path>\vectortrap.s</path>
-            <path>\driver\emac\src\dynamic\mac_drvr.c</path>
-            <path>\driver\emac\src\dynamic\mac_drvr_statistics.c</path>
-            <path>\driver\emac\src\dynamic\mac_drvr_lib_SAM9X60.c</path>
+            <path>\driver\emac\src\dynamic\drv_emac.c</path>
+            <path>\driver\emac\src\dynamic\drv_emac_statistics.c</path>
+            <path>\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</path>
             <path>\library\tcpip\src\tcpip_announce.c</path>
             <path>\library\tcpip\src\udp.c</path>
             <path>\driver\miim\src\dynamic\drv_miim_eMac.c</path>
