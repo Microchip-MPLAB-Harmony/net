@@ -651,10 +651,10 @@ def instantiateComponent( macComponent ):
     headerFileFtl.setMarkup( True )
     headerFileFtl.setType( "STRING" )
 
-    # file mac_drvr.h
+    # file drv_emac.h
     headerFile = macComponent.createFileSymbol( None, None )
-    headerFile.setSourcePath( basePathSrc + "mac_drvr.h" )
-    headerFile.setOutputName( "mac_drvr.h" )
+    headerFile.setSourcePath( basePathSrc + "drv_emac.h" )
+    headerFile.setOutputName( "drv_emac.h" )
     headerFile.setDestPath( basePath )
     headerFile.setProjectPath( prjPath )
     headerFile.setType( "HEADER" )
@@ -662,19 +662,19 @@ def instantiateComponent( macComponent ):
 
     # file TCPIP_MAC_LOCAL_H
     localHeaderFile = macComponent.createFileSymbol( None, None )
-    localHeaderFile.setSourcePath( basePathSrc + "mac_drvr_local.h" )
-    localHeaderFile.setOutputName( "mac_drvr_local.h" )
+    localHeaderFile.setSourcePath( basePathSrc + "drv_emac_local.h" )
+    localHeaderFile.setOutputName( "drv_emac_local.h" )
     localHeaderFile.setDestPath( basePathSrc )
     localHeaderFile.setProjectPath( prjPathSrc )
     localHeaderFile.setType( "HEADER" )
     localHeaderFile.setOverwrite( True )
 
     dynamicFiles = [
-        [ "mac_dcpt_lists.h",                       "HEADER" ],
-        [ "mac_drvr_lib.h",                         "HEADER" ],
-        [ "mac_drvr.c",                             "SOURCE" ],
-        [ "mac_drvr_statistics.c",                  "SOURCE" ],
-        [ "mac_drvr_lib_" + macLibDeviceCore + ".c","SOURCE" ],
+        [ "drv_emac_dcpt_lists.h",                  "HEADER" ],
+        [ "drv_emac_lib.h",                         "HEADER" ],
+        [ "drv_emac.c",                             "SOURCE" ],
+        [ "drv_emac_statistics.c",                  "SOURCE" ],
+        [ "drv_emac_lib_" + macLibDeviceCore + ".c","SOURCE" ],
     ]
     for ff in dynamicFiles:
         fileSymbol = macComponent.createFileSymbol( None, None )
