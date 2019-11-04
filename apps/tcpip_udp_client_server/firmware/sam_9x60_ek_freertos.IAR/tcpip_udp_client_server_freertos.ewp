@@ -2392,16 +2392,16 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\lldp_tlv.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\mac_dcpt_lists.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\mac_drvr.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\drv_emac.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\mac_drvr_lib.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\mac_drvr_local.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\drv_emac_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
@@ -2899,13 +2899,13 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\list.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\mac_drvr.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\mac_drvr_lib_SAM9X60.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\mac_drvr_statistics.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_statistics.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\main_sam_9x60.c</name>
