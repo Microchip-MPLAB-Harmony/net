@@ -3052,7 +3052,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_eMac.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_emac.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\exceptions.c</name>

@@ -72,7 +72,7 @@
         </File>
         <File dnOrder="8">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">drv_miim_eMac.c</Name>
+          <Name dnOrder="1">drv_miim_emac.c</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ekdriver/miim/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">900E33820F23A867D7423263D7A54FB1</GeneratedChecksum>
