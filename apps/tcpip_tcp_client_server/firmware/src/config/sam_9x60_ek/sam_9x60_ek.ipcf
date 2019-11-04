@@ -293,7 +293,7 @@
             <path>\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</path>
             <path>\library\tcpip\src\tcpip_announce.c</path>
             <path>\library\tcpip\src\udp.c</path>
-            <path>\driver\miim\src\dynamic\drv_miim_eMac.c</path>
+            <path>\driver\miim\src\dynamic\drv_miim_emac.c</path>
             <path>\system\debug\src\sys_debug_local.h</path>
             <path>\system\debug\src\sys_debug.c</path>
             <path>\driver\ethphy\src\dynamic\drv_ethphy.c</path>

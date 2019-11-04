@@ -2879,7 +2879,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\memory\src\drv_memory_file_system.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_eMac.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_emac.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\src\drv_sst26.c</name>
