@@ -176,7 +176,7 @@
         </File>
         <File dnOrder="21">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">mac_drvr.c</Name>
+          <Name dnOrder="1">drv_emac.c</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/src/dynamic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">1ECBF1DF0C2DEB2DC7384EB1134362B8</GeneratedChecksum>
@@ -184,7 +184,7 @@
         </File>
         <File dnOrder="22">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">mac_drvr_lib_SAM9X60.c</Name>
+          <Name dnOrder="1">drv_emac_lib_sam9x60.c</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/src/dynamic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">803470F18A2F316BF349791F583CA4D3</GeneratedChecksum>
@@ -192,7 +192,7 @@
         </File>
         <File dnOrder="23">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">mac_drvr_statistics.c</Name>
+          <Name dnOrder="1">drv_emac_statistics.c</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/src/dynamic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">25EAD8FDF81619444860C98510BE5148</GeneratedChecksum>
@@ -1208,7 +1208,7 @@
         </File>
         <File dnOrder="150">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">mac_dcpt_lists.h</Name>
+          <Name dnOrder="1">drv_emac_dcpt_lists.h</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/src/dynamic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">53D7E10DC4E7B089123B7D6145C1A867</GeneratedChecksum>
@@ -1216,7 +1216,7 @@
         </File>
         <File dnOrder="151">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">mac_drvr.h</Name>
+          <Name dnOrder="1">drv_emac.h</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">ACBB31E62AF9B0A2CFB37616B1E56597</GeneratedChecksum>
@@ -1224,7 +1224,7 @@
         </File>
         <File dnOrder="152">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">mac_drvr_lib.h</Name>
+          <Name dnOrder="1">drv_emac_lib.h</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/src/dynamic/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">1046BAFF377405B57245471499034F43</GeneratedChecksum>
@@ -1232,7 +1232,7 @@
         </File>
         <File dnOrder="153">
           <Type dnOrder="0">HEADER</Type>
-          <Name dnOrder="1">mac_drvr_local.h</Name>
+          <Name dnOrder="1">drv_emac_local.h</Name>
           <LogicalPath dnOrder="2">/driver/emac/config/sam_9x60_ek/driver/emac/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/emac/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">B4B4A0E222664F5FA93EB1790D00D662</GeneratedChecksum>
