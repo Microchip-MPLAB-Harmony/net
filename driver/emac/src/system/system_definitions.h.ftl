@@ -23,5 +23,5 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ---------------------------------------------------------------------------->
 <#if ((drvEmac0.TCPIP_USE_EMAC0)?has_content && (drvEmac0.TCPIP_USE_EMAC0 == true)) || ((drvEmac1.TCPIP_USE_EMAC1)?has_content && (drvEmac1.TCPIP_USE_EMAC1 == true))>
-	#include "driver/emac/mac_drvr.h"
+	#include "driver/emac/drv_emac.h"
 </#if>
