@@ -55,6 +55,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "driver/driver_common.h"
 
+#include "driver/ethphy/drv_ethphy.h"
+
+#include "tcpip/tcpip_mac.h"
+#include "tcpip/tcpip_ethernet.h"
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
