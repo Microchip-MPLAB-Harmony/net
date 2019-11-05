@@ -225,20 +225,25 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 </#if>
 
 
-<#if ((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) || ((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content)>
-<#if (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8061")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8061"))>
+
+<#if ((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) || ((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) || ((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) || ((drvEmac1.DRV_MAC_PHY_TYPE)?has_content)>
+<#if (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8061")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8061"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "KSZ8061")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "KSZ8061"))>
 <#assign emac_phy_type = drvExtPhyKsz8061.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8061.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8081")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8081"))>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8081")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8081"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "KSZ8081")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "KSZ8081"))>
 <#assign emac_phy_type = drvExtPhyKsz8081.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8081.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8081.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8091")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8091"))>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8091")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8091"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "KSZ8091")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "KSZ8091"))>
 <#assign emac_phy_type = drvExtPhyKsz8091.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyKsz8091.DRV_ETHPHY_RESET_CALLBACK>
-<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN8740")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN8740"))>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN8740")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN8740"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "LAN8740")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "LAN8740"))>
 <#assign emac_phy_type = drvExtPhyLan8740.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_RESET_CALLBACK>
@@ -411,9 +416,63 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
 </#if>
     .pPhyInit               = &tcpipPhyInitData,
 };
+<#elseif ((drvEmac0.TCPIP_USE_EMAC0)?has_content && (drvEmac0.TCPIP_USE_EMAC0 == true))>
+/*** EMAC0 Initialization Data ***/
+const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpipEMAC0InitData =
+{
+    .macIntSrc                         = DRV_EMAC0_INTERRUPT_SOURCE,
+    .macRxFilters                      = DRV_EMAC0_RX_FILTERS,
+    /** QUEUE Intialization **/
+    .queueEnable                       = true,
+    .rxDeviceMaxDescriptors            = DRV_EMAC0_RX_DEVICE_MAX_DESCRIPTORS0,
+    .nRxDescCnt                        = DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0,
+    .nTxDescCnt                        = DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0,
+    .rxBufferSize                      = DRV_EMAC0_RX_BUFF_SIZE_QUE0,
+    .txBufferSize                      = DRV_EMAC0_TX_BUFF_SIZE_QUE0,
+    .nRxStaticBufferCnt                = DRV_EMAC0_RX_BUFF_STATIC_COUNT_QUE0,
+    .nRxBuffCntThres                   = DRV_EMAC0_RX_BUFF_COUNT_THRESHOLD_QUE0,
+    .nRxBuffAllocCnt                   = DRV_EMAC0_RX_BUFF_ALLOC_COUNT_QUE0,
+    .ethModuleId                       = DRV_EMAC0_BASE_ADDRESS,
+    .ethFlags                          = DRV_EMAC0_ETH_OPEN_FLAGS,
+    .linkInitDelay                     = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+<#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
+<#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
+    .pPhyBase		    = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
+<#else>
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
 </#if>
-
-
+    .pPhyInit               = &tcpipPhyInitData,
+};
+<#elseif ((drvEmac1.TCPIP_USE_EMAC1)?has_content && (drvEmac1.TCPIP_USE_EMAC1 == true))>
+/*** EMAC1 Initialization Data ***/
+const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpipEMAC1InitData =
+{
+    .macIntSrc                         = DRV_EMAC1_INTERRUPT_SOURCE,
+    .macRxFilters                      = DRV_EMAC1_RX_FILTERS,
+    /** QUEUE Intialization **/
+    .queueEnable                       = true,
+    .rxDeviceMaxDescriptors            = DRV_EMAC1_RX_DEVICE_MAX_DESCRIPTORS0,
+    .nRxDescCnt                        = DRV_EMAC1_RX_DESCRIPTORS_COUNT_QUE0,
+    .nTxDescCnt                        = DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0,
+    .rxBufferSize                      = DRV_EMAC1_RX_BUFF_SIZE_QUE0,
+    .txBufferSize                      = DRV_EMAC1_TX_BUFF_SIZE_QUE0,
+    .nRxStaticBufferCnt                = DRV_EMAC1_RX_BUFF_STATIC_COUNT_QUE0,
+    .nRxBuffCntThres                   = DRV_EMAC1_RX_BUFF_COUNT_THRESHOLD_QUE0,
+    .nRxBuffAllocCnt                   = DRV_EMAC1_RX_BUFF_ALLOC_COUNT_QUE0,
+    .ethModuleId                       = DRV_EMAC1_BASE_ADDRESS,
+    .ethFlags                          = DRV_EMAC1_ETH_OPEN_FLAGS,
+    .linkInitDelay                     = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+<#if (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE) == "SMSC_LAN9303">
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_smsc9303,
+<#elseif (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE)?has_content && (drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE) == "KSZ8863">
+    .pPhyBase		    = &DRV_ETHPHY_OBJECT_BASE_ksz8863,
+<#else>
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
+</#if>
+    .pPhyInit               = &tcpipPhyInitData,
+};
+</#if>
 
 
 
@@ -961,7 +1020,12 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 <#if checkInterface("GMAC")>
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
 </#if>
-
+<#if checkInterface("EMAC0")>
+    {TCPIP_MODULE_MAC_SAM9X60_0,    &tcpipEMAC0InitData},		    // TCPIP_MODULE_MAC_SAM9X60_0
+</#if>
+<#if checkInterface("EMAC1")>
+    {TCPIP_MODULE_MAC_SAM9X60_1,    &tcpipEMAC1InitData},		    // TCPIP_MODULE_MAC_SAM9X60_1
+</#if>
 <#if checkInterface("WINC")>
     {TCPIP_MODULE_MAC_WINC,         0},					            // TCPIP_MODULE_MAC_WINC
 </#if>
