@@ -221,7 +221,7 @@ The current known issues are as follows:
 
 
 * SAM9X60 projects:
-    - SAM9x60 projects work with optimization 0 only
+    - SAM9x60 projects with FAT FS work with optimization 0 only
     - The application code uses a Phy reset function
         - This is caused by a bug on the SAM9X60-EK board (KSZ8081 too sensitive to a jittery clock source)
     - The processor selection for debugging should be ARM926EJ-S
@@ -231,7 +231,7 @@ The current known issues are as follows:
     - Suppress the diagnostics Pe186, Pe188, Pe1029
 
 * SAMA5D2, SAM9X60 IAR projects known issues:
-    - The SNMP protocol and corresponding demo applications is not be available.
+    - The SNMP protocol and corresponding demo applications are not available.
     - IPv6 ULA generation is not available
     - ZCLL module is not supported
     - Crypto library is now supported on the SAMA5D2 processor. However the net_pres layer with wolfSSL encryption has not yet been fully tested for these projects. This will be done in a future release.
