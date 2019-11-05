@@ -103,7 +103,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     {
     }
 
-    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SETUP_PERAMBLE(uintptr_t ethphyId,const DRV_MIIM_SETUP* pSetUp)
+    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SETUP_PREAMBLE(uintptr_t ethphyId,const DRV_MIIM_SETUP* pSetUp)
     {
     }
 
@@ -182,7 +182,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     }  
 
  
-    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SCAN_DIABLE(uintptr_t ethphyId)
+    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SCAN_DISABLE(uintptr_t ethphyId)
     {
     } 
     
@@ -259,7 +259,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
     }
     
-    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SETUP_PERAMBLE(uintptr_t ethphyId, const DRV_MIIM_SETUP* pSetUp)
+    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SETUP_PREAMBLE(uintptr_t ethphyId, const DRV_MIIM_SETUP* pSetUp)
     {
         DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
         if((pSetUp->setupFlags & DRV_MIIM_SETUP_FLAG_PREAMBLE_SUPPRESSED) != 0)
@@ -355,7 +355,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         return !DRV_ETH_DataNotValid(ethId);
     }
       
-    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SCAN_DIABLE(uintptr_t ethphyId)
+    static  __inline__ void __attribute__((always_inline))_DRV_MIIM_SCAN_DISABLE(uintptr_t ethphyId)
     { 
         DRV_ETHERNET_REGISTERS* ethId = (DRV_ETHERNET_REGISTERS*)_ETH_BASE_ADDRESS;
         DRV_ETH_MIIMScanModeDisable(ethId);
