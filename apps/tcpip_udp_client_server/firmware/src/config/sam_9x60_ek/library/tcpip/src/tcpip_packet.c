@@ -30,6 +30,8 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
 #if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
 // 32-byte cache alignment for PIC32C
 #define TCPIP_SEGMENT_CACHE_ALIGN_SIZE 32
@@ -39,6 +41,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip_private.h"
 #include "tcpip_packet.h"
+
 
 /*  TCPIP MAC Frame Offset
 
@@ -57,7 +60,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
     It makes sense to have this value as a #define (or global variable) instead of a parameter to the packet allocation function.
     In a system whith different MAC drivers the value may be different from MAC to MAC and then the stack would be forced
     to keep track of what packet could be forwarded on what interface.
+
 */
+
 #if defined(TCPIP_IF_PIC32WK)
     #define TCPIP_MAC_FRAME_OFFSET      (34+4)  // bytes to store the packet pointer
 #elif defined( TCPIP_IF_EMAC0 ) || defined( TCPIP_IF_EMAC1)
@@ -109,16 +114,20 @@ static void                 _TCPIP_PKT_LogInit(bool resetAll);
 
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
 
+
+
 // API
+
 bool TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CONFIG* pNetConf, int nNets)
 {
     pktMemH = 0;
 
     while(heapH != 0)
     {
-        TCPIP_MAC_PACKET * allocPtr;
+        TCPIP_MAC_PACKET* allocPtr;
 
         allocPtr = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc(heapH, sizeof(TCPIP_MAC_PACKET));
+
         if(allocPtr == 0)
         {
             break;
@@ -145,17 +154,22 @@ bool TCPIP_PKT_Initialize(TCPIP_STACK_HEAP_HANDLE heapH, const TCPIP_NETWORK_CON
                 _pktLogInfo.netLogMask |= 1 << ix;
             }
         }
+
 #endif  // (TCPIP_PACKET_LOG_ENABLE)
+
         break;
     }
 
+
     return pktMemH != 0;
+    
 }
 
 void TCPIP_PKT_Deinitialize(void)
 {
     pktMemH = 0;
 }
+
 
 // acknowledges a packet
 void _TCPIP_PKT_PacketAcknowledge(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, TCPIP_STACK_MODULE moduleId)
@@ -192,6 +206,7 @@ void TCPIP_PKT_SegmentAppend(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_DATA_SEGMENT* pSe
         for(prev = 0; pN != 0; prev = pN, pN = pN->next);
         prev->next = pSeg;
     }
+
 }
 
 // helpers
@@ -242,6 +257,7 @@ TCPIP_MAC_DATA_SEGMENT* TCPIP_PKT_DataSegmentGet(TCPIP_MAC_PACKET* pPkt, const u
                 {
                     return pSeg;
                 }
+
                 pStartSeg = pSeg->next;
                 break;
             }
@@ -251,6 +267,7 @@ TCPIP_MAC_DATA_SEGMENT* TCPIP_PKT_DataSegmentGet(TCPIP_MAC_PACKET* pPkt, const u
     {
         pStartSeg = pPkt->pDSeg;
     }
+
 
     for(pSeg = pStartSeg; pSeg != 0; pSeg = pSeg->next)
     {
@@ -270,6 +287,7 @@ uint16_t TCPIP_PKT_PayloadLen(TCPIP_MAC_PACKET* pPkt)
     if(pPkt)
     {
         TCPIP_MAC_DATA_SEGMENT* pSeg = pPkt->pDSeg;
+
         while(pSeg != 0)
         {
             payloadSize += pSeg->segLen;
@@ -282,67 +300,74 @@ uint16_t TCPIP_PKT_PayloadLen(TCPIP_MAC_PACKET* pPkt)
 
 // repeated debug versions; they store the original moduleId
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
-static __inline__ TCPIP_MAC_PACKET * __attribute__((always_inline))
-_TCPIP_PKT_PacketAllocInt(
-    uint16_t                pktLen,
-    uint16_t                segLoadLen,
-    TCPIP_MAC_PACKET_FLAGS  flags,
-    int                     moduleId
-    )
+static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_PacketAllocInt(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId)
 {
     TCPIP_MAC_PACKET* pPkt;
     TCPIP_MAC_DATA_SEGMENT  *pSeg;
     uint16_t        pktUpLen, allocLen;
 
-    if( pktLen < sizeof( TCPIP_MAC_PACKET ) )
+    if(pktLen < sizeof(TCPIP_MAC_PACKET))
     {
-        pktLen = sizeof( TCPIP_MAC_PACKET );
+        pktLen = sizeof(TCPIP_MAC_PACKET);
     }
 
     pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
-    allocLen =  pktUpLen
-                + sizeof( *pSeg )
-                + segLoadLen
-                + sizeof( TCPIP_MAC_ETHERNET_HEADER )
-                + TCPIP_MAC_FRAME_OFFSET
-                ;
+
+    allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET;
+
+#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
+    // Allocation length should be cache aligned and add extra cache line size for the segLoad to be cache aligned
+    allocLen = ((allocLen + (2 * TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+#endif  // defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_MallocDebug( pktMemH, allocLen, moduleId, __LINE__ );
+    pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_MallocDebug(pktMemH, allocLen, moduleId, __LINE__);
 #else
-    pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc( pktMemH, allocLen );
+    pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc(pktMemH, allocLen);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
-    if( pPkt )
+
+    if(pPkt)
     {   
         // clear the TCPIP_MAC_PACKET and 1st segment fields
         // populate the 1st segment
-        memset( pPkt, 0, pktUpLen + sizeof( *pSeg ) );
-        pSeg = (TCPIP_MAC_DATA_SEGMENT *)( (uint8_t *) pPkt + pktUpLen );
+        memset(pPkt, 0, pktUpLen + sizeof(*pSeg));
+        pSeg = (TCPIP_MAC_DATA_SEGMENT*)((uint8_t*)pPkt + pktUpLen);
 
-        pSeg->segSize = segLoadLen + sizeof( TCPIP_MAC_ETHERNET_HEADER );
+        pSeg->segSize = segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
+#if defined(__PIC32C__) || defined(__SAMA5D2__)
         pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
+        // assign the data segment cache-aligned
+        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
+#elif defined(__SAM9X60__)
+        pSeg->segLoad = (uint8_t *)(pSeg + 1);
+        // assign the data segment cache-aligned
+        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
+        pSeg->segLoad += TCPIP_MAC_FRAME_OFFSET;
+#else
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
+#endif        
         pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
 
         pPkt->pMacLayer = pSeg->segLoad;
-        pPkt->pktFlags = flags & ~(TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
-        if( segLoadLen )
+        pPkt->pktFlags = flags & (~TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
+        if(segLoadLen)
         {
-            pPkt->pNetLayer = pPkt->pMacLayer + sizeof( TCPIP_MAC_ETHERNET_HEADER );
+            pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
+
     }
 
     return pPkt;
 }
 
-static __inline__ void __attribute__((always_inline))
-_TCPIP_PKT_PacketFreeInt( TCPIP_MAC_PACKET * pPkt, int moduleId )
+static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_PacketFreeInt(TCPIP_MAC_PACKET* pPkt, int moduleId)
 {
     if((pPkt->pktFlags & TCPIP_MAC_PKT_FLAG_STATIC) == 0)
     {   // we don't deallocate static packets
         TCPIP_MAC_DATA_SEGMENT  *pSeg, *pNSeg;
 
-        for(pSeg = pPkt->pDSeg; pSeg != 0 ; )
+        for(pSeg = pPkt->pDSeg; pSeg != 0; pSeg = pNSeg)
         {
             pNSeg = pSeg->next;
             if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
@@ -353,7 +378,6 @@ _TCPIP_PKT_PacketFreeInt( TCPIP_MAC_PACKET * pPkt, int moduleId )
                 TCPIP_HEAP_Free(pktMemH, pSeg);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
             }
-            pSeg = pNSeg;
         }
 
 #if defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
@@ -364,17 +388,10 @@ _TCPIP_PKT_PacketFreeInt( TCPIP_MAC_PACKET * pPkt, int moduleId )
     }
 }
 
-static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline))
-_TCPIP_PKT_SocketAllocInt(
-    uint16_t                pktLen,
-    uint16_t                transpHdrLen,
-    uint16_t                payloadLen,
-    TCPIP_MAC_PACKET_FLAGS  flags,
-    int                     moduleId
-    )
+static __inline__ TCPIP_MAC_PACKET* __attribute__((always_inline)) _TCPIP_PKT_SocketAllocInt(uint16_t pktLen, uint16_t transpHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId)
 {
-    uint16_t            netHdrLen, totHdrLen;
-    TCPIP_MAC_PACKET *  pPkt;
+    uint16_t    netHdrLen, totHdrLen;
+    TCPIP_MAC_PACKET* pPkt;
 
     if((flags & TCPIP_MAC_PKT_FLAG_IPV6) != 0)
     {
@@ -384,9 +401,13 @@ _TCPIP_PKT_SocketAllocInt(
     {
         netHdrLen = sizeof(IPV4_HEADER);
     }
+
+
     totHdrLen = netHdrLen + transpHdrLen;
+
     pPkt = _TCPIP_PKT_PacketAllocInt(pktLen, totHdrLen +  payloadLen, flags, moduleId);
-    if( pPkt )
+
+    if(pPkt)
     {   // set the layer pointers in place
         if(transpHdrLen)
         {
@@ -397,13 +418,7 @@ _TCPIP_PKT_SocketAllocInt(
     return pPkt;
 }
 
-static __inline__ TCPIP_MAC_DATA_SEGMENT * __attribute__((always_inline))
-_TCPIP_PKT_SegmentAllocInt(
-    uint16_t                loadLen,
-    uint16_t                loadOffset,
-    TCPIP_MAC_SEGMENT_FLAGS flags,
-    int                     moduleId
-    )
+static __inline__ TCPIP_MAC_DATA_SEGMENT* __attribute__((always_inline)) _TCPIP_PKT_SegmentAllocInt(uint16_t loadLen, uint16_t loadOffset, TCPIP_MAC_SEGMENT_FLAGS flags, int moduleId)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg;
     uint16_t allocSize;
@@ -422,9 +437,12 @@ _TCPIP_PKT_SegmentAllocInt(
 #else
     pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_Malloc(pktMemH, allocSize);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
+
+
     if(pSeg)
     {
         memset(pSeg, 0, sizeof(*pSeg));
+
         pSeg->segFlags = flags & (~TCPIP_MAC_SEG_FLAG_STATIC);
         if(loadLen != 0)
         {
@@ -437,8 +455,7 @@ _TCPIP_PKT_SegmentAllocInt(
     return pSeg;
 }
 
-static __inline__ void __attribute__((always_inline))
-_TCPIP_PKT_SegmentFreeInt( TCPIP_MAC_DATA_SEGMENT * pSeg, int moduleId )
+static __inline__ void __attribute__((always_inline)) _TCPIP_PKT_SegmentFreeInt(TCPIP_MAC_DATA_SEGMENT* pSeg, int moduleId)
 {
     if( (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
     {
@@ -448,15 +465,10 @@ _TCPIP_PKT_SegmentFreeInt( TCPIP_MAC_DATA_SEGMENT * pSeg, int moduleId )
         TCPIP_HEAP_Free(pktMemH, pSeg);
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
     }
+
 }
 
-TCPIP_MAC_PACKET* _TCPIP_PKT_SocketAllocDebug(
-    uint16_t                pktLen,
-    uint16_t                tHdrLen,
-    uint16_t                payloadLen,
-    TCPIP_MAC_PACKET_FLAGS  flags,
-    int                     moduleId
-    )
+TCPIP_MAC_PACKET* _TCPIP_PKT_SocketAllocDebug(uint16_t pktLen, uint16_t tHdrLen, uint16_t payloadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId)
 {
     TCPIP_MAC_PACKET* pPkt = _TCPIP_PKT_SocketAllocInt(pktLen, tHdrLen, payloadLen, flags, moduleId);
     _TCPIP_PKT_TraceAddToEntry(moduleId, pPkt);
@@ -464,17 +476,14 @@ TCPIP_MAC_PACKET* _TCPIP_PKT_SocketAllocDebug(
 
 }
 
-TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAllocDebug(
-    uint16_t                pktLen,
-    uint16_t                segLoadLen,
-    TCPIP_MAC_PACKET_FLAGS  flags,
-    int                     moduleId
-    )
+TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAllocDebug(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags, int moduleId)
 {
-    TCPIP_MAC_PACKET * pPkt = _TCPIP_PKT_PacketAllocInt( pktLen, segLoadLen, flags, moduleId );
+    TCPIP_MAC_PACKET* pPkt = _TCPIP_PKT_PacketAllocInt(pktLen, segLoadLen, flags, moduleId);
     _TCPIP_PKT_TraceAddToEntry(moduleId, pPkt);
     return pPkt;
+
 }
+
 
 void _TCPIP_PKT_PacketFreeDebug(TCPIP_MAC_PACKET* pPkt, int moduleId)
 {
@@ -482,12 +491,7 @@ void _TCPIP_PKT_PacketFreeDebug(TCPIP_MAC_PACKET* pPkt, int moduleId)
     _TCPIP_PKT_PacketFreeInt(pPkt, moduleId);
 }
 
-TCPIP_MAC_DATA_SEGMENT * _TCPIP_PKT_SegmentAllocDebug(
-    uint16_t                loadLen,
-    uint16_t                loadOffset,
-    TCPIP_MAC_SEGMENT_FLAGS flags,
-    int                     moduleId
-    )
+TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAllocDebug(uint16_t loadLen, uint16_t loadOffset, TCPIP_MAC_SEGMENT_FLAGS flags, int moduleId)
 {
     return _TCPIP_PKT_SegmentAllocInt(loadLen, loadOffset, flags, moduleId); 
 }
@@ -497,21 +501,19 @@ void _TCPIP_PKT_SegmentFreeDebug(TCPIP_MAC_DATA_SEGMENT* pSeg, int moduleId)
     _TCPIP_PKT_SegmentFreeInt(pSeg, moduleId);
 }
 
-void _TCPIP_PKT_PacketAcknowledgeDebug(
-    TCPIP_MAC_PACKET *      pPkt,
-    TCPIP_MAC_PKT_ACK_RES   ackRes,
-    int                     moduleId
-    )
+
+void _TCPIP_PKT_PacketAcknowledgeDebug(TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes, int moduleId)
 {
     _TCPIP_PKT_PacketAcknowledge(pPkt, ackRes, moduleId);
     _TCPIP_PKT_TraceAckEntry(moduleId, pPkt, ackRes);
 }
 
-int TCPIP_PKT_TraceGetEntriesNo( TCPIP_PKT_TRACE_INFO * pTraceInfo )
+int TCPIP_PKT_TraceGetEntriesNo(TCPIP_PKT_TRACE_INFO* pTraceInfo)
 {
     TCPIP_PKT_TRACE_ENTRY *pEntry;
     int ix;
     int nUsed = 0;
+
 
     for(ix = 0, pEntry = _pktTraceTbl; ix < sizeof(_pktTraceTbl)/sizeof(*_pktTraceTbl); ix++, pEntry++)
     {
@@ -520,14 +522,17 @@ int TCPIP_PKT_TraceGetEntriesNo( TCPIP_PKT_TRACE_INFO * pTraceInfo )
             nUsed++;
         }
     }
+
     _pktTraceInfo.nUsed = nUsed;
     if(pTraceInfo)
     {
         *pTraceInfo = _pktTraceInfo;
     }
 
+
     return nUsed;
 }
+
 
 // populates a trace entry with data for a index
 bool TCPIP_PKT_TraceGetEntry(int entryIx, TCPIP_PKT_TRACE_ENTRY* tEntry)
@@ -547,7 +552,7 @@ bool TCPIP_PKT_TraceGetEntry(int entryIx, TCPIP_PKT_TRACE_ENTRY* tEntry)
     return false;
 }
 
-static TCPIP_PKT_TRACE_ENTRY * _TCPIP_PKT_TraceFindEntry( int moduleId, bool addNewSlot )
+static TCPIP_PKT_TRACE_ENTRY* _TCPIP_PKT_TraceFindEntry(int moduleId, bool addNewSlot)
 {
     int ix;
     TCPIP_PKT_TRACE_ENTRY    *freeEntry,*pEntry;
@@ -574,15 +579,11 @@ static TCPIP_PKT_TRACE_ENTRY * _TCPIP_PKT_TraceFindEntry( int moduleId, bool add
     return freeEntry;
 }
 
-static uint32_t _TCPIP_PKT_TracePktSize( TCPIP_MAC_PACKET * pPkt )
+static uint32_t _TCPIP_PKT_TracePktSize(TCPIP_MAC_PACKET* pPkt)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg = pPkt->pDSeg;
-    uint32_t pktSize =  ((uint8_t*)pSeg
-                        - (uint8_t*)pPkt)
-                        + TCPIP_MAC_FRAME_OFFSET
-                        + sizeof(*pSeg)
-                        + pSeg->segSize
-                        ;
+    uint32_t pktSize = ((uint8_t*)pSeg - (uint8_t*)pPkt) + TCPIP_MAC_FRAME_OFFSET + sizeof(*pSeg) + pSeg->segSize;
+
     while((pSeg = pSeg->next) != 0)
     {
         if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
@@ -590,12 +591,14 @@ static uint32_t _TCPIP_PKT_TracePktSize( TCPIP_MAC_PACKET * pPkt )
             pktSize += sizeof(*pSeg) + pSeg->segSize;
         }
     }
+
     return pktSize;
+
 }
     
-static void _TCPIP_PKT_TraceAddToEntry( int moduleId, TCPIP_MAC_PACKET * pPkt )
+static void _TCPIP_PKT_TraceAddToEntry(int moduleId, TCPIP_MAC_PACKET* pPkt)
 {
-    TCPIP_PKT_TRACE_ENTRY* pEntry = _TCPIP_PKT_TraceFindEntry( moduleId, true );
+    TCPIP_PKT_TRACE_ENTRY* pEntry = _TCPIP_PKT_TraceFindEntry(moduleId, true);
 
     if(pEntry)
     {
@@ -614,7 +617,10 @@ static void _TCPIP_PKT_TraceAddToEntry( int moduleId, TCPIP_MAC_PACKET * pPkt )
     {
         _TCPIP_PKT_TraceFail();
     }
+
 }
+
+
 
 static void _TCPIP_PKT_TraceFreeEntry(int moduleId, TCPIP_MAC_PACKET* pPkt)
 {
@@ -629,6 +635,7 @@ static void _TCPIP_PKT_TraceFreeEntry(int moduleId, TCPIP_MAC_PACKET* pPkt)
     {
         _TCPIP_PKT_TraceFail();
     }
+
 }
 
 static void _TCPIP_PKT_TraceAckEntry(int moduleId, TCPIP_MAC_PACKET* pPkt, TCPIP_MAC_PKT_ACK_RES ackRes)
@@ -647,110 +654,66 @@ static void _TCPIP_PKT_TraceAckEntry(int moduleId, TCPIP_MAC_PACKET* pPkt, TCPIP
     {
         _pktTraceInfo.traceAckOwnerFails++;
     }
+
 }
 
 #else
-
 // regular allocation functions, non-debug
 // they don't take a module Id parameter; otherwise exactly the same functions
-TCPIP_MAC_PACKET * _TCPIP_PKT_PacketAlloc(
-    uint16_t                pktLen,
-    uint16_t                segLoadLen,
-    TCPIP_MAC_PACKET_FLAGS  flags
-    )
+TCPIP_MAC_PACKET* _TCPIP_PKT_PacketAlloc(uint16_t pktLen, uint16_t segLoadLen, TCPIP_MAC_PACKET_FLAGS flags)
 {
-#if defined(__SAM9X60__) ///////////////////////////////////////////////////////
-    TCPIP_MAC_PACKET *          pPkt;
-    TCPIP_MAC_DATA_SEGMENT *    pSeg;
-    uint16_t                    pktUpLen, allocLen;
+    TCPIP_MAC_PACKET* pPkt;
+    TCPIP_MAC_DATA_SEGMENT  *pSeg;
+    uint16_t        pktUpLen, allocLen;
 
-    if( pktLen < sizeof( TCPIP_MAC_PACKET ) )
+    if(pktLen < sizeof(TCPIP_MAC_PACKET))
     {
-        pktLen = sizeof( TCPIP_MAC_PACKET );
+        pktLen = sizeof(TCPIP_MAC_PACKET);
     }
+
     pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
-    allocLen =  pktUpLen
-                + sizeof( *pSeg )
-                + segLoadLen
-                + sizeof( TCPIP_MAC_ETHERNET_HEADER )
-                + TCPIP_MAC_FRAME_OFFSET
-                ;
-    // Allocation length should be multiple of cache line size
-    allocLen = ((allocLen + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
-    pPkt = (TCPIP_MAC_PACKET *) TCPIP_HEAP_Malloc( pktMemH, allocLen );
-    if( pPkt )
+
+    allocLen = pktUpLen + sizeof(*pSeg) + segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER) + TCPIP_MAC_FRAME_OFFSET;
+
+#if defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
+    // Allocation length should be cache aligned and add extra cache line size for the segLoad to be cache aligned
+    allocLen = ((allocLen + (2 * TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) / TCPIP_SEGMENT_CACHE_ALIGN_SIZE) * TCPIP_SEGMENT_CACHE_ALIGN_SIZE;
+#endif  // defined(__PIC32C__) || defined(__SAMA5D2__) || defined(__SAM9X60__)
+    pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc(pktMemH, allocLen);
+
+    if(pPkt)
     {   
         // clear the TCPIP_MAC_PACKET and 1st segment fields
-        memset( pPkt, 0, allocLen );
         // populate the 1st segment
-        pSeg = (TCPIP_MAC_DATA_SEGMENT *)( (uint8_t *) pPkt + pktUpLen );
-        pSeg->segSize = segLoadLen + sizeof( TCPIP_MAC_ETHERNET_HEADER );
+        memset(pPkt, 0, pktUpLen + sizeof(*pSeg));
+        pSeg = (TCPIP_MAC_DATA_SEGMENT*)((uint8_t*)pPkt + pktUpLen);
+
+        pSeg->segSize = segLoadLen + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
+#if defined(__PIC32C__) || defined(__SAMA5D2__)
+        pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
+        // assign the data segment cache-aligned
+        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
+#elif defined(__SAM9X60__)
         pSeg->segLoad = (uint8_t *)(pSeg + 1);
         // assign the data segment cache-aligned
-        pSeg->segLoad = (uint8_t *)(((uint32_t)(pSeg->segLoad)
-                + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
+        pSeg->segLoad = (uint8_t*)(((uint32_t)(pSeg->segLoad) + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
         pSeg->segLoad += TCPIP_MAC_FRAME_OFFSET;
-        pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC;             // embedded in TCPIP_MAC_PACKET itself
-        pSeg->next = 0;
-
-        pPkt->pDSeg = pSeg;
-        pPkt->pMacLayer = pSeg->segLoad;
-        pPkt->pktFlags = flags & ~(TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
-        if( segLoadLen )
-        {
-            pPkt->pNetLayer = pPkt->pMacLayer + sizeof( TCPIP_MAC_ETHERNET_HEADER );
-        }
-    }
-#else // ORIGINAL //////////////////////////////////////////////////////////////
-    TCPIP_MAC_PACKET *          pPkt;
-    TCPIP_MAC_DATA_SEGMENT *    pSeg;
-    uint16_t                    pktUpLen, allocLen;
-
-    if( pktLen < sizeof( TCPIP_MAC_PACKET ) )
-    {
-        pktLen = sizeof( TCPIP_MAC_PACKET );
-    }
-    pktUpLen = (((pktLen + 3) >> 2) << 2);     // 32 bits round up
-    allocLen =  pktUpLen
-                + sizeof( *pSeg )
-                + segLoadLen
-                + sizeof( TCPIP_MAC_ETHERNET_HEADER )
-                + TCPIP_MAC_FRAME_OFFSET
-                ;
-#if defined(__PIC32C__) || defined(__SAMA5D2__)
-    // Allocation length should be multiple of cache line size
-    allocLen += (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1);
-    if( allocLen % TCPIP_SEGMENT_CACHE_ALIGN_SIZE )
-        allocLen = allocLen + TCPIP_SEGMENT_CACHE_ALIGN_SIZE - (allocLen % TCPIP_SEGMENT_CACHE_ALIGN_SIZE);
-#endif    
-    pPkt = (TCPIP_MAC_PACKET*)TCPIP_HEAP_Malloc( pktMemH, allocLen );
-    if( pPkt )
-    {   
-        // clear the TCPIP_MAC_PACKET and 1st segment fields
-        memset( pPkt, 0, allocLen );
-        // populate the 1st segment
-        pSeg = (TCPIP_MAC_DATA_SEGMENT *)( (uint8_t *) pPkt + pktUpLen );
-        pSeg->segSize = segLoadLen + sizeof( TCPIP_MAC_ETHERNET_HEADER );
-        pSeg->segLoadOffset = TCPIP_MAC_FRAME_OFFSET;
+#else
         pSeg->segLoad = (uint8_t*)(pSeg + 1) + TCPIP_MAC_FRAME_OFFSET;
-#if defined(__PIC32C__) || defined(__SAMA5D2__)
-        // assign the data segment cache-aligned
-        pSeg->segLoad = (uint8_t *)(((uint32_t)(pSeg->segLoad)
-                + (TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)) & (~((uint32_t)TCPIP_SEGMENT_CACHE_ALIGN_SIZE - 1)));
-#endif
-        pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC;             // embedded in TCPIP_MAC_PACKET itself
-        pSeg->next = 0;
-
+#endif        
+        pSeg->segFlags = TCPIP_MAC_SEG_FLAG_STATIC; // embedded in TCPIP_MAC_PACKET itself
         pPkt->pDSeg = pSeg;
+
         pPkt->pMacLayer = pSeg->segLoad;
-        pPkt->pktFlags = flags & ~(TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
-        if( segLoadLen )
+        pPkt->pktFlags = flags & (~TCPIP_MAC_PKT_FLAG_STATIC);  // this packet is dynamically allocated
+        if(segLoadLen)
         {
-            pPkt->pNetLayer = pPkt->pMacLayer + sizeof( TCPIP_MAC_ETHERNET_HEADER );
+            pPkt->pNetLayer = pPkt->pMacLayer + sizeof(TCPIP_MAC_ETHERNET_HEADER);
         }
+
     }
-#endif ///////////////////////////////////////////////////////////////////////////
+
     return pPkt;
 }
 
@@ -789,26 +752,22 @@ void _TCPIP_PKT_PacketFree(TCPIP_MAC_PACKET* pPkt)
 {
     if((pPkt->pktFlags & TCPIP_MAC_PKT_FLAG_STATIC) == 0)
     {   // we don't deallocate static packets
-        TCPIP_MAC_DATA_SEGMENT * pSeg, * pNSeg;
+        TCPIP_MAC_DATA_SEGMENT  *pSeg, *pNSeg;
 
         for( pSeg = pPkt->pDSeg; pSeg != 0; pSeg = pNSeg )
         {
             pNSeg = pSeg->next;
-            if( (pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0 )
+            if((pSeg->segFlags & TCPIP_MAC_SEG_FLAG_STATIC) == 0)
             {
-                TCPIP_HEAP_Free( pktMemH, pSeg );
+                TCPIP_HEAP_Free(pktMemH, pSeg);
             }
         }
 
-        TCPIP_HEAP_Free( pktMemH, pPkt );
+        TCPIP_HEAP_Free(pktMemH, pPkt);
     }
 }
 
-TCPIP_MAC_DATA_SEGMENT * _TCPIP_PKT_SegmentAlloc(
-    uint16_t                loadLen,
-    uint16_t                loadOffset,
-    TCPIP_MAC_SEGMENT_FLAGS flags
-    )
+TCPIP_MAC_DATA_SEGMENT* _TCPIP_PKT_SegmentAlloc(uint16_t loadLen, uint16_t loadOffset, TCPIP_MAC_SEGMENT_FLAGS flags)
 {
     TCPIP_MAC_DATA_SEGMENT* pSeg;
     uint16_t allocSize;
@@ -823,9 +782,11 @@ TCPIP_MAC_DATA_SEGMENT * _TCPIP_PKT_SegmentAlloc(
     }
 
     pSeg = (TCPIP_MAC_DATA_SEGMENT*)TCPIP_HEAP_Malloc(pktMemH, allocSize);
-    if( pSeg )
+
+    if(pSeg)
     {
         memset(pSeg, 0, sizeof(*pSeg));
+
         pSeg->segFlags = flags & (~TCPIP_MAC_SEG_FLAG_STATIC);
         if(loadLen != 0)
         {
@@ -1412,4 +1373,6 @@ void TCPIP_PKT_FlightLogReset(bool resetMasks)
 }
 
 #endif  //  (TCPIP_PACKET_LOG_ENABLE)
+
+
 
