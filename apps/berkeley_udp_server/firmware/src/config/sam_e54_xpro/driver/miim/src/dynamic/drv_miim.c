@@ -468,7 +468,7 @@ DRV_MIIM_RESULT DRV_MIIM_Setup(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp)
     _DRV_MIIM_SMIClockSet(ethphyId, pSetUp->hostClockFreq, pSetUp->maxBusFreq);
 
  
-    _DRV_MIIM_SETUP_PERAMBLE(ethphyId, pSetUp);
+    _DRV_MIIM_SETUP_PREAMBLE(ethphyId, pSetUp);
 
     _DRV_MIIM_SCAN_INCREMENT(ethphyId, pSetUp);
     
@@ -1112,7 +1112,7 @@ static void _DRV_MIIM_ReleaseOpDcpt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pO
 
     if(wasScan)
     {        
-		 _DRV_MIIM_SCAN_DIABLE(pMiimObj->ethphyId);
+		 _DRV_MIIM_SCAN_DISABLE(pMiimObj->ethphyId);
         pMiimObj->objFlags &= ~DRV_MIIM_OBJ_FLAG_IS_SCANNING;
     }
     

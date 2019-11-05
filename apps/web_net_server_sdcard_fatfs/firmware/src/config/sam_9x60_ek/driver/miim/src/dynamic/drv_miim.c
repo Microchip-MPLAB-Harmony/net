@@ -43,28 +43,29 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
 //DOM-IGNORE-END
+
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Include Files
 // *****************************************************************************
 // *****************************************************************************
+
 #include "driver/miim/src/drv_miim_local.h"
 #include "driver/miim/src/dynamic/drv_miim_mapping.h"
-// Felipe these need to be generated via ftl and replace the line above
-// based on interfacename (?)
-//  and the drv_miim_mapping_Xmac.h must be generated from ftl as well
-// #include "driver/miim/src/dynamic/drv_miim_mapping_gmac.h"
-// #include "driver/miim/src/dynamic/drv_miim_mapping_emac.h"
 
 #include "system/sys_time_h2_adapter.h"
 #include "system/debug/sys_debug.h"
 #include "system/console/sys_console.h"
 
+
+
 // Local Definitions
 //
 static DRV_MIIM_OBJ              gDrvMIIMObj[DRV_MIIM_INSTANCES_NUMBER];
+
 
 // local prototypes
 // debug
@@ -95,41 +96,29 @@ static void _MIIMDebugCond(bool cond, const char* message, int lineNo)
 #define _MIIMDebugCond(cond, message, lineNo)
 #endif  // (DRV_MIIM_DEBUG_LEVEL & DRV_MIIM_DEBUG_MASK_BASIC)
 
-static DRV_MIIM_RESULT          _DRV_MIIM_ScheduleOp(       DRV_HANDLE handle,
-                                                            DRV_MIIM_SCHEDULE_DATA * pSchedData
-                                                            );
-static void                     _DRV_MIIM_ProcessOp(        DRV_MIIM_OBJ * pMiimObj,
-                                                            DRV_MIIM_OP_DCPT * pOpDcpt
-                                                            );
-static DRV_MIIM_REPORT_ACT      _DRV_MIIM_ReportOp(         DRV_MIIM_OBJ * pMiimObj,
-                                                            DRV_MIIM_OP_DCPT * pOpDcpt
-                                                            );
-static DRV_MIIM_RESULT          _DRV_MIIM_OpResult(         DRV_MIIM_OP_DCPT * pOpDcpt,
-                                                            bool scanAck
-                                                            );
-static DRV_MIIM_OP_DCPT *       _DRV_MIIM_GetOpDcpt(        DRV_MIIM_CLIENT_DCPT * pClient,
-                                                            DRV_MIIM_OPERATION_HANDLE opHandle
-                                                            );
-static void                     _DRV_MIIM_ReleaseOpDcpt(    DRV_MIIM_OBJ * pMiimObj,
-                                                            DRV_MIIM_OP_DCPT * pOpDcpt,
-                                                            SINGLE_LIST * pRemList,
-                                                            DRV_MIIM_QUEUE_TYPE qType
-                                                            );
-static DRV_MIIM_CLIENT_DCPT *   _DRV_MIIM_ClientAllocate(   DRV_MIIM_OBJ * pMiimObj, int * pCliIx);
-static void                     _DRV_MIIM_ClientDeallocate( DRV_MIIM_CLIENT_DCPT * pClient);
-static void                     _DRV_MIIM_SMIClockSet(      uintptr_t ethphyId,
-                                                            uint32_t hostClock,
-                                                            uint32_t maxMIIMClock
-                                                            );
-static void                     _DRV_MIIM_PurgeClientOp(    DRV_MIIM_CLIENT_DCPT * pClient );
-static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_StartOp(         DRV_HANDLE handle,
-                                                            unsigned int rIx,
-                                                            unsigned int phyAdd,
-                                                            uint16_t opData,
-                                                            DRV_MIIM_OPERATION_FLAGS opFlags,
-                                                            DRV_MIIM_RESULT * pOpResult,
-                                                            DRV_MIIM_OP_TYPE opType
-                                                            );
+
+static DRV_MIIM_RESULT _DRV_MIIM_ScheduleOp(DRV_HANDLE handle, DRV_MIIM_SCHEDULE_DATA* pSchedData);
+
+static void _DRV_MIIM_ProcessOp( DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+
+static DRV_MIIM_REPORT_ACT _DRV_MIIM_ReportOp(DRV_MIIM_OBJ * pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt);
+
+static DRV_MIIM_RESULT _DRV_MIIM_OpResult(DRV_MIIM_OP_DCPT* pOpDcpt, bool scanAck);
+
+static DRV_MIIM_OP_DCPT* _DRV_MIIM_GetOpDcpt(DRV_MIIM_CLIENT_DCPT* pClient, DRV_MIIM_OPERATION_HANDLE opHandle);
+
+static void _DRV_MIIM_ReleaseOpDcpt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pOpDcpt, SINGLE_LIST* pRemList, DRV_MIIM_QUEUE_TYPE qType);
+
+static DRV_MIIM_CLIENT_DCPT* _DRV_MIIM_ClientAllocate( DRV_MIIM_OBJ* pMiimObj, int* pCliIx);
+
+static void _DRV_MIIM_ClientDeallocate( DRV_MIIM_CLIENT_DCPT* pClient);
+
+static void _DRV_MIIM_SMIClockSet(uintptr_t ethphyId, uint32_t hostClock, uint32_t maxMIIMClock );
+
+static void _DRV_MIIM_PurgeClientOp(DRV_MIIM_CLIENT_DCPT* pClient);
+
+static DRV_MIIM_OPERATION_HANDLE _DRV_MIIM_StartOp(DRV_HANDLE handle, unsigned int rIx, unsigned int phyAdd, uint16_t opData,
+                                                   DRV_MIIM_OPERATION_FLAGS opFlags, DRV_MIIM_RESULT* pOpResult, DRV_MIIM_OP_TYPE opType);
 
 // locks access to object lists and resources
 // between user threads and task thread
@@ -479,7 +468,7 @@ DRV_MIIM_RESULT DRV_MIIM_Setup(DRV_HANDLE  handle, const DRV_MIIM_SETUP* pSetUp)
     _DRV_MIIM_SMIClockSet(ethphyId, pSetUp->hostClockFreq, pSetUp->maxBusFreq);
 
  
-    _DRV_MIIM_SETUP_PERAMBLE(ethphyId, pSetUp);
+    _DRV_MIIM_SETUP_PREAMBLE(ethphyId, pSetUp);
 
     _DRV_MIIM_SCAN_INCREMENT(ethphyId, pSetUp);
     
@@ -1123,7 +1112,7 @@ static void _DRV_MIIM_ReleaseOpDcpt(DRV_MIIM_OBJ* pMiimObj, DRV_MIIM_OP_DCPT* pO
 
     if(wasScan)
     {        
-		 _DRV_MIIM_SCAN_DIABLE(pMiimObj->ethphyId);
+		 _DRV_MIIM_SCAN_DISABLE(pMiimObj->ethphyId);
         pMiimObj->objFlags &= ~DRV_MIIM_OBJ_FLAG_IS_SCANNING;
     }
     

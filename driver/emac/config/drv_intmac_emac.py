@@ -653,7 +653,7 @@ def instantiateComponent( macComponent ):
 
     # file drv_emac.h
     headerFile = macComponent.createFileSymbol( None, None )
-    headerFile.setSourcePath( basePathSrc + "drv_emac.h" )
+    headerFile.setSourcePath( basePath + "drv_emac.h" )
     headerFile.setOutputName( "drv_emac.h" )
     headerFile.setDestPath( basePath )
     headerFile.setProjectPath( prjPath )
