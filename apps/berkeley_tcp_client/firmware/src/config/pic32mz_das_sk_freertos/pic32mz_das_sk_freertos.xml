@@ -997,7 +997,7 @@
         </Combo>
         <Integer dnOrder="3" id="FREERTOS_MINIMAL_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1204"/>
+            <User dnOrder="0" value="4096"/>
           </Values>
         </Integer>
         <Integer dnOrder="4" id="FREERTOS_TOTAL_HEAP_SIZE">

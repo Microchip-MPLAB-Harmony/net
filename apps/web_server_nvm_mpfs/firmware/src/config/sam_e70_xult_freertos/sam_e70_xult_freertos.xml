@@ -4256,7 +4256,7 @@
         </Integer>
         <Integer dnOrder="1" id="NET_PRES_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="4096"/>
+            <User dnOrder="0" value="32768"/>
           </Values>
         </Integer>
       </Symbols>

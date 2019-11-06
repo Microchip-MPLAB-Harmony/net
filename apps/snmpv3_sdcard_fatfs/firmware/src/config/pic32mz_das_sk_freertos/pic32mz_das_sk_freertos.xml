@@ -3141,7 +3141,7 @@
         </Boolean>
         <Integer dnOrder="16" id="NET_PRES_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8192"/>
+            <User dnOrder="0" value="16384"/>
           </Values>
         </Integer>
       </Symbols>
