@@ -55,10 +55,10 @@ def instantiateComponent(netPresCommonComponent):
     
     # Net Pres Task Stack Size
     netPresTaskSize = netPresCommonComponent.createIntegerSymbol("NET_PRES_RTOS_STACK_SIZE", netPresRtosMenu)
-    netPresTaskSize.setLabel("Stack Size")
+    netPresTaskSize.setLabel("Stack Size (in bytes)")
     netPresTaskSize.setVisible(True)
     netPresTaskSize.setDescription("Net Pres Task Stack Size")
-    netPresTaskSize.setDefaultValue(1024)
+    netPresTaskSize.setDefaultValue(4096)
     netPresTaskSize.setDependencies(netPresRTOSStandaloneMenu, ["NET_PRES_RTOS"])
     
     # Net Pres Task Priority
