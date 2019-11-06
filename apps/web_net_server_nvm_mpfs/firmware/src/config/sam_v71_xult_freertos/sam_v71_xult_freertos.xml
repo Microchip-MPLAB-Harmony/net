@@ -4114,7 +4114,7 @@
         </Combo>
         <Integer dnOrder="3" id="FREERTOS_MINIMAL_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1028"/>
+            <User dnOrder="0" value="1024"/>
           </Values>
         </Integer>
         <Integer dnOrder="4" id="FREERTOS_TOTAL_HEAP_SIZE">
@@ -4548,7 +4548,7 @@
         </Menu>
         <Integer dnOrder="18" id="NET_PRES_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="4096"/>
+            <User dnOrder="0" value="32768"/>
           </Values>
         </Integer>
         <File dnOrder="19" id="NET_PRES_SYS_RTOS_TASK">
@@ -4653,7 +4653,7 @@
         </Integer>
         <Integer dnOrder="1" id="SYS_COMMAND_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1024"/>
+            <User dnOrder="0" value="4096"/>
           </Values>
         </Integer>
         <String dnOrder="2" id="SYS_CONSOLE_DEVICE">

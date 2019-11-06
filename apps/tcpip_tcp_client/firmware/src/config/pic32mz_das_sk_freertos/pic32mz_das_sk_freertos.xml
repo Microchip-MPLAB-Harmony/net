@@ -1162,7 +1162,7 @@
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="SYS_COMMAND_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1024"/>
+            <User dnOrder="0" value="4096"/>
           </Values>
         </Integer>
         <String dnOrder="1" id="SYS_CONSOLE_DEVICE">

@@ -1209,7 +1209,7 @@
         </Combo>
         <Integer dnOrder="4" id="FREERTOS_MINIMAL_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="128"/>
+            <User dnOrder="0" value="1024"/>
           </Values>
         </Integer>
         <Integer dnOrder="5" id="FREERTOS_TOTAL_HEAP_SIZE">
@@ -1499,7 +1499,7 @@
         </Integer>
         <Integer dnOrder="1" id="SYS_COMMAND_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="2560"/>
+            <User dnOrder="0" value="4096"/>
           </Values>
         </Integer>
         <String dnOrder="2" id="SYS_CONSOLE_DEVICE">

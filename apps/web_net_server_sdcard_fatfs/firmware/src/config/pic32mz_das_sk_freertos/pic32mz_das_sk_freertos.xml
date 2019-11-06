@@ -3342,7 +3342,7 @@
         </Menu>
         <Integer dnOrder="17" id="NET_PRES_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="8192"/>
+            <User dnOrder="0" value="32768"/>
           </Values>
         </Integer>
         <File dnOrder="18" id="NET_PRES_SYS_RTOS_TASK">
