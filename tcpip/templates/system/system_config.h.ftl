@@ -42,11 +42,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
 
-
-/*** TCP/IP Configuration ***/
-<#if HarmonyCore.SELECT_RTOS != "BareMetal">
+<#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
     <#lt>/* TCP/IP RTOS Configurations*/
-    <#lt>#define TCPIP_RTOS_STACK_SIZE           ${TCPIP_RTOS_TASK_STACK_SIZE}
+    <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS">
+        <#lt>#define TCPIP_RTOS_STACK_SIZE                ${TCPIP_RTOS_TASK_STACK_SIZE / 4}
+    <#else>
+        <#lt>#define TCPIP_RTOS_STACK_SIZE                ${TCPIP_RTOS_TASK_STACK_SIZE}
+    </#if>
     <#lt>#define TCPIP_RTOS_PRIORITY             ${TCPIP_RTOS_TASK_PRIORITY}
 </#if>
 

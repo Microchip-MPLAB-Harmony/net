@@ -123,10 +123,10 @@ def instantiateComponent(drvMiimComponent):
 
     # MIIM Driver Task Stack Size
     drvMiimDrvTaskSize = drvMiimComponent.createIntegerSymbol("DRV_MIIM_RTOS_STACK_SIZE", drvMiimRtosMenu)
-    drvMiimDrvTaskSize.setLabel("Stack Size")
+    drvMiimDrvTaskSize.setLabel("Stack Size (in bytes)")
     drvMiimDrvTaskSize.setVisible(True)
     drvMiimDrvTaskSize.setDescription("MIIM Driver Task Stack Size")
-    drvMiimDrvTaskSize.setDefaultValue(1024)
+    drvMiimDrvTaskSize.setDefaultValue(4096)
     drvMiimDrvTaskSize.setDependencies(drvMiimRTOSStandaloneMenu, ["DRV_MIIM_RTOS"])
     
 

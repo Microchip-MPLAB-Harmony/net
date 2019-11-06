@@ -186,10 +186,10 @@ def instantiateComponent(tcpipStackComponent):
     
     # RTOS Task Stack Size
     tcpipStackTaskSize = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_STACK_SIZE", tcpipStackRtosMenu)
-    tcpipStackTaskSize.setLabel("Stack Size")
+    tcpipStackTaskSize.setLabel("Stack Size (in bytes)")
     tcpipStackTaskSize.setVisible(True)
     tcpipStackTaskSize.setDescription("Rtos Task Stack Size")
-    tcpipStackTaskSize.setDefaultValue(1024)
+    tcpipStackTaskSize.setDefaultValue(4096)
     tcpipStackTaskSize.setDependencies(tcpipStackRTOSStandaloneMenu, ["TCPIP_STACK_RTOS"])
     
     # RTOS Task Priority
