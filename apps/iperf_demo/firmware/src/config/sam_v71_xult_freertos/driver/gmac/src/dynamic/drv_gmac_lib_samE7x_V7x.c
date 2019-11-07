@@ -79,8 +79,11 @@ typedef struct
 #define GMAC_RX_DYNAMIC_BUFFERS	0
 
 // place the descriptors in an uncached memory region
-__attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000))) __attribute__((keep))DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
-
+#if defined(__IAR_SYSTEMS_ICC__)
+  static __attribute__((__aligned__(8)))  DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array @0x2045F000;
+#elif defined(__GNUC__)
+  static __attribute__((__aligned__(8))) __attribute__((space(data),address(0x2045F000))) DRV_PIC32CGMAC_HW_DCPT_ARRAY gmac_dcpt_array;
+#endif
 /****************************************************************************
  * Function:        DRV_PIC32CGMAC_LibInit
  * Summary: Initialize GMAC peripheral registers
@@ -622,7 +625,7 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxGetPacket(DRV_GMAC_DRIVER * pMACDrv, T
 	if (frameState == GMAC_RX_VALID_FRAME_DETECTED_STATE)
 	{		
 		//pass the packet status to upper layer
-		*pRxStat = (DRV_GMAC_RXDCPT_STATUS)(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_state.endIndex].rx_desc_status.val);		
+		*pRxStat = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_state.endIndex].rx_desc_status;		
 		//number of buffers to return
 		*pnBuffs = rx_state.buffer_count;		
 		// extract Rx packet and pass it to upper layer

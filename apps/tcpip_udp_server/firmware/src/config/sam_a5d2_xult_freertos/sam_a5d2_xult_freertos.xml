@@ -3038,7 +3038,7 @@
         </Integer>
         <Integer dnOrder="1" id="SYS_COMMAND_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="4096"/>
+            <User dnOrder="0" value="10240"/>
           </Values>
         </Integer>
         <String dnOrder="2" id="SYS_CONSOLE_DEVICE">

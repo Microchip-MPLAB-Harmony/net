@@ -225,6 +225,10 @@ typedef struct _tag_TCPIP_NET_IF
     PROTECTED_SINGLE_LIST         registeredClients;      // stack notification clients
                                                 // ((__aligned__)) !!!
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION) && (TCPIP_STACK_USER_NOTIFICATION != 0)
+#if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+    TCPIP_STACK_PACKET_HANDLER      pktHandler;         // external packet handler
+    const void*                     pktHandlerParam;    // user parameter
+#endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
                                                 // ((__aligned__)) !!!
     uint16_t            netIfIx;                // index of this entry in the tcpipNetIf table.
                                                 // netIfIx = (this - &tcpipNetIf[0])/sizeof(TCPIP_NET_IF)

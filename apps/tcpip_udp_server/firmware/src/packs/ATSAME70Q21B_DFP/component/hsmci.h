@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-01T08:48:30Z */
+/* file generated from device description version 2019-08-30T06:09:50Z */
 #ifndef _SAME70_HSMCI_COMPONENT_H_
 #define _SAME70_HSMCI_COMPONENT_H_
 

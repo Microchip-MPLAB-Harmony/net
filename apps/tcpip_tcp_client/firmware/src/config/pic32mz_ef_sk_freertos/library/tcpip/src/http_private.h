@@ -144,7 +144,7 @@ typedef struct
 #endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
     
     TCPIP_TCP_SIGNAL_HANDLE socketSignal;           // socket signal handler
-    char            fileName[SYS_FS_MAX_PATH];      // file name storage
+    char            fileName[SYS_FS_FILE_NAME_LEN + 1]; // file name storage
 
 } HTTP_CONN;
 

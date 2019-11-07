@@ -5,8 +5,6 @@
         <name>ATSAMA5D27</name>
     </device>
     <includePath>
-        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfcrypt_support</path>
-        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl</path>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library</path>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library\tcpip\src</path>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library\tcpip\src\common</path>
@@ -18,8 +16,6 @@
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </includePath>
     <asmIncludePath>
-        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfcrypt_support</path>
-        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl</path>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library</path>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library\tcpip\src</path>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library\tcpip\src\common</path>
@@ -31,17 +27,6 @@
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
     </asmIncludePath>
     <defines>
-        <defines>H</defines>
-        <defines>A</defines>
-        <defines>V</defines>
-        <defines>E</defines>
-        <defines>_</defines>
-        <defines>C</defines>
-        <defines>O</defines>
-        <defines>N</defines>
-        <defines>F</defines>
-        <defines>I</defines>
-        <defines>G</defines>
         <defines>__FPU_PRESENT=1</defines>
     </defines>
     <linkerFile>
@@ -50,7 +35,6 @@
     </linkerFile>
     <files relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra">
         <group name="Header Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra">
-            <path>\config.h</path>
             <path>\..\..\third_party\wolfssl\wolfssl\callbacks.h</path>
             <path>\..\..\third_party\wolfssl\wolfssl\certs_test.h</path>
             <path>\..\..\third_party\wolfssl\wolfssl\crl.h</path>
@@ -63,49 +47,6 @@
             <path>\..\..\third_party\wolfssl\wolfssl\test.h</path>
             <path>\..\..\third_party\wolfssl\wolfssl\version.h</path>
             <path>\..\..\third_party\wolfssl\wolfssl\wolfio.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\aes.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\arc4.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\asn.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\asn_public.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\camellia.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\chacha.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\coding.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\compress.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\cpuid.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\des3.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\dh.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\dsa.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\ecc.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\error-crypt.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\hash.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\hc128.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\hmac.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\integer.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\logging.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\md2.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\md4.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\md5.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\memory.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\misc.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\pkcs7.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\pkcs12.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\mpi_class.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\mpi_superclass.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\pwdbased.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\rabbit.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\random.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\ripemd.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\rsa.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\settings.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\sha.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\sha256.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\sha512.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\tfm.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\types.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\visibility.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\wc_encrypt.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\wc_port.h</path>
-            <path>\..\..\third_party\wolfcrypt_support\wolfssl\wolfcrypt\wolfmath.h</path>
             <path>\peripheral\tc\plib_tc0.h</path>
             <path>\peripheral\tc\plib_tc_common.h</path>
             <path>\system\time\sys_time.h</path>
@@ -224,6 +165,9 @@
             <path>\library\tcpip\ftp.h</path>
             <path>\library\tcpip\src\ftp_manager.h</path>
             <path>\library\tcpip\src\ftp_private.h</path>
+            <path>\library\tcpip\ftpc.h</path>
+            <path>\library\tcpip\src\ftpc_manager.h</path>
+            <path>\library\tcpip\src\ftpc_private.h</path>
             <path>\library\tcpip\icmp.h</path>
             <path>\library\tcpip\nbns.h</path>
             <path>\library\tcpip\src\nbns_manager.h</path>
@@ -286,7 +230,7 @@
             <path>\library\tcpip\src\lldp_private.h</path>
             <path>\library\tcpip\src\lldp_tlv.h</path>
             <path>\library\tcpip\tcpip_ethernet.h</path>
-            <path>\library\tcpip\src\common\sys_fs_wrapper.h</path>
+            <path>\library\tcpip\src\common\sys_fs_shell.h</path>
             <path>\system\sys_clk_h2_adapter.h</path>
             <path>\system\sys_time_h2_adapter.h</path>
             <path>\system\sys_random_h2_adapter.h</path>
@@ -322,7 +266,6 @@
             <path>\peripheral\pio\plib_pio.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
             <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>
@@ -340,107 +283,12 @@
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
             <path>\crypto\crypto.h</path>
-            <path>\crypto\src\aes.h</path>
-            <path>\crypto\src\arc4.h</path>
-            <path>\crypto\src\asn.h</path>
-            <path>\crypto\src\asn_public.h</path>
-            <path>\crypto\src\async.h</path>
-            <path>\crypto\src\camellia.h</path>
-            <path>\crypto\src\certs_test.h</path>
-            <path>\crypto\src\chacha.h</path>
-            <path>\crypto\src\chacha20_poly1305.h</path>
-            <path>\crypto\src\cmac.h</path>
-            <path>\crypto\src\coding.h</path>
-            <path>\crypto\src\compress.h</path>
-            <path>\crypto\src\crypt_rng_hw.h</path>
-            <path>\crypto\src\curve25519.h</path>
-            <path>\crypto\src\des3.h</path>
-            <path>\crypto\src\dh.h</path>
-            <path>\crypto\src\crypt_sha_sam11105.h</path>
-            <path>\crypto\src\crypt_sha_sam6156.h</path>
-            <path>\crypto\src\crypt_sha_hw.h</path>
-            <path>\crypto\src\crypt_aes_hw.h</path>
-            <path>\crypto\src\crypt_aes_sam6149.h</path>
-            <path>\crypto\src\crypt_aes_hwInt.h</path>
-            <path>\crypto\src\crypt_sha1_hw.h</path>
-            <path>\crypto\src\crypt_sha256_hw.h</path>
-            <path>\crypto\src\crypt_sha224_hw.h</path>
-            <path>\crypto\src\crypt_aes_u2238.h</path>
-            <path>\crypto\src\crypt_sha384_hw.h</path>
-            <path>\crypto\src\crypt_sha512_hw.h</path>
-            <path>\crypto\src\crypt_tdes_hw.h</path>
-            <path>\crypto\src\crypt_tdes_sam6150.h</path>
-            <path>\crypto\src\crypt_tdes_hwInt.h</path>
-            <path>\crypto\src\dsa.h</path>
-            <path>\crypto\src\ecc.h</path>
-            <path>\crypto\src\ed25519.h</path>
-            <path>\crypto\src\error-crypt.h</path>
-            <path>\crypto\src\fe_operations.h</path>
-            <path>\crypto\src\pic32mz-crypt.h</path>
-            <path>\crypto\src\fips_test.h</path>
-            <path>\crypto\src\ge_operations.h</path>
-            <path>\crypto\src\hash.h</path>
-            <path>\crypto\src\hc128.h</path>
-            <path>\crypto\src\hmac.h</path>
-            <path>\crypto\src\idea.h</path>
-            <path>\crypto\src\integer.h</path>
-            <path>\crypto\src\logging.h</path>
-            <path>\crypto\src\md2.h</path>
-            <path>\crypto\src\md4.h</path>
-            <path>\crypto\src\md5.h</path>
-            <path>\crypto\src\mem_track.h</path>
-            <path>\crypto\src\memory.h</path>
-            <path>\crypto\src\misc.h</path>
-            <path>\crypto\src\mpi_class.h</path>
-            <path>\crypto\src\mpi_superclass.h</path>
-            <path>\crypto\src\pkcs11.h</path>
-            <path>\crypto\src\pkcs12.h</path>
-            <path>\crypto\src\pkcs7.h</path>
-            <path>\crypto\src\poly1305.h</path>
-            <path>\crypto\src\pwdbased.h</path>
-            <path>\crypto\src\rabbit.h</path>
-            <path>\crypto\src\random.h</path>
-            <path>\crypto\src\ripemd.h</path>
-            <path>\crypto\src\rsa.h</path>
-            <path>\crypto\src\selftest.h</path>
-            <path>\crypto\src\settings.h</path>
-            <path>\crypto\src\sha.h</path>
-            <path>\crypto\src\sha256.h</path>
-            <path>\crypto\src\sha3.h</path>
-            <path>\crypto\src\sha512.h</path>
-            <path>\crypto\src\signature.h</path>
-            <path>\crypto\src\sniffer.h</path>
-            <path>\crypto\src\sniffer_error.h</path>
-            <path>\crypto\src\srp.h</path>
-            <path>\crypto\src\ssl.h</path>
-            <path>\crypto\src\tfm.h</path>
-            <path>\crypto\src\types.h</path>
-            <path>\crypto\src\version.h</path>
-            <path>\crypto\src\visibility.h</path>
-            <path>\crypto\src\wc_encrypt.h</path>
-            <path>\crypto\src\wc_pkcs11.h</path>
-            <path>\crypto\src\wc_port.h</path>
-            <path>\crypto\src\wolfevent.h</path>
-            <path>\crypto\src\wolfio.h</path>
-            <path>\crypto\src\wolfmath.h</path>
-            <path>\crypto\src\zlib-1.2.7\crc32.h</path>
-            <path>\crypto\src\zlib-1.2.7\deflate.h</path>
-            <path>\crypto\src\zlib-1.2.7\inffast.h</path>
-            <path>\crypto\src\zlib-1.2.7\inffixed.h</path>
-            <path>\crypto\src\zlib-1.2.7\inflate.h</path>
-            <path>\crypto\src\zlib-1.2.7\inftrees.h</path>
-            <path>\crypto\src\zlib-1.2.7\trees.h</path>
-            <path>\crypto\src\zlib-1.2.7\zconf.h</path>
-            <path>\crypto\src\zlib-1.2.7\zutil.h</path>
-            <path>\crypto\src\zlib-1.2.7\zlib.h</path>
-            <path>\crypto\src\zlib-1.2.7\gzguts.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra">
             <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\icmp.c</path>
             <path>\library\tcpip\src\nbns.c</path>
             <path>\..\..\third_party\wolfssl\src\crl.c</path>
-            <path>\..\..\third_party\wolfssl\src\internal.c</path>
             <path>\..\..\third_party\wolfssl\src\keys.c</path>
             <path>\..\..\third_party\wolfssl\src\ocsp.c</path>
             <path>\..\..\third_party\wolfssl\src\sniffer.c</path>
@@ -448,6 +296,7 @@
             <path>\..\..\third_party\wolfssl\src\tls.c</path>
             <path>\..\..\third_party\wolfssl\src\tls13.c</path>
             <path>\..\..\third_party\wolfssl\src\wolfio.c</path>
+            <path>\..\..\third_party\wolfssl\src\internal.c</path>
             <path>\library\tcpip\src\tcp.c</path>
             <path>\library\tcpip\src\dhcp.c</path>
             <path>\library\tcpip\src\arp.c</path>
@@ -504,77 +353,6 @@
             <path>\system\console\src\sys_console_uart_definitions.h</path>
             <path>\system\console\src\sys_console_uart.c</path>
             <path>\crypto\src\crypto.c</path>
-            <path>\crypto\src\aes.c</path>
-            <path>\crypto\src\arc4.c</path>
-            <path>\crypto\src\asm.c</path>
-            <path>\crypto\src\asn.c</path>
-            <path>\crypto\src\async.c</path>
-            <path>\crypto\src\camellia.c</path>
-            <path>\crypto\src\chacha.c</path>
-            <path>\crypto\src\chacha20_poly1305.c</path>
-            <path>\crypto\src\cmac.c</path>
-            <path>\crypto\src\coding.c</path>
-            <path>\crypto\src\compress.c</path>
-            <path>\crypto\src\curve25519.c</path>
-            <path>\crypto\src\dh.c</path>
-            <path>\crypto\src\dsa.c</path>
-            <path>\crypto\src\ed25519.c</path>
-            <path>\crypto\src\error.c</path>
-            <path>\crypto\src\fe_low_mem.c</path>
-            <path>\crypto\src\fe_operations.c</path>
-            <path>\crypto\src\ge_low_mem.c</path>
-            <path>\crypto\src\ge_operations.c</path>
-            <path>\crypto\src\hash.c</path>
-            <path>\crypto\src\hc128.c</path>
-            <path>\crypto\src\hmac.c</path>
-            <path>\crypto\src\idea.c</path>
-            <path>\crypto\src\integer.c</path>
-            <path>\crypto\src\logging.c</path>
-            <path>\crypto\src\md2.c</path>
-            <path>\crypto\src\md4.c</path>
-            <path>\crypto\src\memory.c</path>
-            <path>\crypto\src\misc.c</path>
-            <path>\crypto\src\pkcs12.c</path>
-            <path>\crypto\src\pkcs7.c</path>
-            <path>\crypto\src\poly1305.c</path>
-            <path>\crypto\src\pwdbased.c</path>
-            <path>\crypto\src\rabbit.c</path>
-            <path>\crypto\src\random.c</path>
-            <path>\crypto\src\ripemd.c</path>
-            <path>\crypto\src\sha.c</path>
-            <path>\crypto\src\sha256.c</path>
-            <path>\crypto\src\sha3.c</path>
-            <path>\crypto\src\signature.c</path>
-            <path>\crypto\src\sha512.c</path>
-            <path>\crypto\src\srp.c</path>
-            <path>\crypto\src\tfm.c</path>
-            <path>\crypto\src\wc_encrypt.c</path>
-            <path>\crypto\src\wc_pkcs11.c</path>
-            <path>\crypto\src\wc_port.c</path>
-            <path>\crypto\src\wolfevent.c</path>
-            <path>\crypto\src\wolfmath.c</path>
-            <path>\crypto\src\des3.c</path>
-            <path>\crypto\src\md5.c</path>
-            <path>\crypto\src\zlib-1.2.7\adler32.c</path>
-            <path>\crypto\src\zlib-1.2.7\crc32.c</path>
-            <path>\crypto\src\zlib-1.2.7\deflate.c</path>
-            <path>\crypto\src\zlib-1.2.7\inflate.c</path>
-            <path>\crypto\src\zlib-1.2.7\trees.c</path>
-            <path>\crypto\src\zlib-1.2.7\zutil.c</path>
-            <path>\crypto\src\zlib-1.2.7\inftrees.c</path>
-            <path>\crypto\src\zlib-1.2.7\inffast.c</path>
-            <path>\crypto\src\crypt_rng_sam6334.c</path>
-            <path>\crypto\src\crypt_sha1_sam6156.c</path>
-            <path>\crypto\src\crypt_sha_sam6156.c</path>
-            <path>\crypto\src\crypt_sha224_sam6156.c</path>
-            <path>\crypto\src\crypt_sha256_sam6156.c</path>
-            <path>\crypto\src\crypt_sha384_sam6156.c</path>
-            <path>\crypto\src\crypt_sha512_sam6156.c</path>
-            <path>\crypto\src\crypt_aes_sam6149.c</path>
-            <path>\crypto\src\crypt_tdes_sam6150.c</path>
-            <path>\crypto\src\rsa.c</path>
-            <path>\crypto\src\ecc.c</path>
-            <path>\crypto\src\ecc_fp.c</path>
         </group>
     </files>
 </iarProjectConnection>

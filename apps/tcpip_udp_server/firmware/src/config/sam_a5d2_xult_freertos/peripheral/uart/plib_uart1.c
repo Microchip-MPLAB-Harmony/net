@@ -77,8 +77,6 @@ void static UART1_ISR_RX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
 void static UART1_ISR_TX_Handler( void )
@@ -107,8 +105,6 @@ void static UART1_ISR_TX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
 void UART1_InterruptHandler( void )
@@ -144,8 +140,6 @@ void UART1_InterruptHandler( void )
     {
         UART1_ISR_TX_Handler();
     }
-
-    return;
 }
 
 
@@ -153,7 +147,7 @@ void static UART1_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    UART1_REGS->UART_CR|= UART_CR_RSTSTA_Msk;
+    UART1_REGS->UART_CR = UART_CR_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
     while( UART_SR_RXRDY_Msk == (UART1_REGS->UART_SR& UART_SR_RXRDY_Msk) )
@@ -163,8 +157,6 @@ void static UART1_ErrorClear( void )
 
     /* Ignore the warning */
     (void)dummyData;
-
-    return;
 }
 
 void UART1_Initialize( void )
@@ -192,8 +184,6 @@ void UART1_Initialize( void )
     uart1Obj.txProcessedSize = 0;
     uart1Obj.txBusyStatus = false;
     uart1Obj.txCallback = NULL;
-
-    return;
 }
 
 UART_ERROR UART1_ErrorGet( void )
@@ -234,15 +224,19 @@ bool UART1_SerialSetup( UART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
         /* Calculate BRG value */
         brgVal = srcClkFreq / (16 * baud);
 
-        /* Configure UART1 mode */
-        uartMode = UART1_REGS->UART_MR;
-        uartMode &= ~UART_MR_PAR_Msk;
-        UART1_REGS->UART_MR = uartMode | setup->parity ;
+        /* If the target baud rate is acheivable using this clock */
+        if (brgVal <= 65535)
+        {
+            /* Configure UART1 mode */
+            uartMode = UART1_REGS->UART_MR;
+            uartMode &= ~UART_MR_PAR_Msk;
+            UART1_REGS->UART_MR = uartMode | setup->parity ;
 
-        /* Configure UART1 Baud Rate */
-        UART1_REGS->UART_BRGR = UART_BRGR_CD(brgVal);
+            /* Configure UART1 Baud Rate */
+            UART1_REGS->UART_BRGR = UART_BRGR_CD(brgVal);
 
-        status = true;
+            status = true;
+        }
     }
 
     return status;

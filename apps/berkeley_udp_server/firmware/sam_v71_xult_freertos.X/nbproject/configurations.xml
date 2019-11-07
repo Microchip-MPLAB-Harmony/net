@@ -28,10 +28,7 @@
               <itemPath>../src/config/sam_v71_xult_freertos/driver/gmac/drv_gmac.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult_freertos/driver/miim/config/drv_miim_config.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="src" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult_freertos/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
@@ -42,13 +39,16 @@
             <itemPath>../src/config/sam_v71_xult_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="library" projectFiles="true">
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
+                  <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                   <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ndp_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ndp_private.h</itemPath>
@@ -77,6 +77,8 @@
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/telnet_manager.h</itemPath>
@@ -118,6 +120,7 @@
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/lldp_private.h</itemPath>
                 <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/src/lldp_tlv.h</itemPath>
               </logicalFolder>
+              <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/tcpip_common_ports.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/tcpip_mac.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/tcpip_mac_object.h</itemPath>
@@ -140,6 +143,7 @@
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/ddns.h</itemPath>
@@ -163,7 +167,7 @@
               <itemPath>../src/config/sam_v71_xult_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
@@ -177,7 +181,7 @@
               <itemPath>../src/config/sam_v71_xult_freertos/net_pres/pres/net_pres_enc_glue.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
@@ -203,7 +207,7 @@
               <itemPath>../src/config/sam_v71_xult_freertos/peripheral/usart/plib_usart1.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="system" projectFiles="true">
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult_freertos/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
@@ -280,7 +284,7 @@
         <itemPath>../src/config/sam_v71_xult_freertos/osal/osal_freertos.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="packs" projectFiles="true">
-        <logicalFolder name="f1" displayName="ATSAMV71Q21B_DFP" projectFiles="true">
+        <logicalFolder name="f2" displayName="ATSAMV71Q21B_DFP" projectFiles="true">
           <logicalFolder name="f1" displayName="component" projectFiles="true">
             <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/acc.h</itemPath>
             <itemPath>../src/packs/ATSAMV71Q21B_DFP/component/aes.h</itemPath>
@@ -326,13 +330,19 @@
           <itemPath>../src/packs/ATSAMV71Q21B_DFP/device.h</itemPath>
           <itemPath>../src/packs/ATSAMV71Q21B_DFP/atsamv71q21b.h</itemPath>
         </logicalFolder>
-        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
+        <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
@@ -351,12 +361,12 @@
       </logicalFolder>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
+    <logicalFolder name="f2" displayName="Important Files" projectFiles="true">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
+    <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
     </logicalFolder>
-    <logicalFolder name="f3" displayName="Source Files" projectFiles="true">
+    <logicalFolder name="f4" displayName="Source Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="sam_v71_xult_freertos"
@@ -494,7 +504,7 @@
               </logicalFolder>
             </logicalFolder>
             <logicalFolder name="f1" displayName="MemMang" projectFiles="true">
-              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_1.c</itemPath>
+              <itemPath>../src/third_party/rtos/FreeRTOS/Source/portable/MemMang/heap_3.c</itemPath>
             </logicalFolder>
           </logicalFolder>
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/croutine.c</itemPath>
@@ -530,8 +540,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="4.0.27"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="4.0.39"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -651,7 +661,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="102400"/>
+        <property key="heap-size" value="120960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

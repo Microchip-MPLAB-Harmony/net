@@ -24,7 +24,7 @@
 	authentication and privacy passwords. Instead could be configured with the 
 	respective localized keys of the password. Microchip SNMPv3 agent is 
 	provided with the password information in the database for the 
-	“Getting Started” and for understanding purpose only. It is recommended 
+	“Getting Started�? and for understanding purpose only. It is recommended 
 	that the SNMPv3 stack should be modified to restrict access to the password 
 	OIDs declared in the user data base.
 *******************************************************************************/
@@ -359,6 +359,16 @@ typedef struct
     TCPIP_SNMP_COMMUNITY_CONFIG *write_community_config; /* write-only Community configuration*/
     TCPIP_SNMPV3_USM_USER_CONFIG *usm_config; /* SNMPv3 USM configuration*/
     TCPIP_SNMPV3_TARGET_ENTRY_CONFIG *trap_target_config; /* SNMPv3 trap configuration*/
+    // The SNMP server will access snmp.bib file or other MIB files located under this top directory.
+    // No access is possible above this directory.
+    // As a good practice to follow, use something like: "/mnt_point/snmp/"
+    // to limit an external user access to this only directory in the file system
+    // when accessing files.
+    // NOTE: to allow access to the whole file system use the root directory:
+    // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
+    // But this usage should be discouraged because it gives SNMP Server access
+    // to all system files.
+    const char* mountPath;
 } TCPIP_SNMP_MODULE_CONFIG;
 
 // *****************************************************************************

@@ -54,9 +54,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "tcpip_ethernet.h"
 #include "driver/driver_common.h"
-#include "driver/ethphy/drv_ethphy.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -153,9 +151,9 @@ typedef enum
     TCPIP_MODULE_MAC_MRF24WN        = 0x1060,
     TCPIP_MODULE_MAC_MRF24WN_0      = 0x1060,   // alternate numbered name
 
-    // External WINC1500 Wi-Fi MAC: room for 16 WINC1500 devices
-    TCPIP_MODULE_MAC_WINC1500       = 0x1070,
-    TCPIP_MODULE_MAC_WINC1500_0     = 0x1070,   // alternate numbered name
+    // External WINC Wi-Fi MAC: room for 16 WINC devices
+    TCPIP_MODULE_MAC_WINC			= 0x1070,
+    TCPIP_MODULE_MAC_WINC_0			= 0x1070,   // alternate numbered name
 
     // External WILC1000 Wi-Fi MAC: room for 16 WILC1000 devices
     TCPIP_MODULE_MAC_WILC1000       = 0x1080,
@@ -165,157 +163,14 @@ typedef enum
     TCPIP_MODULE_MAC_PIC32WK        = 0x1090,
     TCPIP_MODULE_MAC_PIC32WK_0      = 0x1090,   // alternate numbered name
 
+    // Internal/Embedded EMAC of SAM9x60:
+    TCPIP_MODULE_MAC_SAM9X60        = 0x1100,   // instance base
+    TCPIP_MODULE_MAC_SAM9X60_0      = 0x1100,   // first mac instance
+    TCPIP_MODULE_MAC_SAM9X60_1      = 0x1101,   // second mac instance
+
     // External, non MCHP, MAC modules
     TCPIP_MODULE_MAC_EXTERNAL       = 0x4000,
 }TCPIP_MODULE_MAC_ID;
-
-// *****************************************************************************
-#if defined (__PIC32C__) || defined(__SAMA5D2__)
-/**
- * Configuration Structure for Queues in GMAC.
- */
-typedef struct
-{	
-	/** RX Descriptor count */
-	uint16_t nRxDescCnt;
-	/** TX Descriptor count */
-	uint16_t nTxDescCnt;	
-	/** TX buffer size */
-	uint16_t txBufferSize;
-	/** RX buffer size */
-	uint16_t rxBufferSize;
-	/** Queue Enable status */
-	uint8_t queueEnable;
-} TCPIP_MODULE_GMAC_QUEUE_CONFIG;
-
-/*  MAC Initialization Data
-
-  Summary:
-    Data that's passed to the MAC at initialization time.
-
-  Description:
-    This structure defines the MAC initialization data for the
-    PIC32 MAC/Ethernet controller.
-
-  Remarks:        
-    - Each supported MAC has its own specific init/configuration data
-*/
-
-typedef struct
-{
-	TCPIP_MAC_ADDR                  macAddress;
-	/* Configuration for each GMAC queues*/
-	TCPIP_MODULE_GMAC_QUEUE_CONFIG  gmac_queue_config[DRV_GMAC_NUMBER_OF_QUEUES];    
-
-    /*  Delay to wait after the lomk is coming up (milliseconds) */
-    /*  for insuring that the PHY is ready to transmit data. */
-    uint16_t                        linkInitDelay;
-
-    /*  flags to use for the ETH connection */
-    TCPIP_ETH_OPEN_FLAGS            ethFlags;
-
-    /* Ethernet module ID for this driver instance: a plib ETH Id value */
-    uintptr_t                       ethModuleId;
-
-    /* Non-volatile pointer to the PHY basic object associated with this MAC */
-    const struct DRV_ETHPHY_OBJECT_BASE_TYPE*   pPhyBase;   
-
-    /* Non-volatile pointer to the PHY initialization data */
-    const struct DRV_ETHPHY_INIT*   pPhyInit;   
-   
-}TCPIP_MODULE_MAC_PIC32C_CONFIG;
-#elif defined (__PIC32MZ__)
-/*  MAC Initialization Data
-
-  Summary:
-    Data that's passed to the MAC at initialization time.
-
-  Description:
-    This structure defines the MAC initialization data for the
-    PIC32 MAC/Ethernet controller.
-
-  Remarks:        
-    - Each supported MAC has its own specific init/configuration data
-*/
-
-typedef struct
-{
-    /*  number of TX descriptors */
-    uint16_t                        nTxDescriptors;
-
-    /*  size of the corresponding RX buffer */
-    uint16_t                        rxBuffSize;
-
-    /* Number of RX descriptors */
-    /* Has to be high enough to accommodate both dedicated and non-dedicated RX buffers */
-    uint16_t                        nRxDescriptors;
-
-    /* Number of MAC dedicated RX buffers */
-    /* These buffers/packets are owned by the MAC and are not returned to the packet pool */
-    /* They are allocated at MAC initialization time using pktAllocF */ 
-    /* and freed at MAC deinitialize time using pktFreeF */
-    /* Could be 0, if only not dedicated buffers are needed. */
-    /* For best performance usually it's best to have some dedicated buffers */
-    /* so as to minimize the run time allocations */
-    uint16_t                        nRxDedicatedBuffers;
-    
-    /* Number of MAC non dedicated RX buffers allocated at the MAC initialization pktAllocF */
-    /* Note that these buffers are allocated in addition of the nRxDedicatedBuffers */
-    /* Freed at run time using pktFreeF */
-    uint16_t                        nRxInitBuffers;
-
-    /* Minimum threshold for the buffer replenish process */
-    /* Whenever the number of RX scheduled buffers is <= than this threshold */
-    /* the MAC driver will allocate new non-dedicated buffers */
-    /* that will be freed at run time using pktFreeF */
-    /* Setting this value to 0 disables the buffer replenishing process */
-    uint16_t                        rxLowThreshold;
-
-    /* Number of RX buffers to allocate when below threshold condition is detected */
-    /* If 0, the MAC driver will allocate (scheduled buffers - rxThres) */
-    /* If !0, the MAC driver will allocate exactly rxLowFill buffers */
-    uint16_t                        rxLowFill;
-
-
-    /*  Delay to wait after the lomk is coming up (milliseconds) */
-    /*  for insuring that the PHY is ready to transmit data. */
-    uint16_t                        linkInitDelay;
-
-
-    /*  flags to use for the ETH connection */
-    TCPIP_ETH_OPEN_FLAGS            ethFlags;
-
-    /* Ethernet module ID for this driver instance: a plib ETH Id value */
-    uintptr_t                       ethModuleId;
-
-    /* Non-volatile pointer to the PHY basic object associated with this MAC */
-    const struct DRV_ETHPHY_OBJECT_BASE_TYPE*   pPhyBase;   
-
-    /* Non-volatile pointer to the PHY initialization data */
-    const struct DRV_ETHPHY_INIT*   pPhyInit;   
-    
-}TCPIP_MODULE_MAC_PIC32INT_CONFIG;
-#endif
-typedef struct
-{
-    void*   reserved;
-}TCPIP_MODULE_MAC_MRF24WN_CONFIG;
-
-typedef struct
-{
-    void*   reserved;
-}TCPIP_MODULE_MAC_WINC1500_CONFIG;
-
-typedef struct
-{
-    void*   reserved;
-}TCPIP_MODULE_MAC_WILC1000_CONFIG;
-
-typedef struct
-{
-    void*   reserved;
-}TCPIP_MODULE_MAC_PIC32WK_CONFIG;
-
 
 // *****************************************************************************
 /*  MAC Handle
@@ -362,7 +217,8 @@ typedef enum
     /* Segment carrying user payload */
     /* Higher level protocols (TCP, UDP, etc.) may use it */
     TCPIP_MAC_SEG_FLAG_USER_PAYLOAD     = 0x0008, 
-
+    /*  Ack is required and has not been performed */
+    TCPIP_MAC_SEG_FLAG_ACK_REQUIRED     = 0x0010,
     /*  User available segment flags. */
     TCPIP_MAC_SEG_FLAG_USER             = 0x0100, 
 
@@ -729,6 +585,8 @@ typedef enum
     /* TX: Packet was rejected by the IP layer */
     TCPIP_MAC_PKT_ACK_IP_REJECT_ERR     = -18,  
 
+    /* RX: packet was dropped because it was processed externally */
+    TCPIP_MAC_PKT_ACK_EXTERN           = -19,
 }TCPIP_MAC_PKT_ACK_RES;
 
 
@@ -1767,26 +1625,26 @@ typedef struct
 typedef struct
 {
     /*  number of OK RX packets */
-    int                 nRxOkPackets;
+    int     nRxOkPackets;
 
     /*  number of unacknowledged pending RX buffers in the driver queues. */
     /*  If each incoming packet fits within a RX buffer (the RX buffer is large enough) */
     /*  than this corresponds to the number of unacknowledged pending RX packets. */
     /*  Otherwise the number of packets is less than the pending buffers. */
-    int                 nRxPendBuffers;
+    int     nRxPendBuffers;
 
     /*  number of currently scheduled RX buffers in the driver queues. */
     /* These are available buffers, ready to receive data */
-    int                 nRxSchedBuffers;
+    int     nRxSchedBuffers;
 
     /*  number of RX packets with errors */
-    int                 nRxErrorPackets;
+    int     nRxErrorPackets;
 
     /*  number of RX fragmentation errors */
-    int                 nRxFragmentErrors;
+    int     nRxFragmentErrors;
 	
     /*  number of occurences of 'RX Buffer Not Available' */
-    int                 nRxBuffNotAvailable;
+    int    nRxBuffNotAvailable;
 
 }TCPIP_MAC_RX_STATISTICS;
 
@@ -1808,19 +1666,19 @@ typedef struct
 typedef struct
 {
     /*  number of OK transmitted packets */
-    int                 nTxOkPackets;
+    int     nTxOkPackets;
 
     /*  number of unacknowledged pending TX buffers in the driver queues. */
     /*  This is equal with pending TX packets when each packet */
     /*  is contained within a TX buffer. */
-    int                 nTxPendBuffers;
+    int     nTxPendBuffers;
 
     /*  number of packets that could not be transmitted */
-    int                 nTxErrorPackets;
+    int     nTxErrorPackets;
 
     /*  number of times the TX queue was full */
     /*  this may signal that the number of TX descriptors is too small */
-    int                 nTxQueueFull;
+    int     nTxQueueFull;
 
 }TCPIP_MAC_TX_STATISTICS;
 

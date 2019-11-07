@@ -936,8 +936,8 @@ uint16_t TCPIP_Helper_PacketChecksum(TCPIP_MAC_PACKET* pPkt, uint8_t* startAdd, 
     {
         chkBytes = (pSeg->segLoad + pSeg->segSize) - pChkBuff;
 
-        if(chkBytes > pSeg->segLen)
-        {
+        if( pSeg->segLen && (chkBytes > pSeg->segLen) )
+        {   // segLen must be non-zero to avoid an infinite loop
             chkBytes = pSeg->segLen;
         } 
 

@@ -439,7 +439,17 @@ bool    TCPIP_PKT_FlightLogTypeSet(TCPIP_PKT_LOG_TYPE logType, bool clrPersist);
 
 // clears all log
 // if clrPersist is true, it clears persistent entries too
+// Note: the operation clears only completed packets. Packets not yet acknowledged 
+// will not be removed from the log
 void    TCPIP_PKT_FlightLogClear(bool clrPersist);
+
+// resets the log
+// the operation will forcefully initialize the log and any previous data will be lost
+// if resetMasks is true, the current log masks are cleared too
+// otherwise just the log data is initialized
+// Note: this may result in losing some information for packets that are in traffic
+// at the time the reset is called
+void    TCPIP_PKT_FlightLogReset(bool resetMasks);
 
 #if defined(TCPIP_PACKET_ALLOCATION_TRACE_ENABLE)
 
