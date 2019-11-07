@@ -74,6 +74,18 @@ static int InitCount = 0;
 static OSAL_SEM_HANDLE_TYPE bsdSemaphore;
 static tcpipSignalHandle    bsdSignalHandle;
 
+// validates the socket and returns the pointer to the internal BSDSocket
+// returns 0 if error
+struct BSDSocket* _getBsdSocket(SOCKET s)
+{
+    if(s >= 0 && s < BSD_SOCKET_COUNT)
+    {
+        return BSDSocketArray + s;
+    }
+
+    return 0;
+}
+
 void _cfgBsdSocket(struct BSDSocket * socketInfo)
 {
     if (socketInfo->SocketID == NET_PRES_INVALID_SOCKET)
@@ -437,7 +449,6 @@ socket (int af, int type, int protocol)
   ***************************************************************************/
 int bind( SOCKET s, const struct sockaddr* name, int namelen )
 {
-    struct BSDSocket *socket;
     uint16_t lPort;
     IPV4_ADDR lAddr;
     lAddr.Val = 0;
@@ -449,12 +460,13 @@ int bind( SOCKET s, const struct sockaddr* name, int namelen )
     lAddr6.d[3] = 0;
 #endif
 
-    if (s >= BSD_SOCKET_COUNT) {
+	struct BSDSocket *socket = _getBsdSocket(s);
+
+    if (socket == 0)
+    {
         errno = EBADF;
         return SOCKET_ERROR;
     }
-
-    socket = &BSDSocketArray[s];
 
     if (socket->bsdState != SKT_CREATED) //only work with recently created socket
     {   
@@ -605,13 +617,12 @@ int listen( SOCKET s, int backlog )
     lclAddr6.d[3] = 0;
 #endif
     
-    if (s >= BSD_SOCKET_COUNT)
+    ps = _getBsdSocket(s);
+    if(ps == 0)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
-
-    ps = &BSDSocketArray[s];
 
     if (ps->SocketType != SOCK_STREAM)
     {
@@ -740,13 +751,13 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
     unsigned int sockCount;
     TCP_SOCKET hTCP;
 
-    if (s >= BSD_SOCKET_COUNT)
+    pListenSock = _getBsdSocket(s); /* Get the pointer to listening server socket */
+
+    if (pListenSock == 0)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
-
-    pListenSock = &BSDSocketArray[s]; /* Get the pointer to listening server socket */
 
     if (pListenSock->bsdState != SKT_BSD_LISTEN)
     {
@@ -862,7 +873,6 @@ SOCKET accept(SOCKET s, struct sockaddr* addr, int* addrlen)
   ***************************************************************************/
 int connect( SOCKET s, struct sockaddr* name, int namelen ) 
 {
-    struct BSDSocket *socket;
     struct sockaddr_in *addr;
     uint32_t remoteIP = 0;
     uint16_t remotePort = 0;    
@@ -881,15 +891,9 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
     remoteIP6.d[3] = 0;
     struct sockaddr_in6 * addr6;
 #endif
-    if (s >= BSD_SOCKET_COUNT) 
-    {
-        errno = EBADF;
-        return SOCKET_ERROR;
-    }
 
-    socket = &BSDSocketArray[s];
-
-    if (socket->bsdState < SKT_CREATED) 
+	struct BSDSocket *socket = _getBsdSocket(s);
+    if (socket == 0 || socket->bsdState < SKT_CREATED) 
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -1213,7 +1217,6 @@ int send( SOCKET s, const char* buf, int len, int flags )
   ***************************************************************************/
 int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr* to, int tolen )
 {
-    struct BSDSocket *socket;
     int size = SOCKET_ERROR;
     IPV4_ADDR remoteIp;
     remoteIp.Val = 0;
@@ -1228,16 +1231,9 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
     struct sockaddr_in6 local6;
 #endif
 
+	struct BSDSocket *socket = _getBsdSocket(s);
 
-    if (s >= BSD_SOCKET_COUNT)
-    {
-        errno = EBADF;
-        return SOCKET_ERROR;
-    }
-
-    socket = &BSDSocketArray[s];
-
-    if (socket->bsdState == SKT_CLOSED)
+    if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -1440,16 +1436,14 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
   ***************************************************************************/
 int recv( SOCKET s, char* buf, int len, int flags )
 {
-	struct BSDSocket *socket;
     int     nBytes;
 
-	if( s >= BSD_SOCKET_COUNT )
+	struct BSDSocket *socket = _getBsdSocket(s);
+	if( socket == 0 )
     {
         errno = EBADF;
 		return SOCKET_ERROR;
     }
-
-	socket = &BSDSocketArray[s];
 
 	if(socket->SocketType == SOCK_STREAM) //TCP
 	{
@@ -1549,7 +1543,6 @@ int recv( SOCKET s, char* buf, int len, int flags )
   ***************************************************************************/
 int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, int* fromlen )
 {
-    struct BSDSocket *socket;
     struct sockaddr_in *rem_addr = NULL;
 #if defined(TCPIP_STACK_USE_IPV6)
     struct sockaddr_in6 *rem_addr6 = NULL;
@@ -1557,13 +1550,13 @@ int recvfrom( SOCKET s, char* buf, int len, int flags, struct sockaddr* from, in
     TCP_SOCKET_INFO tcpSockInfo;
     int nBytes;
 
-    if (s >= BSD_SOCKET_COUNT)
+	struct BSDSocket *socket = _getBsdSocket(s);
+    if (socket == 0)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-    socket = &BSDSocketArray[s];
 #if defined(TCPIP_STACK_USE_IPV6)
     if (socket->addressFamily == AF_INET)
     {
@@ -1781,18 +1774,19 @@ int gethostname(char* name, int namelen)
 int closesocket( SOCKET s )
 {	
 	uint8_t i;
-	struct BSDSocket *socket;
 
-	if( s >= BSD_SOCKET_COUNT )
+	struct BSDSocket *socket = _getBsdSocket(s);
+
+    if (socket == 0)
     {
         errno = EBADF;
 		return SOCKET_ERROR;
     }
 
-	socket = &BSDSocketArray[s];
-
 	if(socket->bsdState == SKT_CLOSED)
+    {
 		return 0;	// Nothing to do, so return success
+    }
 
 	if(socket->SocketType == SOCK_STREAM)
 	{
@@ -1898,7 +1892,7 @@ static bool HandlePossibleTCPDisconnection(SOCKET s)
 	uint8_t i;
 	bool bSocketWasReset;
 
-	socket = &BSDSocketArray[s];
+	socket = BSDSocketArray + s;
 
 	// Nothing to do if disconnection has already been handled
 	if(socket->bsdState == SKT_DISCONNECTED)
@@ -2101,9 +2095,9 @@ int setsockopt(SOCKET s,
                const uint8_t *option_value,
                uint32_t option_length)
 {
-    struct BSDSocket *socket;
+	struct BSDSocket *socket = _getBsdSocket(s);
 
-    if (s >= BSD_SOCKET_COUNT || (socket = BSDSocketArray + s)->bsdState == SKT_CLOSED) 
+    if (socket == 0 || socket->bsdState == SKT_CLOSED) 
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -2344,9 +2338,9 @@ int getsockopt(SOCKET s,
                uint8_t *option_value,
                uint32_t *option_length)
 {
-    struct BSDSocket *socket;
+	struct BSDSocket *socket = _getBsdSocket(s);
 
-    if (s >= BSD_SOCKET_COUNT || (socket = BSDSocketArray + s)->bsdState == SKT_CLOSED) 
+    if (socket == 0 || socket->bsdState == SKT_CLOSED) 
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -2454,7 +2448,6 @@ struct hostent * gethostbyname(char *name)
 
 int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
 {
-	struct BSDSocket *socket;
     struct sockaddr_in *rem_addr;
 
     if(addrlen == 0)
@@ -2463,22 +2456,16 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
         return SOCKET_ERROR;
     }
 
-	if( s >= BSD_SOCKET_COUNT )
+	struct BSDSocket *socket = _getBsdSocket(s);
+    if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
     }
 
-	socket = BSDSocketArray + s;
 
 #if defined(TCPIP_STACK_USE_IPV6)
-    if (socket->bsdState == SKT_CLOSED || socket->addressFamily != AF_INET)
-    {
-        errno = EBADF;
-        return SOCKET_ERROR;
-    }
-#else
-    if (socket->bsdState == SKT_CLOSED)
+    if (socket->addressFamily != AF_INET)
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -2503,17 +2490,9 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen)
 
 int TCPIP_BSD_Socket(SOCKET s)
 {
-	struct BSDSocket *socket;
+	struct BSDSocket *socket = _getBsdSocket(s);
 
-	if( s >= BSD_SOCKET_COUNT )
-    {
-        errno = EBADF;
-        return SOCKET_ERROR;
-    }
-
-	socket = BSDSocketArray + s;
-
-    if (socket->bsdState == SKT_CLOSED)
+    if (socket == 0 || socket->bsdState == SKT_CLOSED)
     {
         errno = EBADF;
         return SOCKET_ERROR;
@@ -2522,6 +2501,19 @@ int TCPIP_BSD_Socket(SOCKET s)
 
     int16_t nativeSkt = NET_PRES_SocketGetTransportHandle(socket->SocketID);
     return nativeSkt < 0 ? SOCKET_ERROR : nativeSkt; 
+}
+
+int TCPIP_BSD_PresSocket(SOCKET s)
+{
+	struct BSDSocket *socket = _getBsdSocket(s);
+
+    if (socket == 0 || socket->bsdState == SKT_CLOSED)
+    {
+        errno = EBADF;
+        return SOCKET_ERROR;
+    }
+
+    return socket->SocketID;
 }
 
 typedef enum {
@@ -2913,15 +2905,16 @@ static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDL
 #if (__BERKELEY_DEBUG != 0)
 bool TCPIP_BSD_State(SOCKET s, BSD_SKT_INFO* pInfo)
 {
-    if( s >= BSD_SOCKET_COUNT )
+	struct BSDSocket *socket = _getBsdSocket(s);
+    if( socket == 0 )
     {
         return false;
     }
 
     if(pInfo)
     {
-        pInfo->bsdState = (BSDSocketArray + s)->bsdState;
-        pInfo->presSktId = (BSDSocketArray + s)->SocketID;
+        pInfo->bsdState = socket->bsdState;
+        pInfo->presSktId = socket->SocketID;
     }
 
     return true;

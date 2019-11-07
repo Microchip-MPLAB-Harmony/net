@@ -138,7 +138,6 @@ extern "C" {
 
 
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Middleware & Other Library Configuration
@@ -197,6 +196,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -261,6 +261,7 @@ extern "C" {
 
 
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -312,12 +313,11 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
 
-
-/*** TCP/IP Configuration ***/
 
 
 /*** TCPIP MAC Configuration ***/
@@ -429,6 +429,7 @@ extern "C" {
 #define TCPIP_UDP_USE_TX_CHECKSUM             			true
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 

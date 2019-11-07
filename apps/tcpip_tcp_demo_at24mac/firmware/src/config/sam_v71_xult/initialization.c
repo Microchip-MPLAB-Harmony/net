@@ -221,6 +221,7 @@ const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData =
 
 
 
+
 /*** ETH PHY Initialization Data ***/
 
 
@@ -317,8 +318,6 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 
 
 
-
-
 /*** DNS Client Initialization Data ***/
 const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 {
@@ -381,7 +380,6 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
 // MAC modules
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
-
 
 };
 

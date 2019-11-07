@@ -386,7 +386,7 @@ typedef enum
 #define TCPIP_STACK_IF_NAME_97J60           "97J60"
 #define TCPIP_STACK_IF_NAME_PIC32INT        "PIC32INT"
 #define TCPIP_STACK_IF_NAME_MRF24WN         "MRF24WN"
-#define TCPIP_STACK_IF_NAME_WINC1500        "WINC1500"
+#define TCPIP_STACK_IF_NAME_WINC	        "WINC"
 #define TCPIP_STACK_IF_NAME_WILC1000        "WILC1000"
 
 /* alias for unknown interface */
@@ -523,7 +523,7 @@ typedef struct
 {
     /* Pointer to the interface name; could be NULL. */
     /* Note: Usually it's been one of the TCPIP_STACK_IF_NAME_xxx symbols: */
-    /*        "ENCJ60", "ENCJ600", "97J60", "PIC32INT", "MRF24WN", "WINC1500", "WILC1000". */
+    /*        "ENCJ60", "ENCJ600", "97J60", "PIC32INT", "MRF24WN", "WINC", "WILC1000". */
     /*        However, the TCP/IP stack will assign an alias names for each interface */
     /*        (eth0, wlan0, etc. see TCPIP_STACK_IF_NAME_ALIAS_xxx), so this name is maintained */
     /*        for backward compatibility purposes only and will be eventually dropped. */

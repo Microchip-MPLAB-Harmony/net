@@ -67,7 +67,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* p
             uint16_t high;
         };
         uint32_t    w;
-    }vendorData = {};
+    }vendorData;
 
     uint16_t    phyReg = 0;
     uint16_t    miiConfPhase = 0;
@@ -187,7 +187,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
             uint16_t high;
         };
         uint32_t    w;
-    }vendorData = {};
+    }vendorData;
 
     uint16_t    phyReg = 0;
     uint16_t    mdixConfPhase = 0;

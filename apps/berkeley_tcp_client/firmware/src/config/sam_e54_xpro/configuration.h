@@ -99,7 +99,7 @@ extern "C" {
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_PRINT_BUFFER_SIZE          2560
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 
@@ -133,7 +133,6 @@ extern "C" {
 #define DRV_MIIM_COMMANDS   false
 #define DRV_MIIM_DRIVER_OBJECT              DRV_MIIM_OBJECT_BASE_Default
 #define DRV_MIIM_DRIVER_INDEX               DRV_MIIM_INDEX_0              
-
 
 
 
@@ -191,6 +190,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -284,6 +284,7 @@ extern "C" {
 
 
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -335,12 +336,11 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
 
-
-/*** TCP/IP Configuration ***/
 
 
 /*** TCPIP MAC Configuration ***/
@@ -412,6 +412,7 @@ extern "C" {
 #define TCPIP_UDP_USE_TX_CHECKSUM             			true
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 
