@@ -92,7 +92,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // private stack manager interface
 #include "tcpip/src/tcpip_manager_control.h"
 
-#include "tcpip/src/tcpip_announce_manager.h"
 #include "tcpip/src/ipv4_manager.h"
 #include "tcpip/src/icmp_manager.h"
 #include "tcpip/src/dhcp_manager.h"
@@ -102,6 +101,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_commands_manager.h"
 #include "tcpip/src/udp_manager.h"
 #include "tcpip/src/lldp_manager.h"
+#include "tcpip/src/iperf_manager.h"
 #include "tcpip/src/tcpip_packet.h"
 #include "tcpip/src/tcpip_helpers_private.h"
 #include "tcpip/src/oahash.h"

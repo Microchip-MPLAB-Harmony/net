@@ -116,16 +116,6 @@ static void GCLK0_Initialize(void)
     }
 }
 
-static void GCLK2_Initialize(void)
-{
-    GCLK_REGS->GCLK_GENCTRL[2] = GCLK_GENCTRL_DIV(48) | GCLK_GENCTRL_SRC(6) | GCLK_GENCTRL_GENEN_Msk;
-
-    while((GCLK_REGS->GCLK_SYNCBUSY & GCLK_SYNCBUSY_GENCTRL_GCLK2) == GCLK_SYNCBUSY_GENCTRL_GCLK2)
-    {
-        /* wait for the Generator 2 synchronization */
-    }
-}
-
 void CLOCK_Initialize (void)
 {
     /* Function to Initialize the Oscillators */
@@ -137,7 +127,6 @@ void CLOCK_Initialize (void)
     FDPLL0_Initialize();
     DFLL_Initialize();
     GCLK0_Initialize();
-    GCLK2_Initialize();
 
 
 

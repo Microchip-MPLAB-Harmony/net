@@ -704,7 +704,6 @@ typedef struct TCPIP_STACK_INIT
 #include "tcpip/dhcp.h"
 #include "tcpip/icmp.h"
 #include "tcpip/nbns.h"
-#include "tcpip/tcpip_announce.h"
 #include "tcpip/lldp.h"
 #include "tcpip/iperf.h"
 #include "tcpip/tcpip_commands.h"

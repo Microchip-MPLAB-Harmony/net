@@ -201,6 +201,10 @@ def tcpipAutoConfigIPv6Enable(symbol, event):
             Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_NDP", True, 2)
     else:
         res = Database.deactivateComponents(["tcpipIPv6"])
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv6") == True):
+            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_ICMPv6", False)
+        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_NDP") == True):
+            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_NDP", False)
     
 def tcpipAutoConfigIcmpv6Enable(symbol, event):
     tcpipAutoConfigNetworkGroup = Database.findGroup("NETWORK LAYER")
