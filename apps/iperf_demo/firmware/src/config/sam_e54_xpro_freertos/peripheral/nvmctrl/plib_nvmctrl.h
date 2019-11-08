@@ -67,9 +67,6 @@
 #define NVMCTRL_FLASH_PAGESIZE             (512U)
 #define NVMCTRL_FLASH_BLOCKSIZE            (8192U)
 
-#define NVMCTRL_START_ADDRESS              0x80000
-#define NVMCTRL_MEDIA_SIZE                 512
-#define NVMCTRL_ERASE_BUFFER_SIZE          8192
 
 
 /* NVM supports four write modes */
@@ -89,11 +86,11 @@ bool NVMCTRL_Read( uint32_t *data, uint32_t length, uint32_t address );
 
 void NVMCTRL_SetWriteMode(NVMCTRL_WRITEMODE mode);
 
-bool NVMCTRL_QuadWordWrite(uint32_t *data, const uint32_t address);
+bool NVMCTRL_QuadWordWrite(const uint32_t *data, const uint32_t address);
 
-bool NVMCTRL_DoubleWordWrite(uint32_t *data, const uint32_t address);
+bool NVMCTRL_DoubleWordWrite(const uint32_t *data, const uint32_t address);
 
-bool NVMCTRL_PageWrite( uint32_t* data, uint32_t address );
+bool NVMCTRL_PageWrite( const uint32_t* data, uint32_t address );
 
 bool NVMCTRL_BlockErase( uint32_t address );
 
