@@ -2276,9 +2276,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_v71_xult_iar\driver\miim\drv_miim.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_v71_xult_iar\driver\miim\config\drv_miim_config.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_v71_xult_iar\driver\miim\src\drv_miim_local.h</name>
             </file>
             <file>

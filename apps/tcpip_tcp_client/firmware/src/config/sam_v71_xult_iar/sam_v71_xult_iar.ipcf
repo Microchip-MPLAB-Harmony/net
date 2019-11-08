@@ -229,7 +229,6 @@
             <path>\peripheral\mpu\plib_mpu.h</path>
             <path>\peripheral\mpu\plib_mpu_local.h</path>
             <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\bsp\bsp.h</path>

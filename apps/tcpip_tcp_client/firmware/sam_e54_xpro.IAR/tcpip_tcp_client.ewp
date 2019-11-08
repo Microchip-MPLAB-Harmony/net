@@ -657,7 +657,7 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
@@ -665,7 +665,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>tcpip_tcp_client.hex</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -673,7 +673,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -2280,9 +2280,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\driver\miim\drv_miim.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\driver\miim\config\drv_miim_config.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\driver\miim\src\drv_miim_local.h</name>

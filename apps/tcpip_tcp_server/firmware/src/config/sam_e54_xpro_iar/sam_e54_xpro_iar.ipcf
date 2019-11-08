@@ -235,7 +235,6 @@
             <path>\peripheral\nvic\plib_nvic.h</path>
             <path>\peripheral\cmcc\plib_cmcc.h</path>
             <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>
