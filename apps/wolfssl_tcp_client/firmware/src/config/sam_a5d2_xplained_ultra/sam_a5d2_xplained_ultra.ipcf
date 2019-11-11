@@ -14,6 +14,8 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl\wolfssl</path>
     </includePath>
     <asmIncludePath>
         <path>$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra\library</path>
@@ -25,9 +27,27 @@
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS\CMSIS\Core_A\Include</path>
         <path>$PROJ_DIR$\..\..\firmware\src\packs\CMSIS</path>
         <path>$PROJ_DIR$\..\..\firmware\src\arm</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl</path>
+        <path>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl\wolfssl</path>
     </asmIncludePath>
     <defines>
         <defines>__FPU_PRESENT=1</defines>
+        <defines>H</defines>
+        <defines>A</defines>
+        <defines>V</defines>
+        <defines>E</defines>
+        <defines>_</defines>
+        <defines>C</defines>
+        <defines>O</defines>
+        <defines>N</defines>
+        <defines>F</defines>
+        <defines>I</defines>
+        <defines>G</defines>
+        <defines>;</defines>
+        <defines>W</defines>
+        <defines>L</defines>
+        <defines>S</defines>
+        <defines>R</defines>
     </defines>
     <linkerFile>
         <override>true</override>
@@ -269,6 +289,132 @@
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\arc4.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\asn.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\asn_public.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\blake2-impl.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\blake2-int.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\blake2.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\camellia.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\chacha.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\chacha20_poly1305.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\cmac.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\coding.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\compress.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\cpuid.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\cryptocb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\curve25519.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\dh.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\dsa.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\ecc.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\ed25519.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\error-crypt.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\fe_operations.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\fips_test.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\ge_operations.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\hash.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\hc128.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\hmac.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\idea.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\integer.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\logging.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\md2.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\md4.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\memory.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\mem_track.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\misc.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\mpi_class.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\mpi_superclass.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\pkcs11.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\pkcs12.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\pkcs7.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\poly1305.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\pwdbased.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\rabbit.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\ripemd.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\rsa.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\selftest.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\sha3.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\signature.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\sp.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\sp_int.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\srp.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\tfm.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\types.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\visibility.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\wc_encrypt.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\wc_pkcs11.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\wolfevent.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\wolfmath.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\pic32mz-crypt.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_cf_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ClearFlags_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Comp_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_CondCopy_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_CRT_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Div_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ExpMod_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_FastCopy_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Fill_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Fmult_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GCD_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccAdd_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccConv_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccDbl_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccMul_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEcDsa_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Hardware_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Headers_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_JumpTable_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_mapping_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_PrimeGen_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Rc_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_RedMod_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Rng_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_SelfTest_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Services_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Smult_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Square_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Swap_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_typedef_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccAddSub_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccAdd_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccConv_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccDbl_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccMul_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccQuickDualMul_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEcDsa_pb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_hwInt.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_sam6149.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_u2238.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_ecc_pukcl.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_pukcl_definitions.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_pukcl_functions.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_rng_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_rsa_pukcl.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha1_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha224_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha256_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha384_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha512_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha_sam11105.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha_sam6156.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_tdes_hw.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_tdes_hwInt.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_tdes_sam6150.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_wolfcryptcb.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\settings.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\aes.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\des3.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\md5.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\random.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\sha.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\sha256.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\sha512.h</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\wc_port.h</path>
+            <path>\config.h</path>
             <path>\driver\ethphy\drv_ethphy.h</path>
             <path>\driver\ethphy\src\drv_ethphy_local.h</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_regs.h</path>
@@ -282,7 +428,6 @@
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
-            <path>\crypto\crypto.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra">
             <path>\library\tcpip\src\dns.c</path>
@@ -345,6 +490,88 @@
             <path>\driver\miim\src\dynamic\drv_miim.c</path>
             <path>\system\debug\src\sys_debug_local.h</path>
             <path>\system\debug\src\sys_debug.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\arc4.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\asm.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\asn.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\blake2b.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\blake2s.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\camellia.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\chacha.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\chacha20_poly1305.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\cmac.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\coding.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\compress.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\cpuid.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\cryptocb.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\curve25519.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\dh.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\dsa.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\ecc.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\ecc_fp.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\ed25519.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\error.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\fe_low_mem.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\fe_operations.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\ge_low_mem.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\ge_operations.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\hash.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\hc128.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\hmac.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\idea.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\integer.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\logging.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\md2.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\md4.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\memory.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\pkcs12.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\pkcs7.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\poly1305.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\pwdbased.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\rabbit.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\ripemd.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\rsa.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sha3.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\signature.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_arm32.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_arm64.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_armthumb.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_c32.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_c64.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_cortexm.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_int.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_x86_64.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\srp.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\tfm.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\wc_encrypt.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\wc_pkcs11.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\wc_port.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\wolfevent.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\wolfmath.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\pic32mz-crypt.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_aes_sam6149.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_aes_u2238.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_ecc_pukcl.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_pukcl_functions.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rng_sam6334.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rng_u2242.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rsa_pukcl.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha1_sam11105.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha1_sam6156.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha224_sam11105.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha224_sam6156.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha256_sam11105.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha256_sam6156.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha384_sam6156.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha512_sam6156.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_tdes_sam6150.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_wolfcryptcb.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\aes.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\des3.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\md5.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\random.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sha.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sha256.c</path>
+            <path>\..\..\third_party\wolfssl\wolfssl\wolfcrypt\src\sha512.c</path>
             <path>\driver\ethphy\src\dynamic\drv_ethphy.c</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</path>
             <path>\system\console\src\sys_console_local.h</path>
@@ -352,7 +579,6 @@
             <path>\system\console\src\sys_console_uart.h</path>
             <path>\system\console\src\sys_console_uart_definitions.h</path>
             <path>\system\console\src\sys_console_uart.c</path>
-            <path>\crypto\src\crypto.c</path>
         </group>
     </files>
 </iarProjectConnection>
