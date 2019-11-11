@@ -568,12 +568,12 @@ static const char* client_showpeer_msg[][8] = {
 #ifndef NO_MULTIBYTE_PRINT
     /* Japanese */
     {
-        "SSL �?ージョン�?�",
-        "SSL 暗�?�スイート�?�",
-        "SSL 曲線�??�?�",
-        "SSL DH サイズ�?�",
-        "SSL �?利用セッション",
-        "代替証明�?ェーンを使用",
+        "SSL バージョンは",
+        "SSL 暗号スイートは",
+        "SSL 曲線名は",
+        "SSL DH サイズは",
+        "SSL 再利用セッション",
+        "代替証明チェーンを使用",
         "相手方証明書情報",
         NULL
     },
@@ -595,8 +595,8 @@ static const char* client_showx509_msg[][5] = {
     {
         "発行者",
         "サブジェクト",
-        "代替�??",
-        "シリアル番�?�",
+        "代替名",
+        "シリアル番号",
         NULL
     },
 #endif

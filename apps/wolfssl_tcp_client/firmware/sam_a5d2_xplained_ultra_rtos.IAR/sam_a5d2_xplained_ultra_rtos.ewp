@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.32.2.19370</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -358,6 +358,7 @@
                     <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl\wolfssl</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -640,6 +641,7 @@
                     <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl\wolfssl</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -1417,6 +1419,7 @@
                     <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl\wolfssl</state>
                 </option>
                 <option>
                     <name>CCStdIncCheck</name>
@@ -1699,6 +1702,7 @@
                     <state>$PROJ_DIR$\..\..\firmware\src\arm</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5</state>
                     <state>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\Include</state>
+                    <state>$PROJ_DIR$\..\..\firmware\src\third_party\wolfssl\wolfssl</state>
                 </option>
                 <option>
                     <name>AExtraOptionsCheckV2</name>
@@ -2133,13 +2137,10 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\adc.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\aes.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aes.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\aes.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\aes.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\aesb.h</name>
@@ -2151,10 +2152,7 @@
                 <name>$PROJ_DIR$\..\src\app.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\arc4.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\arc4.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\arc4.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</name>
@@ -2175,19 +2173,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\arp_private.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\asn.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\asn.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\asn.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\asn_public.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\asn_public.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\async.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\asn_public.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\atsama5d27.h</name>
@@ -2202,31 +2191,31 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\berkeley_manager.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\blake2-impl.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\blake2-int.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\blake2.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\bsp\bsp.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\callbacks.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\camellia.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\camellia.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\certs_test.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\camellia.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\certs_test.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\chacha.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\chacha.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\chacha.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\chacha20_poly1305.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\chacha20_poly1305.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\chipid.h</name>
@@ -2235,7 +2224,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\classd.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\cmac.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\cmac.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\cmsis_compiler.h</name>
@@ -2250,16 +2239,10 @@
                 <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\coding.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\coding.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\coding.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\compress.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\compress.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\compress.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\config.h</name>
@@ -2271,10 +2254,7 @@
                 <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core_A\Include\core_ca.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\cpuid.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\crc32.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\cpuid.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\crl.h</name>
@@ -2283,58 +2263,184 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\croutine.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_aes_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_aes_hwInt.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_hwInt.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_aes_sam6149.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_sam6149.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_aes_u2238.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_u2238.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_rng_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_ecc_pukcl.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha1_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_pukcl_definitions.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha224_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_pukcl_functions.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha256_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_rng_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha384_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_rsa_pukcl.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha512_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha1_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha224_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha_sam11105.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha256_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha_sam6156.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha384_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_tdes_hw.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha512_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_tdes_hwInt.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha_hw.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_tdes_sam6150.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha_sam11105.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\crypto.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_sha_sam6156.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\curve25519.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_tdes_hw.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_tdes_hwInt.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_tdes_sam6150.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_wolfcryptcb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\cryptocb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_cf_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ClearFlags_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Comp_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_CondCopy_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_CRT_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Div_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ExpMod_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_FastCopy_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Fill_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Fmult_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GCD_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccAdd_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccConv_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccDbl_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEccMul_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_GF2NEcDsa_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Hardware_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Headers_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_JumpTable_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_mapping_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_PrimeGen_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Rc_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_RedMod_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Rng_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_SelfTest_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Services_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Smult_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Square_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_Swap_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_typedef_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccAdd_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccAddSub_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccConv_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccDbl_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccMul_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEccQuickDualMul_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\CryptoLib_ZpEcDsa_pb.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\curve25519.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\ddns.h</name>
@@ -2346,16 +2452,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\definitions.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\deflate.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\deprecated_definitions.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\des3.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\des3.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\des3.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\device.h</name>
@@ -2364,10 +2464,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\device_cache.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\dh.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\dh.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\dh.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\dhcp.h</name>
@@ -2445,34 +2542,22 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\driver\miim\drv_miim.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\driver\miim\config\drv_miim_config.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\driver\miim\src\drv_miim_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\driver\miim\src\dynamic\drv_miim_mapping.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\dsa.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\dsa.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\dsa.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\ecc.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ecc.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\ed25519.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\ecc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ed25519.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\error-crypt.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\error-crypt.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\error-crypt.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\error-ssl.h</name>
@@ -2481,10 +2566,10 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\event_groups.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\fe_operations.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\fe_operations.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\fips_test.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\fips_test.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\flexcom.h</name>
@@ -2505,37 +2590,34 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\ftp_private.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ge_operations.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\ftpc.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\ftpc_manager.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\ftpc_private.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\ge_operations.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\gmac.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\gzguts.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\hash.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\hash.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\hash.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\hash_fnv.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\hc128.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\hc128.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\hc128.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\common\helpers.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\hmac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\hmac.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\hmac.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\http.h</name>
@@ -2574,7 +2656,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\icmpv6_manager.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\idea.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\idea.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\igmp.h</name>
@@ -2586,22 +2668,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\igmp_private.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inffast.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inffixed.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inflate.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inftrees.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\integer.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\integer.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\integer.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\internal.h</name>
@@ -2658,10 +2725,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\lldp_tlv.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\logging.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\logging.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\logging.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\matrix.h</name>
@@ -2670,55 +2734,34 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\mcan.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\md2.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\md2.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\md2.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\md4.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\md4.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\md5.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\md4.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\mem_track.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\md5.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\md5.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\mem_track.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\memory.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\memory.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\memory.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\message_buffer.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\misc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\misc.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\misc.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\mpddrc.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\mpi_class.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\mpi_class.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\mpi_class.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\mpi_superclass.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\mpi_superclass.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\mpi_superclass.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\mpu_prototypes.h</name>
@@ -2784,7 +2827,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pdmic.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pic32mz-crypt.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\pic32mz-crypt.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pio.h</name>
@@ -2796,19 +2839,13 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pit.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pkcs11.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\pkcs11.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pkcs12.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\pkcs12.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\pkcs12.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pkcs7.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\pkcs7.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\pkcs7.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\peripheral\aic\plib_aic.h</name>
@@ -2847,7 +2884,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pmc.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\poly1305.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\poly1305.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\portable.h</name>
@@ -2865,10 +2902,7 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\ptc.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pwdbased.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\pwdbased.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\pwdbased.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\pwm.h</name>
@@ -2880,28 +2914,16 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\queue.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\rabbit.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\rabbit.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\rabbit.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\random.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\random.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\ripemd.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\random.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ripemd.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\ripemd.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\rsa.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\rsa.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\rsa.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\rstc.h</name>
@@ -2925,16 +2947,13 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\secumod.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\selftest.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\selftest.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\Include\semphr.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\settings.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\settings.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\settings.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sfc.h</name>
@@ -2946,34 +2965,25 @@
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sfrbu.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\sha.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\sha.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\sha.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha256.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\sha256.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\sha256.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\sha3.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha3.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha512.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\sha512.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\sha512.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\shdwc.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\signature.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\signature.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\smc.h</name>
@@ -2994,13 +3004,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\smtpc_private.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sniffer.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\sniffer.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sniffer_error.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\sniffer_error.h</name>
@@ -3027,16 +3031,19 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\sntp_manager.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\sp.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\sp_int.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\spi.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\srp.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\srp.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\ssc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ssl.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\ssl.h</name>
@@ -3063,7 +3070,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\system\debug\sys_debug.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\common\sys_fs_wrapper.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\common\sys_fs_shell.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\system\int\sys_int.h</name>
@@ -3198,10 +3205,7 @@
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\test.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\tfm.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\tfm.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\tfm.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\tftpc.h</name>
@@ -3228,19 +3232,13 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\toolchain_specifics.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\trees.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\trng.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\twihs.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\types.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\types.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\types.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\uart.h</name>
@@ -3264,55 +3262,34 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\user.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\version.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\version.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\visibility.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\visibility.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\visibility.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\wc_encrypt.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wc_encrypt.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\wc_pkcs11.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\wc_encrypt.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wc_pkcs11.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wc_port.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\wc_port.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\wc_port.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\wdt.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wolfevent.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wolfio.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\wolfevent.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfio.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wolfmath.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\third_party\wolfcrypt_support\wolfssl\wolfcrypt\wolfmath.h</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\wolfmath.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\xdmac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\zconf.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\zero_conf_helper.h</name>
@@ -3329,62 +3306,56 @@
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\zero_conf_multicast_dns.h</name>
             </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\zlib.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\zutil.h</name>
-            </file>
         </group>
         <group>
             <name>Source Files</name>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\adler32.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\aes.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\aes.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\app.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\arc4.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\arc4.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\arp.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\asm.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\asm.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\asn.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\asn.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\async.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\blake2b.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\blake2s.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\bsp\bsp.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\camellia.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\camellia.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\chacha.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\chacha.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\chacha20_poly1305.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\chacha20_poly1305.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\cmac.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\cmac.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\coding.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\coding.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\compress.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\compress.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\crc32.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\cpuid.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\src\crl.c</name>
@@ -3393,49 +3364,70 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\croutine.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_aes_sam6149.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_aes_sam6149.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_rng_sam6334.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_aes_u2238.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha1_sam6156.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_ecc_pukcl.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha224_sam6156.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_pukcl_functions.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha256_sam6156.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rng_sam6334.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha384_sam6156.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rng_u2242.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha512_sam6156.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rsa_pukcl.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_sha_sam6156.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha1_sam11105.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypt_tdes_sam6150.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha1_sam6156.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\crypto.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha224_sam11105.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha224_sam6156.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha256_sam11105.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha256_sam6156.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha384_sam6156.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha512_sam6156.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_tdes_sam6150.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_wolfcryptcb.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\cryptocb.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\cstartup.s</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\curve25519.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\curve25519.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\deflate.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\des3.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\des3.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\dh.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\dh.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\dhcp.c</name>
@@ -3459,19 +3451,19 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\driver\miim\src\dynamic\drv_miim.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\dsa.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\dsa.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ecc.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\ecc.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ecc_fp.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\ecc_fp.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ed25519.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\ed25519.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\error.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\error.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\event_groups.c</name>
@@ -3483,10 +3475,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\fault_handlers.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\fe_low_mem.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\fe_low_mem.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\fe_operations.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\fe_operations.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\freertos_hooks.c</name>
@@ -3498,19 +3490,19 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\FreeRTOS_tick_config.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ge_low_mem.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\ge_low_mem.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ge_operations.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\ge_operations.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\hash.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\hash.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\hash_fnv.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\hc128.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\hc128.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\MemMang\heap_1.c</name>
@@ -3519,7 +3511,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\helpers.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\hmac.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\hmac.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\stdio\iar_monitor.c</name>
@@ -3528,22 +3520,13 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\icmp.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\idea.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inffast.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inflate.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\inftrees.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\idea.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\initialization.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\integer.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\integer.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\src\internal.c</name>
@@ -3561,25 +3544,22 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\list.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\logging.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\logging.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\main.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\md2.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\md2.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\md4.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\md4.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\md5.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\md5.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\memory.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\misc.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\memory.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\nbns.c</name>
@@ -3603,10 +3583,13 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\osal\osal_freertos.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pkcs12.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\pic32mz-crypt.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pkcs7.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\pkcs12.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\pkcs7.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\peripheral\aic\plib_aic.c</name>
@@ -3636,7 +3619,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\peripheral\uart\plib_uart1.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\poly1305.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\poly1305.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\port.c</name>
@@ -3645,37 +3628,37 @@
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portASM.s</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\pwdbased.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\pwdbased.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\queue.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\rabbit.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\rabbit.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\random.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\random.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\ripemd.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\ripemd.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\rsa.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\rsa.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sha.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha256.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sha256.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha3.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sha3.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\sha512.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sha512.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\signature.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\signature.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\src\sniffer.c</name>
@@ -3684,7 +3667,31 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\sntp.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\srp.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_arm32.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_arm64.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_armthumb.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_c32.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_c64.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_cortexm.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_int.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\sp_x86_64.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\srp.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\src\ssl.c</name>
@@ -3759,7 +3766,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\tcpip_packet.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\tfm.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\tfm.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\timers.c</name>
@@ -3771,31 +3778,25 @@
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\src\tls13.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\trees.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\library\tcpip\src\udp.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wc_encrypt.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\wc_encrypt.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wc_pkcs11.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\wc_pkcs11.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wc_port.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\wc_port.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wolfevent.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\wolfevent.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\src\wolfio.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\wolfmath.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xplained_ultra_rtos\crypto\src\zlib-1.2.7\zutil.c</name>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\wolfmath.c</name>
             </file>
         </group>
     </group>
