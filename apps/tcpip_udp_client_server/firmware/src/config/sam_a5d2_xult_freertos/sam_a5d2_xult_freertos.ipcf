@@ -150,6 +150,9 @@
             <path>\library\tcpip\ftp.h</path>
             <path>\library\tcpip\src\ftp_manager.h</path>
             <path>\library\tcpip\src\ftp_private.h</path>
+            <path>\library\tcpip\ftpc.h</path>
+            <path>\library\tcpip\src\ftpc_manager.h</path>
+            <path>\library\tcpip\src\ftpc_private.h</path>
             <path>\library\tcpip\icmp.h</path>
             <path>\library\tcpip\nbns.h</path>
             <path>\library\tcpip\src\nbns_manager.h</path>
@@ -212,7 +215,7 @@
             <path>\library\tcpip\src\lldp_private.h</path>
             <path>\library\tcpip\src\lldp_tlv.h</path>
             <path>\library\tcpip\tcpip_ethernet.h</path>
-            <path>\library\tcpip\src\common\sys_fs_wrapper.h</path>
+            <path>\library\tcpip\src\common\sys_fs_shell.h</path>
             <path>\net_pres\pres\net_pres.h</path>
             <path>\net_pres\pres\net_pres_socketapi.h</path>
             <path>\net_pres\pres\net_pres_socketapiconversion.h</path>
@@ -249,7 +252,6 @@
             <path>\peripheral\pio\plib_pio.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
             <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>

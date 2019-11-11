@@ -83,6 +83,10 @@ static tcpipSignalHandle    signalHandle = 0;
 // user threads protection semaphore
 static OSAL_SEM_HANDLE_TYPE userSem;
 
+#if (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
+static TCPIP_UDP_PACKET_HANDLER udpPktHandler = 0;
+static const void* udpPktHandlerParam;
+#endif  // (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
 
 /****************************************************************************
   Section:
@@ -594,7 +598,11 @@ bool TCPIP_UDP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const 
     nUdpSockets = pUdpInit->nSockets;
     udpDefTxSize = pUdpInit->sktTxBuffSize;
     UDPSocketDcpt = newSktDcpt;
+#if (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
+    udpPktHandler = 0;
+#endif  // (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
     udpInitCount++;
+
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
 
     // allow user access
@@ -1074,6 +1082,18 @@ static void TCPIP_UDP_Process(void)
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
+#if (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
+        if(udpPktHandler != 0)
+        {
+            bool was_processed = (*udpPktHandler)(pRxPkt->pktIf, pRxPkt, udpPktHandlerParam);
+            if(was_processed)
+            {
+                TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                continue;
+            }
+        }
+#endif  // (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
+
         ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
 #if defined (TCPIP_STACK_USE_IPV4)
         if((pRxPkt->pktFlags & TCPIP_MAC_PKT_FLAG_NET_TYPE) == TCPIP_MAC_PKT_FLAG_IPV4) 
@@ -3516,6 +3536,41 @@ static void _UDP_RxPktAcknowledge(TCPIP_MAC_PACKET* pRxPkt, TCPIP_MAC_PKT_ACK_RE
 }
 
 #endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
+
+// external packet processing
+#if (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
+TCPIP_UDP_PROCESS_HANDLE TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    TCPIP_UDP_PROCESS_HANDLE pHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(udpPktHandler == 0)
+    {
+        udpPktHandlerParam = handlerParam;
+        udpPktHandler = pktHandler;
+        pHandle = pktHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return pHandle;
+}
+
+bool TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(udpPktHandler == pktHandle)
+    {
+        udpPktHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (TCPIP_UDP_EXTERN_PACKET_PROCESS != 0)
 
 
 #endif //#if defined(TCPIP_STACK_USE_UDP)

@@ -32,10 +32,7 @@
               <itemPath>../src/config/pic32mz_das_sk_freertos/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/pic32mz_das_sk_freertos/driver/miim/config/drv_miim_config.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="src" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/pic32mz_das_sk_freertos/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
@@ -51,7 +48,7 @@
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ndp_manager.h</itemPath>
@@ -81,6 +78,8 @@
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/telnet_manager.h</itemPath>
@@ -144,6 +143,7 @@
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/ddns.h</itemPath>
@@ -273,12 +273,12 @@
       <itemPath>../src/app_commands.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
+    <logicalFolder name="f2" displayName="Important Files" projectFiles="true">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
+    <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
     </logicalFolder>
-    <logicalFolder name="f3" displayName="Source Files" projectFiles="true">
+    <logicalFolder name="f4" displayName="Source Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="pic32mz_das_sk_freertos"
@@ -435,7 +435,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.42"/>
+        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.69"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -497,9 +497,9 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos;"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos"/>
         <property key="extra-include-directories-for-preprocessor"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos;"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos"/>
         <property key="false-conditionals" value="false"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
