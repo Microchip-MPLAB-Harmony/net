@@ -214,7 +214,11 @@ const TCPIP_ARP_MODULE_CONFIG tcpipARPInitData =
 /*** telnet Server Initialization Data ***/
 const TCPIP_TELNET_MODULE_CONFIG tcpipTelnetInitData =
 { 
-    0
+    .nConnections   = TCPIP_TELNET_MAX_CONNECTIONS,
+    .sktTxBuffSize  = TCPIP_TELNET_SKT_TX_BUFF_SIZE,
+    .sktRxBuffSize  = TCPIP_TELNET_SKT_RX_BUFF_SIZE,
+    .listenPort     = TCPIP_TELNET_LISTEN_PORT,
+    .configFlags    = TCPIP_TELNET_CONFIG_FLAGS,
 };
 
 /*** Announce Discovery Initialization Data ***/
@@ -259,6 +263,7 @@ const TCPIP_HTTP_NET_MODULE_CONFIG tcpipHTTPNetInitData =
     .connTimeout        = TCPIP_HTTP_NET_CONNECTION_TIMEOUT,
     .http_malloc_fnc    = TCPIP_HTTP_NET_MALLOC_FUNC,
     .http_free_fnc      = TCPIP_HTTP_NET_FREE_FUNC,
+    .web_dir            = TCPIP_HTTP_NET_WEB_DIR, 
 };
 
 /*** SNTP Client Initialization Data ***/
@@ -310,6 +315,7 @@ const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
 { 
     0
 };
+
 
 
 
@@ -410,7 +416,6 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 
 
 
-
 /*** DNS Client Initialization Data ***/
 const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 {
@@ -461,7 +466,7 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
     },
 };
 
-
+const size_t TCPIP_HOSTS_CONFIGURATION_SIZE = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
@@ -489,9 +494,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 // MAC modules
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
 
-
 };
 
+const size_t TCPIP_STACK_MODULE_CONFIG_TBL_SIZE = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
 /*********************************************************************
  * Function:        SYS_MODULE_OBJ TCPIP_STACK_Init()
  *
@@ -513,14 +518,16 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
  *
  ********************************************************************/
 
+
 SYS_MODULE_OBJ TCPIP_STACK_Init()
 {
     TCPIP_STACK_INIT    tcpipInit;
 
     tcpipInit.pNetConf = TCPIP_HOSTS_CONFIGURATION;
-    tcpipInit.nNets = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
+    tcpipInit.nNets = TCPIP_HOSTS_CONFIGURATION_SIZE;
     tcpipInit.pModConfig = TCPIP_STACK_MODULE_CONFIG_TBL;
-    tcpipInit.nModules = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
+    tcpipInit.nModules = TCPIP_STACK_MODULE_CONFIG_TBL_SIZE;
+    tcpipInit.initCback = 0;
 
     return TCPIP_STACK_Initialize(0, &tcpipInit.moduleInit);
 }
@@ -633,7 +640,7 @@ void SYS_Initialize ( void* data )
 
     EFC_Initialize();
   
-    CLK_Initialize();
+    CLOCK_Initialize();
 	PIO_Initialize();
 
 	BSP_Initialize();

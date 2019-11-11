@@ -56,6 +56,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdbool.h>
 #include <stddef.h>
 #include "driver/driver_common.h"
+#include "driver/ethphy/drv_ethphy.h"
 
 #include "tcpip/tcpip_mac.h"
 #include "tcpip/tcpip_ethernet.h"
@@ -112,6 +113,75 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define DRV_ETHMAC_INDEX_COUNT  ETH_NUMBER_OF_MODULES
 
+/*  Ethernet MAC Initialization Data
+
+  Summary:
+    Data that's passed to the MAC at initialization time as part of the
+    TCPIP_MAC_INIT data structure.
+
+  Description:
+    This structure defines the MAC initialization data for the
+    PIC32 MAC/Ethernet controller.
+
+*/
+
+typedef struct
+{
+    /*  number of TX descriptors */
+    uint16_t                        nTxDescriptors;
+
+    /*  size of the corresponding RX buffer */
+    uint16_t                        rxBuffSize;
+
+    /* Number of RX descriptors */
+    /* Has to be high enough to accommodate both dedicated and non-dedicated RX buffers */
+    uint16_t                        nRxDescriptors;
+
+    /* Number of MAC dedicated RX buffers */
+    /* These buffers/packets are owned by the MAC and are not returned to the packet pool */
+    /* They are allocated at MAC initialization time using pktAllocF */ 
+    /* and freed at MAC deinitialize time using pktFreeF */
+    /* Could be 0, if only not dedicated buffers are needed. */
+    /* For best performance usually it's best to have some dedicated buffers */
+    /* so as to minimize the run time allocations */
+    uint16_t                        nRxDedicatedBuffers;
+    
+    /* Number of MAC non dedicated RX buffers allocated at the MAC initialization pktAllocF */
+    /* Note that these buffers are allocated in addition of the nRxDedicatedBuffers */
+    /* Freed at run time using pktFreeF */
+    uint16_t                        nRxInitBuffers;
+
+    /* Minimum threshold for the buffer replenish process */
+    /* Whenever the number of RX scheduled buffers is <= than this threshold */
+    /* the MAC driver will allocate new non-dedicated buffers */
+    /* that will be freed at run time using pktFreeF */
+    /* Setting this value to 0 disables the buffer replenishing process */
+    uint16_t                        rxLowThreshold;
+
+    /* Number of RX buffers to allocate when below threshold condition is detected */
+    /* If 0, the MAC driver will allocate (scheduled buffers - rxThres) */
+    /* If !0, the MAC driver will allocate exactly rxLowFill buffers */
+    uint16_t                        rxLowFill;
+
+
+    /*  Delay to wait after the lomk is coming up (milliseconds) */
+    /*  for insuring that the PHY is ready to transmit data. */
+    uint16_t                        linkInitDelay;
+
+
+    /*  flags to use for the ETH connection */
+    TCPIP_ETH_OPEN_FLAGS            ethFlags;
+
+    /* Ethernet module ID for this driver instance: a plib ETH Id value */
+    uintptr_t                       ethModuleId;
+
+    /* Non-volatile pointer to the PHY basic object associated with this MAC */
+    const struct DRV_ETHPHY_OBJECT_BASE_TYPE*   pPhyBase;   
+
+    /* Non-volatile pointer to the PHY initialization data */
+    const struct DRV_ETHPHY_INIT*   pPhyInit;   
+    
+}TCPIP_MODULE_MAC_PIC32INT_CONFIG;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -136,7 +206,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
   Parameters:
     - index - index of the ETH MAC driver to be initialized
-    - init  - Pointer to initialization data
+    - init  - Pointer to TCPIP_MAC_INIT initialization data
 
   Returns:
     - a valid handle to a driver object, if successful.

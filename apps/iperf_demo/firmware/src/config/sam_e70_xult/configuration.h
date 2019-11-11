@@ -138,7 +138,6 @@ extern "C" {
 
 
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Middleware & Other Library Configuration
@@ -311,8 +310,6 @@ extern "C" {
 
 
 
-
-/*** TCP/IP Configuration ***/
 
 
 /*** TCPIP MAC Configuration ***/

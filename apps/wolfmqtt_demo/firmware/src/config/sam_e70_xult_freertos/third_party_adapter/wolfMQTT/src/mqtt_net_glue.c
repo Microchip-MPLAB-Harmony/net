@@ -593,6 +593,7 @@ static int WMQTT_NETGlue_Error(WMQTT_NET_CONTEXT* net_glue_ctx, WMQTT_NET_GLUE_R
 #endif  // (WMQTT_NET_GLUE_DEBUG_ENABLE != 0)
 
         net_glue_ctx->stat =  NET_GLUE_IDLE;
+        // TODO aa: return an error code based on the private WMQTT_NET error code
         return MQTT_CODE_ERROR_NETWORK;
     }
 

@@ -45,8 +45,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/random.h"
 
 
-
-static uint8_t _net_pres_wolfsslUsers = 0;
 typedef struct 
 {
     WOLFSSL_CTX* context;
@@ -97,7 +95,6 @@ NET_PRES_EncProviderObject net_pres_EncProviderStreamClient0 =
 net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamServer0;
 net_pres_wolfsslInfo net_pres_wolfSSLInfoStreamClient0;
 	
-		
 int NET_PRES_EncGlue_StreamServerReceiveCb0(void *sslin, char *buf, int sz, void *ctx)
 {
     int fd = *(int *)ctx;
@@ -149,6 +146,7 @@ int NET_PRES_EncGlue_StreamClientSendCb0(void *sslin, char *buf, int sz, void *c
     return bufferSize;
 }
 	
+static uint8_t _net_pres_wolfsslUsers = 0;
 
 		
 bool NET_PRES_EncProviderStreamServerInit0(NET_PRES_TransportObject * transObject)

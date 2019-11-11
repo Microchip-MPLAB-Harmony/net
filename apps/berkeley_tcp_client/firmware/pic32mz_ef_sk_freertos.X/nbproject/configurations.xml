@@ -49,7 +49,6 @@
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftpc_private.h</itemPath>
@@ -81,8 +80,6 @@
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftp_private.h</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/telnet_manager.h</itemPath>
@@ -147,7 +144,6 @@
               <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ftp.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/ddns.h</itemPath>
@@ -460,7 +456,7 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>PKOBSKDEPlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.10</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
@@ -542,9 +538,6 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
-      <C32-CO>
-        <property key="coverage-enable" value=""/>
-      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
