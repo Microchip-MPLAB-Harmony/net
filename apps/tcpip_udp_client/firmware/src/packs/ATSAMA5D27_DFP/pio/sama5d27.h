@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-25T17:28:51Z */
+/* file generated from device description version 2019-06-13T17:45:35Z */
 #ifndef _SAMA5D27_GPIO_H_
 #define _SAMA5D27_GPIO_H_
 
