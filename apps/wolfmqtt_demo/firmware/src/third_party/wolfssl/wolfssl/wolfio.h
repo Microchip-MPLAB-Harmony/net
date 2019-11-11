@@ -1,6 +1,6 @@
 /* io.h
  *
- * Copyright (C) 2006-2017 wolfSSL Inc.
+ * Copyright (C) 2006-2019 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -20,7 +20,7 @@
  */
 
 /*!
-    \file wolfssl/wolfio.h   
+    \file wolfssl/wolfio.h
 */
 
 #ifndef WOLFSSL_IO_H
@@ -69,11 +69,12 @@
     #elif defined(FREESCALE_KSDK_MQX)
         #include <rtcs.h>
     #elif (defined(WOLFSSL_MDK_ARM) || defined(WOLFSSL_KEIL_TCP_NET))
-        #include "cmsis_os.h"
         #include "rl_net.h"
         #include "errno.h"
     #elif defined(WOLFSSL_CMSIS_RTOS)
         #include "cmsis_os.h"
+    #elif defined(WOLFSSL_CMSIS_RTOSv2)
+        #include "cmsis_os2.h"
     #elif defined(WOLFSSL_TIRTOS)
         #include <sys/socket.h>
     #elif defined(FREERTOS_TCP)
@@ -112,6 +113,12 @@
         #include <errno.h>
     #elif defined(WOLFSSL_APACHE_MYNEWT) && !defined(WOLFSSL_LWIP)
         #include <mn_socket/mn_socket.h>
+    #elif defined(WOLFSSL_DEOS)
+        #include <socketapi.h>
+        #include <lwip-socket.h>
+        #include <errno.h>
+    #elif defined(WOLFSSL_ZEPHYR)
+        #include <net/socket.h>
     #elif !defined(WOLFSSL_NO_SOCK)
         #include <sys/types.h>
         #include <errno.h>
@@ -125,7 +132,8 @@
         #elif defined(EBSNET)
             #include "rtipapi.h"  /* errno */
             #include "socket.h"
-        #elif !defined(DEVKITPRO) && !defined(WOLFSSL_PICOTCP) && !defined(WOLFSSL_CONTIKI)
+        #elif !defined(DEVKITPRO) && !defined(WOLFSSL_PICOTCP) \
+                && !defined(WOLFSSL_CONTIKI) && !defined(WOLFSSL_WICED)
             #include <sys/socket.h>
             #include <arpa/inet.h>
             #include <netinet/in.h>
@@ -214,6 +222,14 @@
     #define SOCKET_EPIPE        NU_NOT_CONNECTED
     #define SOCKET_ECONNREFUSED NU_CONNECTION_REFUSED
     #define SOCKET_ECONNABORTED NU_NOT_CONNECTED
+#elif defined(WOLFSSL_DEOS)
+     #define SOCKET_EWOULDBLOCK EAGAIN
+     #define SOCKET_EAGAIN      EAGAIN
+     #define SOCKET_ECONNRESET  EINTR
+     #define SOCKET_EINTR       EINTR
+     #define SOCKET_EPIPE       EPIPE
+     #define SOCKET_ECONNREFUSED SOCKET_ERROR
+     #define SOCKET_ECONNABORTED SOCKET_ERROR
 #else
     #define SOCKET_EWOULDBLOCK EWOULDBLOCK
     #define SOCKET_EAGAIN      EAGAIN
@@ -223,9 +239,6 @@
     #define SOCKET_ECONNREFUSED ECONNREFUSED
     #define SOCKET_ECONNABORTED ECONNABORTED
 #endif /* USE_WINDOWS_API */
-
-
-
 
 #ifdef DEVKITPRO
     /* from network.h */
@@ -248,6 +261,13 @@
 #elif defined(WOLFSSL_NUCLEUS_1_2)
     #define SEND_FUNCTION NU_Send
     #define RECV_FUNCTION NU_Recv
+#elif defined(WOLFSSL_ZEPHYR)
+    #ifndef WOLFSSL_MAX_SEND_SZ
+        #define WOLFSSL_MAX_SEND_SZ       256
+    #endif
+
+    #define SEND_FUNCTION send
+    #define RECV_FUNCTION recv
 #else
     #define SEND_FUNCTION send
     #define RECV_FUNCTION recv
@@ -384,6 +404,9 @@ WOLFSSL_API int BioReceive(WOLFSSL* ssl, char* buf, int sz, void* ctx);
     WOLFSSL_API  int wolfIO_HttpBuildRequest(const char* reqType,
         const char* domainName, const char* path, int pathLen, int reqSz,
         const char* contentType, unsigned char* buf, int bufSize);
+    WOLFSSL_LOCAL int wolfIO_HttpBuildRequest_ex(const char* reqType,
+        const char* domainName, const char* path, int pathLen, int reqSz,
+        const char* contentType, const char *exHdrs, unsigned char* buf, int bufSize);
     WOLFSSL_API  int wolfIO_HttpProcessResponse(int sfd, const char** appStrList,
         unsigned char** respBuf, unsigned char* httpBuf, int httpBufSz,
         int dynType, void* heap);
@@ -395,6 +418,8 @@ typedef int (*CallbackIORecv)(WOLFSSL *ssl, char *buf, int sz, void *ctx);
 typedef int (*CallbackIOSend)(WOLFSSL *ssl, char *buf, int sz, void *ctx);
 WOLFSSL_API void wolfSSL_CTX_SetIORecv(WOLFSSL_CTX*, CallbackIORecv);
 WOLFSSL_API void wolfSSL_CTX_SetIOSend(WOLFSSL_CTX*, CallbackIOSend);
+WOLFSSL_API void wolfSSL_SSLSetIORecv(WOLFSSL*, CallbackIORecv);
+WOLFSSL_API void wolfSSL_SSLSetIOSend(WOLFSSL*, CallbackIOSend);
 /* deprecated old name */
 #define wolfSSL_SetIORecv wolfSSL_CTX_SetIORecv
 #define wolfSSL_SetIOSend wolfSSL_CTX_SetIOSend

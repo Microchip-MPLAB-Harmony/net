@@ -45,16 +45,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 
-#define NVM_DRIVER_V080_WORKAROUND
-
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 
 #if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
-#if defined (NVM_DRIVER_V080_WORKAROUND)
-#define MPFS_UPLOAD_DISK_NO         0
-#endif
-
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
@@ -1992,13 +1986,13 @@ static TCPIP_HTTP_NET_CONN_STATE _HTTP_ProcessPost(TCPIP_HTTP_NET_CONN* pHttpCon
 #endif
         {
             // Run the application callback TCPIP_HTTP_NET_ConnectionPostExecute()
-#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
             if(pHttpCon->httpStatus >= TCPIP_HTTP_NET_STAT_UPLOAD_STARTED && pHttpCon->httpStatus <= TCPIP_HTTP_NET_STAT_UPLOAD_ERROR)
             {
                 ioRes = TCPIP_HTTP_NET_FSUpload(pHttpCon);
             }
             else
-#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif  // defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
             {
                 if(httpUserCback && httpUserCback->postExecute)
                 {
@@ -2731,7 +2725,7 @@ static TCPIP_HTTP_NET_READ_STATUS _HTTP_ReadTo(TCPIP_HTTP_NET_CONN* pHttpCon, ui
     the FS image could be stored (EEPROM, flash, etc.)
 
   ***************************************************************************/
-#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if defined(TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 #define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHttpCon)
 {
@@ -2795,7 +2789,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
                 pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
 
-                SYS_FS_Unmount(LOCAL_WEBSITE_PATH);
+                SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
                 pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_WRITE;
                 return TCPIP_HTTP_NET_IO_RES_WAITING;
             }
@@ -2872,7 +2866,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
                 (*http_free_fnc)(pHttpCon->uploadBufferStart);
                 pHttpCon->uploadBufferStart = 0;
 
-                if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
+                if(SYS_FS_Mount(MPFS_UPLOAD_NVM_VOL, MPFS_UPLOAD_MOUNT_PATH, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
                 {
                     _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_FS_UPLOAD_COMPLETE, pHttpCon->fileName);
                     pHttpCon->httpStatus = TCPIP_HTTP_NET_STAT_UPLOAD_OK;
@@ -2911,7 +2905,7 @@ static TCPIP_HTTP_NET_IO_RESULT TCPIP_HTTP_NET_FSUpload(TCPIP_HTTP_NET_CONN* pHt
     return TCPIP_HTTP_NET_IO_RES_NEED_DATA;
 }
 
-#endif //defined (TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif //defined (TCPIP_HTTP_NET_FILE_UPLOAD_ENABLE)
 
 // the default file include dynamic variable HTTP operation
 static TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_NET_DefaultIncludeFile(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT* varDcpt, const struct _tag_TCPIP_HTTP_NET_USER_CALLBACK* pCBack)

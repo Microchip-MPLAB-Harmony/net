@@ -151,9 +151,9 @@ typedef enum
     TCPIP_MODULE_MAC_MRF24WN        = 0x1060,
     TCPIP_MODULE_MAC_MRF24WN_0      = 0x1060,   // alternate numbered name
 
-    // External WINC1500 Wi-Fi MAC: room for 16 WINC1500 devices
-    TCPIP_MODULE_MAC_WINC1500       = 0x1070,
-    TCPIP_MODULE_MAC_WINC1500_0     = 0x1070,   // alternate numbered name
+    // External WINC Wi-Fi MAC: room for 16 WINC devices
+    TCPIP_MODULE_MAC_WINC			= 0x1070,
+    TCPIP_MODULE_MAC_WINC_0			= 0x1070,   // alternate numbered name
 
     // External WILC1000 Wi-Fi MAC: room for 16 WILC1000 devices
     TCPIP_MODULE_MAC_WILC1000       = 0x1080,
@@ -162,6 +162,11 @@ typedef enum
     // Internal/Embedded PIC32WK Wi-Fi MAC: room for 16 PIC32WK devices
     TCPIP_MODULE_MAC_PIC32WK        = 0x1090,
     TCPIP_MODULE_MAC_PIC32WK_0      = 0x1090,   // alternate numbered name
+
+    // Internal/Embedded EMAC of SAM9x60:
+    TCPIP_MODULE_MAC_SAM9X60        = 0x1100,   // instance base
+    TCPIP_MODULE_MAC_SAM9X60_0      = 0x1100,   // first mac instance
+    TCPIP_MODULE_MAC_SAM9X60_1      = 0x1101,   // second mac instance
 
     // External, non MCHP, MAC modules
     TCPIP_MODULE_MAC_EXTERNAL       = 0x4000,
@@ -212,7 +217,8 @@ typedef enum
     /* Segment carrying user payload */
     /* Higher level protocols (TCP, UDP, etc.) may use it */
     TCPIP_MAC_SEG_FLAG_USER_PAYLOAD     = 0x0008, 
-
+    /*  Ack is required and has not been performed */
+    TCPIP_MAC_SEG_FLAG_ACK_REQUIRED     = 0x0010,
     /*  User available segment flags. */
     TCPIP_MAC_SEG_FLAG_USER             = 0x0100, 
 
@@ -1619,26 +1625,26 @@ typedef struct
 typedef struct
 {
     /*  number of OK RX packets */
-    int                 nRxOkPackets;
+    int     nRxOkPackets;
 
     /*  number of unacknowledged pending RX buffers in the driver queues. */
     /*  If each incoming packet fits within a RX buffer (the RX buffer is large enough) */
     /*  than this corresponds to the number of unacknowledged pending RX packets. */
     /*  Otherwise the number of packets is less than the pending buffers. */
-    int                 nRxPendBuffers;
+    int     nRxPendBuffers;
 
     /*  number of currently scheduled RX buffers in the driver queues. */
     /* These are available buffers, ready to receive data */
-    int                 nRxSchedBuffers;
+    int     nRxSchedBuffers;
 
     /*  number of RX packets with errors */
-    int                 nRxErrorPackets;
+    int     nRxErrorPackets;
 
     /*  number of RX fragmentation errors */
-    int                 nRxFragmentErrors;
+    int     nRxFragmentErrors;
 	
     /*  number of occurences of 'RX Buffer Not Available' */
-    int                 nRxBuffNotAvailable;
+    int    nRxBuffNotAvailable;
 
 }TCPIP_MAC_RX_STATISTICS;
 
@@ -1660,19 +1666,19 @@ typedef struct
 typedef struct
 {
     /*  number of OK transmitted packets */
-    int                 nTxOkPackets;
+    int     nTxOkPackets;
 
     /*  number of unacknowledged pending TX buffers in the driver queues. */
     /*  This is equal with pending TX packets when each packet */
     /*  is contained within a TX buffer. */
-    int                 nTxPendBuffers;
+    int     nTxPendBuffers;
 
     /*  number of packets that could not be transmitted */
-    int                 nTxErrorPackets;
+    int     nTxErrorPackets;
 
     /*  number of times the TX queue was full */
     /*  this may signal that the number of TX descriptors is too small */
-    int                 nTxQueueFull;
+    int     nTxQueueFull;
 
 }TCPIP_MAC_TX_STATISTICS;
 

@@ -1519,10 +1519,13 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 #elif defined (__PIC32C__) || defined(__SAMA5D2__)
     hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)== DRV_GMAC_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;    
     ethRes = DRV_ETHPHY_RES_OK;
+#elif defined (__SAM9X60__)
+    hwFlags = DRV_ETHPHY_CFG_RMII;
+    ethRes = DRV_ETHPHY_RES_OK;
 #else
     hwFlags = 0;
     ethRes = DRV_ETHPHY_RES_CFG_ERR;
-#endif  // defined (__PIC32MX__)
+#endif
 
     if(pFlags)
     {
