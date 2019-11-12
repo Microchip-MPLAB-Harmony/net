@@ -51,8 +51,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/console/sys_console.h"
 #include "system/debug/sys_debug.h"
 #include "system/command/sys_command.h"
-#include "driver/miim/drv_miim.h"
+
+#if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 #include "net_pres/pres/net_pres_socketapi.h"
+#endif  // defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
 
@@ -66,6 +68,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #endif
 
 #if (DRV_MIIM_COMMANDS != 0)
+#include "driver/miim/drv_miim.h"
 #define _TCPIP_COMMANDS_MIIM
 #endif
 
@@ -5622,7 +5625,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     return false;
 }
 
-#endif
-#endif    // defined(TCPIP_STACK_USE_FTP_CLIENT)
+#endif // defined(TCPIP_STACK_USE_FTP_CLIENT)
+#endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 
 

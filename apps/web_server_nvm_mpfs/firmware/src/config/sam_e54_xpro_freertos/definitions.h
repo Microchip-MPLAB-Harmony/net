@@ -49,23 +49,20 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include "crypto/crypto.h"
-#include "driver/memory/drv_memory.h"
-#include "system/time/sys_time.h"
-#include "bsp/bsp.h"
-#include "system/int/sys_int.h"
-#include "system/ports/sys_ports.h"
-#include "system/cache/sys_cache.h"
-#include "osal/osal.h"
-#include "system/fs/sys_fs.h"
-#include "system/fs/sys_fs_media_manager.h"
-#include "system/fs/mpfs/mpfs.h"
 #include "peripheral/nvmctrl/plib_nvmctrl.h"
+#include "driver/memory/drv_memory.h"
 #include "peripheral/tc/plib_tc0.h"
+#include "system/time/sys_time.h"
 #include "driver/memory/drv_memory_nvmctrl.h"
+#include "bsp/bsp.h"
 #include "net_pres/pres/net_pres.h"
 #include "net_pres/pres/net_pres_encryptionproviderapi.h"
 #include "net_pres/pres/net_pres_transportapi.h"
 #include "net_pres/pres/net_pres_socketapi.h"
+#include "system/int/sys_int.h"
+#include "system/ports/sys_ports.h"
+#include "system/cache/sys_cache.h"
+#include "osal/osal.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/gmac/drv_gmac.h"
 #include "driver/miim/drv_miim.h"
@@ -81,6 +78,9 @@
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
 #include "system/debug/sys_debug.h"
+#include "system/fs/sys_fs.h"
+#include "system/fs/sys_fs_media_manager.h"
+#include "system/fs/mpfs/mpfs.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
 #include "FreeRTOS.h"
@@ -208,15 +208,15 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
-    SYS_MODULE_OBJ  sysConsole0;
-
-
-    SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  drvMemory0;
     SYS_MODULE_OBJ  netPres;
 
+    SYS_MODULE_OBJ  sysConsole0;
+
 
     SYS_MODULE_OBJ  tcpip;
+
+    SYS_MODULE_OBJ  drvMiim;
     SYS_MODULE_OBJ  sysDebug;
 
 

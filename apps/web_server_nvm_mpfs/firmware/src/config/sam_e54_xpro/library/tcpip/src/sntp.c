@@ -410,8 +410,12 @@ bool TCPIP_SNTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const
 #endif  // !defined (TCPIP_STACK_USE_IPV4)
 
         memset(&ntpData, 0, sizeof(ntpData));
-        strncpy(sntpServerName, pSNTPConfig->ntp_server, sizeof(sntpServerName) - 1);
-        sntpServerName[sizeof(sntpServerName) - 1] = 0;
+        sntpServerName[0] = 0;
+        if(pSNTPConfig->ntp_server != 0)
+        {
+            strncpy(sntpServerName, pSNTPConfig->ntp_server, sizeof(sntpServerName) - 1);
+            sntpServerName[sizeof(sntpServerName) - 1] = 0;
+        }
         ntpConnection = pSNTPConfig->ntp_connection_type;
         sntp_reply_timeout = pSNTPConfig->ntp_reply_timeout;
         sntp_tstamp_timeout = pSNTPConfig->ntp_stamp_timeout;
@@ -550,6 +554,11 @@ static void TCPIP_SNTP_Process(void)
                 break;
             }
 
+            if(strlen(sntpServerName) == 0)
+            {   // no active serve name
+                break;
+            }
+
 #if defined (TCPIP_STACK_USE_IPV6)           
             if(ntpConnection == IP_ADDRESS_TYPE_IPV6)
             {
@@ -606,6 +615,7 @@ static void TCPIP_SNTP_Process(void)
 
             if(pSntpIf == 0)
             {   // wait some more
+                TCPIP_SNTP_SetNewState(SM_SHORT_WAIT);
                 TCPIP_SNTP_SetError(SNTP_RES_NTP_IF_ERR, TCPIP_SNTP_EVENT_IF_ERROR); 
                 break;
             }
@@ -864,6 +874,10 @@ TCPIP_SNTP_RESULT TCPIP_SNTP_ConnectionParamSet(TCPIP_NET_HANDLE netH, IP_ADDRES
     {
         strncpy(sntpServerName, ntpServer, sizeof(sntpServerName) - 1);
         sntpServerName[sizeof(sntpServerName) - 1] = 0;
+    }
+    else
+    {
+        sntpServerName[0] = 0;
     }
 
     return SNTP_RES_OK;

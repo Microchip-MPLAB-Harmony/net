@@ -805,7 +805,7 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen);
     Using this call the caller can switch to the native TCP/IP API.
    
    Precondition:
-    The socket function should be called.
+    The socket() function should have been called.
 
    Parameters:
     s         - Socket descriptor returned from a previous call to socket
@@ -824,9 +824,53 @@ int getsockname( SOCKET s, struct sockaddr *addr, int *addrlen);
     Please note that calling the TCPIP_BSD_Socket before one of these calls will 
 	return an INVALID_SOCKET.
 
+    The BSD module uses the NET_PRES layer for supporting encrypted connections.
+    This function returns the transport socket (TCP/UDP) associated with the NET_PRES
+    connection.
+    See TCPIP_BSD_PresSocket for getting the NET_PRES socket
+
   */
 
 int TCPIP_BSD_Socket(SOCKET s);
+
+//******************************************************************************
+/* Function:
+    int TCPIP_BSD_PresSocket(SOCKET s);
+
+   Summary:
+    Returns the NET_PRES socket number associated with the BSD socket.
+ 
+
+   Description:
+    The function returns the NET_PRES socket number associated with the BSD socket.
+    Using this call the caller can access the NET_PRES API.
+   
+   Precondition:
+    The socket() function should have been called.
+
+   Parameters:
+    s         - Socket descriptor returned from a previous call to socket
+   
+  Returns:
+    - On success - a socket number >= 0 is returned.
+    - On error   - -1 is returned if no such socket exists and errno is set to EBADF.
+
+  Remarks:
+    This function works for both TCP and UDP sockets.
+
+    The NET_PRES UDP sockets are created after a call to bind (server sockets)
+    or connect (client sockets).
+    The NET_PRES TCP sockets are created after a call to listen (server sockets)
+    or connect (client sockets).
+    Calling the TCPIP_BSD_PresSocket before the sockets are created will
+	return an INVALID_SOCKET.
+
+    The BSD module uses the NET_PRES layer for supporting encrypted connections.
+    This function returns the NET_PRES socket used for the connection.
+
+  */
+
+int TCPIP_BSD_PresSocket(SOCKET s);
 
 //******************************************************************************
 /* Function:
