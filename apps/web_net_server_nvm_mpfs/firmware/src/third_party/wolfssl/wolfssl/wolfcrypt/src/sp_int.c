@@ -1,6 +1,6 @@
 /* sp_int.c
  *
- * Copyright (C) 2006-2017 wolfSSL Inc.
+ * Copyright (C) 2006-2019 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -52,7 +52,7 @@ int sp_init(sp_int* a)
     return MP_OKAY;
 }
 
-#if !defined(WOLFSSL_RSA_PUBLIC_ONLY) && (!defined(NO_DH) || defined(HAVE_ECC))
+#if !defined(WOLFSSL_RSA_PUBLIC_ONLY) || (!defined(NO_DH) || defined(HAVE_ECC))
 /* Initialize up to six big numbers to be zero.
  *
  * a  SP integer.
@@ -288,7 +288,8 @@ int sp_leading_bit(sp_int* a)
     return bit;
 }
 
-#if !defined(WOLFSSL_RSA_VERIFY_ONLY) && (!defined(NO_DH) || defined(HAVE_ECC))
+#if !defined(NO_DH) || defined(HAVE_ECC) || defined(WC_RSA_BLINDING) || \
+    !defined(WOLFSSL_RSA_VERIFY_ONLY)
 /* Convert the big number to an array of bytes in big-endian format.
  * The array must be large enough for encoded number - use mp_unsigned_bin_size
  * to calculate the number of bytes required.
@@ -340,7 +341,7 @@ int sp_to_unsigned_bin_len(sp_int* a, byte* out, int outSz)
     return MP_OKAY;
 }
 
-#if !defined(WOLFSSL_RSA_PUBLIC_ONLY) && (!defined(NO_DH) || defined(HAVE_ECC))
+#if !defined(WOLFSSL_RSA_PUBLIC_ONLY) || (!defined(NO_DH) || defined(HAVE_ECC))
 /* Ensure the data in the big number is zeroed.
  *
  * a  SP integer.
@@ -350,7 +351,9 @@ void sp_forcezero(sp_int* a)
     ForceZero(a->dp, a->used * sizeof(sp_int_digit));
     a->used = 0;
 }
+#endif
 
+#if !defined(WOLFSSL_RSA_VERIFY_ONLY) || (!defined(NO_DH) || defined(HAVE_ECC))
 /* Copy value of big number a into b.
  *
  * a  SP integer.
@@ -380,7 +383,7 @@ int sp_set(sp_int* a, sp_int_digit d)
     return MP_OKAY;
 }
 
-#if !defined(NO_DH) || defined(HAVE_ECC)
+#if defined(WC_MP_TO_RADIX) || !defined(NO_DH) || defined(HAVE_ECC)
 /* Checks whether the value of the big number is zero.
  *
  * a  SP integer.
@@ -392,7 +395,7 @@ int sp_iszero(sp_int* a)
 }
 #endif
 
-#if !defined(WOLFSSL_RSA_VERIFY_ONLY) && (!defined(NO_DH) || defined(HAVE_ECC))
+#if !defined(WOLFSSL_RSA_VERIFY_ONLY) || (!defined(NO_DH) || defined(HAVE_ECC))
 /* Recalculate the number of digits used.
  *
  * a  SP integer.
@@ -411,7 +414,7 @@ void sp_clamp(sp_int* a)
  *
  * a  SP integer.
  * l  Number of digits.
- * retuns MP_MEM if the number of digits requested is more than available and
+ * returns MP_MEM if the number of digits requested is more than available and
  * MP_OKAY otherwise.
  */
 int sp_grow(sp_int* a, int l)
@@ -477,7 +480,7 @@ int sp_cmp_d(sp_int *a, sp_int_digit d)
     return MP_EQ;
 }
 
-#if !defined(WOLFSSL_RSA_VERIFY_ONLY) && (!defined(NO_DH) || defined(HAVE_ECC))
+#if !defined(NO_DH) || defined(HAVE_ECC) || !defined(WOLFSSL_RSA_VERIFY_ONLY)
 /* Left shift the number by number of bits.
  * Bits may be larger than the word size.
  *
@@ -618,7 +621,8 @@ int sp_add_d(sp_int* a, sp_int_digit d, sp_int* r)
     return MP_OKAY;
 }
 
-#if !defined(WOLFSSL_RSA_VERIFY_ONLY) && (!defined(NO_DH) || defined(HAVE_ECC))
+#if !defined(NO_DH) || defined(HAVE_ECC) || defined(WC_RSA_BLINDING) || \
+    !defined(WOLFSSL_RSA_VERIFY_ONLY)
 /* Left shift the big number by a number of digits.
  * WIll chop off digits overflowing maximum size.
  *
@@ -637,7 +641,9 @@ int sp_lshd(sp_int* a, int s)
 
     return MP_OKAY;
 }
+#endif
 
+#if !defined(WOLFSSL_RSA_VERIFY_ONLY) || (!defined(NO_DH) || defined(HAVE_ECC))
 #ifndef NO_PWDBASED
 /* Add two large numbers into result: r = a + b
  *
@@ -674,7 +680,7 @@ int sp_add(sp_int* a, sp_int* b, sp_int* r)
     return MP_OKAY;
 }
 #endif /* NO_PWDBASED */
-#endif
+#endif /* !WOLFSSL_RSA_VERIFY_ONLY || (!NO_DH || HAVE_ECC) */
 
 #ifndef NO_RSA
 /* Set a number into the big number.
@@ -690,7 +696,7 @@ int sp_set_int(sp_int* a, unsigned long b)
 
     return MP_OKAY;
 }
-#endif
+#endif /* !NO_RSA */
 
 #ifdef WC_MP_TO_RADIX
 /* Hex string characters. */
@@ -731,7 +737,7 @@ int sp_tohex(sp_int* a, char* str)
 
     return MP_OKAY;
 }
-#endif
+#endif /* WC_MP_TO_RADIX */
 
 #if !defined(USE_FAST_MATH)
 /* Returns the run time settings.
@@ -742,7 +748,7 @@ word32 CheckRunTimeSettings(void)
 {
     return CTC_SETTINGS;
 }
-#endif
+#endif /* !USE_FAST_MATH */
 
-#endif
+#endif /* WOLFSSL_SP_MATH */
 

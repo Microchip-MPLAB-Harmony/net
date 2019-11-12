@@ -1,6 +1,6 @@
 /* logging.c
  *
- * Copyright (C) 2006-2017 wolfSSL Inc.
+ * Copyright (C) 2006-2019 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -25,8 +25,6 @@
 #endif
 
 #include <wolfssl/wolfcrypt/settings.h>
-
-/* submitted by eof */
 
 #include <wolfssl/wolfcrypt/logging.h>
 #include <wolfssl/wolfcrypt/error-crypt.h>
@@ -211,6 +209,7 @@ void WOLFSSL_TIME(int count)
 #elif defined(WOLFSSL_SGX)
     /* Declare sprintf for ocall */
     int sprintf(char* buf, const char *fmt, ...);
+#elif defined(WOLFSSL_DEOS)
 #elif defined(MICRIUM)
     #if (BSP_SER_COMM_EN  == DEF_ENABLED)
         #include <bsp_ser.h>
@@ -220,6 +219,9 @@ void WOLFSSL_TIME(int count)
 #elif defined(WOLFSSL_ESPIDF)
     #include "esp_types.h"
     #include "esp_log.h"
+#elif defined(WOLFSSL_TELIT_M2MB)
+    #include <stdio.h>
+    #include "m2m_log.h"
 #else
     #include <stdio.h>   /* for default printf stuff */
 #endif
@@ -240,6 +242,8 @@ static void wolfssl_log(const int logLevel, const char *const logMessage)
 
 #elif defined(THREADX) && !defined(THREADX_NO_DC_PRINTF)
         dc_log_printf("%s\n", logMessage);
+#elif defined(WOLFSSL_DEOS)
+        printf("%s\r\n", logMessage);
 #elif defined(MICRIUM)
         BSP_Ser_Printf("%s\r\n", logMessage);
 #elif defined(WOLFSSL_MDK_ARM)
@@ -255,8 +259,11 @@ static void wolfssl_log(const int logLevel, const char *const logMessage)
 #elif defined(WOLFSSL_APACHE_MYNEWT)
         LOG_DEBUG(&mynewt_log, LOG_MODULE_DEFAULT, "%s\n", logMessage);
 #elif defined(WOLFSSL_ESPIDF)
-        extern char* TAG;
-        ESP_LOGI(TAG, "%s", logMessage);
+        ESP_LOGI("wolfssl", "%s", logMessage);
+#elif defined(WOLFSSL_ZEPHYR)
+        printk("%s\n", logMessage);
+#elif defined(WOLFSSL_TELIT_M2MB)
+        M2M_LOG_INFO("%s\n", logMessage);
 #else
         fprintf(stderr, "%s\n", logMessage);
 #endif
