@@ -36,21 +36,13 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_TFTP_CLIENT
 
 #include "tcpip_private.h"
 
 #if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_TFTP_CLIENT)
+#include "system/fs/sys_fs.h"
 #include "tftpc_private.h"
-
-#include "tcpip/src/common/sys_fs_wrapper.h"
 
 #if defined(TCPIP_TFTPC_DEBUG)
 #define TFTPC_DEBUG_PRINT(fmt, ...) do { SYS_CONSOLE_PRINT(fmt, ##__VA_ARGS__); } while (0)
@@ -129,9 +121,9 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
                        const TCPIP_TFTPC_MODULE_CONFIG* pTftpcConfig)
 {
     TFTP_CLIENT_VARS*   pClient;
-    uint16_t        bufferSize;
-    uint16_t        totalBufferSize;
-    
+    uint16_t            bufferSize;
+    uint16_t            totalBufferSize;
+
     if(stackData->stackAction == TCPIP_STACK_ACTION_IF_UP)
     {   // interface restart
         return true;
@@ -148,6 +140,7 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
         pTftpDefIf = (TCPIP_NET_IF*)TCPIP_STACK_NetHandleGet(pTftpcConfig->tftpc_interface);
 
         pClient = &gTFTPClientDcpt;
+        
         pClient->hSocket = TCPIP_UDP_ClientOpen(IP_ADDRESS_TYPE_IPV4, TCPIP_TFTP_SERVER_PORT, 0);
         if(pClient->hSocket == INVALID_UDP_SOCKET)
         {
@@ -194,7 +187,6 @@ bool TCPIP_TFTPC_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackData,
     return true;
 }
 
-#if (TCPIP_STACK_DOWN_OPERATION != 0)
 static  void _TFTPCReleaseSocket(TFTP_CLIENT_VARS* pClient)
 {
     if(pClient->hSocket != INVALID_UDP_SOCKET)
@@ -206,6 +198,8 @@ static  void _TFTPCReleaseSocket(TFTP_CLIENT_VARS* pClient)
 
 static void TCPIP_TFTPC_Cleanup(void)
 {
+    TFTP_CLIENT_VARS    *pClient=NULL;
+    pClient = &gTFTPClientDcpt;
     if(tftpcSignalHandle)
     {
         _TCPIPStackSignalHandlerDeregister(tftpcSignalHandle);
@@ -214,7 +208,7 @@ static void TCPIP_TFTPC_Cleanup(void)
     tftpcInitCount = 0;
 
     // close the socket -
-    _TFTPCReleaseSocket(&gTFTPClientDcpt);
+    _TFTPCReleaseSocket(pClient);
     
 #if (TCPIP_TFTPC_USER_NOTIFICATION != 0)
     // remove notification registered user details.
@@ -223,6 +217,8 @@ static void TCPIP_TFTPC_Cleanup(void)
     
     tftpcMemH = NULL;    
 }
+
+#if (TCPIP_STACK_DOWN_OPERATION != 0)
 
 void TCPIP_TFTPC_Deinitialize(const TCPIP_STACK_MODULE_CTRL* const stackData)
 {        
@@ -756,11 +752,11 @@ static bool TFTPOpenFile(const char *fileName, TFTP_FILE_MODE mode)
 
     if(mode == TFTP_FILE_MODE_WRITE)
     {
-        fp = SYS_FS_FileOpen_Wrapper((const char*)fileName,SYS_FS_FILE_OPEN_READ);
+        fp = SYS_FS_FileOpen((const char*)fileName,SYS_FS_FILE_OPEN_READ);
     }
     else
     {
-        fp = SYS_FS_FileOpen_Wrapper((const char*)fileName,SYS_FS_FILE_OPEN_WRITE);        
+        fp = SYS_FS_FileOpen((const char*)fileName,SYS_FS_FILE_OPEN_WRITE);
     }
 
     if(fp == SYS_FS_HANDLE_INVALID)

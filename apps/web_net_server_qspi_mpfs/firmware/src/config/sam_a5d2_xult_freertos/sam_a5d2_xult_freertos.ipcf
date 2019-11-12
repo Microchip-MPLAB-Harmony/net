@@ -39,42 +39,14 @@
     </linkerFile>
     <files relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos">
         <group name="Header Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos">
-            <path>\driver\memory\src\drv_memory_local.h</path>
-            <path>\system\time\sys_time.h</path>
-            <path>\system\time\sys_time_definitions.h</path>
-            <path>\system\time\src\sys_time_local.h</path>
-            <path>\driver\driver.h</path>
-            <path>\driver\driver_common.h</path>
-            <path>\system\system_media.h</path>
-            <path>\system\int\sys_int.h</path>
-            <path>\system\int\sys_int_mapping.h</path>
-            <path>\system\cache\sys_cache.h</path>
-            <path>\osal\osal.h</path>
-            <path>\osal\osal_definitions.h</path>
-            <path>\osal\osal_freertos.h</path>
-            <path>\..\..\app.h</path>
-            <path>\user.h</path>
-            <path>\configuration.h</path>
-            <path>\driver\mx25l\drv_mx25l.h</path>
-            <path>\driver\mx25l\src\drv_mx25l_local.h</path>
-            <path>\driver\mx25l\drv_mx25l_definitions.h</path>
-            <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
-            <path>\driver\miim\src\drv_miim_local.h</path>
-            <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
-            <path>\system\fs\sys_fs.h</path>
-            <path>\system\fs\src\sys_fs_local.h</path>
-            <path>\system\fs\sys_fs_media_manager.h</path>
-            <path>\system\fs\src\sys_fs_media_manager_local.h</path>
-            <path>\system\fs\fat_fs\src\file_system\ff.h</path>
-            <path>\system\fs\fat_fs\src\file_system\ffconf.h</path>
-            <path>\system\fs\fat_fs\src\hardware_access\diskio.h</path>
-            <path>\system\fs\mpfs\mpfs.h</path>
-            <path>\system\fs\mpfs\src\mpfs_local.h</path>
             <path>\peripheral\pit\plib_pit.h</path>
+            <path>\driver\memory\src\drv_memory_local.h</path>
             <path>\..\..\http_net_print.h</path>
             <path>\peripheral\tc\plib_tc0.h</path>
             <path>\peripheral\tc\plib_tc_common.h</path>
+            <path>\system\time\sys_time.h</path>
+            <path>\system\time\sys_time_definitions.h</path>
+            <path>\system\time\src\sys_time_local.h</path>
             <path>\bsp\bsp.h</path>
             <path>\driver\memory\drv_memory.h</path>
             <path>\driver\memory\drv_memory_definitions.h</path>
@@ -140,6 +112,18 @@
             <path>\net_pres\pres\src\net_pres_local.h</path>
             <path>\net_pres\pres\net_pres_socketapiconversion.h</path>
             <path>\net_pres\pres\net_pres_enc_glue.h</path>
+            <path>\driver\driver.h</path>
+            <path>\driver\driver_common.h</path>
+            <path>\system\system_media.h</path>
+            <path>\system\int\sys_int.h</path>
+            <path>\system\int\sys_int_mapping.h</path>
+            <path>\system\cache\sys_cache.h</path>
+            <path>\osal\osal.h</path>
+            <path>\osal\osal_definitions.h</path>
+            <path>\osal\osal_freertos.h</path>
+            <path>\..\..\app.h</path>
+            <path>\user.h</path>
+            <path>\configuration.h</path>
             <path>\library\tcpip\tcpip_common_ports.h</path>
             <path>\library\tcpip\tcpip_mac.h</path>
             <path>\library\tcpip\tcpip_mac_object.h</path>
@@ -190,6 +174,9 @@
             <path>\library\tcpip\ftp.h</path>
             <path>\library\tcpip\src\ftp_manager.h</path>
             <path>\library\tcpip\src\ftp_private.h</path>
+            <path>\library\tcpip\ftpc.h</path>
+            <path>\library\tcpip\src\ftpc_manager.h</path>
+            <path>\library\tcpip\src\ftpc_private.h</path>
             <path>\library\tcpip\icmp.h</path>
             <path>\library\tcpip\nbns.h</path>
             <path>\library\tcpip\src\nbns_manager.h</path>
@@ -252,7 +239,7 @@
             <path>\library\tcpip\src\lldp_private.h</path>
             <path>\library\tcpip\src\lldp_tlv.h</path>
             <path>\library\tcpip\tcpip_ethernet.h</path>
-            <path>\library\tcpip\src\common\sys_fs_wrapper.h</path>
+            <path>\library\tcpip\src\common\sys_fs_shell.h</path>
             <path>\system\sys_clk_h2_adapter.h</path>
             <path>\system\sys_time_h2_adapter.h</path>
             <path>\system\sys_random_h2_adapter.h</path>
@@ -263,6 +250,9 @@
             <path>\driver\gmac\src\drv_gmac_local.h</path>
             <path>\driver\gmac\src\dynamic\_gmac_dcpt_lists.h</path>
             <path>\driver\gmac\src\dynamic\drv_gmac_lib.h</path>
+            <path>\driver\mx25l\drv_mx25l.h</path>
+            <path>\driver\mx25l\src\drv_mx25l_local.h</path>
+            <path>\driver\mx25l\drv_mx25l_definitions.h</path>
             <path>\system\command\sys_command.h</path>
             <path>\device_cache.h</path>
             <path>\toolchain_specifics.h</path>
@@ -272,9 +262,21 @@
             <path>\peripheral\clk\plib_clk.h</path>
             <path>\peripheral\pio\plib_pio.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
+            <path>\driver\miim\drv_miim.h</path>
+            <path>\driver\miim\src\drv_miim_local.h</path>
+            <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>
             <path>\peripheral\qspi\plib_qspi_common.h</path>
             <path>\peripheral\qspi\plib_qspi0.h</path>
+            <path>\system\fs\sys_fs.h</path>
+            <path>\system\fs\src\sys_fs_local.h</path>
+            <path>\system\fs\sys_fs_media_manager.h</path>
+            <path>\system\fs\src\sys_fs_media_manager_local.h</path>
+            <path>\system\fs\fat_fs\src\file_system\ff.h</path>
+            <path>\system\fs\fat_fs\src\file_system\ffconf.h</path>
+            <path>\system\fs\fat_fs\src\hardware_access\diskio.h</path>
+            <path>\system\fs\mpfs\mpfs.h</path>
+            <path>\system\fs\mpfs\src\mpfs_local.h</path>
             <path>\driver\ethphy\drv_ethphy.h</path>
             <path>\driver\ethphy\src\drv_ethphy_local.h</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_regs.h</path>
@@ -309,33 +311,11 @@
             <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portmacro.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos">
+            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\icmp.c</path>
+            <path>\peripheral\pit\plib_pit.c</path>
             <path>\driver\memory\src\drv_memory.c</path>
             <path>\driver\memory\src\drv_memory_file_system.c</path>
-            <path>\library\tcpip\src\tcp.c</path>
-            <path>\library\tcpip\src\arp.c</path>
-            <path>\system\time\src\sys_time.c</path>
-            <path>\library\tcpip\src\telnet.c</path>
-            <path>\library\tcpip\src\iperf.c</path>
-            <path>\library\tcpip\src\ipv4.c</path>
-            <path>\library\tcpip\src\smtpc.c</path>
-            <path>\system\int\src\sys_int.c</path>
-            <path>\system\cache\sys_cache.c</path>
-            <path>\osal\osal_freertos.c</path>
-            <path>\..\..\app.c</path>
-            <path>\tasks.c</path>
-            <path>\driver\mx25l\src\drv_mx25l.c</path>
-            <path>\library\tcpip\src\tcpip_announce.c</path>
-            <path>\library\tcpip\src\udp.c</path>
-            <path>\driver\miim\src\dynamic\drv_miim.c</path>
-            <path>\system\fs\src\sys_fs.c</path>
-            <path>\system\fs\src\sys_fs_media_manager.c</path>
-            <path>\system\fs\fat_fs\src\ff.c</path>
-            <path>\system\fs\fat_fs\src\diskio.c</path>
-            <path>\system\fs\mpfs\src\mpfs.c</path>
-            <path>\library\tcpip\src\dns.c</path>
-            <path>\library\tcpip\src\common\sys_fs_wrapper.c</path>
-            <path>\peripheral\pit\plib_pit.c</path>
             <path>\library\tcpip\src\http_net.c</path>
             <path>\..\..\http_net_print.c</path>
             <path>\..\..\custom_http_net_app.c</path>
@@ -364,16 +344,29 @@
             <path>\..\..\web_pages\protect\reboot.htm</path>
             <path>\..\..\web_pages\snmp\snmpconfig.htm</path>
             <path>\library\tcpip\src\nbns.c</path>
+            <path>\library\tcpip\src\tcp.c</path>
             <path>\library\tcpip\src\dhcp.c</path>
+            <path>\library\tcpip\src\arp.c</path>
             <path>\peripheral\tc\plib_tc0.c</path>
+            <path>\system\time\src\sys_time.c</path>
             <path>\library\tcpip\src\tcpip_commands.c</path>
             <path>\bsp\bsp.c</path>
             <path>\peripheral\uart\plib_uart1.c</path>
+            <path>\library\tcpip\src\telnet.c</path>
             <path>\net_pres\pres\src\net_pres.c</path>
             <path>\net_pres\pres\net_pres_enc_glue.c</path>
             <path>\net_pres\pres\net_pres_cert_store.c</path>
+            <path>\library\tcpip\src\iperf.c</path>
+            <path>\library\tcpip\src\ipv4.c</path>
+            <path>\library\tcpip\src\smtpc.c</path>
+            <path>\system\int\src\sys_int.c</path>
+            <path>\system\cache\sys_cache.c</path>
+            <path>\osal\osal_freertos.c</path>
+            <path>\..\..\app.c</path>
+            <path>\tasks.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
+            <path>\library\tcpip\src\common\sys_fs_shell.c</path>
             <path>\library\tcpip\src\helpers.c</path>
             <path>\library\tcpip\src\hash_fnv.c</path>
             <path>\library\tcpip\src\oahash.c</path>
@@ -384,6 +377,7 @@
             <path>\system\sys_time_h2_adapter.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac.c</path>
             <path>\driver\gmac\src\dynamic\drv_gmac_lib_samA5D2.c</path>
+            <path>\driver\mx25l\src\drv_mx25l.c</path>
             <path>\system\command\src\sys_command.c</path>
             <path>\..\..\main.c</path>
             <path>\initialization.c</path>
@@ -398,10 +392,18 @@
             <path>\cstartup.s</path>
             <path>\fault_handlers.c</path>
             <path>\library\tcpip\src\sntp.c</path>
+            <path>\library\tcpip\src\tcpip_announce.c</path>
             <path>\library\tcpip\src\tftpc.c</path>
+            <path>\library\tcpip\src\udp.c</path>
+            <path>\driver\miim\src\dynamic\drv_miim.c</path>
             <path>\system\debug\src\sys_debug_local.h</path>
             <path>\system\debug\src\sys_debug.c</path>
             <path>\peripheral\qspi\plib_qspi0.c</path>
+            <path>\system\fs\src\sys_fs.c</path>
+            <path>\system\fs\src\sys_fs_media_manager.c</path>
+            <path>\system\fs\fat_fs\src\ff.c</path>
+            <path>\system\fs\fat_fs\src\diskio.c</path>
+            <path>\system\fs\mpfs\src\mpfs.c</path>
             <path>\driver\ethphy\src\dynamic\drv_ethphy.c</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</path>
             <path>\system\console\src\sys_console_local.h</path>

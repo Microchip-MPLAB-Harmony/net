@@ -97,6 +97,24 @@ extern "C" {
 #define SYS_CONSOLE_BUFFER_DMA_READY
 
 
+#define SYS_CMD_ENABLE
+#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
+#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_BUFFER_DMA_READY
+#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
+/* Command System Service RTOS Configurations*/
+#define SYS_CMD_RTOS_STACK_SIZE                2560
+#define SYS_CMD_RTOS_TASK_PRIORITY             1
+
+
+#define SYS_DEBUG_ENABLE
+#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_BUFFER_DMA_READY
+#define SYS_DEBUG_USE_CONSOLE
+
+
+
 /* File System Service Configuration */
 
 #define SYS_FS_MEDIA_NUMBER               1
@@ -118,24 +136,6 @@ extern "C" {
 
 
 
-
-#define SYS_CMD_ENABLE
-#define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
-#define SYS_CMD_BUFFER_DMA_READY
-#define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
-/* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                1024
-#define SYS_CMD_RTOS_TASK_PRIORITY             1
-
-
-#define SYS_DEBUG_ENABLE
-#define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
-#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
-#define SYS_DEBUG_BUFFER_DMA_READY
-#define SYS_DEBUG_USE_CONSOLE
-
-
 /* Console System Service Configuration Options */
 #define SYS_CONSOLE_DEVICE_MAX_INSTANCES   1
 #define SYS_CONSOLE_UART_MAX_INSTANCES     1
@@ -149,6 +149,15 @@ extern "C" {
 // *****************************************************************************
 /* Memory Driver Global Configuration Options */
 #define DRV_MEMORY_INSTANCES_NUMBER          1
+
+/* Memory Driver Instance 0 Configuration */
+#define DRV_MEMORY_INDEX_0                   0
+#define DRV_MEMORY_CLIENTS_NUMBER_IDX0       1
+
+/* Memory Driver Instance 0 RTOS Configurations*/
+#define DRV_MEMORY_STACK_SIZE_IDX0           1024
+#define DRV_MEMORY_PRIORITY_IDX0             1
+
 /* MX25L Driver Instance Configuration */
 #define DRV_MX25L_INDEX                       0
 #define DRV_MX25L_START_ADDRESS               0x0
@@ -166,20 +175,10 @@ extern "C" {
 #define DRV_MIIM_DRIVER_OBJECT              DRV_MIIM_OBJECT_BASE_Default
 #define DRV_MIIM_DRIVER_INDEX               DRV_MIIM_INDEX_0              
 
-
 /* MIIM RTOS Configurations*/
-#define DRV_MIIM_RTOS_STACK_SIZE           1024
+#define DRV_MIIM_RTOS_STACK_SIZE                1024
 #define DRV_MIIM_RTOS_TASK_PRIORITY             1
 
-
-
-/* Memory Driver Instance 0 Configuration */
-#define DRV_MEMORY_INDEX_0                   0
-#define DRV_MEMORY_CLIENTS_NUMBER_IDX0       1
-
-/* Memory Driver Instance 0 RTOS Configurations*/
-#define DRV_MEMORY_STACK_SIZE_IDX0           1024
-#define DRV_MEMORY_PRIORITY_IDX0             1
 
 
 
@@ -188,139 +187,6 @@ extern "C" {
 // Section: Middleware & Other Library Configuration
 // *****************************************************************************
 // *****************************************************************************
-
-/*** ICMPv4 Server Configuration ***/
-#define TCPIP_STACK_USE_ICMP_SERVER
-#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
-
-
-
-/*** TCP Configuration ***/
-#define TCPIP_TCP_MAX_SEG_SIZE_TX		        	1460
-#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE			512
-#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE			512
-#define TCPIP_TCP_DYNAMIC_OPTIONS             			true
-#define TCPIP_TCP_START_TIMEOUT_VAL		        	1000
-#define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
-#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
-#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
-#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		200
-#define TCPIP_TCP_MAX_RETRIES		            		5
-#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
-#define TCPIP_TCP_MAX_SYN_RETRIES		        	3
-#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL			40
-#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL			200
-#define TCPIP_TCP_MAX_SOCKETS		                10
-#define TCPIP_TCP_TASK_TICK_RATE		        	5
-#define TCPIP_TCP_MSL_TIMEOUT		        	    0
-#define TCPIP_TCP_QUIET_TIME		        	    0
-#define TCPIP_TCP_COMMANDS   false
-
-
-
-/*** ARP Configuration ***/
-#define TCPIP_ARP_CACHE_ENTRIES                 		5
-#define TCPIP_ARP_CACHE_DELETE_OLD		        	true
-#define TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO			1200
-#define TCPIP_ARP_CACHE_PENDING_ENTRY_TMO			60
-#define TCPIP_ARP_CACHE_PENDING_RETRY_TMO			2
-#define TCPIP_ARP_CACHE_PERMANENT_QUOTA		    		50
-#define TCPIP_ARP_CACHE_PURGE_THRESHOLD		    		75
-#define TCPIP_ARP_CACHE_PURGE_QUANTA		    		1
-#define TCPIP_ARP_CACHE_ENTRY_RETRIES		    		3
-#define TCPIP_ARP_GRATUITOUS_PROBE_COUNT			1
-#define TCPIP_ARP_TASK_PROCESS_RATE		        	2
-#define TCPIP_ARP_PRIMARY_CACHE_ONLY		        	true
-
-
-
-/* Network Configuration Index 0 */
-#define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"GMAC"
-#define TCPIP_IF_GMAC
-
-#define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				"MCHPBOARD_C"
-#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"00:04:25:1C:A0:02"
-
-#define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			"192.168.100.11"
-#define TCPIP_NETWORK_DEFAULT_IP_MASK_IDX0			"255.255.255.0"
-#define TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0			"192.168.100.1"
-#define TCPIP_NETWORK_DEFAULT_DNS_IDX0				"192.168.100.1"
-#define TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX0			"0.0.0.0"
-#define TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX0			"full"
-#define TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX0			\
-													TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON |\
-													TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON |\
-													TCPIP_NETWORK_CONFIG_IP_STATIC
-													
-#define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
-
-
-
-/*** telnet Configuration ***/
-#define TCPIP_STACK_USE_TELNET_SERVER
-#define TCPIP_TELNET_MAX_CONNECTIONS    2
-#define TCPIP_TELNET_USERNAME           "admin"
-#define TCPIP_TELNET_PASSWORD           "microchip"
-#define TCPIP_TELNET_TASK_TICK_RATE     100
-
-
-
-
-/*** iperf Configuration ***/
-#define TCPIP_STACK_USE_IPERF
-#define TCPIP_IPERF_TX_BUFFER_SIZE		8192
-#define TCPIP_IPERF_RX_BUFFER_SIZE  	8192
-#define TCPIP_IPERF_TX_WAIT_TMO     	100
-#define TCPIP_IPERF_TX_QUEUE_LIMIT  	2
-#define TCPIP_IPERF_TIMING_ERROR_MARGIN 0
-#define TCPIP_IPERF_MAX_INSTANCES       1
-#define TCPIP_IPERF_TX_BW_LIMIT  		100
-
-
-
-/*** IPv4 Configuration ***/
-
-
-
-/*** SMTPC Configuration ***/
-#define TCPIP_STACK_USE_SMTPC
-#define TCPIP_SMTPC_MAIL_CONNECTIONS 	            2
-#define TCPIP_SMTPC_CLIENT_MESSAGE_DATE 	        "Wed, 20 July 2016 14:55:06 -0600"
-#define TCPIP_SMTPC_SERVER_REPLY_TIMEOUT 	        60
-#define TCPIP_SMTPC_SERVER_DATA_TIMEOUT 	        60
-#define TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT 	        10
-#define TCPIP_SMTPC_MAIL_RETRIES 	                3
-#define TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT  600
-#define TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT          10
-#define TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE 	    512
-#define TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE 	    100
-#define TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE 	    80
-#define TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE 	        256
-#define TCPIP_SMTPC_SKT_TX_BUFF_SIZE			    0
-#define TCPIP_SMTPC_SKT_RX_BUFF_SIZE			    0
-#define TCPIP_SMTPC_TASK_TICK_RATE			        55
-
-
-
-/*** announce Configuration ***/
-#define TCPIP_STACK_USE_ANNOUNCE
-#define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512
-#define TCPIP_ANNOUNCE_TASK_RATE    333
-#define TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST             			false
-
-
-
-/*** UDP Configuration ***/
-#define TCPIP_UDP_MAX_SOCKETS		                	10
-#define TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE		    	512
-#define TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT    	 	3
-#define TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT			3
-#define TCPIP_UDP_USE_POOL_BUFFERS   false
-#define TCPIP_UDP_USE_TX_CHECKSUM             			true
-#define TCPIP_UDP_USE_RX_CHECKSUM             			true
-#define TCPIP_UDP_COMMANDS   false
-
-
 
 
 /*** DNS Client Configuration ***/
@@ -342,14 +208,9 @@ extern "C" {
 
 
 
-/*** TCPIP SYS FS Wrapper ***/
-#define SYS_FS_MAX_PATH						80
-#define LOCAL_WEBSITE_PATH_FS				"/mnt/mchpSite1"
-#define LOCAL_WEBSITE_PATH					"/mnt/mchpSite1/"
-#define SYS_FS_DRIVE						"FLASH"
-#define SYS_FS_NVM_VOL						"/dev/mtda1"
-#define SYS_FS_FATFS_STRING					"FATFS"
-#define SYS_FS_MPFS_STRING					"MPFS2"
+/*** ICMPv4 Server Configuration ***/
+#define TCPIP_STACK_USE_ICMP_SERVER
+#define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
 
@@ -361,6 +222,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_MAX_CONNECTIONS		    		4
 #define TCPIP_HTTP_NET_DEFAULT_FILE		        		"index.htm"
 #define TCPIP_HTTP_NET_FILENAME_MAX_LEN			        25
+#define TCPIP_HTTP_NET_WEB_DIR		        		    "/mnt/mchpSite1/"
 #define TCPIP_HTTP_NET_USE_POST
 #define TCPIP_HTTP_NET_USE_COOKIES
 #define TCPIP_HTTP_NET_USE_AUTHENTICATION
@@ -406,6 +268,30 @@ extern "C" {
 
 
 
+/*** TCP Configuration ***/
+#define TCPIP_TCP_MAX_SEG_SIZE_TX		        	1460
+#define TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE			512
+#define TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE			512
+#define TCPIP_TCP_DYNAMIC_OPTIONS             			true
+#define TCPIP_TCP_START_TIMEOUT_VAL		        	1000
+#define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
+#define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
+#define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		200
+#define TCPIP_TCP_MAX_RETRIES		            		5
+#define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
+#define TCPIP_TCP_MAX_SYN_RETRIES		        	3
+#define TCPIP_TCP_AUTO_TRANSMIT_TIMEOUT_VAL			40
+#define TCPIP_TCP_WINDOW_UPDATE_TIMEOUT_VAL			200
+#define TCPIP_TCP_MAX_SOCKETS		                10
+#define TCPIP_TCP_TASK_TICK_RATE		        	5
+#define TCPIP_TCP_MSL_TIMEOUT		        	    0
+#define TCPIP_TCP_QUIET_TIME		        	    0
+#define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
+
+
+
 /*** DHCP Configuration ***/
 #define TCPIP_STACK_USE_DHCP_CLIENT
 #define TCPIP_DHCP_TIMEOUT                          2
@@ -414,6 +300,44 @@ extern "C" {
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
 #define TCPIP_DHCP_SERVER_LISTEN_PORT               67
 #define TCPIP_DHCP_CLIENT_ENABLED                   true
+
+
+
+/*** ARP Configuration ***/
+#define TCPIP_ARP_CACHE_ENTRIES                 		5
+#define TCPIP_ARP_CACHE_DELETE_OLD		        	true
+#define TCPIP_ARP_CACHE_SOLVED_ENTRY_TMO			1200
+#define TCPIP_ARP_CACHE_PENDING_ENTRY_TMO			60
+#define TCPIP_ARP_CACHE_PENDING_RETRY_TMO			2
+#define TCPIP_ARP_CACHE_PERMANENT_QUOTA		    		50
+#define TCPIP_ARP_CACHE_PURGE_THRESHOLD		    		75
+#define TCPIP_ARP_CACHE_PURGE_QUANTA		    		1
+#define TCPIP_ARP_CACHE_ENTRY_RETRIES		    		3
+#define TCPIP_ARP_GRATUITOUS_PROBE_COUNT			1
+#define TCPIP_ARP_TASK_PROCESS_RATE		        	2
+#define TCPIP_ARP_PRIMARY_CACHE_ONLY		        	true
+
+
+
+/* Network Configuration Index 0 */
+#define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"GMAC"
+#define TCPIP_IF_GMAC
+
+#define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				"MCHPBOARD_C"
+#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"00:04:25:1C:A0:02"
+
+#define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			"192.168.100.11"
+#define TCPIP_NETWORK_DEFAULT_IP_MASK_IDX0			"255.255.255.0"
+#define TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0			"192.168.100.1"
+#define TCPIP_NETWORK_DEFAULT_DNS_IDX0				"192.168.100.1"
+#define TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX0			"0.0.0.0"
+#define TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX0			"full"
+#define TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX0			\
+													TCPIP_NETWORK_CONFIG_DHCP_CLIENT_ON |\
+													TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON |\
+													TCPIP_NETWORK_CONFIG_IP_STATIC
+													
+#define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_GMAC_Object
 
 
 
@@ -427,13 +351,69 @@ extern "C" {
 #define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE    100
 
 
+
+/*** telnet Configuration ***/
+#define TCPIP_STACK_USE_TELNET_SERVER
+#define TCPIP_TELNET_MAX_CONNECTIONS    2
+#define TCPIP_TELNET_TASK_TICK_RATE     100
+#define TCPIP_TELNET_SKT_TX_BUFF_SIZE   0
+#define TCPIP_TELNET_SKT_RX_BUFF_SIZE   0
+#define TCPIP_TELNET_LISTEN_PORT        23
+#define TCPIP_TELNET_PRINT_BUFF_SIZE    200
+#define TCPIP_TELNET_LINE_BUFF_SIZE     80
+#define TCPIP_TELNET_USERNAME_SIZE      15
+#define TCPIP_TELNET_CONFIG_FLAGS       \
+                                       TCPIP_TELNET_FLAG_NONE
+
+#define TCPIP_TELNET_OBSOLETE_AUTHENTICATION false
+#define TCPIP_TELNET_AUTHENTICATION_CONN_INFO true
+
+
 /* MPLAB Harmony Net Presentation Layer Definitions*/
 #define NET_PRES_NUM_INSTANCE 1
 #define NET_PRES_NUM_SOCKETS 10
 
 /* Net Pres RTOS Configurations*/
-#define NET_PRES_RTOS_STACK_SIZE           1024
+#define NET_PRES_RTOS_STACK_SIZE                1024
 #define NET_PRES_RTOS_TASK_PRIORITY             1
+	
+
+
+
+/*** iperf Configuration ***/
+#define TCPIP_STACK_USE_IPERF
+#define TCPIP_IPERF_TX_BUFFER_SIZE		8192
+#define TCPIP_IPERF_RX_BUFFER_SIZE  	8192
+#define TCPIP_IPERF_TX_WAIT_TMO     	100
+#define TCPIP_IPERF_TX_QUEUE_LIMIT  	2
+#define TCPIP_IPERF_TIMING_ERROR_MARGIN 0
+#define TCPIP_IPERF_MAX_INSTANCES       1
+#define TCPIP_IPERF_TX_BW_LIMIT  		100
+
+
+
+/*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
+
+
+
+/*** SMTPC Configuration ***/
+#define TCPIP_STACK_USE_SMTPC
+#define TCPIP_SMTPC_MAIL_CONNECTIONS 	            2
+#define TCPIP_SMTPC_CLIENT_MESSAGE_DATE 	        "Wed, 20 July 2016 14:55:06 -0600"
+#define TCPIP_SMTPC_SERVER_REPLY_TIMEOUT 	        60
+#define TCPIP_SMTPC_SERVER_DATA_TIMEOUT 	        60
+#define TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT 	        10
+#define TCPIP_SMTPC_MAIL_RETRIES 	                3
+#define TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT  600
+#define TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT          10
+#define TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE 	    512
+#define TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE 	    100
+#define TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE 	    80
+#define TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE 	        256
+#define TCPIP_SMTPC_SKT_TX_BUFF_SIZE			    0
+#define TCPIP_SMTPC_SKT_RX_BUFF_SIZE			    0
+#define TCPIP_SMTPC_TASK_TICK_RATE			        55
 
 
 
@@ -485,14 +465,13 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
 
-
-/*** TCP/IP Configuration ***/
 /* TCP/IP RTOS Configurations*/
-#define TCPIP_RTOS_STACK_SIZE           1024
+#define TCPIP_RTOS_STACK_SIZE                1024
 #define TCPIP_RTOS_PRIORITY             1
 
 
@@ -606,6 +585,14 @@ extern "C" {
 
 
 
+/*** announce Configuration ***/
+#define TCPIP_STACK_USE_ANNOUNCE
+#define TCPIP_ANNOUNCE_MAX_PAYLOAD 	512
+#define TCPIP_ANNOUNCE_TASK_RATE    333
+#define TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST             			false
+
+
+
 /*** TFTP Client Configuration ***/
 #define TCPIP_STACK_USE_TFTP_CLIENT
 #define TCPIP_TFTPC_DEFAULT_IF                  "GMAC"
@@ -617,6 +604,19 @@ extern "C" {
 #define TCPIP_TFTPC_ARP_TIMEOUT                 3
 #define TCPIP_TFTPC_MAX_RETRIES                 3
 
+
+
+
+/*** UDP Configuration ***/
+#define TCPIP_UDP_MAX_SOCKETS		                	10
+#define TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE		    	512
+#define TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT    	 	3
+#define TCPIP_UDP_SOCKET_DEFAULT_RX_QUEUE_LIMIT			3
+#define TCPIP_UDP_USE_POOL_BUFFERS   false
+#define TCPIP_UDP_USE_TX_CHECKSUM             			true
+#define TCPIP_UDP_USE_RX_CHECKSUM             			true
+#define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 

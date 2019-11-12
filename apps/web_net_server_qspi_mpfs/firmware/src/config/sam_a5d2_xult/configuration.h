@@ -171,7 +171,6 @@ extern "C" {
 
 
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Middleware & Other Library Configuration
@@ -198,17 +197,6 @@ extern "C" {
 
 
 
-/*** TCPIP SYS FS Wrapper ***/
-#define SYS_FS_MAX_PATH						80
-#define LOCAL_WEBSITE_PATH_FS				"/mnt/mchpSite1"
-#define LOCAL_WEBSITE_PATH					"/mnt/mchpSite1/"
-#define SYS_FS_DRIVE						"FLASH"
-#define SYS_FS_NVM_VOL						"/dev/mtda1"
-#define SYS_FS_FATFS_STRING					"FATFS"
-#define SYS_FS_MPFS_STRING					"MPFS2"
-
-
-
 /*** ICMPv4 Server Configuration ***/
 #define TCPIP_STACK_USE_ICMP_SERVER
 #define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
@@ -223,6 +211,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_MAX_CONNECTIONS		    		4
 #define TCPIP_HTTP_NET_DEFAULT_FILE		        		"index.htm"
 #define TCPIP_HTTP_NET_FILENAME_MAX_LEN			        25
+#define TCPIP_HTTP_NET_WEB_DIR		        		    "/mnt/mchpSite1/"
 #define TCPIP_HTTP_NET_USE_POST
 #define TCPIP_HTTP_NET_USE_COOKIES
 #define TCPIP_HTTP_NET_USE_AUTHENTICATION
@@ -282,6 +271,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -348,10 +338,18 @@ extern "C" {
 /*** telnet Configuration ***/
 #define TCPIP_STACK_USE_TELNET_SERVER
 #define TCPIP_TELNET_MAX_CONNECTIONS    2
-#define TCPIP_TELNET_USERNAME           "admin"
-#define TCPIP_TELNET_PASSWORD           "microchip"
 #define TCPIP_TELNET_TASK_TICK_RATE     100
+#define TCPIP_TELNET_SKT_TX_BUFF_SIZE   0
+#define TCPIP_TELNET_SKT_RX_BUFF_SIZE   0
+#define TCPIP_TELNET_LISTEN_PORT        23
+#define TCPIP_TELNET_PRINT_BUFF_SIZE    200
+#define TCPIP_TELNET_LINE_BUFF_SIZE     80
+#define TCPIP_TELNET_USERNAME_SIZE      15
+#define TCPIP_TELNET_CONFIG_FLAGS       \
+                                       TCPIP_TELNET_FLAG_NONE
 
+#define TCPIP_TELNET_OBSOLETE_AUTHENTICATION false
+#define TCPIP_TELNET_AUTHENTICATION_CONN_INFO true
 
 
 /* MPLAB Harmony Net Presentation Layer Definitions*/
@@ -374,6 +372,7 @@ extern "C" {
 
 
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -445,12 +444,11 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
 
-
-/*** TCP/IP Configuration ***/
 
 
 /*** TCPIP MAC Configuration ***/
@@ -594,6 +592,7 @@ extern "C" {
 #define TCPIP_UDP_USE_TX_CHECKSUM             			true
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 
