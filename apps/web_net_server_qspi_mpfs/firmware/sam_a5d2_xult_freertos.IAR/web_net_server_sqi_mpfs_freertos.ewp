@@ -2304,9 +2304,6 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\drv_miim.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\config\drv_miim_config.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\driver\miim\src\drv_miim_local.h</name>
             </file>
             <file>
@@ -2347,6 +2344,15 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftp_private.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\ftpc.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftpc_manager.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\ftpc_private.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAMA5D27_DFP\component\gmac.h</name>
@@ -2724,7 +2730,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\fs\src\sys_fs_media_manager_local.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\sys_fs_wrapper.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\sys_fs_shell.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\int\sys_int.h</name>
@@ -3204,7 +3210,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\fs\src\sys_fs_media_manager.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\sys_fs_wrapper.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\library\tcpip\src\common\sys_fs_shell.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult_freertos\system\int\src\sys_int.c</name>

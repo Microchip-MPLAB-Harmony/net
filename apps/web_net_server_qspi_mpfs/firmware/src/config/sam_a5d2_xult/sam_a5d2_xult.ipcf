@@ -169,6 +169,9 @@
             <path>\library\tcpip\ftp.h</path>
             <path>\library\tcpip\src\ftp_manager.h</path>
             <path>\library\tcpip\src\ftp_private.h</path>
+            <path>\library\tcpip\ftpc.h</path>
+            <path>\library\tcpip\src\ftpc_manager.h</path>
+            <path>\library\tcpip\src\ftpc_private.h</path>
             <path>\library\tcpip\icmp.h</path>
             <path>\library\tcpip\nbns.h</path>
             <path>\library\tcpip\src\nbns_manager.h</path>
@@ -231,7 +234,7 @@
             <path>\library\tcpip\src\lldp_private.h</path>
             <path>\library\tcpip\src\lldp_tlv.h</path>
             <path>\library\tcpip\tcpip_ethernet.h</path>
-            <path>\library\tcpip\src\common\sys_fs_wrapper.h</path>
+            <path>\library\tcpip\src\common\sys_fs_shell.h</path>
             <path>\system\sys_clk_h2_adapter.h</path>
             <path>\system\sys_time_h2_adapter.h</path>
             <path>\system\sys_random_h2_adapter.h</path>
@@ -256,7 +259,6 @@
             <path>\peripheral\pio\plib_pio.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
             <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
             <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>
@@ -287,7 +289,6 @@
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult">
             <path>\library\tcpip\src\dns.c</path>
-            <path>\library\tcpip\src\common\sys_fs_wrapper.c</path>
             <path>\library\tcpip\src\icmp.c</path>
             <path>\driver\memory\src\drv_memory.c</path>
             <path>\driver\memory\src\drv_memory_file_system.c</path>
@@ -339,6 +340,7 @@
             <path>\tasks.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
+            <path>\library\tcpip\src\common\sys_fs_shell.c</path>
             <path>\library\tcpip\src\helpers.c</path>
             <path>\library\tcpip\src\hash_fnv.c</path>
             <path>\library\tcpip\src\oahash.c</path>
