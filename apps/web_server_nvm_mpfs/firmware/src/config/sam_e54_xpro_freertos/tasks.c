@@ -53,44 +53,12 @@
 #include "configuration.h"
 #include "definitions.h"
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: RTOS "Tasks" Routine
 // *****************************************************************************
 // *****************************************************************************
-/* Handle for the APP_Tasks. */
-TaskHandle_t xAPP_Tasks;
-
-void _APP_Tasks(  void *pvParameters  )
-{
-    while(1)
-    {
-        APP_Tasks();
-        vTaskDelay(2 / portTICK_PERIOD_MS);
-    }
-}
-
-
-void _DRV_MIIM_Task(  void *pvParameters  )
-{
-    while(1)
-    {
-        DRV_MIIM_Tasks(sysObj.drvMiim);
-        vTaskDelay(1 / portTICK_PERIOD_MS);
-    }
-}
-
-
-void _SYS_FS_Tasks(  void *pvParameters  )
-{
-    while(1)
-    {
-        SYS_FS_Tasks();
-        vTaskDelay(10 / portTICK_PERIOD_MS);
-    }
-}
-
-
 void _DRV_MEMORY_0_Tasks(  void *pvParameters  )
 {
     while(1)
@@ -107,6 +75,18 @@ void _NET_PRES_Tasks(  void *pvParameters  )
     {
         NET_PRES_Tasks(sysObj.netPres);
         vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+}
+
+/* Handle for the APP_Tasks. */
+TaskHandle_t xAPP_Tasks;
+
+void _APP_Tasks(  void *pvParameters  )
+{
+    while(1)
+    {
+        APP_Tasks();
+        vTaskDelay(2 / portTICK_PERIOD_MS);
     }
 }
 
@@ -131,6 +111,27 @@ void _SYS_CMD_Tasks(  void *pvParameters  )
 
 
 
+void _DRV_MIIM_Task(  void *pvParameters  )
+{
+    while(1)
+    {
+        DRV_MIIM_Tasks(sysObj.drvMiim);
+        vTaskDelay(1 / portTICK_PERIOD_MS);
+    }
+}
+
+
+void _SYS_FS_Tasks(  void *pvParameters  )
+{
+    while(1)
+    {
+        SYS_FS_Tasks();
+        vTaskDelay(10 / portTICK_PERIOD_MS);
+    }
+}
+
+
+
 
 // *****************************************************************************
 // *****************************************************************************
@@ -145,20 +146,10 @@ void _SYS_CMD_Tasks(  void *pvParameters  )
   Remarks:
     See prototype in system/common/sys_module.h.
 */
-
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-    
-    xTaskCreate( _SYS_FS_Tasks,
-        "SYS_FS_TASKS",
-        SYS_FS_STACK_SIZE,
-        (void*)NULL,
-        SYS_FS_PRIORITY,
-        (TaskHandle_t*)NULL
-    );
-
-    xTaskCreate( _SYS_CMD_Tasks,
+        xTaskCreate( _SYS_CMD_Tasks,
         "SYS_CMD_TASKS",
         SYS_CMD_RTOS_STACK_SIZE,
         (void*)NULL,
@@ -168,9 +159,26 @@ void SYS_Tasks ( void )
 
 
 
+    xTaskCreate( _SYS_FS_Tasks,
+        "SYS_FS_TASKS",
+        SYS_FS_STACK_SIZE,
+        (void*)NULL,
+        SYS_FS_PRIORITY,
+        (TaskHandle_t*)NULL
+    );
+
+
 
     /* Maintain Device Drivers */
-        xTaskCreate( _DRV_MIIM_Task,
+        xTaskCreate( _DRV_MEMORY_0_Tasks,
+        "DRV_MEM_0_TASKS",
+        DRV_MEMORY_STACK_SIZE_IDX0,
+        (void*)NULL,
+        DRV_MEMORY_PRIORITY_IDX0,
+        (TaskHandle_t*)NULL
+    );
+
+    xTaskCreate( _DRV_MIIM_Task,
         "DRV_MIIM_Tasks",
         DRV_MIIM_RTOS_STACK_SIZE,
         (void*)NULL,
@@ -178,14 +186,6 @@ void SYS_Tasks ( void )
         (TaskHandle_t*)NULL
     );
 
-
-    xTaskCreate( _DRV_MEMORY_0_Tasks,
-        "DRV_MEM_0_TASKS",
-        DRV_MEMORY_STACK_SIZE_IDX0,
-        (void*)NULL,
-        DRV_MEMORY_PRIORITY_IDX0,
-        (TaskHandle_t*)NULL
-    );
 
 
 
@@ -231,7 +231,6 @@ void SYS_Tasks ( void )
     vTaskStartScheduler(); /* This function never returns. */
 
 }
-
 
 /*******************************************************************************
  End of File
