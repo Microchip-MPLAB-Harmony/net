@@ -48,12 +48,9 @@
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/ftpc_manager.h</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/ndp_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/ndp_private.h</itemPath>
@@ -125,7 +122,6 @@
                 <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/lldp_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/src/lldp_tlv.h</itemPath>
               </logicalFolder>
-              <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/tcpip_common_ports.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/tcpip_mac.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_rtos/library/tcpip/tcpip_mac_object.h</itemPath>
@@ -418,18 +414,6 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_port.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f3" displayName="wolfssl" projectFiles="true">
-        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
