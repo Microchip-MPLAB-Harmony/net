@@ -8,100 +8,6 @@
             <itemPath>../src/config/pic32mz_ef_sk/bsp/bsp.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f7" displayName="crypto" projectFiles="true">
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/aes.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/arc4.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/asn.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/asn_public.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/async.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/camellia.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/certs_test.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/chacha.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/chacha20_poly1305.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/cmac.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/coding.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/compress.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_rng_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/curve25519.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/des3.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/dh.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha_sam11105.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha_sam6156.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_aes_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_aes_sam6149.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_aes_hwInt.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha1_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha256_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha224_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_aes_u2238.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha384_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_sha512_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_tdes_hw.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_tdes_sam6150.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypt_tdes_hwInt.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/dsa.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ecc.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ed25519.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/error-crypt.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/fe_operations.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/pic32mz-crypt.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/fips_test.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ge_operations.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/hash.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/hc128.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/hmac.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/idea.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/integer.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/logging.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/md2.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/md4.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/md5.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/mem_track.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/memory.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/misc.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/mpi_class.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/mpi_superclass.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/pkcs11.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/pkcs12.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/pkcs7.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/poly1305.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/pwdbased.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/rabbit.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/random.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ripemd.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/rsa.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/selftest.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/settings.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/sha.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/sha256.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/sha3.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/sha512.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/signature.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/sniffer.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/sniffer_error.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/srp.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/ssl.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/tfm.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/types.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/version.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/visibility.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/wc_encrypt.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/wc_pkcs11.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/wc_port.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/wolfevent.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/wolfio.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/wolfmath.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/crc32.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/deflate.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/inffast.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/inffixed.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/inflate.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/inftrees.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/trees.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/zconf.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/zutil.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/zlib.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/zlib-1.2.7/gzguts.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/crypto/crypto.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f1" displayName="driver" projectFiles="true">
@@ -127,10 +33,7 @@
               <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/pic32mz_ef_sk/driver/miim/config/drv_miim_config.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="src" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
@@ -145,7 +48,6 @@
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
-                  <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
@@ -325,16 +227,16 @@
             <itemPath>../src/config/pic32mz_ef_sk/system/system_common.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/system/system_module.h</itemPath>
           </logicalFolder>
-          <itemPath>../src/config/pic32mz_ef_sk/user.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/system_config.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/system_definitions.h</itemPath>
+          <itemPath>../src/config/pic32mz_ef_sk/user.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/configuration.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/config.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f5" displayName="osal" projectFiles="true">
+      <logicalFolder name="f4" displayName="osal" projectFiles="true">
         <itemPath>../src/config/pic32mz_ef_sk/osal/osal.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk/osal/osal_impl_basic.h</itemPath>
@@ -351,7 +253,7 @@
           <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f6" displayName="wolfcrypt" projectFiles="true">
+      <logicalFolder name="f5" displayName="wolfcrypt" projectFiles="true">
         <logicalFolder name="f1" displayName="port" projectFiles="true">
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/pic32mz-crypt.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_cf_pb.h</itemPath>
@@ -480,7 +382,7 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha512.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_port.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="wolfSSL" projectFiles="true">
+      <logicalFolder name="f3" displayName="wolfssl" projectFiles="true">
         <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
@@ -493,61 +395,13 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/aes.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/arc4.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/asn_public.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/camellia.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/chacha.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/coding.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/compress.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/cpuid.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/des3.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dh.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/dsa.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ecc.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/error-crypt.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hash.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hc128.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/hmac.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/integer.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/logging.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md2.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md4.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/md5.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/memory.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/misc.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs7.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pkcs12.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_class.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/mpi_superclass.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/pwdbased.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rabbit.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/random.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/ripemd.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/rsa.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/settings.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha256.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/sha512.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/tfm.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/types.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/visibility.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_encrypt.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wc_port.h</itemPath>
-        <itemPath>../src/third_party/wolfcrypt_support/wolfssl/wolfcrypt/wolfmath.h</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f4" displayName="wolfssl" projectFiles="true">
       </logicalFolder>
       <itemPath>../src/app_commands.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
     <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
-      <logicalFolder name="f2" displayName="wolfcrypt" projectFiles="true">
+      <logicalFolder name="f1" displayName="wolfcrypt" projectFiles="true">
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/misc.c</itemPath>
-      </logicalFolder>
-      <logicalFolder name="f1" displayName="wolfSSL" projectFiles="true">
-        <itemPath>../src/third_party/wolfcrypt_support/wolfcrypt/src/misc.c</itemPath>
       </logicalFolder>
       <itemPath>Makefile</itemPath>
     </logicalFolder>
@@ -1043,6 +897,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/isp/git/h3/net/apps/wolfssl_tcp_client/firmware/pic32mz_ef_sk.X/debug/pic32mz_ef_sk/pic32mz_ef_sk_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
