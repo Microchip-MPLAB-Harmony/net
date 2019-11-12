@@ -137,26 +137,6 @@ SYSTEM_OBJECTS sysObj;
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
-/*** File System Initialization Data ***/
-
-
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
-{
-	{NULL}
-};
-
-
-
-
-const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
-{
-    {
-        .nativeFileSystemType = FAT,
-        .nativeFileSystemFunctions = &FatFsFunctions
-    }
-};
-
-
 /* Net Presentation Layer Data Definitions */
 #include "net_pres/pres/net_pres_enc_glue.h"
 
@@ -328,6 +308,7 @@ const TCPIP_HTTP_MODULE_CONFIG tcpipHTTPInitData =
     .configFlags	= TCPIP_HTTP_CONFIG_FLAGS,
     .http_malloc_fnc    = TCPIP_HTTP_MALLOC_FUNC,
     .http_free_fnc      = TCPIP_HTTP_FREE_FUNC,
+    .web_dir            = TCPIP_HTTP_WEB_DIR, 
 };
 
 
@@ -380,6 +361,7 @@ const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
 { 
     0
 };
+
 
 
 
@@ -480,7 +462,6 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 
 
 
-
 /*** DNS Client Initialization Data ***/
 const TCPIP_DNS_CLIENT_MODULE_CONFIG tcpipDNSClientInitData =
 {
@@ -531,7 +512,7 @@ const TCPIP_NETWORK_CONFIG __attribute__((unused))  TCPIP_HOSTS_CONFIGURATION[] 
     },
 };
 
-
+const size_t TCPIP_HOSTS_CONFIGURATION_SIZE = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
 
 const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 {
@@ -558,9 +539,9 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 // MAC modules
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
 
-
 };
 
+const size_t TCPIP_STACK_MODULE_CONFIG_TBL_SIZE = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
 /*********************************************************************
  * Function:        SYS_MODULE_OBJ TCPIP_STACK_Init()
  *
@@ -582,18 +563,40 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
  *
  ********************************************************************/
 
+
 SYS_MODULE_OBJ TCPIP_STACK_Init()
 {
     TCPIP_STACK_INIT    tcpipInit;
 
     tcpipInit.pNetConf = TCPIP_HOSTS_CONFIGURATION;
-    tcpipInit.nNets = sizeof (TCPIP_HOSTS_CONFIGURATION) / sizeof (*TCPIP_HOSTS_CONFIGURATION);
+    tcpipInit.nNets = TCPIP_HOSTS_CONFIGURATION_SIZE;
     tcpipInit.pModConfig = TCPIP_STACK_MODULE_CONFIG_TBL;
-    tcpipInit.nModules = sizeof (TCPIP_STACK_MODULE_CONFIG_TBL) / sizeof (*TCPIP_STACK_MODULE_CONFIG_TBL);
+    tcpipInit.nModules = TCPIP_STACK_MODULE_CONFIG_TBL_SIZE;
+    tcpipInit.initCback = 0;
 
     return TCPIP_STACK_Initialize(0, &tcpipInit.moduleInit);
 }
 // </editor-fold>
+
+/*** File System Initialization Data ***/
+
+
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+{
+	{NULL}
+};
+
+
+
+
+const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
+{
+    {
+        .nativeFileSystemType = FAT,
+        .nativeFileSystemFunctions = &FatFsFunctions
+    }
+};
+
 
 
 
@@ -702,10 +705,8 @@ void SYS_Initialize ( void* data )
 
     EFC_Initialize();
   
-    CLK_Initialize();
+    CLOCK_Initialize();
 	PIO_Initialize();
-
-	HSMCI_Initialize();
 
   
 
@@ -722,6 +723,8 @@ void SYS_Initialize ( void* data )
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
 	BSP_Initialize();
+	HSMCI_Initialize();
+
 
 
     /* Initialize the MIIM Driver */
@@ -740,9 +743,6 @@ void SYS_Initialize ( void* data )
 
 
 
-    /*** File System Service Initialization Code ***/
-    SYS_FS_Initialize( (const void *) sysFSInit );
-
     sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
 
 
@@ -750,6 +750,9 @@ void SYS_Initialize ( void* data )
     sysObj.tcpip = TCPIP_STACK_Init();
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 
+
+    /*** File System Service Initialization Code ***/
+    SYS_FS_Initialize( (const void *) sysFSInit );
 
 
     APP_Initialize();
