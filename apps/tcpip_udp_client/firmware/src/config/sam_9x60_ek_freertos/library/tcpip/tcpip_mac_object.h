@@ -95,7 +95,7 @@ typedef struct TCPIP_MAC_OBJECT_TYPE
     bool                (*TCPIP_MAC_EventAcknowledge)(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvents);
     TCPIP_MAC_EVENT     (*TCPIP_MAC_EventPendingGet)(DRV_HANDLE hMac);
 
-} TCPIP_MAC_OBJECT;     // TCPIP MAC object descriptor
+}TCPIP_MAC_OBJECT;        // TCPIP MAC object descriptor
 
 typedef struct
 {
@@ -104,7 +104,7 @@ typedef struct
                                         // multiple MAC objects of the same type
                                         // to share an unique const object table
     void*               mac_data[0];    // specific MAC object data
-} TCPIP_MAC_DCPT;
+}TCPIP_MAC_DCPT; 
     
 // supported MAC objects
 extern const TCPIP_MAC_OBJECT DRV_ETHMAC_PIC32MACObject;
