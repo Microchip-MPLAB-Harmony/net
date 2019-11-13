@@ -190,35 +190,19 @@ typedef enum
     // Some useful masks:
     /*DOM-IGNORE-END*/
     // Mask of all RX related events
-    TCPIP_EV_RX_ALL             = ( TCPIP_EV_RX_PKTPEND
-                                    | TCPIP_EV_RX_OVFLOW
-                                    | TCPIP_EV_RX_BUFNA
-                                    | TCPIP_EV_RX_ACT
-                                    | TCPIP_EV_RX_DONE
-                                    | TCPIP_EV_RX_FWMARK
-                                    | TCPIP_EV_RX_EWMARK
-                                    | TCPIP_EV_RX_BUSERR
-                                    ),
+    TCPIP_EV_RX_ALL             = (TCPIP_EV_RX_PKTPEND|TCPIP_EV_RX_OVFLOW|TCPIP_EV_RX_BUFNA|TCPIP_EV_RX_ACT|
+                                   TCPIP_EV_RX_DONE|TCPIP_EV_RX_FWMARK|TCPIP_EV_RX_EWMARK|TCPIP_EV_RX_BUSERR),
 
     // Mask of all TX related events
-    TCPIP_EV_TX_ALL            = (  TCPIP_EV_TX_DONE
-                                    | TCPIP_EV_TX_ABORT
-                                    | TCPIP_EV_TX_BUSERR
-                                    ),
+    TCPIP_EV_TX_ALL            = (TCPIP_EV_TX_DONE|TCPIP_EV_TX_ABORT|TCPIP_EV_TX_BUSERR),
 
     // All events showing some abnormal traffic/system condition
     // Action should be taken accordingly by the stack (or the stack user)
-    TCPIP_EV_RXTX_ERRORS        = ( TCPIP_EV_RX_OVFLOW
-                                    | TCPIP_EV_RX_BUFNA
-                                    | TCPIP_EV_RX_BUSERR
-                                    | TCPIP_EV_TX_ABORT
-                                    | TCPIP_EV_TX_BUSERR
-                                    ),
+    TCPIP_EV_RXTX_ERRORS        = (TCPIP_EV_RX_OVFLOW|TCPIP_EV_RX_BUFNA|TCPIP_EV_RX_BUSERR|
+	                               TCPIP_EV_TX_ABORT|TCPIP_EV_TX_BUSERR),
 
     // Mask of all Connection related events
-    TCPIP_EV_CONN_ALL           = ( TCPIP_EV_CONN_ESTABLISHED
-                                    | TCPIP_EV_CONN_LOST
-                                    ),
+    TCPIP_EV_CONN_ALL            = (TCPIP_EV_CONN_ESTABLISHED|TCPIP_EV_CONN_LOST),
 
 } TCPIP_EVENT;
 
@@ -1527,11 +1511,8 @@ TCPIP_STACK_MODULE  TCPIP_STACK_NetMACIdGet(TCPIP_NET_HANDLE netH);
 //*********************************************************************
 /*
    Function:
-    bool TCPIP_STACK_NetMACStatisticsGet(
-        TCPIP_NET_HANDLE netH,
-	    TCPIP_MAC_RX_STATISTICS * pRxStatistics,
-	    TCPIP_MAC_TX_STATISTICS * pTxStatistics
-	    )
+    bool TCPIP_STACK_NetMACStatisticsGet(TCPIP_NET_HANDLE netH, 
+	TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics)
   
    Summary:
     Get the MAC statistics data.
@@ -1573,11 +1554,8 @@ TCPIP_STACK_MODULE  TCPIP_STACK_NetMACIdGet(TCPIP_NET_HANDLE netH);
     If the netH refers to an alias interface, the MAC statistics of the primary interface are returned.
  */
 
-bool  TCPIP_STACK_NetMACStatisticsGet(
-    TCPIP_NET_HANDLE            netH,
-    TCPIP_MAC_RX_STATISTICS *   pRxStatistics,
-    TCPIP_MAC_TX_STATISTICS *   pTxStatistics
-    );
+bool  TCPIP_STACK_NetMACStatisticsGet(TCPIP_NET_HANDLE netH, TCPIP_MAC_RX_STATISTICS* pRxStatistics, 
+                                      TCPIP_MAC_TX_STATISTICS* pTxStatistics);
 
 //*********************************************************************
 /*
