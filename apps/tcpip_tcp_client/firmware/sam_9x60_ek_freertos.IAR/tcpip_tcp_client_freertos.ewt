@@ -2494,6 +2494,18 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\driver_common.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\drv_emac.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\drv_emac_local.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\drv_ethphy.h</name>
             </file>
             <file>
@@ -2509,10 +2521,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\drv_miim.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\config\drv_miim_config.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\drv_miim_local.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\drv_miim_local.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\dynamic\drv_miim_mapping.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\emac.h</name>
@@ -2648,18 +2660,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\lldp_tlv.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\drv_emac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\drv_emac_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
@@ -3106,13 +3106,22 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\library\tcpip\src\dns.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_statistics.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\dynamic\drv_ethphy.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\dynamic\drv_miim_emac.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\miim\src\dynamic\drv_miim.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\event_groups.c</name>
@@ -3155,15 +3164,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\rtos\FreeRTOS\Source\list.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek_freertos\driver\emac\src\dynamic\drv_emac_statistics.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\main_sam_9x60.c</name>
