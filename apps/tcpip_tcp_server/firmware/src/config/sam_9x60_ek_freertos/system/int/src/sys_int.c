@@ -156,14 +156,12 @@ INT_InterruptEnable( INT_SOURCE aSrcSelection )
 bool
 INT_InterruptDisable( INT_SOURCE aSrcSelection )
 {
-    bool processorStatus = INT_IrqDisable();
     bool previousValue = INT_IsInterruptEnabled( aSrcSelection );
     aic_registers_t * aicPtr = _aicInstanceGet( aSrcSelection );
     aicPtr->AIC_SSR = AIC_SSR_INTSEL( (uint32_t) aSrcSelection );
     aicPtr->AIC_IDCR = AIC_IDCR_Msk;
     __DSB();
     __ISB();
-    INT_IrqRestore(processorStatus);
     return( previousValue );
 }
 

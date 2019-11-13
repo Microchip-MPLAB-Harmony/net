@@ -34,6 +34,13 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
+
+
+
+
+
+
+
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_COMMAND
 #include "system/sys_clk_h2_adapter.h"
 
@@ -111,8 +118,8 @@ typedef enum
 }DNS_SERVICE_COMD_TYPE;
 typedef struct 
 {
-    char *command;
-    DNS_SERVICE_COMD_TYPE  val;
+	char *command;
+	DNS_SERVICE_COMD_TYPE  val;
 }DNSS_COMMAND_MAP;
 
 
@@ -437,10 +444,10 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #endif
 #endif
 #if defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
-    {"mail",        (SYS_CMD_FNC)_CommandMail,                 ": Send Mail Message"},
+	{"mail", 	    (SYS_CMD_FNC)_CommandMail,			       ": Send Mail Message"},
 #endif  // defined(TCPIP_STACK_USE_SMTPC) && defined(TCPIP_SMTPC_USE_MAIL_COMMAND)
 #if defined(_TCPIP_COMMANDS_MIIM)
-    {"miim",        (SYS_CMD_FNC)_CommandMiim,                 ": MIIM commands"},
+	{"miim", 	    (SYS_CMD_FNC)_CommandMiim,			       ": MIIM commands"},
 #endif  // defined(_TCPIP_COMMANDS_MIIM)
 #if (TCPIP_UDP_COMMANDS)
     {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
@@ -745,7 +752,7 @@ static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         return false;
     }
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam,"MAC Address       IPAddress       RemainingLeaseTime \r\n",0);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam,"MAC Address		IPAddress		RemainingLeaseTime \r\n",0);
 
     prevLease = 0;
     do
@@ -762,8 +769,8 @@ static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
             TCPIP_Helper_MACAddressToString(&leaseEntry.hwAdd, addrBuff, sizeof(addrBuff));
             (*pCmdIO->pCmdApi->print)(cmdIoParam, "%s", addrBuff);
             TCPIP_Helper_IPAddressToString(&leaseEntry.ipAddress, addrBuff, sizeof(addrBuff));
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, " %s ", addrBuff);
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, " %d Secs\r\n", leaseEntry.leaseTime/SYS_TMR_TickCounterFrequencyGet());
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "	%s ", addrBuff);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "	%d Secs\r\n", leaseEntry.leaseTime/SYS_TMR_TickCounterFrequencyGet());
 
             prevLease = nextLease;
         }
@@ -1427,10 +1434,10 @@ static int _Command_TFTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
     }
    
     if(TCPIP_TFTPC_SetCommand(&mAddr,ipType,cmdType,tftpcFileName) != TFTPC_ERROR_NONE)
-    {
-        (*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "TFTPC:Command processing error.\r\n");
+	{
+		(*pCmdIO->pCmdApi->msg)(pCmdIO->cmdIoParam, "TFTPC:Command processing error.\r\n");
         return true;
-    }
+	}
     return false;
 }
 #endif
@@ -1780,7 +1787,7 @@ static int _Command_DNSSOnOff(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Unknown option\r\n");
         return false;
     }
-    addFnc = svcEnable?TCPIP_DNSS_Enable:TCPIP_DNSS_Disable;
+	addFnc = svcEnable?TCPIP_DNSS_Enable:TCPIP_DNSS_Disable;
 
         msgOK   = svcEnable?"enabled":"disabled";
         msgFail = svcEnable?"enable":"disable";
@@ -1804,7 +1811,7 @@ static int _Command_AddDelDNSSrvAddress(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, c
     uint8_t             *hostName;
     IP_MULTI_ADDRESS    ipDNS;
     const void* cmdIoParam = pCmdIO->cmdIoParam;
-    uint32_t        entryTimeout=0;
+    uint32_t		entryTimeout=0;
 #if defined(TCPIP_STACK_USE_IPV6)
     uint8_t     addrBuf[44];
 #endif
@@ -1919,8 +1926,8 @@ static int _Command_DnsServService(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char**
                 {"del",DNS_SERVICE_COMD_DEL,},
                 {"info",DNS_SERVICE_COMD_INFO,},
             }; 
-
-
+	
+	
     if (argc < 2) {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: dnss <service/add/del/info> \r\n");
          return false;
@@ -1979,7 +1986,7 @@ static int _Command_ShowDNSServInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char*
     hostName = (uint8_t*)argv[2];
     if(strcmp((char*)argv[2],"all")==0)
     {
-        index = 0;
+    	index = 0;
         (*pCmdIO->pCmdApi->msg)(cmdIoParam,"HostName        IPv4/IPv6Count\r\n");
 
         while(1)
@@ -2641,38 +2648,29 @@ static int _Command_HeapInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     return true;
 }
 
-#if defined(__SAM9X60__)
-extern void emacStatisticsClear( void );
-#endif
 static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    int                             netNo, netIx;
-    TCPIP_NET_HANDLE                netH;
-    TCPIP_MAC_RX_STATISTICS         rxStatistics;
-    TCPIP_MAC_TX_STATISTICS         txStatistics;
-    TCPIP_MAC_STATISTICS_REG_ENTRY  regEntries[ 50 ];
-    char                            entryName[ sizeof( regEntries[ 0 ].registerName ) + 1 ];
-    int                             ii, jj, hwEntries;
-    const void *                    cmdIoParam = pCmdIO->cmdIoParam;
+    int                     netNo, netIx;
+    TCPIP_NET_HANDLE        netH;
+    TCPIP_MAC_RX_STATISTICS rxStatistics;
+    TCPIP_MAC_TX_STATISTICS txStatistics;
+    TCPIP_MAC_STATISTICS_REG_ENTRY  regEntries[50];
+    TCPIP_MAC_STATISTICS_REG_ENTRY* pRegEntry;
+    int                     jx, hwEntries;
+    char                    entryName[sizeof(pRegEntry->registerName) + 1];
+    const char*             netName;
 
-    if( argc > 1 )
-    {
-        if( !stricmp( argv[ 1 ], "clear") )
-        {
-#if defined(__SAM9X60__)
-            emacStatisticsClear();
-#endif
-        }
-        else
-        {
-            pCmdIO->pCmdApi->msg( cmdIoParam, "Usage: macinfo [clear]\r\n" );
-            pCmdIO->pCmdApi->msg( cmdIoParam, "Ex: macinfo \r\n" );
-            return false;
-        }
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if (argc != 1) {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: macinfo \r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: macinfo \r\n");
+        return false;
     }
 
+
     netNo = TCPIP_STACK_NumberOfNetworksGet();
-    for( netIx = 0; netIx < netNo; netIx++ )
+    for(netIx = 0; netIx < netNo; netIx++)
     {
         netH = TCPIP_STACK_IndexToNet(netIx);
         if(TCPIP_STACK_NetGetType(netH) != TCPIP_NETWORK_TYPE_PRIMARY)
@@ -2680,41 +2678,41 @@ static int _Command_MacInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             continue;
         }
 
-        pCmdIO->pCmdApi->print( cmdIoParam, "Interface: %s\r\n", TCPIP_STACK_NetNameGet( netH ) );
-        if( TCPIP_STACK_NetMACStatisticsGet( netH, &rxStatistics, &txStatistics ) )
+        netName = TCPIP_STACK_NetNameGet(netH);
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Interface: %s Driver Statistics\r\n", netName);
+        if(TCPIP_STACK_NetMACStatisticsGet(netH, &rxStatistics, &txStatistics))
         {
-            pCmdIO->pCmdApi->print( cmdIoParam, "\r\nReceive Statistics\r\n" );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nRxOkPackets:              0x%x\r\n", rxStatistics.nRxOkPackets );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nRxSchedBuffers:           0x%x\r\n", rxStatistics.nRxSchedBuffers );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nRxErrorPackets:           0x%x\r\n", rxStatistics.nRxErrorPackets );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nRxFragmentErrors:         0x%x\r\n", rxStatistics.nRxFragmentErrors );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nRxBuffNotAvailable:       0x%x\r\n", rxStatistics.nRxBuffNotAvailable );
-            pCmdIO->pCmdApi->print( cmdIoParam, "\r\nTransmit Statistics\r\n");
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nTxOkPackets:              0x%x\r\n", txStatistics.nTxOkPackets );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nTxErrorPackets:           0x%x\r\n", txStatistics.nTxErrorPackets );
-            pCmdIO->pCmdApi->print( cmdIoParam, "    nTxQueueFull:              0x%x\r\n", txStatistics.nTxQueueFull );
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\n Receive Statistics\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t nRxOkPackets: %d\r\n\t nRxPendBuffers: %d\r\n\t nRxSchedBuffers: %d\r\n",
+                    rxStatistics.nRxOkPackets, rxStatistics.nRxPendBuffers, rxStatistics.nRxSchedBuffers);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t nRxErrorPackets: %d\r\n\t nRxFragmentErrors: %d\r\n\t nRxBuffNotAvailable: %d\r\n", rxStatistics.nRxErrorPackets, rxStatistics.nRxFragmentErrors,rxStatistics.nRxBuffNotAvailable);
+            
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\n Transmit Statistics\r\n");
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t nTxOkPackets: %d\r\n\t nTxPendBuffers: %d\r\n\t nTxErrorPackets: %d\r\n\t nTxQueueFull: %d\r\n\r\n",
+                    txStatistics.nTxOkPackets, txStatistics.nTxPendBuffers, txStatistics.nTxErrorPackets, txStatistics.nTxQueueFull);
         }
         else
         {
-            pCmdIO->pCmdApi->msg( cmdIoParam, "\tnot supported\r\n" );
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "\tnot supported\r\n");
         }
 
-        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\r\nHardware Register Status\r\n" );
-        jj = sizeof( regEntries )/sizeof( regEntries[ 0 ] );
-        if( TCPIP_STACK_NetMACRegisterStatisticsGet( netH, regEntries, jj, &hwEntries ) )
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Interface: %s Hardware Register Status\r\n", netName);
+        if(TCPIP_STACK_NetMACRegisterStatisticsGet(netH, regEntries, sizeof(regEntries)/sizeof(*regEntries), &hwEntries))
         {
-            for( ii = 0; ii < hwEntries && ii < jj; ++ii )
+            entryName[sizeof(entryName) - 1] = 0;
+            for(jx = 0, pRegEntry = regEntries; jx < hwEntries && jx < sizeof(regEntries)/sizeof(*regEntries); jx++, pRegEntry++)
             {
-                strncpy( entryName, regEntries[ ii ].registerName, sizeof( entryName ));
-                entryName[ sizeof( entryName ) - 1 ] = 0;
-                pCmdIO->pCmdApi->print( cmdIoParam, "    %s: 0x%x\r\n", entryName, regEntries[ ii ].registerValue );
+                strncpy(entryName, pRegEntry->registerName, sizeof(entryName) - 1);
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t %s: 0x%x\r\n", entryName, pRegEntry->registerValue);
             }
         }
         else
         {
-            pCmdIO->pCmdApi->msg( cmdIoParam, "\tnot supported\r\n" );
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "\tnot supported\r\n");
         }
+
     }
+
     return true;
 }
 
@@ -4130,22 +4128,13 @@ static void _CommandMiimSetup(SYS_CMD_DEVICE_NODE* pCmdIO, const void* cmdIoPara
         return;
     }
 
-#if defined (__PIC32MZ__)
-    miimSetup.hostClockFreq = SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5);
+    miimSetup.hostClockFreq = (uint32_t)TCPIP_INTMAC_PERIPHERAL_CLK;
     miimSetup.maxBusFreq = 2000000;
-#elif defined (__PIC32C__) || defined(__SAMA5D2__)
-    miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
-    miimSetup.maxBusFreq = 2000000;
-#elif defined(__SAM9X60__)
-    miimSetup.hostClockFreq = SYS_CLK_FrequencyGet(SYS_CLK_MASTER);
-    miimSetup.maxBusFreq = 2500000;
-#else
-    miimSetup.hostClockFreq = SYS_CLK_SystemFrequencyGet();
-    miimSetup.maxBusFreq = 2000000;
-#endif
     miimSetup.setupFlags = 0;
+
     
     res = miimObj->DRV_MIIM_Setup(miimHandle, &miimSetup);
+
     if(res < 0)
     {
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "miim setup failed: %d!\r\n", res);
@@ -5636,6 +5625,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     return false;
 }
 
-#endif  // defined(TCPIP_STACK_USE_FTP_CLIENT)
-#endif  // defined(TCPIP_STACK_COMMAND_ENABLE)
+#endif // defined(TCPIP_STACK_USE_FTP_CLIENT)
+#endif // defined(TCPIP_STACK_COMMAND_ENABLE)
+
 

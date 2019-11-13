@@ -1500,16 +1500,16 @@ static void _DRV_ETHPHY_NegRestartPhaseWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
 }
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS * pFlags )
+DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CONFIG_FLAGS* pFlags )
 {
     DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
     DRV_ETHPHY_CONFIG_FLAGS hwFlags;
     DRV_ETHPHY_RESULT ethRes;
-
-    if( hClientObj == 0 )
+    if(hClientObj == 0)
     {
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
+
 
     // the way the hw is configured
 #if defined (__PIC32MX__) || defined(__PIC32MZ__)
@@ -1527,10 +1527,12 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
     ethRes = DRV_ETHPHY_RES_CFG_ERR;
 #endif
 
-    if( pFlags )
+    if(pFlags)
     {
+
         *pFlags = hwFlags;
     }
+
     return ethRes;
 }
 
