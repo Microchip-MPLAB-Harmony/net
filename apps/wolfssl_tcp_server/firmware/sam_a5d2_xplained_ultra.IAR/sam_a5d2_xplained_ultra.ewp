@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.32.2.19370</state>
+                    <state>8.32.1.18618</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>50</state>
                 </option>
                 <option>
@@ -221,6 +221,7 @@
                 <option>
                     <name>CCDefines</name>
                     <state>__PIC32C__</state>
+                    <state>HAVE_CONFIG_H</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -260,7 +261,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state></state>
+                    <state>Pe186, Pe188, Pa089</state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -1173,7 +1174,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1190,7 +1191,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1213,7 +1214,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>38</state>
                 </option>
                 <option>
