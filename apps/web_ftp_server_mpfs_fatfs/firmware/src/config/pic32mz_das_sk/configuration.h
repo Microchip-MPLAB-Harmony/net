@@ -158,7 +158,6 @@ extern "C" {
 
 
 
-
 /* Memory Driver Instance 0 Configuration */
 #define DRV_MEMORY_INDEX_0                   0
 #define DRV_MEMORY_CLIENTS_NUMBER_IDX0       1
@@ -202,12 +201,10 @@ extern "C" {
 #define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
-
 /******************************************************************************/
 /*wolfSSL TLS Layer Configuration*/
 /******************************************************************************/
 
-#define HAVE_AES_DECRYPT
 #define WOLFSSL_ALT_NAMES
 #define WOLFSSL_DER_LOAD
 #define KEEP_OUR_CERT
@@ -221,20 +218,12 @@ extern "C" {
 #define HAVE_FFDHE_8192
 #define TFM_NO_ASM
 #define WOLFSSL_NO_ASM
-#define SINGLE_THREADED
 #define SIZEOF_LONG_LONG 8
 #define WOLFSSL_USER_IO
 #define NO_WRITEV
-#define NO_DEV_RANDOM
-#define NO_FILESYSTEM
 #define MICROCHIP_TCPIP
-#define USER_TICKS
 #define WOLFSSL_DTLS
 
-
-#define TFM_TIMING_RESISTANT
-#define ECC_TIMING_RESISTANT
-#define WC_RSA_BLINDING
 
 
     
@@ -247,8 +236,7 @@ extern "C" {
     
     
     
-    
-
+   
 
 
 /*** TCP Configuration ***/
@@ -637,8 +625,6 @@ extern "C" {
 
 
 
-/*** TCP/IP Configuration ***/
-
 
 
 /*** SNTP Configuration ***/
@@ -659,39 +645,46 @@ extern "C" {
 
 
 
-
-/*** Crypto Library Configuration ***/
-#define WC_NO_HARDEN
-#define NO_DSA
-#define HAVE_MCAPI
-#define WOLFSSL_IGNORE_FILE_WARN
-
+/*** wolfCrypt Library Configuration ***/
+#define MICROCHIP_PIC32
 #define MICROCHIP_MPLAB_HARMONY
 #define MICROCHIP_MPLAB_HARMONY_3
-
-#define MICROCHIP_PIC32
+#define HAVE_MCAPI
 #define SIZEOF_LONG_LONG 8
-#define SINGLE_THREADED
 #define WOLFSSL_USER_IO
 #define NO_WRITEV
-#define NO_DEV_RANDOM
 #define NO_FILESYSTEM
 #define USE_FAST_MATH
-#define TFM_TIMING_RESISTANT
-#define USE_CERT_BUFFERS_2048
-#define NO_BIG_INT
-#define WOLFSSL_AES_COUNTER
-#define HAVE_AES_CBC
-#define HAVE_AESGCM
+#define NO_PWDBASED
+#define HAVE_MCAPI
+#define WOLF_CRYPTO_CB
+#define WOLFSSL_HAVE_MIN
+#define WOLFSSL_HAVE_MAX
+#define NO_MD4
 #define WOLFSSL_SHA224
-#define WOLFSSL_SHA512
-#define WOLFSSL_SHA384
-#define HAVE_ECC
-#define USE_FAST_MATH
-#define WOLFSSL_STATIC_RSA
-#define NO_DES3
+#define WOLFSSL_AES_128
+#define WOLFSSL_AES_192
+#define WOLFSSL_AES_256
+#define WOLFSSL_AES_DIRECT
+#define HAVE_AES_DECRYPT
+#define HAVE_AES_ECB
+#define HAVE_AES_CBC
 #define WOLFSSL_AES_COUNTER
-#define NO_RNG_TEST
+#define HAVE_AESGCM
+#define HAVE_AESCCM
+#define NO_RC4
+#define NO_HC128
+#define NO_RABBIT
+#define HAVE_ECC
+#define NO_DH
+#define NO_DSA
+#define USE_CERT_BUFFERS_2048
+#define NO_DEV_RANDOM
+#define HAVE_HASHDRBG
+#define WC_NO_HARDEN
+#define SINGLE_THREADED
+#define NO_ERROR_STRINGS
+#define NO_WOLFSSL_MEMORY
 
 
 
