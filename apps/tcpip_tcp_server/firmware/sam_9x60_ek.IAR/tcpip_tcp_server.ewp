@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.32.1.18618</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1167,7 +1167,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1184,7 +1184,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -1207,7 +1207,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>27</version>
+                    <version>26</version>
                     <state>38</state>
                 </option>
                 <option>
@@ -2222,6 +2222,18 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\driver_common.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\drv_emac.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\drv_emac_local.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\drv_ethphy.h</name>
             </file>
             <file>
@@ -2237,10 +2249,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\drv_miim.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\config\drv_miim_config.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\drv_miim_local.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\drv_miim_local.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_mapping.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\emac.h</name>
@@ -2364,18 +2376,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_tlv.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\drv_emac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\drv_emac_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
@@ -2780,13 +2780,22 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dns.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_statistics.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_ethphy.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_emac.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\exceptions.c</name>
@@ -2811,15 +2820,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_statistics.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\main_sam_9x60.c</name>

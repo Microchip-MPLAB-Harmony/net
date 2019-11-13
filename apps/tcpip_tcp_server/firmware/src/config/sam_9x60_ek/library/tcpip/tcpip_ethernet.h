@@ -40,15 +40,28 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+
+
+
+
+
+
+
+
 //DOM-IGNORE-END
+
 #ifndef _TCPIP_ETHERNET_H_
 #define _TCPIP_ETHERNET_H_
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
+
     extern "C" {
+
 #endif
 // DOM-IGNORE-END  
+
+
 // *****************************************************************************
 /* Ethernet Open Configuration Settings
 
@@ -79,44 +92,74 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
         - The MDIX is set based on the TCPIP_ETH_OPEN_MDIX_NORM/TCPIP_ETH_OPEN_MDIX_SWAP
           setting.
 */
+
 typedef enum
 {
     // Link capabilities flags:
+
     // Use auto negotiation. set the following flags to specify your choices
-    TCPIP_ETH_OPEN_AUTO         /*DOM-IGNORE-BEGIN*/ = 0x1 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_AUTO
+        /*DOM-IGNORE-BEGIN*/ = 0x1 /*DOM-IGNORE-END*/,
+
     // Use full duplex or full duplex negotiation capability needed
-    TCPIP_ETH_OPEN_FDUPLEX      /*DOM-IGNORE-BEGIN*/ = 0x2 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_FDUPLEX
+        /*DOM-IGNORE-BEGIN*/ = 0x2 /*DOM-IGNORE-END*/,
+
     // Use half duplex or half duplex negotiation capability needed
-    TCPIP_ETH_OPEN_HDUPLEX      /*DOM-IGNORE-BEGIN*/ = 0x4 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_HDUPLEX
+        /*DOM-IGNORE-BEGIN*/ = 0x4 /*DOM-IGNORE-END*/,
+
     // Use 100MBps or 100MBps negotiation capability needed
-    TCPIP_ETH_OPEN_100          /*DOM-IGNORE-BEGIN*/ = 0x8 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_100
+        /*DOM-IGNORE-BEGIN*/ = 0x8 /*DOM-IGNORE-END*/,
+
     // Use 10MBps or 10MBps negotiation capability needed
-    TCPIP_ETH_OPEN_10           /*DOM-IGNORE-BEGIN*/ = 0x10 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_10
+        /*DOM-IGNORE-BEGIN*/ = 0x10 /*DOM-IGNORE-END*/,
+
     // Allow huge packets RX/TX
-    TCPIP_ETH_OPEN_HUGE_PKTS    /*DOM-IGNORE-BEGIN*/ = 0x20 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_HUGE_PKTS
+        /*DOM-IGNORE-BEGIN*/ = 0x20 /*DOM-IGNORE-END*/,
+
     // Loopbacked at the MAC level
-    TCPIP_ETH_OPEN_MAC_LOOPBACK /*DOM-IGNORE-BEGIN*/ = 0x40 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_MAC_LOOPBACK
+        /*DOM-IGNORE-BEGIN*/ = 0x40 /*DOM-IGNORE-END*/,
+
     /*When PHY is loopbacked, negotiation will be disabled!*/
-    TCPIP_ETH_OPEN_PHY_LOOPBACK /*DOM-IGNORE-BEGIN*/ = 0x80 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_PHY_LOOPBACK
+        /*DOM-IGNORE-BEGIN*/ = 0x80 /*DOM-IGNORE-END*/,
+
     // Use Auto MDIX
-    TCPIP_ETH_OPEN_MDIX_AUTO    /*DOM-IGNORE-BEGIN*/ = 0x100 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_MDIX_AUTO
+        /*DOM-IGNORE-BEGIN*/ = 0x100 /*DOM-IGNORE-END*/,
+
     // Use normal MDIX when Auto MDIX disabled
-    TCPIP_ETH_OPEN_MDIX_NORM    /*DOM-IGNORE-BEGIN*/ = 0x0 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_MDIX_NORM
+        /*DOM-IGNORE-BEGIN*/ = 0x0 /*DOM-IGNORE-END*/,
+
     // Use swapped MDIX when Auto MDIX disabled
-    TCPIP_ETH_OPEN_MDIX_SWAP    /*DOM-IGNORE-BEGIN*/ = 0x200 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_MDIX_SWAP
+        /*DOM-IGNORE-BEGIN*/ = 0x200 /*DOM-IGNORE-END*/,
+
+    // MII/RMII flags:
+
     // RMII connection
-    TCPIP_ETH_OPEN_RMII         /*DOM-IGNORE-BEGIN*/ = 0x400 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_RMII
+        /*DOM-IGNORE-BEGIN*/ = 0x400 /*DOM-IGNORE-END*/,
+
     // MII connection
-    TCPIP_ETH_OPEN_MII          /*DOM-IGNORE-BEGIN*/ = 0x000 /*DOM-IGNORE-END*/,
+    TCPIP_ETH_OPEN_MII
+        /*DOM-IGNORE-BEGIN*/ = 0x000 /*DOM-IGNORE-END*/,
+
+
     // All capabilities default
-    TCPIP_ETH_OPEN_DEFAULT = (  TCPIP_ETH_OPEN_AUTO
-                              | TCPIP_ETH_OPEN_FDUPLEX
-                              | TCPIP_ETH_OPEN_HDUPLEX
-                              | TCPIP_ETH_OPEN_100
-                              | TCPIP_ETH_OPEN_10
-                              | TCPIP_ETH_OPEN_MDIX_AUTO
-                              )
+    TCPIP_ETH_OPEN_DEFAULT = (TCPIP_ETH_OPEN_AUTO|TCPIP_ETH_OPEN_FDUPLEX|TCPIP_ETH_OPEN_HDUPLEX|
+                        TCPIP_ETH_OPEN_100|TCPIP_ETH_OPEN_10|TCPIP_ETH_OPEN_MDIX_AUTO)
+
 } TCPIP_ETH_OPEN_FLAGS; 
+
+
+
 
 // *****************************************************************************
 /* TCP/IP Ethernet Pause Types
@@ -132,26 +175,32 @@ typedef enum
     in the PHY link negotiation process.
 
 */
+
 typedef enum
 {
     // No PAUSE capabilities
     TCPIP_ETH_PAUSE_TYPE_NONE     /*DOM-IGNORE-BEGIN*/ = 0x0 /*DOM-IGNORE-END*/,
+
     // Supports symmetric PAUSE
     TCPIP_ETH_PAUSE_TYPE_PAUSE    /*DOM-IGNORE-BEGIN*/ = 0x1 /*DOM-IGNORE-END*/,
+
     // Supports ASM_DIR
     TCPIP_ETH_PAUSE_TYPE_ASM_DIR  /*DOM-IGNORE-BEGIN*/ = 0x2 /*DOM-IGNORE-END*/,
+
     // The previous two values converted to TX/RX capabilities:
+
     // Enable MAC TX pause support
     TCPIP_ETH_PAUSE_TYPE_EN_TX    /*DOM-IGNORE-BEGIN*/ = 0x4 /*DOM-IGNORE-END*/,
+
     // Enable MAC RX pause support
     TCPIP_ETH_PAUSE_TYPE_EN_RX    /*DOM-IGNORE-BEGIN*/ = 0x8 /*DOM-IGNORE-END*/,
+
     // All types of pause
-    TCPIP_ETH_PAUSE_TYPE_ALL    = (     TCPIP_ETH_PAUSE_TYPE_PAUSE
-                                    |   TCPIP_ETH_PAUSE_TYPE_ASM_DIR
-                                    |   TCPIP_ETH_PAUSE_TYPE_EN_TX
-                                    |   TCPIP_ETH_PAUSE_TYPE_EN_RX
-                                    ),
+    TCPIP_ETH_PAUSE_TYPE_ALL    = (TCPIP_ETH_PAUSE_TYPE_PAUSE|TCPIP_ETH_PAUSE_TYPE_ASM_DIR|
+                           TCPIP_ETH_PAUSE_TYPE_EN_TX|TCPIP_ETH_PAUSE_TYPE_EN_RX),
+
 } TCPIP_ETH_PAUSE_TYPE; 
+
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
@@ -159,4 +208,5 @@ typedef enum
 #endif
 //DOM-IGNORE-END
 
-#endif
+
+#endif//_TCPIP_ETHERNET_H_
