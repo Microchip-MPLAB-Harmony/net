@@ -59,6 +59,7 @@
 #include "system/int/sys_int.h"
 #include "osal/osal.h"
 #include "library/tcpip/tcpip.h"
+#include "driver/emac/drv_emac.h"
 #include "driver/miim/drv_miim.h"
 #include "system/sys_time_h2_adapter.h"
 #include "system/sys_clk_h2_adapter.h"

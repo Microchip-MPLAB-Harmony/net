@@ -64,6 +64,20 @@ extern "C" {
 #endif
 // DOM-IGNORE-END
 
+#ifdef __SAM9X60__
+#define LED_AH_PB11_Get() (PIOB_REGS->PIO_PDSR & (1<<11))
+#define LED_AH_PB12_Get() (PIOB_REGS->PIO_PDSR & (1<<12))
+#define LED_AH_PB13_Get() (PIOB_REGS->PIO_PDSR & (1<<13))
+
+#define APP_LED_2StateGet()         LED_AH_PB12_Get()
+#define APP_LED_3StateGet()         LED_AH_PB13_Get()
+  
+#define APP_SWITCH_1StateGet()      (0)
+#define APP_LED_1StateGet()         LED_AH_PB11_Get()
+#define APP_LED_1StateSet()         LED_AH_PB11_On()
+#define APP_LED_1StateClear()       LED_AH_PB11_Off()
+#define APP_LED_1StateToggle()      LED_AH_PB11_Toggle()
+#else    
 #if defined (__PIC32C__) || defined(__SAMA5D2__)        
 /* This section is highly customizable based on application's specific needs. */
 #define APP_SWITCH_1StateGet()      SWITCH_Get()
@@ -91,6 +105,7 @@ extern "C" {
 #define APP_LED_3StateGet()         LED3_Get()
 #define APP_LED_3StateClear()       LED3_Clear()
 #define APP_LED_3StateToggle()      LED3_Toggle()
+#endif
 #endif
 
 // Application SYS_FS mount points

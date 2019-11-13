@@ -376,6 +376,45 @@ const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData =
 
 
 
+/*** ETH PHY Initialization Data ***/
+extern void AppPhyResetFunction( const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pBaseObj);
+
+
+
+const DRV_ETHPHY_INIT tcpipPhyInitData =
+{    
+    .ethphyId               = TCPIP_INTMAC_MODULE_ID,
+    .phyAddress             = TCPIP_INTMAC_PHY_ADDRESS,
+    .phyFlags               = TCPIP_INTMAC_PHY_CONFIG_FLAGS,
+    .pPhyObject             = &DRV_ETHPHY_OBJECT_KSZ8081,
+    .resetFunction          = AppPhyResetFunction,
+    .pMiimObject            = &DRV_MIIM_OBJECT_BASE_Default,
+    .pMiimInit              = &drvMiimInitData,
+    .miimIndex              = DRV_MIIM_DRIVER_INDEX,
+
+};
+
+/*** EMAC0 Initialization Data ***/
+const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpipEMAC0InitData =
+{
+    .macIntSrc                         = DRV_EMAC0_INTERRUPT_SOURCE,
+    .macRxFilters                      = DRV_EMAC0_RX_FILTERS,
+    /** QUEUE Intialization **/
+    .queueEnable                       = true,
+    .rxDeviceMaxDescriptors            = DRV_EMAC0_RX_DEVICE_MAX_DESCRIPTORS0,
+    .nRxDescCnt                        = DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0,
+    .nTxDescCnt                        = DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0,
+    .rxBufferSize                      = DRV_EMAC0_RX_BUFF_SIZE_QUE0,
+    .txBufferSize                      = DRV_EMAC0_TX_BUFF_SIZE_QUE0,
+    .nRxStaticBufferCnt                = DRV_EMAC0_RX_BUFF_STATIC_COUNT_QUE0,
+    .nRxBuffCntThres                   = DRV_EMAC0_RX_BUFF_COUNT_THRESHOLD_QUE0,
+    .nRxBuffAllocCnt                   = DRV_EMAC0_RX_BUFF_ALLOC_COUNT_QUE0,
+    .ethModuleId                       = DRV_EMAC0_BASE_ADDRESS,
+    .ethFlags                          = DRV_EMAC0_ETH_OPEN_FLAGS,
+    .linkInitDelay                     = TCPIP_INTMAC_PHY_LINK_INIT_DELAY,
+    .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
+    .pPhyInit               = &tcpipPhyInitData,
+};
 
 
 
@@ -466,6 +505,7 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     { TCPIP_MODULE_MANAGER,         &tcpipHeapConfig },             // TCPIP_MODULE_MANAGER
 
 // MAC modules
+    {TCPIP_MODULE_MAC_SAM9X60_0,    &tcpipEMAC0InitData},		    // TCPIP_MODULE_MAC_SAM9X60_0
 
 };
 
