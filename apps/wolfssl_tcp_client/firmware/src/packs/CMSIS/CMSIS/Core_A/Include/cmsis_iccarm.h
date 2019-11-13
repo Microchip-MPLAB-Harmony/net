@@ -2,13 +2,12 @@
  * @file     cmsis_iccarm.h
  * @brief    CMSIS compiler ICCARM (IAR Compiler for Arm) header file
  * @version  V5.0.7
- * @date     15. May 2019
+ * @date     04. Semptember 2018
  ******************************************************************************/
 
 //------------------------------------------------------------------------------
 //
 // Copyright (c) 2017-2018 IAR Systems
-// Copyright (c) 2018-2019 Arm Limited 
 //
 // Licensed under the Apache License, Version 2.0 (the "License")
 // you may not use this file except in compliance with the License.
@@ -68,10 +67,6 @@
 
 #ifndef __ASM
   #define __ASM __asm
-#endif
-
-#ifndef   __COMPILER_BARRIER
-  #define __COMPILER_BARRIER() __ASM volatile("":::"memory")
 #endif
 
 #ifndef __INLINE
@@ -552,12 +547,10 @@ void __FPU_Enable(void)
 #endif
 
     //Initialise FPSCR to a known state
-    "        VMRS    R1,FPSCR          \n"
-    "        MOV32   R2,#0x00086060    \n" //Mask off all bits that do not have to be preserved. Non-preserved bits can/should be zero.
-    "        AND     R1,R1,R2          \n"
-    "        VMSR    FPSCR,R1          \n"
-    : : : "cc", "r1", "r2"
-  );
+    "        VMRS    R2,FPSCR          \n"
+    "        MOV32   R3,#0x00086060    \n" //Mask off all bits that do not have to be preserved. Non-preserved bits can/should be zero.
+    "        AND     R2,R2,R3          \n"
+    "        VMSR    FPSCR,R2          \n");
 }
 
 
