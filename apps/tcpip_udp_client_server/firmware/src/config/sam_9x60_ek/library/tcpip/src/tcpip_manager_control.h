@@ -371,6 +371,8 @@ static __inline__ uint32_t  __attribute__((always_inline)) _TCPIPStackNetAddress
     return pNetIf->netIPAddr.Val;
 }
 
+
+
 static __inline__ bool  __attribute__((always_inline)) TCPIP_STACK_AddressIsOfNet(TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
     return (pIpAdd->Val == 0x0100007f || pNetIf->netIPAddr.Val == pIpAdd->Val);
