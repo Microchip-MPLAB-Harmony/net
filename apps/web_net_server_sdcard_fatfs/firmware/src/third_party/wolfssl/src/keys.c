@@ -1,6 +1,6 @@
 /* keys.c
  *
- * Copyright (C) 2006-2017 wolfSSL Inc.
+ * Copyright (C) 2006-2019 wolfSSL Inc.
  *
  * This file is part of wolfSSL.
  *
@@ -1294,6 +1294,23 @@ int SetCipherSpecs(WOLFSSL* ssl)
         break;
 #endif
 
+#ifdef BUILD_TLS_RSA_WITH_NULL_MD5
+    case TLS_RSA_WITH_NULL_MD5 :
+        ssl->specs.bulk_cipher_algorithm = wolfssl_cipher_null;
+        ssl->specs.cipher_type           = stream;
+        ssl->specs.mac_algorithm         = md5_mac;
+        ssl->specs.kea                   = rsa_kea;
+        ssl->specs.sig_algo              = rsa_sa_algo;
+        ssl->specs.hash_size             = WC_MD5_DIGEST_SIZE;
+        ssl->specs.pad_size              = PAD_MD5;
+        ssl->specs.static_ecdh           = 0;
+        ssl->specs.key_size              = 0;
+        ssl->specs.block_size            = 0;
+        ssl->specs.iv_size               = 0;
+
+        break;
+#endif
+
 #ifdef BUILD_TLS_RSA_WITH_NULL_SHA
     case TLS_RSA_WITH_NULL_SHA :
         ssl->specs.bulk_cipher_algorithm = wolfssl_cipher_null;
@@ -1433,7 +1450,7 @@ int SetCipherSpecs(WOLFSSL* ssl)
         ssl->options.usingPSK_cipher     = 1;
         break;
 #endif
-        
+
 #ifdef BUILD_TLS_DH_anon_WITH_AES_256_GCM_SHA384
     case TLS_DH_anon_WITH_AES_256_GCM_SHA384:
         ssl->specs.bulk_cipher_algorithm = wolfssl_aes_gcm;
@@ -2212,11 +2229,14 @@ static int SetPrefix(byte* sha_input, int idx)
 
 
 static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
-                   int side, void* heap, int devId)
+                   int side, void* heap, int devId, WC_RNG* rng, int skipIv)
 {
+    (void)rng;
+    (void)skipIv;
+
 #ifdef BUILD_ARC4
-    word32 sz = specs->key_size;
     if (specs->bulk_cipher_algorithm == wolfssl_rc4) {
+        word32 sz = specs->key_size;
         if (enc && enc->arc4 == NULL)
             enc->arc4 = (Arc4*)XMALLOC(sizeof(Arc4), heap, DYNAMIC_TYPE_CIPHER);
         if (enc && enc->arc4 == NULL)
@@ -2608,6 +2628,15 @@ static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
                 if (gcmRet != 0) return gcmRet;
                 XMEMCPY(keys->aead_enc_imp_IV, keys->client_write_IV,
                         AEAD_MAX_IMP_SZ);
+#if !defined(NO_PUBLIC_GCM_SET_IV) && \
+    ((!defined(HAVE_FIPS) && !defined(HAVE_SELFTEST)) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)))
+                if (!skipIv) {
+                    gcmRet = wc_AesGcmSetIV(enc->aes, AESGCM_NONCE_SZ,
+                            keys->client_write_IV, AESGCM_IMP_IV_SZ, rng);
+                    if (gcmRet != 0) return gcmRet;
+                }
+#endif
             }
             if (dec) {
                 gcmRet = wc_AesGcmSetKey(dec->aes, keys->server_write_key,
@@ -2624,6 +2653,15 @@ static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
                 if (gcmRet != 0) return gcmRet;
                 XMEMCPY(keys->aead_enc_imp_IV, keys->server_write_IV,
                         AEAD_MAX_IMP_SZ);
+#if !defined(NO_PUBLIC_GCM_SET_IV) && \
+    ((!defined(HAVE_FIPS) && !defined(HAVE_SELFTEST)) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)))
+                if (!skipIv) {
+                    gcmRet = wc_AesGcmSetIV(enc->aes, AESGCM_NONCE_SZ,
+                            keys->server_write_IV, AESGCM_IMP_IV_SZ, rng);
+                    if (gcmRet != 0) return gcmRet;
+                }
+#endif
             }
             if (dec) {
                 gcmRet = wc_AesGcmSetKey(dec->aes, keys->client_write_key,
@@ -2692,6 +2730,15 @@ static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
                 }
                 XMEMCPY(keys->aead_enc_imp_IV, keys->client_write_IV,
                         AEAD_MAX_IMP_SZ);
+#if !defined(NO_PUBLIC_CCM_SET_NONCE) && \
+    ((!defined(HAVE_FIPS) && !defined(HAVE_SELFTEST)) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)))
+                if (!skipIv) {
+                    CcmRet = wc_AesCcmSetNonce(enc->aes, keys->client_write_IV,
+                            AEAD_MAX_IMP_SZ);
+                    if (CcmRet != 0) return CcmRet;
+                }
+#endif
             }
             if (dec) {
                 CcmRet = wc_AesCcmSetKey(dec->aes, keys->server_write_key,
@@ -2712,6 +2759,15 @@ static int SetKeys(Ciphers* enc, Ciphers* dec, Keys* keys, CipherSpecs* specs,
                 }
                 XMEMCPY(keys->aead_enc_imp_IV, keys->server_write_IV,
                         AEAD_MAX_IMP_SZ);
+#if !defined(NO_PUBLIC_CCM_SET_NONCE) && \
+    ((!defined(HAVE_FIPS) && !defined(HAVE_SELFTEST)) || \
+    (defined(HAVE_FIPS_VERSION) && (HAVE_FIPS_VERSION >= 2)))
+                if (!skipIv) {
+                    CcmRet = wc_AesCcmSetNonce(enc->aes, keys->server_write_IV,
+                            AEAD_MAX_IMP_SZ);
+                    if (CcmRet != 0) return CcmRet;
+                }
+#endif
             }
             if (dec) {
                 CcmRet = wc_AesCcmSetKey(dec->aes, keys->client_write_key,
@@ -2931,16 +2987,12 @@ static void CacheStatusPP(SecureRenegotiation* cache)
  */
 int SetKeysSide(WOLFSSL* ssl, enum encrypt_side side)
 {
-    int devId = INVALID_DEVID, ret, copy = 0;
+    int ret, copy = 0;
     Ciphers* wc_encrypt = NULL;
     Ciphers* wc_decrypt = NULL;
     Keys*    keys    = &ssl->keys;
 
     (void)copy;
-
-#ifdef WOLFSSL_ASYNC_CRYPT
-    devId = ssl->devId;
-#endif
 
 #ifdef HAVE_SECURE_RENEGOTIATION
     if (ssl->secure_renegotiation && ssl->secure_renegotiation->cache_status) {
@@ -3003,14 +3055,14 @@ int SetKeysSide(WOLFSSL* ssl, enum encrypt_side side)
 
 #ifdef HAVE_ONE_TIME_AUTH
     if (!ssl->auth.setup && ssl->specs.bulk_cipher_algorithm == wolfssl_chacha){
-        ret = SetAuthKeys(&ssl->auth, keys, &ssl->specs, ssl->heap, devId);
+        ret = SetAuthKeys(&ssl->auth, keys, &ssl->specs, ssl->heap, ssl->devId);
         if (ret != 0)
            return ret;
     }
 #endif
 
     ret = SetKeys(wc_encrypt, wc_decrypt, keys, &ssl->specs, ssl->options.side,
-                  ssl->heap, devId);
+                  ssl->heap, ssl->devId, ssl->rng, ssl->options.tls1_3);
 
 #ifdef HAVE_SECURE_RENEGOTIATION
     if (copy) {
@@ -3293,6 +3345,7 @@ static int CleanPreMaster(WOLFSSL* ssl)
 
     XFREE(ssl->arrays->preMasterSecret, ssl->heap, DYNAMIC_TYPE_SECRET);
     ssl->arrays->preMasterSecret = NULL;
+    ssl->arrays->preMasterSz = 0;
 
     return 0;
 }

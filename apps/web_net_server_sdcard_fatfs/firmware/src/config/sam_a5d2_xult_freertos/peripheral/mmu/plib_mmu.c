@@ -118,7 +118,7 @@ static void mmu_enable(void)
 
 static inline uint32_t cp15_read_sctlr(void)
 {
-    uint32_t sctlr;
+    uint32_t sctlr = 0;
     asm("mrc p15, 0, %0, c1, c0, 0" : "=r"(sctlr));
     return sctlr;
 }

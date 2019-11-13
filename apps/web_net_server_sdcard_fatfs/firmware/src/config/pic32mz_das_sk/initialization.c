@@ -437,6 +437,7 @@ const TCPIP_NBNS_MODULE_CONFIG tcpipNBNSInitData =
 
 
 
+
 /*** ETH PHY Initialization Data ***/
 
 
@@ -470,8 +471,6 @@ const TCPIP_MODULE_MAC_PIC32INT_CONFIG tcpipMACPIC32INTInitData =
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     .pPhyInit               = &tcpipPhyInitData,
 };
-
-
 
 
 
@@ -559,7 +558,6 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
 // MAC modules
     {TCPIP_MODULE_MAC_PIC32INT,     &tcpipMACPIC32INTInitData},     // TCPIP_MODULE_MAC_PIC32INT
-
 
 };
 
@@ -770,6 +768,7 @@ void SYS_Initialize ( void* data )
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 
 
+    CRYPT_WCCB_Initialize();
     /*** File System Service Initialization Code ***/
     SYS_FS_Initialize( (const void *) sysFSInit );
 
