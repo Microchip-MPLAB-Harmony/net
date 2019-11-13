@@ -71,7 +71,6 @@
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
 #include "peripheral/aic/plib_aic.h"
-#include "driver/sst26/drv_sst26.h"
 #include "system/debug/sys_debug.h"
 #include "peripheral/qspi/plib_qspi.h"
 #include "system/fs/sys_fs.h"
@@ -212,7 +211,6 @@ typedef struct
     SYS_MODULE_OBJ  tcpip;
 
     SYS_MODULE_OBJ  drvMiim;
-    SYS_MODULE_OBJ  drvSST26;
     SYS_MODULE_OBJ  sysDebug;
 
 
