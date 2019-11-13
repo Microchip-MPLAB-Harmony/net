@@ -218,38 +218,44 @@ typedef enum
 // MIIM Driver Hardware Instance Object
 typedef struct _tag_DRV_MIIM_OBJ_STRUCT
 {
-    OSAL_SEM_HANDLE_TYPE    objSem;         // synchronization object: protection for access to the IGMP
-                                            // lists between user threads and task thread
-    uint16_t                objFlags;       // DRV_MIIM_OBJ_FLAGS: object associated flags
-    uint16_t                numClients;     // Number of active clients
-    SYS_STATUS              objStatus;      // Status of module
-    SYS_MODULE_INDEX        iModule;        // Module instance number
-    uintptr_t               ethphyId;       // The peripheral Id associated with the object
-    DRV_MIIM_CLIENT_DCPT    objClients[ DRV_MIIM_INSTANCE_CLIENTS ];    // array of clients
-    DRV_MIIM_OP_DCPT        opPool[ DRV_MIIM_INSTANCE_OPERATIONS ];     // pool of operations
-    SINGLE_LIST             freeOpList;     // available operations
-    SINGLE_LIST             busyOpList;     // scheduled operations
-    SINGLE_LIST             completeOpList; // completed operations that need to be polled by the clients
+    OSAL_SEM_HANDLE_TYPE objSem;  // synchronization object: protection for access to the IGMP
+                                          // lists between user threads and task thread
+    uint16_t            objFlags;       // DRV_MIIM_OBJ_FLAGS: object associated flags
+    uint16_t            numClients;     // Number of active clients
+    SYS_STATUS          objStatus;      // Status of module
+    SYS_MODULE_INDEX    iModule;        // Module instance number
+    uintptr_t       ethphyId;       // The peripheral Id associated with the object
+    DRV_MIIM_CLIENT_DCPT objClients[DRV_MIIM_INSTANCE_CLIENTS]; // array of clients
+    DRV_MIIM_OP_DCPT    opPool[DRV_MIIM_INSTANCE_OPERATIONS];      // pool of operations
+    SINGLE_LIST         freeOpList;     // available operations
+    SINGLE_LIST         busyOpList;     // scheduled operations
+    SINGLE_LIST         completeOpList; // completed operations that need to be polled by the clients
 #if (DRV_MIIM_CLIENT_OP_PROTECTION)
-    DRV_MIIM_CLI_OP_STAMP   stampPool[ DRV_MIIM_INSTANCE_OPERATIONS ];      // pool of stamps, matching operations
-    SINGLE_LIST             freeStampList;  // list with available client stamps
-    SINGLE_LIST             busyStampList;  // list with scheduled client stamps
-#endif
-} DRV_MIIM_OBJ;
+    DRV_MIIM_CLI_OP_STAMP stampPool[DRV_MIIM_INSTANCE_OPERATIONS];      // pool of stamps, matching operations
+    SINGLE_LIST         freeStampList;   // list with available client stamps
+    SINGLE_LIST         busyStampList;   // list with scheduled client stamps
+
+#endif  // (DRV_MIIM_CLIENT_OP_PROTECTION)
+
+}DRV_MIIM_OBJ;
+
 
 // helpers
 //
-void  Helper_SingleListInitialize( SINGLE_LIST * pL );
+void  Helper_SingleListInitialize(SINGLE_LIST* pL);
+
+
 
 // adds node to tail
-void  Helper_SingleListTailAdd( SINGLE_LIST * pL, SGL_LIST_NODE * pN );
+void  Helper_SingleListTailAdd(SINGLE_LIST* pL, SGL_LIST_NODE* pN);
+
 
 // removes the head node
-SGL_LIST_NODE*  Helper_SingleListHeadRemove( SINGLE_LIST * pL );
+SGL_LIST_NODE*  Helper_SingleListHeadRemove(SINGLE_LIST* pL);
 
 // removes a node anywhere in the list
 // Note: this is lengthy!
-SGL_LIST_NODE *  Helper_SingleListNodeRemove( SINGLE_LIST * pL, SGL_LIST_NODE * pN );
+SGL_LIST_NODE*  Helper_SingleListNodeRemove(SINGLE_LIST* pL, SGL_LIST_NODE* pN);
 
 #endif //#ifndef _DRV_MIIM_LOCAL_H
 

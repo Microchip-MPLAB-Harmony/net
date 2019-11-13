@@ -49,6 +49,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_IPV4)
 #if defined(TCPIP_STACK_USE_ICMP_SERVER) || defined(TCPIP_STACK_USE_ICMP_CLIENT)
 
+
 // ICMP Packet Structure
 typedef struct
 {
@@ -67,9 +68,13 @@ typedef struct
 #define ICMP_TYPE_ECHO_REPLY        0   // ICMP client echo reply - type
 #define ICMP_CODE_ECHO_REPLY        0   // ICMP client echo reply - code
 
+
+
 static int                  icmpInitCount = 0;  // ICMP module initialization count
+
 static const void*          icmpMemH = 0;       // memory handle
-static tcpipSignalHandle    signalHandle = 0;   // registered signal handler
+
+static tcpipSignalHandle    signalHandle = 0;   // registered signal handler   
 
 #if defined(TCPIP_STACK_USE_ICMP_CLIENT)
 
@@ -455,13 +460,15 @@ void  TCPIP_ICMP_Task(void)
 // Processes an ICMP packet and generates an echo reply, if requested
 static void  TCPIP_ICMP_Process(void)
 {
-    TCPIP_MAC_PACKET *      pRxPkt;
-    IPV4_HEADER *           pIpv4Header;
+    TCPIP_MAC_PACKET        *pRxPkt;
+    IPV4_HEADER*            pIpv4Header;
     uint32_t                srcAdd;
-    ICMP_PACKET *           pRxHdr;
+    ICMP_PACKET*            pRxHdr;
     uint16_t                icmpTotLength;
     uint16_t                checksum;
     TCPIP_MAC_PKT_ACK_RES   ackRes;
+
+
 
     // extract queued ICMP packets
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
@@ -473,9 +480,11 @@ static void  TCPIP_ICMP_Process(void)
         pIpv4Header = (IPV4_HEADER*)pRxPkt->pNetLayer;
         srcAdd =  pIpv4Header->SourceAddress.Val;
 
+
         while(true)
         {
             icmpTotLength = pRxPkt->totTransportLen;    // length of the 1st segment (if fragmented)
+
             if(icmpTotLength < sizeof(*pRxHdr))
             {
                 ackRes = TCPIP_MAC_PKT_ACK_STRUCT_ERR;
@@ -514,6 +523,7 @@ static void  TCPIP_ICMP_Process(void)
                     break;  
                 }
 #endif  // (TCPIP_ICMP_ECHO_ALLOW_BROADCASTS == 0)
+
                 _ICMPProcessEchoRequest((TCPIP_NET_IF*)pRxPkt->pktIf, pRxPkt, pIpv4Header->DestAddress.Val, srcAdd);
                 ackRes = TCPIP_MAC_PKT_ACK_NONE;
                 break;
@@ -650,6 +660,7 @@ static bool _ICMPProcessEchoRequest(TCPIP_NET_IF* pNetIf, TCPIP_MAC_PACKET* pRxP
     }
 #endif  // (TCPIP_IPV4_FRAGMENTATION != 0)
 
+    // went through
     return true;
 }
 #endif // defined(TCPIP_STACK_USE_ICMP_SERVER)
