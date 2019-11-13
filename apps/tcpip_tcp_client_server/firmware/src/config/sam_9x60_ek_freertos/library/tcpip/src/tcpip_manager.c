@@ -1442,7 +1442,7 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
             // get a fresh copy
             activeEvents |= (*pNetIf->pMacObj->TCPIP_MAC_EventPendingGet)(pNetIf->hIfMac);
 #else
-            activeEvents |= TCPIP_MAC_EV_RX_DONE | TCPIP_MAC_EV_TX_DONE;    // just fake pending events
+            activeEvents |= TCPIP_MAC_EV_RX_DONE|TCPIP_MAC_EV_TX_DONE;    // just fake pending events
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION)
 
             // clear processed events
@@ -1494,10 +1494,7 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
             {
                 for(modIx = 0; modIx < sizeof(TCPIP_STACK_CONN_EVENT_TBL)/sizeof(*TCPIP_STACK_CONN_EVENT_TBL); modIx++)
                 {
-                    if( TCPIP_STACK_CONN_EVENT_TBL[modIx] )
-                    {
-                        (*TCPIP_STACK_CONN_EVENT_TBL[modIx])(pAliasIf, activeEvents);
-                    }
+                    (*TCPIP_STACK_CONN_EVENT_TBL[modIx])(pAliasIf, activeEvents);
                 }
             }
         }
@@ -1707,56 +1704,6 @@ static bool _TCPIPStackIsRunState(void)
 }
 
 #if !defined(TCPIP_STACK_APP_EXECUTE_MODULE_TASKS)
-
-#define PROTOCOL_PROFILING_DESIRED 0
-#if PROTOCOL_PROFILING_DESIRED
-#include "helpers.h"
-#if PROFILE_HOOKS_DESIRED
-static bool bProfileSetupNeeded = true;
-static uint32_t profileHandle[ TCPIP_MODULES_NUMBER ];
-static char * const moduleTitle[ TCPIP_MODULES_NUMBER ] = {
-    "TCPIP_MODULE_NONE",
-    "TCPIP_MODULE_MANAGER",
-    "TCPIP_MODULE_ARP",
-    "TCPIP_MODULE_IPV4",
-    "TCPIP_MODULE_IPV6",
-    "TCPIP_MODULE_LLDP",
-    "TCPIP_MODULE_ICMP",
-    "TCPIP_MODULE_ICMPV6",
-    "TCPIP_MODULE_NDP",
-    "TCPIP_MODULE_UDP",
-    "TCPIP_MODULE_TCP",
-    "TCPIP_MODULE_IGMP",
-    "TCPIP_MODULE_DHCP_CLIENT",
-    "TCPIP_MODULE_DHCP_SERVER",
-    "TCPIP_MODULE_ANNOUNCE",
-    "TCPIP_MODULE_DNS_CLIENT",
-    "TCPIP_MODULE_DNS_SERVER",
-    "TCPIP_MODULE_ZCLL",
-    "TCPIP_MODULE_MDNS",
-    "TCPIP_MODULE_NBNS",
-    "TCPIP_MODULE_SMTP_CLIENT",
-    "TCPIP_MODULE_SNTP",
-    "TCPIP_MODULE_FTP_SERVER",
-    "TCPIP_MODULE_HTTP_SERVER",
-    "TCPIP_MODULE_HTTP_NET_SERVER",
-    "TCPIP_MODULE_TELNET_SERVER",
-    "TCPIP_MODULE_SNMP_SERVER",
-    "TCPIP_MODULE_SNMPV3_SERVER",
-    "TCPIP_MODULE_DYNDNS_CLIENT",
-    "TCPIP_MODULE_BERKELEY",
-    "TCPIP_MODULE_REBOOT_SERVER",
-    "TCPIP_MODULE_COMMAND",
-    "TCPIP_MODULE_IPERF",
-    "TCPIP_MODULE_TFTP_CLIENT",
-    "TCPIP_MODULE_DHCPV6_CLIENT",
-    "TCPIP_MODULE_SMTPC",
-	"TCPIP_MODULE_TFTP_SERVER",
-};
-
-#endif
-#endif
-
 static void _TCPIPStackExecuteModules(void)
 {
     int     modIx;
@@ -1765,16 +1712,6 @@ static void _TCPIPStackExecuteModules(void)
     uint16_t                    signalVal;
     OSAL_CRITSECT_DATA_TYPE     critSect;
 
-#if PROTOCOL_PROFILING_DESIRED
-    if( bProfileSetupNeeded )
-    {
-        bProfileSetupNeeded = false;
-        for( modIx = TCPIP_MODULE_LAYER1; modIx < sizeof(TCPIP_STACK_MODULE_SIGNAL_TBL)/sizeof(*TCPIP_STACK_MODULE_SIGNAL_TBL); modIx++ )
-        {
-            profileHandle[ modIx ] = profileGetHandle( moduleTitle[ modIx ] );
-        }
-    }
-#endif
     pSigEntry = TCPIP_STACK_MODULE_SIGNAL_TBL + TCPIP_MODULE_LAYER1;
     for(modIx = TCPIP_MODULE_LAYER1; modIx < sizeof(TCPIP_STACK_MODULE_SIGNAL_TBL)/sizeof(*TCPIP_STACK_MODULE_SIGNAL_TBL); modIx++, pSigEntry++)
     {
@@ -1790,13 +1727,7 @@ static void _TCPIPStackExecuteModules(void)
         // pending signals; either TMO or RX related or ASYNC
         // execute the handler-> module Task function
         // Note: this can set signals for sibling modules!
-#if PROTOCOL_PROFILING_DESIRED
-        profileStart( profileHandle[ modIx ] );
         (*signalHandler)();
-        profileStop( profileHandle[ modIx ] );
-#else
-        (*signalHandler)();
-#endif
     }
 }
 #endif  // !defined(TCPIP_STACK_APP_EXECUTE_MODULE_TASKS)
@@ -2823,11 +2754,7 @@ TCPIP_STACK_MODULE  TCPIP_STACK_NetMACIdGet(TCPIP_NET_HANDLE netH)
     return TCPIP_MODULE_NONE;
 }
 
-bool TCPIP_STACK_NetMACStatisticsGet(
-    TCPIP_NET_HANDLE            netH,
-    TCPIP_MAC_RX_STATISTICS *   pRxStatistics,
-    TCPIP_MAC_TX_STATISTICS *   pTxStatistics
-    )
+bool TCPIP_STACK_NetMACStatisticsGet(TCPIP_NET_HANDLE netH, TCPIP_MAC_RX_STATISTICS* pRxStatistics, TCPIP_MAC_TX_STATISTICS* pTxStatistics)
 {
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(netH);
     if(pNetIf)
@@ -3777,6 +3704,7 @@ void  TCPIP_STACK_SecondaryDNSAddressSet(TCPIP_NET_IF* pNetIf, IPV4_ADDR* ipAddr
         pNetIf->dnsServer[1].Val = ipAddress->Val;
     }
 }
+
 
 bool  TCPIP_STACK_AddressIsOfNetUp( TCPIP_NET_IF* pNetIf, const IPV4_ADDR* pIpAdd)
 {
