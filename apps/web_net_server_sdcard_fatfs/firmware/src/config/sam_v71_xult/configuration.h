@@ -155,7 +155,6 @@ extern "C" {
 
 
 
-
 /* SDMMC Driver Global Configuration Options */
 #define DRV_SDMMC_INSTANCES_NUMBER                       1
 #define DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT              0
@@ -189,12 +188,10 @@ extern "C" {
 #define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
-
 /******************************************************************************/
 /*wolfSSL TLS Layer Configuration*/
 /******************************************************************************/
 
-#define HAVE_AES_DECRYPT
 #define WOLFSSL_ALT_NAMES
 #define WOLFSSL_DER_LOAD
 #define KEEP_OUR_CERT
@@ -208,20 +205,12 @@ extern "C" {
 #define HAVE_FFDHE_8192
 #define TFM_NO_ASM
 #define WOLFSSL_NO_ASM
-#define SINGLE_THREADED
 #define SIZEOF_LONG_LONG 8
 #define WOLFSSL_USER_IO
 #define NO_WRITEV
-#define NO_DEV_RANDOM
-#define NO_FILESYSTEM
 #define MICROCHIP_TCPIP
-#define USER_TICKS
 #define WOLFSSL_DTLS
 
-
-#define TFM_TIMING_RESISTANT
-#define ECC_TIMING_RESISTANT
-#define WC_RSA_BLINDING
 
 
     
@@ -234,8 +223,7 @@ extern "C" {
     
     
     
-    
-
+   
 
 
 /*** TCP Configuration ***/
@@ -258,6 +246,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -333,9 +322,11 @@ extern "C" {
 #define TCPIP_IPV6_ULA_NTP_VALID_WINDOW 				1000
 #define TCPIP_IPV6_FRAGMENT_PKT_TIMEOUT 				60
 #define TCPIP_IPV6_RX_FRAGMENTED_BUFFER_SIZE 			1514
+#define TCPIP_IPV6_EXTERN_PACKET_PROCESS   false
 
 
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -376,6 +367,7 @@ extern "C" {
 #define TCPIP_UDP_USE_TX_CHECKSUM             			true
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -416,17 +408,6 @@ extern "C" {
 
 
 
-/*** TCPIP SYS FS Wrapper ***/
-#define SYS_FS_MAX_PATH						80
-#define LOCAL_WEBSITE_PATH_FS				"/mnt/mchpSite1"
-#define LOCAL_WEBSITE_PATH					"/mnt/mchpSite1/"
-#define SYS_FS_DRIVE						"SDCARD"
-#define SYS_FS_SD_VOL						"/dev/mmcblka1"
-#define SYS_FS_FATFS_STRING					"FATFS"
-#define SYS_FS_MPFS_STRING					"MPFS2"
-
-
-
 /*** HTTP NET Configuration ***/
 #define TCPIP_STACK_USE_HTTP_NET_SERVER
 #define TCPIP_HTTP_NET_MAX_HEADER_LEN		    		15
@@ -435,6 +416,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_MAX_CONNECTIONS		    		4
 #define TCPIP_HTTP_NET_DEFAULT_FILE		        		"index.htm"
 #define TCPIP_HTTP_NET_FILENAME_MAX_LEN			        25
+#define TCPIP_HTTP_NET_WEB_DIR		        		    "/mnt/mchpSite1/"
 #define TCPIP_HTTP_NET_USE_POST
 #define TCPIP_HTTP_NET_USE_COOKIES
 #define TCPIP_HTTP_NET_USE_AUTHENTICATION
@@ -560,12 +542,11 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
 
-
-/*** TCP/IP Configuration ***/
 
 
 /*** TCPIP MAC Configuration ***/
@@ -678,37 +659,44 @@ extern "C" {
 
 
 
-
-/*** Crypto Library Configuration ***/
-#define WC_NO_HARDEN
-#define NO_DSA
-#define HAVE_MCAPI
-#define WOLFSSL_IGNORE_FILE_WARN
-
+/*** wolfCrypt Library Configuration ***/
+#define MICROCHIP_PIC32
 #define MICROCHIP_MPLAB_HARMONY
 #define MICROCHIP_MPLAB_HARMONY_3
-
+#define HAVE_MCAPI
 #define SIZEOF_LONG_LONG 8
-#define SINGLE_THREADED
 #define WOLFSSL_USER_IO
 #define NO_WRITEV
-#define NO_DEV_RANDOM
 #define NO_FILESYSTEM
 #define USE_FAST_MATH
-#define TFM_TIMING_RESISTANT
-#define USE_CERT_BUFFERS_2048
-#define WOLFSSL_AES_COUNTER
-#define HAVE_AES_CBC
-#define HAVE_AESGCM
+#define NO_PWDBASED
+#define HAVE_MCAPI
+#define WOLF_CRYPTO_CB
+#define NO_MD4
 #define WOLFSSL_SHA224
-#define WOLFSSL_SHA512
-#define WOLFSSL_SHA384
-#define HAVE_ECC
-#define USE_FAST_MATH
-#define WOLFSSL_STATIC_RSA
-#define NO_DES3
+#define WOLFSSL_AES_128
+#define WOLFSSL_AES_192
+#define WOLFSSL_AES_256
+#define WOLFSSL_AES_DIRECT
+#define HAVE_AES_DECRYPT
+#define HAVE_AES_ECB
+#define HAVE_AES_CBC
 #define WOLFSSL_AES_COUNTER
-#define NO_RNG_TEST
+#define HAVE_AESGCM
+#define HAVE_AESCCM
+#define NO_RC4
+#define NO_HC128
+#define NO_RABBIT
+#define HAVE_ECC
+#define NO_DH
+#define NO_DSA
+#define USE_CERT_BUFFERS_2048
+#define NO_DEV_RANDOM
+#define HAVE_HASHDRBG
+#define WC_NO_HARDEN
+#define SINGLE_THREADED
+#define NO_ERROR_STRINGS
+#define NO_WOLFSSL_MEMORY
 
 
 

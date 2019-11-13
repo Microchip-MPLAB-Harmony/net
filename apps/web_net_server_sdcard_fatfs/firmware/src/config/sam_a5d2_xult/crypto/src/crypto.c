@@ -17,7 +17,7 @@
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -44,8 +44,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 //DOM-IGNORE-END
 
 
-
-
 /* Implements Microchip CRYPTO API layer */
 #ifdef HAVE_CONFIG_H
     #include "config.h"
@@ -54,18 +52,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "crypto/crypto.h"
 
-#include "crypto/src/md5.h"
-#include "crypto/src/sha.h"
-#include "crypto/src/sha256.h"
-#include "crypto/src/sha512.h"
-#include "crypto/src/hmac.h"
-#include "crypto/src/compress.h"
-#include "crypto/src/random.h"
-#include "crypto/src/des3.h"
-#include "crypto/src/aes.h"
-#include "crypto/src/rsa.h"
-#include "crypto/src/ecc.h"
-#include "crypto/src/error-crypt.h"
+#include "wolfssl/wolfcrypt/md5.h"
+#include "wolfssl/wolfcrypt/sha.h"
+#include "wolfssl/wolfcrypt/sha256.h"
+#include "wolfssl/wolfcrypt/sha512.h"
+#include "wolfssl/wolfcrypt/hmac.h"
+#include "wolfssl/wolfcrypt/compress.h"
+#include "wolfssl/wolfcrypt/random.h"
+#include "wolfssl/wolfcrypt/des3.h"
+#include "wolfssl/wolfcrypt/aes.h"
+#include "wolfssl/wolfcrypt/rsa.h"
+#include "wolfssl/wolfcrypt/ecc.h"
+#include "wolfssl/wolfcrypt/error-crypt.h"
 
 #ifndef NO_MD5
 /* Initialize MD5 */
@@ -211,6 +209,42 @@ int CRYPT_SHA256_Finalize(CRYPT_SHA256_CTX* sha256, unsigned char* digest)
     return wc_Sha256Final((Sha256*)sha256, digest);
 }
 #endif // NO_SHA256
+#ifdef WOLFSSL_SHA224
+
+/* Initialize SHA-224 */
+int CRYPT_SHA224_Initialize(CRYPT_SHA256_CTX* sha224)
+{
+    typedef char sha_test[sizeof(CRYPT_SHA256_CTX) >= sizeof(Sha224) ? 1 : -1];
+    (void)sizeof(sha_test);
+
+    if (sha224 == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_InitSha224((Sha224*)sha224);
+}
+
+
+/* Add data to SHA-224 */
+int CRYPT_SHA224_DataAdd(CRYPT_SHA256_CTX* sha224, const unsigned char* input,
+                         unsigned int sz)
+{
+    if (sha224 == NULL || input == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_Sha224Update((Sha224*)sha224, input, sz);
+}
+
+
+/* Get SHA-224 Final into digest */
+int CRYPT_SHA224_Finalize(CRYPT_SHA256_CTX* sha224, unsigned char* digest)
+{
+    if (sha224 == NULL || digest == NULL)
+        return BAD_FUNC_ARG;
+
+    return wc_Sha224Final((Sha224*)sha224, digest);
+}
+
+#endif  // WOLFSSL_SHA224
 #ifdef WOLFSSL_SHA384
 
 /* Initialize SHA-384 */
@@ -370,6 +404,7 @@ int CRYPT_RNG_Initialize(CRYPT_RNG_CTX* rng)
 	return same70_InitRng();
 #else
     return wc_InitRng((WC_RNG*)rng);
+    return wc_InitRng((WC_RNG*)rng);
 #endif
 }
 
@@ -474,7 +509,7 @@ int CRYPT_AES_IvSet(CRYPT_AES_CTX* aes, const unsigned char* iv)
 }
 
 
-/* AES CBC Encrypt */
+#ifdef HAVE_AES_CBC
 int CRYPT_AES_CBC_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
                           const unsigned char* in, unsigned int inSz)
 {
@@ -494,6 +529,7 @@ int CRYPT_AES_CBC_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
 
     return wc_AesCbcDecrypt((Aes*)aes, out, in, inSz);
 }
+#endif /* HAVE_AES_CBC */
 
 #ifdef WOLFSSL_AES_COUNTER
 
@@ -509,13 +545,54 @@ int CRYPT_AES_CTR_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
 
 #endif /* WOLFSSL_AES_COUNTER */
 
+#if defined(HAVE_AESGCM)
+int CRYPT_AES_GCM_SetKey(CRYPT_AES_CTX* aes, const unsigned char* key, unsigned int len)
+{
+    typedef char aes_test[sizeof(CRYPT_AES_CTX) >= sizeof(Aes) ? 1 : -1];
+    (void)sizeof(aes_test);
+
+    if (aes == NULL || key == NULL)
+    {
+        return BAD_FUNC_ARG;
+    }
+    return wc_AesGcmSetKey((Aes*)aes, key, len);
+}
+
+int CRYPT_AES_GCM_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz)
+{
+    if (aes == NULL || out == NULL)
+    {
+         return BAD_FUNC_ARG;
+    }
+    return wc_AesGcmEncrypt((Aes*)aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+}
+
+int CRYPT_AES_GCM_Decrypt(CRYPT_AES_CTX* aes, unsigned char* out,
+                                   const unsigned char* in, unsigned int sz,
+                                   const unsigned char* iv, unsigned int ivSz,
+                                   const unsigned char* authTag, unsigned int authTagSz,
+                                   const unsigned char* authIn, unsigned int authInSz)
+{
+    if (aes == NULL)
+    {
+         return BAD_FUNC_ARG;
+    }
+    return wc_AesGcmDecrypt((Aes*)aes, out, in, sz, iv, ivSz, authTag, authTagSz, authIn, authInSz);
+}
+
+#endif
+
 #ifdef WOLFSSL_AES_DIRECT
 
 /* AES Direct mode encrypt, one block at a time */
 int CRYPT_AES_DIRECT_Encrypt(CRYPT_AES_CTX* aes, unsigned char* out,
                              const unsigned char* in)
 {
-    if (aes == NULL || out == NULL || in == NULL)
+    if (aes == NULL)
         return BAD_FUNC_ARG;
 
     wc_AesEncryptDirect((Aes*)aes, out, in);
@@ -551,7 +628,7 @@ int CRYPT_RSA_Initialize(CRYPT_RSA_CTX* rsa)
     if (rsa->holder == NULL)
         return -1;
 
-    return wc_InitRsaKey((RsaKey*)rsa->holder, NULL);
+    return wc_InitRsaKey_ex((RsaKey*)rsa->holder, NULL, 0);
 }
 
 
