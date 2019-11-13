@@ -2491,6 +2491,18 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\driver_common.h</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\drv_emac.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\drv_emac_local.h</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\drv_ethphy.h</name>
             </file>
             <file>
@@ -2515,19 +2527,10 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\drv_miim.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\config\drv_miim_config.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\drv_miim_local.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\drv_sst26.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\drv_sst26_definitions.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\src\drv_sst26_local.h</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_mapping.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\emac.h</name>
@@ -2660,18 +2663,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_tlv.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\drv_emac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\drv_emac_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\matrix.h</name>
@@ -3133,6 +3124,15 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dns.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_statistics.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_ethphy.c</name>
             </file>
             <file>
@@ -3145,10 +3145,7 @@
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\memory\src\drv_memory_file_system.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_emac.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\src\drv_sst26.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\web_pages\dynvars.htm</name>
@@ -3215,15 +3212,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\web_pages\leds.cgi</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_statistics.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\main_sam_9x60.c</name>

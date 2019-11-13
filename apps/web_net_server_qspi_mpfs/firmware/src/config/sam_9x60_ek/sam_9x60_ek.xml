@@ -232,7 +232,7 @@
         </Integer>
         <Boolean dnOrder="44" id="EMAC0_CLOCK_ENABLE">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="drvMac0" value="true"/>
+            <Dynamic dnOrder="0" id="drvEmac0" value="true"/>
           </Values>
         </Boolean>
         <Integer dnOrder="45" id="EMAC0_CLOCK_FREQUENCY">
@@ -247,17 +247,17 @@
             </Boolean>
           </Attributes>
           <Values dnOrder="1">
-            <Dynamic dnOrder="0" id="drvMac0" value="true"/>
+            <Dynamic dnOrder="0" id="drvEmac0" value="true"/>
           </Values>
         </Boolean>
         <String dnOrder="47" id="EMAC0_INTERRUPT_HANDLER">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="drvMac0" value="EMAC0_InterruptHandler"/>
+            <Dynamic dnOrder="0" id="drvEmac0" value="EMAC0_InterruptHandler"/>
           </Values>
         </String>
         <Boolean dnOrder="48" id="EMAC0_INTERRUPT_HANDLER_LOCK">
           <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="drvMac0" value="true"/>
+            <Dynamic dnOrder="0" id="drvEmac0" value="true"/>
           </Values>
         </Boolean>
         <KeyValueSet dnOrder="49" id="EMAC0_INTERRUPT_PRIORITY">
@@ -1830,86 +1830,10 @@
               </Attributes>
             </File>
           </Symbols>
-          <Attachments dnOrder="1">
-            <DirectDependency dnOrder="0" id="drv_memory_MEMORY_dependency">
-              <Attributes dnOrder="0">
-                <String dnOrder="0" id="targetComponentID">
-                  <Value dnOrder="0">drv_sst26</Value>
-                </String>
-                <String dnOrder="1" id="targetAttachmentID">
-                  <Value dnOrder="0">memory</Value>
-                </String>
-              </Attributes>
-            </DirectDependency>
-          </Attachments>
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
-    <UniqueComponent dnOrder="5" id="drv_sst26">
-      <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="DRV_MEMORY_CONNECTED">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="drv_memory_0" value="true"/>
-          </Values>
-        </Boolean>
-        <File dnOrder="1" id="DRV_SST26_HEADER_DEF">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="source">
-              <Value dnOrder="0">driver/sqi_flash/sst26/templates/drv_sst26_qspi_definitions.h.ftl</Value>
-            </String>
-          </Attributes>
-        </File>
-        <String dnOrder="2" id="DRV_SST26_PLIB">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="drv_sst26" value="QSPI"/>
-          </Values>
-        </String>
-        <File dnOrder="3" id="DRV_SST26_SOURCE">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="source">
-              <Value dnOrder="0">driver/sqi_flash/sst26/src/drv_sst26_qspi.c</Value>
-            </String>
-          </Attributes>
-        </File>
-        <Integer dnOrder="4" id="ERASE_BUFFER_SIZE">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Integer>
-        <Comment dnOrder="5" id="ERASE_COMMENT">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="visible">
-              <Value dnOrder="0">true</Value>
-            </Boolean>
-          </Attributes>
-        </Comment>
-      </Symbols>
-      <Attachments dnOrder="1">
-        <DirectDependency dnOrder="0" id="drv_sst26_SQI_dependency">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0">qspi</Value>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0">QSPI_SQI</Value>
-            </String>
-          </Attributes>
-        </DirectDependency>
-        <DirectCapability dnOrder="1" id="memory">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0">drv_memory_0</Value>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0">drv_memory_MEMORY_dependency</Value>
-            </String>
-          </Attributes>
-        </DirectCapability>
-      </Attachments>
-    </UniqueComponent>
-    <UniqueComponent dnOrder="6" id="HarmonyCore">
+    <UniqueComponent dnOrder="5" id="HarmonyCore">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="APP0_C">
           <Attributes dnOrder="0">
@@ -2102,7 +2026,7 @@
         </File>
       </Symbols>
     </UniqueComponent>
-    <GeneratorComponent dnOrder="7" id="netPres">
+    <GeneratorComponent dnOrder="6" id="netPres">
       <Symbols dnOrder="0">
         <File dnOrder="0" id="NET_PRES_SYS_RTOS_TASK">
           <Attributes dnOrder="0">
@@ -2129,7 +2053,7 @@
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
-    <UniqueComponent dnOrder="8" id="qspi">
+    <UniqueComponent dnOrder="7" id="qspi">
       <Symbols dnOrder="0">
         <Comment dnOrder="0" id="QSPI_CLK_COMMENT">
           <Attributes dnOrder="0">
@@ -2154,20 +2078,8 @@
           </Values>
         </Integer>
       </Symbols>
-      <Attachments dnOrder="1">
-        <DirectCapability dnOrder="0" id="QSPI_SQI">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0">drv_sst26</Value>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0">drv_sst26_SQI_dependency</Value>
-            </String>
-          </Attributes>
-        </DirectCapability>
-      </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="9" id="sys_command">
+    <UniqueComponent dnOrder="8" id="sys_command">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="SYS_COMMAND_DEBUG_ENABLE">
           <Values dnOrder="0">
@@ -2203,7 +2115,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <GeneratorComponent dnOrder="10" id="sys_console">
+    <GeneratorComponent dnOrder="9" id="sys_console">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="SYS_CONSOLE_UART_CONNECTION_COUNTER">
           <Values dnOrder="0">
@@ -2255,7 +2167,7 @@
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
-    <UniqueComponent dnOrder="11" id="sys_debug">
+    <UniqueComponent dnOrder="10" id="sys_debug">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="SYS_CONSOLE_DEVICE">
           <Values dnOrder="0">
@@ -2291,7 +2203,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="12" id="sys_fs">
+    <UniqueComponent dnOrder="11" id="sys_fs">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="SYS_FS_FAT">
           <Values dnOrder="0">
@@ -2327,7 +2239,7 @@
         </MultiCapability>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="13" id="sys_time">
+    <UniqueComponent dnOrder="12" id="sys_time">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="SYS_TIME_PLIB">
           <Values dnOrder="0">
@@ -2348,7 +2260,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="14" id="tc0">
+    <UniqueComponent dnOrder="13" id="tc0">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="CALLBACK_API_NAME">
           <Values dnOrder="0">
@@ -2598,7 +2510,7 @@
         </DirectCapability>
       </Attachments>
     </UniqueComponent>
-    <GroupComponent displayName="TCP/IP STACK" dnOrder="15" id="TCP/IP STACK">
+    <GroupComponent displayName="TCP/IP STACK" dnOrder="14" id="TCP/IP STACK">
       <Children dnOrder="0">
         <GroupComponent displayName="APPLICATION LAYER" dnOrder="0" id="APPLICATION LAYER">
           <Children dnOrder="0">
@@ -2715,9 +2627,9 @@
           </Children>
           <Attachments dnOrder="1">
             <Attachment dnOrder="0" id="Tftps_TcpipFs_Dependency" namespace="tcpipTftps"/>
-            <Attachment dnOrder="1" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
-            <Attachment dnOrder="2" id="Tftpc_TcpipFs_Dependency" namespace="tcpipTftpc"/>
-            <Attachment dnOrder="3" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet" targetAttachmentID="TCP/IP STACK:tcpipHttpNet:HttpNet_TcpipFs_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="1" id="Tftpc_TcpipFs_Dependency" namespace="tcpipTftpc"/>
+            <Attachment dnOrder="2" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet" targetAttachmentID="TCP/IP STACK:tcpipHttpNet:HttpNet_TcpipFs_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="3" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="BASIC CONFIGURATION" dnOrder="1" id="BASIC CONFIGURATION">
@@ -2727,6 +2639,7 @@
                 <Boolean dnOrder="0" id="TCPIP_AUTOCONFIG_ENABLE_NETCONFIG">
                   <Values dnOrder="0">
                     <Dynamic dnOrder="0" id="tcpip_transport_config" value="true"/>
+                    <User dnOrder="1" value="true"/>
                   </Values>
                 </Boolean>
                 <Boolean dnOrder="1" id="TCPIP_AUTOCONFIG_ENABLE_STACK">
@@ -2824,29 +2737,34 @@
             </UniqueComponent>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
+            <Attachment dnOrder="0" id="Core_SysConsole_Dependency" namespace="tcpipStack"/>
+            <Attachment dnOrder="1" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvEmac0:libdrvMac0" targetComponentID="DRIVER LAYER"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
           <Children dnOrder="0">
-            <UniqueComponent dnOrder="0" id="drvExtPhyKsz8081">
+            <UniqueComponent dnOrder="0" id="drvEmac0">
+              <Symbols dnOrder="0">
+                <String dnOrder="0" id="DRV_MAC_PHY_TYPE">
+                  <Values dnOrder="0">
+                    <Dynamic dnOrder="0" id="drvEmac0" value="KSZ8081"/>
+                  </Values>
+                </String>
+                <Integer dnOrder="1" id="MAX_RX_PACKET_POINTERS">
+                  <Values dnOrder="0">
+                    <Dynamic dnOrder="0" id="drvEmac0" value="1024"/>
+                  </Values>
+                </Integer>
+              </Symbols>
+            </UniqueComponent>
+            <UniqueComponent dnOrder="1" id="drvExtPhyKsz8081">
               <Symbols dnOrder="0">
                 <Integer dnOrder="0" id="DRV_ETHPHY_CLIENTS_NUMBER">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="2"/>
                   </Values>
                 </Integer>
-                <String dnOrder="1" id="DRV_ETHPHY_MAC_MODULE_ID">
-                  <Values dnOrder="0">
-                    <Dynamic dnOrder="0" id="drvExtPhyKsz8081" value="EMAC0_BASE_ADDRESS"/>
-                  </Values>
-                </String>
-                <String dnOrder="2" id="DRV_ETHPHY_MAC_PERIPHERAL_ID">
-                  <Values dnOrder="0">
-                    <Dynamic dnOrder="0" id="drvExtPhyKsz8081" value="EMAC0"/>
-                  </Values>
-                </String>
-                <String dnOrder="3" id="DRV_ETHPHY_RESET_CALLBACK">
+                <String dnOrder="1" id="DRV_ETHPHY_RESET_CALLBACK">
                   <Attributes dnOrder="0">
                     <Boolean dnOrder="0" id="visible">
                       <Value dnOrder="0">true</Value>
@@ -2856,55 +2774,21 @@
                     <User dnOrder="0" value="AppPhyResetFunction"/>
                   </Values>
                 </String>
-                <Boolean dnOrder="4" id="DRV_ETHPHY_USE_RESET_CALLBACK">
+                <Boolean dnOrder="2" id="DRV_ETHPHY_USE_RESET_CALLBACK">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="true"/>
                   </Values>
                 </Boolean>
-                <Integer dnOrder="5" id="TCPIP_INTMAC_PHY_ADDRESS">
+                <Integer dnOrder="3" id="TCPIP_INTMAC_PHY_ADDRESS">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="0"/>
                   </Values>
                 </Integer>
-                <Boolean dnOrder="6" id="TCPIP_INTMAC_PHY_CONFIG_RMII">
+                <Boolean dnOrder="4" id="TCPIP_INTMAC_PHY_CONFIG_RMII">
                   <Values dnOrder="0">
                     <Dynamic dnOrder="0" id="drvExtPhyKsz8081" value="true"/>
                   </Values>
                 </Boolean>
-              </Symbols>
-            </UniqueComponent>
-            <UniqueComponent dnOrder="1" id="drvMac0">
-              <Symbols dnOrder="0">
-                <String dnOrder="0" id="DRV_MAC_PHY_TYPE">
-                  <Values dnOrder="0">
-                    <Dynamic dnOrder="0" id="drvMac0" value="KSZ8081"/>
-                  </Values>
-                </String>
-                <Integer dnOrder="1" id="MAX_RX_PACKET_POINTERS">
-                  <Values dnOrder="0">
-                    <Dynamic dnOrder="0" id="drvMac0" value="1024"/>
-                  </Values>
-                </Integer>
-                <Integer dnOrder="2" id="RX_BUFFER_ALLOCATION_THRESHOLD_0">
-                  <Values dnOrder="0">
-                    <User dnOrder="0" value="0"/>
-                  </Values>
-                </Integer>
-                <Integer dnOrder="3" id="RX_BUFFER_DEFICIT_0">
-                  <Values dnOrder="0">
-                    <Dynamic dnOrder="0" id="drvMac0" value="0"/>
-                  </Values>
-                </Integer>
-                <Integer dnOrder="4" id="RX_STATIC_BUFFERS_0">
-                  <Values dnOrder="0">
-                    <User dnOrder="0" value="1048"/>
-                  </Values>
-                </Integer>
-                <Integer dnOrder="5" id="TX_DESCRIPTOR_COUNT_0">
-                  <Values dnOrder="0">
-                    <User dnOrder="0" value="1024"/>
-                  </Values>
-                </Integer>
               </Symbols>
             </UniqueComponent>
             <UniqueComponent dnOrder="2" id="drvMiim">
@@ -2928,29 +2812,27 @@
             </UniqueComponent>
             <UniqueComponent dnOrder="3" id="tcpip_driver_config">
               <Symbols dnOrder="0">
-                <Boolean dnOrder="0" id="TCPIP_AUTOCONFIG_ENABLE_KSZ8081">
+                <Boolean dnOrder="0" id="TCPIP_AUTOCONFIG_ENABLE_EMAC0">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="true"/>
                   </Values>
                 </Boolean>
-                <Boolean dnOrder="1" id="TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver">
+                <Boolean dnOrder="1" id="TCPIP_AUTOCONFIG_ENABLE_KSZ8081">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="true"/>
                   </Values>
                 </Boolean>
-                <KeyValueSet dnOrder="2" id="TCPIP_AUTOCONFIG_MAC_CHOICE">
-                  <Attributes dnOrder="0">
-                    <Boolean dnOrder="0" id="readOnly">
-                      <Value dnOrder="0">false</Value>
-                    </Boolean>
-                  </Attributes>
-                  <Values dnOrder="1">
-                    <Dynamic dnOrder="0" id="tcpip_driver_config" value="1"/>
+                <Boolean dnOrder="2" id="TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver">
+                  <Values dnOrder="0">
+                    <User dnOrder="0" value="true"/>
                   </Values>
-                </KeyValueSet>
+                </Boolean>
               </Symbols>
             </UniqueComponent>
           </Children>
+          <Attachments dnOrder="1">
+            <Attachment dnOrder="0" id="libdrvMac0" namespace="drvEmac0" targetAttachmentID="tcpipNetConfig_0:NETCONFIG_MAC_Dependency" targetComponentID="BASIC CONFIGURATION"/>
+          </Attachments>
         </GroupComponent>
         <GroupComponent displayName="NETWORK LAYER" dnOrder="3" id="NETWORK LAYER">
           <Children dnOrder="0">
@@ -3029,21 +2911,21 @@
         </GroupComponent>
       </Children>
       <Attachments dnOrder="1">
-        <Attachment dnOrder="0" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console_0"/>
-        <Attachment dnOrder="1" id="tcpipTftps:Tftps_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="2" id="tcpipTftpc:Tftpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
+        <Attachment dnOrder="0" id="tcpipTftps:Tftps_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
+        <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION"/>
+        <Attachment dnOrder="2" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
         <Attachment dnOrder="3" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
-        <Attachment dnOrder="4" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
+        <Attachment dnOrder="4" id="tcpipTftpc:Tftpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
       </Attachments>
     </GroupComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="NETWORK LAYER">
+    <ComponentGraph dnOrder="0" id="DRIVER LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="307" y="28"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="570" y="21"/>
-        <ElementPosition dnOrder="2" id="tcpipIcmp" x="438" y="30"/>
-        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="drvEmac0" x="540" y="20"/>
+        <ElementPosition dnOrder="1" id="drvExtPhyKsz8081" x="419" y="18"/>
+        <ElementPosition dnOrder="2" id="drvMiim" x="280" y="19"/>
+        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="19" y="19"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="1"/>
@@ -3056,18 +2938,41 @@
         <ElementPosition dnOrder="4" id="dbgu" x="18" y="393"/>
         <ElementPosition dnOrder="5" id="dfp" x="20" y="20"/>
         <ElementPosition dnOrder="6" id="drv_memory" x="335" y="169"/>
-        <ElementPosition dnOrder="7" id="drv_sst26" x="167" y="182"/>
-        <ElementPosition dnOrder="8" id="netPres" x="635" y="25"/>
-        <ElementPosition dnOrder="9" id="qspi" x="23" y="182"/>
-        <ElementPosition dnOrder="10" id="sys_command" x="323" y="546"/>
-        <ElementPosition dnOrder="11" id="sys_console" x="169" y="327"/>
-        <ElementPosition dnOrder="12" id="sys_debug" x="518" y="441"/>
-        <ElementPosition dnOrder="13" id="sys_fs" x="487" y="173"/>
-        <ElementPosition dnOrder="14" id="sys_time" x="185" y="58"/>
-        <ElementPosition dnOrder="15" id="tc0" x="23" y="77"/>
+        <ElementPosition dnOrder="7" id="netPres" x="635" y="25"/>
+        <ElementPosition dnOrder="8" id="qspi" x="23" y="182"/>
+        <ElementPosition dnOrder="9" id="sys_command" x="323" y="546"/>
+        <ElementPosition dnOrder="10" id="sys_console" x="169" y="327"/>
+        <ElementPosition dnOrder="11" id="sys_debug" x="518" y="441"/>
+        <ElementPosition dnOrder="12" id="sys_fs" x="487" y="173"/>
+        <ElementPosition dnOrder="13" id="sys_time" x="185" y="58"/>
+        <ElementPosition dnOrder="14" id="tc0" x="23" y="77"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="3" id="BASIC CONFIGURATION">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipCmd" x="357" y="75"/>
+        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="540" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipStack" x="204" y="78"/>
+        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="22" y="19"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="4" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="435" y="23"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="19" y="22"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="5" id="TCP/IP STACK">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="53" y="33"/>
+        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="243" y="38"/>
+        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="267" y="226"/>
+        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="264" y="154"/>
+        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="260" y="118"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="6" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipAnnounce" x="24" y="54"/>
         <ElementPosition dnOrder="1" id="tcpipDhcp" x="176" y="56"/>
@@ -3082,36 +2987,12 @@
         <ElementPosition dnOrder="10" id="tcpip_apps_config" x="20" y="19"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="TCP/IP STACK">
+    <ComponentGraph dnOrder="7" id="NETWORK LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="53" y="33"/>
-        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="243" y="38"/>
-        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="267" y="226"/>
-        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="264" y="154"/>
-        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="260" y="118"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="5" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="435" y="23"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="19" y="22"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="6" id="BASIC CONFIGURATION">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipCmd" x="357" y="75"/>
-        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="48" y="75"/>
-        <ElementPosition dnOrder="2" id="tcpipStack" x="204" y="78"/>
-        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="22" y="19"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="DRIVER LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="drvExtPhyKsz8081" x="419" y="18"/>
-        <ElementPosition dnOrder="1" id="drvMac0" x="540" y="20"/>
-        <ElementPosition dnOrder="2" id="drvMiim" x="280" y="19"/>
-        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="19" y="19"/>
+        <ElementPosition dnOrder="0" id="tcpipArp" x="307" y="28"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="570" y="21"/>
+        <ElementPosition dnOrder="2" id="tcpipIcmp" x="438" y="30"/>
+        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>

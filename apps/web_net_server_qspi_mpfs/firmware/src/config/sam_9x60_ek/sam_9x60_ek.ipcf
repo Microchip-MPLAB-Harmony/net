@@ -40,6 +40,10 @@
             <path>\system\time\sys_time.h</path>
             <path>\system\time\sys_time_definitions.h</path>
             <path>\system\time\src\sys_time_local.h</path>
+            <path>\driver\emac\drv_emac.h</path>
+            <path>\driver\emac\src\drv_emac_local.h</path>
+            <path>\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</path>
+            <path>\driver\emac\src\dynamic\drv_emac_lib.h</path>
             <path>\driver\memory\drv_memory.h</path>
             <path>\driver\memory\drv_memory_definitions.h</path>
             <path>\..\..\packs\SAM9X60_DFP\device.h</path>
@@ -244,16 +248,9 @@
             <path>\peripheral\clk\plib_clk.h</path>
             <path>\peripheral\pio\plib_pio.h</path>
             <path>\peripheral\aic\plib_aic.h</path>
-            <path>\driver\emac\drv_emac.h</path>
-            <path>\driver\emac\src\drv_emac_local.h</path>
-            <path>\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</path>
-            <path>\driver\emac\src\dynamic\drv_emac_lib.h</path>
             <path>\driver\miim\drv_miim.h</path>
-            <path>\driver\miim\config\drv_miim_config.h</path>
             <path>\driver\miim\src\drv_miim_local.h</path>
-            <path>\driver\sst26\drv_sst26.h</path>
-            <path>\driver\sst26\src\drv_sst26_local.h</path>
-            <path>\driver\sst26\drv_sst26_definitions.h</path>
+            <path>\driver\miim\src\dynamic\drv_miim_mapping.h</path>
             <path>\system\debug\sys_debug.h</path>
             <path>\peripheral\qspi\plib_qspi_common.h</path>
             <path>\peripheral\qspi\plib_qspi.h</path>
@@ -313,6 +310,9 @@
             <path>\peripheral\tc\plib_tc0.c</path>
             <path>\system\time\src\sys_time.c</path>
             <path>\library\tcpip\src\tcpip_commands.c</path>
+            <path>\driver\emac\src\dynamic\drv_emac.c</path>
+            <path>\driver\emac\src\dynamic\drv_emac_statistics.c</path>
+            <path>\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</path>
             <path>\library\tcpip\src\telnet.c</path>
             <path>\library\tcpip\src\tftps.c</path>
             <path>\net_pres\pres\src\net_pres.c</path>
@@ -349,14 +349,10 @@
             <path>\cstartup.s</path>
             <path>\vectortrap.s</path>
             <path>\library\tcpip\src\sntp.c</path>
-            <path>\driver\emac\src\dynamic\drv_emac.c</path>
-            <path>\driver\emac\src\dynamic\drv_emac_statistics.c</path>
-            <path>\driver\emac\src\dynamic\drv_emac_lib_sam9x60.c</path>
             <path>\library\tcpip\src\tcpip_announce.c</path>
             <path>\library\tcpip\src\tftpc.c</path>
             <path>\library\tcpip\src\udp.c</path>
-            <path>\driver\miim\src\dynamic\drv_miim_emac.c</path>
-            <path>\driver\sst26\src\drv_sst26.c</path>
+            <path>\driver\miim\src\dynamic\drv_miim.c</path>
             <path>\system\debug\src\sys_debug_local.h</path>
             <path>\system\debug\src\sys_debug.c</path>
             <path>\peripheral\qspi\plib_qspi.c</path>
