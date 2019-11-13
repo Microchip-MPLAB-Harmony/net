@@ -957,7 +957,7 @@ enum {
 
 /* HMAC */
 typedef struct CRYPT_HMAC_CTX {
-    long long holder[80];   /* This structure should be large enough to hold 
+    long long holder[96];   /* This structure should be large enough to hold 
                                the internal representation, the size is checked 
                                during initialization*/
 } CRYPT_HMAC_CTX;
