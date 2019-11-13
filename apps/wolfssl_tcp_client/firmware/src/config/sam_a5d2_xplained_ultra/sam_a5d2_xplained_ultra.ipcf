@@ -428,6 +428,7 @@
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
+            <path>\crypto\crypto.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xplained_ultra">
             <path>\library\tcpip\src\dns.c</path>
@@ -579,6 +580,7 @@
             <path>\system\console\src\sys_console_uart.h</path>
             <path>\system\console\src\sys_console_uart_definitions.h</path>
             <path>\system\console\src\sys_console_uart.c</path>
+            <path>\crypto\src\crypto.c</path>
         </group>
     </files>
 </iarProjectConnection>

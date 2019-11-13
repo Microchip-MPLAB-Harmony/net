@@ -433,6 +433,7 @@
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
+            <path>\crypto\crypto.h</path>
             <path>\FreeRTOSConfig.h</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\include\croutine.h</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\include\event_groups.h</path>
@@ -605,6 +606,7 @@
             <path>\system\console\src\sys_console_uart.h</path>
             <path>\system\console\src\sys_console_uart_definitions.h</path>
             <path>\system\console\src\sys_console_uart.c</path>
+            <path>\crypto\src\crypto.c</path>
             <path>\freertos_hooks.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\croutine.c</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\list.c</path>

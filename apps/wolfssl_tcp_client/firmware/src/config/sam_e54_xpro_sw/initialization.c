@@ -294,6 +294,7 @@ const TCPIP_ICMP_MODULE_CONFIG tcpipICMPInitData =
 
 
 
+
 /*** ETH PHY Initialization Data ***/
 
 
@@ -334,8 +335,6 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
     .pPhyBase               = &DRV_ETHPHY_OBJECT_BASE_Default,
     .pPhyInit               = &tcpipPhyInitData,
 };
-
-
 
 
 
@@ -410,7 +409,6 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
 
 // MAC modules
     {TCPIP_MODULE_MAC_PIC32C,     &tcpipMACPIC32CINTInitData},     // TCPIP_MODULE_MAC_PIC32C
-
 
 };
 
@@ -595,6 +593,7 @@ void SYS_Initialize ( void* data )
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 
 
+    CRYPT_WCCB_Initialize();
 
     APP_Initialize();
 
