@@ -352,15 +352,16 @@ extern "C" {
 
 
 /* Network Configuration Index 0 */
-#define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	""
+#define TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX0	"EMAC0"
+#define TCPIP_IF_EMAC0
 
-#define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				""
-#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				0
+#define TCPIP_NETWORK_DEFAULT_HOST_NAME_IDX0				"SAM9X60_EK"
+#define TCPIP_NETWORK_DEFAULT_MAC_ADDR_IDX0				"00:04:25:1C:A0:03"
 
-#define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			""
+#define TCPIP_NETWORK_DEFAULT_IP_ADDRESS_IDX0			"192.168.100.14"
 #define TCPIP_NETWORK_DEFAULT_IP_MASK_IDX0			"255.255.255.0"
-#define TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0			""
-#define TCPIP_NETWORK_DEFAULT_DNS_IDX0				""
+#define TCPIP_NETWORK_DEFAULT_GATEWAY_IDX0			"192.168.100.1"
+#define TCPIP_NETWORK_DEFAULT_DNS_IDX0				"192.168.100.1"
 #define TCPIP_NETWORK_DEFAULT_SECOND_DNS_IDX0			"0.0.0.0"
 #define TCPIP_NETWORK_DEFAULT_POWER_MODE_IDX0			"full"
 #define TCPIP_NETWORK_DEFAULT_INTERFACE_FLAGS_IDX0			\
@@ -368,7 +369,7 @@ extern "C" {
 													TCPIP_NETWORK_CONFIG_DNS_CLIENT_ON |\
 													TCPIP_NETWORK_CONFIG_IP_STATIC
 													
-#define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			
+#define TCPIP_NETWORK_DEFAULT_MAC_DRIVER_IDX0			DRV_EMAC0_Object
 
 
 
@@ -381,6 +382,50 @@ extern "C" {
 #define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_BUFF_SIZE    2000
 #define TCPIP_STACK_COMMANDS_ICMP_ECHO_REQUEST_DATA_SIZE    100
 
+
+// *****************************************************************************
+// EMAC0 -- as produced from drv_intmac.h.ftl
+
+#define EMAC_MIN_RX_SIZE                            64      // always multiple of 16!, 
+                                                            // less than 64 creates excessive fragmentation
+#define EMAC_MIN_TX_DESCRIPTORS                     1       // needed to accommodate zero copy and TCP traffic
+#define TCPIP_INTMAC_PERIPHERAL_CLK                 200000000
+#define TCPIP_INTMAC_MAX_NUMBER_OF_QUEUES           1
+#define TCPIP_INTMAC_MAX_RX_PACKET_POINTERS         1024
+#define DRV_EMAC0_BASE_ADDRESS                      EMAC0_BASE_ADDRESS
+#define TCPIP_INTMAC_MODULE_ID                                           EMAC0_BASE_ADDRESS
+#define DRV_EMAC0_CLIENTS_NUMBER                    1
+#define DRV_EMAC0_NUMBER_OF_QUEUES                  1
+#define DRV_EMAC0_INTERRUPT_SOURCE                  EMAC0_IRQn
+#define DRV_EMAC0_RMII_MODE                         1
+
+/*** MAC QUEUE 0 Configuration ***/
+#define DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0         160
+#define DRV_EMAC0_TX_BUFF_SIZE_QUE0                 1536
+#define DRV_EMAC0_RX_DEVICE_MAX_DESCRIPTORS0        1024
+#define DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0         1024
+#define DRV_EMAC0_RX_BUFF_SIZE_QUE0                 128
+#define DRV_EMAC0_RX_BUFF_STATIC_COUNT_QUE0         0
+#define DRV_EMAC0_RX_BUFF_COUNT_THRESHOLD_QUE0      10
+#define DRV_EMAC0_RX_BUFF_ALLOC_COUNT_QUE0          10
+
+#define DRV_EMAC0_RX_FILTERS                        ( 0\
+                                                    | TCPIP_MAC_RX_FILTER_TYPE_BCAST_ACCEPT\
+                                                    | TCPIP_MAC_RX_FILTER_TYPE_MCAST_ACCEPT\
+                                                    | TCPIP_MAC_RX_FILTER_TYPE_UCAST_ACCEPT\
+                                                    | TCPIP_MAC_RX_FILTER_TYPE_CRC_ERROR_REJECT\
+                                                    )
+#define DRV_EMAC0_ETH_OPEN_FLAGS                    ( 0\
+                                                    | TCPIP_ETH_OPEN_AUTO\
+                                                    | TCPIP_ETH_OPEN_FDUPLEX\
+                                                    | TCPIP_ETH_OPEN_HDUPLEX\
+                                                    | TCPIP_ETH_OPEN_100\
+                                                    | TCPIP_ETH_OPEN_10\
+                                                    | TCPIP_ETH_OPEN_MDIX_AUTO\
+                                                    | TCPIP_ETH_OPEN_RMII\
+                                                    )
+
+// *****************************************************************************
 
 
 /*** telnet Configuration ***/
