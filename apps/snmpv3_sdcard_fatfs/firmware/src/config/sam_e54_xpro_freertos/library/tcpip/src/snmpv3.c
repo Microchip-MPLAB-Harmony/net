@@ -35,7 +35,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)
 #include "tcpip/src/snmpv3_private.h"
-#include "tcpip/src/common/sys_fs_wrapper.h"
+#include "tcpip/src/common/sys_fs_shell.h"
 #include "tcpip/snmpv3.h"
 
 
@@ -68,7 +68,7 @@ Header length ( 2 + 2 bytes)  + engineID ( snmpEngnIDLength bytes)
                                              +1+1+SNMPv3_MSG_PRIV_PARAM_STRING_LEN) \
                                             )
 
-static int32_t Snmpv3TrapFileDescrptr=SYS_FS_HANDLE_INVALID;
+static int32_t Snmpv3TrapFileDescrptr=(int32_t)SYS_FS_HANDLE_INVALID;
 
 typedef struct 
 {
@@ -77,6 +77,10 @@ typedef struct
 }snmpV3MsgFlagsBitWise;
 
 extern TCPIP_SNMP_DCPT gSnmpDcpt;
+
+// file shell object for file access
+extern const SYS_FS_SHELL_OBJ*  snmpFileShell;
+
 /*   
 SNMP_ENGINE_MAX_MSG_SIZE is determined as the minimum of the max msg size
 values supported among all of the transports available to and supported by the engine. 
@@ -3411,18 +3415,15 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             {
                 return false;
             }
-
-            SYS_FS_FileSeek(Snmpv3TrapFileDescrptr, rec.hData, SYS_FS_SEEK_SET);
-
+            (*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr,rec.hData,SYS_FS_SEEK_SET);
             TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
-            SYS_FS_FileRead(Snmpv3TrapFileDescrptr,&len,1);
-
+            (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,(uint8_t*)&len,1);
             OIDLen = len;
             TCPIP_SNMPv3_DataCopyToProcessBuff(len,dynTrapScopedPduBuf);
             while( len-- )
             {
                 uint8_t c;
-                SYS_FS_FileRead(Snmpv3TrapFileDescrptr,&c,1);
+                (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
                 TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
             }
 
@@ -3557,7 +3558,8 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
         TCPIP_SNMPv3_DataCopyToProcessBuff(0,dynTrapScopedPduBuf);
         if ( !TCPIP_SNMP_OIDStringFindByID(Snmpv3TrapFileDescrptr,snmpStkDcptMemStubPtr->SNMPNotifyInfo.agentIDVar, &rec, OIDValue, &OIDLen) )
         {
-            SYS_FS_FileClose(Snmpv3TrapFileDescrptr);
+            (*snmpFileShell->fileClose)(snmpFileShell,Snmpv3TrapFileDescrptr);
+            
             Snmpv3TrapFileDescrptr = SYS_FS_HANDLE_INVALID;
             return false;
         }
@@ -3566,16 +3568,16 @@ bool TCPIP_SNMPv3_TrapScopedPDU(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint
             return false;
         }
 
-        SYS_FS_FileSeek(Snmpv3TrapFileDescrptr, rec.hData, SYS_FS_SEEK_SET);		
+        (*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr, rec.hData, SYS_FS_SEEK_SET);		
         TCPIP_SNMPv3_DataCopyToProcessBuff(ASN_OID,dynTrapScopedPduBuf);
 		
-        SYS_FS_FileRead(Snmpv3TrapFileDescrptr,&len,1);		
+        (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&len,1);		
         OIDLen = len;
         TCPIP_SNMPv3_DataCopyToProcessBuff(OIDLen,dynTrapScopedPduBuf);
         while( OIDLen-- )
         {
             uint8_t c;			
-            SYS_FS_FileRead(Snmpv3TrapFileDescrptr,&c,1);
+            (*snmpFileShell->fileRead)(snmpFileShell,Snmpv3TrapFileDescrptr,&c,1);
 			
             TCPIP_SNMPv3_DataCopyToProcessBuff(c,dynTrapScopedPduBuf);
         }
@@ -3759,7 +3761,7 @@ bool TCPIP_SNMPv3_Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,uint8_t tar
         return false;
     }
     // set the file position to the begining
-    if(SYS_FS_FileSeek(Snmpv3TrapFileDescrptr,0,SYS_FS_SEEK_SET) == -1)
+    if((*snmpFileShell->fileSeek)(snmpFileShell,Snmpv3TrapFileDescrptr,0,SYS_FS_SEEK_SET) == -1)
     {
         return false;
     }

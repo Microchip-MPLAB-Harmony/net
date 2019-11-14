@@ -138,7 +138,6 @@ extern "C" {
 
 
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: Middleware & Other Library Configuration
@@ -307,31 +306,6 @@ extern "C" {
 
 
 
-/*** telnet Configuration ***/
-#define TCPIP_STACK_USE_TELNET_SERVER
-#define TCPIP_TELNET_MAX_CONNECTIONS    2
-#define TCPIP_TELNET_TASK_TICK_RATE     100
-#define TCPIP_TELNET_SKT_TX_BUFF_SIZE   0
-#define TCPIP_TELNET_SKT_RX_BUFF_SIZE   0
-#define TCPIP_TELNET_LISTEN_PORT        23
-#define TCPIP_TELNET_PRINT_BUFF_SIZE    200
-#define TCPIP_TELNET_LINE_BUFF_SIZE     80
-#define TCPIP_TELNET_USERNAME_SIZE      15
-#define TCPIP_TELNET_CONFIG_FLAGS       \
-                                       TCPIP_TELNET_FLAG_NONE
-
-#define TCPIP_TELNET_OBSOLETE_AUTHENTICATION true
-#define TCPIP_TELNET_USERNAME           "admin"
-#define TCPIP_TELNET_PASSWORD           "microchip"
-
-
-/* MPLAB Harmony Net Presentation Layer Definitions*/
-#define NET_PRES_NUM_INSTANCE 1
-#define NET_PRES_NUM_SOCKETS 10
-
-
-
-
 /*** IPv4 Configuration ***/
 #define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
@@ -390,26 +364,6 @@ extern "C" {
 
 
 
-
-/*** TCP/IP Configuration ***/
-
-
-
-/*** SNTP Configuration ***/
-#define TCPIP_STACK_USE_SNTP_CLIENT
-#define TCPIP_NTP_DEFAULT_IF		        		"PIC32INT"
-#define TCPIP_NTP_VERSION             			    	4
-#define TCPIP_NTP_DEFAULT_CONNECTION_TYPE   			IP_ADDRESS_TYPE_IPV4
-#define TCPIP_NTP_EPOCH		                		2208988800ul
-#define TCPIP_NTP_REPLY_TIMEOUT		        		6
-#define TCPIP_NTP_MAX_STRATUM		        		15
-#define TCPIP_NTP_TIME_STAMP_TMO				660
-#define TCPIP_NTP_SERVER		        		"ntp.microchip.com"
-#define TCPIP_NTP_SERVER_MAX_LENGTH				30
-#define TCPIP_NTP_QUERY_INTERVAL				600
-#define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
-#define TCPIP_NTP_TASK_TICK_RATE				1100
-#define TCPIP_NTP_RX_QUEUE_LIMIT				2
 
 
 

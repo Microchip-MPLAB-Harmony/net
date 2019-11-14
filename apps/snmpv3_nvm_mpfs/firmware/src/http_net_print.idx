@@ -9,8 +9,8 @@
 +ledSelected(1,true)
 +ledSelected(1,false)
 +version
-+drive
-+fstype
+drive
+fstype
 +led(0)
 +btn(0)
 +btn(1)

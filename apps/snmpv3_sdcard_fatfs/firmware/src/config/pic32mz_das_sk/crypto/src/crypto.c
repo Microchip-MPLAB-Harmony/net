@@ -52,18 +52,18 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "crypto/crypto.h"
 
-#include "crypto/src/md5.h"
-#include "crypto/src/sha.h"
-#include "crypto/src/sha256.h"
-#include "crypto/src/sha512.h"
-#include "crypto/src/hmac.h"
-#include "crypto/src/compress.h"
-#include "crypto/src/random.h"
-#include "crypto/src/des3.h"
-#include "crypto/src/aes.h"
-#include "crypto/src/rsa.h"
-#include "crypto/src/ecc.h"
-#include "crypto/src/error-crypt.h"
+#include "wolfssl/wolfcrypt/md5.h"
+#include "wolfssl/wolfcrypt/sha.h"
+#include "wolfssl/wolfcrypt/sha256.h"
+#include "wolfssl/wolfcrypt/sha512.h"
+#include "wolfssl/wolfcrypt/hmac.h"
+#include "wolfssl/wolfcrypt/compress.h"
+#include "wolfssl/wolfcrypt/random.h"
+#include "wolfssl/wolfcrypt/des3.h"
+#include "wolfssl/wolfcrypt/aes.h"
+#include "wolfssl/wolfcrypt/rsa.h"
+#include "wolfssl/wolfcrypt/ecc.h"
+#include "wolfssl/wolfcrypt/error-crypt.h"
 
 #ifndef NO_MD5
 /* Initialize MD5 */
@@ -628,7 +628,7 @@ int CRYPT_RSA_Initialize(CRYPT_RSA_CTX* rsa)
     if (rsa->holder == NULL)
         return -1;
 
-    return wc_InitRsaKey((RsaKey*)rsa->holder, NULL);
+    return wc_InitRsaKey_ex((RsaKey*)rsa->holder, NULL, 0);
 }
 
 

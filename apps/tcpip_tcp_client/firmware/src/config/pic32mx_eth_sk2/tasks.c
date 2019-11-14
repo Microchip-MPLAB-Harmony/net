@@ -84,10 +84,6 @@ void SYS_Tasks ( void )
 
     /* Maintain Middleware & Other Libraries */
     
-NET_PRES_Tasks(sysObj.netPres);
-
-
-
 TCPIP_STACK_Task(sysObj.tcpip);
 
 
