@@ -265,6 +265,12 @@ void APP_Tasks( void );
 #endif
 #endif /* _APP_H */
 
+// Application SYS_FS mount points
+// Adjust as needed
+#define APP_SYS_FS_NVM_VOL          "/dev/nvma1"
+#define APP_SYS_FS_MOUNT_POINT      "/mnt/mchpSite1"
+#define APP_SYS_FS_TYPE             MPFS2
+#define APP_SYS_FS_TYPE_STRING      "MPFS2"
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus
 }

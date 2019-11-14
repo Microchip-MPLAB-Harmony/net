@@ -36,13 +36,6 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
 #define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_SNMP_SERVER
 
 #include "tcpip/src/tcpip_private.h"
@@ -51,7 +44,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)
 #include "tcpip/src/snmpv3_private.h"
 #endif
-#include "tcpip/src/common/sys_fs_wrapper.h"
+#include "tcpip/src/common/sys_fs_shell.h"
 #include "tcpip/snmp.h"
 #include "mib.h"
 
@@ -85,8 +78,10 @@ static const void*  SnmpStackMemH = 0;        // memory handle
 
 static SNMP_STACK_DCPT_STUB*  SnmpStackDcptMemStubPtr=0;
 
+// file shell object for file access
+const SYS_FS_SHELL_OBJ*  snmpFileShell = 0;
 TCPIP_SNMP_DCPT gSnmpDcpt;
-
+const char *snmpMountPath = TCPIP_SNMP_MOUNT_POINT;
 #if defined (TCPIP_STACK_USE_IPV6)
 static void SNMP_IPV6_Notify(TCPIP_NET_HANDLE hNet, uint8_t evType, const void * param);
 #endif
@@ -363,7 +358,7 @@ void TCPIP_SNMP_FreeMemory(void)
     }	
     if(SNMPStatus.Flags.bIsFileOpen)
     {
-        SYS_FS_FileClose(snmpFileDescrptr);
+        (snmpFileShell->fileClose)(snmpFileShell,snmpFileDescrptr);
         snmpFileDescrptr = (int32_t) SYS_FS_HANDLE_INVALID;
         SNMPStatus.Flags.bIsFileOpen = false;
     }
@@ -372,6 +367,12 @@ void TCPIP_SNMP_FreeMemory(void)
     {
         SNMPStatus.Flags.bIsSnmpIntfUp = false;
     }
+    if(snmpFileShell != 0)
+    {
+        (*snmpFileShell->delete)(snmpFileShell);
+        snmpFileShell = 0;
+    }
+    
 }
 #else
 #define TCPIP_SNMP_FreeMemory()
@@ -463,6 +464,19 @@ bool TCPIP_SNMP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
         {
             return false;
         }
+        // create the SYS_FS shell
+        SYS_FS_SHELL_RES shellRes;
+        if(snmpData->mountPath != 0)
+        {
+            snmpMountPath = snmpData->mountPath;
+        }
+        snmpFileShell = (SYS_FS_SHELL_OBJ*)SYS_FS_Shell_Create(snmpMountPath,0,0,0,&shellRes);
+        if(snmpFileShell == 0)
+        {
+            SYS_ERROR(SYS_ERROR_ERROR, " SNMP: Wrapper object failure : %d",shellRes);
+            TCPIP_SNMP_FreeMemory();
+            return false;
+        }          
         TCPIP_UDP_SignalHandlerRegister(gSnmpDcpt.skt, TCPIP_UDP_SIGNAL_RX_DATA, _SNMPSocketRxSignalHandler, 0);
         // As we process SNMP variables, we will prepare response on-the-fly
         // creating full duplex transfer.
@@ -915,7 +929,7 @@ static SNMP_STACK_ERROR TCPIP_SNMP_inputPacketProcessAndRespond(void)
 	/* Initialize buffer offsets. */
     SNMPRxOffset = 0;
     SNMPTxOffset = 0;
-    if(SYS_FS_FileSeek(snmpFileDescrptr,0,SYS_FS_SEEK_SET) == -1)
+    if((*snmpFileShell->fileSeek)(snmpFileShell,snmpFileDescrptr,0,SYS_FS_SEEK_SET) == -1)    
     {
         return SNMP_STACK_FAIL;
     }
@@ -1026,7 +1040,7 @@ static void TCPIP_SNMP_Process(void)
 
     if(!SNMPStatus.Flags.bIsFileOpen)
     {
-        snmpFileDescrptr= SYS_FS_FileOpen_Wrapper((const char*)TCPIP_SNMP_BIB_FILE_NAME,SYS_FS_FILE_OPEN_READ);
+        snmpFileDescrptr = snmpFileShell->fileOpen(snmpFileShell,TCPIP_SNMP_BIB_FILE_NAME,SYS_FS_FILE_OPEN_READ);
         if(snmpFileDescrptr != SYS_FS_HANDLE_INVALID)
         {
            SNMPStatus.Flags.bIsFileOpen = true;
@@ -1263,7 +1277,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
 
     snmpTrapFileDescriptr = snmpFileDescrptr;
     // set the file position to the begining
-    if(SYS_FS_FileSeek(snmpTrapFileDescriptr,0,SYS_FS_SEEK_SET) == -1)
+    if((*snmpFileShell->fileSeek)(snmpFileShell,snmpTrapFileDescriptr,0,SYS_FS_SEEK_SET) == -1)
     {
         return false;
     }
@@ -1493,12 +1507,12 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
             return false;
         }
 
-        if(SYS_FS_FileSeek(snmpTrapFileDescriptr,rec.hData, SYS_FS_SEEK_SET) == -1)
+        if((*snmpFileShell->fileSeek)(snmpFileShell,snmpTrapFileDescriptr,rec.hData,SYS_FS_SEEK_SET) == -1)
         {
             return false;
         }
         TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpTrapPutData);
-        if(SYS_FS_FileRead(snmpTrapFileDescriptr, (uint8_t*)&len,1) == -1)
+        if((*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,(uint8_t*)&len,1) == -1)        
         {
             return false;
         }
@@ -1508,7 +1522,7 @@ bool TCPIP_SNMP_TRAPv2Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         while( len-- )
         {
             uint8_t c;
-            SYS_FS_FileRead(snmpTrapFileDescriptr,(uint8_t*)&c,1);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,(uint8_t*)&c,1);
             TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
         }
         tempOffset = snmpTrapPutData->length;
@@ -1658,7 +1672,7 @@ bool TCPIP_SNMP_TRAPv1Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
     }
     snmpTrapFileDescriptr = snmpFileDescrptr;
     // set the file position to the begining
-    if(SYS_FS_FileSeek(snmpTrapFileDescriptr,0,SYS_FS_SEEK_SET) == -1)
+    if((*snmpFileShell->fileSeek)(snmpFileShell,snmpTrapFileDescriptr,0,SYS_FS_SEEK_SET) == -1)
     {
         return false;
     }
@@ -1738,15 +1752,15 @@ bool TCPIP_SNMP_TRAPv1Notify(SNMP_ID var, SNMP_VAL val, SNMP_INDEX index,SNMP_TR
         return false;
     }
 
-    SYS_FS_FileSeek(snmpTrapFileDescriptr, rec.hData, SYS_FS_SEEK_SET);
+    (*snmpFileShell->fileSeek)(snmpFileShell,snmpTrapFileDescriptr,rec.hData,SYS_FS_SEEK_SET);
     TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpTrapPutData);
-    SYS_FS_FileRead(snmpTrapFileDescriptr,(uint8_t*)&len,1);
+    (*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,(uint8_t*)&len,1);
     agentIDLen = len;
     TCPIP_SNMP_DataCopyToProcessBuffer(len,snmpTrapPutData);
     while( len-- )
     {
         uint8_t c;
-        SYS_FS_FileRead(snmpTrapFileDescriptr,&c,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpTrapFileDescriptr,&c,1);
         TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpTrapPutData);
     }
     
@@ -2469,11 +2483,10 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
 
                         if ( rec.nodeInfo.Flags.bIsAgentID )
                         {
-                            SYS_FS_FileSeek(snmpFileDescrptr, rec.hData, SYS_FS_SEEK_SET);
+                            (*snmpFileShell->fileSeek)(snmpFileShell,snmpFileDescrptr, rec.hData,SYS_FS_SEEK_SET);
                         }
                         TCPIP_SNMP_DataCopyToProcessBuffer(ASN_OID,snmpPutData);
-
-                        SYS_FS_FileRead(snmpFileDescrptr,&len,1);
+                        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&len,1);
 
                         agentIDLen = len;
                         TCPIP_SNMP_DataCopyToProcessBuffer(len,snmpPutData);
@@ -2481,7 +2494,7 @@ static bool TCPIP_SNMP_ProcessVariables(PDU_INFO* pduDbPtr,char* community, uint
                         {
                             uint8_t c;
 
-                            SYS_FS_FileRead(snmpFileDescrptr,&c,1);
+                            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&c,1);
 
                             TCPIP_SNMP_DataCopyToProcessBuffer(c,snmpPutData);
                         }
@@ -3444,28 +3457,27 @@ uint8_t TCPIP_SNMP_ProcessGetNextVar(OID_INFO* rec,PDU_INFO* pduDbPtr)
         varNodeInfo.Val = rec->nodeInfo.Val;
     
         // In this version, only 7-bit index is supported.
-        SYS_FS_FileRead(snmpFileDescrptr,&dummyRead,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&dummyRead,1);
         indexBytes = 0;
-        SYS_FS_FileRead(snmpFileDescrptr,&indexInfo.Val,1);
-        SYS_FS_FileRead(snmpFileDescrptr,&idLen,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&indexInfo.Val,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&idLen,1);
         if(idLen == 1)
         {
             uint8_t temp;
-            SYS_FS_FileRead(snmpFileDescrptr,(uint8_t*)&temp,1);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,(uint8_t*)&temp,1);
             indexRec.id = temp & 0xFF;
         }
         else if(idLen == 2)
         {
             uint8_t temp[2];
-            SYS_FS_FileRead(snmpFileDescrptr,temp,2);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,temp,2);
             indexRec.id = 0;
             indexRec.id = temp[0] & 0xFF;
             indexRec.id <<= 8;
             indexRec.id |= temp[1] & 0xFF;
         }
         indexRec.dataType = 0;
-        SYS_FS_FileRead(snmpFileDescrptr,(uint8_t*)&indexRec.dataType,1);
-    
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,(uint8_t*)&indexRec.dataType,1);
         indexRec.index = rec->index;
     
         // Check with application to see if there exists next index
@@ -3794,28 +3806,27 @@ uint8_t TCPIP_SNMP_ProcessGetBulkVar(OID_INFO* rec, uint8_t* oidValuePtr, uint8_
         varNodeInfo.Val = rec->nodeInfo.Val;
 
         // In this version, only 7-bit index is supported.
-        SYS_FS_FileRead(snmpFileDescrptr,&dummyRead,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&dummyRead,1);
         indexBytes = 0;
-        SYS_FS_FileRead(snmpFileDescrptr,&indexInfo.Val,1);
-        SYS_FS_FileRead(snmpFileDescrptr,&idLen,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&indexInfo.Val,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&idLen,1);
         if(idLen == 1)
         {
             uint8_t temp;
-    	    SYS_FS_FileRead(snmpFileDescrptr,&temp,1);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,&temp,1);
     	    indexRec.id = temp & 0xFF;
         }
         else if(idLen == 2)
         {
             uint8_t temp[2];
-    	    SYS_FS_FileRead(snmpFileDescrptr,temp,2);
+            (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,temp,2);
             indexRec.id = 0;
             indexRec.id = temp[0] & 0xFF;
             indexRec.id <<= 8;
             indexRec.id |= temp[1] & 0xFF;
         }
         indexRec.dataType = 0;
-        SYS_FS_FileRead(snmpFileDescrptr,(uint8_t*)&indexRec.dataType,1);
-
+        (*snmpFileShell->fileRead)(snmpFileShell,snmpFileDescrptr,(uint8_t*)&indexRec.dataType,1);
         indexRec.index = rec->index;
          // Check with application to see if there exists next index
         // for this index id.
@@ -4055,24 +4066,23 @@ uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(int32_t fileDescr,PDU_INFO* pduDbPtr,ui
 
     while( 1 )
     {
-        SYS_FS_FileSeek(fileDescr, hNode, SYS_FS_SEEK_SET);
-        rec->hNode = SYS_FS_FileTell(fileDescr); // hNode;
-        SYS_FS_FileRead(fileDescr,&savedOID,1);
-       
-        SYS_FS_FileRead(fileDescr,&rec->nodeInfo.Val,1);
+        (*snmpFileShell->fileSeek)(snmpFileShell,fileDescr, hNode,SYS_FS_SEEK_SET);
+        rec->hNode = (*snmpFileShell->fileTell)(snmpFileShell,fileDescr);
+        (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&savedOID,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&rec->nodeInfo.Val,1);
         if(rec->nodeInfo.Flags.bIsIDPresent)
         {
-            SYS_FS_FileRead(fileDescr,&idLen,1);
+            (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&idLen,1);
             if(idLen == 1)
             {
                 uint8_t temp;
-                SYS_FS_FileRead(fileDescr,&temp,1);
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&temp,1);
                 rec->id = temp & 0xFF;
             }
             else if(idLen == 2)
             {
                 uint8_t temp[2];
-                SYS_FS_FileRead(fileDescr,temp,2);
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,temp,2);
                 rec->id = 0;
                 rec->id = temp[0] & 0xFF;
                 rec->id <<= 8;
@@ -4081,8 +4091,8 @@ uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(int32_t fileDescr,PDU_INFO* pduDbPtr,ui
         }
         if((rec->nodeInfo.Flags.bIsSibling)|| (rec->nodeInfo.Flags.bIsDistantSibling))
         {
-            SYS_FS_FileRead(fileDescr,&tempData.v[0],1);
-            SYS_FS_FileRead(fileDescr,&tempData.v[1],1);
+            (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&tempData.v[0],1);
+            (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&tempData.v[1],1);
             rec->hSibling = tempData.Val;
         }
 
@@ -4106,8 +4116,8 @@ uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(int32_t fileDescr,PDU_INFO* pduDbPtr,ui
 
             if ( rec->nodeInfo.Flags.bIsSibling )
             {
-                SYS_FS_FileSeek(fileDescr, tempData.Val, SYS_FS_SEEK_SET);
-                hNode = SYS_FS_FileTell(fileDescr);
+                (*snmpFileShell->fileSeek)(snmpFileShell,fileDescr, tempData.Val,SYS_FS_SEEK_SET);
+                hNode = (*snmpFileShell->fileTell)(snmpFileShell,fileDescr);
                 comapreOidWithSibling=true;
             }
             else
@@ -4128,9 +4138,8 @@ uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(int32_t fileDescr,PDU_INFO* pduDbPtr,ui
             if ( !rec->nodeInfo.Flags.bIsParent )
             {
                 rec->dataType = 0;
-                SYS_FS_FileRead(fileDescr,(uint8_t*)&rec->dataType,1);
-                rec->hData = SYS_FS_FileTell(fileDescr);
-
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,(uint8_t*)&rec->dataType,1);
+                rec->hData = (*snmpFileShell->fileTell)(snmpFileShell,fileDescr);
                 if(snmpReqType==SNMP_GET && matchedCount == 0u)
                 {
                     SnmpStackDcptMemStubPtr->appendZeroToOID=false;
@@ -4179,7 +4188,7 @@ uint8_t TCPIP_SNMP_OIDFindInMgmtInfoBase(int32_t fileDescr,PDU_INFO* pduDbPtr,ui
             }
             else
             {
-                hNode = SYS_FS_FileTell(fileDescr);
+                hNode = (*snmpFileShell->fileTell)(snmpFileShell,fileDescr);
                 // Try to match following child node.
                 continue;
             }
@@ -4305,8 +4314,7 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
            rec->nodeInfo.Flags.bIsDistantSibling )
         {
             // Reposition at sibling.
-            SYS_FS_FileSeek(fileDescr, rec->hSibling, SYS_FS_SEEK_SET);
-
+            (*snmpFileShell->fileSeek)(snmpFileShell,fileDescr,rec->hSibling,SYS_FS_SEEK_SET);
             // Fetch node related information
         }
         // There is no sibling to this leaf.  This must be the very last node on the tree.
@@ -4319,24 +4327,25 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
     while( 1 )
     {
         // Remember current offset for this node.
-        rec->hNode = SYS_FS_FileTell(fileDescr);
+        rec->hNode = (*snmpFileShell->fileTell)(snmpFileShell,fileDescr);
 
         // Read OID byte.
-        SYS_FS_FileRead(fileDescr,&rec->oid,1);
-        SYS_FS_FileRead(fileDescr,&rec->nodeInfo.Val,1);
+        
+        (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&rec->oid,1);
+        (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&rec->nodeInfo.Val,1);
         if ( rec->nodeInfo.Flags.bIsIDPresent )
         {
-            SYS_FS_FileRead(fileDescr,&idLen,1);
+            (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&idLen,1);
             if(idLen == 1)
             {
                 uint8_t temp;
-                SYS_FS_FileRead(fileDescr,&temp,1);
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&temp,1);
                 rec->id = temp & 0xFF;
             }
             else if(idLen == 2)
             {
                 uint8_t temp[2];
-                SYS_FS_FileRead(fileDescr,temp,2);
+                (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,temp,2);
                 rec->id = 0;
                 rec->id = temp[0] & 0xFF;
                 rec->id <<= 8;
@@ -4346,8 +4355,8 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
         if ( rec->nodeInfo.Flags.bIsSibling ||
              rec->nodeInfo.Flags.bIsDistantSibling )
         {
-            SYS_FS_FileRead(fileDescr,&temp.v[0],1);
-            SYS_FS_FileRead(fileDescr,&temp.v[1],1);
+            (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&temp.v[0],1);
+            (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,&temp.v[1],1);
             rec->hSibling = temp.Val;
         }
         if ( rec->nodeInfo.Flags.bIsParent )
@@ -4355,8 +4364,8 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
             continue;
         }
         rec->dataType = 0;
-        SYS_FS_FileRead(fileDescr,(uint8_t*)&rec->dataType,1);
-        rec->hData = SYS_FS_FileTell(fileDescr);
+        (*snmpFileShell->fileRead)(snmpFileShell,fileDescr,(uint8_t*)&rec->dataType,1);
+        rec->hData = (*snmpFileShell->fileTell)(snmpFileShell,fileDescr);
 
         // Since we just found next leaf in line, it will always have zero index
         // to it.
@@ -4370,6 +4379,7 @@ bool TCPIP_SNMP_NextLeafGet(int32_t fileDescr, OID_INFO* rec)
 
         return true;
     }
+    return false;
 }
 
 

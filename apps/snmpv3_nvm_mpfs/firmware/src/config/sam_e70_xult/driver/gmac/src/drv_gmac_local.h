@@ -62,6 +62,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/time/sys_time.h"
 #include "tcpip/tcpip_mac_object.h"
 
+#include "driver/gmac/drv_gmac.h"
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Data Type Definitions

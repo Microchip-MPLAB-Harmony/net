@@ -40,9 +40,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #if defined(TCPIP_STACK_USE_HTTP_NET_SERVER)
 
 #include "crypto/crypto.h"
-#if defined(__SAMA5D2__)
-#error  "Crypto is not currently supported on SAMA5D2!"  
-#endif
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_time_h2_adapter.h"
@@ -1361,18 +1358,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_builddate(TCPIP_HTTP_NET_CONN_HANDLE c
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_version(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)TCPIP_STACK_VERSION_STR, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_drive(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_DRIVE, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fstype(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_MPFS_STRING, false);
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 
