@@ -4138,7 +4138,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME70_DFP\4.0.42\same70b\atdf\ATSAME70Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

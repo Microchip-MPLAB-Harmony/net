@@ -789,8 +789,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.40"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.40"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -854,7 +854,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
-        <property key="optimization-level" value=""/>
+        <property key="optimization-level" value="-O1"/>
         <property key="place-data-into-section" value="true"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -1031,6 +1031,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="400000-5fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/isp/git/h3/net/apps/wolfssl_tcp_client/firmware/sam_e70_xplained_ultra_rtos.X/debug/sam_e70_xplained_ultra_rtos/sam_e70_xplained_ultra_rtos_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
