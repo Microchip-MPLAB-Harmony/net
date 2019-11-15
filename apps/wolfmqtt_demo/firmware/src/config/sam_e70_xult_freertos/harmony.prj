@@ -1627,8 +1627,8 @@
           <Name dnOrder="1">FreeRTOSConfig.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">538B652E409CB530F2C25168610E3E49</GeneratedChecksum>
-          <UserChecksum dnOrder="5">538B652E409CB530F2C25168610E3E49</UserChecksum>
+          <GeneratedChecksum dnOrder="4">229252EA32DF7437FDC4209458F6ED3F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">229252EA32DF7437FDC4209458F6ED3F</UserChecksum>
         </File>
         <File dnOrder="203">
           <Type dnOrder="0">HEADER</Type>
@@ -4480,7 +4480,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="5" key="extra-include-directories" value="../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="6" key="preprocessor-macros" value="HAVE_CONFIG_H"/>
         <Setting category="C32" dnOrder="7" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
-        <Setting category="C32-LD" dnOrder="8" key="heap-size" value="102400"/>
+        <Setting category="C32-LD" dnOrder="8" key="heap-size" value="122400"/>
         <Setting category="C32-LD" dnOrder="9" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="10" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="11" key="mdtcm" value=""/>
