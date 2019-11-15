@@ -1779,8 +1779,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_rtos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">18C67008872AD207C3D7B7324554909C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">18C67008872AD207C3D7B7324554909C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B52C40537AD75627C751A0EB925039BF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B52C40537AD75627C751A0EB925039BF</UserChecksum>
         </File>
         <File dnOrder="222">
           <Type dnOrder="0">HEADER</Type>
@@ -3922,7 +3922,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.39\atdf\PIC32MZ2048EFM144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;gfx;net;"/>
     </Settings>
   </Configurator>

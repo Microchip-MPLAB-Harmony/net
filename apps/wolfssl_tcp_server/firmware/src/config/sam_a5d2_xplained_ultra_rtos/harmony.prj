@@ -1931,8 +1931,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">01D449409ED7D38599C2860245388C92</GeneratedChecksum>
-          <UserChecksum dnOrder="5">01D449409ED7D38599C2860245388C92</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C721E644FB1A2560AAD81D1191977EB7</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C721E644FB1A2560AAD81D1191977EB7</UserChecksum>
         </File>
         <File dnOrder="241">
           <Type dnOrder="0">HEADER</Type>
@@ -4461,7 +4461,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.0.5\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
