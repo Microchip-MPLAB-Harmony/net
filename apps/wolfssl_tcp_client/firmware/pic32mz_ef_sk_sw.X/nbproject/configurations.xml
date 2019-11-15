@@ -50,7 +50,6 @@
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ftpc_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ftpc_private.h</itemPath>
@@ -82,8 +81,6 @@
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ftp_private.h</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ftpc_manager.h</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/src/telnet_manager.h</itemPath>
@@ -148,7 +145,6 @@
               <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/ftp.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_sw/library/tcpip/ddns.h</itemPath>
@@ -382,18 +378,6 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_port.h</itemPath>
       </logicalFolder>
       <logicalFolder name="f2" displayName="wolfssl" projectFiles="true">
-        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
@@ -697,7 +681,7 @@
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
         <property key="make-warnings-into-errors" value="true"/>
-        <property key="optimization-level" value=""/>
+        <property key="optimization-level" value="-O1"/>
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
@@ -908,8 +892,6 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
-        <property key="programmerToGoFilePath"
-                  value="D:/isp/git/h3/net/apps/wolfssl_tcp_client/firmware/pic32mz_ef_sk_sw.X/debug/pic32mz_ef_sk_sw/pic32mz_ef_sk_sw_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>

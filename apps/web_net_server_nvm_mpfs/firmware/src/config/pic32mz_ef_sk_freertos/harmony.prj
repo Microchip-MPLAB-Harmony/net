@@ -339,8 +339,8 @@
           <Name dnOrder="1">custom_http_net_app.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FD7F7FCB9F5D012F825AD8E052B63E16</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FD7F7FCB9F5D012F825AD8E052B63E16</UserChecksum>
+          <GeneratedChecksum dnOrder="4">16C647A201F8FD2645D59FA611E47F88</GeneratedChecksum>
+          <UserChecksum dnOrder="5">16C647A201F8FD2645D59FA611E47F88</UserChecksum>
         </File>
         <File dnOrder="42">
           <Type dnOrder="0">SOURCE</Type>
@@ -876,7 +876,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
+          <UserChecksum dnOrder="5">2B704C325BC48CC1E1900AE62948DAED</UserChecksum>
         </File>
         <File dnOrder="109">
           <Type dnOrder="0">SOURCE</Type>
@@ -4400,7 +4400,7 @@
         <Setting category="C32" dnOrder="5" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
         <Setting append="true" category="C32-AS" delimiter=";" dnOrder="6" key="extra-include-directories-for-assembler" value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
         <Setting append="true" category="C32-AS" delimiter=";" dnOrder="7" key="extra-include-directories-for-preprocessor" value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
-        <Setting category="C32-LD" dnOrder="8" key="heap-size" value="126976"/>
+        <Setting category="C32-LD" dnOrder="8" key="heap-size" value="146976"/>
         <Setting category="C32-LD" dnOrder="9" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="10" key="preprocessor-macros" value=""/>
       </Settings>
@@ -4410,7 +4410,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.39\atdf\PIC32MZ2048EFM144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
