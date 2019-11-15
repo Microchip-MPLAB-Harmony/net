@@ -492,7 +492,7 @@
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">B7DBFD6F500AAD4713403E985EB18EAE</GeneratedChecksum>
-          <UserChecksum dnOrder="5">B7DBFD6F500AAD4713403E985EB18EAE</UserChecksum>
+          <UserChecksum dnOrder="5">E8D9B8FF375E84B849841977AA4143A9</UserChecksum>
         </File>
         <File dnOrder="61">
           <Type dnOrder="0">SOURCE</Type>
@@ -1619,8 +1619,8 @@
           <Name dnOrder="1">FreeRTOSConfig.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">91C7D484CC4403735FA8B605C908F839</GeneratedChecksum>
-          <UserChecksum dnOrder="5">91C7D484CC4403735FA8B605C908F839</UserChecksum>
+          <GeneratedChecksum dnOrder="4">573CD2BC0A8A8663E55BC77E90DB70BE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">573CD2BC0A8A8663E55BC77E90DB70BE</UserChecksum>
         </File>
         <File dnOrder="202">
           <Type dnOrder="0">HEADER</Type>
@@ -4034,7 +4034,7 @@
         <Setting category="C32" dnOrder="7" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
         <Setting append="true" category="C32-AS" delimiter=";" dnOrder="8" key="extra-include-directories-for-assembler" value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
         <Setting append="true" category="C32-AS" delimiter=";" dnOrder="9" key="extra-include-directories-for-preprocessor" value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
-        <Setting category="C32-LD" dnOrder="10" key="heap-size" value="102400"/>
+        <Setting category="C32-LD" dnOrder="10" key="heap-size" value="192400"/>
         <Setting category="C32-LD" dnOrder="11" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="12" key="preprocessor-macros" value=""/>
       </Settings>
