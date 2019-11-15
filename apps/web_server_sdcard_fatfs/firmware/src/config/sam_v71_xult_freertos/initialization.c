@@ -137,6 +137,26 @@ SYSTEM_OBJECTS sysObj;
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
+/*** File System Initialization Data ***/
+
+
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+{
+	{NULL}
+};
+
+
+
+
+const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
+{
+    {
+        .nativeFileSystemType = FAT,
+        .nativeFileSystemFunctions = &FatFsFunctions
+    }
+};
+
+
 /* Net Presentation Layer Data Definitions */
 #include "net_pres/pres/net_pres_enc_glue.h"
 
@@ -578,26 +598,6 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 }
 // </editor-fold>
 
-/*** File System Initialization Data ***/
-
-
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
-{
-	{NULL}
-};
-
-
-
-
-const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
-{
-    {
-        .nativeFileSystemType = FAT,
-        .nativeFileSystemFunctions = &FatFsFunctions
-    }
-};
-
-
 
 
 // *****************************************************************************
@@ -708,6 +708,8 @@ void SYS_Initialize ( void* data )
     CLOCK_Initialize();
 	PIO_Initialize();
 
+	HSMCI_Initialize();
+
   
 
  
@@ -723,8 +725,6 @@ void SYS_Initialize ( void* data )
 	WDT_REGS->WDT_MR = WDT_MR_WDDIS_Msk; 		// Disable WDT 
 
 	BSP_Initialize();
-	HSMCI_Initialize();
-
 
 
     /* Initialize the MIIM Driver */
@@ -743,6 +743,9 @@ void SYS_Initialize ( void* data )
 
 
 
+    /*** File System Service Initialization Code ***/
+    SYS_FS_Initialize( (const void *) sysFSInit );
+
     sysObj.netPres = NET_PRES_Initialize(0, (SYS_MODULE_INIT*)&netPresInitData);
 
 
@@ -751,9 +754,7 @@ void SYS_Initialize ( void* data )
     SYS_ASSERT(sysObj.tcpip != SYS_MODULE_OBJ_INVALID, "TCPIP_STACK_Init Failed" );
 
 
-    /*** File System Service Initialization Code ***/
-    SYS_FS_Initialize( (const void *) sysFSInit );
-
+    CRYPT_WCCB_Initialize();
 
     APP_Initialize();
 
