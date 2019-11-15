@@ -1899,8 +1899,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2E2DC942FA2E2737CC500E5110F977F3</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E2DC942FA2E2737CC500E5110F977F3</UserChecksum>
+          <GeneratedChecksum dnOrder="4">DE4F14CAB71F26DD499804BB6F858A46</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DE4F14CAB71F26DD499804BB6F858A46</UserChecksum>
         </File>
         <File dnOrder="237">
           <Type dnOrder="0">HEADER</Type>
@@ -4371,7 +4371,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME70_DFP\4.0.42\same70b\atdf\ATSAME70Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
