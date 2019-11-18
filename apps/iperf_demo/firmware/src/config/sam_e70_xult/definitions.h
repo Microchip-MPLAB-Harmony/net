@@ -48,6 +48,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "peripheral/efc/plib_efc.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "system/time/sys_time.h"
 #include "bsp/bsp.h"
@@ -61,6 +62,7 @@
 #include "system/sys_reset_h2_adapter.h"
 #include "system/int/sys_int.h"
 #include "system/cache/sys_cache.h"
+#include "osal/osal.h"
 #include "system/command/sys_command.h"
 #include "peripheral/clk/plib_clk.h"
 #include "peripheral/pio/plib_pio.h"
