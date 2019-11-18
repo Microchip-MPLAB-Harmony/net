@@ -868,7 +868,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DC6CDB00E296C7F97A5FB12EF5974ECA</UserChecksum>
+          <UserChecksum dnOrder="5">9CE0D5DCE0B287051C3F490CB84C421F</UserChecksum>
         </File>
         <File dnOrder="108">
           <Type dnOrder="0">SOURCE</Type>
@@ -2235,8 +2235,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7F3F282B4551CC5E3873C52D4475E1D1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7F3F282B4551CC5E3873C52D4475E1D1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4E4DFF06759A7BDAB64D41FBFF1AB4D4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4E4DFF06759A7BDAB64D41FBFF1AB4D4</UserChecksum>
         </File>
         <File dnOrder="279">
           <Type dnOrder="0">HEADER</Type>

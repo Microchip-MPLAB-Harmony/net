@@ -4271,7 +4271,12 @@
     </UniqueComponent>
     <UniqueComponent dnOrder="9" id="lib_wolfcrypt">
       <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="wolfssl_included">
+        <Combo dnOrder="0" id="wolfSslRTOSSupport">
+          <Values dnOrder="0">
+            <User dnOrder="0" value="FreeRTOS"/>
+          </Values>
+        </Combo>
+        <Boolean dnOrder="1" id="wolfssl_included">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="lib_wolfcrypt" value="true"/>
           </Values>
@@ -5266,7 +5271,7 @@
         <ElementPosition dnOrder="7" id="drv_memory" x="164" y="389"/>
         <ElementPosition dnOrder="8" id="efc" x="9" y="480"/>
         <ElementPosition dnOrder="9" id="lib_crypto" x="822" y="425"/>
-        <ElementPosition dnOrder="10" id="lib_wolfcrypt" x="645" y="288"/>
+        <ElementPosition dnOrder="10" id="lib_wolfcrypt" x="645" y="287"/>
         <ElementPosition dnOrder="11" id="lib_wolfssl" x="837" y="288"/>
         <ElementPosition dnOrder="12" id="netPres" x="766" y="115"/>
         <ElementPosition dnOrder="13" id="sys_command" x="458" y="151"/>
