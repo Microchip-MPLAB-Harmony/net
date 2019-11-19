@@ -308,7 +308,21 @@ def instantiateComponent(tcpipSnmpv3Component):
 		tcpipSnmpV3AesLibraryFile.setDestPath("library/tcpip/src/crypto/")
 		tcpipSnmpV3AesLibraryFile.setEnabled(True)
 		tcpipSnmpV3AesLibraryFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
-	elif "PIC32M" in Variables.get("__PROCESSOR"):
+	elif (("PIC32MZ" in Variables.get("__PROCESSOR")) and ("DA" in Variables.get("__PROCESSOR"))):
+		tcpipSnmpV3AesLibraryFile = tcpipSnmpv3Component.createLibrarySymbol(None, None)
+		tcpipSnmpV3AesLibraryFile.setSourcePath("tcpip/src/crypto/aes_pic32mzda.a")
+		tcpipSnmpV3AesLibraryFile.setOutputName("aes_pic32mzda.a")
+		tcpipSnmpV3AesLibraryFile.setDestPath("library/tcpip/src/crypto/")
+		tcpipSnmpV3AesLibraryFile.setEnabled(True)
+		tcpipSnmpV3AesLibraryFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])
+	elif (("PIC32MZ" in Variables.get("__PROCESSOR")) and ("EF" in Variables.get("__PROCESSOR")) ):
+		tcpipSnmpV3AesLibraryFile = tcpipSnmpv3Component.createLibrarySymbol(None, None)
+		tcpipSnmpV3AesLibraryFile.setSourcePath("tcpip/src/crypto/aes_pic32mzef.a")
+		tcpipSnmpV3AesLibraryFile.setOutputName("aes_pic32mzef.a")
+		tcpipSnmpV3AesLibraryFile.setDestPath("library/tcpip/src/crypto/")
+		tcpipSnmpV3AesLibraryFile.setEnabled(True)
+		tcpipSnmpV3AesLibraryFile.setDependencies(tcpipSnmpv3GenSourceFile, ["TCPIP_USE_SNMPv3"])	
+	elif "PIC32MX" in Variables.get("__PROCESSOR"):
 		tcpipSnmpV3AesLibraryFile = tcpipSnmpv3Component.createLibrarySymbol(None, None)
 		tcpipSnmpV3AesLibraryFile.setSourcePath("tcpip/src/crypto/aes_pic32mx.a")
 		tcpipSnmpV3AesLibraryFile.setOutputName("aes_pic32mx.a")
