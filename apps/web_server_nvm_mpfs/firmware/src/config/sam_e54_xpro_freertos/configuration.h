@@ -125,13 +125,13 @@ extern "C" {
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                256
+#define SYS_CMD_RTOS_STACK_SIZE                2048
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
 #define SYS_DEBUG_ENABLE
 #define SYS_DEBUG_GLOBAL_ERROR_LEVEL       SYS_ERROR_DEBUG
-#define SYS_DEBUG_PRINT_BUFFER_SIZE        200
+#define SYS_DEBUG_PRINT_BUFFER_SIZE        1500
 #define SYS_DEBUG_BUFFER_DMA_READY
 #define SYS_DEBUG_USE_CONSOLE
 
