@@ -1129,7 +1129,7 @@
                 </option>
                 <option>
                     <name>RTDescription</name>
-                    <state></state>
+                    <state>Use the normal configuration of the C/C++ runtime library. No locale interface, C locale, no file descriptor support, no multibytes in printf and scanf, and no hex floats in strtod.</state>
                 </option>
                 <option>
                     <name>OGProductVersion</name>
@@ -1137,7 +1137,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state></state>
+                    <state>8.32.1.18618</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1183,12 +1183,12 @@
                 </option>
                 <option>
                     <name>RTConfigPath2</name>
-                    <state></state>
+                    <state>$TOOLKIT_DIR$\inc\c\DLib_Config_Normal.h</state>
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
                     <version>26</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>OGUseCmsis</name>
@@ -1205,7 +1205,7 @@
                 <option>
                     <name>CoreVariant</name>
                     <version>26</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>GFPUDeviceSlave</name>
@@ -1228,7 +1228,7 @@
                 <option>
                     <name>GFPUCoreSlave2</name>
                     <version>26</version>
-                    <state>38</state>
+                    <state>12</state>
                 </option>
                 <option>
                     <name>OGCMSISPackSelectDevice</name>
@@ -1291,7 +1291,7 @@
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
-                    <state>NDEBUG</state>
+                    <state>__SAM9X60__</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1331,7 +1331,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state></state>
+                    <state>Pe188, Pe186</state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -1356,7 +1356,7 @@
                 </option>
                 <option>
                     <name>CCDebugInfo</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IEndianMode</name>
@@ -1442,7 +1442,7 @@
                 </option>
                 <option>
                     <name>IProcessorMode2</name>
-                    <state>1</state>
+                    <state>0</state>
                 </option>
                 <option>
                     <name>CCOptLevel</name>
@@ -1455,7 +1455,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>1</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -1740,15 +1740,15 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>harmony.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1756,7 +1756,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
@@ -1927,7 +1927,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state>__iar_program_start</state>
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -2100,7 +2100,7 @@
                 </option>
                 <option>
                     <name>IlinkTrustzoneImportLibraryOut</name>
-                    <state>###Unitialized###</state>
+                    <state>tcpip_tcp_client_freertos_import_lib.o</state>
                 </option>
                 <option>
                     <name>OILinkExtraOption</name>
