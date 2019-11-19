@@ -1219,8 +1219,8 @@
           <Name dnOrder="1">tasks.c</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D51115491F3B36072064C9B91E24BEAD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D51115491F3B36072064C9B91E24BEAD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5E229ED82E70772C840D76B69B129BA1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5E229ED82E70772C840D76B69B129BA1</UserChecksum>
         </File>
         <File dnOrder="152">
           <Type dnOrder="0">SOURCE</Type>
@@ -2003,8 +2003,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F9C9B310410B76B287BF115580C48AC1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F9C9B310410B76B287BF115580C48AC1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FFB2B359B00221C70421422869A5CA80</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FFB2B359B00221C70421422869A5CA80</UserChecksum>
         </File>
         <File dnOrder="250">
           <Type dnOrder="0">HEADER</Type>
