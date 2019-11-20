@@ -820,7 +820,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">240FAA488C335D7A78269ACF9B829F7B</UserChecksum>
+          <UserChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
         </File>
         <File dnOrder="102">
           <Type dnOrder="0">SOURCE</Type>
@@ -923,8 +923,8 @@
           <Name dnOrder="1">plib_mpu.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/peripheral/mpu/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/mpu/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CA71293B9270B016CFB42468FA2EE6A9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CA71293B9270B016CFB42468FA2EE6A9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">49A56F7528308BA05C078174128F4F29</GeneratedChecksum>
+          <UserChecksum dnOrder="5">49A56F7528308BA05C078174128F4F29</UserChecksum>
         </File>
         <File dnOrder="115">
           <Type dnOrder="0">SOURCE</Type>
@@ -2131,8 +2131,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E6B8E29F68ECEF8AB0BC25A1BAA17248</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E6B8E29F68ECEF8AB0BC25A1BAA17248</UserChecksum>
+          <GeneratedChecksum dnOrder="4">84A385A0448D9A4CEAC6E05323BDE20A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">84A385A0448D9A4CEAC6E05323BDE20A</UserChecksum>
         </File>
         <File dnOrder="266">
           <Type dnOrder="0">HEADER</Type>
@@ -4589,7 +4589,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" value="../src/third_party/wolfssl/wolfssl"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src;../src/config/sam_v71_xult;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32" dnOrder="4" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
-        <Setting category="C32-LD" dnOrder="5" key="heap-size" value="104960"/>
+        <Setting category="C32-LD" dnOrder="5" key="heap-size" value="124960"/>
         <Setting category="C32-LD" dnOrder="6" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="7" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="8" key="mdtcm" value=""/>
@@ -4602,7 +4602,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.0.41\samv71b\atdf\ATSAMV71Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

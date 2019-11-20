@@ -726,8 +726,12 @@
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
@@ -745,8 +749,18 @@
           <itemPath>../src/web_pages/protect/index.htm</itemPath>
           <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
           <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
@@ -883,7 +897,7 @@
         <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.30</languageToolchainVersion>
         <platform>3</platform>
@@ -1014,7 +1028,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="164960"/>
+        <property key="heap-size" value="224960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

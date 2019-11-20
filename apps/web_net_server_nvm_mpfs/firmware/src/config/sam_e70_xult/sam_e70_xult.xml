@@ -4840,7 +4840,6 @@
           </Children>
           <Attachments dnOrder="1">
             <Attachment dnOrder="0" id="HttpNet_TcpipFs_Dependency" namespace="tcpipHttpNet" targetAttachmentID="TCP/IP STACK:tcpipHttpNet:HttpNet_TcpipFs_Dependency" targetComponentID="TCP/IP STACK"/>
-            <Attachment dnOrder="1" id="Smtpc_TcpipFs_Dependency" namespace="tcpipSmtpc"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="BASIC CONFIGURATION" dnOrder="1" id="BASIC CONFIGURATION">
@@ -5103,7 +5102,6 @@
         </GroupComponent>
       </Children>
       <Attachments dnOrder="1">
-        <Attachment dnOrder="0" id="tcpipSmtpc:Smtpc_TcpipFs_Dependency" namespace="APPLICATION LAYER"/>
         <Attachment dnOrder="1" id="tcpipHttpNet:HttpNet_TcpipFs_Dependency" namespace="APPLICATION LAYER" targetAttachmentID="sys_fs" targetComponentID="sys_fs"/>
         <Attachment dnOrder="2" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION"/>
       </Attachments>
