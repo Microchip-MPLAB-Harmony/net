@@ -860,7 +860,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
+          <UserChecksum dnOrder="5">FE4AF765EC06682BAA815BF97624E29A</UserChecksum>
         </File>
         <File dnOrder="107">
           <Type dnOrder="0">SOURCE</Type>
@@ -1155,8 +1155,8 @@
           <Name dnOrder="1">snmp.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2339A5475291D6F7F1A22F51ED7E381E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2339A5475291D6F7F1A22F51ED7E381E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9522943B04D576ABD2C9488CAD4DCD4B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9522943B04D576ABD2C9488CAD4DCD4B</UserChecksum>
         </File>
         <File dnOrder="144">
           <Type dnOrder="0">SOURCE</Type>
@@ -1179,8 +1179,8 @@
           <Name dnOrder="1">snmpv3_usm.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_freertos/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E362E6E8714442B428B37CB9BC4106A1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E362E6E8714442B428B37CB9BC4106A1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">024570EE636D3ECB784FCE5E3789D3F0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">024570EE636D3ECB784FCE5E3789D3F0</UserChecksum>
         </File>
         <File dnOrder="147">
           <Type dnOrder="0">SOURCE</Type>
@@ -4320,7 +4320,7 @@
         </File>
       </Files>
       <Libraries dnOrder="1">
-        <Library dnOrder="0" name="aes_pic32mx.a" path="library/tcpip/src/crypto/"/>
+        <Library dnOrder="0" name="aes_pic32mzef.a" path="library/tcpip/src/crypto/"/>
       </Libraries>
       <Settings dnOrder="2">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src/config/pic32mz_ef_sk_freertos/library;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src;../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/common"/>
@@ -4337,11 +4337,11 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.39\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
