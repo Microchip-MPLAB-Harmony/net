@@ -1867,8 +1867,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e70_xult/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">BFFD461C9F0426CED319594DF6D0B222</GeneratedChecksum>
-          <UserChecksum dnOrder="5">BFFD461C9F0426CED319594DF6D0B222</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1C723A86754EBF3890FCC905EA9E7F6A</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1C723A86754EBF3890FCC905EA9E7F6A</UserChecksum>
         </File>
         <File dnOrder="233">
           <Type dnOrder="0">HEADER</Type>
@@ -4253,7 +4253,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" value="../src/third_party/wolfssl/wolfssl"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src;../src/config/sam_e70_xult;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32" dnOrder="4" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
-        <Setting category="C32-LD" dnOrder="5" key="heap-size" value="96960"/>
+        <Setting category="C32-LD" dnOrder="5" key="heap-size" value="126960"/>
         <Setting category="C32-LD" dnOrder="6" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="7" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="8" key="mdtcm" value=""/>
@@ -4266,7 +4266,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME70_DFP\4.0.42\same70b\atdf\ATSAME70Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
