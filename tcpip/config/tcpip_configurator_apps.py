@@ -153,12 +153,12 @@ def instantiateComponent(tcpipAutoConfigAppsComponent):
     tcpipAutoConfigNBNS.setDescription("Enable NBNS")   
     tcpipAutoConfigNBNS.setDependencies(tcpipAutoConfigNBNSEnable, ["TCPIP_AUTOCONFIG_ENABLE_NBNS"])
 
-    # Enable REBOOT
-    tcpipAutoConfigREBOOT = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_REBOOT", None)
-    tcpipAutoConfigREBOOT.setLabel("REBOOT")
-    tcpipAutoConfigREBOOT.setVisible(True)
-    tcpipAutoConfigREBOOT.setDescription("Enable REBOOT")
-    tcpipAutoConfigREBOOT.setDependencies(tcpipAutoConfigREBOOTEnable, ["TCPIP_AUTOCONFIG_ENABLE_REBOOT"])
+    # # Enable REBOOT
+    # tcpipAutoConfigREBOOT = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_REBOOT", None)
+    # tcpipAutoConfigREBOOT.setLabel("REBOOT")
+    # tcpipAutoConfigREBOOT.setVisible(True)
+    # tcpipAutoConfigREBOOT.setDescription("Enable REBOOT")
+    # tcpipAutoConfigREBOOT.setDependencies(tcpipAutoConfigREBOOTEnable, ["TCPIP_AUTOCONFIG_ENABLE_REBOOT"])
 
     # Enable SMTP_CLIENT
     tcpipAutoConfigSMTP_CLIENT = tcpipAutoConfigAppsComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_SMTP_CLIENT", None)
@@ -483,18 +483,18 @@ def tcpipAutoConfigNBNSEnable(symbol, event):
     else:
         res = Database.deactivateComponents(["tcpipNbns"])
     
-def tcpipAutoConfigREBOOTEnable(symbol, event):
-    tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
-    enableTcpipAutoConfigApps(True)
-    if (event["value"] == True):
-        res = Database.activateComponents(["tcpipReboot"],"APPLICATION LAYER", False)   
-        tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipReboot", "libtcpipReboot")
-        if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
-        if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
-    else:
-        res = Database.deactivateComponents(["tcpipReboot"])
+# def tcpipAutoConfigREBOOTEnable(symbol, event):
+    # tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
+    # enableTcpipAutoConfigApps(True)
+    # if (event["value"] == True):
+        # res = Database.activateComponents(["tcpipReboot"],"APPLICATION LAYER", False)   
+        # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipReboot", "libtcpipReboot")
+        # if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
+            # Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+        # if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
+            # Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+    # else:
+        # res = Database.deactivateComponents(["tcpipReboot"])
     
 def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
     tcpipAutoConfigAppsGroup = Database.findGroup("APPLICATION LAYER")
