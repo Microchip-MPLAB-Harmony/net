@@ -2011,8 +2011,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_9x60_ek/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">8152952663044401D94C2DD13C0EBBFD</GeneratedChecksum>
-          <UserChecksum dnOrder="5">8152952663044401D94C2DD13C0EBBFD</UserChecksum>
+          <GeneratedChecksum dnOrder="4">A9457C7FF17AC1A38264F9C8833F9B17</GeneratedChecksum>
+          <UserChecksum dnOrder="5">A9457C7FF17AC1A38264F9C8833F9B17</UserChecksum>
         </File>
         <File dnOrder="251">
           <Type dnOrder="0">HEADER</Type>
@@ -4501,7 +4501,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\1.0.5\atdf\SAM9X60.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
