@@ -265,9 +265,6 @@
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/system.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/system_common.h</itemPath>
-            <itemPath>../src/config/sam_v71_xult_freertos/system/system_module.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/system_media.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_clk_h2_adapter.h</itemPath>
             <itemPath>../src/config/sam_v71_xult_freertos/system/sys_time_h2_adapter.h</itemPath>
@@ -730,10 +727,10 @@
           <itemPath>../src/third_party/rtos/FreeRTOS/Source/stream_buffer.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="osal" projectFiles="true">
+      <logicalFolder name="f3" displayName="osal" projectFiles="true">
         <itemPath>../src/config/sam_v71_xult_freertos/osal/osal_freertos.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="web_pages" projectFiles="true">
+      <logicalFolder name="f4" displayName="web_pages" projectFiles="true">
         <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
@@ -859,7 +856,7 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha256.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha512.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="wolfssl" projectFiles="true">
+      <logicalFolder name="f2" displayName="wolfssl" projectFiles="true">
         <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
         <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
         <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
@@ -1026,7 +1023,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="124960"/>
+        <property key="heap-size" value="164960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

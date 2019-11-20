@@ -2107,8 +2107,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EDBB91FC5511DC17FC435C2411E90835</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EDBB91FC5511DC17FC435C2411E90835</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C6075AA189E5F43DD8022A610C9BAF25</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C6075AA189E5F43DD8022A610C9BAF25</UserChecksum>
         </File>
         <File dnOrder="263">
           <Type dnOrder="0">HEADER</Type>

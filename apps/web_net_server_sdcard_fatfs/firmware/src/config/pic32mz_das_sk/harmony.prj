@@ -323,8 +323,8 @@
           <Name dnOrder="1">custom_http_net_app.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FD7F7FCB9F5D012F825AD8E052B63E16</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FD7F7FCB9F5D012F825AD8E052B63E16</UserChecksum>
+          <GeneratedChecksum dnOrder="4">16C647A201F8FD2645D59FA611E47F88</GeneratedChecksum>
+          <UserChecksum dnOrder="5">16C647A201F8FD2645D59FA611E47F88</UserChecksum>
         </File>
         <File dnOrder="40">
           <Type dnOrder="0">SOURCE</Type>
@@ -1979,8 +1979,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">37889514F2B9BEC9B03CC870A05D9D2E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">37889514F2B9BEC9B03CC870A05D9D2E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">04F3A624A3E2B9C0FDF246E3A3B58BAC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">04F3A624A3E2B9C0FDF246E3A3B58BAC</UserChecksum>
         </File>
         <File dnOrder="247">
           <Type dnOrder="0">HEADER</Type>
@@ -4135,7 +4135,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.0.81\atdf\PIC32MZ2064DAS169.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
