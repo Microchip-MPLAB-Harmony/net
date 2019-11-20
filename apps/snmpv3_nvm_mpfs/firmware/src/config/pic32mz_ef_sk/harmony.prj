@@ -804,7 +804,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
+          <UserChecksum dnOrder="5">A88E6B293E5656C097D6E111AC01DFAF</UserChecksum>
         </File>
         <File dnOrder="100">
           <Type dnOrder="0">SOURCE</Type>
@@ -1067,8 +1067,8 @@
           <Name dnOrder="1">snmp.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2339A5475291D6F7F1A22F51ED7E381E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2339A5475291D6F7F1A22F51ED7E381E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9522943B04D576ABD2C9488CAD4DCD4B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9522943B04D576ABD2C9488CAD4DCD4B</UserChecksum>
         </File>
         <File dnOrder="133">
           <Type dnOrder="0">SOURCE</Type>
@@ -1091,8 +1091,8 @@
           <Name dnOrder="1">snmpv3_usm.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E362E6E8714442B428B37CB9BC4106A1</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E362E6E8714442B428B37CB9BC4106A1</UserChecksum>
+          <GeneratedChecksum dnOrder="4">024570EE636D3ECB784FCE5E3789D3F0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">024570EE636D3ECB784FCE5E3789D3F0</UserChecksum>
         </File>
         <File dnOrder="136">
           <Type dnOrder="0">SOURCE</Type>
@@ -1995,8 +1995,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E97C3CD37D26CDF2455138ADC672CF65</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E97C3CD37D26CDF2455138ADC672CF65</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D45B8BC2C5CA656A1B0AA7254D7BA8CB</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D45B8BC2C5CA656A1B0AA7254D7BA8CB</UserChecksum>
         </File>
         <File dnOrder="249">
           <Type dnOrder="0">HEADER</Type>
@@ -4064,7 +4064,7 @@
         </File>
       </Files>
       <Libraries dnOrder="1">
-        <Library dnOrder="0" name="aes_pic32mx.a" path="library/tcpip/src/crypto/"/>
+        <Library dnOrder="0" name="aes_pic32mzef.a" path="library/tcpip/src/crypto/"/>
       </Libraries>
       <Settings dnOrder="2">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" value="../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common"/>
@@ -4078,7 +4078,7 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="4">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.0.39\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
