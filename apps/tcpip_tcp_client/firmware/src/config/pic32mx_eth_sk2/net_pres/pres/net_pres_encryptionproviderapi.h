@@ -143,7 +143,7 @@ typedef bool (*NET_PRES_EncProviderInit)(struct _NET_PRES_TransportObject * tran
     - false - Deinitialization did not succeed
 
  */
-typedef bool (*NET_PRES_EncProviderDeinit)();  
+typedef bool (*NET_PRES_EncProviderDeinit)( void );
 
 
 // *****************************************************************************
@@ -371,7 +371,7 @@ typedef int32_t (*NET_PRES_EncProviderReadReady)(void * providerData);
     - false - The provider has not been initialized
 
  */
-typedef bool (*NET_PRES_EncProviderIsInitialized)();
+typedef bool (*NET_PRES_EncProviderIsInitialized)( void );
 
 // *****************************************************************************
 /* Presentation Encryption Provider Output Size Function Pointer Prototype
