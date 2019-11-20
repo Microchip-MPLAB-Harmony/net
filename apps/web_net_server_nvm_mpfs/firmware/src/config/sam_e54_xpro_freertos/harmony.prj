@@ -339,8 +339,8 @@
           <Name dnOrder="1">custom_http_net_app.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">FD7F7FCB9F5D012F825AD8E052B63E16</GeneratedChecksum>
-          <UserChecksum dnOrder="5">FD7F7FCB9F5D012F825AD8E052B63E16</UserChecksum>
+          <GeneratedChecksum dnOrder="4">16C647A201F8FD2645D59FA611E47F88</GeneratedChecksum>
+          <UserChecksum dnOrder="5">16C647A201F8FD2645D59FA611E47F88</UserChecksum>
         </File>
         <File dnOrder="42">
           <Type dnOrder="0">SOURCE</Type>
@@ -868,7 +868,7 @@
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="4">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
+          <UserChecksum dnOrder="5">5CE7B1757FB3D30AC3D54D0DFC2721F2</UserChecksum>
         </File>
         <File dnOrder="108">
           <Type dnOrder="0">SOURCE</Type>
@@ -4886,7 +4886,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src/third_party/wolfssl/wolfssl"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="4" key="extra-include-directories" value="../src;../src/config/sam_e54_xpro_freertos;../src/packs/ATSAME54P20A_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32" dnOrder="5" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
-        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="124960"/>
+        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="174960"/>
         <Setting category="C32-LD" dnOrder="7" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="8" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="9" key="mdtcm" value=""/>
@@ -4899,7 +4899,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\3.1.33\atdf\ATSAME54P20A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
