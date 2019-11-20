@@ -5154,10 +5154,13 @@ uint8_t TCPIP_SNMP_ProcessSetVar(PDU_INFO* pduDbPtr,OID_INFO* rec, SNMP_ERR_STAT
     {        
         return (0);
     }
-    // if the length of a integer type is more than 4 or  less than 0 bytes don't do anything
-    if ((dataLen > 4) || (dataLen == 0))
-    {	
-        return (0);
+    if(actualDataTypeInfo.asnType != OCTET_STRING)
+    {
+        // if the length of a integer type is more than 4 or  less than 0 bytes don't do anything
+        if ((dataLen > 4) || (dataLen == 0))
+        {	
+            return (0);
+        }
     }
     // Make sure that received data length is within our capability.
     if(pduDbPtr->snmpVersion != (uint8_t) SNMP_V3)
@@ -5249,7 +5252,7 @@ uint8_t TCPIP_SNMP_ProcessSetVar(PDU_INFO* pduDbPtr,OID_INFO* rec, SNMP_ERR_STAT
     else
     {
         // This is a multi-byte Set operation.
-        // Check with application to see if this many bytes can be
+        // Check with application to see if these many bytes can be
         // written to current variable.      
         if ( !TCPIP_SNMP_IsValidLength(rec->id, dataLen,rec->index) )
         {
