@@ -1803,8 +1803,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_e54_xpro_sw/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1F53275286A2842D9A0F70B465186D20</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1F53275286A2842D9A0F70B465186D20</UserChecksum>
+          <GeneratedChecksum dnOrder="4">C3A0356B324E3DE3AC967218D576BCB0</GeneratedChecksum>
+          <UserChecksum dnOrder="5">C3A0356B324E3DE3AC967218D576BCB0</UserChecksum>
         </File>
         <File dnOrder="225">
           <Type dnOrder="0">HEADER</Type>
@@ -4154,7 +4154,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\3.1.33\atdf\ATSAME54P20A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
