@@ -24,7 +24,7 @@
 	authentication and privacy passwords. Instead could be configured with the 
 	respective localized keys of the password. Microchip SNMPv3 agent is 
 	provided with the password information in the database for the 
-	“Getting Started” and for understanding purpose only. It is recommended 
+	“Getting Started�? and for understanding purpose only. It is recommended 
 	that the SNMPv3 stack should be modified to restrict access to the password 
 	OIDs declared in the user data base.
 *******************************************************************************/

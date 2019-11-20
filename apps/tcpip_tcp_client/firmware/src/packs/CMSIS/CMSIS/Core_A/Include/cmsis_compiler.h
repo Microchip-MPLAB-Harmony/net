@@ -98,10 +98,6 @@
   #ifndef   __PACKED
     #define __PACKED                  __attribute__((packed))
   #endif
-  #ifndef   __COMPILER_BARRIER
-    #warning No compiler specific solution for __COMPILER_BARRIER. __COMPILER_BARRIER is ignored.
-    #define __COMPILER_BARRIER()      (void)0
-  #endif
 
 
 /*
@@ -148,10 +144,6 @@
   #ifndef   __PACKED
     #define __PACKED                  __packed__
   #endif
-  #ifndef   __COMPILER_BARRIER
-    #warning No compiler specific solution for __COMPILER_BARRIER. __COMPILER_BARRIER is ignored.
-    #define __COMPILER_BARRIER()      (void)0
-  #endif
 
 
 /*
@@ -197,10 +189,6 @@
   #endif
   #ifndef   __PACKED
     #define __PACKED                  @packed
-  #endif
-  #ifndef   __COMPILER_BARRIER
-    #warning No compiler specific solution for __COMPILER_BARRIER. __COMPILER_BARRIER is ignored.
-    #define __COMPILER_BARRIER()      (void)0
   #endif
 
 
