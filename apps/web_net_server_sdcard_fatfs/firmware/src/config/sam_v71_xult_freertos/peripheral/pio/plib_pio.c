@@ -58,7 +58,7 @@
 void PIO_Initialize ( void )
 {
     /* Selected System IO pins are configured as GPIO */
-    MATRIX_REGS->CCFG_SYSIO |= 0x1c10;
+    MATRIX_REGS->CCFG_SYSIO |= 0xc10;
 
     /************************ PIO A Initialization ************************/
     /* PORTA Peripheral Function Selection */
@@ -76,10 +76,10 @@ void PIO_Initialize ( void )
     /* PORTA Output Write Enable */
     ((pio_registers_t*)PIO_PORT_A)->PIO_OWER = PIO_OWER_Msk;
     /* PORTA Output Direction Enable */
-    ((pio_registers_t*)PIO_PORT_A)->PIO_OER = 0x800000;
-    ((pio_registers_t*)PIO_PORT_A)->PIO_ODR = ~0x800000;
+    ((pio_registers_t*)PIO_PORT_A)->PIO_OER = 0x0;
+    ((pio_registers_t*)PIO_PORT_A)->PIO_ODR = ~0x0;
     /* PORTA Initial state High */
-    ((pio_registers_t*)PIO_PORT_A)->PIO_ODSR = 0x800000;
+    ((pio_registers_t*)PIO_PORT_A)->PIO_ODSR = 0x0;
     /* PORTA drive control */
     ((pio_registers_t*)PIO_PORT_A)->PIO_DRIVER = 0x0;
 
@@ -92,8 +92,7 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_B)->PIO_PER = ~0x10;
     ((pio_registers_t*)PIO_PORT_B)->PIO_MDDR = 0xFFFFFFFF;
     /* PORTB Pull Up Enable/Disable as per MHC selection */
-    ((pio_registers_t*)PIO_PORT_B)->PIO_PUDR = ~0x1000;
-    ((pio_registers_t*)PIO_PORT_B)->PIO_PUER = 0x1000;
+    ((pio_registers_t*)PIO_PORT_B)->PIO_PUDR = 0xFFFFFFFF;
     /* PORTB Pull Down Enable/Disable as per MHC selection */
     ((pio_registers_t*)PIO_PORT_B)->PIO_PPDDR = 0xFFFFFFFF;
     /* PORTB Output Write Enable */

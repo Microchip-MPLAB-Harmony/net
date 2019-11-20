@@ -1,26 +1,19 @@
 /*******************************************************************************
-  Driver Layer Interface Header
+  Memory Driver EFC Interface Definition
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    driver.h
+    drv_memory_efc.h
 
   Summary:
-    Driver layer data types and definitions.
+    Memory Driver EFC Interface Definition
 
   Description:
-    This file defines the common macros and definitions for the driver layer
-    modules.
-
-  Remarks:
-    The parent directory to the "system" directory should be added to the
-    compiler's search path for header files such that the following include
-    statement will successfully include this file.
-
-    #include "system/system.h"
- *******************************************************************************/
+    The Memory Driver provides a interface to access the EFC peripheral on the
+    microcontroller.
+*******************************************************************************/
 
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -44,25 +37,49 @@
 * FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 * ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
- *******************************************************************************/
+*******************************************************************************/
 //DOM-IGNORE-END
 
-#ifndef SYSTEM_H
-#define SYSTEM_H
-
+#ifndef _DRV_MEMORY_EFC_H
+#define _DRV_MEMORY_EFC_H
 
 // *****************************************************************************
 // *****************************************************************************
-// Section: Included Files
+// Section: File includes
 // *****************************************************************************
 // *****************************************************************************
 
-#include "system/system_common.h"
-#include "system/system_module.h"
+#include "drv_memory_definitions.h"
+
+// DOM-IGNORE-BEGIN
+#ifdef __cplusplus  // Provide C++ Compatibility
+    extern "C" {
+#endif
+
+// DOM-IGNORE-END
+
+DRV_HANDLE DRV_EFC_Open( const SYS_MODULE_INDEX drvIndex, const DRV_IO_INTENT ioIntent );
+
+void DRV_EFC_Close( const DRV_HANDLE handle );
+
+SYS_STATUS DRV_EFC_Status( const SYS_MODULE_INDEX drvIndex );
+
+bool DRV_EFC_SectorErase( const DRV_HANDLE handle, uint32_t address );
+
+bool DRV_EFC_Read( const DRV_HANDLE handle, void *rx_data, uint32_t rx_data_length, uint32_t address );
+
+bool DRV_EFC_PageWrite( const DRV_HANDLE handle, void *tx_data, uint32_t address );
 
 
-#endif // SYSTEM_H
+MEMORY_DEVICE_TRANSFER_STATUS DRV_EFC_TransferStatusGet( const DRV_HANDLE handle );
+
+bool DRV_EFC_GeometryGet( const DRV_HANDLE handle, MEMORY_DEVICE_GEOMETRY *geometry );
+
+#ifdef __cplusplus
+}
+#endif
+
+#endif // #ifndef _DRV_MEMORY_EFC_H
 /*******************************************************************************
  End of File
 */
-
