@@ -51,6 +51,10 @@
 #include "system/time/sys_time.h"
 #include "peripheral/coretimer/plib_coretimer.h"
 #include "peripheral/uart/plib_uart2.h"
+#include "net_pres/pres/net_pres.h"
+#include "net_pres/pres/net_pres_encryptionproviderapi.h"
+#include "net_pres/pres/net_pres_transportapi.h"
+#include "net_pres/pres/net_pres_socketapi.h"
 #include "library/tcpip/tcpip.h"
 #include "driver/ethmac/drv_ethmac.h"
 #include "driver/miim/drv_miim.h"
@@ -190,6 +194,8 @@ void SYS_Tasks ( void );
 typedef struct
 {
     SYS_MODULE_OBJ  sysTime;
+    SYS_MODULE_OBJ  netPres;
+
     SYS_MODULE_OBJ  sysConsole0;
 
 
