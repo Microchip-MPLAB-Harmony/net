@@ -835,8 +835,8 @@
           <Name dnOrder="1">plib_mpu.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult_freertos/peripheral/mpu/</LogicalPath>
           <PhysicalPath dnOrder="3">/peripheral/mpu/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">CA71293B9270B016CFB42468FA2EE6A9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">CA71293B9270B016CFB42468FA2EE6A9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">49A56F7528308BA05C078174128F4F29</GeneratedChecksum>
+          <UserChecksum dnOrder="5">49A56F7528308BA05C078174128F4F29</UserChecksum>
         </File>
         <File dnOrder="104">
           <Type dnOrder="0">SOURCE</Type>
@@ -1203,8 +1203,8 @@
           <Name dnOrder="1">tasks.c</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">94C71817EEEACCEFBBC25566B65EE218</GeneratedChecksum>
-          <UserChecksum dnOrder="5">94C71817EEEACCEFBBC25566B65EE218</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1AEE28C6974B8D67F5AA8C781F2C6B54</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1AEE28C6974B8D67F5AA8C781F2C6B54</UserChecksum>
         </File>
         <File dnOrder="150">
           <Type dnOrder="0">SOURCE</Type>
@@ -1971,8 +1971,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_v71_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F0426430D5B479E8ADED477E64DA68C9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F0426430D5B479E8ADED477E64DA68C9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">90E7D8E826AED61DB62B68C376997384</GeneratedChecksum>
+          <UserChecksum dnOrder="5">90E7D8E826AED61DB62B68C376997384</UserChecksum>
         </File>
         <File dnOrder="246">
           <Type dnOrder="0">HEADER</Type>
@@ -4470,7 +4470,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" value="../src/third_party/wolfssl/wolfssl"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="4" key="extra-include-directories" value="../src;../src/config/sam_v71_xult_freertos;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm"/>
         <Setting category="C32" dnOrder="5" key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
-        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="104960"/>
+        <Setting category="C32-LD" dnOrder="6" key="heap-size" value="144960"/>
         <Setting category="C32-LD" dnOrder="7" key="no-device-startup-code" value="true"/>
         <Setting category="C32-LD" dnOrder="8" key="preprocessor-macros" value=""/>
         <Setting category="C32Global" dnOrder="9" key="mdtcm" value=""/>
@@ -4483,7 +4483,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.0.41\samv71b\atdf\ATSAMV71Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
