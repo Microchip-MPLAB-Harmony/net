@@ -1091,8 +1091,8 @@
           <Name dnOrder="1">snmp.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2339A5475291D6F7F1A22F51ED7E381E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2339A5475291D6F7F1A22F51ED7E381E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">9522943B04D576ABD2C9488CAD4DCD4B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">9522943B04D576ABD2C9488CAD4DCD4B</UserChecksum>
         </File>
         <File dnOrder="136">
           <Type dnOrder="0">SOURCE</Type>
@@ -2067,8 +2067,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">64C04E99FB4FEF1D8FB9ABDBDD8DA16B</GeneratedChecksum>
-          <UserChecksum dnOrder="5">64C04E99FB4FEF1D8FB9ABDBDD8DA16B</UserChecksum>
+          <GeneratedChecksum dnOrder="4">11B1DB0B88A7392A67FE4C184EDC2F09</GeneratedChecksum>
+          <UserChecksum dnOrder="5">11B1DB0B88A7392A67FE4C184EDC2F09</UserChecksum>
         </File>
         <File dnOrder="258">
           <Type dnOrder="0">HEADER</Type>
@@ -4234,7 +4234,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.0.81\atdf\PIC32MZ2064DAS169.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>
