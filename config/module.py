@@ -173,11 +173,11 @@ def loadModule():
     tcpipNbnsComponent.addDependency("Nbns_UDP_Dependency", "UDP", None, True, True)    
     tcpipNbnsComponent.setDisplayType("TCP/IP Library")
     
-    tcpipRebootComponent = Module.CreateComponent("tcpipReboot", "REBOOT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_reboot.py")
-    tcpipRebootComponent.addCapability("libtcpipReboot","REBOOT",True)
-    tcpipRebootComponent.addDependency("Reboot_IPv4_Dependency", "IPv4", None, True, True)
-    tcpipRebootComponent.addDependency("Reboot_UDP_Dependency", "UDP", None, True, True)
-    tcpipRebootComponent.setDisplayType("TCP/IP Library")
+    # tcpipRebootComponent = Module.CreateComponent("tcpipReboot", "REBOOT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_reboot.py")
+    # tcpipRebootComponent.addCapability("libtcpipReboot","REBOOT",True)
+    # tcpipRebootComponent.addDependency("Reboot_IPv4_Dependency", "IPv4", None, True, True)
+    # tcpipRebootComponent.addDependency("Reboot_UDP_Dependency", "UDP", None, True, True)
+    # tcpipRebootComponent.setDisplayType("TCP/IP Library")
 
     tcpipSmtpcComponent = Module.CreateComponent("tcpipSmtpc", "SMTP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_smtpc.py")
     tcpipSmtpcComponent.addCapability("libtcpipSmtpc","SMTPC",True)
