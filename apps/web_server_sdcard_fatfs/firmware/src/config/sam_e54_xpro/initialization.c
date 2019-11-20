@@ -660,6 +660,8 @@ const SYS_DEBUG_INIT debugInit =
 
 void SYS_Initialize ( void* data )
 {
+    NVMCTRL_Initialize( );
+
   
     PORT_Initialize();
 
