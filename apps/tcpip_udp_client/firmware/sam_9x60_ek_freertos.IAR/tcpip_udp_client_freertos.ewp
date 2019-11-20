@@ -1121,7 +1121,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.32.3.20186</state>
+                    <state>8.32.1.18618</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -1275,6 +1275,7 @@
                 <debug>0</debug>
                 <option>
                     <name>CCDefines</name>
+                    <state>__SAM9X60__</state>
                     <state>NDEBUG</state>
                 </option>
                 <option>
@@ -1315,7 +1316,7 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state></state>
+                    <state>Pe188, Pe186, Pe1029</state>
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
@@ -1426,7 +1427,7 @@
                 </option>
                 <option>
                     <name>CCOptLevel</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CCOptStrategy</name>
@@ -1435,7 +1436,7 @@
                 </option>
                 <option>
                     <name>CCOptLevelSlave</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>CompilerMisraRules98</name>
@@ -1469,7 +1470,7 @@
                 </option>
                 <option>
                     <name>IccAllowVLA</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>IccStaticDestr</name>
@@ -1716,15 +1717,15 @@
                 <option>
                     <name>OOCOutputFormat</name>
                     <version>3</version>
-                    <state>0</state>
+                    <state>3</state>
                 </option>
                 <option>
                     <name>OCOutputOverride</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state>harmony.bin</state>
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1732,7 +1733,7 @@
                 </option>
                 <option>
                     <name>OOCObjCopyEnable</name>
-                    <state>0</state>
+                    <state>1</state>
                 </option>
             </data>
         </settings>
