@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>snmp_config.h</title>
+<title>SNMP_COMMUNITY_TYPE Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01665.html" target="topic">Files</a> &gt; <a href="01219.html" target="topic">snmp_config.h</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01217.html" target="topic">SNMP Module</a> &gt; <a href="01686.html" target="topic">Library Interface</a> &gt; c) SNMP Data Types and Constants &gt; <a href="01219.html" target="topic">SNMP_COMMUNITY_TYPE Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01251.html" target="topic">Previous</a> | <a href="01665.html" target="topic">Up</a> | <a href="01252.html" target="topic">Next</a></div>
+<a href="03571.html" target="topic">Previous</a> | <a href="01686.html" target="topic">Up</a> | <a href="01224.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: snmp_config.h Topic Title: snmp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SNMP_COMMUNITY_TYPE Topic Title: SNMP_COMMUNITY_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-snmp_config.h</div>
+SNMP_COMMUNITY_TYPE Enumeration</div>
 </div>
 </div>
 
@@ -46,129 +46,63 @@ snmp_config.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+Enumeration: SNMP_COMMUNITY_TYPE&nbsp;</p>
+<p class="Element10">
+List of different SNMP community types.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">READ_COMMUNITY</span></strong> = 1,
+  <strong><span style="color: #000000">WRITE_COMMUNITY</span></strong> = 2,
+  <strong><span style="color: #000000">INVALID_COMMUNITY</span></strong> = 3
+} SNMP_COMMUNITY_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-snmp_config.h</p></div>
-</div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-Simple Network Management Protocol (SNMP) Configuration file&nbsp;</p>
-<p class="Element10">
-This file contains the SNMP module configuration options&nbsp;</p>
-<p class="Element10">
-This file is not part of the project, it is a configuration template file only.</p></div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03339.html" target="topic">TCPIP_SNMP_BIB_FILE_NAME</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The Microchip mib2bib.jar compiler is used to convert the Microchip MIB script to binary format and it is compatible with the Microchip SNMP agent. which is written in ASCII format. Name of the bib file for SNMP is snmp.bib.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03343.html" target="topic">TCPIP_SNMP_COMMUNITY_MAX_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is the maximum length for community string. Application must ensure that this length is observed. SNMP module adds one byte extra after TCPIP_SNMP_COMMUNITY_MAX_LEN for adding '0' NULL character.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03348.html" target="topic">TCPIP_SNMP_MAX_COMMUNITY_SUPPORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Specifying more strings than TCPIP_SNMP_MAX_COMMUNITY_SUPPORT will result in the later strings being ignored (but still wasting program memory). Specifying fewer strings is legal, as long as at least one is present.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03349.html" target="topic">TCPIP_SNMP_MAX_MSG_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The maximum length in octets of an SNMP message which this SNMP agent able to process. As per RFC 3411 snmpEngineMaxMessageSize and RFC 1157 ( section 4- protocol specification ) and implementation supports more than 480 whenever feasible. It should be divisible by 16&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03350.html" target="topic">TCPIP_SNMP_MAX_NON_REC_ID_OID</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Update the Non record id OID value which is part of CustomSnmpDemoApp.c file. This is the maximum size for gSnmpNonMibRecInfo[] which is the list of static variable Parent OIDs which are not part of mib.h file. This structure is used to restrict access to static variables of SNMPv3 OIDs from SNMPv2c and SNMPv1 version. With SNMPv3 all the OIDs accessible but when we are using SNMPv2c version , static variables of the SNMPv3 cannot be accessible with SNMP version v2c. SNMP agent supports both SMIv1 and SMIv2 standard and snmp.mib has been updated with respect to SMIV2 standard and it... <a href="03350.html" target="topic">more</a>&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03362.html" target="topic">TCPIP_SNMP_NOTIFY_COMMUNITY_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Maximum length for SNMP Trap community name&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03365.html" target="topic">TCPIP_SNMP_OID_MAX_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Maximum length for the OID String. Change this to match your OID string length.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03373.html" target="topic">TCPIP_SNMP_TASK_PROCESS_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-SNMP task processing rate, in milli-seconds. The SNMP module will process a timer event with this rate for processing its own state machine, etc. The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03627.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03374.html" target="topic">TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The maximum size of TRAP community string length&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03375.html" target="topic">TCPIP_SNMP_TRAP_COMMUNITY_MAX_LEN_MEM_USE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Trap information. This macro will be used to avoid SNMP OID memory buffer corruption&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03376.html" target="topic">TCPIP_SNMP_TRAP_TABLE_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This table maintains list of interested receivers who should receive notifications when some interesting event occurs.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+READ_COMMUNITY = 1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Read only community&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+WRITE_COMMUNITY = 2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Read write community&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+INVALID_COMMUNITY = 3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Community invalid&nbsp;</div></td></tr></table></div></div>
 </div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+SNMP agent use these community types for both TRAP and SNMP agent request.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01665.html" target="topic">Files</a> &gt; <a href="01219.html" target="topic">snmp_config.h</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01217.html" target="topic">SNMP Module</a> &gt; <a href="01686.html" target="topic">Library Interface</a> &gt; c) SNMP Data Types and Constants &gt; <a href="01219.html" target="topic">SNMP_COMMUNITY_TYPE Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -176,13 +110,13 @@ This table maintains list of interested receivers who should receive notificatio
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01251.html" target="topic">Previous</a> | <a href="01665.html" target="topic">Up</a> | <a href="01252.html" target="topic">Next</a></div>
+<a href="03571.html" target="topic">Previous</a> | <a href="01686.html" target="topic">Up</a> | <a href="01224.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: snmp_config.h Topic Title: snmp_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SNMP_COMMUNITY_TYPE Topic Title: SNMP_COMMUNITY_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

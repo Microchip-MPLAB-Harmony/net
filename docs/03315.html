@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SMTPC_MODULE_CONFIG Structure</title>
+<title>tcpip_reboot.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01210.html" target="topic">SMTPC Module</a> &gt; <a href="01659.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03315.html" target="topic">TCPIP_SMTPC_MODULE_CONFIG Structure</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01656.html" target="topic">Reboot Module</a> &gt; <a href="01654.html" target="topic">Files</a> &gt; <a href="03315.html" target="topic">tcpip_reboot.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03308.html" target="topic">Previous</a> | <a href="01659.html" target="topic">Up</a> | <a href="03328.html" target="topic">Next</a></div>
+<a href="03317.html" target="topic">Previous</a> | <a href="01654.html" target="topic">Up</a> | <a href="00815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MODULE_CONFIG Topic Title: TCPIP_SMTPC_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_reboot.h Topic Title: tcpip_reboot.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SMTPC_MODULE_CONFIG Structure</div>
+tcpip_reboot.h</div>
 </div>
 </div>
 
@@ -46,99 +46,81 @@ TCPIP_SMTPC_MODULE_CONFIG Structure</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Structure: TCPIP_SMTPC_MODULE_CONFIG&nbsp;</p>
-<p class="Element10">
-This data structure describes the SMTPC configuration data. It is presented to the module as part of the module initialization.</p></div>
+Microchip Technology Inc.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nMailConnections</span></strong>;
-  uint32_t <strong><span style="color: #000000">serverReplyTmo</span></strong>;
-  uint32_t <strong><span style="color: #000000">serverDataTmo</span></strong>;
-  uint32_t <strong><span style="color: #000000">tlsHandshakeTmo</span></strong>;
-  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nMailRetries</span></strong>;
-  uint32_t <strong><span style="color: #000000">serverRetryTmo</span></strong>;
-  uint32_t <strong><span style="color: #000000">smtpcRetryTmo</span></strong>;
-  uint16_t <strong><span style="color: #000000">sktTxBuffSize</span></strong>;
-  uint16_t <strong><span style="color: #000000">sktRxBuffSize</span></strong>;
-} TCPIP_SMTPC_MODULE_CONFIG;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
+<p class="Element10">
+tcpip_reboot.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+TCP/IP Reboot Server API Header File&nbsp;</p>
+<p class="Element10">
+The Reboot server listens on a UDP connection and resets the system upon request.</p></div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table4">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int nMailConnections;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-number of mail connections to be created each mail message to be sent requires a mail connection adjust based on the number of simultaneous mail messages in transit&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t serverReplyTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-general server response timeout, seconds Should be adjusted according to the server responsivity RFC specifies it as 5 min&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t serverDataTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-server response timeout to acknowledge a received mail body/data, seconds Should be adjusted according to the server responsivity RFC specifies it as 10 min&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t tlsHandshakeTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-secure connection establishment timeout, seconds usually few seconds&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-int nMailRetries;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-how many times to retry sending a failed mail message Retries occur only for server reported transient errors Could be 0 if only one mail <a href="01201.html" target="topic">send</a> is to be attempted, without retries&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t serverRetryTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-The retry interval because of a server transient error, in seconds. RFC specifies it should be at least 30 min!&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint32_t smtpcRetryTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-The retry interval because of a SMTPC temporary error, in seconds. These include temporary errors related to: DNS, <a href="01301.html" target="topic">socket</a> connection, TLS.&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t sktTxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-size of TX buffer for the associated <a href="01301.html" target="topic">socket</a>; leave 0 for default&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-uint16_t sktRxBuffSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-size of RX buffer for the associated <a href="01301.html" target="topic">socket</a>; leave 0 for default&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03323.html" target="topic">TCPIP_REBOOT_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03316.html" target="topic">TCPIP_REBOOT_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCPIP Reboot server configuration.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01210.html" target="topic">SMTPC Module</a> &gt; <a href="01659.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03315.html" target="topic">TCPIP_SMTPC_MODULE_CONFIG Structure</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01656.html" target="topic">Reboot Module</a> &gt; <a href="01654.html" target="topic">Files</a> &gt; <a href="03315.html" target="topic">tcpip_reboot.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -146,13 +128,13 @@ None</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03308.html" target="topic">Previous</a> | <a href="01659.html" target="topic">Up</a> | <a href="03328.html" target="topic">Next</a></div>
+<a href="03317.html" target="topic">Previous</a> | <a href="01654.html" target="topic">Up</a> | <a href="00815.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MODULE_CONFIG Topic Title: TCPIP_SMTPC_MODULE_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcpip_reboot.h Topic Title: tcpip_reboot.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

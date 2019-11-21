@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCP_OPTION_THRES_FLUSH_TYPE Enumeration</title>
+<title>TCP_OPTION_LINGER_DATA Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01320.html" target="topic">TCP Module</a> &gt; <a href="01698.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01342.html" target="topic">TCP_OPTION_THRES_FLUSH_TYPE Enumeration</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01324.html" target="topic">TCP Module</a> &gt; <a href="01717.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01342.html" target="topic">TCP_OPTION_LINGER_DATA Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00833.html" target="topic">Previous</a> | <a href="01698.html" target="topic">Up</a> | <a href="01334.html" target="topic">Next</a></div>
+<a href="01329.html" target="topic">Previous</a> | <a href="01717.html" target="topic">Up</a> | <a href="01350.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_OPTION_THRES_FLUSH_TYPE Topic Title: TCP_OPTION_THRES_FLUSH_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_OPTION_LINGER_DATA Topic Title: TCP_OPTION_LINGER_DATA Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCP_OPTION_THRES_FLUSH_TYPE Enumeration</div>
+TCP_OPTION_LINGER_DATA Structure</div>
 </div>
 </div>
 
@@ -49,17 +49,17 @@ TCP_OPTION_THRES_FLUSH_TYPE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enumeration: TCP_OPTION_THRES_FLUSH_TYPE&nbsp;</p>
+Structure: TCP_OPTION_LINGER_DATA&nbsp;</p>
 <p class="Element10">
-Describes the possible types of the <a href="01301.html" target="topic">socket</a> half threshold TX flush.</p></div>
+This structure defines <a href="01305.html" target="topic">socket</a> <a href="01012.html" target="topic">linger</a> options.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCP_OPTION_THRES_FLUSH_AUTO</span></strong>,
-  <strong><span style="color: #000000">TCP_OPTION_THRES_FLUSH_OFF</span></strong>,
-  <strong><span style="color: #000000">TCP_OPTION_THRES_FLUSH_ON</span></strong>
-} TCP_OPTION_THRES_FLUSH_TYPE;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">lingerEnable</span></strong>;
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">gracefulEnable</span></strong>;
+  uint16_t <strong><span style="color: #000000">lingerTmo</span></strong>;
+} TCP_OPTION_LINGER_DATA;</pre></div></div>
 <a name="4D656D62657273"></a><div class="Element14">
 Members</div>
 <div class="Element11">
@@ -75,19 +75,19 @@ Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCP_OPTION_THRES_FLUSH_AUTO&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+bool lingerEnable;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-The <a href="01301.html" target="topic">socket</a> will set the half buffer flush based on the TX buffer size. This is the default setting. For TX buffers &gt;= 1.5 MSS the half buffer flush will be disabled. This results in higher performance/throughput for the <a href="01301.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+Enable/disable <a href="01012.html" target="topic">linger</a>; enabled by default for any <a href="01305.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCP_OPTION_THRES_FLUSH_OFF&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+bool gracefulEnable;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Always disable the <a href="01301.html" target="topic">socket</a> flush at half buffer threshold. No <a href="01301.html" target="topic">socket</a> flush is performed when the half TX buffer threshold is passed.&nbsp;</div></td></tr><tr>
+Enable/disable graceful close; enabled by default for any <a href="01305.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCP_OPTION_THRES_FLUSH_ON&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint16_t lingerTmo;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Always enable the <a href="01301.html" target="topic">socket</a> flush at half buffer threshold. Socket flush is always performed when the half TX buffer threshold is passed. This is useful for small TX buffers when the remote party implements the delayed ACK algorithm.&nbsp;</div></td></tr></table></div></div>
+Linger timeout in seconds (when enabled). This option is not supported yet.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -95,7 +95,7 @@ Always enable the <a href="01301.html" target="topic">socket</a> flush at half b
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01320.html" target="topic">TCP Module</a> &gt; <a href="01698.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01342.html" target="topic">TCP_OPTION_THRES_FLUSH_TYPE Enumeration</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01324.html" target="topic">TCP Module</a> &gt; <a href="01717.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01342.html" target="topic">TCP_OPTION_LINGER_DATA Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +103,13 @@ Always enable the <a href="01301.html" target="topic">socket</a> flush at half b
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00833.html" target="topic">Previous</a> | <a href="01698.html" target="topic">Up</a> | <a href="01334.html" target="topic">Next</a></div>
+<a href="01329.html" target="topic">Previous</a> | <a href="01717.html" target="topic">Up</a> | <a href="01350.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_OPTION_THRES_FLUSH_TYPE Topic Title: TCP_OPTION_THRES_FLUSH_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCP_OPTION_LINGER_DATA Topic Title: TCP_OPTION_LINGER_DATA Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

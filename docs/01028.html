@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MPFS Command Line Options</title>
+<title>Building MPFS Images</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01749.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01031.html" target="topic">MPFS Utility</a> &gt; <a href="01028.html" target="topic">MPFS Command Line Options</a></div>
+<a href="01768.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01033.html" target="topic">MPFS Utility</a> &gt; <a href="01028.html" target="topic">Building MPFS Images</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01025.html" target="topic">Previous</a> | <a href="01031.html" target="topic">Up</a> | <a href="01029.html" target="topic">Next</a></div>
+<a href="01029.html" target="topic">Previous</a> | <a href="01033.html" target="topic">Up</a> | <a href="01032.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS MPFS Command Line Options Topic Title: MPFS Command Line Options)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS Building MPFS Images Topic Title: Building MPFS Images)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MPFS Command Line Options</div>
+Building MPFS Images</div>
 </div>
 </div>
 
@@ -49,135 +49,58 @@ MPFS Command Line Options</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-To facilitate batch files and automation, the MPFS Utility also supports execution from the command line. The syntax is as follows:&nbsp;</p>
+The MPFS Utility has four steps, which are indicated on the left hand side of the dialog.&nbsp;</p>
 <p class="Element10">
-<span class="Element146">MPFS.jar [options] &lt;SourceDir&gt; &lt;ProjectDir&gt; &lt;OutputFile&gt;</span>&nbsp;</p>
+To build an MPFS image, select <strong>Start With: Webpage Directory</strong> in <strong>Step 1</strong> and choose the directory in which the web pages are stored.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+The web page directory path from the &lt;install-dir&gt;/net/apps/ demonstration project needs to be provided.&nbsp;</p>
 <p class="Element10">
-The SourceDir, ProjectDir, and OutputFile options are required and should be enclosed in quotation marks.&nbsp;</p>
-<p class="Element10">
-The OutputFile option will be relative to ProjectDir, and cannot be a full path name.&nbsp;</p>
-<p class="Element10">
-The various option switches are described in the following table. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="13%">
-<div class="Element66">
-Switch&nbsp;</div></td><td class="Element65" valign="top" width="8%">
-<div class="Element66">
-Short&nbsp;</div></td><td class="Element65" valign="top" width="79%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
-<div class="Element68">
-/BIN&nbsp;</div></td><td class="Element67" valign="top" width="8%">
-<div class="Element68">
-/b&nbsp;</div></td><td class="Element67" valign="top" width="79%">
-<div class="Element68">
-Output a BIN image (Default)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
-<div class="Element68">
-/PIC32&nbsp;</div></td><td class="Element67" valign="top" width="8%">
-<div class="Element68">
-/c&nbsp;</div></td><td class="Element67" valign="top" width="79%">
-<div class="Element68">
-Output a XC32 image&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
-<div class="Element68">
-/ASM30&nbsp;</div></td><td class="Element67" valign="top" width="8%">
-<div class="Element68">
-/s&nbsp;</div></td><td class="Element67" valign="top" width="79%">
-<div class="Element68">
-Output an ASM16 image&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
-<div class="Element68">
-/MPFS&nbsp;</div></td><td class="Element67" valign="top" width="8%">
-<div class="Element68">
-/2&nbsp;</div></td><td class="Element67" valign="top" width="79%">
-<div class="Element68">
-Use the MPFS format (Default)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
-<div class="Element68">
-/html &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="8%">
-<div class="Element68">
-/h &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="79%">
-<div class="Element68">
-File types to be parsed for dynamic variables (Default: &quot;<span class="Element146">*.htm</span>, <span class="Element146">*.html</span>, <span class="Element146">*.cgi</span>, <span class="Element146">*.xml</span>&quot;)&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
-<div class="Element68">
-/xgzip &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="8%">
-<div class="Element68">
-/z &quot;...&quot;&nbsp;</div></td><td class="Element67" valign="top" width="79%">
-<div class="Element68">
-File types to be excluded from GZIP compression (Default: &quot;<span class="Element146">*.bib</span>, <span class="Element146">*.bin</span>&quot;)&nbsp;</div></td></tr></table></div></div>
+The Source Directory path is stored in MPFSSettingDetails.xml for future access.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-SourceDir, ProjectDir, and OutputFile are required and should be enclosed in quotes.&nbsp;</p>
-<p class="Element10">
-OutputFile is placed relative to ProjectDir and cannot be a full path name.&nbsp;</p>
+<img src="Build_step1_mpfs.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>PIC32 Output Option Example:</strong>&nbsp;</p>
+<strong>Step 2 </strong>selects the output format.&nbsp;</p>
+<p class="Element10">
+If storing the web pages in external EEPROM or serial Flash, choose the <strong>BIN Image </strong>output format.&nbsp;</p>
+<p class="Element10">
+If internal program memory will be used, select <strong>PIC32 Image </strong>for use with 32-bit devices. Refer to <a href="01027.html" target="topic">Advanced MPFS Settings</a> for more information.&nbsp;</p>
+<p class="Element10">
+The configurable parameters of Output file format and Advance Settings are stored in MPFSSettingDetails.xml.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<img src="command_1_mpfs.png" border="0" alt="" title=""> &nbsp;</p><p class="Element10" style="text-align: center;">
-&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-&nbsp;</p><p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-<strong>Successful MPFS Image Generation Example:</strong>&nbsp;</p>
+<img src="Build_step2_mpfs.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<img src="command_2_mpfs.png" border="0" alt="" title=""> </p><p class="Element10" style="text-align: center;">
+<strong>Step 3 </strong>asks for the TCP/IP MPLAB X IDE project directory. The MPFS utility will write the image file (e.g - mpfs_img_net.bin or mpfs_img_net.c) to the project directory and will also update the http_net_print.h and http_net_print.c files there if needed. Select the correct directory so that the right files are modified.&nbsp;</p>
+<p class="Element10">
+By default, the project directory path is one level above the source directory. Both the Project Directory and Image Name are configurable parameters, which are stored in MPFSSettingDetails.xml.&nbsp;</p>
+<p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<strong>MPFS Utility Output Log Details</strong>&nbsp;</p>
-<div class="Element13"><div class="Element12"><pre class="Element12">D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages :
-auth.htm: 1388 bytes, 1 vars
-cookies.htm: 2104 bytes, 3 vars
-dynvars.htm: 1986 bytes, 6 vars
-footer.htm: 161 bytes
-forms.htm: 2068 bytes, 5 vars
-harmony.gif: 1605 bytes (gzipped by 26%)
-header.htm: 1232 bytes
-index.htm: 3953 bytes, 5 vars
-leds.cgi: 21 bytes, 1 vars
-mchp.css: 922 bytes (gzipped by 72%)
-mchp.gif: 1250 bytes (gzipped by 2%)
-mchp.js: 1451 bytes (gzipped by 62%)
-snmp.bib: 512 bytes
-ssi.htm: 2032 bytes, 1 vars
-status.xml: 183 bytes, 7 vars
-upload.htm: 970 bytes, 2 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\snmp :
-snmp/snmpconfig.htm: 1379 bytes, 7 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\protect :
-protect/config.htm: 1924 bytes, 10 vars
-protect/index.htm: 1021 bytes, 1 vars
-protect/reboot.cgi: 12 bytes, 1 vars
-protect/reboot.htm: 1815 bytes, 2 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\email :
-email/index.htm: 1791 bytes, 3 vars
-D:\microchip\h3\net\apps\web_net_server_nvm_mpfs\firmware\src\web_pages\dyndns :
-dyndns/index.htm: 1497 bytes, 10 vars
-GENERATED MPFS IMAGE: 32126 bytes
-
-</pre></div></div>
-</div>
+<img src="Build_step3_mpfs.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<strong>Step 4</strong> controls the upload settings. When external EEPROM or serial Flash is used for storage, the option to upload the newly created image to the board is available. Check the box next to<strong> Upload Image To</strong> to enable this feature. The target host name (or IP address), upload protocol, and upload path may need to be changed to the one chosen when the board was first configured. You may also need to modify the user name and password used to access the secured functionality in your application, like web page upload. Use the <strong>Settings</strong> button to edit these values (see <a href="01031.html" target="topic">MPFS Upload Settings</a> for more information).&nbsp;</p>
+<p class="Element10">
+If internal program memory is being used, the image will be compiled in with the project and so direct uploads are not available. Make sure to include the output source file indicated in Step 3 as part of the project.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="Build_step4_mpfs.png" border="0" alt="" title="">&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01749.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01031.html" target="topic">MPFS Utility</a> &gt; <a href="01028.html" target="topic">MPFS Command Line Options</a></div>
+<a href="01768.html" target="topic">TCP/IP Utilities</a> &gt; <a href="01033.html" target="topic">MPFS Utility</a> &gt; <a href="01028.html" target="topic">Building MPFS Images</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -185,13 +108,13 @@ GENERATED MPFS IMAGE: 32126 bytes
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01025.html" target="topic">Previous</a> | <a href="01031.html" target="topic">Up</a> | <a href="01029.html" target="topic">Next</a></div>
+<a href="01029.html" target="topic">Previous</a> | <a href="01033.html" target="topic">Up</a> | <a href="01032.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS MPFS Command Line Options Topic Title: MPFS Command Line Options)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: MPFS Building MPFS Images Topic Title: Building MPFS Images)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
