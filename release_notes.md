@@ -54,7 +54,6 @@ The following table provides the list of the updated IAR applications including 
 | tcpip_udp_client            | SAM9X60, SAMA5D2                         | UDP Client demo using Harmony native API                         |
 | tcpip_udp_client_server     | SAM9X60, SAMA5D2                         | UDP Client and Server demo using Harmony native API              |
 | tcpip_udp_server            | SAM9X60, SAMA5D2                         | UDP Server demo using Harmony native API                         |
-| web_net_server_qspi_mpfs    | SAM9X60, SAMA5D2                         | Web server with MPFS file system on the onboard QSPI Flash Memory|
 | web_net_server_sdcard_fatfs | SAM9X60, SAMA5D2                         | Web server with FAT FS file system on the external SD Card       |
 | tcpip_client_server         | SAMA5D2                                  | Multi-threaded example with TCP and UDP server and client threads|
 
@@ -222,9 +221,12 @@ The current known issues are as follows:
 
 * SAM9X60 projects:
     - SAM9x60 projects with FAT FS work with optimization 0 only
+        - Reading of the status.xml from the SD card could experience temporary lock ups.
     - The application code uses a Phy reset function
         - This is caused by a bug on the SAM9X60-EK board (KSZ8081 too sensitive to a jittery clock source)
     - The processor selection for debugging should be ARM926EJ-S
+    - The SST26 component is currently disabled and can not be currently added for SAM9X60 projects
+        - The project web_net_server_qspi_mpfs does not support the SAM9X60 configuration
 
 * For all the IAR projects:
     - The 'VLA -- variable length arrays' must be allowed in the compiler configuration.
@@ -240,6 +242,11 @@ The current known issues are as follows:
 
 * The code has been updated to allow the integrating of the WINC driver to the H3 TCP/IP Stack.
     - However the WINC support is not yet available. It will be added in a future release.
+
+* SAM9X60 documentation issues:
+    - The documentation for the SAM9X60 EMAC driver is currently missing.
+    - The code/RAM resource tables do not contain the SAM9X60 platform.
+    - They will be added in a future release.
 
 Older known issues:
 
