@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>wolfmqtt_demo</title>
+<title>Configuring the MHC</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00266.html" target="topic">wolfmqtt_demo</a></div>
+<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00265.html" target="topic">web_net_server_nvm_mpfs</a> &gt; <a href="00266.html" target="topic">Configuring the MHC</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00214.html" target="topic">Previous</a> | <a href="00209.html" target="topic">Up</a> | <a href="00264.html" target="topic">Next</a></div>
+<a href="00268.html" target="topic">Previous</a> | <a href="00265.html" target="topic">Up</a> | <a href="00269.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS WOLFMQTT Demo Topic Title: wolfmqtt_demo)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_net_server_nvm_mpfs Configuring the MHC Topic Title: Configuring the MHC)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-wolfmqtt_demo</div>
+Configuring the MHC</div>
 </div>
 </div>
 
@@ -49,17 +49,57 @@ wolfmqtt_demo</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
- &nbsp;</p>
+MHC Configuration:
+<ol class="Element634">
+<li value="1" class="Element604">From <i>Harmony Framework Configuration &gt; TCPIP Stack</i> select <strong>HTTP NET Server</strong>.</li>
+<li value="2" class="Element604">Leave the default settings. The HTTP server listening port should be already set to 443 for encrypted connections, as shown in the following figure; however, change this value to 80 if unencrypted connection is required.
+<ul class="Element635">
+<li class="Element605">Ensure that the “Enable the Processing SSI Commands” is enabled. Leave the default settings or expand the item and adjust to your application needs.</li>
+<li class="Element605">This version of the HTTP Net MHC configuration allows for the explicit selection of the dynamic variables processing. Ensure that this option is also selected.</li>
+</ul></li>
+</ol>&nbsp;</p>
 <p class="Element10">
+&nbsp;</p><p class="Element10" style="text-align: center;">
+<img src="APPS TCPIP MHC Config web_net_server_nvm_mpfs.png" border="0" alt="" title="">&nbsp;</p><p class="Element10">
+
+<ol class="Element634">
+<li value="3" class="Element604">Enable the MPLAB Harmony Networking Presentation Layer and the NET_PRES instance, as follows:
+<ul class="Element635">
+<li class="Element605">Ensure that the TCP/IP stack is used as transport layer</li>
+<li class="Element605">Select <strong>Support Stream Connections?</strong> (for TCP support)</li>
+<li class="Element605">Select <strong>Support Server Connections?</strong> (for HTTPS support)</li>
+<li class="Element605">Select <strong>Support Client Connections?</strong> (for encrypted SMTP support)</li>
+<li class="Element605">Select <strong>Support Client Certificate?</strong> and <strong>Support Server Certificate?</strong> (as appropriate)</li>
+</ul></li>
+</ol></p><p class="Element10" style="text-align: center;">
+<img src="APPS TCPIP MHC Config_ii web_net_server_nvm_mpfs.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10" style="text-align: center;">
 &nbsp;</p>
-<p class="Element10">
-The wolfMQTT application demonstrates a simple MQTT application using the 3<sup>rd</sup> party <a href="#" onclick="openExternalLink('https://www.wolfssl.com/products/wolfmqtt');"><img src="indicator_external_link.gif" border="0" alt="" title="">wolfMQTT</a> library.&nbsp;</p>
-<p class="Element10">
-The application uses the console to implement a simple set of commands to start a MQTT connection to a selected broker.&nbsp;</p>
-<p class="Element10">
-The connection parameters can be adjusted using various MQTT related commands.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element63">
+<p class="Element10" style="text-align: center;">
+<img src="APPS TCPIP MHC Config__net_pres_instance.png" border="0" alt="" title=""></p><p class="Element10">
+
+<ol class="Element634">
+<li value="4" class="Element604">Enable <i>Third Party Libraries &gt; TCPIP &gt; wolfSSL &gt; Use wolfSSL</i>. Ensure that the wolfSSL client and wolfSSL server are enabled depending on your HTTP and SMTP selection, as shown in the following figure:</li>
+</ol></p><p class="Element10" style="text-align: center;">
+<img src="APPS TCPIP MHC Config_iii web_net_server_nvm_mpfs.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+&nbsp;</p><p class="Element10">
+
+<ol class="Element634">
+<li value="5" class="Element604">Generating the web pages using the Microchip MPFS Generator:
+<ul class="Element635">
+<li class="Element605">The web pages for this demonstration are now part of the MPLAB X IDE project</li>
+<li class="Element605">The MPFS Generator is now run automatically, when the project builds.</li>
+<li class="Element605">The tool could still be used independently, if needed, as below (see <a href="01033.html" target="topic">MPFS Utility</a>).</li>
+</ul></li>
+</ol>&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+<img src="APPS TCPIP MPFS2 Advance Settings.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10" style="text-align: center;">
+&nbsp;</p>
+<div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
 <tr>
@@ -67,42 +107,7 @@ The connection parameters can be adjusted using various MQTT related commands.&n
 <div class="Element68">
 <img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
-This demonstration uses the NET_PRES layer which supports <strong>encrypted communication </strong>through an external service provider for <strong>TLS support (</strong>usually <a href="#" onclick="openExternalLink('https://www.wolfssl.com/products/wolfssl');"><img src="indicator_external_link.gif" border="0" alt="" title="">wolfSSL</a><strong>)</strong>.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00264.html" target="topic">Building the Application</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section identifies the MPLAB X IDE projects for this demonstration application. This lists the name, location, hardware development board and available configurations for the TCP/IP wolfMQTT Demonstration.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00265.html" target="topic">Configuring the Hardware</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section describes how to configure the supported hardware.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00268.html" target="topic">Running the Demonstration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides instructions on how to build and run the wolfMQTT demonstration.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00267.html" target="topic">MHC Configuration</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This section provides information on the MHC configuration for the MQTT demonstration.&nbsp;</div></td></tr></table></div></div>
+For demonstrations that use SSI, the file inclusion is now done in a standard way using <span class="Element146">.htm</span> files.<br>For example, <span class="Element146">&lt;!--#include virtual=&quot;header.htm&quot;&gt;</span>. These files may contain dynamic variables, other SSI commands, or include other files. As shown in the following figure, ensure that when using the <span class="Element146">mpfs2.jar</span> image generation tool that <span class="Element146">*.htm</span> is added using <i>Advanced Settings &gt; Do Not Compress.</i>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -110,7 +115,7 @@ This section provides information on the MHC configuration for the MQTT demonstr
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00266.html" target="topic">wolfmqtt_demo</a></div>
+<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00265.html" target="topic">web_net_server_nvm_mpfs</a> &gt; <a href="00266.html" target="topic">Configuring the MHC</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +123,13 @@ This section provides information on the MHC configuration for the MQTT demonstr
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00214.html" target="topic">Previous</a> | <a href="00209.html" target="topic">Up</a> | <a href="00264.html" target="topic">Next</a></div>
+<a href="00268.html" target="topic">Previous</a> | <a href="00265.html" target="topic">Up</a> | <a href="00269.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS WOLFMQTT Demo Topic Title: wolfmqtt_demo)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_net_server_nvm_mpfs Configuring the MHC Topic Title: Configuring the MHC)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

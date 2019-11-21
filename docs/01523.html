@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Interface</title>
+<title>HTTP Net Features</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00766.html" target="topic">ICMP Module</a> &gt; <a href="01523.html" target="topic">Library Interface</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00719.html" target="topic">HTTP Net Module</a> &gt; <a href="01530.html" target="topic">Using the Library</a> &gt; <a href="01523.html" target="topic">HTTP Net Features</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01517.html" target="topic">Previous</a> | <a href="00766.html" target="topic">Up</a> | <a href="02646.html" target="topic">Next</a></div>
+<a href="01527.html" target="topic">Previous</a> | <a href="01530.html" target="topic">Up</a> | <a href="01519.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMP Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET HTTP Net Features Topic Title: HTTP Net Features)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Interface</div>
+HTTP Net Features</div>
 </div>
 </div>
 
@@ -49,140 +49,58 @@ Library Interface</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section describes the Application Programming Interface (API) functions of the <span style="color: #000000">ICMP module</span>.&nbsp;</p>
+The HTTP Net module is a HTTP server module that works using the Networking Presentation Layer of the MPLAB Harmony framework. This allows it to support both encrypted and plain text connections.&nbsp;</p>
 <p class="Element10">
-Refer to each section for a detailed description.</p></div>
+Some of the key features of the HTTP Net module include:
+<ul class="Element634">
+<li class="Element604">The updated module implements HTTP 1.1 persistent connections by default, using the “Transfer-Encoding: chunked” HTTP header. It can be configured to operate with closing the connections like the previous HTTP server.</li>
+<li class="Element604">The application has to dynamically register its HTTP processing functions with the HTTP Net server using the <a href="02774.html" target="topic">TCPIP_HTTP_NET_UserHandlerRegister</a> call. The HTTP Net server no longer relies on well known function names.</li>
+<li class="Element604">The HTTP Net server supports either secure or plain text connections, but not both simultaneously. The specification of a secure or non-secure connection can be easily done by:
+<ul class="Element635">
+<li class="Element605">Selecting the server listening port: 80 or 443</li>
+<li class="Element605">Using the module configuration flags</li>
+</ul></li>
+<li class="Element604">The HTTP Net module reports run-time events that could be caught by the user application using the “eventReport” registered function that carries a <a href="02637.html" target="topic">TCPIP_HTTP_NET_EVENT_TYPE</a> enumerated type</li>
+</ul></p></div>
 </div>
-<a name="61292046756E6374696F6E73"></a><div class="Element14">
-a) Functions</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<td class="Element200" valign="top" width="35%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02646.html" target="topic">TCPIP_ICMP_CallbackDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01519.html" target="topic">Dynamic Variables Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Deregisters the ICMP callback function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section describes the dynamic variable processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02647.html" target="topic">TCPIP_ICMP_CallbackRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01524.html" target="topic">Include Files Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Registers a callback to allow the application layer to process incoming ICMPv4 packets&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section provides information on include file processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02657.html" target="topic">TCPIP_ICMP_EchoRequestSend</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01520.html" target="topic">File Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sends an ICMP echo request to a remote node.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section provides information on file processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02661.html" target="topic">TCPIP_ICMP_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01529.html" target="topic">SSI Processing</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+This section provides information on SSI processing.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
 <div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02655.html" target="topic">TCPIP_ICMP_EchoRequest</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="01528.html" target="topic">mpfs2.jar Utility</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-Sends an ICMP echo request containing user supplied data&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02656.html" target="topic">TCPIP_ICMP_EchoRequestCancel</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Cancels a previously sent ICMP echo request&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="6229204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
-b) Data Types and Constants</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00777.html" target="topic">ICMP_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-a handle that a client can use after the event handler has been registered&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00769.html" target="topic">ICMP_ECHO_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-result of an ICMP Echo Request call&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02658.html" target="topic">TCPIP_ICMP_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Placeholder for ICMP module configuration.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02650.html" target="topic">_tag_TCPIP_ICMP_ECHO_REQUEST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Contains the data needed for an ICMP request operation&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02650.html" target="topic">TCPIP_ICMP_ECHO_REQUEST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Contains the data needed for an ICMP request operation&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02651.html" target="topic">TCPIP_ICMP_ECHO_REQUEST_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-A result code for an Echo Request callback (as a result of an ICMP <a href="02655.html" target="topic">TCPIP_ICMP_EchoRequest</a> call)&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="02660.html" target="topic">TCPIP_ICMP_REQUEST_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is type TCPIP_ICMP_REQUEST_HANDLE.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00003.html" target="topic">__ICMP_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro __ICMP_H.&nbsp;</div></td></tr></table></div></div>
+This section provides information on using the mpfs2 utility.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -190,7 +108,7 @@ This is macro __ICMP_H.&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00766.html" target="topic">ICMP Module</a> &gt; <a href="01523.html" target="topic">Library Interface</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00719.html" target="topic">HTTP Net Module</a> &gt; <a href="01530.html" target="topic">Using the Library</a> &gt; <a href="01523.html" target="topic">HTTP Net Features</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -198,13 +116,13 @@ This is macro __ICMP_H.&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01517.html" target="topic">Previous</a> | <a href="00766.html" target="topic">Up</a> | <a href="02646.html" target="topic">Next</a></div>
+<a href="01527.html" target="topic">Previous</a> | <a href="01530.html" target="topic">Up</a> | <a href="01519.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMP Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP NET HTTP Net Features Topic Title: HTTP Net Features)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

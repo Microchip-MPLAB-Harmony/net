@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SNMP_VarbindSet Function</title>
+<title>TCPIP_SMTPC_MAIL_MESSAGE Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01667.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03389.html" target="topic">TCPIP_SNMP_VarbindSet Function</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01678.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03389.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03388.html" target="topic">Previous</a> | <a href="01667.html" target="topic">Up</a> | <a href="03390.html" target="topic">Next</a></div>
+<a href="03379.html" target="topic">Previous</a> | <a href="01678.html" target="topic">Up</a> | <a href="03412.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_VarbindSet@SNMP_ID@SNMP_INDEX@uint8_t@SNMP_VAL Topic Title: TCPIP_SNMP_VarbindSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MAIL_MESSAGE Topic Title: TCPIP_SMTPC_MAIL_MESSAGE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SNMP_VarbindSet Function</div>
+TCPIP_SMTPC_MAIL_MESSAGE Structure</div>
 </div>
 </div>
 
@@ -49,136 +49,165 @@ TCPIP_SNMP_VarbindSet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This is a callback function called by module for SNMP SET request. This function content is modified by the application developer. This function contains the implementation of WRITE enable MIB OID macros.&nbsp;</p>
+Structure: TCPIP_SMTPC_MAIL_MESSAGE&nbsp;</p>
 <p class="Element10">
-mib2bib.jar Microchip MIB compiler utility is used to generate mib.h, which lists all the MIB OID ID value.</p></div>
+This data structure describes a mail message</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_SNMP_VarbindSet</span></strong>(
-    <a href="01229.html" target="topic">SNMP_ID</a> <strong><span style="color: #000000">var</span></strong>, 
-    <a href="01230.html" target="topic">SNMP_INDEX</a> <strong><span style="color: #000000">index</span></strong>, 
-    uint8_t <strong><span style="color: #000000">ref</span></strong>, 
-    <a href="01242.html" target="topic">SNMP_VAL</a> <strong><span style="color: #000000">val</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">from</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">to</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">sender</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">cc</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">bcc</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">date</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">subject</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> uint8_t* <strong><span style="color: #000000">body</span></strong>;
+  size_t <strong><span style="color: #000000">bodySize</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nBuffers</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <a href="03355.html" target="topic">TCPIP_SMTPC_ATTACH_BUFFER</a>* <strong><span style="color: #000000">attachBuffers</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nFiles</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <a href="03361.html" target="topic">TCPIP_SMTPC_ATTACH_FILE</a>* <strong><span style="color: #000000">attachFiles</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">username</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">password</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>* <strong><span style="color: #000000">smtpServer</span></strong>;
+  uint16_t <strong><span style="color: #000000">serverPort</span></strong>;
+  <a href="03379.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS</a> <strong><span style="color: #000000">messageFlags</span></strong>;
+  <a href="03412.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK</a> <strong><span style="color: #000000">messageCallback</span></strong>;
+  <a href="03493.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_CALLBACK</a> <strong><span style="color: #000000">replyCallback</span></strong>;
+} TCPIP_SMTPC_MAIL_MESSAGE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-TCPIP_SNMP_ProcessVariables() is called.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-var&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Write enable Variable id whose value is to be set&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-index&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-For a scalar variable , Index value is zero. For sequence variable index value specifies which index value need to be set.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-ref&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Variable reference used to transfer multi-byte data 0 if first byte is set otherwise non zero value to indicate corresponding byte being set. SNMP set will performed until ref is not equal to <a href="01220.html" target="topic">SNMP_END_OF_VAR</a> and SNMP set starts with ref = <a href="01235.html" target="topic">SNMP_START_OF_VAR</a>.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-val&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Up to 4 byte data value:
-<ul class="Element633">
-<li class="Element603">If var data type is uint8_t, variable value is in val-&gt;byte</li>
-<li class="Element603">If var data type is uint16_t, variable value is in val-&gt;word</li>
-<li class="Element603">If var data type is uint32_t, variable value is in val-&gt;dword.</li>
-<li class="Element603">If var data type is IP_ADDRESS, COUNTER32, or GAUGE32, value is in val-&gt;dword</li>
-<li class="Element603">If var data type is OCTET_STRING, ASCII_STRING value is in val-&gt;byte; multi-byte transfer will be performed to transfer remaining bytes of data.</li>
-</ul>&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* from;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mandatory Mail Fields<br>recipient return address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* to;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* sender;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Optional Mail Fields<br>if sent on behalf of someone else&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* cc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+carbon copy destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* bcc;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+blind carbon copy destination address&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* date;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+date for the mail message Should be formatted like: &quot;Wed, 20 July 2016 14:55:06 -0600&quot; if NULL, then the <a href="03372.html" target="topic">TCPIP_SMTPC_CLIENT_MESSAGE_DATE</a> will be used&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* subject;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Regular Mail Fields<br>mail subject line&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const uint8_t* body;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+mail body; main body of the mail&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int nBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Attachments<br>number of attached buffers&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const TCPIP_SMTPC_ATTACH_BUFFER* attachBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+array of buffer attachments&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int nFiles;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of attached files&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const TCPIP_SMTPC_ATTACH_FILE* attachFiles;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+array of file attachments&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* username;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Authentication<br>username to be presented when the mail server requires authentication&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* password;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+associated password to be presented when the mail server requires authentication&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char* smtpServer;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Server<br>address or name of a server to <a href="01205.html" target="topic">send</a> the mail to (smtp.gmail.com, 74.125.23.109, etc.)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint16_t serverPort;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+port on which the SMTP server listens on Standard SMTP ports are 25 or 587 For servers supporting TLS (gmail, yahoo, etc.), the recommended port is 587&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MAIL_FLAGS messageFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Additional message flags&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_MESSAGE_CALLBACK messageCallback;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Mail Notifications<br>message completion notification could be NULL if not needed&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+TCPIP_SMTPC_SERVER_REPLY_CALLBACK replyCallback;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+server reply notification could be NULL if not needed&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">true - if it is okay to set more byte(s)</li>
-<li class="Element603">false - if it is not okay to set more byte(s)</li>
-</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function may get called more than once depending on number of bytes in a specific set request for given variable. only dynamic read/-write variables needs to be handled.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">switch</span></strong>(var)
-{
-    <i><span style="color: #008000">// LED_D5 - generated from the Microchip style MIB script using mib2bib.jar is a scalar variable</span></i>
-    <strong><span style="color: #000080">case</span></strong> LED_D5:
-        LED2_IO = val.byte;
-        <strong><span style="color: #000080">return</span></strong> <strong><span style="color: #000080">true</span></strong>;
-        
-    <i><span style="color: #008000">// TRAP_COMMUNITY - generated from the Microchip style MIB script using mib2bib.jar,</span></i>
-    <i><span style="color: #008000">// is a Sequence variable.  </span></i>
-    
-    <strong><span style="color: #000080">case</span></strong> TRAP_COMMUNITY:
-        <i><span style="color: #008000">// Since this is a ASCII_STRING data type, SNMP will call with</span></i>
-        <i><span style="color: #008000">// SNMP_END_OF_VAR to indicate no more bytes or end of SNMP SET process</span></i>
-        <i><span style="color: #008000">// Use this information to determine if we just added new row</span></i>
-        <i><span style="color: #008000">// or updated an existing one.</span></i>
-        <strong><span style="color: #000080">if</span></strong> ( ref ==  <a href="01220.html" target="topic">SNMP_END_OF_VAR</a> )
-        {
-            <i><span style="color: #008000">// Index equal to table size means that we have new row.</span></i>
-            <strong><span style="color: #000080">if</span></strong> ( index == trapInfo.Size )
-                trapInfo.Size++;
-
-            <i><span style="color: #008000">// Length of string is one more than index.</span></i>
-            trapInfo.table[index].communityLen++;
-
-            <strong><span style="color: #000080">return</span></strong> <strong><span style="color: #000080">true</span></strong>;
-        }
-
-        <i><span style="color: #008000">// Make sure that index is within our range.</span></i>
-        <strong><span style="color: #000080">if</span></strong> ( index &lt; trapInfo.Size )
-        {
-            <i><span style="color: #008000">// Copy given value into local buffer.</span></i>
-            trapInfo.table[index].community[ref] = val.byte;
-            <i><span style="color: #008000">// Keep track of length too.</span></i>
-            <i><span style="color: #008000">// This may not be NULL terminate string.</span></i>
-            trapInfo.table[index].communityLen = (uint8_t)ref;
-            <strong><span style="color: #000080">return</span></strong> <strong><span style="color: #000080">true</span></strong>;
-        }
-        <strong><span style="color: #000080">break</span></strong>;
-}</pre></div></div>
-</div>
+SMTPC does NOT make private copies of the strings, buffers, etc. presented in a TCPIP_SMTPC_MAIL_MESSAGE data structure. All fields that are pointers to strings, buffers, files names, etc. MUST be persistent until the mail complete notification is received.&nbsp;</p>
+<p class="Element10">
+The TCPIP_SMTPC_MAIL_MESSAGE data structure itself does not need to be persistent.&nbsp;</p>
+<p class="Element10">
+The mail body is not a char* but uint8_t* to allow sending binary data as well as part of the mail body. This requires though that the bodySize member is present.&nbsp;</p>
+<p class="Element10">
+If some file could not be opened when the mail is sent a warning will be issued and the file will be ignored.&nbsp;</p>
+<p class="Element10">
+Currently the fields: &quot;sender&quot;, &quot;cc&quot; and &quot;bcc&quot; are not used. They will be eventually added.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01667.html" target="topic">Library Interface</a> &gt; a) SNMP Module Functions &gt; <a href="03389.html" target="topic">TCPIP_SNMP_VarbindSet Function</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01678.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03389.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -186,13 +215,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03388.html" target="topic">Previous</a> | <a href="01667.html" target="topic">Up</a> | <a href="03390.html" target="topic">Next</a></div>
+<a href="03379.html" target="topic">Previous</a> | <a href="01678.html" target="topic">Up</a> | <a href="03412.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMP_VarbindSet@SNMP_ID@SNMP_INDEX@uint8_t@SNMP_VAL Topic Title: TCPIP_SNMP_VarbindSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_MAIL_MESSAGE Topic Title: TCPIP_SMTPC_MAIL_MESSAGE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>drv_ethphy_config.h</title>
+<title>DRV_ETHMAC_PIC32MACPacketRx Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00364.html" target="topic">Files</a> &gt; <a href="00434.html" target="topic">drv_ethphy_config.h</a></div>
+<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00683.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00376.html" target="topic">Library Interface</a> &gt; b) Receive Functions &gt; <a href="00434.html" target="topic">DRV_ETHMAC_PIC32MACPacketRx Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00423.html" target="topic">Previous</a> | <a href="00364.html" target="topic">Up</a> | <a href="00677.html" target="topic">Next</a></div>
+<a href="00439.html" target="topic">Previous</a> | <a href="00376.html" target="topic">Up</a> | <a href="00441.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: drv_ethphy_config.h Topic Title: drv_ethphy_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHMAC_PIC32MACPacketRx@DRV_HANDLE@TCPIP_MAC_RES*@TCPIP_MAC_PACKET_RX_STAT** Topic Title: DRV_ETHMAC_PIC32MACPacketRx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-drv_ethphy_config.h</div>
+DRV_ETHMAC_PIC32MACPacketRx Function</div>
 </div>
 </div>
 
@@ -46,105 +46,86 @@ drv_ethphy_config.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+This function will return a packet if such a pending packet exists.&nbsp;</p>
+<p class="Element10">
+Additional information about the packet is available by providing the pRes and ppPktStat fields.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03062.html" target="topic">TCPIP_MAC_PACKET</a>* <strong><span style="color: #000000">DRV_ETHMAC_PIC32MACPacketRx</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="03146.html" target="topic">TCPIP_MAC_RES</a>* <strong><span style="color: #000000">pRes</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <a href="03075.html" target="topic">TCPIP_MAC_PACKET_RX_STAT</a>** <strong><span style="color: #000000">ppPktStat</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-drv_ethphy_config.h</p></div>
+<a href="00431.html" target="topic">DRV_ETHMAC_PIC32MACInitialize</a>() should have been called. <a href="00433.html" target="topic">DRV_ETHMAC_PIC32MACOpen</a>() should have been called to obtain a valid handle.</p></div>
 </div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Ethernet PHY Driver Configuration Definitions for the Template Version&nbsp;</p>
-<p class="Element10">
-These definitions statically define the driver's mode of operation.</p></div>
+
+<ul class="Element635">
+<li class="Element605">a valid pointer to an available RX packet</li>
+<li class="Element605">0 if no packet pending/available</li>
+</ul></p></div>
 </div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00016.html" target="topic">_DRV_ETHPHY_CONFIG_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _DRV_ETHPHY_CONFIG_H.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00431.html" target="topic">DRV_ETHPHY_CLIENTS_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Selects the maximum number of clients.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00443.html" target="topic">DRV_ETHPHY_INDEX</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Ethernet PHY static index selection.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00458.html" target="topic">DRV_ETHPHY_INSTANCES_NUMBER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Selects the maximum number of hardware instances that can be supported by the dynamic driver.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00482.html" target="topic">DRV_ETHPHY_NEG_DONE_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Value of the PHY negotiation complete time out as per IEEE 802.3 spec.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00483.html" target="topic">DRV_ETHPHY_NEG_INIT_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Value of the PHY negotiation initiation time out as per IEEE 802.3 spec.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00542.html" target="topic">DRV_ETHPHY_PERIPHERAL_ID</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines an override of the peripheral ID.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00546.html" target="topic">DRV_ETHPHY_RESET_CLR_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Value of the PHY Reset self clear time out as per IEEE 802.3 spec.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00567.html" target="topic">DRV_ETHPHY_USE_DRV_MIIM</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Defines the way the PHY driver accesses the MIIM bus to communicate with the PHY.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">Once a pending packet is available in the MAC driver internal RX queues this function will dequeue the packet and hand it over to the MAC driver's client - i.e., the stack - for further processing.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">The flags for a RX packet are updated by the MAC driver:
+<ul class="Element636">
+<li class="Element606">TCPIP_MAC_PKT_FLAG_RX will be set</li>
+<li class="Element606">TCPIP_MAC_PKT_FLAG_UNICAST is set if that packet is a unicast packet</li>
+<li class="Element606">TCPIP_MAC_PKT_FLAG_BCAST is set if that packet is a broadcast packet</li>
+<li class="Element606">TCPIP_MAC_PKT_FLAG_MCAST is set if that packet is a multicast packet</li>
+<li class="Element606">TCPIP_MAC_PKT_FLAG_QUEUED is set</li>
+<li class="Element606">TCPIP_MAC_PKT_FLAG_SPLIT is set if the packet has multiple data segments</li>
+</ul></li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">The MAC driver dequeues and return to the caller just one single packet. That is the packets are not chained.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">The packet buffers are allocated by the Ethernet MAC driver itself, Once the higher level layers in the stack are done with processing the RX packet, they have to call the corresponding packet acknowledgment function that tells the MAC driver that it can resume control of that packet.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">Once the stack modules are done processing the RX packets and the acknowledge function is called the MAC driver will reuse the RX packets.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">The MAC driver may use the <a href="00438.html" target="topic">DRV_ETHMAC_PIC32MACProcess</a>() for obtaining new RX packets if needed.</li>
+</ul></p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
 </div>
 </div>
 </div>
@@ -152,7 +133,7 @@ Defines the way the PHY driver accesses the MIIM bus to communicate with the PHY
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01467.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00678.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00364.html" target="topic">Files</a> &gt; <a href="00434.html" target="topic">drv_ethphy_config.h</a></div>
+<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00683.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00376.html" target="topic">Library Interface</a> &gt; b) Receive Functions &gt; <a href="00434.html" target="topic">DRV_ETHMAC_PIC32MACPacketRx Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -160,13 +141,13 @@ Defines the way the PHY driver accesses the MIIM bus to communicate with the PHY
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00423.html" target="topic">Previous</a> | <a href="00364.html" target="topic">Up</a> | <a href="00677.html" target="topic">Next</a></div>
+<a href="00439.html" target="topic">Previous</a> | <a href="00376.html" target="topic">Up</a> | <a href="00441.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: drv_ethphy_config.h Topic Title: drv_ethphy_config.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHMAC_PIC32MACPacketRx@DRV_HANDLE@TCPIP_MAC_RES*@TCPIP_MAC_PACKET_RX_STAT** Topic Title: DRV_ETHMAC_PIC32MACPacketRx Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
