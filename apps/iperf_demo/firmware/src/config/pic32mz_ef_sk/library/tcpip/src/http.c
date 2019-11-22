@@ -46,18 +46,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 
-#define NVM_DRIVER_V080_WORKAROUND
-
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 
 
 
 #define HTTP_SEND_DATABUF_SIZE      256
 #define HTTP_INC_DATABUF_SIZE       256
-
-#if defined (NVM_DRIVER_V080_WORKAROUND)
-#define MPFS_UPLOAD_DISK_NO         0
-#endif
 
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
@@ -220,7 +214,7 @@ static void _HTTP_CloseConnections(TCPIP_NET_IF* pNetIf);
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 
-#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && !defined(DRV_WIFI_OTA_ENABLE)
+#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon);
 #endif
 
@@ -402,10 +396,11 @@ bool TCPIP_HTTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
 
         // create the SYS_FS shell
         SYS_FS_SHELL_RES shellRes;
-        httpFileShell = SYS_FS_Shell_Create(LOCAL_WEBSITE_PATH, 0, 0, 0, &shellRes);  // TODO aa: the docroot should be a HTTP configuration parameter
+        const char* web_dir = httpInitData->web_dir;
+        httpFileShell = SYS_FS_Shell_Create(web_dir, 0, 0, 0, &shellRes);
         if(httpFileShell == 0)
         {
-            SYS_ERROR(SYS_ERROR_WARNING, " HTTP: FS Shell creation failed: %d\r\n", shellRes);
+            SYS_ERROR(SYS_ERROR_WARNING, " HTTP: FS Shell creation for directory: %s Failed: %d!\r\n", web_dir, shellRes);
             initFail = true;
             break;
         }
@@ -984,8 +979,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                   )
                 {
                     // Run the application callback TCPIP_HTTP_PostExecute()
-#ifndef  DRV_WIFI_OTA_ENABLE
-#if  defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if  defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
                     if(pHttpCon->httpStatus >= HTTP_MPFS_UP && pHttpCon->httpStatus <= HTTP_MPFS_ERROR)
                     {
                     c = TCPIP_HTTP_MPFSUpload(pHttpCon);
@@ -997,21 +991,10 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                         }
                     }
                     else
-#endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
-#endif
+#endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
                         c = TCPIP_HTTP_PostExecute(pHttpCon);
-#ifdef  DRV_WIFI_OTA_ENABLE
-                    if(c == (uint8_t)HTTP_IO_DONE)
-                    {
-                        pHttpCon->sm = SM_HTTP_SERVE_HEADERS;
-                        isDone = false;
-                        break;
-                    } // If waiting for asynchronous process, return to main app
-					else if(c == (uint8_t)HTTP_IO_WAITING)
-#else				
 					 // If waiting for asynchronous process, return to main app
 					if(c == (uint8_t)HTTP_IO_WAITING)	
-#endif					
                     {// return to main app and make sure we don't get stuck by the watchdog
                         pHttpCon->callbackPos = TCPIP_TCP_GetIsReady(pHttpCon->socket) - 1;
                         break;
@@ -2146,7 +2129,7 @@ static HTTP_READ_STATUS _HTTP_ReadTo(HTTP_CONN* pHttpCon, uint8_t cDelim, uint8_
     the MPFS image is stored in EEPROM.
 
   ***************************************************************************/
-#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND) && !defined(DRV_WIFI_OTA_ENABLE)
+#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 #define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE       (4 * 1024)
 static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
@@ -2182,7 +2165,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                     if(pHttpCon->uploadBufferStart == 0)
                     {
                         pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
-                        SYS_FS_Unmount(LOCAL_WEBSITE_PATH);
+                        SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
                     }
 
                     if(pHttpCon->uploadBufferStart != 0)
@@ -2278,7 +2261,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                 (*http_free_fnc)(pHttpCon->uploadBufferStart);
                 pHttpCon->uploadBufferStart = 0;
 
-                if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
+                if(SYS_FS_Mount(MPFS_UPLOAD_NVM_VOL, MPFS_UPLOAD_MOUNT_PATH, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
                 {
                     pHttpCon->sm = SM_HTTP_PROCESS_REQUEST;
                     SYS_CONSOLE_MESSAGE("\r\nMPFSUPLOAD completed\r\n");
@@ -2303,7 +2286,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
     return HTTP_IO_NEED_DATA;
 }//TCPIP_HTTP_MPFSUpload
 
-#endif //defined (TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif //defined (TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 
 /*****************************************************************************
   Function:

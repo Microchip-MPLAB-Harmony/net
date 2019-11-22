@@ -1053,7 +1053,7 @@ static TCPIP_FTPC_RESULT_TYPE _ftpcStateStartConnect(TCPIP_FTPC_DCPT_TYPE* pDcpt
     if(pDcpt->ftpcSocket.ftpcCtrlSkt == NET_PRES_INVALID_SOCKET)
     {   // get a new socket
         NET_PRES_SKT_HANDLE_T ctrlSkt;
-        NET_PRES_SKT_T sktType =  NET_PRES_SKT_DEFAULT_STREAM_CLIENT;// Todo: extend type to encrypted stream; like NET_PRES_SKT_ENCRYPTED_STREAM_CLIENT;
+        NET_PRES_SKT_T sktType =  NET_PRES_SKT_DEFAULT_STREAM_CLIENT;
         ctrlSkt = NET_PRES_SocketOpen(0, sktType, 
                 (NET_PRES_SKT_ADDR_T)pDcpt->ftpcCtrlConnection.ftpcServerIpAddrType, 
                                     pDcpt->ftpcCtrlConnection.serverCtrlPort, 0, 0);

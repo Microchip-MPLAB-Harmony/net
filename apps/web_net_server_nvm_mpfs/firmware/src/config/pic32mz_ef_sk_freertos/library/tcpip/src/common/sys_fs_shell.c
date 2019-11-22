@@ -39,8 +39,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
 
-// TODO aa: move it to configuration
-// add it to MHC!
 //#define SYS_FS_SHELL_MTHREAD_PROTECTION     0
 //#define SYS_FS_SHELL_MALLOC                 malloc
 //#define SYS_FS_SHELL_FREE                   free
