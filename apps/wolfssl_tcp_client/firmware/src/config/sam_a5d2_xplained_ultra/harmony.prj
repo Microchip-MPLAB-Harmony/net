@@ -643,8 +643,8 @@
           <Name dnOrder="1">net_pres_enc_glue.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/net_pres/pres/</LogicalPath>
           <PhysicalPath dnOrder="3">/net_pres/pres/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">37992DF19C9A3726B570478DCEEF7EEC</GeneratedChecksum>
-          <UserChecksum dnOrder="5">37992DF19C9A3726B570478DCEEF7EEC</UserChecksum>
+          <GeneratedChecksum dnOrder="4">155FE1B615737531A5C4AAE2E25DE74F</GeneratedChecksum>
+          <UserChecksum dnOrder="5">155FE1B615737531A5C4AAE2E25DE74F</UserChecksum>
         </File>
         <File dnOrder="80">
           <Type dnOrder="0">SOURCE</Type>
@@ -1803,8 +1803,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">ABEF1469014529C89C1047B8F8962FD5</GeneratedChecksum>
-          <UserChecksum dnOrder="5">ABEF1469014529C89C1047B8F8962FD5</UserChecksum>
+          <GeneratedChecksum dnOrder="4">32F062E23B4E4919CBA734BE3C8AD644</GeneratedChecksum>
+          <UserChecksum dnOrder="5">32F062E23B4E4919CBA734BE3C8AD644</UserChecksum>
         </File>
         <File dnOrder="225">
           <Type dnOrder="0">HEADER</Type>
@@ -3963,8 +3963,8 @@
           <Name dnOrder="1">tftps_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0D6D02195C20BFF828814F7A9D456141</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0D6D02195C20BFF828814F7A9D456141</UserChecksum>
+          <GeneratedChecksum dnOrder="4">93955E68585F91EE382E3EFCEDB120EE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">93955E68585F91EE382E3EFCEDB120EE</UserChecksum>
         </File>
         <File dnOrder="495">
           <Type dnOrder="0">HEADER</Type>
@@ -4189,7 +4189,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMA5D2_DFP\1.0.5\atdf\ATSAMA5D27.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

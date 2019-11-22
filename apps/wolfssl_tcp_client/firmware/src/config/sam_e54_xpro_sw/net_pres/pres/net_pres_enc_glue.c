@@ -163,7 +163,7 @@ bool NET_PRES_EncProviderStreamServerInit0(NET_PRES_TransportObject * transObjec
         _net_pres_wolfsslUsers++;
     }
     net_pres_wolfSSLInfoStreamServer0.transObject = transObject;
-    net_pres_wolfSSLInfoStreamServer0.context = wolfSSL_CTX_new(wolfSSLv23_server_method());
+    net_pres_wolfSSLInfoStreamServer0.context = wolfSSL_CTX_new(wolfTLSv1_3_server_method());
     if (net_pres_wolfSSLInfoStreamServer0.context == 0)
     {
         return false;
@@ -231,7 +231,7 @@ bool NET_PRES_EncProviderStreamClientInit0(NET_PRES_TransportObject * transObjec
         _net_pres_wolfsslUsers++;
     }
     net_pres_wolfSSLInfoStreamClient0.transObject = transObject;
-    net_pres_wolfSSLInfoStreamClient0.context = wolfSSL_CTX_new(wolfSSLv23_client_method());
+    net_pres_wolfSSLInfoStreamClient0.context = wolfSSL_CTX_new(wolfTLSv1_3_client_method());
     if (net_pres_wolfSSLInfoStreamClient0.context == 0)
     {
         return false;
