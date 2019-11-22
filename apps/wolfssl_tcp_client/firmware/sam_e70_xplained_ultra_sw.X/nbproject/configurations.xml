@@ -790,7 +790,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_e70_xplained_ultra/library;../src/config/sam_e70_xplained_ultra/library/tcpip/src;../src/config/sam_e70_xplained_ultra/library/tcpip/src/common;../src/config/sam_e70_xplained_ultra;../src/config/sam_e70_xplained_ultra_sw/library;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common;../src;../src/config/sam_e70_xplained_ultra_sw;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl"/>
+                  value="../src/config/sam_e70_xplained_ultra_sw/library;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src;../src/config/sam_e70_xplained_ultra_sw/library/tcpip/src/common;../src;../src/config/sam_e70_xplained_ultra_sw;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
