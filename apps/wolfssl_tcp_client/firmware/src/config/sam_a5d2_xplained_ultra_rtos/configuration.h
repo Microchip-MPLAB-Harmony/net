@@ -99,11 +99,11 @@ extern "C" {
 
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          1024
+#define SYS_CMD_PRINT_BUFFER_SIZE          2560
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                1024
+#define SYS_CMD_RTOS_STACK_SIZE                2560
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
@@ -204,6 +204,9 @@ extern "C" {
 #define MICROCHIP_TCPIP
 #define WOLFSSL_DTLS
 
+#define WOLFSSL_TLS13
+#define HAVE_TLS_EXTENSIONS
+#define HAVE_SUPPORTED_CURVES
 
 
     
@@ -307,7 +310,7 @@ extern "C" {
 #define NET_PRES_NUM_SOCKETS 10
 
 /* Net Pres RTOS Configurations*/
-#define NET_PRES_RTOS_STACK_SIZE                2560
+#define NET_PRES_RTOS_STACK_SIZE                8192
 #define NET_PRES_RTOS_TASK_PRIORITY             1
 	
 #define FREERTOS
@@ -521,13 +524,26 @@ extern "C" {
 #define NO_PWDBASED
 #define HAVE_MCAPI
 #define WOLF_CRYPTO_CB
+#define WOLFSSL_HAVE_MCHP_HW_CRYPTO
+#define WOLFSSL_HAVE_MCHP_HW_CRYPTO_AES_HW_6149
+#define WOLFSSL_HAVE_MCHP_HW_CRYPTO_TRNG_HW_6334
+#define WOLFSSL_HAVE_MCHP_HW_CRYPTO_TDES_HW_6150
+#define WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_6156
 #define NO_MD4
+#define WOLFSSL_HAVE_MCHP_HW_SHA1
 #define WOLFSSL_SHA224
+#define WOLFSSL_HAVE_MCHP_HW_SHA264
+#define WOLFSSL_SHA384
+#define WOLFSSL_SHA512
+#define HAVE_SHA512
+#define WOLFSSL_HAVE_MCHP_HW_SHA2128
+#define HAVE_HKDF
 #define WOLFSSL_AES_128
 #define WOLFSSL_AES_192
 #define WOLFSSL_AES_256
 #define WOLFSSL_AES_DIRECT
 #define HAVE_AES_DECRYPT
+#define WOLFSSL_HAVE_MCHP_HW_AES_DIRECT
 #define HAVE_AES_ECB
 #define HAVE_AES_CBC
 #define WOLFSSL_AES_COUNTER
@@ -537,9 +553,10 @@ extern "C" {
 #define NO_HC128
 #define NO_RABBIT
 #define HAVE_ECC
-#define NO_DH
+#define HAVE_DH
 #define NO_DSA
 #define USE_CERT_BUFFERS_2048
+#define WC_RSA_PSS
 #define NO_DEV_RANDOM
 #define HAVE_HASHDRBG
 #define WC_NO_HARDEN
