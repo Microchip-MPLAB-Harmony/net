@@ -44,19 +44,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "system/command/sys_command.h"
 
 
-#if !defined(TCPIP_TELNET_MAX_CONNECTIONS)
-    // Maximum number of Telnet connections
-	#define TCPIP_TELNET_MAX_CONNECTIONS	(2u)
-#endif
-#if !defined(TCPIP_TELNET_USERNAME)
-    // Default Telnet user name
-	#define TCPIP_TELNET_USERNAME		"admin"
-#endif
-#if !defined(TCPIP_TELNET_PASSWORD)
-    // Default Telnet password
-	#define TCPIP_TELNET_PASSWORD		"microchip"
-#endif
-
 #define TELNET_LINE_RETURN  "\r"
 #define TELNET_LINE_FEED    "\n"
 #define TELNET_LINE_TERM    TELNET_LINE_RETURN TELNET_LINE_FEED  
@@ -135,25 +122,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TELNET_FAIL_CMD_REGISTER    "Failed to connect to the command processor. Aborting!" TELNET_LINE_TERM
 
 // buffering defines
-#define TELNET_PRINT_BUFF           200     // internal print buffer
-#define TELNET_LINE_BUFF            (80 +3) // assembled line buffer for password, authentication, and regular characters
-                                            // + extra room for \r\n
+#define _TCPIP_TELNET_LINE_BUFF_SIZE    (TCPIP_TELNET_LINE_BUFF_SIZE + 3) // + extra room for \r\n 
+
 #define TELNET_SKT_MESSAGE_SPACE    80      // min space needed in the socket buffer for displaying messages
 
-// if !0, sends the commands, options, etc. in the messages passed to the console
-// by default they are removed
-#define TELNET_SEND_COMMANDS_TO_CONSOLE     0
-
-// machine state
-typedef	enum
-{
-    SM_PRINT_LOGIN = 0,
-    SM_GET_LOGIN,
-    SM_GET_PASSWORD,
-    SM_GET_PASSWORD_BAD_LOGIN,
-    SM_AUTHENTICATED,
-    SM_CONNECTED
-} TELNET_STATE;
+// authentication defines
+#if (TCPIP_TELNET_OBSOLETE_AUTHENTICATION == 0)
+#define _TELNET_USE_AUTHENTICATION_CALLBACK     1
+#else
+#define _TELNET_USE_AUTHENTICATION_CALLBACK     0
+#endif  // (TCPIP_TELNET_OBSOLETE_AUTHENTICATION == 0)
 
 typedef enum
 {
@@ -164,16 +142,25 @@ typedef enum
     
 typedef struct
 {
-    NET_PRES_SKT_HANDLE_T          telnetSkt;
-    TELNET_STATE        telnetState;
+    NET_PRES_SKT_HANDLE_T   telnetSkt;
+    TCPIP_TELNET_STATE      telnetState;
     SYS_CMD_DEVICE_NODE*    telnetIO;
+    char                    username[TCPIP_TELNET_USERNAME_SIZE + 1];   // username for the connection login
 }TELNET_DCPT;
 
-static TELNET_DCPT      telnetDcpt[TCPIP_TELNET_MAX_CONNECTIONS];
+static const void*      telnetHeapH = 0;                    // memory allocation handle
+static TELNET_DCPT*     telnetDcpt = 0; // array of descriptors, each for a connection
 
 static int              telnetInitCount = 0;      // TELNET module initialization count
 
-static tcpipSignalHandle       telnetSignalHandle = 0;
+static tcpipSignalHandle telnetSignalHandle = 0;
+
+static TCPIP_TELNET_MODULE_CONFIG telnetConfigData;   // initialization data
+
+#if (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
+static TCPIP_TELNET_AUTH_HANDLER telnetAuthHandler;
+static const void* telnetAuthHParam;
+#endif  // (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
 
 // prototypes
 static void _Telnet_MSG(const void* cmdIoParam, const char* str);
@@ -189,8 +176,8 @@ static void _Telnet_Cleanup(void);
 #define _Telnet_Cleanup()
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
-static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSocket, TELNET_STATE tState);
-static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSocket, TELNET_STATE tState);
+static TCPIP_TELNET_STATE _Telnet_UserCheck(TELNET_DCPT* pDcpt);
+static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt);
 static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, char** pLineBuffer, int bufferSize, int* readBytes);
 static char* _Telnet_Process_CmdOptions(const char* strMsg, int avlblBytes);
 
@@ -218,6 +205,7 @@ bool TCPIP_TELNET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
 
     int tIx;
     TELNET_DCPT* pDcpt;
+    NET_PRES_SKT_HANDLE_T tSkt;
     TCPIP_TCP_SIGNAL_HANDLE sigHandle;
     bool    initFail = false;
 
@@ -230,24 +218,55 @@ bool TCPIP_TELNET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
     while(telnetInitCount == 0)
     {   // first time we're run
 
-        pDcpt = telnetDcpt;
-        for(tIx = 0; tIx < sizeof(telnetDcpt)/sizeof(*telnetDcpt); tIx++, pDcpt++)
+        // check configuration data is not missing
+        if(stackCtrl->memH == 0 || pTelConfig == 0 || pTelConfig->nConnections == 0)
         {
-            pDcpt->telnetSkt = INVALID_SOCKET;
-            pDcpt->telnetState = SM_PRINT_LOGIN;
-            pDcpt->telnetIO = 0;
+            SYS_ERROR(SYS_ERROR_ERROR, "telnet NULL dynamic allocation handle/init data");
+            return false;
         }
 
-        // open the server sockets
-        pDcpt = telnetDcpt;
-        for(tIx = 0; tIx < sizeof(telnetDcpt)/sizeof(*telnetDcpt); tIx++, pDcpt++)
+        telnetHeapH = stackCtrl->memH;
+        telnetConfigData = *pTelConfig;
+        // allocate data
+        telnetDcpt = (TELNET_DCPT*)TCPIP_HEAP_Calloc(telnetHeapH, telnetConfigData.nConnections, sizeof(*telnetDcpt)); 
+        if(telnetDcpt == 0)
         {
-            pDcpt->telnetSkt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_ANY, TCPIP_TELNET_SERVER_PORT, 0, 0);
-            sigHandle = NET_PRES_SocketSignalHandlerRegister(pDcpt->telnetSkt, TCPIP_TCP_SIGNAL_RX_DATA, _TelnetSocketRxSignalHandler, 0);
-            if(pDcpt->telnetSkt == INVALID_SOCKET || sigHandle == 0)
+            SYS_ERROR(SYS_ERROR_ERROR, " telnet Dynamic allocation failed");
+            return false;
+        }
+
+        // initialize telnetDcpt and open the server sockets
+        pDcpt = telnetDcpt;
+        for(tIx = 0; tIx < telnetConfigData.nConnections; tIx++, pDcpt++)
+        {
+            pDcpt->telnetSkt = (tSkt = NET_PRES_SocketOpen(0, NET_PRES_SKT_DEFAULT_STREAM_SERVER, IP_ADDRESS_TYPE_ANY, telnetConfigData.listenPort, 0, 0));
+            sigHandle = NET_PRES_SocketSignalHandlerRegister(tSkt, TCPIP_TCP_SIGNAL_RX_DATA, _TelnetSocketRxSignalHandler, 0);
+            if(tSkt == INVALID_SOCKET || sigHandle == 0)
             {
                 initFail = true;
                 break;
+            }
+            // set socket options
+            if((telnetConfigData.configFlags & TCPIP_TELNET_FLAG_NO_DELAY) != 0)
+            {
+                void* tcpForceFlush = (void*)1;
+                NET_PRES_SocketOptionsSet(tSkt, TCP_OPTION_NODELAY, tcpForceFlush);
+            }
+            if(telnetConfigData.sktTxBuffSize != 0)
+            {
+                void* tcpBuffSize = (void*)(unsigned int)telnetConfigData.sktTxBuffSize;
+                if(!NET_PRES_SocketOptionsSet(tSkt, TCP_OPTION_TX_BUFF, tcpBuffSize))
+                {
+                    SYS_ERROR(SYS_ERROR_WARNING, " telnet: Setting TX Buffer failed: %d\r\n", tIx);
+                }
+            }
+            if(telnetConfigData.sktRxBuffSize != 0)
+            {
+                void* tcpBuffSize = (void*)(unsigned int)telnetConfigData.sktRxBuffSize;
+                if(!NET_PRES_SocketOptionsSet(tSkt, TCP_OPTION_RX_BUFF, tcpBuffSize))
+                {
+                    SYS_ERROR(SYS_ERROR_WARNING, " telnet: Setting RX Buffer failed: %d\r\n", tIx);
+                }
             }
         }
 
@@ -259,6 +278,9 @@ bool TCPIP_TELNET_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, con
                 initFail = true;
             }
         }
+#if (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
+        telnetAuthHandler = 0;
+#endif  // (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
 
         break;
 
@@ -301,18 +323,19 @@ static void _Telnet_Cleanup(void)
     TELNET_DCPT* pDcpt;
 
     pDcpt = telnetDcpt;
-    for(tIx = 0; tIx < sizeof(telnetDcpt)/sizeof(*telnetDcpt); tIx++, pDcpt++)
+    for(tIx = 0; tIx < telnetConfigData.nConnections; tIx++, pDcpt++)
     {
         _Telnet_Deregister(pDcpt);
 
         if( pDcpt->telnetSkt != INVALID_SOCKET)
         {
             NET_PRES_SocketClose(pDcpt->telnetSkt);
-            pDcpt->telnetSkt = NET_PRES_INVALID_SOCKET;
         }
-
-        pDcpt->telnetState = SM_PRINT_LOGIN;
     }
+
+    TCPIP_HEAP_Free(telnetHeapH, telnetDcpt);
+    telnetDcpt = 0;
+    telnetConfigData.nConnections = 0;
 
     if(telnetSignalHandle)
     {
@@ -358,10 +381,10 @@ static void _Telnet_MSG(const void* cmdIoParam, const char* str)
 static void _Telnet_PRINT(const void* cmdIoParam, const char* format, ...)
 {
     va_list arg_list = {0};
-    char buff[TELNET_PRINT_BUFF];
+    char buff[TCPIP_TELNET_PRINT_BUFF_SIZE];
 
     va_start(arg_list, format);
-    vsnprintf(buff, TELNET_PRINT_BUFF, format, arg_list);
+    vsnprintf(buff, TCPIP_TELNET_PRINT_BUFF_SIZE, format, arg_list); 
     va_end(arg_list);
 
     _Telnet_MSG(cmdIoParam, buff);
@@ -392,14 +415,17 @@ static char _Telnet_GETC(const void* cmdIoParam)
         return 0;
     }
 
-#if (TELNET_SEND_COMMANDS_TO_CONSOLE != 0)
-    if (NET_PRES_SocketRead(tSkt, &bData, 1))
+    if((telnetConfigData.configFlags & TCPIP_TELNET_FLAG_PASS_CONTROL_CHARS) != 0)
     {
-        return (char)bData;
+        if (NET_PRES_SocketRead(tSkt, &bData, 1))
+        {
+            return (char)bData;
+        }
+        return 0;
     }
-#else
+
     // remove the control chars from the console stream
-    char    lineBuffer[TELNET_LINE_BUFF];    // telnet line buffer
+    char    lineBuffer[_TCPIP_TELNET_LINE_BUFF_SIZE];    // telnet line buffer
 
     int avlblBytes = NET_PRES_SocketPeek(tSkt, (uint8_t*)lineBuffer, sizeof(lineBuffer) - 1);
 
@@ -415,12 +441,20 @@ static char _Telnet_GETC(const void* cmdIoParam)
         if(avlblBytes)
         {
             bData = *linePtr++;
-            // discard consumed and unused
-            NET_PRES_SocketRead(tSkt, 0, linePtr - lineBuffer);
-            return (char)bData;
         }
+        else
+        {
+            bData = 0;
+        }
+
+        // discard consumed and unused
+        int discardBytes = linePtr - lineBuffer;
+        if(discardBytes != 0)
+        {
+            NET_PRES_SocketRead(tSkt, 0, discardBytes);
+        }
+        return (char)bData;
     }
-#endif  // TELNET_SEND_COMMANDS_TO_CONSOLE
 
     return 0;
 
@@ -454,12 +488,12 @@ static void TCPIP_TELNET_Process(void)
     int         tIx;
     TELNET_DCPT* pDcpt;
     NET_PRES_SKT_HANDLE_T	tSocket;
-    TELNET_STATE tState;
+    TCPIP_TELNET_STATE tState;
 
 
     // Loop through each telnet session and process state changes and TX/RX data
     pDcpt = telnetDcpt;
-    for(tIx = 0; tIx < sizeof(telnetDcpt)/sizeof(*telnetDcpt); tIx++, pDcpt++)
+    for(tIx = 0; tIx < telnetConfigData.nConnections; tIx++, pDcpt++)
     {
         // Load up static state information for this session
         tSocket = pDcpt->telnetSkt;
@@ -471,13 +505,13 @@ static void TCPIP_TELNET_Process(void)
             NET_PRES_SocketDisconnect(tSocket);
             // Deregister IO and free its space
             _Telnet_Deregister(pDcpt);
-            tState = SM_PRINT_LOGIN;
+            tState = TCPIP_TELNET_IDLE;
         }
 
         // Handle session state
         switch(tState)
         {
-            case SM_PRINT_LOGIN:
+            case TCPIP_TELNET_IDLE:
                 // Make certain the socket can be written to
                 if(NET_PRES_SocketWriteIsReady(tSocket, TELNET_SKT_MESSAGE_SPACE, 0) < TELNET_SKT_MESSAGE_SPACE)
                     break;
@@ -489,17 +523,15 @@ static void TCPIP_TELNET_Process(void)
                 NET_PRES_SocketFlush(tSocket);
                 tState++;
 
-            case SM_GET_LOGIN:
-                tState = _Telnet_UserCheck(tSocket, tState);
+            case TCPIP_TELNET_GET_LOGIN:
+                tState = _Telnet_UserCheck(pDcpt);
                 break;
 
-            case SM_GET_PASSWORD:
-            case SM_GET_PASSWORD_BAD_LOGIN:
-
-                tState = _Telnet_LogonCheck(tSocket, tState);
+            case TCPIP_TELNET_GET_PASSWORD:
+                tState = _Telnet_LogonCheck(pDcpt);
                 break;
 
-            case SM_AUTHENTICATED:
+            case TCPIP_TELNET_AUTHENTICATED:
                 if(NET_PRES_SocketWriteIsReady(tSocket, TELNET_SKT_MESSAGE_SPACE, 0) < TELNET_SKT_MESSAGE_SPACE)
                     break;
 
@@ -514,11 +546,11 @@ static void TCPIP_TELNET_Process(void)
                 {
                     NET_PRES_SocketWrite(tSocket, (const uint8_t*)TELNET_FAIL_CMD_REGISTER, strlen(TELNET_FAIL_CMD_REGISTER));
                     NET_PRES_SocketDisconnect(tSocket);
-                    tState = SM_PRINT_LOGIN;
+                    tState = TCPIP_TELNET_IDLE;
                     break;
                 }	
 
-            case SM_CONNECTED:
+            case TCPIP_TELNET_CONNECTED:
                 // Check if you're disconnected and de-register from the command processor
 
                 break;
@@ -531,19 +563,19 @@ static void TCPIP_TELNET_Process(void)
 
 }
 
-static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE tState)
+static TCPIP_TELNET_STATE _Telnet_UserCheck(TELNET_DCPT* pDcpt)
 {
     int         avlblBytes;
-    bool        userFound;
     char        *lineStr;
+    NET_PRES_SKT_HANDLE_T tSkt;
     TELNET_MSG_LINE_RES lineRes;
 
+    char    userMessage[_TCPIP_TELNET_LINE_BUFF_SIZE];    // telnet confirmation message
 
-    char    userMessage[TELNET_LINE_BUFF];    // telnet confirmation message
-
+    tSkt = pDcpt->telnetSkt;
     if(NET_PRES_SocketWriteIsReady(tSkt, TELNET_SKT_MESSAGE_SPACE, 0) < TELNET_SKT_MESSAGE_SPACE)
     {   // wait some more
-        return tState;
+        return TCPIP_TELNET_GET_LOGIN;
     }
 
     lineStr = userMessage;
@@ -551,49 +583,52 @@ static TELNET_STATE _Telnet_UserCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE t
 
     if(lineRes == TELNET_MSG_LINE_PENDING)
     {   // wait some more
-        return tState;
+        return TCPIP_TELNET_GET_LOGIN;
     }
     else if(lineRes == TELNET_MSG_LINE_OVFL)
     {
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_BUFFER_OVFLOW_MSG, strlen(TELNET_BUFFER_OVFLOW_MSG));
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_FAIL_LOGON_MSG, strlen(TELNET_FAIL_LOGON_MSG));
         NET_PRES_SocketDisconnect(tSkt);
-        return SM_PRINT_LOGIN;	
+        return TCPIP_TELNET_IDLE;	
     }
 
     // TELNET_MSG_LINE_DONE
     // remove the line termination 
     lineStr = strtok(lineStr, TELNET_LINE_TERM);
-    // find the user name
-    if(lineStr && strcmp(lineStr, TCPIP_TELNET_USERNAME) == 0)
+    // save the user name
+    if(lineStr)
     {
-        userFound = true;
+        strncpy(pDcpt->username, lineStr, sizeof(pDcpt->username) - 1);
+        pDcpt->username[sizeof(pDcpt->username) - 1] = 0;
     }
     else
     {
-        userFound = false;
+        pDcpt->username[0] = 0;
     }
 
     NET_PRES_SocketRead(tSkt, 0, avlblBytes);
     // Print the password prompt
     NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_ASK_PASSWORD_MSG, strlen(TELNET_ASK_PASSWORD_MSG));
-    return userFound?SM_GET_PASSWORD:SM_GET_PASSWORD_BAD_LOGIN;
+    return TCPIP_TELNET_GET_PASSWORD;
 
 }
 
-static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE tState)
+static TCPIP_TELNET_STATE _Telnet_LogonCheck(TELNET_DCPT* pDcpt)
 {
     int     avlblBytes;
-    bool    sktDisconnect, sktOverflow;
+    bool    sktDisconnect, sktOverflow, authRes;
+    NET_PRES_SKT_HANDLE_T tSkt;
     char*   lineStr;
     TELNET_MSG_LINE_RES lineRes;
 
-    char    passMessage[TELNET_LINE_BUFF];    // telnet confirmation message
+    char    passMessage[_TCPIP_TELNET_LINE_BUFF_SIZE];    // telnet confirmation message
 
+    tSkt = pDcpt->telnetSkt;
 
     if(NET_PRES_SocketWriteIsReady(tSkt, TELNET_SKT_MESSAGE_SPACE, 0) < TELNET_SKT_MESSAGE_SPACE)
     {   // wait some more
-        return tState;
+        return TCPIP_TELNET_GET_PASSWORD;
     }
 
     lineStr = passMessage;
@@ -601,7 +636,7 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
 
     if(lineRes == TELNET_MSG_LINE_PENDING)
     {   // wait some more
-        return tState;
+        return TCPIP_TELNET_GET_PASSWORD;
     }
 
     sktDisconnect = sktOverflow = false;
@@ -614,11 +649,44 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
     {   // TELNET_MSG_LINE_DONE
         // remove the line termination 
         lineStr = strtok(lineStr, TELNET_LINE_TERM);
-        if(tState != SM_GET_PASSWORD || strcmp(lineStr, TCPIP_TELNET_PASSWORD) != 0)
+
+        authRes = false;
+        if(lineStr)
+        {
+#if (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
+            if(telnetAuthHandler != 0)
+            {
+#if (TCPIP_TELNET_AUTHENTICATION_CONN_INFO != 0)
+                // we need connection info
+                TCPIP_TELNET_CONN_INFO connInfo;
+                connInfo.connIx = pDcpt - telnetDcpt;
+                connInfo.state = TCPIP_TELNET_GET_PASSWORD;
+                connInfo.presSkt = tSkt;
+                connInfo.tcpSkt = NET_PRES_SocketGetTransportHandle(tSkt);
+                TCPIP_TCP_SocketInfoGet(connInfo.tcpSkt, &connInfo.tcpInfo);
+                authRes = (*telnetAuthHandler)(pDcpt->username, lineStr, &connInfo, telnetAuthHParam);
+#else
+                authRes = (*telnetAuthHandler)(pDcpt->username, lineStr, 0, telnetAuthHParam);
+
+#endif  // (TCPIP_TELNET_AUTHENTICATION_CONN_INFO != 0)
+            }
+#else
+            // OBSOLETE authentication method
+            // use the build time defaults
+            authRes = strcmp(pDcpt->username, TCPIP_TELNET_USERNAME) == 0 && strcmp(lineStr, TCPIP_TELNET_PASSWORD) == 0;
+#endif  // (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
+            // done with password
+            memset(passMessage, 0, sizeof(passMessage));
+        }
+
+        if(authRes == false)
         {   // failed
             sktDisconnect = true;
         }
     }
+
+    // done with the user name
+    memset(pDcpt->username, 0, sizeof(pDcpt->username));
 
     if(sktOverflow)
     {
@@ -629,18 +697,16 @@ static TELNET_STATE _Telnet_LogonCheck(NET_PRES_SKT_HANDLE_T tSkt, TELNET_STATE 
     {
         NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_FAIL_LOGON_MSG, strlen(TELNET_FAIL_LOGON_MSG));
         NET_PRES_SocketDisconnect(tSkt);
-        return SM_PRINT_LOGIN;	
+        return TCPIP_TELNET_IDLE;	
     }
 
     // success
     NET_PRES_SocketRead(tSkt, 0, avlblBytes);  //  throw this line of data away
     // Print the authenticated prompt
     NET_PRES_SocketWrite(tSkt, (const uint8_t*)TELNET_LOGON_OK, strlen(TELNET_LOGON_OK));
-    return SM_AUTHENTICATED;
+    return TCPIP_TELNET_AUTHENTICATED;
 
 }
-
-
 
 // checks if a complete line is assembled
 static TELNET_MSG_LINE_RES _Telnet_MessageLineCheck(NET_PRES_SKT_HANDLE_T tSkt, char** pLineBuffer, int bufferSize, int* readBytes)
@@ -767,4 +833,69 @@ static char* _Telnet_Process_CmdOptions(const char* strMsg, int avlblBytes)
 
 }
 
+uint16_t TCPIP_TELNET_ConnectionsGet(void)
+{
+    if(telnetDcpt != 0)
+    {
+        return telnetConfigData.nConnections;
+    }
+
+    return 0;
+}
+
+bool TCPIP_TELNET_ConnectionInfoGet(uint16_t connIx, TCPIP_TELNET_CONN_INFO* pInfo)
+{
+    if(telnetDcpt != 0 && connIx < telnetConfigData.nConnections)
+    {
+        if(pInfo)
+        {
+            TELNET_DCPT* pDcpt = telnetDcpt + connIx;
+            pInfo->connIx = connIx;
+            pInfo->state = pDcpt->telnetState;
+            pInfo->presSkt = pDcpt->telnetSkt;
+            pInfo->tcpSkt = NET_PRES_SocketGetTransportHandle(pDcpt->telnetSkt);
+            TCPIP_TCP_SocketInfoGet(pInfo->tcpSkt, &pInfo->tcpInfo);
+        }
+        return true;
+    }
+
+    return false;
+}
+
+
+#if (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
+TCPIP_TELNET_HANDLE TCPIP_TELNET_AuthenticationRegister(TCPIP_TELNET_AUTH_HANDLER authHandler, const void* handlerParam)
+{
+    TCPIP_TELNET_HANDLE tHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(telnetAuthHandler == 0)
+    {
+        telnetAuthHParam = handlerParam;
+        telnetAuthHandler = authHandler;
+        tHandle = (TCPIP_TELNET_HANDLE) authHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return tHandle;
+}
+
+bool TCPIP_TELNET_AuthenticationDeregister(TCPIP_TELNET_HANDLE authHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(telnetAuthHandler == (TCPIP_TELNET_AUTH_HANDLER) authHandle)
+    {
+        telnetAuthHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (_TELNET_USE_AUTHENTICATION_CALLBACK != 0)
+
 #endif	//#if defined(TCPIP_STACK_USE_TELNET_SERVER)
+

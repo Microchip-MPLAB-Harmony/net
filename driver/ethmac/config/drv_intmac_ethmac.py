@@ -42,11 +42,16 @@ def instantiateComponent(drvPic32mEthmacComponent):
     drvEthmac.setVisible(False)
     drvEthmac.setDescription("Use Internal Ethernet MAC Driver?")
     drvEthmac.setDefaultValue(True)	
-    
-    # Enable RMII mode
-    Database.setSymbolValue("core", "CONFIG_FMIIEN", "OFF", 1)
-    # Enable Default Pins for Ethernet MAC
-    Database.setSymbolValue("core", "CONFIG_FETHIO", "ON", 1)    
+    if "PIC32MZ" in Variables.get("__PROCESSOR"):
+        # Enable RMII mode
+        Database.setSymbolValue("core", "CONFIG_FMIIEN", "OFF", 1)
+        # Enable Alternate Pins for Ethernet MAC
+        Database.setSymbolValue("core", "CONFIG_FETHIO", "ON", 1)
+    elif "PIC32MX" in Variables.get("__PROCESSOR"):
+        # Enable RMII mode
+        Database.setSymbolValue("core", "CONFIG_FMIIEN", "OFF", 1)
+        # Enable Default Pins for Ethernet MAC
+        Database.setSymbolValue("core", "CONFIG_FETHIO", "OFF", 1)
 
     # Number of Tx Descriptors to be created
     tcpipEthmacTxDescCount = drvPic32mEthmacComponent.createIntegerSymbol("TCPIP_EMAC_TX_DESCRIPTORS", None)
@@ -322,11 +327,19 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEmacModuleId.setDefaultValue("_ETH_BASE_ADDRESS")
     
     # Get register names, mask values, bit shifts based on vector number
-    tcpipEthmacInterruptVector = "ETHERNET_INTERRUPT_ENABLE"
-    tcpipEthmacInterruptHandler = "ETHERNET_INTERRUPT_HANDLER"
-    tcpipEthmacInterruptHandlerLock = "ETHERNET_INTERRUPT_HANDLER_LOCK"
-    tcpipEthmacInterruptVectorUpdate = "ETHERNET_INTERRUPT_ENABLE_UPDATE"
-    tcpipEthmacIrq_index = int(getIRQnumber("ETHERNET"))
+    if "PIC32MZ" in Variables.get("__PROCESSOR"):
+        tcpipEthmacInterruptVector = "ETHERNET_INTERRUPT_ENABLE"
+        tcpipEthmacInterruptHandler = "ETHERNET_INTERRUPT_HANDLER"
+        tcpipEthmacInterruptHandlerLock = "ETHERNET_INTERRUPT_HANDLER_LOCK"
+        tcpipEthmacInterruptVectorUpdate = "ETHERNET_INTERRUPT_ENABLE_UPDATE"
+        tcpipEthmacIrq_index = int(getIRQnumber("ETHERNET"))
+    elif "PIC32MX" in Variables.get("__PROCESSOR"):
+        tcpipEthmacInterruptVector = "ETH_INTERRUPT_ENABLE"
+        tcpipEthmacInterruptHandler = "ETH_INTERRUPT_HANDLER"
+        tcpipEthmacInterruptHandlerLock = "ETH_INTERRUPT_HANDLER_LOCK"
+        tcpipEthmacInterruptVectorUpdate = "ETH_INTERRUPT_ENABLE_UPDATE"
+        tcpipEthmacIrq_index = int(getIRQnumber("ETH"))
+    
     
     #Configures the library for interrupt mode operations
     tcpipEthmacInterruptEnable = drvPic32mEthmacComponent.createBooleanSymbol("INTERRUPT_ENABLE", None)
@@ -405,7 +418,10 @@ def instantiateComponent(drvPic32mEthmacComponent):
     tcpipEthmacIntrSource.setLabel("ETHMAC Interrupt Source")
     tcpipEthmacIntrSource.setVisible(False)
     tcpipEthmacIntrSource.setDescription("Driver ETHMAC Interrupt Source")
-    tcpipEthmacIntrSource.setDefaultValue("_ETHERNET_VECTOR")
+    if "PIC32MZ" in Variables.get("__PROCESSOR"):
+        tcpipEthmacIntrSource.setDefaultValue("_ETHERNET_VECTOR")
+    elif "PIC32MX" in Variables.get("__PROCESSOR"):
+        tcpipEthmacIntrSource.setDefaultValue("_ETHERNET_IRQ")
     
     #Add to system_config.h
     tcpipEthmacHeaderFtl = drvPic32mEthmacComponent.createFileSymbol(None, None)
@@ -512,12 +528,12 @@ def setEthmacInterruptData(status):
 
     Database.setSymbolValue("core", tcpipEthmacInterruptVector, status, 1)
     Database.setSymbolValue("core", tcpipEthmacInterruptHandlerLock, status, 1)
-    interruptName = tcpipEthmacInterruptHandler.split("_INTERRUPT_HANDLER")[0]
+    #interruptName = tcpipEthmacInterruptHandler.split("_INTERRUPT_HANDLER")[0]
     
     if status == True:
-        Database.setSymbolValue("core", tcpipEthmacInterruptHandler, interruptName + "_InterruptHandler", 1)
+        Database.setSymbolValue("core", tcpipEthmacInterruptHandler, "ETHERNET_InterruptHandler", 1)
     else:
-        Database.setSymbolValue("core", tcpipEthmacInterruptHandler, interruptName + "_Handler", 1)
+        Database.setSymbolValue("core", tcpipEthmacInterruptHandler, "ETHERNET_Handler", 1)
 
 def updateEthmacInterruptData(symbol, event):
 

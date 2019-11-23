@@ -46,8 +46,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 
-#define NVM_DRIVER_V080_WORKAROUND
-
 #if defined(TCPIP_STACK_USE_HTTP_SERVER)
 
 
@@ -55,16 +53,16 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define HTTP_SEND_DATABUF_SIZE      256
 #define HTTP_INC_DATABUF_SIZE       256
 
-#if defined (NVM_DRIVER_V080_WORKAROUND)
-#define MPFS_UPLOAD_DISK_NO         0
-#endif
-
 
 #define MPFS_SIGNATURE "MPFS\x02\x01"
 // size of the MPFS upload operation write buffer
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE   (4 * 1024)
 
-#include "tcpip/src/common/sys_fs_wrapper.h"
+#include "tcpip/src/common/sys_fs_shell.h"
+
+#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
+#include "system/fs/sys_fs_media_manager.h"
+#endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 
 #include "http_private.h"
 
@@ -182,6 +180,10 @@ static tcpipSignalHandle       httpSignalHandle = 0;
 static void* (*http_malloc_fnc)(size_t bytes) = 0; // HTTP malloc
 static void  (*http_free_fnc)(void* ptr) = 0;      // HTTP free
 #endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
+
+// file shell object for file access
+static const SYS_FS_SHELL_OBJ*  httpFileShell = 0;
+
 /****************************************************************************
   Section:
     Function Prototypes
@@ -212,7 +214,7 @@ static void _HTTP_CloseConnections(TCPIP_NET_IF* pNetIf);
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 
-#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && !defined(DRV_WIFI_OTA_ENABLE)
+#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon);
 #endif
 
@@ -248,7 +250,7 @@ static void _HTTP_CloseConnections(TCPIP_NET_IF* pNetIf)
             {
                 if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
                 {
-                    SYS_FS_FileClose(pHttpCon->file);
+                    (*httpFileShell->fileClose)(httpFileShell, pHttpCon->file);
                     pHttpCon->file = SYS_FS_HANDLE_INVALID;
                 }
 
@@ -296,6 +298,12 @@ static void _HTTP_Cleanup(const TCPIP_STACK_MODULE_CTRL* const stackCtrl)
     {
         _TCPIPStackSignalHandlerDeregister(httpSignalHandle);
         httpSignalHandle = 0;
+    }
+
+    if(httpFileShell != 0)
+    {
+        (*httpFileShell->delete)(httpFileShell);
+        httpFileShell = 0;
     }
 
     httpConnNo = 0;
@@ -385,6 +393,18 @@ bool TCPIP_HTTP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl,
             initFail = true;
             break;
         }
+
+        // create the SYS_FS shell
+        SYS_FS_SHELL_RES shellRes;
+        const char* web_dir = httpInitData->web_dir;
+        httpFileShell = SYS_FS_Shell_Create(web_dir, 0, 0, 0, &shellRes);
+        if(httpFileShell == 0)
+        {
+            SYS_ERROR(SYS_ERROR_WARNING, " HTTP: FS Shell creation for directory: %s Failed: %d!\r\n", web_dir, shellRes);
+            initFail = true;
+            break;
+        }
+
         // initialize all connections
         httpConnDataSize = httpInitData->dataLen;
 
@@ -548,7 +568,7 @@ static void TCPIP_HTTP_Process(void)
             // Make sure any opened files are closed
             if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
             {
-                SYS_FS_FileClose(pHttpCon->file);
+                (*httpFileShell->fileClose)(httpFileShell, pHttpCon->file);
                 pHttpCon->file = SYS_FS_HANDLE_INVALID;
                 // Important to clear related control variables,
                 // or serving continuous refresh(F5) by IE etc... will meet issue
@@ -726,7 +746,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                 // If the last character is a not a directory delimiter, then try to open the file
                 // String starts at 2nd character, because the first is always a '/'
                 if(pHttpCon->data[lenB-1] != '/') {
-                    pHttpCon->file = SYS_FS_FileOpen_Wrapper((char *)&pHttpCon->data[1], SYS_FS_FILE_OPEN_READ);
+                    pHttpCon->file = (*httpFileShell->fileOpen)(httpFileShell, (char *)&pHttpCon->data[1], SYS_FS_FILE_OPEN_READ);
                     if(strlen((char*)pHttpCon->data + 1) > sizeof(pHttpCon->fileName))
                     {
                         SYS_ERROR(SYS_ERROR_WARNING, " HTTP: URL exceeds allocated space!");
@@ -746,7 +766,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                     lenB += strlen(TCPIP_HTTP_DEFAULT_FILE);
 
                     // Try to open again
-                    pHttpCon->file = SYS_FS_FileOpen_Wrapper((char *)&pHttpCon->data[1],SYS_FS_FILE_OPEN_READ);
+                    pHttpCon->file = (*httpFileShell->fileOpen)(httpFileShell, (char *)&pHttpCon->data[1],SYS_FS_FILE_OPEN_READ);
                     strncpy(pHttpCon->fileName, (char*)pHttpCon->data + 1, sizeof(pHttpCon->fileName));
                 }
 
@@ -959,8 +979,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                   )
                 {
                     // Run the application callback TCPIP_HTTP_PostExecute()
-#ifndef  DRV_WIFI_OTA_ENABLE
-#if  defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#if  defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
                     if(pHttpCon->httpStatus >= HTTP_MPFS_UP && pHttpCon->httpStatus <= HTTP_MPFS_ERROR)
                     {
                     c = TCPIP_HTTP_MPFSUpload(pHttpCon);
@@ -972,21 +991,10 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                         }
                     }
                     else
-#endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
-#endif
+#endif  // defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
                         c = TCPIP_HTTP_PostExecute(pHttpCon);
-#ifdef  DRV_WIFI_OTA_ENABLE
-                    if(c == (uint8_t)HTTP_IO_DONE)
-                    {
-                        pHttpCon->sm = SM_HTTP_SERVE_HEADERS;
-                        isDone = false;
-                        break;
-                    } // If waiting for asynchronous process, return to main app
-					else if(c == (uint8_t)HTTP_IO_WAITING)
-#else				
 					 // If waiting for asynchronous process, return to main app
 					if(c == (uint8_t)HTTP_IO_WAITING)	
-#endif					
                     {// return to main app and make sure we don't get stuck by the watchdog
                         pHttpCon->callbackPos = TCPIP_TCP_GetIsReady(pHttpCon->socket) - 1;
                         break;
@@ -1070,7 +1078,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                 }
 
                 // Output the gzip encoding header if needed
-                if(SYS_FS_FileStat_Wrapper((const char *)&pHttpCon->fileName, &fs_attr) != SYS_FS_HANDLE_INVALID) {
+                if((*httpFileShell->fileStat)(httpFileShell, (const char *)&pHttpCon->fileName, &fs_attr) != SYS_FS_HANDLE_INVALID) {
                     if (fs_attr.fattrib == SYS_FS_ATTR_ZIP_COMPRESSED)
                     {
                         TCPIP_TCP_StringPut(pHttpCon->socket, (const uint8_t*)"Content-Encoding: gzip\r\n");
@@ -1187,7 +1195,7 @@ static void TCPIP_HTTP_ProcessConnection(HTTP_CONN* pHttpCon)
                 // Make sure any opened files are closed
                 if(pHttpCon->file != SYS_FS_HANDLE_INVALID)
                 {
-                    SYS_FS_FileClose(pHttpCon->file);
+                    (*httpFileShell->fileClose)(httpFileShell, pHttpCon->file);
                     pHttpCon->file = SYS_FS_HANDLE_INVALID;
                 }
 
@@ -1229,14 +1237,16 @@ static bool TCPIP_HTTP_WebPageIsDynamic(HTTP_CONN* pHttpCon)
     uint32_t numFile = 0;
     bool ret = false;
 
-    fp = SYS_FS_FileOpen_Wrapper("FileRcrd.bin", SYS_FS_FILE_OPEN_READ);
+    fp = (*httpFileShell->fileOpen)(httpFileShell, "FileRcrd.bin", SYS_FS_FILE_OPEN_READ);
     if (fp == SYS_FS_HANDLE_INVALID)
-    return false;
-    SYS_FS_FileRead(fp, &numFile, 4); //Reading Number of files in record
+    {
+        return false;
+    }
+    (*httpFileShell->fileRead)(httpFileShell, fp, &numFile, 4); //Reading Number of files in record
 
     while(numFile)
     {
-        SYS_FS_FileRead(fp, &nameHash, 2); //Reading HashName record
+        (*httpFileShell->fileRead)(httpFileShell, fp, &nameHash, 2); //Reading HashName record
         if(pHttpCon->nameHash == nameHash) 
         {
             ret = true;
@@ -1244,13 +1254,13 @@ static bool TCPIP_HTTP_WebPageIsDynamic(HTTP_CONN* pHttpCon)
         }
         else //Seek to next name hash position
         {
-            SYS_FS_FileSeek(fp, 8, SYS_FS_SEEK_CUR);
+            (*httpFileShell->fileSeek)(httpFileShell, fp, 8, SYS_FS_SEEK_CUR);
         }
         numFile-=1;
     }
     // Close file
     if (fp != SYS_FS_HANDLE_INVALID) {
-        SYS_FS_FileClose(fp);
+        (*httpFileShell->fileClose)(httpFileShell, fp);
     }
 
     return ret;
@@ -1299,7 +1309,7 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
     {
         case SM_IDLE:
 
-            pHttpCon->TxFile.numBytes = SYS_FS_FileSize(pHttpCon->file);
+            pHttpCon->TxFile.numBytes = (*httpFileShell->fileSize)(httpFileShell, pHttpCon->file);
             if ((pHttpCon->TxFile.numBytes == SYS_FS_HANDLE_INVALID) || (pHttpCon->TxFile.numBytes == 0)) {
                 pHttpCon->TxFile.fileTxDone = 1;
                 return false;
@@ -1308,7 +1318,7 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
             pHttpCon->callbackPos = 0;
 
         case SM_GET_NO_OF_FILES:
-            FileRcrdPtr = SYS_FS_FileOpen_Wrapper("FileRcrd.bin", SYS_FS_FILE_OPEN_READ);
+            FileRcrdPtr = (*httpFileShell->fileOpen)(httpFileShell, "FileRcrd.bin", SYS_FS_FILE_OPEN_READ);
             if(FileRcrdPtr == SYS_FS_HANDLE_INVALID)
             {   // No dynamic variables, so default the flag to 1
                 pHttpCon->file_sm = SM_SERVE_TEXT_DATA ;
@@ -1316,7 +1326,7 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
                 break;
             }
 
-            cntr=SYS_FS_FileRead(FileRcrdPtr,&recrdcntr, 4); //Reading Number of files in record        
+            cntr = (*httpFileShell->fileRead)(httpFileShell, FileRcrdPtr,&recrdcntr, 4); //Reading Number of files in record        
             _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
 
             //Continue to next state
@@ -1326,29 +1336,29 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
 
             while(recrdcntr)
             {
-                cntr=SYS_FS_FileRead(FileRcrdPtr, &nameHashRcrd, 2); //Reading HashName record
+                cntr = (*httpFileShell->fileRead)(httpFileShell, FileRcrdPtr, &nameHashRcrd, 2); //Reading HashName record
                 _HTTP_FileRdCheck(cntr==2, __FILE__, __LINE__);
                 if(pHttpCon->nameHash == nameHashRcrd) // Check if namHash calculation contains dir delimiter '/'
                 {
                     pHttpCon->TxFile.nameHashMatched = true;
-                    cntr=SYS_FS_FileRead(FileRcrdPtr, &UInt32DataFromBinFile, 4);
+                    cntr = (*httpFileShell->fileRead)(httpFileShell, FileRcrdPtr, &UInt32DataFromBinFile, 4);
                     _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
                     pHttpCon->TxFile.DynRcrdRdCount = UInt32DataFromBinFile;
-                    cntr=SYS_FS_FileRead(FileRcrdPtr, &pHttpCon->TxFile.dynVarCntr, 4);
+                    cntr = (*httpFileShell->fileRead)(httpFileShell, FileRcrdPtr, &pHttpCon->TxFile.dynVarCntr, 4);
                     _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
                     break;
                 }
                 else //Dummy Read..to hop to next hash name or HOP by "FileSeek" in file handle
                 {
-                    cntr=SYS_FS_FileRead(FileRcrdPtr, &UInt32DataFromBinFile,4);
+                    cntr = (*httpFileShell->fileRead)(httpFileShell, FileRcrdPtr, &UInt32DataFromBinFile,4);
                     _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
-                    cntr=SYS_FS_FileRead(FileRcrdPtr, &UInt32DataFromBinFile,4);
+                    cntr = (*httpFileShell->fileRead)(httpFileShell, FileRcrdPtr, &UInt32DataFromBinFile,4);
                     _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
                 }
                 recrdcntr-=1;
             }
             if(FileRcrdPtr != SYS_FS_HANDLE_INVALID) {
-                SYS_FS_FileClose(FileRcrdPtr);
+                (*httpFileShell->fileClose)(httpFileShell, FileRcrdPtr);
                 FileRcrdPtr = SYS_FS_HANDLE_INVALID;
             }
 
@@ -1370,19 +1380,19 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
         case SM_GET_DYN_VAR_FILE_RCRD:
             pHttpCon->callbackPos = 0;
             // Open DynRcrd.bin if not opened
-            DynVarFilePtr=SYS_FS_FileOpen_Wrapper("DynRcrd.bin", SYS_FS_FILE_OPEN_READ);
+            DynVarFilePtr = (*httpFileShell->fileOpen)(httpFileShell, "DynRcrd.bin", SYS_FS_FILE_OPEN_READ);
             if (DynVarFilePtr == SYS_FS_HANDLE_INVALID)
                 return false;
             if(pHttpCon->TxFile.lock_dynrcd == 0)
             {
-                SYS_FS_FileSeek(DynVarFilePtr, pHttpCon->TxFile.DynRcrdRdCount+6, SYS_FS_SEEK_SET);
+                (*httpFileShell->fileSeek)(httpFileShell, DynVarFilePtr, pHttpCon->TxFile.DynRcrdRdCount+6, SYS_FS_SEEK_SET);
                 pHttpCon->TxFile.lock_dynrcd = 1;
             } else {
-                SYS_FS_FileSeek(DynVarFilePtr, pHttpCon->TxFile.DynRcrdRdCount, SYS_FS_SEEK_SET);
+                (*httpFileShell->fileSeek)(httpFileShell, DynVarFilePtr, pHttpCon->TxFile.DynRcrdRdCount, SYS_FS_SEEK_SET);
             }
-            cntr=SYS_FS_FileRead(DynVarFilePtr, &pHttpCon->TxFile.dynVarRcrdOffset, 4);//Reading dynamic variable offset in webpage
+            cntr = (*httpFileShell->fileRead)(httpFileShell, DynVarFilePtr, &pHttpCon->TxFile.dynVarRcrdOffset, 4);//Reading dynamic variable offset in webpage
             _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
-            cntr=SYS_FS_FileRead(DynVarFilePtr, &pHttpCon->TxFile.dynVarCallBackID, 4);//Reading dynamic variable call back ID
+            cntr = (*httpFileShell->fileRead)(httpFileShell, DynVarFilePtr, &pHttpCon->TxFile.dynVarCallBackID, 4);//Reading dynamic variable call back ID
             _HTTP_FileRdCheck(cntr==4, __FILE__, __LINE__);
             
             //Continue to next state
@@ -1391,8 +1401,8 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
         case SM_PARSE_TILL_DYN_VAR:
             // Check if it is re-entering service
             if (DynVarFilePtr == SYS_FS_HANDLE_INVALID) {
-                DynVarFilePtr=SYS_FS_FileOpen_Wrapper("DynRcrd.bin", SYS_FS_FILE_OPEN_READ);
-                SYS_FS_FileSeek(DynVarFilePtr, pHttpCon->TxFile.DynRcrdRdCount, SYS_FS_SEEK_SET);
+                DynVarFilePtr = (*httpFileShell->fileOpen)(httpFileShell, "DynRcrd.bin", SYS_FS_FILE_OPEN_READ);
+                (*httpFileShell->fileSeek)(httpFileShell, DynVarFilePtr, pHttpCon->TxFile.DynRcrdRdCount, SYS_FS_SEEK_SET);
             }
             if( pHttpCon->TxFile.dynVarRcrdOffset== 0x00)
             {
@@ -1410,28 +1420,28 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
                 {
                     cntr = pHttpCon->TxFile.dynVarRcrdOffset - pHttpCon->TxFile.bytesReadCount;
                 }
-                len = SYS_FS_FileRead(pHttpCon->file, sendDataBuffer, cntr);
+                len = (*httpFileShell->fileRead)(httpFileShell, pHttpCon->file, sendDataBuffer, cntr);
                 _HTTP_FileRdCheck((len==cntr), __FILE__, __LINE__);
                 bytesPut = TCPIP_TCP_ArrayPut(pHttpCon->socket, sendDataBuffer, len);
                 //SYS_CMD_PRINT("cntr %d len %d BP %d\r\n", cntr, len, bytesPut);
                 if (bytesPut != len)
                 {
                     // we didn't transmit the entire buffer, so we have to seek backwards.
-                    SYS_FS_FileSeek(pHttpCon->file, 0 - (len - bytesPut), SYS_FS_SEEK_CUR);
+                    (*httpFileShell->fileSeek)(httpFileShell, pHttpCon->file, 0 - (len - bytesPut), SYS_FS_SEEK_CUR);
                 }
                 pHttpCon->TxFile.numBytes -= bytesPut;
                 pHttpCon->TxFile.bytesReadCount+=bytesPut;
             }
-            pHttpCon->TxFile.DynRcrdRdCount = SYS_FS_FileTell(DynVarFilePtr);
+            pHttpCon->TxFile.DynRcrdRdCount = (*httpFileShell->fileTell)(httpFileShell, DynVarFilePtr);
             if(pHttpCon->TxFile.dynVarRcrdOffset == pHttpCon->TxFile.bytesReadCount)
             {
                 pHttpCon->file_sm = SM_PARSE_DYN_VAR_STRING;
             }
-            SYS_FS_FileClose(DynVarFilePtr);
+            (*httpFileShell->fileClose)(httpFileShell, DynVarFilePtr);
             break;
 
         case SM_PARSE_DYN_VAR_STRING:
-            len = SYS_FS_FileRead(pHttpCon->file, sendDataBuffer, 1);
+            len = (*httpFileShell->fileRead)(httpFileShell, pHttpCon->file, sendDataBuffer, 1);
             _HTTP_FileRdCheck(len==1, __FILE__, __LINE__);
             pHttpCon->TxFile.numBytes-=1;
             pHttpCon->TxFile.bytesReadCount+=1;
@@ -1439,7 +1449,7 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
             {
                 do
                 {
-                    len = SYS_FS_FileRead(pHttpCon->file, sendDataBuffer, 1);
+                    len = (*httpFileShell->fileRead)(httpFileShell, pHttpCon->file, sendDataBuffer, 1);
                     _HTTP_FileRdCheck(len==1, __FILE__, __LINE__);
                     pHttpCon->TxFile.numBytes-=1;
                     pHttpCon->TxFile.bytesReadCount+=1;
@@ -1490,13 +1500,13 @@ static bool TCPIP_HTTP_FileSend(HTTP_CONN* pHttpCon)
             {
                 cntr = pHttpCon->TxFile.numBytes;
             }
-            len = SYS_FS_FileRead(pHttpCon->file, sendDataBuffer, cntr);
+            len = (*httpFileShell->fileRead)(httpFileShell, pHttpCon->file, sendDataBuffer, cntr);
             _HTTP_FileRdCheck(len==cntr, __FILE__, __LINE__);
             bytesPut = TCPIP_TCP_ArrayPut(pHttpCon->socket, sendDataBuffer, len);
             if (bytesPut != len)
             {
                 // we didn't transmit the entire buffer, so we have to seek backwards.
-                SYS_FS_FileSeek(pHttpCon->file, 0 - (len - bytesPut), SYS_FS_SEEK_CUR);
+                (*httpFileShell->fileSeek)(httpFileShell, pHttpCon->file, 0 - (len - bytesPut), SYS_FS_SEEK_CUR);
             }
             pHttpCon->TxFile.numBytes -=bytesPut;
             pHttpCon->TxFile.bytesReadCount+=bytesPut;
@@ -2119,7 +2129,7 @@ static HTTP_READ_STATUS _HTTP_ReadTo(HTTP_CONN* pHttpCon, uint8_t cDelim, uint8_
     the MPFS image is stored in EEPROM.
 
   ***************************************************************************/
-#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND) && !defined(DRV_WIFI_OTA_ENABLE)
+#if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 #define     SYS_FS_MEDIA_SECTOR_SIZE        512     
 #define MPFS_UPLOAD_WRITE_BUFFER_SIZE       (4 * 1024)
 static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
@@ -2155,7 +2165,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                     if(pHttpCon->uploadBufferStart == 0)
                     {
                         pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
-                        SYS_FS_Unmount_Wrapper((const char *)&pHttpCon->data[1]);
+                        SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
                     }
 
                     if(pHttpCon->uploadBufferStart != 0)
@@ -2251,7 +2261,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
                 (*http_free_fnc)(pHttpCon->uploadBufferStart);
                 pHttpCon->uploadBufferStart = 0;
 
-                if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
+                if(SYS_FS_Mount(MPFS_UPLOAD_NVM_VOL, MPFS_UPLOAD_MOUNT_PATH, MPFS2, 0, NULL)  != SYS_FS_RES_FAILURE)
                 {
                     pHttpCon->sm = SM_HTTP_PROCESS_REQUEST;
                     SYS_CONSOLE_MESSAGE("\r\nMPFSUPLOAD completed\r\n");
@@ -2276,7 +2286,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
     return HTTP_IO_NEED_DATA;
 }//TCPIP_HTTP_MPFSUpload
 
-#endif //defined (TCPIP_HTTP_FILE_UPLOAD_ENABLE) && defined(NVM_DRIVER_V080_WORKAROUND)
+#endif //defined (TCPIP_HTTP_FILE_UPLOAD_ENABLE)
 
 /*****************************************************************************
   Function:
@@ -2322,7 +2332,7 @@ void TCPIP_HTTP_FileInclude(HTTP_CONN_HANDLE connHandle, const uint8_t* cFile)
     uint16_t bytesPut;
 
 
-    if((fp = SYS_FS_FileOpen_Wrapper((const char *)cFile, SYS_FS_FILE_OPEN_READ)) == SYS_FS_HANDLE_INVALID)
+    if((fp = (*httpFileShell->fileOpen)(httpFileShell, (const char *)cFile, SYS_FS_FILE_OPEN_READ)) == SYS_FS_HANDLE_INVALID)
     {// File not found, so abort
         pHttpCon->TxFile.incFileRdCnt = 0;
         return;
@@ -2331,16 +2341,16 @@ void TCPIP_HTTP_FileInclude(HTTP_CONN_HANDLE connHandle, const uint8_t* cFile)
     {// The file opened successfully, so seek the file
         if(pHttpCon->TxFile.lock_hdr == 0)
         {
-            pHttpCon->TxFile.numBytesHdrFile = SYS_FS_FileSize(fp);
+            pHttpCon->TxFile.numBytesHdrFile = (*httpFileShell->fileSize)(httpFileShell, fp);
             pHttpCon->TxFile.incFileRdCnt = 0x00;
             if ((pHttpCon->TxFile.numBytesHdrFile == -1) || (pHttpCon->TxFile.numBytesHdrFile == 0)) {
-                SYS_FS_FileClose(fp);
+                (*httpFileShell->fileClose)(httpFileShell, fp);
                 pHttpCon->TxFile.EndOfCallBackFileFlag=0x01;
                 return;   
             }
             pHttpCon->TxFile.lock_hdr=1;
         }
-        SYS_FS_FileSeek(fp, pHttpCon->TxFile.incFileRdCnt, SYS_FS_SEEK_SET);
+        (*httpFileShell->fileSeek)(httpFileShell, fp, pHttpCon->TxFile.incFileRdCnt, SYS_FS_SEEK_SET);
     }
 
     availbleTcpBuffSize = TCPIP_TCP_PutIsReady(pHttpCon->socket);
@@ -2348,8 +2358,8 @@ void TCPIP_HTTP_FileInclude(HTTP_CONN_HANDLE connHandle, const uint8_t* cFile)
     if(availbleTcpBuffSize == 0)
     {
         // Save the new address and close the file
-        pHttpCon->TxFile.incFileRdCnt = SYS_FS_FileTell(fp);
-        SYS_FS_FileClose(fp);
+        pHttpCon->TxFile.incFileRdCnt = (*httpFileShell->fileTell)(httpFileShell, fp);
+        (*httpFileShell->fileClose)(httpFileShell, fp);
         pHttpCon->TxFile.EndOfCallBackFileFlag=0x00;
         return;
     }
@@ -2362,19 +2372,19 @@ void TCPIP_HTTP_FileInclude(HTTP_CONN_HANDLE connHandle, const uint8_t* cFile)
     {
         cntr = sizeof(incDataBuffer);
     }
-    len = SYS_FS_FileRead(fp, incDataBuffer, cntr);
+    len = (*httpFileShell->fileRead)(httpFileShell, fp, incDataBuffer, cntr);
     _HTTP_FileRdCheck(len==cntr, __FILE__, __LINE__);
     bytesPut = TCPIP_TCP_ArrayPut(pHttpCon->socket, incDataBuffer, len);
     if (bytesPut != len)
     {
         // we didn't transmit the entire buffer, so we have to seek backwards.
-        SYS_FS_FileSeek(fp, 0 - (len - bytesPut), SYS_FS_SEEK_CUR);
+        (*httpFileShell->fileSeek)(httpFileShell, fp, 0 - (len - bytesPut), SYS_FS_SEEK_CUR);
     }
     pHttpCon->TxFile.numBytesHdrFile -= bytesPut;
 
     if(pHttpCon->TxFile.numBytesHdrFile == 0)
     {// If no bytes were read, an EOF was reached
-    SYS_FS_FileClose(fp);
+        (*httpFileShell->fileClose)(httpFileShell, fp);
         pHttpCon->TxFile.incFileRdCnt = 0x00;
         pHttpCon->TxFile.EndOfCallBackFileFlag=0x01;
         pHttpCon->TxFile.lock_hdr=0;
@@ -2382,8 +2392,8 @@ void TCPIP_HTTP_FileInclude(HTTP_CONN_HANDLE connHandle, const uint8_t* cFile)
     }
 
     // Save the new address and close the file
-    pHttpCon->TxFile.incFileRdCnt = SYS_FS_FileTell(fp);
-    SYS_FS_FileClose(fp);
+    pHttpCon->TxFile.incFileRdCnt = (*httpFileShell->fileTell)(httpFileShell, fp);
+    (*httpFileShell->fileClose)(httpFileShell, fp);
     pHttpCon->TxFile.EndOfCallBackFileFlag=-1;
 }
 

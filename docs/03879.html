@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_UDP_ServerOpen Function</title>
+<title>TCPIP_TCP_PacketHandlerRegister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03925.html" target="topic">UDP Module</a> &gt; <a href="01743.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03879.html" target="topic">TCPIP_UDP_ServerOpen Function</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01324.html" target="topic">TCP Module</a> &gt; <a href="01717.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03879.html" target="topic">TCPIP_TCP_PacketHandlerRegister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01743.html" target="topic">Previous</a> | <a href="01743.html" target="topic">Up</a> | <a href="03855.html" target="topic">Next</a></div>
+<a href="03878.html" target="topic">Previous</a> | <a href="01717.html" target="topic">Up</a> | <a href="03883.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_ServerOpen@IP_ADDRESS_TYPE@UDP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_ServerOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_PacketHandlerRegister@TCPIP_TCP_PACKET_HANDLER@void* Topic Title: TCPIP_TCP_PacketHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_UDP_ServerOpen Function</div>
+TCPIP_TCP_PacketHandlerRegister Function</div>
 </div>
 </div>
 
@@ -49,21 +49,20 @@ TCPIP_UDP_ServerOpen Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Provides a unified method for opening UDP server sockets.</p></div>
+This function registers a new packet processing handler. The caller can use the handler to be notified of incoming packets and given a chance to examine/process them.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03940.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">TCPIP_UDP_ServerOpen</span></strong>(
-    IP_ADDRESS_TYPE <strong><span style="color: #000000">addType</span></strong>, 
-    <a href="03939.html" target="topic">UDP_PORT</a> <strong><span style="color: #000000">localPort</span></strong>, 
-    IP_MULTI_ADDRESS* <strong><span style="color: #000000">localAddress</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="03881.html" target="topic">TCPIP_TCP_PROCESS_HANDLE</a> <strong><span style="color: #000000">TCPIP_TCP_PacketHandlerRegister</span></strong>(
+    <a href="03877.html" target="topic">TCPIP_TCP_PACKET_HANDLER</a> <strong><span style="color: #000000">pktHandler</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">handlerParam</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-UDP is initialized.</p></div>
+TCP properly initialized</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,9 +79,14 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-IP_ADDRESS_TYPE addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pktHandler&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The type of address being used.&nbsp;</div></td></tr></table></div></div>
+the packet handler which will be called for an incoming packet&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+handlerParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+packet handler parameter&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -91,32 +95,33 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element633">
-<li class="Element603"><a href="00833.html" target="topic">INVALID_SOCKET</a> - No sockets of the specified type were available to be opened or parameter error.</li>
-</ul>&nbsp;</p>
-<p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">A <a href="03940.html" target="topic">UDP_SOCKET</a> handle - Save this handle and use it when calling all other UDP APIs.</li>
+<ul class="Element635">
+<li class="Element605">a valid <a href="03881.html" target="topic">TCPIP_TCP_PROCESS_HANDLE</a> - if the operation succeeded</li>
+<li class="Element605">NULL - if the operation failed</li>
 </ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Currently only one packet handler is supported for the TCP module. The call will fail if a handler is already registered. Use <a href="03878.html" target="topic">TCPIP_TCP_PacketHandlerDeregister</a> first&nbsp;</p>
+<p class="Element10">
+Exists only if <a href="03851.html" target="topic">TCPIP_TCP_EXTERN_PACKET_PROCESS</a> is true</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-IP_ADDRESS_TYPE_IPV4 or IP_ADDRESS_TYPE_IPV6. It can be IP_ADDRESS_TYPE_ANY and the server <a href="01301.html" target="topic">socket</a> will accept any incoming type of connection.&nbsp;</p>
-<p class="Element10">
-<a href="03939.html" target="topic">UDP_PORT</a> localPort - UDP port on which to <a href="01013.html" target="topic">listen</a> for connections&nbsp;</p>
-<p class="Element10">
-IP_MULTI_ADDRESS* localAddress - Pointer to a local IP address to use. This needs to be the valid IP address of a local interface the server is to <a href="01013.html" target="topic">listen</a> on or NULL if any incoming interface will do.</p></div>
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="03881.html" target="topic">TCPIP_TCP_PROCESS_HANDLE</a> pktHandle = TCPIP_TCP_PacketHandlerRegister( myPktHandler, myParam );</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="03925.html" target="topic">UDP Module</a> &gt; <a href="01743.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03879.html" target="topic">TCPIP_UDP_ServerOpen Function</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01324.html" target="topic">TCP Module</a> &gt; <a href="01717.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="03879.html" target="topic">TCPIP_TCP_PacketHandlerRegister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -124,13 +129,13 @@ IP_MULTI_ADDRESS* localAddress - Pointer to a local IP address to use. This need
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01743.html" target="topic">Previous</a> | <a href="01743.html" target="topic">Up</a> | <a href="03855.html" target="topic">Next</a></div>
+<a href="03878.html" target="topic">Previous</a> | <a href="01717.html" target="topic">Up</a> | <a href="03883.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_ServerOpen@IP_ADDRESS_TYPE@UDP_PORT@IP_MULTI_ADDRESS* Topic Title: TCPIP_UDP_ServerOpen Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TCP_PacketHandlerRegister@TCPIP_TCP_PACKET_HANDLER@void* Topic Title: TCPIP_TCP_PacketHandlerRegister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -145,9 +145,9 @@ void APP_Tasks ( void )
     switch ( appData.state )
     {
         case APP_MOUNT_DISK:
-            if(SYS_FS_Mount(SYS_FS_NVM_VOL, LOCAL_WEBSITE_PATH_FS, MPFS2, 0, NULL) == 0)
+            if(SYS_FS_Mount(APP_SYS_FS_NVM_VOL, APP_SYS_FS_MOUNT_POINT, APP_SYS_FS_TYPE, 0, NULL) == 0)
             {
-                SYS_CONSOLE_PRINT("SYS_Initialize: The %s File System is mounted\r\n", SYS_FS_MPFS_STRING);
+                SYS_CONSOLE_PRINT("SYS_Initialize: The %s File System is mounted\r\n", APP_SYS_FS_TYPE_STRING);
                 appData.state = APP_TCPIP_WAIT_INIT;
             }
             //appData.state = APP_TCPIP_WAIT_INIT;
@@ -179,6 +179,8 @@ void APP_Tasks ( void )
 #else
                     SYS_CONSOLE_PRINT("    Interface %s on host %s - NBNS disabled\r\n", netName, netBiosName);
 #endif // defined(TCPIP_STACK_USE_NBNS)
+                    (void)netName;          // avoid compiler warning 
+                    (void)netBiosName;      // if SYS_CONSOLE_PRINT is null macro
 
 #if defined(TCPIP_STACK_USE_ZEROCONF_MDNS_SD)
                     // base name of the service Must not exceed 16 bytes long
@@ -237,8 +239,6 @@ void APP_Tasks ( void )
                             ipAddr.v[0], ipAddr.v[1], ipAddr.v[2], ipAddr.v[3]);
                 }
             }
-
-            SYS_CMD_READY_TO_READ();
 
             break;
 

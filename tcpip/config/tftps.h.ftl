@@ -57,7 +57,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#else>
 #define TCPIP_TFTPS_USER_NOTIFICATION					false
 </#if>
-
+<#if TCPIP_TFTPS_MOUNT_POINT?has_content>
+#define TCPIP_TFTPS_MOUNT_POINT							"${TCPIP_TFTPS_MOUNT_POINT}"
+<#else>
+#define TCPIP_TFTPS_MOUNT_POINT 							"\"
+</#if>
 </#if>
 
 <#--

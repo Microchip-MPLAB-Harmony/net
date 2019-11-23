@@ -136,7 +136,6 @@ void APP_Tasks(void) {
     int i, nNets;
     TCPIP_NET_HANDLE netH;
 
-    SYS_CMD_READY_TO_READ();
     switch (appData.state) {
         case APP_TCPIP_WAIT_INIT:
             tcpipStat = TCPIP_STACK_Status(sysObj.tcpip);
@@ -158,6 +157,8 @@ void APP_Tasks(void) {
 #else
                     SYS_CONSOLE_PRINT("    Interface %s on host %s - NBNS disabled\r\n", netName, netBiosName);
 #endif  // defined(TCPIP_STACK_USE_NBNS)
+                    (void)netName;          // avoid compiler warning 
+                    (void)netBiosName;      // if SYS_CONSOLE_PRINT is null macro
 
                 }
                 appData.state = APP_TCPIP_WAIT_FOR_IP;

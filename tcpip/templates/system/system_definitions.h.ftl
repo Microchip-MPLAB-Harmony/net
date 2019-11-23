@@ -28,6 +28,11 @@
 <#if (drvPic32mEthmac.TCPIP_USE_ETH_MAC)?has_content && (drvPic32mEthmac.TCPIP_USE_ETH_MAC) == true>
 #include "driver/ethmac/drv_ethmac.h"
 </#if>
+
+<#if ((drvEmac0.TCPIP_USE_EMAC0)?has_content && (drvEmac0.TCPIP_USE_EMAC0 == true)) || ((drvEmac1.TCPIP_USE_EMAC1)?has_content && (drvEmac1.TCPIP_USE_EMAC1 == true))>
+#include "driver/emac/drv_emac.h"
+</#if>
+
 <#if (drvMiim.DRV_MIIM_USE_DRIVER)?has_content && (drvMiim.DRV_MIIM_USE_DRIVER) == true>
 #include "driver/miim/drv_miim.h"
 </#if>

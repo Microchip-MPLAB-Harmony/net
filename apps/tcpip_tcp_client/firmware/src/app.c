@@ -167,6 +167,8 @@ void APP_Tasks ( void )
 #else
                     SYS_CONSOLE_PRINT("    Interface %s on host %s - NBNS disabled\r\n", netName, netBiosName);
 #endif  // defined(TCPIP_STACK_USE_NBNS)
+                    (void)netName;          // avoid compiler warning 
+                    (void)netBiosName;      // if SYS_CONSOLE_PRINT is null macro
 
                 }
                 appData.state = APP_TCPIP_WAIT_FOR_IP;
@@ -205,51 +207,53 @@ void APP_Tasks ( void )
             break;
 
         case APP_TCPIP_WAITING_FOR_COMMAND:
-        {
-            SYS_CMD_READY_TO_READ();
-
             if (APP_URL_Buffer[0] != '\0')
             {
-                TCPIP_DNS_RESULT result;
-                if (_APP_ParseUrl(APP_URL_Buffer, &appData.host, &appData.path, &appData.port))
+                if(_APP_ParseUrl(APP_URL_Buffer, &appData.host, &appData.path, &appData.port) != 0)
                 {
                     SYS_CONSOLE_PRINT("Could not parse URL '%s'\r\n", APP_URL_Buffer);
-                    APP_URL_Buffer[0] = '\0';
-                    break;
                 }
-                result = TCPIP_DNS_Resolve(appData.host, TCPIP_DNS_TYPE_A);
-                if (result == TCPIP_DNS_RES_NAME_IS_IPADDRESS)
+                else
                 {
-                    IPV4_ADDR addr;
-                    TCPIP_Helper_StringToIPAddress(appData.host, &addr);
-                    appData.socket = TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE_IPV4,
-                                                          TCPIP_HTTP_SERVER_PORT,
-                                                          (IP_MULTI_ADDRESS*) &addr);
-                    if (appData.socket == INVALID_SOCKET)
+                    TCPIP_DNS_RESULT result = TCPIP_DNS_Resolve(appData.host, TCPIP_DNS_TYPE_A);
+                    if (result == TCPIP_DNS_RES_NAME_IS_IPADDRESS)
                     {
-                        SYS_CONSOLE_MESSAGE("Could not start connection\r\n");
+                        IPV4_ADDR addr;
+                        TCPIP_Helper_StringToIPAddress(appData.host, &addr);
+                        appData.socket = TCPIP_TCP_ClientOpen(IP_ADDRESS_TYPE_IPV4,
+                                TCPIP_HTTP_SERVER_PORT,
+                                (IP_MULTI_ADDRESS*) &addr);
+                        if (appData.socket == INVALID_SOCKET)
+                        {
+                            SYS_CONSOLE_MESSAGE("Could not start connection\r\n");
+                            appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
+                        }
+                        else
+                        {
+                            SYS_CONSOLE_MESSAGE("Starting connection\r\n");
+                            appData.state = APP_TCPIP_WAIT_FOR_CONNECTION;
+                        }
+
+                    }
+                    else if (result < 0)
+                    {
+                        SYS_CONSOLE_MESSAGE("Error in DNS. Aborting\r\n");
                         appData.state = APP_TCPIP_WAITING_FOR_COMMAND;
                     }
-                    SYS_CONSOLE_MESSAGE("Starting connection\r\n");
-                    appData.state = APP_TCPIP_WAIT_FOR_CONNECTION;
-                    break;
+                    else
+                    {
+                        appData.state = APP_TCPIP_WAIT_ON_DNS;
+                    }
                 }
-                if (result < 0)
-                {
-                    SYS_CONSOLE_MESSAGE("Error in DNS aborting\r\n");
-                    APP_URL_Buffer[0] = '\0';
-                    break;
-                }
-                appData.state = APP_TCPIP_WAIT_ON_DNS;
-                APP_URL_Buffer[0] = '\0';
+
+                APP_URL_Buffer[0] = '\0';   // clear the processed command
             }
             else
             {
-               appData.state = APP_TCPIP_WAIT_FOR_IP; 
+                appData.state = APP_TCPIP_WAIT_FOR_IP; 
             }
 
-        }
-        break;
+            break;
 
         case APP_TCPIP_WAIT_ON_DNS:
         {

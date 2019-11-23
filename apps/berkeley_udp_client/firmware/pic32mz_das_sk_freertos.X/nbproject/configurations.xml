@@ -9,7 +9,7 @@
           <logicalFolder name="f6" displayName="bsp" projectFiles="true">
             <itemPath>../src/config/pic32mz_das_sk_freertos/bsp/bsp.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
             <logicalFolder name="f1" displayName="ethmac" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
@@ -32,10 +32,7 @@
               <itemPath>../src/config/pic32mz_das_sk_freertos/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/pic32mz_das_sk_freertos/driver/miim/config/drv_miim_config.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="src" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/pic32mz_das_sk_freertos/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
@@ -46,13 +43,15 @@
             <itemPath>../src/config/pic32mz_das_sk_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/pic32mz_das_sk_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                   <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
                 </logicalFolder>
+                <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ndp_manager.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/ndp_private.h</itemPath>
@@ -122,6 +121,7 @@
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/lldp_private.h</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/src/lldp_tlv.h</itemPath>
               </logicalFolder>
+              <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/tcpip_common_ports.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/tcpip_mac.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/tcpip_mac_object.h</itemPath>
@@ -167,7 +167,7 @@
               <itemPath>../src/config/pic32mz_das_sk_freertos/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
+          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
             <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <itemPath>../src/config/pic32mz_das_sk_freertos/net_pres/pres/src/net_pres_local.h</itemPath>
@@ -202,7 +202,7 @@
               <itemPath>../src/config/pic32mz_das_sk_freertos/peripheral/uart/plib_uart2.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f2" displayName="system" projectFiles="true">
+          <logicalFolder name="f4" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk_freertos/system/command/sys_command.h</itemPath>
             </logicalFolder>
@@ -283,12 +283,12 @@
       <itemPath>../src/app_commands.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
+    <logicalFolder name="f2" displayName="Important Files" projectFiles="true">
       <itemPath>Makefile</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
+    <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
     </logicalFolder>
-    <logicalFolder name="f3" displayName="Source Files" projectFiles="true">
+    <logicalFolder name="f4" displayName="Source Files" projectFiles="true">
       <logicalFolder name="f1" displayName="config" projectFiles="true">
         <logicalFolder name="f1"
                        displayName="pic32mz_das_sk_freertos"
@@ -358,7 +358,7 @@
               <itemPath>../src/config/pic32mz_das_sk_freertos/net_pres/pres/net_pres_cert_store.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="peripheral" projectFiles="true">
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk_freertos/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
@@ -381,7 +381,7 @@
           <logicalFolder name="f6" displayName="stdio" projectFiles="true">
             <itemPath>../src/config/pic32mz_das_sk_freertos/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
+          <logicalFolder name="f4" displayName="system" projectFiles="true">
             <logicalFolder name="f3" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk_freertos/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
@@ -453,13 +453,13 @@
         <targetDevice>PIC32MZ2064DAS169</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.20</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.42"/>
+        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.69"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -521,9 +521,9 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos;"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos"/>
         <property key="extra-include-directories-for-preprocessor"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos;"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos"/>
         <property key="false-conditionals" value="false"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
@@ -537,6 +537,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
@@ -557,7 +560,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="64960"/>
+        <property key="heap-size" value="104960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

@@ -101,7 +101,7 @@ void PIO_Initialize ( void )
     ((pio_registers_t*)PIO_PORT_B)->PIO_OER = 0x100;
     ((pio_registers_t*)PIO_PORT_B)->PIO_ODR = ~0x100;
     /* PORTB Initial state High */
-    ((pio_registers_t*)PIO_PORT_B)->PIO_ODSR = 0x100;
+    ((pio_registers_t*)PIO_PORT_B)->PIO_ODSR = 0x0;
     /* PORTB drive control */
     ((pio_registers_t*)PIO_PORT_B)->PIO_DRIVER = 0x0;
 

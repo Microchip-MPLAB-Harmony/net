@@ -264,7 +264,11 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(
 		if((pMACDrv->sGmacData.gmac_queue[queueIdx]._RxBuffNewQueue.nNodes) < (pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffCntThres))
         {      
             gmacRes = _AllocateRxPacket(pMACDrv, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxBuffAllocCnt, queueIdx, GMAC_RX_DYNAMIC_BUFFERS);
-            //SYS_CONSOLE_PRINT("*");
+            if(gmacRes == DRV_PIC32CGMAC_RES_OUT_OF_MEMORY)
+            {
+                pMACDrv->sGmacData._rxStat.nRxBuffNotAvailable++;			
+                break; 
+            }
         }
         
 		if(pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[desc_idx] == 0)
@@ -293,12 +297,6 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersAppend(
 				DRV_PIC32CGMAC_SingleListTailAdd(&pMACDrv->sGmacData.gmac_queue[queueIdx]._RxBuffAckQueue,pRxBuffQueueNode);
 				GCIRC_INC(desc_idx,nRxDescCnt );
 			}
-            else
-            {                
-                gmacRes = DRV_PIC32CGMAC_RES_NO_RX_QUEUE;
-                SYS_CONSOLE_PRINT("DRV_PIC32CGMAC_LibRxBuffersAppend: Rx Buffer Queue error \r\n");
-                break;
-            }	
 
 		}
 
@@ -788,6 +786,45 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibGetMacAddr (uint8_t * pMacAddr)
 }
 
 /****************************************************************************
+ * Function:    DRV_PIC32CGMAC_LibRxBuffersCountGet
+ * Summary :    Returns the number of pending RX buffers and scheduled buffers in the GMAC queues.
+ *****************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxBuffersCountGet(DRV_GMAC_DRIVER* pMACDrv, int* pendBuffs, int* schedBuffs)
+{
+    int pend_buffer_cnt = 0;
+    int sched_buffer_cnt = 0;
+    
+     
+    for(uint16_t queue_idx=0; queue_idx < DRV_GMAC_NUMBER_OF_QUEUES; queue_idx++)	
+    {
+        for(uint16_t desc_idx=0; desc_idx < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queue_idx].nRxDescCnt; desc_idx++)
+        {                
+            if ((pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc[desc_idx].rx_desc_buffaddr.val) & GMAC_ADDRESS_MASK)
+            {
+                if ((pMACDrv->sGmacData.gmac_queue[queue_idx].pRxDesc[desc_idx].rx_desc_buffaddr.val) & GMAC_RX_OWNERSHIP_BIT)
+                {
+                    pend_buffer_cnt++;
+                }
+                else
+                {
+                    sched_buffer_cnt++;
+                }
+            }
+        }
+    }
+    
+    if(pendBuffs)
+    {
+        *pendBuffs = pend_buffer_cnt;
+    }
+    if(schedBuffs)
+    {
+        *schedBuffs = sched_buffer_cnt;
+    }
+    return DRV_PIC32CGMAC_RES_OK;
+}
+
+/****************************************************************************
  * Function:        _MacPacketAck
  * Summary: ACK function to free the RX/TX packet
  *****************************************************************************/
@@ -875,7 +912,6 @@ static bool _IsBufferNotAvailable(DRV_GMAC_DRIVER * pMACDrv)
 {
     if(GMAC_REGS->GMAC_RSR & GMAC_RSR_BNA_Msk ) //Check for BNA error due to shortage of Rx Buffers
     {
-        pMACDrv->sGmacData._rxStat.nRxBuffNotAvailable++;	
 		
 		//Clear GMAC 'Buffer Not Available' Flag			
 		GMAC_REGS->GMAC_RSR = GMAC_RSR_BNA_Msk ;             
@@ -1080,49 +1116,57 @@ static DRV_PIC32CGMAC_RESULT _GetRxPacket(	DRV_GMAC_DRIVER * pMACDrv,
 	
 	//backup of data Segment for later use
 	pPkt = (TCPIP_MAC_DATA_SEGMENT *)(*pRxPkt)->pDSeg;; 
-	
-	//process all the packet buffers
-	while(nRx_buffer--) 
-	{
-		(*pRxPkt)->pDSeg->segLen = (frameSize >= pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize) ?
-											pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize :frameSize;
-												
-		(*pRxPkt)->pDSeg->segSize = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
-		
-		// RX frame bigger than GMAC RX buffer?
-        if(frameSize >= pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize)
-			frameSize = frameSize - pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
-		else
-			frameSize = 0;			
-		
-		//release the rx packets from GMAC queue
-		pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[rx_index] = 0; 
-		
-        _DRV_GMAC_RxLock(pMACDrv);
-		//clear the buffer address bit-fields
-		pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_index].rx_desc_buffaddr.val &= ~GMAC_ADDRESS_MASK; 
-		_DRV_GMAC_RxUnlock(pMACDrv);
-        
-		// perform cache maintenance
-		L2_DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) (pRxTempPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen );
-		// L1_ICACHE_INVALIDATE_ALL();
-		L1_DCACHE_CLEAN_INVALIDATE_ALL();
-		
-		if(frameSize)
+
+    if(nRx_buffer)
+    {	
+		//process all the packet buffers
+		while(nRx_buffer--) 
 		{
-			GCIRC_INC(rx_index, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt);
+			(*pRxPkt)->pDSeg->segLen = (frameSize >= pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize) ?
+												pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize :frameSize;
+													
+			(*pRxPkt)->pDSeg->segSize = pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
 			
-			(*pRxPkt)->pDSeg->next = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[rx_index]->pDSeg;
-			(*pRxPkt)->pDSeg = (*pRxPkt)->pDSeg->next;	
-		}			
+			// RX frame bigger than GMAC RX buffer?
+			if(frameSize >= pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize)
+				frameSize = frameSize - pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].rxBufferSize;
+			else
+				frameSize = 0;			
+			
+			//release the rx packets from GMAC queue
+			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[rx_index] = 0; 
+			
+			_DRV_GMAC_RxLock(pMACDrv);
+			//clear the buffer address bit-fields
+			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[rx_index].rx_desc_buffaddr.val &= ~GMAC_ADDRESS_MASK; 
+			_DRV_GMAC_RxUnlock(pMACDrv);
+			
+			// perform cache maintenance
+			L2_DCACHE_INVALIDATE_BY_ADDR( (uint32_t *) (pRxTempPkt)->pDSeg->segLoad, (*pRxPkt)->pDSeg->segLen );
+			// L1_ICACHE_INVALIDATE_ALL();
+			L1_DCACHE_CLEAN_INVALIDATE_ALL();
+			
+			if(frameSize)
+			{
+				GCIRC_INC(rx_index, pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nRxDescCnt);
+				
+				(*pRxPkt)->pDSeg->next = pMACDrv->sGmacData.gmac_queue[queueIdx].pRxPckt[rx_index]->pDSeg;
+				(*pRxPkt)->pDSeg = (*pRxPkt)->pDSeg->next;	
+			}			
+			
+		}
+			
+		// restore to first data segment
+		(*pRxPkt)->pDSeg = (TCPIP_MAC_DATA_SEGMENT*)pPkt; 
 		
+		//allocate new packets in place of used buffers
+		DRV_PIC32CGMAC_LibRxBuffersAppend(pMACDrv, queueIdx, rx_state->startIndex, (rx_state->buffer_count)); 
+		res = DRV_PIC32CGMAC_RES_OK;
 	}
-		
-	// restore to first data segment
-	(*pRxPkt)->pDSeg = (TCPIP_MAC_DATA_SEGMENT*)pPkt; 
-	
-	//allocate new packets in place of used buffers
-	res = DRV_PIC32CGMAC_LibRxBuffersAppend(pMACDrv, queueIdx, rx_state->startIndex, (rx_state->buffer_count)); 
+	else
+    {
+        res = DRV_PIC32CGMAC_RES_NO_PACKET;
+    }
 	
 	return res;
 }
@@ -1154,6 +1198,7 @@ static DRV_PIC32CGMAC_RESULT _AllocateRxPacket(DRV_GMAC_DRIVER * pMACDrv, uint16
 		if(pRxPkt == NULL)
 		{   
 			// failed
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pRxBuffQueueNode);
 			gmacAllocRes = DRV_PIC32CGMAC_RES_OUT_OF_MEMORY;
 			break;
 		}

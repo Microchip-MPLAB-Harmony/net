@@ -27,10 +27,14 @@
 #define NET_PRES_NUM_INSTANCE ${__INSTANCE_COUNT}
 #define NET_PRES_NUM_SOCKETS ${NET_PRES_SOCKETS}
 
-<#if HarmonyCore.SELECT_RTOS != "BareMetal">
+<#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS != "BareMetal">
     <#lt>/* Net Pres RTOS Configurations*/
-    <#lt>#define NET_PRES_RTOS_STACK_SIZE           ${NET_PRES_RTOS_STACK_SIZE}
-    <#lt>#define NET_PRES_RTOS_TASK_PRIORITY             ${NET_PRES_RTOS_TASK_PRIORITY}	
+    <#if (HarmonyCore.SELECT_RTOS)?? && HarmonyCore.SELECT_RTOS == "FreeRTOS">
+        <#lt>#define NET_PRES_RTOS_STACK_SIZE                ${NET_PRES_RTOS_STACK_SIZE / 4}
+    <#else>
+        <#lt>#define NET_PRES_RTOS_STACK_SIZE                ${NET_PRES_RTOS_STACK_SIZE}
+    </#if>
+    <#lt>#define NET_PRES_RTOS_TASK_PRIORITY             ${NET_PRES_RTOS_TASK_PRIORITY}
 	
 	<#assign numInstance= __INSTANCE_COUNT?number>
 	<#assign freertos_present= false/>

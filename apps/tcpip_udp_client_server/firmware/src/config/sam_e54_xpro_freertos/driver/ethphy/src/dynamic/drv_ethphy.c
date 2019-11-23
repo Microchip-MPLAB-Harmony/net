@@ -72,36 +72,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define MAC_COMM_CPBL_MASK  (_BMSTAT_BASE10T_HDX_MASK|_BMSTAT_BASE10T_FDX_MASK|_BMSTAT_BASE100TX_HDX_MASK|_BMSTAT_BASE100TX_FDX_MASK)
 // all comm capabilities our MAC supports
 
-// *****************************************************************************
-/* Function:        mRegIxPhyAddToEMACxMADR
-
-   PreCondition:    rIx a valid PHY register, 0-31
-                    phyAdd a valid PHY address, 0-31
-
-   Input:           rIx:    PHY register to be accessed
-                    phyAdd: PHY to be accessed
-
-   Output:          None
-
-   Side Effects:    None
-
-   Overview:        This macro converts a register index and PHY address to a EMACxMADR format;
-
-   Note:            None
-*/
-// From eth_miim_access.c:
-#define  mRegIxPhyAddToEMACxMADR(rIx, phyAdd)  ((rIx)<<_EMACxMADR_REGADDR_POSITION)|((phyAdd)<<_EMACxMADR_PHYADDR_POSITION)
-
-#if (!DRV_ETHPHY_USE_DRV_MIIM)
-// From eth_miim_access.c:
-static const short _MIIClockDivisorTable[]=
-{
-    4, 6, 8, 10, 14, 20, 28, 40, 
-#if defined (__PIC32MZ__)
-    48, 50,
-#endif  // defined (__PIC32MZ__)
-};  // divider values for the Host clock
-#endif  // defined (DRV_ETHPHY_USE_DRV_MIIM)
 // local prototypes
 // debug
 #if ((DRV_PHY_DEBUG_LEVEL & DRV_PHY_DEBUG_MASK_BASIC) != 0)
@@ -265,7 +235,6 @@ static DRV_ETHPHY_LINK_STATUS _Phy2LinkStat(__BMSTATbits_t phyStat)
 
 }
 
-#if (DRV_ETHPHY_USE_DRV_MIIM)
 static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     DRV_MIIM_OPERATION_HANDLE miimOpHandle;
@@ -346,74 +315,6 @@ static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_O
             return hClientObj->smiTxferStatus;
     }
 }
-#else
-static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMITransferDo(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
-{
-    uintptr_t ethphyId = hClientObj->ethphyId;
-
-    switch(hClientObj->smiTxferStatus)
-    {
-        case DRV_ETHPHY_SMI_TXFER_OP_START:
-
-            if( PLIB_ETH_MIIMIsBusy(ethphyId) )
-            {   // some previous operation; wait
-                return DRV_ETHPHY_SMI_TXFER_OP_START;
-            }
-            if(hClientObj->hDriver->busInUse != 0)
-            {   // if this operation is not queued, need to wait the end of the previous one
-                return DRV_ETHPHY_SMI_TXFER_OP_START;
-            }
-
-            hClientObj->hDriver->busInUse = 1;  // mark as busy
-            PLIB_ETH_PHYAddressSet(ethphyId, hClientObj->smiPhyAddress);
-            PLIB_ETH_RegisterAddressSet(ethphyId,hClientObj->smiRIx);
-
-            if(hClientObj->smiTxferType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE)
-            {
-                PLIB_ETH_MIIMWriteDataSet(ethphyId, hClientObj->smiData);
-                // no need to wait for write completion
-                hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_DONE;
-                hClientObj->hDriver->busInUse = 0;  // clear
-            }
-            else if(hClientObj->smiTxferType == DRV_ETHPHY_SMI_XFER_TYPE_WRITE_COMPLETE)
-            {
-                PLIB_ETH_MIIMWriteDataSet(ethphyId, hClientObj->smiData);
-                // wait for write completion
-                hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_BUSY_COMPLETE;
-            }
-            else if(hClientObj->smiTxferType == DRV_ETHPHY_SMI_XFER_TYPE_READ)
-            {   // start read
-                PLIB_ETH_MIIMReadStart(ethphyId);
-                hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_BUSY_COMPLETE;
-            }
-            else if(hClientObj->smiTxferType == DRV_ETHPHY_SMI_XFER_TYPE_SCAN)
-            {   // SCAN
-                PLIB_ETH_MIIMScanModeEnable(ethphyId);
-                hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_DONE;
-            }
-
-            return hClientObj->smiTxferStatus;
-
-        case DRV_ETHPHY_SMI_TXFER_OP_BUSY_COMPLETE:
-            if ( PLIB_ETH_MIIMIsBusy(ethphyId) )
-            {   // wait op to complete
-                return DRV_ETHPHY_SMI_TXFER_OP_BUSY_COMPLETE;
-            }
-
-            if(hClientObj->smiTxferType == DRV_ETHPHY_SMI_XFER_TYPE_READ)
-            {
-                PLIB_ETH_MIIMWriteStart(ethphyId);         // Stop read cycle.
-                hClientObj->smiData = PLIB_ETH_MIIMReadDataGet(ethphyId); // get the read register
-            }
-
-            hClientObj->hDriver->busInUse = 0;  // clear
-            return (hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_DONE);
-
-        default :   // DRV_ETHPHY_SMI_TXFER_OP_NONE, DRV_ETHPHY_SMI_TXFER_OP_DONE
-            return hClientObj->smiTxferStatus;
-    }
-}
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
 
 static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIReadStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx)
 {
@@ -434,18 +335,6 @@ static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIReadStartEx(DRV_ETHPHY_CLIENT_
 
     return _DRV_PHY_SMITransferDo(hClientObj);
 }
-
-#if !(DRV_ETHPHY_USE_DRV_MIIM)
-static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIScanStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx)
-{
-    hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_START;
-    hClientObj->smiRIx = rIx;
-    hClientObj->smiTxferType = DRV_ETHPHY_SMI_XFER_TYPE_SCAN;
-    hClientObj->smiPhyAddress = hClientObj->hDriver->phyAddress;
-
-    return _DRV_PHY_SMITransferDo(hClientObj);
-}
-#endif  // !(DRV_ETHPHY_USE_DRV_MIIM)
 
 static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIWriteStart(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, uint16_t wData)
 {
@@ -468,20 +357,6 @@ static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIWriteStartEx(DRV_ETHPHY_CLIENT
 
    return  _DRV_PHY_SMITransferDo(hClientObj);
 }
-
-#if !(DRV_ETHPHY_USE_DRV_MIIM)
-static DRV_ETHPHY_SMI_TXFER_OP_STATUS _DRV_PHY_SMIWriteCompleteStartEx(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t rIx, uint16_t wData, int phyAdd)
-{
-    hClientObj->smiTxferStatus = DRV_ETHPHY_SMI_TXFER_OP_START;
-    hClientObj->smiRIx = rIx;
-    hClientObj->smiTxferType = DRV_ETHPHY_SMI_XFER_TYPE_WRITE_COMPLETE;
-    hClientObj->smiData =  wData;
-    hClientObj->smiPhyAddress = phyAdd;
-
-   return  _DRV_PHY_SMITransferDo(hClientObj);
-
-}
-#endif  // !(DRV_ETHPHY_USE_DRV_MIIM)
 
 static void _DRV_PHY_SetOperPhase(DRV_ETHPHY_CLIENT_OBJ * hClientObj, uint16_t operPhase, uint16_t operSubPhase)
 {
@@ -577,14 +452,6 @@ const DRV_ETHPHY_OBJECT_BASE  DRV_ETHPHY_OBJECT_BASE_Default =
     DRV_ETHPHY_ClientStatus,
     DRV_ETHPHY_ClientOperationResult,
     DRV_ETHPHY_ClientOperationAbort,
-    DRV_ETHPHY_SMIRead,
-    DRV_ETHPHY_SMIWrite,
-    DRV_ETHPHY_SMIScanStart,
-    DRV_ETHPHY_SMIScanStop,
-    DRV_ETHPHY_SMIScanStatusGet,
-    DRV_ETHPHY_SMIScanDataGet,
-    DRV_ETHPHY_SMIStatus,
-    DRV_ETHPHY_SMIClockSet,
     DRV_ETHPHY_PhyAddressGet,
     DRV_ETHPHY_Setup,
     DRV_ETHPHY_RestartNegotiation,
@@ -647,13 +514,11 @@ SYS_MODULE_OBJ DRV_ETHPHY_Initialize( const SYS_MODULE_INDEX  iModule,
     /* Assign to the local pointer the init data passed */
     ethphyInit = ( DRV_ETHPHY_INIT * ) init;
 
-#if (DRV_ETHPHY_USE_DRV_MIIM)
     if((hSysObj->pMiimBase = ethphyInit->pMiimObject) == 0)
     {
         return SYS_MODULE_OBJ_INVALID;
     }
     hSysObj->miimIndex = ethphyInit->miimIndex;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
 
     hSysObj->objInUse = true;      // Set object to be in use
     hSysObj->busInUse = 0;
@@ -787,7 +652,6 @@ DRV_HANDLE  DRV_ETHPHY_Open ( const SYS_MODULE_INDEX iModule,
     hClientObj = _DRV_ETHPHY_ClientObjectAllocate(hPhyObj, &clientIx) ;
     while(hClientObj)
     {
-#if (DRV_ETHPHY_USE_DRV_MIIM)
         DRV_HANDLE miimHandle = hPhyObj->pMiimBase->DRV_MIIM_Open(hPhyObj->miimIndex, DRV_IO_INTENT_SHARED);
         if(miimHandle == DRV_HANDLE_INVALID)
         {
@@ -797,7 +661,6 @@ DRV_HANDLE  DRV_ETHPHY_Open ( const SYS_MODULE_INDEX iModule,
         hClientObj->pMiimBase = hPhyObj->pMiimBase;
         hClientObj->miimHandle = miimHandle;
         hClientObj->miimOpHandle = 0;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
 
         hClientObj->clientInUse    = true;
         hClientObj->clientIx = clientIx;
@@ -845,9 +708,7 @@ void DRV_ETHPHY_Close( DRV_HANDLE handle )
 
     if(hClientObj != 0)
     {
-#if (DRV_ETHPHY_USE_DRV_MIIM)
         hClientObj->pMiimBase->DRV_MIIM_Close(hClientObj->miimHandle);
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
 
         /* Free the Client Instance */
         hClientObj->clientInUse = false ;
@@ -896,7 +757,6 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
     {
         (*pSetUp->resetFunction)(gDrvEthBaseObj);
     }
-#if (DRV_ETHPHY_USE_DRV_MIIM)
     DRV_MIIM_SETUP  miimSetup;
 
 	miimSetup.hostClockFreq = (uint32_t)TCPIP_INTMAC_PERIPHERAL_CLK;
@@ -911,7 +771,6 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_Setup( DRV_HANDLE handle, DRV_ETHPHY_SETUP* pSetUp,
         _PhyDebugCond(true, __func__, __LINE__);
         return DRV_ETHPHY_RES_MIIM_ERR;
     }
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
 
     hDriver->phyAddress = pSetUp->phyAddress;
     hDriver->openFlags = pSetUp->openFlags;
@@ -986,20 +845,6 @@ static void _DRV_ETHPHY_SetupPhaseIdle(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     openFlags |= (configFlags & DRV_ETHPHY_CFG_RMII) ? TCPIP_ETH_OPEN_RMII : TCPIP_ETH_OPEN_MII;
 
     hDriver->openFlags = openFlags;
-
-
-#if !(DRV_ETHPHY_USE_DRV_MIIM)
-    // Set SMI clock
-    DRV_ETHPHY_VENDOR_SMI_CLOCK_GET phySMIClockGet = hDriver->pPhyObj->smiClockGet;
-
-#if defined (__PIC32MZ__)
-    DRV_ETHPHY_SMIClockSet((DRV_HANDLE)hClientObj, SYS_CLK_PeripheralFrequencyGet(CLK_BUS_PERIPHERAL_5), (*phySMIClockGet)(gDrvEthBaseObj, (DRV_HANDLE)hClientObj) );
-#elif defined (__PIC32C__) || defined(__SAMA5D2__)
-    DRV_ETHPHY_SMIClockSet((DRV_HANDLE)hClientObj, SYS_CLK_FrequencyGet(SYS_CLK_MASTER), (*phySMIClockGet)(gDrvEthBaseObj, (DRV_HANDLE)hClientObj) );
-#else
-    DRV_ETHPHY_SMIClockSet((DRV_HANDLE)hClientObj, SYS_CLK_SystemFrequencyGet(), (*phySMIClockGet)(gDrvEthBaseObj, (DRV_HANDLE)hClientObj) );
-#endif
-#endif  // !(DRV_ETHPHY_USE_DRV_MIIM)
 
     hClientObj->operTStamp = SYS_TMR_TickCountGet() + ((DRV_ETHPHY_RESET_CLR_TMO * SYS_TMR_TickCounterFrequencyGet()) + 999) / 1000;
     _DRV_PHY_SetOperPhase(hClientObj, DRV_ETHPHY_SETUP_PHASE_DETECT, 0);
@@ -1511,33 +1356,6 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_ClientOperationAbort( DRV_HANDLE handle)
 // *****************************************************************************
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIRead( DRV_HANDLE handle, unsigned int rIx, uint16_t* pSmiRes, int phyAdd)
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if(hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    if(hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_READY)
-    {   // another op going on
-        return DRV_ETHPHY_RES_NOT_READY_ERR;
-    }
-
-    hClientObj->operParam = (uintptr_t)pSmiRes;
-
-    _DRV_PHY_SetOperStart(hClientObj, DRV_ETHPHY_CLIENT_OP_SMI_READ, DRV_ETHPHY_RES_PENDING);
-    _DRV_PHY_SMIReadStartEx(hClientObj, rIx, phyAdd);
-
-    return DRV_ETHPHY_RES_PENDING;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-}
-
 static void _DRV_ETHPHY_ClientOpSmiRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     uint16_t* pSmiRes = NULL;
@@ -1558,41 +1376,6 @@ static void _DRV_ETHPHY_ClientOpSmiRead(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 }
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIWrite( DRV_HANDLE handle, unsigned int rIx, uint16_t wData, int phyAdd, bool waitComplete)
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    if(hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_READY)
-    {   // another op going on
-        return DRV_ETHPHY_RES_NOT_READY_ERR;
-    }
-
-    hClientObj->operParam = waitComplete;
-
-
-    _DRV_PHY_SetOperStart(hClientObj, DRV_ETHPHY_CLIENT_OP_SMI_WRITE, DRV_ETHPHY_RES_PENDING);
-    if(waitComplete)
-    {
-        _DRV_PHY_SMIWriteCompleteStartEx(hClientObj, rIx, wData, phyAdd);
-    }
-    else
-    {
-        _DRV_PHY_SMIWriteStartEx(hClientObj, rIx, wData, phyAdd);
-    }
-
-    return DRV_ETHPHY_RES_PENDING;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-}
-
-
 static void _DRV_ETHPHY_ClientOpSmiWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait for write transfer to complete
@@ -1606,31 +1389,6 @@ static void _DRV_ETHPHY_ClientOpSmiWrite(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 }
 
 
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanStart( DRV_HANDLE handle, unsigned int rIx)
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    if(hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_READY)
-    {   // another op going on
-        return DRV_ETHPHY_RES_NOT_READY_ERR;
-    }
-
-    _DRV_PHY_SetOperStart(hClientObj, DRV_ETHPHY_CLIENT_OP_SMI_SCAN, DRV_ETHPHY_RES_PENDING);
-    _DRV_PHY_SMIScanStart(hClientObj, rIx);
-
-
-    return DRV_ETHPHY_RES_PENDING;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-}
-
 static void _DRV_ETHPHY_ClientOpSmiScan(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
 {
     // wait for scan transfer to complete
@@ -1642,139 +1400,6 @@ static void _DRV_ETHPHY_ClientOpSmiScan(DRV_ETHPHY_CLIENT_OBJ * hClientObj)
     // done; remain busy as to not start another SMI operation before aborting this one
 
 }
-
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanStop( DRV_HANDLE handle )
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    if(hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_BUSY || hClientObj->operType != DRV_ETHPHY_CLIENT_OP_SMI_SCAN)
-    {   // not scanning?
-        return DRV_ETHPHY_RES_OPERATION_ERR;
-    }
-
-    PLIB_ETH_MIIMScanModeDisable(hClientObj->ethphyId);
-    _DRV_PHY_SetOperDoneResult(hClientObj, DRV_ETHPHY_RES_OK);
-    hClientObj->hDriver->busInUse = 0;  // clear
-    return DRV_ETHPHY_RES_OK;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-}
-
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanStatusGet( DRV_HANDLE handle )
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    if(hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_BUSY || hClientObj->operType != DRV_ETHPHY_CLIENT_OP_SMI_SCAN)
-    {   // not scanning?
-        return DRV_ETHPHY_RES_OPERATION_ERR;
-    }
-
-    return PLIB_ETH_DataNotValid(hClientObj->ethphyId) ? DRV_ETHPHY_RES_PENDING : DRV_ETHPHY_RES_OK;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-}
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIScanDataGet( DRV_HANDLE handle, uint16_t* pScanRes )
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    if(hClientObj->status != DRV_ETHPHY_CLIENT_STATUS_BUSY || hClientObj->operType != DRV_ETHPHY_CLIENT_OP_SMI_SCAN)
-    {   // not scanning?
-        return DRV_ETHPHY_RES_OPERATION_ERR;
-    }
-
-    if( PLIB_ETH_DataNotValid(hClientObj->ethphyId) )
-    {   // no data available yet
-        return DRV_ETHPHY_RES_PENDING;
-    }
-
-    uint16_t scanData = PLIB_ETH_MIIMReadDataGet(hClientObj->ethphyId);
-    if(pScanRes)
-    {
-        *pScanRes = scanData;
-    }
-    
-    return DRV_ETHPHY_RES_OK;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-}
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIStatus( DRV_HANDLE handle )
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    return PLIB_ETH_MIIMIsBusy(hClientObj->ethphyId) ? DRV_ETHPHY_RES_BUSY : DRV_ETHPHY_RES_OK;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-} 
-
-DRV_ETHPHY_RESULT DRV_ETHPHY_SMIClockSet( DRV_HANDLE handle,
-                             uint32_t hostClock,
-                             uint32_t maxSMIClock )
-{
-#if (DRV_ETHPHY_USE_DRV_MIIM)
-    return DRV_ETHPHY_RES_OPERATION_ERR; 
-#else
-    DRV_ETHPHY_CLIENT_OBJ * hClientObj = (DRV_ETHPHY_CLIENT_OBJ *) handle;
-    int  ix;
-    uintptr_t    ethphyId; 
-
-    if( hClientObj == 0)
-    {
-        return DRV_ETHPHY_RES_HANDLE_ERR;
-    }
-
-    ethphyId = hClientObj->ethphyId;
-    PLIB_ETH_MIIMResetEnable(ethphyId); // Issue MIIM reset
-    PLIB_ETH_MIIMResetDisable(ethphyId); // Clear MIIM reset
-
-    for(ix=0; ix<sizeof(_MIIClockDivisorTable)/sizeof(*_MIIClockDivisorTable); ix++)
-    {
-        if(hostClock/_MIIClockDivisorTable[ix]<=maxSMIClock)
-        {   // found it
-            break;
-        }
-    }
-
-    if(ix == sizeof(_MIIClockDivisorTable)/sizeof(*_MIIClockDivisorTable))
-    {
-        ix--;   // max divider; best we can do
-    }
-    PLIB_ETH_MIIMClockSet(ethphyId,ix+1);  // program the clock
-
-    return DRV_ETHPHY_RES_OK;
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
-} 
 
 DRV_ETHPHY_RESULT DRV_ETHPHY_PhyAddressGet( DRV_HANDLE handle, DRV_ETHPHY_INTERFACE_INDEX portIndex, int* pPhyAddress)
 {
@@ -1894,10 +1519,13 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 #elif defined (__PIC32C__) || defined(__SAMA5D2__)
     hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)== DRV_GMAC_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;    
     ethRes = DRV_ETHPHY_RES_OK;
+#elif defined (__SAM9X60__)
+    hwFlags = DRV_ETHPHY_CFG_RMII;
+    ethRes = DRV_ETHPHY_RES_OK;
 #else
     hwFlags = 0;
     ethRes = DRV_ETHPHY_RES_CFG_ERR;
-#endif  // defined (__PIC32MX__)
+#endif
 
     if(pFlags)
     {

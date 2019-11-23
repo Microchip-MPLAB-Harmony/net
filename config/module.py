@@ -37,15 +37,9 @@ def loadModule():
     tcpipNetConfigComponent.addDependency("NETCONFIG_MAC_Dependency", "MAC")
     tcpipNetConfigComponent.addCapability("libtcpipNetConfig","NETCONFIG",True)
     tcpipNetConfigComponent.setDisplayType("TCP/IP Library")
-
-    tcpipSysFsWrapperComponent = Module.CreateSharedComponent("tcpipSysFsWrapper", "TCPIP File System Wrapper", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_sysfs_wrapper.py")
-    tcpipSysFsWrapperComponent.addCapability("libtcpipSysFsWrapper","TCPIP_FS_WRAPPER",True)    
-    tcpipSysFsWrapperComponent.addDependency("TcpipFsWarapper_SysFS_Dependency", "SYS_FS")  
-    tcpipSysFsWrapperComponent.setDisplayType("TCP/IP Library")
     
     tcpipCmdComponent = Module.CreateComponent("tcpipCmd", "TCPIP CMD", "/Libraries/TCPIP/CORE/", "tcpip/config/tcpip_cmd.py")
     tcpipCmdComponent.addCapability("libtcpipCmd","TCPIP_CMD",True) 
-    # tcpipCmdComponent.addDependency("Cmd_Stack_Dependency", "TCPIP_CORE", None, True, True)
     tcpipCmdComponent.addDependency("TcpipCmd_SysCmd_Dependency", "SYS_COMMAND", None, True, True)
     tcpipCmdComponent.setDisplayType("TCP/IP Library")
 
@@ -143,15 +137,13 @@ def loadModule():
     tcpipFtpsComponent = Module.CreateComponent("tcpipFtps", "FTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ftps.py")
     tcpipFtpsComponent.addCapability("libtcpipFtps","FTPS",True)    
     tcpipFtpsComponent.addDependency("Ftps_TCP_Dependency", "TCP", None, True, True)    
-    tcpipFtpsComponent.addDependency("Ftps_IPv4_Dependency", "IPv4", None, True, True)  
-    tcpipFtpsComponent.addDependency("Ftps_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+    tcpipFtpsComponent.addDependency("Ftps_TcpipFs_Dependency", "SYS_FS", None, False, False)
     tcpipFtpsComponent.setDisplayType("TCP/IP Library")
     
     tcpipHttpNetComponent = Module.CreateComponent("tcpipHttpNet", "HTTPNET SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_httpnet.py")
     tcpipHttpNetComponent.addCapability("libtcpipHttpNet","HTTPNET",True)   
     tcpipHttpNetComponent.addDependency("HttpNet_TCP_Dependency", "TCP", None, True, True)  
-    tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-    # tcpipHttpNetComponent.addDependency("HttpNet_Crypto_Dependency", "LIB_CRYPTO")
+    tcpipHttpNetComponent.addDependency("HttpNet_TcpipFs_Dependency", "SYS_FS", None, False, False)
     tcpipHttpNetComponent.addDependency("HttpNet_NetPres_Dependency", "net_pres", True, True)
     tcpipHttpNetComponent.setDisplayType("TCP/IP Library")
 
@@ -159,8 +151,8 @@ def loadModule():
         tcpipHttpComponent = Module.CreateComponent("tcpipHttp", "HTTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_http.py")
         tcpipHttpComponent.addCapability("libtcpipHttp","HTTP",True)
         tcpipHttpComponent.addDependency("Http_TCP_Dependency", "TCP", None, True, True)
-        tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-        tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO")
+        tcpipHttpComponent.addDependency("Http_TcpipFs_Dependency", "SYS_FS", None, False, False)
+        tcpipHttpComponent.addDependency("Http_Crypto_Dependency", "LIB_CRYPTO", None, True, True)
         tcpipHttpComponent.setDisplayType("TCP/IP Library")
 
     tcpipIperfComponent = Module.CreateComponent("tcpipIperf", "IPERF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_iperf.py")
@@ -168,6 +160,12 @@ def loadModule():
     tcpipIperfComponent.addDependency("Iperf_TCP_Dependency", "TCP", None, True, True)
     tcpipIperfComponent.addDependency("Iperf_UDP_Dependency", "UDP", None, True, True)
     tcpipIperfComponent.setDisplayType("TCP/IP Library")
+
+    tcpipFtpcComponent = Module.CreateComponent("tcpipFtpc", "FTP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_ftpc.py")
+    tcpipFtpcComponent.addCapability("libtcpipFtpc","FTPC",True)
+    tcpipFtpcComponent.addDependency("FTPC_TCP_Dependency", "TCP", None, True, True)    
+    tcpipFtpcComponent.addDependency("FTPC_TcipFs_Dependency", "SYS_FS", None, False, False)
+    tcpipFtpcComponent.setDisplayType("TCP/IP Library")
     
     tcpipNbnsComponent = Module.CreateComponent("tcpipNbns", "NBNS", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_nbns.py")
     tcpipNbnsComponent.addCapability("libtcpipNbns","NBNS",True)
@@ -175,25 +173,24 @@ def loadModule():
     tcpipNbnsComponent.addDependency("Nbns_UDP_Dependency", "UDP", None, True, True)    
     tcpipNbnsComponent.setDisplayType("TCP/IP Library")
     
-    tcpipRebootComponent = Module.CreateComponent("tcpipReboot", "REBOOT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_reboot.py")
-    tcpipRebootComponent.addCapability("libtcpipReboot","REBOOT",True)
-    tcpipRebootComponent.addDependency("Reboot_IPv4_Dependency", "IPv4", None, True, True)
-    tcpipRebootComponent.addDependency("Reboot_UDP_Dependency", "UDP", None, True, True)
-    tcpipRebootComponent.setDisplayType("TCP/IP Library")
+    # tcpipRebootComponent = Module.CreateComponent("tcpipReboot", "REBOOT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_reboot.py")
+    # tcpipRebootComponent.addCapability("libtcpipReboot","REBOOT",True)
+    # tcpipRebootComponent.addDependency("Reboot_IPv4_Dependency", "IPv4", None, True, True)
+    # tcpipRebootComponent.addDependency("Reboot_UDP_Dependency", "UDP", None, True, True)
+    # tcpipRebootComponent.setDisplayType("TCP/IP Library")
 
     tcpipSmtpcComponent = Module.CreateComponent("tcpipSmtpc", "SMTP CLIENT", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_smtpc.py")
     tcpipSmtpcComponent.addCapability("libtcpipSmtpc","SMTPC",True)
     tcpipSmtpcComponent.addDependency("Smtpc_TCP_Dependency", "TCP", None, True, True)  
     tcpipSmtpcComponent.addDependency("Smtpc_NetPres_Dependency", "net_pres", True, True)
     tcpipSmtpcComponent.addDependency("Smtpc_DNSC_Dependency", "DNSC", None, True, True)
-    tcpipSmtpcComponent.addDependency("Smtpc_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+    tcpipSmtpcComponent.addDependency("Smtpc_TcpipFs_Dependency", "SYS_FS", None, False, False)
     tcpipSmtpcComponent.setDisplayType("TCP/IP Library")
     
     tcpipSnmpComponent = Module.CreateComponent("tcpipSnmp", "SNMP", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_snmp.py")
     tcpipSnmpComponent.addCapability("libtcpipSnmp","SNMP",True)    
     tcpipSnmpComponent.addDependency("Snmp_UDP_Dependency", "UDP", None, True, True)    
-    tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
-    # tcpipSnmpComponent.addDependency("Snmp_Crypto_Dependency", "LIB_CRYPTO")
+    tcpipSnmpComponent.addDependency("Snmp_TcpipFs_Dependency", "SYS_FS", None, False, False)
     tcpipSnmpComponent.setDisplayType("TCP/IP Library")
 
     if "SAMA5" not in processor:    
@@ -218,7 +215,7 @@ def loadModule():
     tcpipTftpcComponent.addDependency("Tftpc_IPv4_Dependency", "IPv4", None, True, True)
     tcpipTftpcComponent.addDependency("Tftpc_UDP_Dependency", "UDP", None, True, True)  
     #tcpipTftpcComponent.addDependency("Tftpc_MAC_Dependency", "MAC")
-    tcpipTftpcComponent.addDependency("Tftpc_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+    tcpipTftpcComponent.addDependency("Tftpc_TcpipFs_Dependency", "SYS_FS", None, False, False)
     tcpipTftpcComponent.setDisplayType("TCP/IP Library")
     
     tcpipTftpsComponent = Module.CreateComponent("tcpipTftps", "TFTP SERVER", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_tftps.py")
@@ -226,7 +223,7 @@ def loadModule():
     tcpipTftpsComponent.addDependency("Tftps_IPv4_Dependency", "IPv4", None, True, True)
     tcpipTftpsComponent.addDependency("Tftps_UDP_Dependency", "UDP", None, True, True)  
     #tcpipTftpsComponent.addDependency("Tftps_MAC_Dependency", "MAC")
-    tcpipTftpsComponent.addDependency("Tftps_TcpipFs_Dependency", "TCPIP_FS_WRAPPER", None, True, True)
+    tcpipTftpsComponent.addDependency("Tftps_TcpipFs_Dependency", "SYS_FS", None, False, False)
     tcpipTftpsComponent.setDisplayType("TCP/IP Library")
     
     tcpipZeroConfComponent = Module.CreateComponent("tcpipZeroConf", "ZEROCONF", "/Libraries/TCPIP/Layer7-APPLICATION/", "tcpip/config/tcpip_zeroconf.py")
@@ -240,6 +237,13 @@ def loadModule():
         drvGmacComponent = Module.CreateComponent("drvGmac", "GMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/gmac/config/drv_intmac_gmac.py")
         drvGmacComponent.addCapability("libdrvGmac","MAC")
         drvGmacComponent.addDependency("GMAC_PHY_Dependency", "PHY", None, True, True)  
+    elif Peripheral.moduleExists("EMAC"):
+        aDrvMacComponent_0 = Module.CreateComponent("drvEmac0", "EMAC0", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
+        aDrvMacComponent_0.addCapability( "libdrvMac0", "MAC")
+        aDrvMacComponent_0.addDependency("MAC_PHY_Dependency0", "PHY", None, True, True)
+        aDrvMacComponent_1 = Module.CreateComponent("drvEmac1", "EMAC1", "/Harmony/Drivers/MAC Driver/Internal/", "driver/emac/config/drv_intmac_emac.py")
+        aDrvMacComponent_1.addCapability( "libdrvMac1", "MAC")
+        aDrvMacComponent_1.addDependency("MAC_PHY_Dependency1", "PHY", None, True, True)
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         drvPic32mEthmacComponent = Module.CreateComponent("drvPic32mEthmac", "ETHMAC", "/Harmony/Drivers/MAC Driver/Internal/", "driver/ethmac/config/drv_intmac_ethmac.py")
         drvPic32mEthmacComponent.addCapability("libdrvPic32mEthmac","MAC")

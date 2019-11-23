@@ -1816,7 +1816,7 @@ static TCPIP_TFTPS_RESULT _TFTPS_Check_Options(TFTPS_CB *tftp_con, uint32_t byte
         if(tftpTxBufSize != configTftpTxBufSize)
         {       
             /* Reallocate the original socket memory */            
-            if(!TCPIP_UDP_OptionsSet(tftp_con->cSkt, UDP_OPTION_TX_BUFF, (void*)&tftpTxBufSize))
+            if(!TCPIP_UDP_OptionsSet(tftp_con->cSkt, UDP_OPTION_TX_BUFF, (void*)(uintptr_t)tftpTxBufSize))
             {
                 return TFTPS_RES_SKT_ERR;
             }

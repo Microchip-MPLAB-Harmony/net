@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_SMTPC_ENCODE_TYPE Enumeration</title>
+<title>TCPIP_MAC_TX_STATISTICS Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01210.html" target="topic">SMTPC Module</a> &gt; <a href="01659.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03208.html" target="topic">TCPIP_SMTPC_ENCODE_TYPE Enumeration</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01016.html" target="topic">MAC Driver Module</a> &gt; <a href="01606.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03208.html" target="topic">TCPIP_MAC_TX_STATISTICS Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03200.html" target="topic">Previous</a> | <a href="01659.html" target="topic">Up</a> | <a href="03214.html" target="topic">Next</a></div>
+<a href="03178.html" target="topic">Previous</a> | <a href="01606.html" target="topic">Up</a> | <a href="03028.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_ENCODE_TYPE Topic Title: TCPIP_SMTPC_ENCODE_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_TX_STATISTICS Topic Title: TCPIP_MAC_TX_STATISTICS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_SMTPC_ENCODE_TYPE Enumeration</div>
+TCPIP_MAC_TX_STATISTICS Structure</div>
 </div>
 </div>
 
@@ -49,17 +49,18 @@ TCPIP_SMTPC_ENCODE_TYPE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enumeration: TCPIP_SMTPC_ENCODE_TYPE&nbsp;</p>
+MAC TX Statistics Data&nbsp;</p>
 <p class="Element10">
-Enumeration describing the possible encoding types supported by the SMTPC client.</p></div>
+This structure defines the TX statistics data for the MAC driver.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCPIP_SMTPC_ENCODE_TYPE_UNKNOWN</span></strong>,
-  <strong><span style="color: #000000">TCPIP_SMTPC_ENCODE_TYPE_7BIT</span></strong>,
-  <strong><span style="color: #000000">TCPIP_SMTPC_ENCODE_TYPE_BASE64</span></strong>
-} TCPIP_SMTPC_ENCODE_TYPE;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nTxOkPackets</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nTxPendBuffers</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nTxErrorPackets</span></strong>;
+  <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nTxQueueFull</span></strong>;
+} TCPIP_MAC_TX_STATISTICS;</pre></div></div>
 <a name="4D656D62657273"></a><div class="Element14">
 Members</div>
 <div class="Element11">
@@ -75,19 +76,24 @@ Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SMTPC_ENCODE_TYPE_UNKNOWN&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+int nTxOkPackets;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-unknown encoding type; defaults to base64&nbsp;</div></td></tr><tr>
+number of OK transmitted packets&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SMTPC_ENCODE_TYPE_7BIT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+int nTxPendBuffers;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-7bit encoding type: no encoding done, 7 bit ASCII This doesn't do any encoding. Use it for plain text.&nbsp;</div></td></tr><tr>
+number of unacknowledged pending TX buffers in the driver queues. This is equal with pending TX packets when each packet is contained within a TX buffer.&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_SMTPC_ENCODE_TYPE_BASE64&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+int nTxErrorPackets;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-base64 encoding applied Mandatory for binary data; could be used for plain data as well. other supported types will be added here&nbsp;</div></td></tr></table></div></div>
+number of packets that could not be transmitted&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+int nTxQueueFull;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+number of times the TX queue was full this may signal that the number of TX descriptors is too small&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -95,14 +101,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Normally plain text should be sen using the 7bit encoding type, i.e. plain ASCII. However, selecting base64 encoding has the advantage that the lines are not limited in length and any sequence of characters can be present in the email body without the need of the SMTPC to search and replace the SMTP forbidden characters.</p></div>
+This statistics are recorded by the driver, not by the hardware.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01210.html" target="topic">SMTPC Module</a> &gt; <a href="01659.html" target="topic">Library Interface</a> &gt; b) Data Types and Functions &gt; <a href="03208.html" target="topic">TCPIP_SMTPC_ENCODE_TYPE Enumeration</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01016.html" target="topic">MAC Driver Module</a> &gt; <a href="01606.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03208.html" target="topic">TCPIP_MAC_TX_STATISTICS Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +116,13 @@ Normally plain text should be sen using the 7bit encoding type, i.e. plain ASCII
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03200.html" target="topic">Previous</a> | <a href="01659.html" target="topic">Up</a> | <a href="03214.html" target="topic">Next</a></div>
+<a href="03178.html" target="topic">Previous</a> | <a href="01606.html" target="topic">Up</a> | <a href="03028.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SMTPC_ENCODE_TYPE Topic Title: TCPIP_SMTPC_ENCODE_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_TX_STATISTICS Topic Title: TCPIP_MAC_TX_STATISTICS Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

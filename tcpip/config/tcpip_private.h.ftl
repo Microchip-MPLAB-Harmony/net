@@ -183,6 +183,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if (tcpipIgmp.TCPIP_USE_IGMP)?has_content &&  (tcpipIgmp.TCPIP_USE_IGMP) == true>
 #include "tcpip/src/igmp_manager.h"
 </#if>
+<#if (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT)?has_content && (tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT) == true>
+#include "tcpip/src/ftpc_manager.h"
+</#if>
 #include "tcpip/src/tcpip_packet.h"
 #include "tcpip/src/tcpip_helpers_private.h"
 #include "tcpip/src/oahash.h"

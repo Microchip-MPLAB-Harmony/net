@@ -42,7 +42,23 @@ def instantiateComponent(drvGmacComponent):
     elif (gmac_periphID == "44152"): # SAMA5D2
         tcpipGmacDevName.setDefaultValue("SAMA5D2")  
         
-    
+    if(gmac_periphID == "11046"): # SAME70, SAMV71  
+        # Enable MPU Setting for GMAC descriptor
+        if(Database.getSymbolValue("core", "CoreUseMPU") != True):
+            Database.setSymbolValue("core", "CoreUseMPU", True)
+        if(Database.getSymbolValue("core", "CoreMPU_DEFAULT") != True):  
+            Database.setSymbolValue("core", "CoreMPU_DEFAULT", True)            
+        mpuNumRegions = Database.getSymbolValue("core", "MPU_NUMBER_REGIONS")
+        for i in range(0,mpuNumRegions):
+            if(Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Enable")) != True):
+                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Enable"), True)
+                Database.setSymbolValue("core", ("MPU_Region_Name" + str(i)), "GMAC Descriptor")
+                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Address"), Database.getSymbolValue("core", ("MPU_Region_" + str(i) + "_Address")) + 0x2045F000) 
+                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Size"), 7)
+                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Type"), 5)
+                Database.setSymbolValue("core", ("MPU_Region_" + str(i) + "_Access"), 3)
+                break
+        
     # Enable GMAC clock
     Database.setSymbolValue("core", "GMAC_CLOCK_ENABLE", True, 2)
     # Use Internal Ethernet MAC Driver? 

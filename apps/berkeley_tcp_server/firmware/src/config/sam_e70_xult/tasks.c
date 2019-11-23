@@ -54,6 +54,7 @@
 #include "definitions.h"
 
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -67,7 +68,6 @@
   Remarks:
     See prototype in system/common/sys_module.h.
 */
-
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
@@ -100,7 +100,6 @@ TCPIP_STACK_Task(sysObj.tcpip);
 
 
 }
-
 
 /*******************************************************************************
  End of File

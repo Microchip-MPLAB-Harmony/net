@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_SocketRemoteBind Function</title>
+<title>NET_PRES_SocketRead Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01160.html" target="topic">NET_PRES_SocketRemoteBind Function</a></div>
+<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01160.html" target="topic">NET_PRES_SocketRead Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01159.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01161.html" target="topic">Next</a></div>
+<a href="01159.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01161.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRemoteBind@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_ADDR_T@NET_PRES_SKT_PORT_T@NET_PRES_ADDRESS * Topic Title: NET_PRES_SocketRemoteBind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRead@NET_PRES_SKT_HANDLE_T@void *@uint16_t Topic Title: NET_PRES_SocketRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_SocketRemoteBind Function</div>
+NET_PRES_SocketRead Function</div>
 </div>
 </div>
 
@@ -49,22 +49,21 @@ NET_PRES_SocketRemoteBind Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function calls directly to the transport layer's remote bind function.</p></div>
+This function reads an array of data bytes from a <a href="01305.html" target="topic">socket</a>'s RX buffer/FIFO. The data is removed from the FIFO in the process. If the connection is encrypted this function calls the encryption provider's read function, otherwise it calls the transport layer's read function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NET_PRES_SocketRemoteBind</span></strong>(
-    <a href="01116.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
-    <a href="01106.html" target="topic">NET_PRES_SKT_ADDR_T</a> <strong><span style="color: #000000">addrType</span></strong>, 
-    <a href="01119.html" target="topic">NET_PRES_SKT_PORT_T</a> <strong><span style="color: #000000">port</span></strong>, 
-    <a href="01059.html" target="topic">NET_PRES_ADDRESS</a> * <strong><span style="color: #000000">addr</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">NET_PRES_SocketRead</span></strong>(
+    <a href="01118.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">buffer</span></strong>, 
+    uint16_t <strong><span style="color: #000000">size</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A <a href="01301.html" target="topic">socket</a> needs to have been opened by <a href="01154.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
+A <a href="01305.html" target="topic">socket</a> needs to have been opened by <a href="01156.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -83,22 +82,17 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element303">
 handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The <a href="01301.html" target="topic">socket</a> to bind.&nbsp;</div></td></tr><tr>
+The presentation layer <a href="01305.html" target="topic">socket</a> handle.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+buffer&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The type of address being used. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
+The pointer to the array to store data that was read.&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+size&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The port to use. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-addr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The address to bind to. This is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
+The number of bytes to be read.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -106,18 +100,21 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">true - Indicates success</li>
-<li class="Element603">false - Indicates failure</li>
-</ul></p></div>
+The number of bytes read from the <a href="01305.html" target="topic">socket</a>. If less than len, the RX FIFO buffer became empty or the <a href="01305.html" target="topic">socket</a> is not connected.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+For encrypted connections, a null buffer is an invalid parameter. For non encrypted connections if the supplied buffer is null, the data is simply discarded.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01160.html" target="topic">NET_PRES_SocketRemoteBind Function</a></div>
+<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01160.html" target="topic">NET_PRES_SocketRead Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +122,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01159.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01161.html" target="topic">Next</a></div>
+<a href="01159.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01161.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRemoteBind@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_ADDR_T@NET_PRES_SKT_PORT_T@NET_PRES_ADDRESS * Topic Title: NET_PRES_SocketRemoteBind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRead@NET_PRES_SKT_HANDLE_T@void *@uint16_t Topic Title: NET_PRES_SocketRead Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

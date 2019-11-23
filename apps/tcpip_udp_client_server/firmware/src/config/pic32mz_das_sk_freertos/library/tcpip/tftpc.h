@@ -120,7 +120,7 @@ typedef enum
     TFTPC_ERROR_INVALID_INTERFACE = -9,    // TFTP client interface error
     TFTPC_ERROR_INVALID_FILE_LENGTH = -10, // TFTP client file length is more than 
 	                                     // the expected size, which should be
-                                         // the size of SYS_FS_MAX_PATH
+                                         // the size of SYS_FS_FILE_NAME_LEN
     TFTPC_ERROR_INVALID_SERVER_ADDR=-11,   // Invalid Server Address
 
 } TCPIP_TFTPC_OPERATION_RESULT;

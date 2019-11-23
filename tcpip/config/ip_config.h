@@ -72,6 +72,14 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // the stream will be discarded
 #define TCPIP_IPV4_FRAGMENT_MAX_NUMBER     4
 
+// This setting enables/disables the processing of the RX packets
+// by an external handler
+// The user of the IPv4 can register an external function to 
+// process the incoming packets
+// If true, the functionality is built in and could be used by the application
+// If false, the functionality does not exist and the generated code is slightly smaller 
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS true
+
 
 // The IP task processing rate: number of milliseconds to generate an IP tick.
 // This is the tick that advances the IP state machine.

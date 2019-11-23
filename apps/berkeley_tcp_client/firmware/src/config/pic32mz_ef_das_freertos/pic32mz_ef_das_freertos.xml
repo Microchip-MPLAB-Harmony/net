@@ -1163,7 +1163,7 @@
         </Menu>
         <Integer dnOrder="7" id="SYS_COMMAND_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="1024"/>
+            <User dnOrder="0" value="4096"/>
           </Values>
         </Integer>
         <File dnOrder="8" id="SYS_COMMAND_SOURCE">

@@ -65,7 +65,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/tcpip_mac_object.h"
 
 
-
 #include "driver/ethphy/drv_ethphy.h"
 #include "driver/ethmac/drv_ethmac.h"
 
@@ -96,12 +95,6 @@ typedef struct
     TCPIP_MAC_EventF            _TcpNotifyFnc;              // group notification handler
     const void*                 _TcpNotifyParam;            // notification parameter
 }DRV_ETHMAC_EVENT_DCPT;   // event descriptor per group
-
-// transmit directly from within ISR
-// provides a faster response when running out of
-// TX descriptors
-//
-//#define ETH_PIC32_INT_MAC_ISR_TX
 
 
 // synchronization for the RX flow
@@ -210,9 +203,6 @@ typedef struct
     INT_SOURCE     _macIntSrc;             // this MAC interrupt source
 
     DRV_ETHMAC_EVENT_DCPT _pic32_ev_group_dcpt;
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    DRV_ETHMAC_SGL_LIST _TxAckQueue;        // TX acknowledgement queue; stores TX packets that need to be acknowledged 
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
     // rx descriptor; supports maximum fragmentation
     DRV_ETHMAC_PKT_DCPT         rxPktDcpt[TCPIP_EMAC_RX_FRAGMENTS];

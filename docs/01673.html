@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Introduction</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01671.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01673.html" target="topic">Introduction</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01673.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01671.html" target="topic">Previous</a> | <a href="01671.html" target="topic">Up</a> | <a href="01675.html" target="topic">Next</a></div>
+<a href="01679.html" target="topic">Previous</a> | <a href="01214.html" target="topic">Up</a> | <a href="00104.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Introduction</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,38 +49,146 @@ Introduction</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SNMP is an Internet protocol that was originally designed to manage different network devices, such as file servers, hubs, routers, and so on. It can also be used to manage and control an ever increasing number of small embedded systems connected to one another over any IP network. Systems can communicate with each other using SNMP to transfer control and status information, creating a truly distributed system. </p><p class="Element10" style="text-align: center;">
-<strong>Location of the SNMP Stack in the TCP/IP Protocol Stack</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="tcpip_stack_diagram.png" border="0" alt="" title="">&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<strong>Overview of the SNMP Model</strong>&nbsp;</p>
-<p class="Element10" style="text-align: center;">
-<img src="TCPIP SNMP Abstraction Model.png" border="0" alt="" title=""></p><p class="Element10">
-The Microchip SNMP Server is a multi-lingual implementation, which supports SNMPv1, V2c, and V3 server features simultaneously. The SNMP Server is implemented to address the requirements of embedded applications and works with both IPv4 and IPv6 addresses. SNMPv1 and V2c are enabled by <a href="03651.html" target="topic">TCPIP_STACK_USE_SNMP_SERVER</a>. SNMPv3 support is enabled by <a href="03652.html" target="topic">TCPIP_STACK_USE_SNMPV3_SERVER</a>. Since the SNMPv3 stack requires the support of SNMPv1 and SNMPv2c, <a href="03652.html" target="topic">TCPIP_STACK_USE_SNMPV3_SERVER</a> should be enabled with <a href="03651.html" target="topic">TCPIP_STACK_USE_SNMP_SERVER</a>. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-Currently, the SNMP agent will be able to communicate with one manager at a time, and it will be connected to either an IPv4 address or an IPv6 address.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-V2c</div>
+The configuration of the SMPT TCP/IP Stack Library is based on the file <span class="Element146"><a href="01216.html" target="topic">smtpc_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
 <p class="Element10">
-V2c is implemented with support for the configuration of multiple community names and the community names can be configured through the HTTP web interface. An access-restricted web page is provided with the demonstration application to allow dynamic configuration of SNMP communities.</p><div class="Element15">
-SNMPv3</div>
+This header file contains the configuration selection for the SMTPC TCP/IP Stack Library. Based on the selections made, the SMTPC TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the SMTPC TCP/IP Stack Library.&nbsp;</p>
 <p class="Element10">
-SNMPv3 RFC specifies different types of access mechanisms, user security model (USM), authentication and privacy protocols. The Microchip SNMPv3 Server is implemented with support for the AES 128 CFB 128 and DES-CBC privacy protocols, and the MD5 and SHA1 message authentication protocols. The demonstration implementation of the server is configured with three types of user names with respective authentication and privacy credentials and authentication types. These credentials and other user information are stored in the global array. The user of the SNMPv3 stack can decide on the number of user names in the User’s database to be stored with the SNMPv3 Server. According to the SNMPv3 recommendation, the SNMPv3 Server should not be configured with the authentication and privacy passwords. Instead, it could be configured with the respective localized keys of the password. The Microchip SNMPv3 agent is provided with the password information in the database for &quot;Getting Started&quot; and for understanding purposes only. It is recommended that the SNMPv3 stack be modified to restrict access to the password OIDs declared in the user database. </p><div class="Element63">
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01327.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in the SNMP Stack will prevent access to the variables that should be secured by SNMPv3. SNMP variables are structures in a tree in the MIB. Access to parts of this tree is determined by version. For example, SYSTEM-type variables can be accessed regardless of the SNMP version, while SNMPv2c requests can access part of the tree, and authenticated SNMPv3 requests can access the complete tree.&nbsp;</div></td></tr></table></div></div>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00104.html" target="topic">_SMTPC_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro _SMTPC_CONFIG_H_.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03370.html" target="topic">TCPIP_SMTPC_CLIENT_ADDR_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+size of a buffer that can hold an email address: user@domain.smth&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03371.html" target="topic">TCPIP_SMTPC_CLIENT_AUTH_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+size of a buffer that can hold the 2* username and password&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03372.html" target="topic">TCPIP_SMTPC_CLIENT_MESSAGE_DATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+default string that identifies the SMTPC client mail date Currently there is no date/time service available The mail server will update with the current date Keep the current data/time format that's accepted by the SMTP servers&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03377.html" target="topic">TCPIP_SMTPC_INTERNAL_RETRY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The retry interval because of a SMTPC temporary error, in seconds. These include temporary errors related to: DNS, <a href="01305.html" target="topic">socket</a> connection, TLS.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03378.html" target="topic">TCPIP_SMTPC_MAIL_CONNECTIONS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+number of mail connections (sockets) to be created each mail message requires a mail connection adjust based on the number of simultaneous mail messages in transit&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03410.html" target="topic">TCPIP_SMTPC_MAIL_RETRIES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+How many times to retry sending a mail message Retries occur only for server reported transient errors or for internal temporary errors (DNS, <a href="01305.html" target="topic">socket</a> errors, etc.)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03490.html" target="topic">TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+size of an email line when sending the email body as plain text SMTP lines are recommended to be 78 chars long and MUST not exceed 998 characters! This implementation limits the line size to TCPIP_SMTPC_PLAIN_LINE_BUFF_SIZE (usually 256 or 512). So any mail line longer that this size will have inserted an artificial end of line sequence (CRLF) after this many characters.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03491.html" target="topic">TCPIP_SMTPC_SERVER_DATA_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+server acknowledgment of the mail data: body, attachments et all; seconds Should be adjusted according to the server responsivity RFC specifies it as 10 min Default is 1 minute, which should normally be enough&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03492.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+size of the RX buffer for processing the server replies Usually the server replies are not very long so a 512 bytes buffer will normally do&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03494.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+general server response timeout, seconds Should be adjusted according to the server responsivity RFC specifies it as 5 min Default is 1 minute, which should normally be enough&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03495.html" target="topic">TCPIP_SMTPC_SERVER_TRANSIENT_RETRY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The retry interval because of a server transient error, in seconds. RFC specifies it should be at least 30 min!&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03496.html" target="topic">TCPIP_SMTPC_SKT_RX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the size of the RX buffer for the SMTPC <a href="01305.html" target="topic">socket</a> Use 0 for default TCP <a href="01305.html" target="topic">socket</a> value The SMTPC RX does not need high throughput so the default value is usually fine.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03497.html" target="topic">TCPIP_SMTPC_SKT_TX_BUFF_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Define the size of the TX buffer for the SMTPC <a href="01305.html" target="topic">socket</a> Use 0 for default TCP <a href="01305.html" target="topic">socket</a> value The SMTPC TX does not need high throughput so the default value is usually fine. For transferring large files increase this value as needed.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03499.html" target="topic">TCPIP_SMTPC_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC task rate, milliseconds The default value is 55 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03799.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03500.html" target="topic">TCPIP_SMTPC_TLS_HANDSHAKE_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+the timeout for the TLS handshake to complete, seconds when a secure connection is established to the mail server Adjust based on the processing speed, key size, etc.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03501.html" target="topic">TCPIP_SMTPC_USE_MAIL_COMMAND</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Use the sample tcpip console &quot;mail&quot; command for sending email from the console&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -88,7 +196,7 @@ Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in the SNMP Stack w
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01671.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01673.html" target="topic">Introduction</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01673.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -96,13 +204,13 @@ Even though SNMPv3 also requires SNMPv1 and SNMPv2c, a layer in the SNMP Stack w
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01671.html" target="topic">Previous</a> | <a href="01671.html" target="topic">Up</a> | <a href="01675.html" target="topic">Next</a></div>
+<a href="01679.html" target="topic">Previous</a> | <a href="01214.html" target="topic">Up</a> | <a href="00104.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

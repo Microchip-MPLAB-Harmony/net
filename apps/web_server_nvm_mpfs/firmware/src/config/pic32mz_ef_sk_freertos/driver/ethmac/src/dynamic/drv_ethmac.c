@@ -132,10 +132,6 @@ static TCPIP_MAC_RES    DRV_ETHMAC_PIC32MACEventInit(DRV_HANDLE hMac, TCPIP_MAC_
 static TCPIP_MAC_RES    DRV_ETHMAC_PIC32MACEventDeInit(DRV_HANDLE hMac);
 #endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-static void             _MACTxAcknowledgeAckQueue(DRV_ETHMAC_INSTANCE_DCPT* pMacD);
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
 static int              _DRV_ETHMAC_AddRxBuffers(DRV_ETHMAC_INSTANCE_DCPT* pMacD, int nBuffs, DRV_ETHMAC_ADDBUFF_FLAGS buffFlags);
 
 
@@ -583,24 +579,24 @@ SYS_MODULE_OBJ DRV_ETHMAC_PIC32MACInitialize(const SYS_MODULE_INDEX index, const
 
 #if (TCPIP_EMAC_AUTO_FLOW_CONTROL_ENABLE) 
         // sanity check for water marks
-        uint8_t aaFullWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK;
-        uint8_t aaEmptyWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK;
+        uint8_t fullWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_FULL_WMARK;
+        uint8_t emptyWMPkts = (uint8_t)TCPIP_EMAC_FLOW_CONTROL_EMPTY_WMARK;
 
-        if(aaFullWMPkts == 0)
+        if(fullWMPkts == 0)
         {
-            aaFullWMPkts++;
+            fullWMPkts++;
         }
-        if(aaEmptyWMPkts >= aaFullWMPkts)
+        if(emptyWMPkts >= fullWMPkts)
         {
-            aaEmptyWMPkts = aaFullWMPkts - 1;
+            emptyWMPkts = fullWMPkts - 1;
         }
 
         // enable the AutoFC
         uint32_t ptValue = (TCPIP_EMAC_FLOW_CONTROL_PAUSE_BYTES + _TCPIP_EMAC_QUANTA_PAUSE_BYTES - 1) / _TCPIP_EMAC_QUANTA_PAUSE_BYTES;
         DRV_ETH_PauseTimerSet(ethId, (uint16_t)ptValue);
 
-        DRV_ETH_RxFullWmarkSet(ethId, aaFullWMPkts);
-        DRV_ETH_RxEmptyWmarkSet(ethId, aaEmptyWMPkts);
+        DRV_ETH_RxFullWmarkSet(ethId, fullWMPkts);
+        DRV_ETH_RxEmptyWmarkSet(ethId, emptyWMPkts);
 
         DRV_ETH_TxPauseEnable(ethId);
         DRV_ETH_RxPauseEnable(ethId);
@@ -863,10 +859,6 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACPacketTx(DRV_HANDLE hMac, TCPIP_MAC_PACKET * pt
     _DRV_ETHMAC_TxLock(pMacD);
 
     _MACTxAcknowledgeEth(pMacD);
-
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    _MACTxAcknowledgeAckQueue(pMacD);
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
     // transmit the pending packets...don't transmit out of order
     macRes = _MacTxPendingPackets(pMacD);
@@ -1481,11 +1473,6 @@ TCPIP_MAC_RES DRV_ETHMAC_PIC32MACProcess(DRV_HANDLE hMac)
     _DRV_ETHMAC_TxLock(pMacD);
     _MACTxAcknowledgeEth(pMacD);
 
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    _MACTxAcknowledgeAckQueue(pMacD);
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
-
     _MacTxPendingPackets(pMacD);
     _DRV_ETHMAC_TxUnlock(pMacD);
 
@@ -1597,19 +1584,8 @@ static TCPIP_MAC_RES _MACTxPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PAC
     DRV_ETHMAC_RESULT ethRes;
 
     // Note: the TCPIP_MAC_DATA_SEGMENT is defined to be a perfect match for DRV_ETHMAC_PKT_DCPT !!!
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    // avoid conflict with ETHC since we mess with the
-    // TX queues from within the ISR!!!
-    int ethILev = SYS_INT_SourceDisable(pMacD->mData._macIntSrc);
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
     ethRes = DRV_ETHMAC_LibTxSendPacket(pMacD, (const DRV_ETHMAC_PKT_DCPT*)ptrPacket->pDSeg);
 
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    // restore ETHC ints
-    SYS_INT_SourceRestore(pMacD->mData._macIntSrc, ethILev);   // re-enable
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-    
     if(ethRes == DRV_ETHMAC_RES_OK)
     {
         return TCPIP_MAC_RES_OK;
@@ -1628,18 +1604,7 @@ static TCPIP_MAC_RES _MACTxPacket(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PAC
 // acknowledge the ETHC packets
 static void _MACTxAcknowledgeEth(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
 {
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    // avoid conflict with ETHC since we mess with the
-    // TX queues from within the ISR!!!
-    int ethILev = SYS_INT_SourceDisable(pMacD->mData._macIntSrc);
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
     DRV_ETHMAC_LibTxAcknowledgePacket(pMacD, 0, _MACTxPacketAckCallback, pMacD);
-
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    // restore ETHC ints
-    SYS_INT_SourceRestore(pMacD->mData._macIntSrc, ethILev);   // re-enable
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 }
 
 static void	_MACTxPacketAckCallback(void* pBuff, int buffIx, void* fParam)
@@ -1854,30 +1819,11 @@ static void _MacTxDiscardQueues(DRV_ETHMAC_INSTANCE_DCPT* pMacD, TCPIP_MAC_PKT_A
 {
     TCPIP_MAC_PACKET* pPkt;
 
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    while( (pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData._TxAckQueue)) != 0)
-    {   // acknowledge the packet
-        (*pMacD->mData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
-    }
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
     while( (pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData._TxQueue)) != 0)
     {   // acknowledge the packet
         (*pMacD->mData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
     }
 }
-
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-static void _MACTxAcknowledgeAckQueue(DRV_ETHMAC_INSTANCE_DCPT* pMacD)
-{
-    TCPIP_MAC_PACKET* pPkt;
-    while( (pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData._TxAckQueue)) != 0)
-    {   // acknowledge the packet; the ackRes should be set
-        (*pMacD->mData.pktAckF)(pPkt, ackRes, TCPIP_THIS_MODULE_ID);
-    }
-
-}
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
 // a RX packet has been done with 
 static bool _MacRxPacketAck(TCPIP_MAC_PACKET* pRxPkt,  const void* param)
@@ -1936,10 +1882,6 @@ static DRV_HANDLE         _hEventMac;     // the MAC we belong to
  ******************************************/
 
 void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ object );
-
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-static void     _MACTxLocalAckCallback(void* pPktBuff, int buffIx, void* fParam);
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
 /****************************************************************************
  * Function:        _XtlEventsTcp2Eth
@@ -2418,28 +2360,13 @@ void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
     pDcpt = &pMacD->mData._pic32_ev_group_dcpt;
     currGroupEvents = currEthEvents & pDcpt->_EthEnabledEvents;     //  keep just the relevant ones
 
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    bool isTxInterrupt = (currGroupEvents & DRV_ETH_EV_TXDONE) != 0;
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
     if(currGroupEvents)
     {
         pDcpt->_EthPendingEvents |= currGroupEvents;                    // add the new events
         pDcpt->_TcpPendingEvents |= _XtlEventsEth2Tcp(currGroupEvents);
 
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-        if(isTxInterrupt)
-        {
-            DRV_ETH_EventsEnableClr(ethId, currGroupEvents & ~DRV_ETH_EV_TXDONE);   // don't disable TX_DONE
-            DRV_ETH_EventsClr(ethId, currGroupEvents | DRV_ETH_EV_TXDONE);          // always ack TX_DONE
-        }
-        else
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-        {
-            DRV_ETH_EventsEnableClr(ethId, currGroupEvents);         // these will get reported; disable them until ack is received back
-            DRV_ETH_EventsClr(ethId, currGroupEvents);               // acknowledge the ETHC
-        }
-
+        DRV_ETH_EventsEnableClr(ethId, currGroupEvents);         // these will get reported; disable them until ack is received back
+        DRV_ETH_EventsClr(ethId, currGroupEvents);               // acknowledge the ETHC
 
         if(pDcpt->_TcpNotifyFnc)
         {
@@ -2447,58 +2374,8 @@ void DRV_ETHMAC_Tasks_ISR( SYS_MODULE_OBJ macIndex )
         }
     }
     
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    if(isTxInterrupt)
-    {   // locally acknowledge TX done activity
-        DRV_ETHMAC_LibTxAcknowledgePacket(pMacD, 0, _MACTxLocalAckCallback, pMacD);
-        // schedule the next packet
-        TCPIP_MAC_PACKET* pPkt;
-        while((pPkt = (TCPIP_MAC_PACKET*)DRV_ETHMAC_SingleListHeadRemove(&pMacD->mData._TxQueue)) != 0)
-        {
-            DRV_ETHMAC_RESULT ethRes = DRV_ETHMAC_LibTxSendPacket(pMacD, (const DRV_ETHMAC_PKT_DCPT*)pPkt->pDSeg);
-            if(ethRes == DRV_ETHMAC_RES_NO_DESCRIPTORS)
-            {   // no more descriptors
-                pMacD->mData._txStat.nTxQueueFull++;
-                break;
-            }
-            else if(ethRes != DRV_ETHMAC_RES_OK) 
-            {   // it must be an error, DRV_ETHMAC_RES_NO_DESCRIPTORS shouldn't happen
-                pPkt->ackRes = TCPIP_MAC_PKT_ACK_BUFFER_ERR; 
-                DRV_ETHMAC_SingleListTailAdd(&pMacD->mData._TxAckQueue, (DRV_ETHMAC_SGL_LIST_NODE*)pPkt);
-                pMacD->mData._txStat.nTxErrorPackets++;
-            }
-            // else continue as long as we have packets and descriptors to TX !!!
-            // to be efficient: if TX_DONE actually carries multiple
-            // TX_DONE events and I send just one packet I won't get another
-            // TX ISR until this just sent packet is successfully tx-ed!
-        }
-    }
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
     SYS_INT_SourceStatusClear(pMacD->mData._macIntSrc);         // acknowledge the int Controller
 }
-
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-// acknowledges just the ETHC so that we can send another packet
-// the packet acknowledge is deferred
-static void	_MACTxLocalAckCallback(void* pBuff, int buffIx, void* fParam)
-{
-    if(buffIx == 0)
-    {
-        // restore packet the buffer belongs to
-        uint16_t buffOffset = *((uint16_t*)pBuff - 1);
-
-        TCPIP_MAC_PACKET* ptrPacket = (TCPIP_MAC_PACKET*)((uint8_t*)pBuff - buffOffset);
-        
-        // insert the packet into the local ACK queue
-        DRV_ETHMAC_INSTANCE_DCPT* pMacD = (DRV_ETHMAC_INSTANCE_DCPT*)fParam;
-        ptrPacket->ackRes = TCPIP_MAC_PKT_ACK_TX_OK; 
-        DRV_ETHMAC_SingleListTailAdd(&pMacD->mData._TxAckQueue, (DRV_ETHMAC_SGL_LIST_NODE*)ptrPacket);
-        pMacD->mData._txStat.nTxOkPackets++;
-    }
-}
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
-
 
 static uint16_t _DRV_ETHMAC_GetFrmTxOk(DRV_ETHERNET_REGISTERS* ethId)
 {

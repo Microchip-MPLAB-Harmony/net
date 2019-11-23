@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_STACK_HEAP_USAGE Enumeration</title>
+<title>TCPIP_SNMPV3_EngineUserDataBaseSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03561.html" target="topic">TCPIP_STACK_HEAP_USAGE Enumeration</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01217.html" target="topic">SNMP Module</a> &gt; <a href="01686.html" target="topic">Library Interface</a> &gt; b) SNMPv3 Module Functions &gt; <a href="03561.html" target="topic">TCPIP_SNMPV3_EngineUserDataBaseSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03556.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="00007.html" target="topic">Next</a></div>
+<a href="03560.html" target="topic">Previous</a> | <a href="01686.html" target="topic">Up</a> | <a href="03570.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_USAGE Topic Title: TCPIP_STACK_HEAP_USAGE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_EngineUserDataBaseSet@TCPIP_SNMPV3_USERDATABASECONFIG_TYPE@uint8_t@uint8_t@void * Topic Title: TCPIP_SNMPV3_EngineUserDataBaseSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_STACK_HEAP_USAGE Enumeration</div>
+TCPIP_SNMPV3_EngineUserDataBaseSet Function</div>
 </div>
 </div>
 
@@ -49,82 +49,105 @@ TCPIP_STACK_HEAP_USAGE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Type: TCPIP_STACK_HEAP_USAGE&nbsp;</p>
-<p class="Element10">
-Definition of the heap usage/purpose. It defines what modules in the TCP/IP stack will use this heap.</p></div>
+This function is used to set SNMPv3 Engine data base details using <a href="03574.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE</a> enumeration.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_DEFAULT</span></strong> = 0x00,
-  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_GENERIC</span></strong> = 0x01,
-  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_PACKET</span></strong> = 0x02,
-  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_SOCKET_TCP</span></strong> = 0x04,
-  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_SOCKET_UDP</span></strong> = 0x08,
-  <strong><span style="color: #000000">TCPIP_STACK_HEAP_USE_POOL_UDP</span></strong> = 0x10
-} TCPIP_STACK_HEAP_USAGE;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_SNMPV3_EngineUserDataBaseSet</span></strong>(
+    <a href="03574.html" target="topic">TCPIP_SNMPV3_USERDATABASECONFIG_TYPE</a> <strong><span style="color: #000000">userDataBaseType</span></strong>, 
+    uint8_t <strong><span style="color: #000000">len</span></strong>, 
+    uint8_t <strong><span style="color: #000000">userIndex</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong> * <strong><span style="color: #000000">val</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USE_DEFAULT = 0x00&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Default heap usage&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USE_GENERIC = 0x01&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Generic heap usage&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USE_PACKET = 0x02&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Heap for packet allocations&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USE_SOCKET_TCP = 0x04&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Heap for TCP sockets&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USE_SOCKET_UDP = 0x08&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Heap for UDP sockets&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-TCPIP_STACK_HEAP_USE_POOL_UDP = 0x10&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Heap for UDP TX pool buffers&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+TCPIP_SNMP_Initialize is already called.</p></div>
 </div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element312">
+<div class="TableDiv">
+<table cellspacing="0" class="Table3">
+<tr>
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+userDataBaseType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+SNMPv3 data base configuration type&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+Number of bytes need to be read from data base&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+userIndex&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+SNMPv3 user index&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+val&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+void pointer to a any data type. Length parameter value is changed according to data type.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This is an advanced definition that is currently not used. Multiple heaps usage will be added in the future. For now only one heap type is supported and its used for all allocation operations.&nbsp;</p>
-<p class="Element10">
-New usages could be eventually added.&nbsp;</p>
-<p class="Element10">
-Multiple usage flags can be simultaneously set.</p></div>
+None.</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><strong><span style="color: #000080">bool</span></strong> <a href="03555.html" target="topic">TCPIP_SNMP_VarbindSet</a>(<a href="01233.html" target="topic">SNMP_ID</a> var, <a href="01234.html" target="topic">SNMP_INDEX</a> index, uint8_t ref, <a href="01246.html" target="topic">SNMP_VAL</a> val)
+{
+  <strong><span style="color: #000080">switch</span></strong>(var)
+  {
+      <strong><span style="color: #000080">case</span></strong> USER_SECURITY_NAME:
+          <strong><span style="color: #000080">if</span></strong> ( ref ==  <a href="01224.html" target="topic">SNMP_END_OF_VAR</a> )
+          {
+              <strong><span style="color: #000080">if</span></strong>(TCPIP_SNMPV3_EngineUserDataBaseSet(SNMPV3_USERNAME_CONFIG_TYPE,strlen((<strong><span style="color: #000080">char</span></strong>*)gSnmpv3UserSecurityName),
+                                              index,gSnmpv3UserSecurityName) != <strong><span style="color: #000080">true</span></strong>)
+                  <strong><span style="color: #000080">return</span></strong> <strong><span style="color: #000080">false</span></strong>;
+          }
+          <i><span style="color: #008000">// Make sure that index is within our range.</span></i>
+          <strong><span style="color: #000080">if</span></strong> ( index &lt; <a href="03590.html" target="topic">TCPIP_SNMPV3_USM_MAX_USER</a> )
+          {
+              <i><span style="color: #008000">// Copy given value into local buffer.</span></i>
+              gSnmpv3UserSecurityName[ref]=val.byte;
+              <strong><span style="color: #000080">return</span></strong> <strong><span style="color: #000080">true</span></strong>;
+          }
+          <strong><span style="color: #000080">break</span></strong>;
+  }
+}</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01009.html" target="topic">Manager Module</a> &gt; <a href="01595.html" target="topic">Library Interface</a> &gt; h) Data Types and Constants &gt; <a href="03561.html" target="topic">TCPIP_STACK_HEAP_USAGE Enumeration</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01217.html" target="topic">SNMP Module</a> &gt; <a href="01686.html" target="topic">Library Interface</a> &gt; b) SNMPv3 Module Functions &gt; <a href="03561.html" target="topic">TCPIP_SNMPV3_EngineUserDataBaseSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +155,13 @@ Multiple usage flags can be simultaneously set.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03556.html" target="topic">Previous</a> | <a href="01595.html" target="topic">Up</a> | <a href="00007.html" target="topic">Next</a></div>
+<a href="03560.html" target="topic">Previous</a> | <a href="01686.html" target="topic">Up</a> | <a href="03570.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_STACK_HEAP_USAGE Topic Title: TCPIP_STACK_HEAP_USAGE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_SNMPV3_EngineUserDataBaseSet@TCPIP_SNMPV3_USERDATABASECONFIG_TYPE@uint8_t@uint8_t@void * Topic Title: TCPIP_SNMPV3_EngineUserDataBaseSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

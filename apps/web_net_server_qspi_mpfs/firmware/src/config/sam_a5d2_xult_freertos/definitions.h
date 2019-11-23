@@ -48,6 +48,7 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include "crypto/crypto.h"
 #include "driver/memory/drv_memory.h"
 #include "system/time/sys_time.h"
 #include "system/int/sys_int.h"
@@ -80,6 +81,7 @@
 #include "peripheral/aic/plib_aic.h"
 #include "system/debug/sys_debug.h"
 #include "peripheral/qspi/plib_qspi0.h"
+#include "wolfssl/wolfcrypt/port/pic32/crypt_wolfcryptcb.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"
 #include "FreeRTOS.h"

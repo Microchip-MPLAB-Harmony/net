@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00237.html" target="topic">tcpip_tcp_client_server</a> &gt; <a href="00238.html" target="topic">Building the Application</a></div>
+<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00237.html" target="topic">snmpv3_sdcard_fatfs</a> &gt; <a href="00238.html" target="topic">Building the Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00237.html" target="topic">Previous</a> | <a href="00237.html" target="topic">Up</a> | <a href="00239.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP TCP Client Server pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP SNMPv3 SD Card FAT FS pic32_esk_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Building the Application</div>
 </div>
@@ -49,9 +49,13 @@ Building the Application</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following table lists the MPLAB X projects available for this demonstration. These projects are available inside <span class="Element146">&lt;install-dir&gt;/net/apps/tcpip_tcp_client_server/firmware</span>.&nbsp;</p>
+The following table lists the MPLAB X projects available for this demonstration. These projects are available inside <span class="Element146">&lt;install-dir&gt;/net/apps/snmpv3_sdcard_fatfs/firmware</span>.&nbsp;</p>
 <p class="Element10">
-To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.</p><div class="Element15">
+The SD Card FAT FS has the snmp.bib file with other web pages stored in an external SD card and is accessed through a FAT FS API.&nbsp;</p>
+<p class="Element10">
+To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p><div class="Element15">
 MPLAB X IDE Project</div>
 <p class="Element10">
 This table lists the name and location of the MPLAB X IDE project folder for the demonstration.&nbsp;</p>
@@ -62,164 +66,99 @@ This table lists the name and location of the MPLAB X IDE project folder for the
 <tr>
 <td class="Element65" valign="top" width="9%">
 <div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="7%">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="6%">
 <div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="13%">
+Target Device&nbsp;</div></td><td class="Element65" valign="top" width="15%">
 <div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="71%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_v71_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_das_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2064DAS169&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-PIC32MZ DA Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with PIC32MZ2064DAS169 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="9%">
-<div class="Element68">
-pic32mz_ef_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="7%">
-<div class="Element68">
-PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="13%">
-<div class="Element68">
-PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="71%">
-<div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<div class="Element15">
-IAR Embeded Workbench IDE Project</div>
-<p class="Element10">
-This table lists the name and location of the IAR IDE project folder for the demonstration.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="13%">
-<div class="Element66">
-Project Name&nbsp;</div></td><td class="Element65" valign="top" width="8%">
-<div class="Element66">
-Target Device&nbsp;</div></td><td class="Element65" valign="top" width="17%">
-<div class="Element66">
-Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="62%">
+Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="70%">
 <div class="Element66">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+<td class="Element67" valign="top" width="9%">
 <div class="Element68">
-sam_a5d2_xult.IAR&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
 <div class="Element68">
-ATSAMA5D27&nbsp;</div></td><td class="Element67" valign="top" width="17%">
+ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="15%">
 <div class="Element68">
-SAM A5D2 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="62%">
+SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
 <div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAMA5D27 device. This is a bare-metal (non-RTOS) implementation&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="13%">
+Demonstrates the SNMPv3 SD Card FAT FS on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
 <div class="Element68">
-sam_a5d2_xult_freertos.IAR&nbsp;</div></td><td class="Element67" valign="top" width="8%">
+sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
 <div class="Element68">
-ATSAMA5D27&nbsp;</div></td><td class="Element67" valign="top" width="17%">
+ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="15%">
 <div class="Element68">
-SAM A5D2 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="62%">
+SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="70%">
 <div class="Element68">
-Demonstrates the TCP/IP TCP Client Server on development board with ATSAMA5D27 device. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
+Demonstrates the SNMPv3 SD Card FAT FS on development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
+<div class="Element68">
+Demonstrates the SNMPv3 SD Card FAT FS on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_v71_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="70%">
+<div class="Element68">
+Demonstrates the SNMPv3 SD Card FAT FS on development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
+<div class="Element68">
+Demonstrates the SNMPv3 SD Card FAT FS on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="70%">
+<div class="Element68">
+Demonstrates the SNMPv3 SD Card FAT FS on development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+pic32mz_ef_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="15%">
+<div class="Element68">
+PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="70%">
+<div class="Element68">
+Demonstrates the SNMPv3 SD Card FAT FS on development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-The following Project Graph diagram shows the Harmony components included in the bare-metal TCP/IP TCP Client Server demonstration application.&nbsp;</p>
-<p class="Element10">
-<img src="tcpip_root_2.png" border="0" alt="" title="">&nbsp;</p>
+The following Project Graph diagram shows the Harmony components included in the bare-metal SNMPv3 SD Card FAT FS demonstration application.&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<img src="tcpip_layer_2.png" border="0" alt="" title="">&nbsp;</p>
+<img src="tcpip_root_snmpv3_sdcard.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-<img src="tcpip_app_layer_2.png" border="0" alt="" title="">&nbsp;</p></div>
+<img src="tcpip_layer_3.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="tcpip_app_layer_snmpv3_sdcard.png" border="0" alt="" title="">&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00237.html" target="topic">tcpip_tcp_client_server</a> &gt; <a href="00238.html" target="topic">Building the Application</a></div>
+<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00237.html" target="topic">snmpv3_sdcard_fatfs</a> &gt; <a href="00238.html" target="topic">Building the Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -227,13 +166,13 @@ The following Project Graph diagram shows the Harmony components included in the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00237.html" target="topic">Previous</a> | <a href="00237.html" target="topic">Up</a> | <a href="00239.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP TCP Client Server pic32_ethernet_starter_kit_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP SNMPv3 SD Card FAT FS pic32_esk_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -213,6 +213,8 @@ void APP_Tasks(void) {
 #else
                     SYS_CONSOLE_PRINT("    Interface %s on host %s - NBNS disabled\r\n", netName, netBiosName);
 #endif  // defined(TCPIP_STACK_USE_NBNS)
+                    (void)netName;          // avoid compiler warning 
+                    (void)netBiosName;      // if SYS_CONSOLE_PRINT is null macro
 
                 }
                 appData.state = APP_STATE_WAIT_FOR_IP;
@@ -238,7 +240,6 @@ void APP_Tasks(void) {
             break;
         case APP_STATE_READY_TO_START:
         {
-            SYS_CMD_READY_TO_READ();
             if (appData.serviceStarted) {
                 appData.clientState = APP_STATE_DNS_LOOKUP;
                 appData.serverState = APP_STATE_SERVER_CREATE_SOCKET;
@@ -249,7 +250,6 @@ void APP_Tasks(void) {
         }
         case APP_STATE_STARTED:
         {
-            SYS_CMD_READY_TO_READ();
             if (appData.serviceStarted) {
                 _APP_ClientTasks();
                 _APP_ServerTasks();

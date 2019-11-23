@@ -327,7 +327,7 @@ typedef enum
     TCPIP_MODULE_TCP,
     TCPIP_MODULE_IGMP,      /* IGMP host module */
 
-    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 36 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    TCPIP_MODULE_LAYER3, // 3rd layer modules: 12 - 19 /*DOM-IGNORE-END*/
     TCPIP_MODULE_DHCP_CLIENT  /*DOM-IGNORE-BEGIN*/ = TCPIP_MODULE_LAYER3 /*DOM-IGNORE-END*/,
     TCPIP_MODULE_DHCP_SERVER,
     TCPIP_MODULE_ANNOUNCE,
@@ -336,9 +336,9 @@ typedef enum
     TCPIP_MODULE_ZCLL,              /* Zero Config Link Local */
     TCPIP_MODULE_MDNS,              /* Bonjour/mDNS */
     TCPIP_MODULE_NBNS,
-    TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 21 - 30 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 20 - 29 /*DOM-IGNORE-END*/
+    TCPIP_MODULE_SMTP_CLIENT,       /* Obsolete - old SMTP client */
     TCPIP_MODULE_SNTP,
     TCPIP_MODULE_FTP_SERVER,
     TCPIP_MODULE_HTTP_SERVER,
@@ -348,15 +348,16 @@ typedef enum
     TCPIP_MODULE_SNMPV3_SERVER,
     TCPIP_MODULE_DYNDNS_CLIENT,
     TCPIP_MODULE_BERKELEY,
-    TCPIP_MODULE_REBOOT_SERVER,
 
-    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 31 - 36 /*DOM-IGNORE-END*/
+    /*DOM-IGNORE-BEGIN*/    // 3rd layer modules: 30 - 37 /*DOM-IGNORE-END*/
+    TCPIP_MODULE_REBOOT_SERVER,
     TCPIP_MODULE_COMMAND,
     TCPIP_MODULE_IPERF,
     TCPIP_MODULE_TFTP_CLIENT,       /* TFTP client module */
     TCPIP_MODULE_DHCPV6_CLIENT,     /* DHCPV6 client */
     TCPIP_MODULE_SMTPC,             /* SMTP (new) client */
 	TCPIP_MODULE_TFTP_SERVER,       /* TFTP Server module */
+	TCPIP_MODULE_FTP_CLIENT,        /* FTP client */
 
     /* add other modules here */
     //
@@ -390,7 +391,7 @@ typedef enum
 #define TCPIP_STACK_IF_NAME_97J60           "97J60"
 #define TCPIP_STACK_IF_NAME_PIC32INT        "PIC32INT"
 #define TCPIP_STACK_IF_NAME_MRF24WN         "MRF24WN"
-#define TCPIP_STACK_IF_NAME_WINC1500        "WINC1500"
+#define TCPIP_STACK_IF_NAME_WINC	        "WINC"
 #define TCPIP_STACK_IF_NAME_WILC1000        "WILC1000"
 
 /* alias for unknown interface */
@@ -606,6 +607,53 @@ typedef struct
 }TCPIP_STACK_MODULE_CONFIG;
 
 // *****************************************************************************
+/* TCP/IP stack initialization callback
+
+  Summary:
+    Definition to represent a TCP/IP stack initialization callback function.
+
+  Description:
+    This type describes a TCP/IP stack initialization callback function type
+    that's passed to the stack at the initialization time.
+
+   Parameters:
+    ppStackInit  - Pointer to the address of the initialization data.
+              It should be updated to a TCPIP_STACK_INIT pointer that carries the stack initialization data:
+                -    pNetConf  	 - pointer to an array of TCPIP_NETWORK_CONFIG to support
+                -    nNets       - number of network configurations in the array
+                -    pModConfig  - pointer to an array of TCPIP_STACK_MODULE_CONFIG
+                -    nModules    - number of modules to initialize 
+  
+  Returns:
+    >  0    - the initialization is pending. The stack is required to call again the callback
+
+    == 0    - the initialization data is ready and the ppStackInit has been properly updated
+              stack initialization should proceed
+
+    <  0    - some error occurred, the stack initialization should be aborted
+
+  Remarks:
+    This callback is part of the initialization data that's passed to the stack
+    at initialization
+
+    If the callback is NULL, then the stack initialization will proceed immediately with the
+    data presented in the TCPIP_STACK_INIT.
+
+    If the callback is not NULL, then the initialization of the stack will be delayed
+    and it will be performed in the TCPIP_STACK_Task() function.
+    The TCPIP_STACK_Task() will keep calling the callback function until this returns 
+    ready or an error condition.
+
+    The ppStackInit will be used in the TCPIP_STACK_Task() context.
+    It has to point to a persistent data structure that won't go 
+    out of scope until the stack initialization is finished!
+
+*/
+struct TCPIP_STACK_INIT;
+typedef int (*TCPIP_STACK_INIT_CALLBACK)(const struct TCPIP_STACK_INIT** ppStackInit);
+
+
+// *****************************************************************************
 /* TCP/IP stack initialization/configuration structure
 
   Summary:
@@ -620,7 +668,7 @@ typedef struct
     TCPIP_STACK_Initialize.
 */
 
-typedef struct
+typedef struct TCPIP_STACK_INIT
 {
     /* system module initialization     */
     SYS_MODULE_INIT                     moduleInit; 
@@ -632,6 +680,8 @@ typedef struct
     const TCPIP_STACK_MODULE_CONFIG*    pModConfig; 
     /* number of modules in the array  */
     int                                 nModules;   
+    /* initialization callback */
+    TCPIP_STACK_INIT_CALLBACK           initCback;
 }TCPIP_STACK_INIT;
 
 //DOM-IGNORE-BEGIN
@@ -640,7 +690,11 @@ typedef struct
 #endif
 //DOM-IGNORE-END
 
-
+// *****************************************************************************
+// *****************************************************************************
+// Section: TCPIP Stack Modules Include
+// *****************************************************************************
+// *****************************************************************************
 #include "tcpip/tcpip_common_ports.h"
 
 #include "tcpip/tcpip_mac.h"

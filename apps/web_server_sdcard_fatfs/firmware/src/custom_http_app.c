@@ -1296,17 +1296,6 @@ void TCPIP_HTTP_Print_version(HTTP_CONN_HANDLE connHandle)
     TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)TCPIP_STACK_VERSION_STR);
 }
 
-void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle)
-{
-    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_DRIVE);
-}
-
-void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle)
-{
-
-    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_FATFS_STRING);
-}
-
 void TCPIP_HTTP_Print_cookiename(HTTP_CONN_HANDLE connHandle)
 {
     const uint8_t *ptr;
