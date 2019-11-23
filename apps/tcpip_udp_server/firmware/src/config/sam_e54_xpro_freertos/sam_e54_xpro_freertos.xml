@@ -976,13 +976,13 @@
         <Setting dnOrder="190" id="XC32_HEAP">
           <Attributes dnOrder="0">
             <String dnOrder="0" id="value">
-              <Value dnOrder="0">96960</Value>
+              <Value dnOrder="0">120960</Value>
             </String>
           </Attributes>
         </Setting>
         <Integer dnOrder="191" id="XC32_HEAP_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="96960"/>
+            <User dnOrder="0" value="120960"/>
           </Values>
         </Integer>
         <Integer dnOrder="192" id="XOSC1_FREQ">
@@ -1542,7 +1542,7 @@
         </Integer>
         <Integer dnOrder="1" id="SYS_COMMAND_RTOS_STACK_SIZE">
           <Values dnOrder="0">
-            <User dnOrder="0" value="2560"/>
+            <User dnOrder="0" value="10240"/>
           </Values>
         </Integer>
         <String dnOrder="2" id="SYS_CONSOLE_DEVICE">

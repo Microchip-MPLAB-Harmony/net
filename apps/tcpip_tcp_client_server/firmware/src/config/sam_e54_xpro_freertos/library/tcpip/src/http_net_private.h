@@ -436,7 +436,7 @@ typedef struct _tag_TCPIP_HTTP_NET_CONN
     TCPIP_HTTP_NET_CONN_FLAGS   flags;                          // connection flags
     uint8_t                     closeEvent;                     // the event for the reported connection close
     // 
-    char                        fileName[SYS_FS_MAX_PATH + 1];  // file name storage
+    char                        fileName[SYS_FS_FILE_NAME_LEN + 1];  // file name storage
 
 } TCPIP_HTTP_NET_CONN;
 

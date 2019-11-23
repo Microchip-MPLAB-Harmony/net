@@ -309,17 +309,8 @@ public class MPFS2Lib //: MPFS2Writer
         DataInputStream in = new DataInputStream(inputFile);
         BufferedReader br = new BufferedReader(new InputStreamReader(in));
         
-        FileInputStream inputFile_ssi = new FileInputStream(localName);        
-        DataInputStream in_ssi = new DataInputStream(inputFile_ssi);
-        BufferedReader br_ssi = new BufferedReader(new InputStreamReader(in_ssi));
-        
-        String ssiString="";
         int byteCnt=0;
       
-        while((ssiString = br_ssi.readLine())!= null)
-        {
-            SSI_CommandParse(ssiString);
-        }
         while((byteRead = br.read(buf))!= -1)
         {
             if(byteRead == 0) {break;}
@@ -351,71 +342,85 @@ public class MPFS2Lib //: MPFS2Writer
 
         // GZip the file if possible
         int gzipRatio = 0;
-        if (idxFile == null && !this.FileMatches(localName, this.nonGZipTypes) && !nonGzipSSIFiles.contains(imageName))
+        if (idxFile == null && !this.FileMatches(localName, this.nonGZipTypes))
         {
-            inputFile = new FileInputStream(localName);
-           /*ZipOutputStream zipout = new ZipOutputStream(new FileOutputStream("output.zip"));
-            zipout.putNextEntry(new ZipEntry("output.zip"));*/
-            GZIPOutputStream zipout  =  new GZIPOutputStream(new
-                                        FileOutputStream("output.gzip"));
-            if(fileSizeLength < 10000000)
+            boolean ssiFileStatus = false;
+            for(String ssiFile:nonGzipSSIFiles)
             {
-                fileData = new byte[fileSizeLength];               
-            }
-            else
-            {
-                fileData = new byte[10000000];             
-            }
-            while((byteRead = inputFile.read(fileData)) != -1)
-            {
-                if(byteRead == 0) {break;}
-                zipout.write(fileData,0,byteRead);
-            }
-            zipout.finish();
-//            byteRead = inputFile.read();
-//            while (byteRead != -1){
-//            zipout.write(byteRead);
-//            byteRead = inputFile.read();
-//            }
-            //zipout.closeEntry();
-            zipout.close();
-            File file_zip = new File("output.gzip");
-//            if(file_zip.isFile())
-//                System.out.println("original:"+file.length()+
-//                        "   zip file length" +file_zip.getName()+file_zip.length()) ;
-            FileInputStream inputZipFile = new FileInputStream("output.gzip");
-
-            // Only use zipped copy if it's smaller
-            if ((file_zip.length() < newFile.fileSizeLen) && (file_zip.length() > 0))
-            {
-                ByteArrayInputStream tempNewFileDataArray =
-                        new ByteArrayInputStream(newFile.data);
-                gzipRatio = (int)(100 - (100 * file_zip.length() / newFile.fileSizeLen));
-                if(file_zip.length() < 10000000)
+                if(imageName.contains(ssiFile))
                 {
-                    fileData = new byte[(int)file_zip.length()];
+                    // No compression is allowed for SSI files.
+                    ssiFileStatus = true;
+                    break;                    
+                }
+            }
+            if(!ssiFileStatus)
+            {
+
+                inputFile = new FileInputStream(localName);
+               /*ZipOutputStream zipout = new ZipOutputStream(new FileOutputStream("output.zip"));
+                zipout.putNextEntry(new ZipEntry("output.zip"));*/
+                GZIPOutputStream zipout  =  new GZIPOutputStream(new
+                                            FileOutputStream("output.gzip"));
+                if(fileSizeLength < 10000000)
+                {
+                    fileData = new byte[fileSizeLength];               
                 }
                 else
                 {
-                    fileData = new byte[10000000];
+                    fileData = new byte[10000000];             
                 }
-                //newFile.data.clear();
-                tempNewFileDataArray.reset();
-                tempout = new ByteArrayOutputStream();
-                byteCnt = 0;
-                while((byteRead=inputZipFile.read(fileData))!= -1)
+                while((byteRead = inputFile.read(fileData)) != -1)
                 {
                     if(byteRead == 0) {break;}
-                    byteCnt += byteRead;
-                    tempout.write(fileData);
+                    zipout.write(fileData,0,byteRead);
                 }
-                newFile.data = tempout.toByteArray();
-                newFile.fileSizeLen = byteCnt; //tempout.size();
-                newFile.isZipped = true;
+                zipout.finish();
+    //            byteRead = inputFile.read();
+    //            while (byteRead != -1){
+    //            zipout.write(byteRead);
+    //            byteRead = inputFile.read();
+    //            }
+                //zipout.closeEntry();
+                zipout.close();
+                File file_zip = new File("output.gzip");
+    //            if(file_zip.isFile())
+    //                System.out.println("original:"+file.length()+
+    //                        "   zip file length" +file_zip.getName()+file_zip.length()) ;
+                FileInputStream inputZipFile = new FileInputStream("output.gzip");
+
+                // Only use zipped copy if it's smaller
+                if ((file_zip.length() < newFile.fileSizeLen) && (file_zip.length() > 0))
+                {
+                    ByteArrayInputStream tempNewFileDataArray =
+                            new ByteArrayInputStream(newFile.data);
+                    gzipRatio = (int)(100 - (100 * file_zip.length() / newFile.fileSizeLen));
+                    if(file_zip.length() < 10000000)
+                    {
+                        fileData = new byte[(int)file_zip.length()];
+                    }
+                    else
+                    {
+                        fileData = new byte[10000000];
+                    }
+                    //newFile.data.clear();
+                    tempNewFileDataArray.reset();
+                    tempout = new ByteArrayOutputStream();
+                    byteCnt = 0;
+                    while((byteRead=inputZipFile.read(fileData))!= -1)
+                    {
+                        if(byteRead == 0) {break;}
+                        byteCnt += byteRead;
+                        tempout.write(fileData);
+                    }
+                    newFile.data = tempout.toByteArray();
+                    newFile.fileSizeLen = byteCnt; //tempout.size();
+                    newFile.isZipped = true;
+                }
+                inputZipFile.close();
+                file_zip.delete();
+                inputFile.close();
             }
-            inputZipFile.close();
-            file_zip.delete();
-            inputFile.close();
         }
 
         // Add the file and return
@@ -435,6 +440,26 @@ public class MPFS2Lib //: MPFS2Writer
                 files.add(idxFile);
             }            
         }
+        }catch(IOException e){
+         System.out.println ("IO exception = " + e );
+         //log.add("ERROR: " + e.getMessage());
+        }
+        return true;
+    }
+    
+    public boolean addSSIFilestoList(String localName)
+    {
+        try{
+            FileInputStream inputFile_ssi = new FileInputStream(localName);        
+            DataInputStream in_ssi = new DataInputStream(inputFile_ssi);
+            BufferedReader br_ssi = new BufferedReader(new InputStreamReader(in_ssi));
+        
+            String ssiString="";
+      
+            while((ssiString = br_ssi.readLine())!= null)
+            {
+                SSI_CommandParse(ssiString);
+            }
         }catch(IOException e){
          System.out.println ("IO exception = " + e );
          //log.add("ERROR: " + e.getMessage());
@@ -493,6 +518,18 @@ public class MPFS2Lib //: MPFS2Writer
             return false;
         }
         //rootFilePath = ListFiles.get(0).getPath();
+        //SSi file adding to the list
+        for(File ssiFile : ListFiles)
+        {
+            if(ssiFile.isHidden())
+            {
+               continue;
+            }
+            if(!ssiFile.isDirectory())
+            {                
+                addSSIFilestoList(ssiFile.getPath());                
+            }
+        }
 
         for (File f : ListFiles)
         {

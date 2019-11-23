@@ -56,31 +56,115 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // Set up configuration parameter defaults if not overridden 
 
-// Force all connecting clients to be secured and connected via
-// TCPIP_TELNET_SERVER_SECURE_PORT.
-// Connections on port TCPIP_TELNET_SERVER_PORT will be ignored.
-//#define TCPIP_TELNET_REJECT_UNSECURED
+// Maximum number of Telnet connections
+#define TCPIP_TELNET_MAX_CONNECTIONS  (2)
 
-#if !defined(TCPIP_TELNET_MAX_CONNECTIONS)
-    // Maximum number of Telnet connections
-    #define TCPIP_TELNET_MAX_CONNECTIONS  (2u)
-#endif
+// Size of the telnet socket TX buffer
+// if long messages are sent over the telnet connection
+// the socket should have a large enough buffer to write the data at once
+//
+// Leave 0 for default TCP TX buffer size
+#define TCPIP_TELNET_SKT_TX_BUFF_SIZE      0
 
-#if !defined(TCPIP_TELNET_USERNAME)
-    // Default Telnet user name
-    #define TCPIP_TELNET_USERNAME     "admin"
-#endif
+// Size of the telnet socket RX buffer
+// If long messages are sent over the telnet connection
+// the socket should have a large enough buffer to receive the data
+//
+// Leave 0 for default TCP RX buffer size
+#define TCPIP_TELNET_SKT_RX_BUFF_SIZE      0
 
-#if !defined(TCPIP_TELNET_PASSWORD)
-    // Default Telnet password
-    #define TCPIP_TELNET_PASSWORD     "microchip"
-#endif
+// Port on which the telnet server is listening
+// Default is TCPIP_TELNET_SERVER_PORT (23) or
+// TCPIP_TELNET_SERVER_SECURE_PORT (992) 
+//
+// Adjust as needed
+#define TCPIP_TELNET_LISTEN_PORT    23
 
+
+// Size of the internal print buffer
+// This buffer is used when the telnet console printf style function
+// is called
+// Adjust based on the length of the messages to be formatted with print statements
+//
+// This buffer is created in the automatic stack.
+//       Make sure that there's enough stack space for this buffer
+#define TCPIP_TELNET_PRINT_BUFF_SIZE       200 
+
+// Size of the internal line buffer
+// This buffer is used for receiving and assembling the password, authentication
+// and regular characters
+// Adjust based on the length of the commands sent to the telnet server
+//
+// This buffer is created in the automatic stack.
+//       Make sure that there's enough stack space for this buffer
+#define TCPIP_TELNET_LINE_BUFF_SIZE       80
+
+// Maximum size of the internal buffer to store the user name
+// Adjust based on the length of the user names
+// allowed for the telnet connections
+//
+// A buffer of this size if allocated for each connection
+// to store the login user name 
+//
+// Longer user names will be truncated to this size
+#define TCPIP_TELNET_USERNAME_SIZE       15
+
+// Use the telnet connection information data
+// as part of the authentication callback
+//
+// If false
+//      no connection info data is provided to 
+//      the authentication callback
+//      This is useful for the default case when
+//      all connections will use the same username/password.
+//
+//  If true
+//      the authentication callback will contain the connection info data
+//      to allow different processing based on the
+//      source of the authentication request
+//
+// This flag is relevant only when TCPIP_TELNET_OBSOLETE_AUTHENTICATION == false
+#define TCPIP_TELNET_AUTHENTICATION_CONN_INFO     true
+
+// telnet obsolete authentication method disable/enable
+// 
+// If false
+//      This is the default and the PREFERRED case!
+//      The telnet module will call a registrated 
+//      callback to authenticate the users.
+//      Is is the preferred authentication method.
+//      It requires the run time registration of an authentication handler
+//
+//      Until the moment the authentication handler is registered
+//      any login attempts will fail!
+//
+// If true
+//      The old OBSOLETE authentication method using the build symbols
+//      TCPIP_TELNET_USERNAME and TCPIP_TELNET_PASSWORD is used
+//      This method is DEPRECATED and it will be eventually removed!
+//
+//      It is recommended that you leave the setting to false!
+#define TCPIP_TELNET_OBSOLETE_AUTHENTICATION    false
+
+// Default Telnet user name
+//
+// DEPRECATED. this is used only when there's no authentication callback defined!
+//
+// Use only when TCPIP_TELNET_OBSOLETE_AUTHENTICATION == true
+#define TCPIP_TELNET_USERNAME     "admin"
+
+// Default Telnet password
+// DEPRECATED. this is used only when there's no authentication callback defined!
+//
+// Use only when TCPIP_TELNET_OBSOLETE_AUTHENTICATION == true
+#define TCPIP_TELNET_PASSWORD     "microchip"
 
 // telnet task rate, milliseconds
+//
 // The default value is 100 milliseconds.
 // The lower the rate (higher the frequency) the higher the module priority
 // and higher module performance can be obtained
+//
 // The value cannot be lower than the TCPIP_STACK_TICK_RATE.
 #define TCPIP_TELNET_TASK_TICK_RATE   100
 

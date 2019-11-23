@@ -141,7 +141,6 @@ void _APP_ClientTasks()
         case APP_TCPIP_WAITING_FOR_COMMAND:
         {
 #if defined(TCPIP_STACK_COMMAND_ENABLE)
-            SYS_CMD_READY_TO_READ();
             if (APP_URL_Buffer[0] != '\0')
             {
                 TCPIP_DNS_RESULT result;
@@ -410,6 +409,8 @@ void APP_Tasks ( void )
 #else
                     SYS_CONSOLE_PRINT("    Interface %s on host %s - NBNS disabled\r\n", netName, netBiosName);
 #endif  // defined(TCPIP_STACK_USE_NBNS)
+                    (void)netName;          // avoid compiler warning 
+                    (void)netBiosName;      // if SYS_CONSOLE_PRINT is null macro
 
                 }
                 appData.state = APP_TCPIP_WAIT_FOR_IP;

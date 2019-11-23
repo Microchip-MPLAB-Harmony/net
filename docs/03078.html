@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MODULE_MAC_PIC32C_CONFIG Structure</title>
+<title>TCPIP_MAC_PACKET_RX_STAT_PIC32C Union</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01582.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03078.html" target="topic">TCPIP_MODULE_MAC_PIC32C_CONFIG Structure</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01016.html" target="topic">MAC Driver Module</a> &gt; <a href="01606.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03078.html" target="topic">TCPIP_MAC_PACKET_RX_STAT_PIC32C Union</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03049.html" target="topic">Previous</a> | <a href="01582.html" target="topic">Up</a> | <a href="01577.html" target="topic">Next</a></div>
+<a href="03146.html" target="topic">Previous</a> | <a href="01606.html" target="topic">Up</a> | <a href="03062.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MODULE_MAC_PIC32C_CONFIG Topic Title: TCPIP_MODULE_MAC_PIC32C_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PACKET_RX_STAT_PIC32C Topic Title: TCPIP_MAC_PACKET_RX_STAT_PIC32C Union)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MODULE_MAC_PIC32C_CONFIG Structure</div>
+TCPIP_MAC_PACKET_RX_STAT_PIC32C Union</div>
 </div>
 </div>
 
@@ -49,21 +49,35 @@ TCPIP_MODULE_MAC_PIC32C_CONFIG Structure</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-MAC Initialization Data&nbsp;</p>
+PIC32C Received Packet Status&nbsp;</p>
 <p class="Element10">
-This structure defines the MAC initialization data for the PIC32 MAC/Ethernet controller.</p></div>
+This structure contains the status of a PIC32C received packet.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
-  TCPIP_MAC_ADDR <strong><span style="color: #000000">macAddress</span></strong>;
-  <a href="03049.html" target="topic">TCPIP_MODULE_GMAC_QUEUE_CONFIG</a> <strong><span style="color: #000000">gmac_queue_config</span></strong>[DRV_GMAC_NUMBER_OF_QUEUES];
-  uint16_t <strong><span style="color: #000000">linkInitDelay</span></strong>;
-  TCPIP_ETH_OPEN_FLAGS <strong><span style="color: #000000">ethFlags</span></strong>;
-  uintptr_t <strong><span style="color: #000000">ethModuleId</span></strong>;
-  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00495.html" target="topic">DRV_ETHPHY_OBJECT_BASE_TYPE</a>* <strong><span style="color: #000000">pPhyBase</span></strong>;
-  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">struct</span></strong> <a href="00447.html" target="topic">DRV_ETHPHY_INIT</a>* <strong><span style="color: #000000">pPhyInit</span></strong>;
-} TCPIP_MODULE_MAC_PIC32C_CONFIG;</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">union</span></strong> {
+  uint32_t <strong><span style="color: #000000">val</span></strong>;
+  <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_TCPRxStatusBM</span></strong> {
+    uint32_t <strong><span style="color: #000000">len</span></strong> : 12;
+    uint32_t <strong><span style="color: #000000">offset</span></strong> : 2;
+    uint32_t <strong><span style="color: #000000">bSof</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bEof</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bCFI</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">vlanPriority</span></strong> : 3;
+    uint32_t <strong><span style="color: #000000">bPriorityDetected</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bVlanDetected</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bTypeIDMatch</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bAddr4Match</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bAddr3Match</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bAddr2Match</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bAddr1Match</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">reserved</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bExtAddrMatch</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bUniHashMatch</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bMultiHashMatch</span></strong> : 1;
+    uint32_t <strong><span style="color: #000000">bBroadcastDetected</span></strong> : 1;
+  } bm;
+} TCPIP_MAC_PACKET_RX_STAT_PIC32C;</pre></div></div>
 <a name="4D656D62657273"></a><div class="Element14">
 Members</div>
 <div class="Element11">
@@ -79,34 +93,89 @@ Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_MODULE_GMAC_QUEUE_CONFIG gmac_queue_config[DRV_GMAC_NUMBER_OF_QUEUES];&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t len : 12;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Configuration for each GMAC queues&nbsp;</div></td></tr><tr>
+Length of frame including FCS&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-uint16_t linkInitDelay;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t offset : 2;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Delay to wait after the lomk is coming up (milliseconds) for insuring that the PHY is ready to transmit data.&nbsp;</div></td></tr><tr>
+Receive buffer offset, bits 13:12 of frame length for jumbo frame&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-TCPIP_ETH_OPEN_FLAGS ethFlags;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t bSof : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-flags to use for the ETH connection&nbsp;</div></td></tr><tr>
+Start of frame&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-uintptr_t ethModuleId;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t bEof : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Ethernet module ID for this driver instance: a plib ETH Id value&nbsp;</div></td></tr><tr>
+End of frame&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-const struct DRV_ETHPHY_OBJECT_BASE_TYPE* pPhyBase;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t bCFI : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Non-volatile pointer to the PHY basic object associated with this MAC&nbsp;</div></td></tr><tr>
+Concatenation Format Indicator&nbsp;</div></td></tr><tr>
 <td class="Element262" valign="top" width="35%">
 <div class="Element263">
-const struct DRV_ETHPHY_INIT* pPhyInit;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+uint32_t vlanPriority : 3;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
 <div class="Element267">
-Non-volatile pointer to the PHY initialization data&nbsp;</div></td></tr></table></div></div>
+VLAN priority (if VLAN detected)&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bPriorityDetected : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Priority tag detected&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bVlanDetected : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; VLAN tag detected&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bTypeIDMatch : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Type ID match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bAddr4Match : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Address register 4 match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bAddr3Match : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Address register 3 match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bAddr2Match : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Address register 2 match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bAddr1Match : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Address register 1 match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bExtAddrMatch : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; External address match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bUniHashMatch : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Unicast hash match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bMultiHashMatch : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Multicast hash match&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+uint32_t bBroadcastDetected : 1;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+&lt; Global all ones broadcast address detected&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -114,17 +183,14 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
-<ul class="Element633">
-<li class="Element603">Each supported MAC has its own specific init/configuration data</li>
-</ul></p></div>
+MACs have different hardware support for the received packet status.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01008.html" target="topic">MAC Driver Module</a> &gt; <a href="01582.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03078.html" target="topic">TCPIP_MODULE_MAC_PIC32C_CONFIG Structure</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01016.html" target="topic">MAC Driver Module</a> &gt; <a href="01606.html" target="topic">Library Interface</a> &gt; f) Data Types and Constants &gt; <a href="03078.html" target="topic">TCPIP_MAC_PACKET_RX_STAT_PIC32C Union</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +198,13 @@ Remarks</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03049.html" target="topic">Previous</a> | <a href="01582.html" target="topic">Up</a> | <a href="01577.html" target="topic">Next</a></div>
+<a href="03146.html" target="topic">Previous</a> | <a href="01606.html" target="topic">Up</a> | <a href="03062.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MODULE_MAC_PIC32C_CONFIG Topic Title: TCPIP_MODULE_MAC_PIC32C_CONFIG Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_PACKET_RX_STAT_PIC32C Topic Title: TCPIP_MAC_PACKET_RX_STAT_PIC32C Union)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

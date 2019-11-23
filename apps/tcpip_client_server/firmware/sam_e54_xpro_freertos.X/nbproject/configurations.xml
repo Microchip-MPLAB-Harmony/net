@@ -28,10 +28,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/driver/gmac/drv_gmac.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="config" projectFiles="true">
-                <itemPath>../src/config/sam_e54_xpro_freertos/driver/miim/config/drv_miim_config.h</itemPath>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="src" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
                   <itemPath>../src/config/sam_e54_xpro_freertos/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
                 </logicalFolder>
@@ -46,9 +43,12 @@
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
               <logicalFolder name="f1" displayName="src" projectFiles="true">
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
+                  <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                   <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/common/helpers.h</itemPath>
-                  <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/common/sys_fs_wrapper.h</itemPath>
+                  <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/tcpip_heap_alloc.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ndp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ndp_private.h</itemPath>
@@ -77,6 +77,8 @@
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/dnss_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ftp_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ftp_private.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ftpc_manager.h</itemPath>
+                <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ftpc_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/nbns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/ddns_manager.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/telnet_manager.h</itemPath>
@@ -118,6 +120,7 @@
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/lldp_private.h</itemPath>
                 <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/src/lldp_tlv.h</itemPath>
               </logicalFolder>
+              <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/tcpip_common_ports.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/tcpip_mac.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/tcpip_mac_object.h</itemPath>
@@ -140,6 +143,7 @@
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/dns.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/dnss.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/ftp.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/ftpc.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/icmp.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/nbns.h</itemPath>
               <itemPath>../src/config/sam_e54_xpro_freertos/library/tcpip/ddns.h</itemPath>
@@ -174,11 +178,15 @@
             <logicalFolder name="f5" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/clock/plib_clock.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="cmcc" projectFiles="true">
+            <logicalFolder name="f8" displayName="cmcc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/cmcc/plib_cmcc.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="evsys" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/evsys/plib_evsys.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="mpu" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/mpu/plib_mpu.h</itemPath>
+              <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/mpu/plib_mpu_local.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/nvic/plib_nvic.h</itemPath>
@@ -326,9 +334,15 @@
           <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
             <logicalFolder name="f1" displayName="Core" projectFiles="true">
               <logicalFolder name="f1" displayName="Include" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
@@ -415,11 +429,14 @@
             <logicalFolder name="f5" displayName="clock" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/clock/plib_clock.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="cmcc" projectFiles="true">
+            <logicalFolder name="f8" displayName="cmcc" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/cmcc/plib_cmcc.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f3" displayName="evsys" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/evsys/plib_evsys.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="mpu" projectFiles="true">
+              <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/mpu/plib_mpu.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="nvic" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro_freertos/peripheral/nvic/plib_nvic.c</itemPath>
@@ -519,14 +536,14 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>ICD4Tool</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.20</languageToolchainVersion>
+        <languageToolchainVersion>2.30</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAME54_DFP" vendor="Microchip" version="2.0.12"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="3.0.27"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -626,6 +643,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
@@ -706,6 +726,41 @@
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
       </C32Global>
+      <EdbgTool>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="communication.activationmode" value="nohv"/>
+        <property key="communication.interface" value="swd"/>
+        <property key="communication.speed" value="2.000"/>
+        <property key="debugoptions.useswbreakpoints" value="false"/>
+        <property key="firmware.path"
+                  value="Press to browse for a specific firmware version"/>
+        <property key="firmware.update.action" value="firmware.update.use.latest"/>
+        <property key="memories.aux" value="false"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.configurationmemory2" value="true"/>
+        <property key="memories.dataflash" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.exclude.configurationmemory" value="true"/>
+        <property key="memories.flashdata" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.ranges" value="0-fffff"/>
+        <property key="poweroptions.powerenable" value="false"/>
+        <property key="programoptions.eraseb4program" value="true"/>
+        <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preserveeeprom" value="false"/>
+        <property key="programoptions.preserveeeprom.ranges" value=""/>
+        <property key="programoptions.preserveprogram.ranges" value="0-47001fff"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveuserid" value="false"/>
+        <property key="programoptions.programuserotp" value="false"/>
+        <property key="voltagevalue" value=""/>
+      </EdbgTool>
       <ICD4Tool>
         <property key="AutoSelectMemRanges" value="auto"/>
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
@@ -1235,6 +1290,29 @@
                   value=""/>
         <property key="warningmessagebreakoptions.warningmessages" value="holdstate"/>
       </Simulator>
+      <samice>
+        <property key="AutoSelectMemRanges" value="auto"/>
+        <property key="jtagcommunication.autoselectspeed" value="false"/>
+        <property key="jtagcommunication.method" value="swd"/>
+        <property key="jtagcommunication.speed" value="4000"/>
+        <property key="memories.bootflash" value="true"/>
+        <property key="memories.configurationmemory" value="true"/>
+        <property key="memories.eeprom" value="true"/>
+        <property key="memories.id" value="true"/>
+        <property key="memories.instruction.ram" value="true"/>
+        <property key="memories.instruction.ram.end"
+                  value="${memories.instruction.ram.end.value}"/>
+        <property key="memories.instruction.ram.start"
+                  value="${memories.instruction.ram.start.value}"/>
+        <property key="memories.programmemory" value="true"/>
+        <property key="memories.programmemory.end" value="0xfffff"/>
+        <property key="memories.programmemory.start" value="0x0"/>
+        <property key="programoptions.preservebootflash" value="false"/>
+        <property key="programoptions.preserveprogramrange" value="false"/>
+        <property key="programoptions.preserveprogramrange.end" value="0xfffff"/>
+        <property key="programoptions.preserveprogramrange.start" value="0x0"/>
+        <property key="programoptions.resetafterprogram" value="true"/>
+      </samice>
     </conf>
   </confs>
 </configurationDescriptor>

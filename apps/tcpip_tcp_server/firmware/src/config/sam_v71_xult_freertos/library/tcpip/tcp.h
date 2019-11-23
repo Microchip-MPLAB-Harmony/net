@@ -414,6 +414,75 @@ typedef void    (*TCPIP_TCP_SIGNAL_FUNCTION)(TCP_SOCKET hTCP, TCPIP_NET_HANDLE h
 
 typedef const void* TCPIP_TCP_SIGNAL_HANDLE;
 
+// *****************************************************************************
+/*
+  Type:
+    TCPIP_TCP_PROCESS_HANDLE
+
+  Summary:
+    Defines a TCP packet processing handle.
+
+  Description:
+    Definition of an packet processing handle used for
+    packet processing registration by the TCP clients.
+
+*/
+typedef const void* TCPIP_TCP_PROCESS_HANDLE;
+
+// *****************************************************************************
+/* TCP packet handler Pointer
+
+  Function:
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+
+  Summary:
+    Pointer to a function(handler) that will get called to process an incoming TCP packet.
+
+  Description:
+    Pointer to a function that will be called by the TCP module
+    when a RX packet is available.
+
+  Precondition:
+    None
+
+  Parameters:
+    hNet        - network handle on which the packet has arrived
+    rxPkt       - pointer to incoming packet
+    hParam      - user passed parameter when handler was registered
+
+  Returns:
+    true - if the packet is processed by the external handler.
+           In this case the TCP module will no longer process the packet
+    false - the packet needs to be processed internally by the TCP as usual           
+
+  Remarks:
+    The packet handler is called in the TCP context.
+    The handler should be kept as short as possible as it affects the processing of all the other
+    TCP RX traffic.
+
+    Before calling the external packet handler:
+    - the rxPkt->pktFlags has the bit 9 (value 0x0200) set for an IPv6 packet, cleared for IPv4
+    - the rxPkt->pTransportLayer points to an TCP_HEADER data structure.
+    - the rxPkt->pNetLayer points to an IPV4_HEADER/IPV6_HEADER data structure.
+    - the rxPkt->pktIf points to the interface receiving the packet
+    - the first data segment segLen is adjusted to store the size of the TCP data 
+
+    Important!
+    When the packet handler returns true, once it's done processing the packet,
+    it needs to acknowledge it, i.e. return to the owner,
+    which is the MAC driver serving the network interface!
+    This means that the packet acknowledge function needs to be called,
+    with a proper acknowledge parameter and the QUEUED flag needs to be cleared, if needed:
+    if((*rxPkt->ackFunc)(rxPkt, rxPkt->ackParam))
+    {
+           rxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+    }
+    Failure to do that will result in memory leaks and starvation of the MAC driver.
+    See the tcpip_mac.h for details.
+    
+ */
+typedef bool(*TCPIP_TCP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+
 
 // *****************************************************************************
 /*
@@ -1742,6 +1811,82 @@ bool    TCPIP_TCP_IsReady(void);
  */
 
 bool    TCPIP_TCP_SocketTraceSet(TCP_SOCKET sktNo, bool enable);
+
+//*******************************************************************************
+/*
+  Function:
+    TCPIP_TCP_PROCESS_HANDLE    TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HANDLER pktHandler, const void* handlerParam)
+
+  Summary:
+    Sets a new packet processing handler.
+
+  Description:
+    This function registers a new packet processing handler.
+    The caller can use the handler to be notified of incoming packets
+    and given a chance to examine/process them.
+
+  Precondition:
+    TCP properly initialized
+
+  Parameters:
+    pktHandler      - the packet handler which will be called for an incoming packet
+    handlerParam    - packet handler parameter
+
+  Returns:
+    - a valid TCPIP_TCP_PROCESS_HANDLE - if the operation succeeded
+    - NULL - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_TCP_PROCESS_HANDLE pktHandle = TCPIP_TCP_PacketHandlerRegister( myPktHandler, myParam );
+    </code>
+
+  Remarks:
+    Currently only one packet handler is supported for the TCP module.
+    The call will fail if a handler is already registered.
+    Use TCPIP_TCP_PacketHandlerDeregister first
+
+    Exists only if TCPIP_TCP_EXTERN_PACKET_PROCESS is true 
+
+  */
+TCPIP_TCP_PROCESS_HANDLE     TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HANDLER pktHandler, const void* handlerParam);
+
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE pktHandle);
+
+  Summary:
+    Deregisters a previously registered packet handler.
+
+  Description:
+    This function removes a packet processing handler.
+
+  Precondition:
+    TCP properly initialized
+
+  Parameters:
+    pktHandle   - TCPIP packet handle obtained by a call to TCPIP_TCP_PacketHandlerRegister
+
+
+  Returns:
+    - true  - if the operation succeeded
+    - false - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_TCP_PROCESS_HANDLE myHandle = TCPIP_TCP_PacketHandlerRegister(myPacketHandler, myParam );
+    // process incoming packets
+    // now we're done with it
+    TCPIP_TCP_PacketHandlerDeregister(myHandle);
+    </code>
+
+  Remarks:
+    Exists only if TCPIP_TCP_EXTERN_PACKET_PROCESS is true 
+
+  */
+bool    TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE pktHandle);
 
 // *****************************************************************************
 /*

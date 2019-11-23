@@ -53,6 +53,7 @@
 #include "configuration.h"
 #include "definitions.h"
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: RTOS "Tasks" Routine
@@ -64,7 +65,7 @@ void _NET_PRES_Tasks(  void *pvParameters  )
     while(1)
     {
         NET_PRES_Tasks(sysObj.netPres);
-        vTaskDelay(1 / portTICK_PERIOD_MS);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
     }
 }
 
@@ -136,7 +137,6 @@ void _SYS_FS_Tasks(  void *pvParameters  )
   Remarks:
     See prototype in system/common/sys_module.h.
 */
-
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
@@ -215,7 +215,6 @@ void SYS_Tasks ( void )
     vTaskStartScheduler(); /* This function never returns. */
 
 }
-
 
 /*******************************************************************************
  End of File

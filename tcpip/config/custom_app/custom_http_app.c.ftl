@@ -2225,18 +2225,6 @@ void TCPIP_HTTP_Print_pot(HTTP_CONN_HANDLE connHandle)
     TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), AN0String);
 }
 
-void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle)
-{
-// TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void*)SYS_FS_DRIVE);
-  TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle),(const uint8_t*) "FLASH");
-}
-
-void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle)
-{
-// TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void*)SYS_FS_MPFS_STRING);
- TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle),(const uint8_t*) "MPFS2");
-}
-
 void TCPIP_HTTP_Print_hellomsg(HTTP_CONN_HANDLE connHandle)
 {
     const uint8_t *ptr;
@@ -3065,7 +3053,7 @@ void TCPIP_HTTP_Print_nextWLAN(HTTP_CONN_HANDLE connHandle)
 #endif
 
 <#if ((DRV_WIFI_HTTP_CUSTOM_TEMPLATE?has_content) && (DRV_WIFI_HTTP_CUSTOM_TEMPLATE  == "Easy Configuration Demo"))>
-#if defined(TCPIP_IF_MRF24WN) || defined(TCPIP_IF_WINC1500) || defined(TCPIP_IF_WILC1000)
+#if defined(TCPIP_IF_MRF24WN) || defined(TCPIP_IF_WINC) || defined(TCPIP_IF_WILC1000)
 #define HTTP_APP_USE_WIFI
 #endif
 
@@ -4577,7 +4565,7 @@ static HTTP_IO_RESULT HTTPPostWIFIConfig(HTTP_CONN_HANDLE connHandle)
             {
                 if (g_wifi_deviceInfo.deviceType == MRF24WN_MODULE) {
                     g_wifi_redirectionConfig.securityMode = WF_SECURITY_WPA_WITH_PASS_PHRASE;
-                } else if (g_wifi_deviceInfo.deviceType == WINC1500_MODULE) {
+                } else if (g_wifi_deviceInfo.deviceType == WINC_MODULE) {
                     g_wifi_redirectionConfig.securityMode = WF_SECURITY_WPA_AUTO_WITH_PASS_PHRASE;
                 } else if (g_wifi_deviceInfo.deviceType == WILC1000_MODULE) {
                     g_wifi_redirectionConfig.securityMode = WF_SECURITY_WPA_AUTO_WITH_PASS_PHRASE;
@@ -4589,7 +4577,7 @@ static HTTP_IO_RESULT HTTPPostWIFIConfig(HTTP_CONN_HANDLE connHandle)
             {
                 if (g_wifi_deviceInfo.deviceType == MRF24WN_MODULE) {
                     g_wifi_redirectionConfig.securityMode = WF_SECURITY_WPA2_WITH_PASS_PHRASE;
-                } else if (g_wifi_deviceInfo.deviceType == WINC1500_MODULE) {
+                } else if (g_wifi_deviceInfo.deviceType == WINC_MODULE) {
                     g_wifi_redirectionConfig.securityMode = WF_SECURITY_WPA_AUTO_WITH_PASS_PHRASE;
                 } else if (g_wifi_deviceInfo.deviceType == WILC1000_MODULE) {
                     g_wifi_redirectionConfig.securityMode = WF_SECURITY_WPA_AUTO_WITH_PASS_PHRASE;
@@ -4761,25 +4749,6 @@ void TCPIP_HTTP_Print_builddate(HTTP_CONN_HANDLE connHandle)
 void TCPIP_HTTP_Print_version(HTTP_CONN_HANDLE connHandle)
 {
     TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)TCPIP_STACK_VERSION_STR);
-}
-
-void TCPIP_HTTP_Print_drive(HTTP_CONN_HANDLE connHandle)
-{
-    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_DRIVE);
-}
-
-void TCPIP_HTTP_Print_fstype(HTTP_CONN_HANDLE connHandle)
-{
-
-<#if ((tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER?has_content) && (tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER  == true))> 
-<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE?has_content >
-<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "FLASH">
-    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_MPFS_STRING);
-<#elseif tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "SDCARD">
-    TCPIP_TCP_StringPut(TCPIP_HTTP_CurrentConnectionSocketGet(connHandle), (const void *)SYS_FS_FATFS_STRING);
-</#if>
-</#if>
-</#if>
 }
 
 void TCPIP_HTTP_Print_cookiename(HTTP_CONN_HANDLE connHandle)

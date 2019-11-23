@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Authentication</title>
+<title>Building the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01509.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">HTTP Features</a> &gt; <a href="01479.html" target="topic">Authentication</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00686.html" target="topic">FTP Server Module</a> &gt; <a href="01479.html" target="topic">Building the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01487.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01483.html" target="topic">Next</a></div>
+<a href="02335.html" target="topic">Previous</a> | <a href="00686.html" target="topic">Up</a> | <a href="01485.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Authentication Topic Title: Authentication)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Authentication</div>
+Building the Library</div>
 </div>
 </div>
 
@@ -49,66 +49,82 @@ Authentication</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Authentication functionality is supported by two user-provided callback functions. The first, <a href="02401.html" target="topic">TCPIP_HTTP_FileAuthenticate</a>, determines if the requested page requires valid credentials to proceed. The second, <a href="02638.html" target="topic">TCPIP_HTTP_UserAuthenticate</a>, checks the user name and password against an accepted list and determines whether to grant or deny access. The connection stores the current authorization setting which can be manipulated by using the <a href="02354.html" target="topic">TCPIP_HTTP_CurrentConnectionIsAuthorizedGet</a> and <a href="02355.html" target="topic">TCPIP_HTTP_CurrentConnectionIsAuthorizedSet</a> functions.&nbsp;</p>
+The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/tcpip</span>.</p><div class="Element15">
+Interface File(s)</div>
 <p class="Element10">
-&nbsp;</p><div class="Element63">
+This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="32%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="32%">
+<div class="Element68">
+<span class="Element146">/tcpip.h</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
+<div class="Element68">
+Header file that includes all of the TCP/IP modules.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Required File(s)</div>
+<div class="Element63">
 <div class="TableDiv">
 <table cellspacing="0" class="Table0">
 <tr>
 <td class="Element67" valign="top" width="10%" style="border:none;">
 <div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
 <div class="Element68">
-The HTTP authentication is <strong>NOT</strong> <strong>secure!</strong> The passwords are sent in clear over the network.<br>For a secure approach, the HTTP_NET module with TLS enabled should be used.&nbsp;</div></td></tr></table></div></div>
+<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-&nbsp;</p>
+This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="48%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="48%">
+<div class="Element68">
+<span class="Element146">/src/ftp.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
+<div class="Element68">
+FTP implementation file.&nbsp;</div></td></tr></table></div></div>
 <div class="Element15">
-Requiring Authentication</div>
+Optional File(s)</div>
 <p class="Element10">
-When a request is first made, the function <a href="02401.html" target="topic">TCPIP_HTTP_FileAuthenticate</a> is called to determine if that page needs password protection. This function returns a value to instruct the HTTP server how to proceed. The most significant bit indicates whether or not access is granted. That is, values 0x80 and higher allow access unconditionally, while values 0x79 and lower will require a user name and password at a later point. The value returned is stored in the connection data so that it can be accessed by future callback functions.&nbsp;</p>
+This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
+<div class="TableDiv">
+<table cellspacing="0" class="Table2">
+<tr>
+<td class="Element65" valign="top" width="24%">
+<div class="Element66">
+Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="24%">
+<div class="Element68">
+N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
+<div class="Element68">
+No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
+<div class="Element15">
+Module Dependencies</div>
 <p class="Element10">
-The following example is the simplest case, in which all files require a password for access: </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)
-{
-<strong><span style="color: #000080">return</span></strong> 0;
-}
-In some cases, only certain files will need to be <strong><span style="color: #000080">protected</span></strong>. The second example requires a password <strong><span style="color: #000080">for</span></strong> any file located in the /treasure folder:
-uint8_t TCPIP_HTTP_FileAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cFile)
-{
-    <i><span style="color: #008000">// Compare to &quot;/treasure&quot; folder. Don't use strcmp here, because</span></i>
-    <i><span style="color: #008000">// cFile has additional path info such as &quot;/treasure/gold.htm&quot;</span></i>
-    <strong><span style="color: #000080">if</span></strong>(memcmp(cFile, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">void</span></strong>*)&quot;treasure&quot;, 8) == 0)
-    {   <i><span style="color: #008000">// Authentication will be needed later</span></i>
-        <strong><span style="color: #000080">return</span></strong> 0;
-    }
-
-    <i><span style="color: #008000">// No authentication required</span></i>
-    <strong><span style="color: #000080">return</span></strong> 0x80;
-}</pre></div></div>
-<p class="Element10">
-More complex uses could require an administrative user to access the <span class="Element146">/admin</span> folder, while any authenticated user can access the rest of the site. This requires the <a href="02401.html" target="topic">TCPIP_HTTP_FileAuthenticate</a> to return different authentication values for a different file.</p><div class="Element15">
-Validating Credentials</div>
-<p class="Element10">
-The <a href="02638.html" target="topic">TCPIP_HTTP_UserAuthenticate</a> function determines if the supplied user name and password are valid to access the specific resource. Again, the most significant bit indicates whether or not access is granted. The value returned is also stored in the connection internal data and it can be accessed by future callback functions.&nbsp;</p>
-<p class="Element10">
-The following example is the simplest case, in which one user/password pair is accepted for all pages: </p><div class="Element13"><div class="Element12"><pre class="Element12">uint8_t TCPIP_HTTP_UserAuthenticate(HTTP_CONN_HANDLE connHandle, uint8_t* cUser, uint8_t* cPass)
-{
-    <strong><span style="color: #000080">if</span></strong>(!strcmp((<strong><span style="color: #000080">char</span></strong>*)cUser, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>*)&quot;AliBaba&quot;) &amp;&amp;
-    !strcmp((<strong><span style="color: #000080">char</span></strong>*)cPass, (<strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong>*)&quot;Open Sesame!&quot;) )
-    {
-        <strong><span style="color: #000080">return</span></strong> 0x80;
-    }
-
-    <strong><span style="color: #000080">return</span></strong> 0;
-}</pre></div></div>
-<p class="Element10">
-More complex uses are certainly feasible. Many applications may choose to store the user names and passwords in protected files so that they may be updated by a privileged user. In some cases, you may have multiple users with various levels of access. The application may wish to return various values above 0x80 in <a href="02638.html" target="topic">TCPIP_HTTP_UserAuthenticate</a> so that later callback functions can determine which user logged in.</p></div>
+The FTP module depends on the following modules:
+<ul class="Element634">
+<li class="Element604"><a href="01011.html" target="topic">TCP/IP Stack Library</a></li>
+<li class="Element604"><a href="01324.html" target="topic">TCP Module</a></li>
+<li class="Element604"><strong>File System Service Library</strong></li>
+</ul></p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00712.html" target="topic">HTTP Module</a> &gt; <a href="01509.html" target="topic">Using the Library</a> &gt; <a href="01489.html" target="topic">HTTP Features</a> &gt; <a href="01479.html" target="topic">Authentication</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00686.html" target="topic">FTP Server Module</a> &gt; <a href="01479.html" target="topic">Building the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -116,13 +132,13 @@ More complex uses are certainly feasible. Many applications may choose to store 
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01487.html" target="topic">Previous</a> | <a href="01489.html" target="topic">Up</a> | <a href="01483.html" target="topic">Next</a></div>
+<a href="02335.html" target="topic">Previous</a> | <a href="00686.html" target="topic">Up</a> | <a href="01485.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP HTTP Authentication Topic Title: Authentication)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

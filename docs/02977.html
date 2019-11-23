@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_MAC_RegisterStatisticsGet Function</title>
+<title>TCPIP_IPV6_PacketHandlerDeregister Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01014.html" target="topic">MAC Driver Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; b) Client Control and Status Functions &gt; <a href="02977.html" target="topic">TCPIP_MAC_RegisterStatisticsGet Function</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02977.html" target="topic">TCPIP_IPV6_PacketHandlerDeregister Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02941.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="03028.html" target="topic">Next</a></div>
+<a href="02962.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="02978.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_RegisterStatisticsGet@DRV_HANDLE@TCPIP_MAC_STATISTICS_REG_ENTRY*@int@int* Topic Title: TCPIP_MAC_RegisterStatisticsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_PacketHandlerDeregister@TCPIP_IPV6_PROCESS_HANDLE Topic Title: TCPIP_IPV6_PacketHandlerDeregister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_MAC_RegisterStatisticsGet Function</div>
+TCPIP_IPV6_PacketHandlerDeregister Function</div>
 </div>
 </div>
 
@@ -49,22 +49,19 @@ TCPIP_MAC_RegisterStatisticsGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function will get the current value of the statistic registers maintained by the MAC hardware.</p></div>
+This function removes a packet processing handler.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02979.html" target="topic">TCPIP_MAC_RES</a> <strong><span style="color: #000000">TCPIP_MAC_RegisterStatisticsGet</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
-    <a href="03025.html" target="topic">TCPIP_MAC_STATISTICS_REG_ENTRY</a>* <strong><span style="color: #000000">pRegEntries</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">nEntries</span></strong>, 
-    <strong><span style="color: #000080">int</span></strong>* <strong><span style="color: #000000">pHwEntries</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_IPV6_PacketHandlerDeregister</span></strong>(
+    <a href="02980.html" target="topic">TCPIP_IPV6_PROCESS_HANDLE</a> <strong><span style="color: #000000">pktHandle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<a href="02872.html" target="topic">TCPIP_MAC_Initialize</a> should have been called. <a href="02895.html" target="topic">TCPIP_MAC_Open</a> should have been called to obtain a valid handle.</p></div>
+IPv6 properly initialized</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,24 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-hMac&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+pktHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-handle identifying the MAC driver client&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pRegStatistics&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to a pRegEntries that will receive the current hardware statistics registers values. Can be 0, if only the number of supported hardware registers is requested&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-nEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-provides the number of <a href="03025.html" target="topic">TCPIP_MAC_STATISTICS_REG_ENTRY</a> structures present in pRegEntries Can be 0, if only the number of supported hardware registers is requested The register entries structures will be filled by the driver, up to the supported hardware registers.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pHwEntries&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-pointer to an address to store the number of the statistics registers that the hardware supports It is updated by the driver. Can be 0 if not needed&nbsp;</div></td></tr></table></div></div>
+TCPIP packet handle obtained by a call to <a href="02978.html" target="topic">TCPIP_IPV6_PacketHandlerRegister</a>&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -107,9 +89,9 @@ Returns</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element633">
-<li class="Element603">TCPIP_MAC_RES_OK - if all processing went on OK</li>
-<li class="Element603">TCPIP_MAC_RES_OP_ERR error code - if function not supported by the driver</li>
+<ul class="Element634">
+<li class="Element604">true - if the operation succeeded</li>
+<li class="Element604">false - if the operation failed</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -117,14 +99,24 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The reported values are info only and change dynamically.</p></div>
+Exists only if TCPIP_IPV6_EXTERN_PACKET_PROCESS is true</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"><a href="02980.html" target="topic">TCPIP_IPV6_PROCESS_HANDLE</a> myHandle = <a href="02978.html" target="topic">TCPIP_IPV6_PacketHandlerRegister</a>(myPacketHandler, myParam );
+<i><span style="color: #008000">// process incoming packets</span></i>
+<i><span style="color: #008000">// now we're done with it</span></i>
+TCPIP_IPV6_PacketHandlerDeregister(myHandle);</pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01014.html" target="topic">MAC Driver Module</a> &gt; <a href="01588.html" target="topic">Library Interface</a> &gt; b) Client Control and Status Functions &gt; <a href="02977.html" target="topic">TCPIP_MAC_RegisterStatisticsGet Function</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02977.html" target="topic">TCPIP_IPV6_PacketHandlerDeregister Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -132,13 +124,13 @@ The reported values are info only and change dynamically.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02941.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="03028.html" target="topic">Next</a></div>
+<a href="02962.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="02978.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_MAC_RegisterStatisticsGet@DRV_HANDLE@TCPIP_MAC_STATISTICS_REG_ENTRY*@int@int* Topic Title: TCPIP_MAC_RegisterStatisticsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_PacketHandlerDeregister@TCPIP_IPV6_PROCESS_HANDLE Topic Title: TCPIP_IPV6_PacketHandlerDeregister Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

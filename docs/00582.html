@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00372.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00582.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart Function</a></div>
+<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00389.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00582.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,10 +26,10 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00581.html" target="topic">Previous</a> | <a href="00372.html" target="topic">Up</a> | <a href="00487.html" target="topic">Next</a></div>
+<a href="00581.html" target="topic">Previous</a> | <a href="00389.html" target="topic">Up</a> | <a href="00504.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_VendorSMIWriteStart@DRV_HANDLE@uint16_t@uint16_t@int Topic Title: DRV_ETHPHY_VendorSMIWriteStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
@@ -53,7 +53,7 @@ This function will start a SMI write transfer.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00555.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_VendorSMIWriteStart</span></strong>(
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00564.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_VendorSMIWriteStart</span></strong>(
     DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
     uint16_t <strong><span style="color: #000000">rIx</span></strong>, 
     uint16_t <strong><span style="color: #000000">wData</span></strong>, 
@@ -65,11 +65,11 @@ Preconditions</div>
 <div class="Element10">
 <p class="Element10">
 
-<ul class="Element633">
-<li class="Element603">The <a href="00463.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
-<li class="Element603"><a href="00547.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
-<li class="Element603"><a href="00562.html" target="topic">DRV_ETHPHY_Setup</a> is in progress and configures the PHY</li>
-<li class="Element603">The vendor implementation of the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure is running and a SMI transfer is needed</li>
+<ul class="Element635">
+<li class="Element605">The <a href="00480.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
+<li class="Element605"><a href="00556.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
+<li class="Element605"><a href="00571.html" target="topic">DRV_ETHPHY_Setup</a> is in progress and configures the PHY</li>
+<li class="Element605">The vendor implementation of the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure is running and a SMI transfer is needed</li>
 </ul></p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -81,7 +81,7 @@ DRV_ETHPHY_RES_OK - if the vendor SMI write transfer is started&nbsp;</p>
 <p class="Element10">
 DRV_ETHPHY_RES_PENDING - the SMI bus was busy and the call needs to be retried&nbsp;</p>
 <p class="Element10">
-&lt; 0 - some error and the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure has to return error to be aborted by the <a href="00562.html" target="topic">DRV_ETHPHY_Setup</a></p></div>
+&lt; 0 - some error and the DRV_EXTPHY_MIIConfigure/DRV_EXTPHY_MDIXConfigure has to return error to be aborted by the <a href="00571.html" target="topic">DRV_ETHPHY_Setup</a></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
@@ -90,7 +90,7 @@ Remarks</div>
 <p class="Element10">
 The function is intended for implementing vendor SMI transfers within DRV_EXTPHY_MIIConfigure and DRV_EXTPHY_MDIXConfigure.&nbsp;</p>
 <p class="Element10">
-It has to be called from within the DRV_EXTPHY_MIIConfigure or DRV_EXTPHY_MDIXConfigure functions (which are called, in turn, by the <a href="00562.html" target="topic">DRV_ETHPHY_Setup</a> procedure) otherwise the call will fail.&nbsp;</p>
+It has to be called from within the DRV_EXTPHY_MIIConfigure or DRV_EXTPHY_MDIXConfigure functions (which are called, in turn, by the <a href="00571.html" target="topic">DRV_ETHPHY_Setup</a> procedure) otherwise the call will fail.&nbsp;</p>
 <p class="Element10">
 The DRV_ETHPHY_RES_OK and DRV_ETHPHY_RES_PENDING significance is changed from the general driver API.</p></div>
 </div>
@@ -106,7 +106,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01473.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00372.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00582.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart Function</a></div>
+<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00389.html" target="topic">Library Interface</a> &gt; d) Vendor Functions &gt; <a href="00582.html" target="topic">DRV_ETHPHY_VendorSMIWriteStart Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,10 +114,10 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00581.html" target="topic">Previous</a> | <a href="00372.html" target="topic">Up</a> | <a href="00487.html" target="topic">Next</a></div>
+<a href="00581.html" target="topic">Previous</a> | <a href="00389.html" target="topic">Up</a> | <a href="00504.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
 <a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_VendorSMIWriteStart@DRV_HANDLE@uint16_t@uint16_t@int Topic Title: DRV_ETHPHY_VendorSMIWriteStart Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>

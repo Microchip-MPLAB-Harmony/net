@@ -99,6 +99,14 @@ extern "C" {
 #define APP_LED_3StateClear()       LED3_Clear()
 #define APP_LED_3StateToggle()      LED3_Toggle()
 #endif
+
+// Application SYS_FS mount points
+// Adjust as needed
+#define APP_SYS_FS_NVM_VOL          "/dev/nvma1"
+#define APP_SYS_FS_MOUNT_POINT      "/mnt/mchpSite1"
+#define APP_SYS_FS_TYPE             MPFS2
+#define APP_SYS_FS_TYPE_STRING      "MPFS2"
+
 // *****************************************************************************
 /* Application states
 

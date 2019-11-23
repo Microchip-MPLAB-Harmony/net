@@ -384,6 +384,18 @@ typedef struct
     void* (*http_malloc_fnc)(size_t bytes); // malloc style allocation function for HTTP module
     void  (*http_free_fnc)(void* ptr);      // free style allocation function
 
+    // Web pages directory
+    // The HTTP server will serve pages located under this top directory.
+    // No access is possible above this directory.
+    // As a good practice to follow, use something like: "/mnt_point/webpages/"
+    // to limit an external user access to this only directory in the file system
+    // when using the Web server
+    // NOTE: to allow access to the whole file system use the root directory:
+    // "/mnt_point/" or "/" depending on your SYS_FS settings/mounting
+    // But this usage should be discouraged because it gives HTTP access
+    // to all system files.
+    const char* web_dir;
+
 } TCPIP_HTTP_NET_MODULE_CONFIG;
 
 // *****************************************************************************

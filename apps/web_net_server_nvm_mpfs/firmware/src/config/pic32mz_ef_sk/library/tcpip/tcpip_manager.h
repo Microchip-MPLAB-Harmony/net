@@ -387,6 +387,75 @@ typedef const void* TCPIP_MODULE_SIGNAL_HANDLE;
 typedef void (*TCPIP_MODULE_SIGNAL_FUNC)(TCPIP_MODULE_SIGNAL_HANDLE sigHandle, 
                TCPIP_STACK_MODULE moduleId, TCPIP_MODULE_SIGNAL signal, uintptr_t signalParam);
 
+// *****************************************************************************
+/*
+  Type:
+    TCPIP_STACK_PROCESS_HANDLE
+
+  Summary:
+    Defines a TCPIP stack packet processing handle.
+
+  Description:
+    Definition of an packet processing handle used for
+    packet processing registration by the stack clients.
+
+*/
+typedef const void* TCPIP_STACK_PROCESS_HANDLE;
+
+// *****************************************************************************
+/* TCPIP packet handler Pointer
+
+  Function:
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, uint16_t frameType, const void* hParam);
+
+  Summary:
+    Pointer to a function(handler) that will get called to process an incoming packet.
+
+  Description:
+    Pointer to a function that will be called by the TCP/IP manager
+    when a RX packet is available.
+
+  Precondition:
+    None
+
+  Parameters:
+    hNet        - network handle on which the packet has arrived
+    rxPkt       - pointer to incoming packet
+    frameType   - type of packet being processed
+                  Note: value is converted to host endianess!
+                  Standard Ethernet frame value: 0x0800 - IPV4, 0x86DD - IPv6, 0x0806 - ARP, etc. 
+    hParam      - user passed parameter when handler was registered
+
+  Returns:
+    true - if the packet is processed by the external handler.
+           In this case the TCP/IP manager will no longer process the packet
+    false - the packet needs to be processed internally by the stack as usual           
+
+  Remarks:
+    The packet handler is called in the TCP/IP stack manager context.
+    The handler should be kept as short as possible as it affects the processing of all the other
+    RX traffic.
+
+    Before calling the external packet handler 
+    - the rxPkt->pktIf points to the interface receiving the packet
+    - no other processing/checks are done!
+
+    Important!
+    When the packet handler returns true, once it's done processing the packet,
+    it needs to acknowledge it, i.e. return to the owner,
+    which is the MAC driver serving the network interface!
+    This means that the packet acknowledge function needs to be called,
+    with a proper acknowledge parameter and the QUEUED flag needs to be cleared, if needed:
+    if((*rxPkt->ackFunc)(rxPkt, rxPkt->ackParam))
+    {
+           rxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+    }
+    Failure to do that will result in memory leaks and starvation of the MAC driver.
+    See the tcpip_mac.h for details.
+    
+ */
+typedef bool(*TCPIP_STACK_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, uint16_t frameType, const void* hParam);
+
 
 //*********************************************************************
 /*
@@ -2291,6 +2360,89 @@ bool    TCPIP_MODULE_SignalFunctionDeregister(TCPIP_MODULE_SIGNAL_HANDLE signalH
 
   */
 TCPIP_MODULE_SIGNAL    TCPIP_MODULE_SignalGet(TCPIP_STACK_MODULE moduleId);
+
+
+
+//*******************************************************************************
+/*
+  Function:
+    TCPIP_STACK_PROCESS_HANDLE    TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
+
+  Summary:
+    Sets a new packet processing handler.
+
+  Description:
+    This function registers a new packet processing handler.
+    The caller can use the handler to be notified of incoming packets
+    and given a chance to examine/process them.
+
+  Precondition:
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+    The network interface should be up and running.
+
+  Parameters:
+    hNet            - network handle
+    pktHandler      - the packet handler which will be called for an incoming packet
+    handlerParam    - packet handler parameter
+
+  Returns:
+    - a valid TCPIP_STACK_PROCESS_HANDLE - if the operation succeeded
+    - NULL - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_STACK_PROCESS_HANDLE pktHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPktHandler, myParam );
+    </code>
+
+  Remarks:
+    Currently only one packet handler is supported per interface.
+    The call will fail if a handler is already registered.
+    Use TCPIP_STACK_PacketHandlerDeregister first
+
+    Exists only if TCPIP_STACK_EXTERN_PACKET_PROCESS is true 
+
+  */
+TCPIP_STACK_PROCESS_HANDLE     TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam);
+
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle);
+
+  Summary:
+    Deregisters a previously registered packet handler.
+
+  Description:
+    This function removes a packet processing handler.
+
+  Precondition:
+    The TCP/IP stack should have been initialized by TCPIP_STACK_Initialize 
+    and the TCPIP_STACK_Status returned SYS_STATUS_READY.
+
+  Parameters:
+    hNet        - network handle
+    pktHandle   - TCPIP packet handle obtained by a call to TCPIP_STACK_PacketHandlerRegister
+
+
+  Returns:
+    - true  - if the operation succeeded
+    - false - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_STACK_PROCESS_HANDLE myHandle = TCPIP_STACK_PacketHandlerRegister( hNet, myPacketHandler, myParam );
+    // process incoming packets
+    // now we're done with it
+    TCPIP_STACK_PacketHandlerDeregister(hNet, myHandle);
+    </code>
+
+  Remarks:
+    Exists only if TCPIP_STACK_EXTERN_PACKET_PROCESS is true 
+
+  */
+bool    TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle);
 
 
 // *****************************************************************************

@@ -69,6 +69,11 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#else>
 #define TCPIP_UDP_COMMANDS   false
 </#if>
+<#if TCPIP_UDP_EXTERN_PACKET_PROCESS == true>
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   true
+<#else>
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
+</#if>
 </#if>
 
 <#--

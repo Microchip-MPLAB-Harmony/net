@@ -103,7 +103,7 @@ typedef int16_t UDP_SOCKET;
 // *****************************************************************************
 /*
   Structure:
-    UDP_SOCKET_OPTION
+    UDP_SOCKET_INFO
 
   Summary:
     Information about a UDP socket
@@ -298,6 +298,35 @@ typedef enum
 
   Description:
     Allows the multicast options configuration of a socket.
+
+  Remarks:
+    Using the mask and value members, multiple flags can be set and cleared in one single operations.
+    The TCPIP_UDP_OptionsSet() operation for UDP_OPTION_MULTICAST will apply the folowing to the socket flags:
+    flags &= ~flagsMask;    // clear all flags touched by mask
+    flags |= (flagsValue & flagsMask);  // set the corresponding flags that are set in flagsValue. All others will remain cleared.
+    
+
+  Example:
+    <code>
+    // set the flag UDP_MCAST_FLAG_LOOP:
+    UDP_OPTION_MULTICAST_DATA mcastData;
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      // specify the flag to touch
+    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP;     // new value for the flag:
+                                                    // any value with the bit set for the UDP_MCAST_FLAG_LOOP bit
+    TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
+
+    // clear the flag UDP_MCAST_FLAG_LOOP:
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP;      // specify the flag to touch
+    mcastData.flagsValue = 0;                       // new value for the flag:
+                                                    // any value with the bit cleared for the UDP_MCAST_FLAG_LOOP bit
+    TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
+
+    // set UDP_MCAST_FLAG_LOOP and UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK
+    // clear  UDP_MCAST_FLAG_IGNORE_SOURCE_ADD and UDP_MCAST_FLAG_IGNORE_SOURCE_PORT
+    mcastData.flagsMask = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK | UDP_MCAST_FLAG_IGNORE_SOURCE_ADD | UDP_MCAST_FLAG_IGNORE_SOURCE_PORT; // flags to touch
+    mcastData.flagsValue = UDP_MCAST_FLAG_LOOP | UDP_MCAST_FLAG_DISABLE_SOURCE_CHECK ;  // value with bits set for the first 2 flags, cleared for the others
+    TCPIP_UDP_OptionsSet(hUdp, UDP_OPTION_MULTICAST, &mcastData);
+    </code>
 */
 //
 typedef struct
@@ -390,6 +419,74 @@ typedef void    (*TCPIP_UDP_SIGNAL_FUNCTION)(UDP_SOCKET hUDP, TCPIP_NET_HANDLE h
 
 typedef const void* TCPIP_UDP_SIGNAL_HANDLE;
 
+// *****************************************************************************
+/*
+  Type:
+    TCPIP_UDP_PROCESS_HANDLE
+
+  Summary:
+    Defines a UDP packet processing handle.
+
+  Description:
+    Definition of an packet processing handle used for
+    packet processing registration by the UDP clients.
+
+*/
+typedef const void* TCPIP_UDP_PROCESS_HANDLE;
+
+// *****************************************************************************
+/* UDP packet handler Pointer
+
+  Function:
+    bool <FunctionName> (TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
+
+  Summary:
+    Pointer to a function(handler) that will get called to process an incoming UDP packet.
+
+  Description:
+    Pointer to a function that will be called by the UDP module
+    when a RX packet is available.
+
+  Precondition:
+    None
+
+  Parameters:
+    hNet        - network handle on which the packet has arrived
+    rxPkt       - pointer to incoming packet
+    hParam      - user passed parameter when handler was registered
+
+  Returns:
+    true - if the packet is processed by the external handler.
+           In this case the UDP module will no longer process the packet
+    false - the packet needs to be processed internally by the UDP as usual           
+
+  Remarks:
+    The packet handler is called in the UDP context.
+    The handler should be kept as short as possible as it affects the processing of all the other
+    UDP RX traffic.
+
+    Before calling the external packet handler 
+    - the rxPkt->pktFlags has the bit 9 (value 0x0200) set for an IPv6 packet, cleared for IPv4
+    - the rxPkt->pTransportLayer points to an UDP_HEADER data structure.
+    - the rxPkt->pNetLayer points to an IPV4_HEADER/IPV6_HEADER data structure.
+    - the rxPkt->pktIf points to the interface receiving the packet
+    - the first data segment segLen is adjusted to store the size of the UDP data 
+
+    Important!
+    When the packet handler returns true, once it's done processing the packet,
+    it needs to acknowledge it, i.e. return to the owner,
+    which is the MAC driver serving the network interface!
+    This means that the packet acknowledge function needs to be called,
+    with a proper acknowledge parameter and the QUEUED flag needs to be cleared, if needed:
+    if((*rxPkt->ackFunc)(rxPkt, rxPkt->ackParam))
+    {
+           rxPkt->pktFlags &= ~TCPIP_MAC_PKT_FLAG_QUEUED;
+    }
+    Failure to do that will result in memory leaks and starvation of the MAC driver.
+    See the tcpip_mac.h for details.
+    
+ */
+typedef bool(*TCPIP_UDP_PACKET_HANDLER)(TCPIP_NET_HANDLE hNet, struct _tag_TCPIP_MAC_PACKET* rxPkt, const void* hParam);
 
 
 // *****************************************************************************
@@ -1696,6 +1793,83 @@ bool   TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE h
  */
 
 int     TCPIP_UDP_SocketsNumberGet(void);
+
+//*******************************************************************************
+/*
+  Function:
+    TCPIP_UDP_PROCESS_HANDLE    TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HANDLER pktHandler, const void* handlerParam)
+
+  Summary:
+    Sets a new packet processing handler.
+
+  Description:
+    This function registers a new packet processing handler.
+    The caller can use the handler to be notified of incoming packets
+    and given a chance to examine/process them.
+
+  Precondition:
+    UDP properly initialized
+
+  Parameters:
+    pktHandler      - the packet handler which will be called for an incoming packet
+    handlerParam    - packet handler parameter
+
+  Returns:
+    - a valid TCPIP_UDP_PROCESS_HANDLE - if the operation succeeded
+    - NULL - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_UDP_PROCESS_HANDLE pktHandle = TCPIP_UDP_PacketHandlerRegister( myPktHandler, myParam );
+    </code>
+
+  Remarks:
+    Currently only one packet handler is supported for the UDP module.
+    The call will fail if a handler is already registered.
+    Use TCPIP_UDP_PacketHandlerDeregister first
+
+    Exists only if TCPIP_UDP_EXTERN_PACKET_PROCESS is true 
+
+  */
+TCPIP_UDP_PROCESS_HANDLE     TCPIP_UDP_PacketHandlerRegister(TCPIP_UDP_PACKET_HANDLER pktHandler, const void* handlerParam);
+
+
+//*******************************************************************************
+/*
+  Function:
+    bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle);
+
+  Summary:
+    Deregisters a previously registered packet handler.
+
+  Description:
+    This function removes a packet processing handler.
+
+  Precondition:
+    UDP properly initialized
+
+  Parameters:
+    pktHandle   - TCPIP packet handle obtained by a call to TCPIP_UDP_PacketHandlerRegister
+
+
+  Returns:
+    - true  - if the operation succeeded
+    - false - if the operation failed
+
+  Example:
+    <code>
+    TCPIP_UDP_PROCESS_HANDLE myHandle = TCPIP_UDP_PacketHandlerRegister(myPacketHandler, myParam );
+    // process incoming packets
+    // now we're done with it
+    TCPIP_UDP_PacketHandlerDeregister(myHandle);
+    </code>
+
+  Remarks:
+    Exists only if TCPIP_UDP_EXTERN_PACKET_PROCESS is true 
+
+  */
+bool    TCPIP_UDP_PacketHandlerDeregister(TCPIP_UDP_PROCESS_HANDLE pktHandle);
+
 
 
 // *****************************************************************************

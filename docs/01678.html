@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Files</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01255.html" target="topic">SNTP Module</a> &gt; <a href="01678.html" target="topic">Files</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01678.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="03472.html" target="topic">Previous</a> | <a href="01255.html" target="topic">Up</a> | <a href="01256.html" target="topic">Next</a></div>
+<a href="01672.html" target="topic">Previous</a> | <a href="01214.html" target="topic">Up</a> | <a href="03411.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNTP Files Topic Title: Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Files</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -49,31 +49,175 @@ Files</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section lists the source and header files used by the library.</p></div>
+This section describes the Application Programming Interface (API) functions of the <span style="color: #000000">SMTPC</span> module.&nbsp;</p>
+<p class="Element10">
+Refer to each section for a detailed description.</p></div>
 </div>
-<a name="46696C6573"></a><div class="Element14">
-Files</div>
+<a name="61292046756E6374696F6E73"></a><div class="Element14">
+a) Functions</div>
 <div class="Element11">
 <div class="Element10">
 <div class="Element212">
 <div class="TableDiv">
 <table cellspacing="0" class="Table1">
 <tr>
-<td class="Element200" valign="top" width="35%">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
 <div class="Element201">
 Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
 <div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
-<a href="01256.html" target="topic">sntp.h</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-The SNTP module implements the Simple Network Time Protocol. The module (by default) updates its internal time every 10 minutes using a pool of public global time servers.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="01257.html" target="topic">sntp_config.h</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03411.html" target="topic">TCPIP_SMTPC_MailMessage</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-SNTP configuration file&nbsp;</div></td></tr></table></div></div>
+SMTPC mail message function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03479.html" target="topic">TCPIP_SMTPC_MessageQuery</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC mail message query function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03498.html" target="topic">TCPIP_SMTPC_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6229204461746120547970657320616E642046756E6374696F6E73"></a><div class="Element14">
+b) Data Types and Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03355.html" target="topic">TCPIP_SMTPC_ATTACH_BUFFER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Buffer attachment to the mail.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03361.html" target="topic">TCPIP_SMTPC_ATTACH_FILE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+File attachment to the mail.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03365.html" target="topic">TCPIP_SMTPC_ATTACH_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC attachment type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03373.html" target="topic">TCPIP_SMTPC_ENCODE_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC encoding type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03379.html" target="topic">TCPIP_SMTPC_MAIL_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Mail message flags&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03389.html" target="topic">TCPIP_SMTPC_MAIL_MESSAGE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Mail message descriptor.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03412.html" target="topic">TCPIP_SMTPC_MESSAGE_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a mail message callback&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03413.html" target="topic">TCPIP_SMTPC_MESSAGE_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a handle to a mail message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03414.html" target="topic">TCPIP_SMTPC_MESSAGE_QUERY</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Structure defining a run time query for a mail message&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03419.html" target="topic">TCPIP_SMTPC_MESSAGE_REPORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Structure defining a mail message report&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03424.html" target="topic">TCPIP_SMTPC_MESSAGE_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC result code&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03458.html" target="topic">TCPIP_SMTPC_MESSAGE_STATUS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC message status&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03473.html" target="topic">TCPIP_SMTPC_MESSAGE_WARNING</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC warning type&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03480.html" target="topic">TCPIP_SMTPC_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC configuration data.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03493.html" target="topic">TCPIP_SMTPC_SERVER_REPLY_CALLBACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a mail server reply callback&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00004.html" target="topic">__SMTPC_H</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This is macro __SMTPC_H.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -81,7 +225,7 @@ SNTP configuration file&nbsp;</div></td></tr></table></div></div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01003.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01255.html" target="topic">SNTP Module</a> &gt; <a href="01678.html" target="topic">Files</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01678.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -89,13 +233,13 @@ SNTP configuration file&nbsp;</div></td></tr></table></div></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01568.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="03472.html" target="topic">Previous</a> | <a href="01255.html" target="topic">Up</a> | <a href="01256.html" target="topic">Next</a></div>
+<a href="01672.html" target="topic">Previous</a> | <a href="01214.html" target="topic">Up</a> | <a href="03411.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNTP Files Topic Title: Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

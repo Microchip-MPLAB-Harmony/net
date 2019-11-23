@@ -44,20 +44,25 @@ def instantiateComponent(tcpipStackComponent):
     processor = Variables.get("__PROCESSOR")
 
     # Enable dependent Harmony core components
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True, 2)
+    # Enable "Generate Harmony Driver Common Files" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON", True)
+
+    # Enable "Generate Harmony System Service Common Files" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
+        
+    # Enable "Enable System Interrupt" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_SYS_INT") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_INT", True)
+        
+    # Enable "Enable OSAL" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_OSAL") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_OSAL", True)
     
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON", True, 2)
-
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_SYS_INT")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_INT", True, 2)
-
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_OSAL")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_OSAL", True, 2)
-
-    Database.clearSymbolValue("HarmonyCore", "ENABLE_APP_FILE")
-    Database.setSymbolValue("HarmonyCore", "ENABLE_APP_FILE", True, 2)
+    # Enable "Enable APP FILE" option in MHC
+    if (Database.getSymbolValue("HarmonyCore", "ENABLE_APP_FILE") == False):
+        Database.setSymbolValue("HarmonyCore", "ENABLE_APP_FILE", True)
     
     # TCP/IP Stack Enable 
     tcpipStackEnable = tcpipStackComponent.createBooleanSymbol("USE_TCPIP_STACK", None)
@@ -156,6 +161,13 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackPktLogSize.setDescription("Number of Entries in the Packet Logger")
     tcpipStackPktLogSize.setDefaultValue(40)
     tcpipStackPktLogSize.setDependencies(tcpipStackMenuVisible, ["TCPIP_PACKET_LOG_ENABLE"])    
+
+    # Enable External Packet Processing
+    tcpipStackExtPktProcess= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_EXTERN_PACKET_PROCESS", None)
+    tcpipStackExtPktProcess.setLabel("Enable External Packet Processing")
+    tcpipStackExtPktProcess.setVisible(True)
+    tcpipStackExtPktProcess.setDescription("Allows External Processing of RX Packets")
+    tcpipStackExtPktProcess.setDefaultValue(False)
     
     # RTOS Configuration
     tcpipStackRtosMenu = tcpipStackComponent.createMenuSymbol("TCPIP_STACK_RTOS_MENU", None)
@@ -174,10 +186,10 @@ def instantiateComponent(tcpipStackComponent):
     
     # RTOS Task Stack Size
     tcpipStackTaskSize = tcpipStackComponent.createIntegerSymbol("TCPIP_RTOS_TASK_STACK_SIZE", tcpipStackRtosMenu)
-    tcpipStackTaskSize.setLabel("Stack Size")
+    tcpipStackTaskSize.setLabel("Stack Size (in bytes)")
     tcpipStackTaskSize.setVisible(True)
     tcpipStackTaskSize.setDescription("Rtos Task Stack Size")
-    tcpipStackTaskSize.setDefaultValue(1024)
+    tcpipStackTaskSize.setDefaultValue(4096)
     tcpipStackTaskSize.setDependencies(tcpipStackRTOSStandaloneMenu, ["TCPIP_STACK_RTOS"])
     
     # RTOS Task Priority
@@ -215,8 +227,10 @@ def instantiateComponent(tcpipStackComponent):
         tcpipStackDeviceFamily.setDefaultValue("SAME54")
     elif "PIC32M" in Variables.get("__PROCESSOR"):
         tcpipStackDeviceFamily.setDefaultValue("PIC32M")
-    elif "ATSAMA5" in Variables.get("__PROCESSOR"):
+    elif "SAMA5" in Variables.get("__PROCESSOR"):
         tcpipStackDeviceFamily.setDefaultValue("SAMA5")
+    elif "SAM9X6" in Variables.get("__PROCESSOR"):
+        tcpipStackDeviceFamily.setDefaultValue("SAM9X6")
         
     ###########################################################################################
     ###########################################################################################
@@ -262,6 +276,23 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapStackPoolExpnSize.setDescription("The Expansion Size for the Internal Heap Pool")
     tcpipStackHeapStackPoolExpnSize.setDefaultValue(51200)
     tcpipStackHeapStackPoolExpnSize.setDependencies(tcpipStackHeapPoolMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
+
+    # Enable TCP/IP stack Initialization callback 
+    tcpipStackEnableInitCback= tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_ENABLE_INIT_CALLBACK", None)
+    tcpipStackEnableInitCback.setLabel("Enable Stack Initialization Callback")
+    tcpipStackEnableInitCback.setVisible(True)
+    tcpipStackEnableInitCback.setDescription("Enable Stack Initialization Callback")
+    tcpipStackEnableInitCback.setDefaultValue(False)
+
+    # Callback Function
+    tcpipStackInitCback = tcpipStackComponent.createStringSymbol("TCPIP_STACK_INIT_CALLBACK", tcpipStackEnableInitCback)
+    tcpipStackInitCback.setLabel("Stack Initialization Callback Function")
+    tcpipStackInitCback.setVisible(False)
+    tcpipStackInitCback.setDescription("Callback Function to be called at the Stack Initialization")
+    tcpipStackInitCback.setDefaultValue("TCPIP_STACK_InitCallback")
+    tcpipStackInitCback.setDependencies(tcpipStackMenuVisible, ["TCPIP_STACK_ENABLE_INIT_CALLBACK"])
+    
+    
     
     # source "$HARMONY_VERSION_PATH/framework/tcpip/config/tcpip_pool_idx.ftl" 20 instances
     #####################################################################################################
@@ -889,6 +920,33 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackFtpsPrivateHeaderFile.setType("HEADER")
     tcpipStackFtpsPrivateHeaderFile.setOverwrite(True)
     
+    # Add ftpc.h file to project
+    tcpipStackFtpcHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackFtpcHeaderFile.setSourcePath("tcpip/ftpc.h")
+    tcpipStackFtpcHeaderFile.setOutputName("ftpc.h")
+    tcpipStackFtpcHeaderFile.setDestPath("library/tcpip/")
+    tcpipStackFtpcHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
+    tcpipStackFtpcHeaderFile.setType("HEADER")
+    tcpipStackFtpcHeaderFile.setOverwrite(True)
+
+    # Add ftpc_manager.h file to project
+    tcpipStackFtpcManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackFtpcManagerHeaderFile.setSourcePath("tcpip/src/ftpc_manager.h")
+    tcpipStackFtpcManagerHeaderFile.setOutputName("ftpc_manager.h")
+    tcpipStackFtpcManagerHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackFtpcManagerHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackFtpcManagerHeaderFile.setType("HEADER")
+    tcpipStackFtpcManagerHeaderFile.setOverwrite(True)
+    
+    # Add ftpc_private.h file to project
+    tcpipStackFtpcPrivateHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackFtpcPrivateHeaderFile.setSourcePath("tcpip/src/ftpc_private.h")
+    tcpipStackFtpcPrivateHeaderFile.setOutputName("ftpc_private.h")
+    tcpipStackFtpcPrivateHeaderFile.setDestPath("library/tcpip/src/")
+    tcpipStackFtpcPrivateHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackFtpcPrivateHeaderFile.setType("HEADER")
+    tcpipStackFtpcPrivateHeaderFile.setOverwrite(True)
+    
     # Add icmp.h file to project
     tcpipStackIcmpHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackIcmpHeaderFile.setSourcePath("tcpip/icmp.h")
@@ -1449,15 +1507,37 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackTcpipEthernetHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
     tcpipStackTcpipEthernetHeaderFile.setType("HEADER")
     tcpipStackTcpipEthernetHeaderFile.setOverwrite(True)
+ 
+ 
+    tcpipStackFtpsEn = Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE")
+    tcpipStackFtpcEn = Database.getSymbolValue("tcpipFtpc","TCPIP_STACK_USE_FTP_CLIENT")
+    tcpipStackHttpNetEn = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
+    tcpipStackHttpEn = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
+    tcpipStackSmtpcEn = Database.getSymbolValue("tcpipSmtpc","TCPIP_USE_SMTPC_CLIENT")
+    tcpipStackSnmpEn = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
+    tcpipStackTftpcEn = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
+    tcpipStackTftpsEn = Database.getSymbolValue("tcpipTftps","TCPIP_USE_TFTPS_MODULE")
     
-    # Add sys_fs_wrapper.h file to project
-    tcpipStackSysFsWrapperHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysFsWrapperHeaderFile.setSourcePath("tcpip/src/common/sys_fs_wrapper.h")
-    tcpipStackSysFsWrapperHeaderFile.setOutputName("sys_fs_wrapper.h")
-    tcpipStackSysFsWrapperHeaderFile.setDestPath("library/tcpip/src/common/")
-    tcpipStackSysFsWrapperHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
-    tcpipStackSysFsWrapperHeaderFile.setType("HEADER")
-    tcpipStackSysFsWrapperHeaderFile.setOverwrite(True)
+    # Add sys_fs_shell.c file to project
+    tcpipStackSysFsShellSourceFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackSysFsShellSourceFile.setSourcePath("tcpip/src/common/sys_fs_shell.c")
+    tcpipStackSysFsShellSourceFile.setOutputName("sys_fs_shell.c")
+    tcpipStackSysFsShellSourceFile.setOverwrite(True)
+    tcpipStackSysFsShellSourceFile.setDestPath("library/tcpip/src/common/")
+    tcpipStackSysFsShellSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
+    tcpipStackSysFsShellSourceFile.setType("SOURCE")  
+    tcpipStackSysFsShellSourceFile.setEnabled((tcpipStackFtpsEn == True) or (tcpipStackFtpcEn == True) or (tcpipStackHttpNetEn == True) or (tcpipStackHttpEn == True) or (tcpipStackSmtpcEn == True) or (tcpipStackSnmpEn == True) or (tcpipStackTftpcEn == True) or (tcpipStackTftpsEn == True))
+    tcpipStackSysFsShellSourceFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
+    
+    # Add sys_fs_shell.h file to project
+    tcpipStackSysFsShellHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackSysFsShellHeaderFile.setSourcePath("tcpip/src/common/sys_fs_shell.h")
+    tcpipStackSysFsShellHeaderFile.setOutputName("sys_fs_shell.h")
+    tcpipStackSysFsShellHeaderFile.setDestPath("library/tcpip/src/common/")
+    tcpipStackSysFsShellHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/src/common/")
+    tcpipStackSysFsShellHeaderFile.setType("HEADER")
+    tcpipStackSysFsShellHeaderFile.setOverwrite(True)
+    tcpipStackSysFsShellHeaderFile.setDependencies(tcpipStackSysFsShellSourceFileEnable, ["tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSnmp.TCPIP_USE_SNMP", "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftps.TCPIP_USE_TFTPS_MODULE"])
 
     # file NET_PRES1_HTTP_H "$HARMONY_VERSION_PATH/framework/net_pres/pres/net_pres.h"  to "$PROJECT_HEADER_FILES/framework/net_pres/pres/net_pres.h"
     tcpipStackNetPresHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -1575,8 +1655,9 @@ def instantiateComponent(tcpipStackComponent):
     # ifblock !DSTBDPIC32CZ
     # file TCPIP_HELPERS_C_32 "$HARMONY_VERSION_PATH/framework/tcpip/src/tcpip_helper_c32.S" to "$PROJECT_SOURCE_FILES/framework/tcpip/src/tcpip_helper_c32.S"
     # endif
-    
-    if not Peripheral.moduleExists("GMAC"):
+    if(     not Peripheral.moduleExists("GMAC")
+        and not Peripheral.moduleExists("EMAC")
+    ):
         tcpipStackTcpipHelpersC32SourceFile = tcpipStackComponent.createFileSymbol(None, None)
         tcpipStackTcpipHelpersC32SourceFile.setSourcePath("tcpip/src/tcpip_helper_c32.S")
         tcpipStackTcpipHelpersC32SourceFile.setOutputName("tcpip_helper_c32.S")
@@ -1622,7 +1703,7 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackInclPath.setKey("extra-include-directories")
     tcpipStackInclPath.setValue("../src/config/"+configName+ "/library;../src/config/"+configName+ "/library/tcpip/src;../src/config/"+configName+ "/library/tcpip/src/common")
     tcpipStackInclPath.setAppend(True, ";")
-	
+    
 #########################################################################################
 #### H3TODO: Adding H2 sys adapters temporarily; this will be moved to respective modules #######
     tcpipStackSysClkAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
@@ -1782,6 +1863,21 @@ def tcpipStackHeapPoolSourceFile(sourceFile, event):
         sourceFile.setEnabled(True)
     else:
         sourceFile.setEnabled(False)
+
+def tcpipStackSysFsShellSourceFileEnable(sourceFile, event): 
+    tcpipStackFtpsEn = Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE")
+    tcpipStackFtpcEn = Database.getSymbolValue("tcpipFtpc","TCPIP_STACK_USE_FTP_CLIENT")
+    tcpipStackHttpNetEn = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")
+    tcpipStackHttpEn = Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER")
+    tcpipStackSmtpcEn = Database.getSymbolValue("tcpipSmtpc","TCPIP_USE_SMTPC_CLIENT")
+    tcpipStackSnmpEn = Database.getSymbolValue("tcpipSnmp","TCPIP_USE_SNMP")
+    tcpipStackTftpcEn = Database.getSymbolValue("tcpipTftpc","TCPIP_USE_TFTPC_MODULE")
+    tcpipStackTftpsEn = Database.getSymbolValue("tcpipTftps","TCPIP_USE_TFTPS_MODULE")
+    
+    if (tcpipStackFtpsEn or tcpipStackFtpcEn or tcpipStackHttpNetEn or tcpipStackHttpEn or tcpipStackSmtpcEn or tcpipStackSnmpEn or tcpipStackTftpcEn or tcpipStackTftpsEn):
+        sourceFile.setEnabled(True)
+    else:
+        sourceFile.setEnabled(False)
         
 ###########################################################################################################
 def tcpipStackHeapPoolEntryInstance(tcpipStackHeapSymbol, event):
@@ -1880,3 +1976,5 @@ def genRtosTask(symbol, event):
 
 def destroyComponent(component):
     Database.setSymbolValue("tcpipStack", "USE_TCPIP_STACK", False, 2)
+
+

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_EncProviderOutputSize Type</title>
+<title>NET_PRES_EncProviderObject Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01073.html" target="topic">NET_PRES_EncProviderOutputSize Type</a></div>
+<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01073.html" target="topic">NET_PRES_EncProviderObject Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01070.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01051.html" target="topic">Next</a></div>
+<a href="01071.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01074.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderOutputSize Topic Title: NET_PRES_EncProviderOutputSize Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderObject Topic Title: NET_PRES_EncProviderObject Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_EncProviderOutputSize Type</div>
+NET_PRES_EncProviderObject Structure</div>
 </div>
 </div>
 
@@ -49,63 +49,120 @@ NET_PRES_EncProviderOutputSize Type</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Presentation Encryption Provider Output Size Function Pointer Prototype&nbsp;</p>
+Presentation Encryption Provider Information Structure&nbsp;</p>
 <p class="Element10">
-This function pointer defines the output size function. It is called by the presentation layer when the application wants to check how many bytes will be sent across the Transport layer, given a specified plaintext input size.</p></div>
+This data type is given to the presentation layer during initialization to provide information on the provider, so it can be used during secure communications.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> int32_t (* <strong><span style="color: #000000">NET_PRES_EncProviderOutputSize</span></strong>)(<strong><span style="color: #000080">void</span></strong> * providerData, int32_t inSize);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> <strong><span style="color: #000000">_NET_PRES_EncProviderObject</span></strong> {
+  <a href="01070.html" target="topic">NET_PRES_EncProviderInit</a> <strong><span style="color: #000000">fpInit</span></strong>;
+  <a href="01069.html" target="topic">NET_PRES_EncProviderDeinit</a> <strong><span style="color: #000000">fpDeinit</span></strong>;
+  <a href="01074.html" target="topic">NET_PRES_EncProviderOpen</a> <strong><span style="color: #000000">fpOpen</span></strong>;
+  <a href="01067.html" target="topic">NET_PRES_EncProviderConnect</a> <strong><span style="color: #000000">fpConnect</span></strong>;
+  <a href="01068.html" target="topic">NET_PRES_EncProviderConnectionClose</a> <strong><span style="color: #000000">fpClose</span></strong>;
+  <a href="01078.html" target="topic">NET_PRES_EncProviderWrite</a> <strong><span style="color: #000000">fpWrite</span></strong>;
+  <a href="01079.html" target="topic">NET_PRES_EncProviderWriteReady</a> <strong><span style="color: #000000">fpWriteReady</span></strong>;
+  <a href="01076.html" target="topic">NET_PRES_EncProviderRead</a> <strong><span style="color: #000000">fpRead</span></strong>;
+  <a href="01077.html" target="topic">NET_PRES_EncProviderReadReady</a> <strong><span style="color: #000000">fpReadReady</span></strong>;
+  <a href="01076.html" target="topic">NET_PRES_EncProviderRead</a> <strong><span style="color: #000000">fpPeek</span></strong>;
+  <a href="01071.html" target="topic">NET_PRES_EncProviderIsInitialized</a> <strong><span style="color: #000000">fpIsInited</span></strong>;
+  <a href="01075.html" target="topic">NET_PRES_EncProviderOutputSize</a> <strong><span style="color: #000000">fpOutputSize</span></strong>;
+  <a href="01072.html" target="topic">NET_PRES_EncProviderMaxOutputSize</a> <strong><span style="color: #000000">fpMaxOutputSize</span></strong>;
+} NET_PRES_EncProviderObject;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-A connection must have already been created, and be in the open state. This function must be called after the SSL/TLS handshake has been completed.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-providerData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-A pointer to the buffer for the provider to keep connection specific data.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-inSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The requested plain text size to check for.&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderInit fpInit;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to open/initialize the provider&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderDeinit fpDeinit;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to close/deinitialize the provider&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderOpen fpOpen;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to create a stream client connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderConnect fpConnect;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to <a href="00297.html" target="topic">connect</a> and pump the negotiation of a stream client connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderConnectionClose fpClose;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function Pointer to close and clean up a connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderWrite fpWrite;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function Pointer to write data to a connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderWriteReady fpWriteReady;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function Pointer to check the connection write space&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderRead fpRead;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to read data from a connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderReadReady fpReadReady;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to return the available read data from a connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderRead fpPeek;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to peek at data from a connection&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderIsInitialized fpIsInited;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to check to determine if the provider has been initialized&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderOutputSize fpOutputSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to get the output size&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+NET_PRES_EncProviderMaxOutputSize fpMaxOutputSize;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Function pointer to get the maximum output size&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Upon success, the requested size will be returned. Upon error, 0 is returned:
-<ul class="Element633">
-<li class="Element603">if the input size is greater than the maximum TLS fragment size </li>
-<li class="Element603">invalid function argument</li>
-<li class="Element603">if the SSL/TLS handshake has not been completed yet</li>
-</ul></p></div>
+None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01039.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01053.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01073.html" target="topic">NET_PRES_EncProviderOutputSize Type</a></div>
+<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01073.html" target="topic">NET_PRES_EncProviderObject Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +170,13 @@ Upon success, the requested size will be returned. Upon error, 0 is returned:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01070.html" target="topic">Previous</a> | <a href="01053.html" target="topic">Up</a> | <a href="01051.html" target="topic">Next</a></div>
+<a href="01071.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01074.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderOutputSize Topic Title: NET_PRES_EncProviderOutputSize Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderObject Topic Title: NET_PRES_EncProviderObject Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

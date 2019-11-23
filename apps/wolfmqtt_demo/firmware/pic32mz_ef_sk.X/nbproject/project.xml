@@ -6,7 +6,7 @@
             <name>wolfmqtt_demo</name>
             <creation-uuid>e54023e9-3948-44ef-bf6f-29d8b223e555</creation-uuid>
             <make-project-type>0</make-project-type>
-            <c-extensions>c,S</c-extensions>
+            <c-extensions>c</c-extensions>
             <cpp-extensions/>
             <header-extensions>h</header-extensions>
             <asminc-extensions/>

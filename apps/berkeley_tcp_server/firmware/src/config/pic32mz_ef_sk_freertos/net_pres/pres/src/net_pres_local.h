@@ -50,14 +50,15 @@ extern "C" {
     
     typedef struct _NET_PRES_SocketData
     {
-        bool inUse;
-        NET_PRES_SKT_ERROR_T lastError;
-        NET_PRES_SKT_T socketType;
-        int16_t transHandle;
-        uint8_t providerData[8];
-        NET_PRES_EncSessionStatus status;
+        uint8_t     inUse;
+        uint8_t     provOpen;
+        uint8_t     status;     // NET_PRES_EncSessionStatus value
+        int8_t      lastError;  // NET_PRES_SKT_ERROR_T value
+        uint16_t    socketType; // NET_PRES_SKT_T value
+        int16_t     transHandle;
         NET_PRES_TransportObject * transObject;
         NET_PRES_EncProviderObject * provObject;
+        uint8_t providerData[8];
     }NET_PRES_SocketData;
     
 #ifdef __CPLUSPLUS

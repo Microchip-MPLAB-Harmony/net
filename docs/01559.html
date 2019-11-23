@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>How the Library Works</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00854.html" target="topic">IPv4 Module</a> &gt; <a href="01563.html" target="topic">Using the Library</a> &gt; <a href="01559.html" target="topic">How the Library Works</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00815.html" target="topic">IGMP Module</a> &gt; <a href="01559.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01555.html" target="topic">Previous</a> | <a href="01563.html" target="topic">Up</a> | <a href="01554.html" target="topic">Next</a></div>
+<a href="01553.html" target="topic">Previous</a> | <a href="00815.html" target="topic">Up</a> | <a href="02834.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv4 How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IGMP Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-How the Library Works</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -49,26 +49,175 @@ How the Library Works</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-On the transmit side, the IP layer<span style="color: #FFFFFF">_</span>is responsible for routing and forwarding the IP datagrams to the required destination host. To do that, the IP layer<span style="color: #FFFFFF">_</span>has internal functionality that allows the selection of the proper network interface and destination hardware address of a packet.&nbsp;</p>
+This section describes the Application Programming Interface (API) functions of the <span style="color: #000000">IGMP module</span>.&nbsp;</p>
 <p class="Element10">
-Based on the destination of a packet/datagram, the IP layer<span style="color: #FFFFFF">_</span>will <a href="01201.html" target="topic">send</a> the packet to either a host on the network or to a gateway if either is available. To accomplish this, the IP module works closely with the ARP layer<span style="color: #FFFFFF">_</span>from which it requests the destination hardware addresses for outgoing packets. If the destination address of a packet is not known, the IP module will request an ARP probe and will wait for the ARP module reply. Whenever ARP signals that the solicited address is available, the IP module will <a href="01201.html" target="topic">send</a> the packet over the network. If a time-out is reported (no such host could be found on that particular network), the packet is silently discarded.&nbsp;</p>
-<p class="Element10">
-On the receive side, the IP module processes all the incoming IPv4 packets and performs a basic sanity check of the packet checksum and other attributes. If the packet check fails, the packet is simply discarded. Otherwise, it is dispatched for further processing to the appropriate module (UDP, TCP, ICMP, etc.).&nbsp;</p>
-<p class="Element10">
-The IP layer<span style="color: #FFFFFF">_</span>operation within the TCP/IP stack is transparent to the applications using the preferred<span style="color: #FFFFFF">_</span><a href="01301.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>API (MCHP UDP, TCP or BSD). This means that normally an application does not need to interface directly to the IP<span style="color: #FFFFFF">_</span>layer. However, the IP module exposes an API that can be used by the application for sending IP datagrams directly, bypassing the normal higher layer<span style="color: #FFFFFF">_</span>protocols (UDP, TCP). </p><div class="Element63">
+Refer to each section for a detailed description.</p></div>
+</div>
+<a name="61292046756E6374696F6E73"></a><div class="Element14">
+a) Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-
-<ol class="Element632">
-<li value="1" class="Element602">Currently, it is not possible for an application to intercept the incoming IP datagrams and interfere with the default IP processing. However, this may change in the future and support can be added for the receive side.</li>
-<li value="2" class="Element602">For a detailed description of the IP layer<span style="color: #FFFFFF">_</span>functionality, please consult RFC 791, RFC 1122, RFC 2474, etc.</li>
-<li value="3" class="Element602">This implementation supports packet fragmentation both on transmit and receive side.</li>
-</ol>&nbsp;</div></td></tr></table></div></div>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02834.html" target="topic">TCPIP_IGMP_ExcludeSource</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Helper to unsubscribe from one source.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02844.html" target="topic">TCPIP_IGMP_GroupInfoGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets current info about a multicast group.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02845.html" target="topic">TCPIP_IGMP_GroupsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets current info about multicast groups.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02847.html" target="topic">TCPIP_IGMP_HandlerDeRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deregisters a previously registered IGMP client handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02848.html" target="topic">TCPIP_IGMP_HandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Registers a IGMP client Handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02849.html" target="topic">TCPIP_IGMP_IncludeSource</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Helper to subscribe to one source.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02851.html" target="topic">TCPIP_IGMP_Join</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IGMPv2 style &quot;join&quot; function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02852.html" target="topic">TCPIP_IGMP_Leave</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IGMPv2 style &quot;leave&quot; function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02882.html" target="topic">TCPIP_IGMP_Subscribe</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Subscribes to an IGMP multicast group.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02883.html" target="topic">TCPIP_IGMP_SubscribeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the subscription to sources in an IGMP multicast group.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02884.html" target="topic">TCPIP_IGMP_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02887.html" target="topic">TCPIP_IGMP_Unsubscribe</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Removes the subscription to sources in an IGMP multicast group.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6229204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+b) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02824.html" target="topic">TCPIP_IGMP_EVENT_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Notification handler that can be called when an IGMP event ocurrs and the user needs to be notified&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02825.html" target="topic">TCPIP_IGMP_EVENT_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This enumeration lists the IGMP events used to notify IGMP client applications.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02835.html" target="topic">TCPIP_IGMP_FILTER_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This enumeration lists the supported IGMP filters.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02839.html" target="topic">TCPIP_IGMP_GROUP_INFO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IGMP group information&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02846.html" target="topic">TCPIP_IGMP_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IGMP client handle.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02854.html" target="topic">TCPIP_IGMP_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+IGMP module run-time configuration/initialization data.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02863.html" target="topic">TCPIP_IGMP_RESULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This enumeration is used to report the result of an IGMP API call.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -76,7 +225,7 @@ The IP layer<span style="color: #FFFFFF">_</span>operation within the TCP/IP sta
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00854.html" target="topic">IPv4 Module</a> &gt; <a href="01563.html" target="topic">Using the Library</a> &gt; <a href="01559.html" target="topic">How the Library Works</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00815.html" target="topic">IGMP Module</a> &gt; <a href="01559.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -84,13 +233,13 @@ The IP layer<span style="color: #FFFFFF">_</span>operation within the TCP/IP sta
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01555.html" target="topic">Previous</a> | <a href="01563.html" target="topic">Up</a> | <a href="01554.html" target="topic">Next</a></div>
+<a href="01553.html" target="topic">Previous</a> | <a href="00815.html" target="topic">Up</a> | <a href="02834.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv4 How the Library Works Topic Title: How the Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IGMP Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

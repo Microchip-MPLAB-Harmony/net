@@ -1753,7 +1753,7 @@ void DRV_SDMMC_Tasks( SYS_MODULE_OBJ object )
                         }
                     }
                 }
-                
+
             }
             break;
 

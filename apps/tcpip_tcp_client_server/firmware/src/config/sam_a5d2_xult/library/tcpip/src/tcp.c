@@ -160,6 +160,11 @@ static uint32_t             tcpStartTime;               // time at which the TCP
 static bool                 tcpQuietDone;               // the quiet time has elapsed
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 
+#if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
+static TCPIP_TCP_PACKET_HANDLER tcpPktHandler = 0;
+static const void* tcpPktHandlerParam;
+#endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
+
 
 /****************************************************************************
   Section:
@@ -681,6 +686,10 @@ bool TCPIP_TCP_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackInit, const 
         tcpLockCount = 0; // leave it uninitialized
         return false;
     }
+
+#if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
+    tcpPktHandler = 0;
+#endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
 
     tcpInitCount = 1; // initialized
     tcpLockCount = 1; // release the lock
@@ -1247,10 +1256,22 @@ static void TCPIP_TCP_Process(void)
     TCPIP_MAC_PACKET*   pRxPkt;
     TCPIP_MAC_PKT_ACK_RES ackRes;
 
-    // extract queued UDP packets
+    // extract queued TCP packets
     while((pRxPkt = _TCPIPStackModuleRxExtract(TCPIP_THIS_MODULE_ID)) != 0)
     {
         TCPIP_PKT_FlightLogRx(pRxPkt, TCPIP_THIS_MODULE_ID);
+#if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
+        if(tcpPktHandler != 0)
+        {
+            bool was_processed = (*tcpPktHandler)(pRxPkt->pktIf, pRxPkt, tcpPktHandlerParam);
+            if(was_processed)
+            {
+                TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                continue;
+            }
+        }
+#endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
+
         ackRes = TCPIP_MAC_PKT_ACK_PROTO_DEST_ERR;
 #if (TCPIP_TCP_QUIET_TIME != 0)
         if(tcpQuietDone)
@@ -6284,6 +6305,41 @@ bool TCPIP_TCP_IsReady(void)
     return true;
 #endif  // (TCPIP_TCP_QUIET_TIME != 0)
 }
+
+// external packet processing
+#if (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
+TCPIP_TCP_PROCESS_HANDLE TCPIP_TCP_PacketHandlerRegister(TCPIP_TCP_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    TCPIP_TCP_PROCESS_HANDLE pHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(tcpPktHandler == 0)
+    {
+        tcpPktHandlerParam = handlerParam;
+        tcpPktHandler = pktHandler;
+        pHandle = pktHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return pHandle;
+}
+
+bool TCPIP_TCP_PacketHandlerDeregister(TCPIP_TCP_PROCESS_HANDLE pktHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    if(tcpPktHandler == pktHandle)
+    {
+        tcpPktHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (TCPIP_TCP_EXTERN_PACKET_PROCESS != 0)
 
 
 

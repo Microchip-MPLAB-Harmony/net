@@ -32,7 +32,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 #ifndef __TFTPS_PRIVATE_H_
 #define __TFTPS_PRIVATE_H_
-#include "sys_fs_wrapper.h"
 
 #include "configuration.h"
 
@@ -213,6 +212,7 @@ typedef struct
     uint8_t                     mode[TCPIP_TFTP_OCTET_SIZE]; /* File Transfer Mode Requested by Client. */
     uint8_t                     errCode;                /* client error code */
     uint8_t                     smState;                /* TFTP Server state machine variable */
+    SYS_FS_SHELL_OBJ            *tftps_shell_obj;                 /* TFTP server wrapper object */
 } TFTPS_CB;
 
 #endif  // __TFTPS_PRIVATE_H_

@@ -72,6 +72,14 @@ extern "C" {
 #define APP_LED_1StateGet()         LED1_Get()
 #define APP_LED_1StateClear()       LED1_Clear()
 #define APP_LED_1StateToggle()      LED1_Toggle()
+
+// Application SYS_FS mount points
+// Adjust as needed
+#define APP_SYS_FS_SD_VOL          "/dev/mmcblka1"
+#define APP_SYS_FS_MOUNT_POINT      "/mnt/mchpSite1"
+#define APP_SYS_FS_TYPE             FAT
+#define APP_SYS_FS_TYPE_STRING      "FATFS"
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Type Definitions

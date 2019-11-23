@@ -1591,12 +1591,17 @@
     </UniqueComponent>
     <UniqueComponent dnOrder="2" id="core_timer">
       <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="CORE_TIMER_INTERRUPT_MODE">
+        <Integer dnOrder="0" id="CORE_TIMER_FREQUENCY">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core_timer" value="100000000"/>
+          </Values>
+        </Integer>
+        <Boolean dnOrder="1" id="CORE_TIMER_INTERRUPT_MODE">
           <Values dnOrder="0">
             <Dynamic dnOrder="0" id="core_timer" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="1" id="CORE_TIMER_PERIODIC_INTERRUPT">
+        <Boolean dnOrder="2" id="CORE_TIMER_PERIODIC_INTERRUPT">
           <Attributes dnOrder="0">
             <Boolean dnOrder="0" id="visible">
               <Value dnOrder="0">true</Value>
@@ -1606,6 +1611,16 @@
             <Dynamic dnOrder="0" id="core_timer" value="false"/>
           </Values>
         </Boolean>
+        <Integer dnOrder="3" id="CORE_TIMER_PERIOD_US">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core_timer" value="1000"/>
+          </Values>
+        </Integer>
+        <String dnOrder="4" id="CORE_TIMER_PERIOD_VALUE">
+          <Values dnOrder="0">
+            <Dynamic dnOrder="0" id="core_timer" value="0x186a0"/>
+          </Values>
+        </String>
       </Symbols>
       <Attachments dnOrder="1">
         <DirectCapability dnOrder="0" id="CORE_TIMER_TMR">
@@ -1789,147 +1804,29 @@
       </Symbols>
     </UniqueComponent>
     <UniqueComponent dnOrder="5" id="lib_crypto">
+      <Attachments dnOrder="0">
+        <DirectDependency dnOrder="0" id="LIB_CRYPTO_WOLFCRYPT_Dependency">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0">lib_wolfcrypt</Value>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0">lib_wolfcrypt</Value>
+            </String>
+          </Attributes>
+        </DirectDependency>
+      </Attachments>
+    </UniqueComponent>
+    <UniqueComponent dnOrder="6" id="lib_wolfcrypt">
       <Symbols dnOrder="0">
-        <Boolean dnOrder="0" id="cryptoCipher3DES">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">Cipher&amp;#160;-&amp;#160;DES/TDES</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="1" id="cryptoCipherAES_CBC">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">AES&amp;#160;-&amp;#160;CBC</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="2" id="cryptoCipherAES_CTR">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">AES&amp;#160;-&amp;#160;CTR</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="3" id="cryptoCipherAES_ECB">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">AES&amp;#160;-&amp;#160;ECB</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="4" id="cryptoCipherAES_GCM">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">AES&amp;#160;-&amp;#160;GCM</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="5" id="cryptoCipherECC">
+        <Boolean dnOrder="0" id="wolfssl_included">
           <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
+            <Dynamic dnOrder="0" id="lib_wolfcrypt" value="true"/>
           </Values>
         </Boolean>
-        <Boolean dnOrder="6" id="cryptoCipherRSA">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="7" id="cryptoHW">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="8" id="cryptoHashHMAC">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="9" id="cryptoHashMD5">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">Hash&amp;#160;-&amp;#160;MD5</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="10" id="cryptoHashSHA1">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">Hash&amp;#160;-&amp;#160;SHA-1</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="11" id="cryptoHashSHA224">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="12" id="cryptoHashSHA256">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">Hash&amp;#160;-&amp;#160;SHA-256</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="13" id="cryptoHashSHA384">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="14" id="cryptoHashSHA512">
-          <Values dnOrder="0">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="15" id="cryptoIsWolfsslEnabled">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="lib_crypto" value="false"/>
-          </Values>
-        </Boolean>
-        <Boolean dnOrder="16" id="cryptoRandom">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="label">
-              <Value dnOrder="0">TRNG</Value>
-            </String>
-          </Attributes>
-          <Values dnOrder="1">
-            <User dnOrder="0" value="true"/>
-          </Values>
-        </Boolean>
-        <File dnOrder="17" id="pic32mz-crypt_c">
-          <Attributes dnOrder="0">
-            <Boolean dnOrder="0" id="enabled">
-              <Value dnOrder="0">false</Value>
-            </Boolean>
-          </Attributes>
-        </File>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="6" id="lib_wolfmqtt">
+    <UniqueComponent dnOrder="7" id="lib_wolfmqtt">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="WMQTT_CSTM_APP_TEMPLATE">
           <Values dnOrder="0">
@@ -1953,7 +1850,7 @@
         </Boolean>
       </Symbols>
     </UniqueComponent>
-    <UniqueComponent dnOrder="7" id="lib_wolfssl">
+    <UniqueComponent dnOrder="8" id="lib_wolfssl">
       <Symbols dnOrder="0">
         <Boolean dnOrder="0" id="wolfssl">
           <Values dnOrder="0">
@@ -1966,8 +1863,30 @@
           </Values>
         </Boolean>
       </Symbols>
+      <Attachments dnOrder="1">
+        <DirectDependency dnOrder="0" id="WolfSSL_Crypto_Dependency">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0">lib_wolfcrypt</Value>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0">lib_wolfcrypt</Value>
+            </String>
+          </Attributes>
+        </DirectDependency>
+        <DirectCapability dnOrder="1" id="lib_wolfssl">
+          <Attributes dnOrder="0">
+            <String dnOrder="0" id="targetComponentID">
+              <Value dnOrder="0">netPres_0</Value>
+            </String>
+            <String dnOrder="1" id="targetAttachmentID">
+              <Value dnOrder="0">NetPres_Crypto_Dependency</Value>
+            </String>
+          </Attributes>
+        </DirectCapability>
+      </Attachments>
     </UniqueComponent>
-    <GeneratorComponent dnOrder="8" id="netPres">
+    <GeneratorComponent dnOrder="9" id="netPres">
       <Symbols dnOrder="0">
         <KeyValueSet dnOrder="0" id="NET_PRES_BLOB_CERT">
           <Values dnOrder="0">
@@ -2136,10 +2055,22 @@
               </Values>
             </Boolean>
           </Symbols>
+          <Attachments dnOrder="1">
+            <DirectDependency dnOrder="0" id="NetPres_Crypto_Dependency">
+              <Attributes dnOrder="0">
+                <String dnOrder="0" id="targetComponentID">
+                  <Value dnOrder="0">lib_wolfssl</Value>
+                </String>
+                <String dnOrder="1" id="targetAttachmentID">
+                  <Value dnOrder="0">lib_wolfssl</Value>
+                </String>
+              </Attributes>
+            </DirectDependency>
+          </Attachments>
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
-    <UniqueComponent dnOrder="9" id="sys_command">
+    <UniqueComponent dnOrder="10" id="sys_command">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="SYS_CONSOLE_DEVICE">
           <Values dnOrder="0">
@@ -2165,7 +2096,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <GeneratorComponent dnOrder="10" id="sys_console">
+    <GeneratorComponent dnOrder="11" id="sys_console">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="SYS_CONSOLE_UART_CONNECTION_COUNTER">
           <Values dnOrder="0">
@@ -2207,7 +2138,7 @@
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
-    <UniqueComponent dnOrder="11" id="sys_debug">
+    <UniqueComponent dnOrder="12" id="sys_debug">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="SYS_CONSOLE_DEVICE">
           <Values dnOrder="0">
@@ -2233,7 +2164,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <UniqueComponent dnOrder="12" id="sys_time">
+    <UniqueComponent dnOrder="13" id="sys_time">
       <Symbols dnOrder="0">
         <String dnOrder="0" id="SYS_TIME_PLIB">
           <Values dnOrder="0">
@@ -2254,7 +2185,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <GroupComponent displayName="TCP/IP STACK" dnOrder="13" id="TCP/IP STACK">
+    <GroupComponent displayName="TCP/IP STACK" dnOrder="14" id="TCP/IP STACK">
       <Children dnOrder="0">
         <GroupComponent displayName="APPLICATION LAYER" dnOrder="0" id="APPLICATION LAYER">
           <Children dnOrder="0">
@@ -2394,7 +2325,15 @@
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
           <Children dnOrder="0">
             <UniqueComponent dnOrder="0" id="drvExtPhyLan8740"/>
-            <UniqueComponent dnOrder="1" id="drvMiim"/>
+            <UniqueComponent dnOrder="1" id="drvMiim">
+              <Symbols dnOrder="0">
+                <String dnOrder="0" id="DRV_MIIM_ETH_MODULE_ID">
+                  <Values dnOrder="0">
+                    <Dynamic dnOrder="0" id="drvMiim" value="_ETH_BASE_ADDRESS"/>
+                  </Values>
+                </String>
+              </Symbols>
+            </UniqueComponent>
             <UniqueComponent dnOrder="2" id="drvPic32mEthmac">
               <Symbols dnOrder="0">
                 <String dnOrder="0" id="DRV_INTMAC_PHY_TYPE">
@@ -2406,17 +2345,12 @@
             </UniqueComponent>
             <UniqueComponent dnOrder="3" id="tcpip_driver_config">
               <Symbols dnOrder="0">
-                <Boolean dnOrder="0" id="TCPIP_AUTOCONFIG_ENABLE_EMAC">
+                <Boolean dnOrder="0" id="TCPIP_AUTOCONFIG_ENABLE_LAN8740">
                   <Values dnOrder="0">
                     <User dnOrder="0" value="true"/>
                   </Values>
                 </Boolean>
-                <Boolean dnOrder="1" id="TCPIP_AUTOCONFIG_ENABLE_LAN8740">
-                  <Values dnOrder="0">
-                    <User dnOrder="0" value="true"/>
-                  </Values>
-                </Boolean>
-                <Boolean dnOrder="2" id="TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver">
+                <Boolean dnOrder="1" id="TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver">
                   <Values dnOrder="0">
                     <Dynamic dnOrder="0" id="tcpip_driver_config" value="true"/>
                   </Values>
@@ -2487,7 +2421,7 @@
         <Attachment dnOrder="0" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION"/>
       </Attachments>
     </GroupComponent>
-    <UniqueComponent dnOrder="14" id="uart2">
+    <UniqueComponent dnOrder="15" id="uart2">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="BRG_VALUE">
           <Values dnOrder="0">
@@ -2525,23 +2459,43 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="0" id="DRIVER LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="400" y="20"/>
+        <ElementPosition dnOrder="1" id="drvMiim" x="520" y="20"/>
+        <ElementPosition dnOrder="2" id="drvPic32mEthmac" x="280" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="1" id="NETWORK LAYER">
+    <ComponentGraph dnOrder="1" id="TRANSPORT LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="19"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="TCP/IP STACK">
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="2"/>
+    <ComponentGraph dnOrder="3" id="__ROOTVIEW">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="BSP_PIC32MZ_EF_Starter_Kit" x="18" y="65"/>
+        <ElementPosition dnOrder="1" id="HarmonyCore" x="356" y="16"/>
+        <ElementPosition dnOrder="2" id="TCP/IP STACK" x="504" y="279"/>
+        <ElementPosition dnOrder="3" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="4" id="core_timer" x="110" y="293"/>
+        <ElementPosition dnOrder="5" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="6" id="lib_crypto" x="869" y="443"/>
+        <ElementPosition dnOrder="7" id="lib_wolfcrypt" x="712" y="323"/>
+        <ElementPosition dnOrder="8" id="lib_wolfmqtt" x="893" y="68"/>
+        <ElementPosition dnOrder="9" id="lib_wolfssl" x="902" y="324"/>
+        <ElementPosition dnOrder="10" id="netPres" x="889" y="156"/>
+        <ElementPosition dnOrder="11" id="sys_command" x="540" y="20"/>
+        <ElementPosition dnOrder="12" id="sys_console" x="294" y="121"/>
+        <ElementPosition dnOrder="13" id="sys_debug" x="536" y="142"/>
+        <ElementPosition dnOrder="14" id="sys_time" x="295" y="293"/>
+        <ElementPosition dnOrder="15" id="uart2" x="115" y="160"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="4" id="TCP/IP STACK">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="65" y="58"/>
         <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="300" y="200"/>
@@ -2550,47 +2504,28 @@
         <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="68" y="107"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="19"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="DRIVER LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="drvExtPhyLan8740" x="400" y="20"/>
-        <ElementPosition dnOrder="1" id="drvMiim" x="520" y="20"/>
-        <ElementPosition dnOrder="2" id="drvPic32mEthmac" x="280" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_driver_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="5" id="__ROOTVIEW">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="BSP_PIC32MZ_EF_Starter_Kit" x="18" y="65"/>
-        <ElementPosition dnOrder="1" id="HarmonyCore" x="356" y="16"/>
-        <ElementPosition dnOrder="2" id="TCP/IP STACK" x="504" y="279"/>
-        <ElementPosition dnOrder="3" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="4" id="core_timer" x="110" y="293"/>
-        <ElementPosition dnOrder="5" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="6" id="lib_crypto" x="24" y="444"/>
-        <ElementPosition dnOrder="7" id="lib_wolfmqtt" x="602" y="421"/>
-        <ElementPosition dnOrder="8" id="lib_wolfssl" x="261" y="433"/>
-        <ElementPosition dnOrder="9" id="netPres" x="430" y="420"/>
-        <ElementPosition dnOrder="10" id="sys_command" x="540" y="20"/>
-        <ElementPosition dnOrder="11" id="sys_console" x="294" y="121"/>
-        <ElementPosition dnOrder="12" id="sys_debug" x="536" y="142"/>
-        <ElementPosition dnOrder="13" id="sys_time" x="295" y="293"/>
-        <ElementPosition dnOrder="14" id="uart2" x="115" y="160"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="6"/>
-    <ComponentGraph dnOrder="7" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="5" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipDhcp" x="320" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipDns" x="460" y="20"/>
         <ElementPosition dnOrder="2" id="tcpipSntp" x="600" y="20"/>
         <ElementPosition dnOrder="3" id="tcpip_apps_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="6" id="NETWORK LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="7" id="BASIC CONFIGURATION">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>

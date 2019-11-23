@@ -44,11 +44,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)
+#ifdef TCPIP_SNMPV3_SUPPORT_DES
+#include "wolfssl/wolfcrypt/des3.h"
+#endif
 #include "tcpip/snmpv3.h"
 #include "tcpip/src/snmp_private.h"
 #include "tcpip/src/snmpv3_private.h"
 #include "tcpip/src/crypto/aes.h"
-#include "crypto/src/des3.h"
 #include "crypto/crypto.h"
 
 extern TCPIP_SNMP_DCPT gSnmpDcpt;

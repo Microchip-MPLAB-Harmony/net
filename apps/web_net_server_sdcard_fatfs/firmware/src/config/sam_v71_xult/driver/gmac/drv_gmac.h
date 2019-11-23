@@ -57,6 +57,10 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stddef.h>
 
 #include "driver/driver_common.h"
+#include "driver/ethphy/drv_ethphy.h"
+
+#include "tcpip/tcpip_mac.h"
+#include "tcpip/tcpip_ethernet.h"
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -89,6 +93,64 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define DRV_GMAC_INDEX_COUNT  GMAC_NUMBER_OF_MODULES
 
+/**
+ * Configuration Structure for Queues in GMAC.
+ */
+typedef struct
+{	
+	/** RX Descriptor count */
+	uint16_t nRxDescCnt;
+    /** RX buffer count */
+	uint16_t nRxBuffCount;
+    /** RX buffer count threshold */
+	uint16_t nRxBuffCntThres;
+    /** RX buffer allocate count */
+	uint16_t nRxBuffAllocCnt;
+	/** TX Descriptor count */
+	uint16_t nTxDescCnt;	
+	/** TX buffer size */
+	uint16_t txBufferSize;
+	/** RX buffer size */
+	uint16_t rxBufferSize;
+	/** Queue Enable status */
+	uint8_t queueEnable;
+} TCPIP_MODULE_GMAC_QUEUE_CONFIG;
+
+/*  GMAC Initialization Data
+
+  Summary:
+    Data that's passed to the GMAC at initialization time as part of
+    TCPIP_MAC_INIT data structure.
+
+  Description:
+    This structure defines the MAC initialization data for the
+    PIC32 MAC/Ethernet controller.
+
+*/
+
+typedef struct
+{
+	TCPIP_MAC_ADDR                  macAddress;
+	/* Configuration for each GMAC queues*/
+	TCPIP_MODULE_GMAC_QUEUE_CONFIG  gmac_queue_config[DRV_GMAC_NUMBER_OF_QUEUES];    
+
+    /*  Delay to wait after the lomk is coming up (milliseconds) */
+    /*  for insuring that the PHY is ready to transmit data. */
+    uint16_t                        linkInitDelay;
+
+    /*  flags to use for the ETH connection */
+    TCPIP_ETH_OPEN_FLAGS            ethFlags;
+
+    /* Ethernet module ID for this driver instance: a plib ETH Id value */
+    uintptr_t                       ethModuleId;
+
+    /* Non-volatile pointer to the PHY basic object associated with this MAC */
+    const struct DRV_ETHPHY_OBJECT_BASE_TYPE*   pPhyBase;   
+
+    /* Non-volatile pointer to the PHY initialization data */
+    const struct DRV_ETHPHY_INIT*   pPhyInit;   
+   
+}TCPIP_MODULE_MAC_PIC32C_CONFIG;
 
 // *****************************************************************************
 // *****************************************************************************

@@ -129,5 +129,14 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // Note: to have the UDP commands available the TCP/IP commands need to be enabled.
 #define TCPIP_UDP_COMMANDS       0
 
+// This setting enables/disables the processing of the RX packets
+// by an external handler
+// The user of the UDP can register an external function to 
+// process the incoming packets
+// If true, the functionality is built in and could be used by the application
+// If false, the functionality does not exist and the generated code is slightly smaller 
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS true
+
+
 
 #endif  // _UDP_CONFIG_H_

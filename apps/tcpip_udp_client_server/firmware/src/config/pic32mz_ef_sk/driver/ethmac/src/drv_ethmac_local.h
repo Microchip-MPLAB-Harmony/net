@@ -96,12 +96,6 @@ typedef struct
     const void*                 _TcpNotifyParam;            // notification parameter
 }DRV_ETHMAC_EVENT_DCPT;   // event descriptor per group
 
-// transmit directly from within ISR
-// provides a faster response when running out of
-// TX descriptors
-//
-//#define ETH_PIC32_INT_MAC_ISR_TX
-
 
 // synchronization for the RX flow
 // The RX packets are allocated by the MAC and
@@ -209,9 +203,6 @@ typedef struct
     INT_SOURCE     _macIntSrc;             // this MAC interrupt source
 
     DRV_ETHMAC_EVENT_DCPT _pic32_ev_group_dcpt;
-#if defined(ETH_PIC32_INT_MAC_ISR_TX)
-    DRV_ETHMAC_SGL_LIST _TxAckQueue;        // TX acknowledgement queue; stores TX packets that need to be acknowledged 
-#endif  // defined(ETH_PIC32_INT_MAC_ISR_TX)
 
     // rx descriptor; supports maximum fragmentation
     DRV_ETHMAC_PKT_DCPT         rxPktDcpt[TCPIP_EMAC_RX_FRAGMENTS];

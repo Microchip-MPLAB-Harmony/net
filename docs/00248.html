@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00245.html" target="topic">tcpip_udp_client</a> &gt; <a href="00248.html" target="topic">Running the Demonstration</a></div>
+<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00245.html" target="topic">tcpip_tcp_client_server</a> &gt; <a href="00248.html" target="topic">Running the Demonstration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
 <a href="00247.html" target="topic">Previous</a> | <a href="00245.html" target="topic">Up</a> | <a href="00249.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP UDP Client pic32_ethernet_starter_kit_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP TCP Client Server pic32_ethernet_starter_kit_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Running the Demonstration</div>
 </div>
@@ -49,24 +49,17 @@ Running the Demonstration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-There are three sequential commands implemented in this demonstration.
-<ul class="Element632">
-<li class="Element602">setudppacketoptions &lt;hostname&gt; &lt;port&gt; &lt;message&gt; - This command specifies the following parameters for the UDP packet: Destination IP Address or Host name, Destination Port and Message to transfer</li>
-<li class="Element602">getudppacketoptions - This command displays the current options</li>
-<li class="Element602">sendudppacket - This command sends a UDP packet</li>
-</ul>&nbsp;</p>
-<p class="Element10">
 <strong>For SAM E70/V71 Xplained Ultra, SAM E54 Xplained Pro Evaluation Kits</strong>
-<ol class="Element632">
-<li value="1" class="Element602">Configure the Development Board as given <a href="00247.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
-<li value="2" class="Element602">Make the demonstration setup as shown <a href="00335.html" target="topic">here</a>.</li>
-<li value="3" class="Element602">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element602">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
-<li value="5" class="Element602">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element602">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element602">Restart the demonstration by pressing the 'RESET' button on the board.</li>
-<li value="8" class="Element602">See that the initialization prints on the serial port terminal.</li>
-<li value="9" class="Element602">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+<ol class="Element634">
+<li value="1" class="Element604">Configure the Development Board as given <a href="00247.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
+<li value="2" class="Element604">Make the demonstration setup as shown <a href="00352.html" target="topic">here</a>.</li>
+<li value="3" class="Element604">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element604">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
+<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element604">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element604">Restart the demonstration by pressing the 'RESET' button on the board.</li>
+<li value="8" class="Element604">See that the initialization prints on the serial port terminal.</li>
+<li value="9" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
 </ol>&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
@@ -74,53 +67,90 @@ There are three sequential commands implemented in this demonstration.
 <strong>For SAM A5D2 Xplained Ultra Evaluation Kits</strong>&nbsp;</p>
 <p class="Element10">
 
-<ol class="Element632">
-<li value="1" class="Element602">Build the demo by opening the project in the IAR Embedded Workbench</li>
-<li value="2" class="Element602">Copy the project output - harmony.bin - on the SD Card that is used to load the executable and run it on the SAM A5D2 board.
-<ol class="Element633">
-<li value="1" class="Element603">The boot loader on the SD card - boot.bin - should be configured to load the harmony.bin image instead of the standard uboot.bin</li>
+<ol class="Element634">
+<li value="1" class="Element604">Build the demo by opening the project in the IAR Embedded Workbench</li>
+<li value="2" class="Element604">Copy the project output - harmony.bin - on the SD Card that is used to load the executable and run it on the SAM A5D2 board.
+<ol class="Element635">
+<li value="1" class="Element605">The boot loader on the SD card - boot.bin - should be configured to load the harmony.bin image instead of the standard uboot.bin</li>
 </ol></li>
-<li value="3" class="Element602">Configure the Development Board as given <a href="01197.html" target="topic">here</a>.</li>
-<li value="4" class="Element602">Make the demonstration setup as shown <a href="00335.html" target="topic">here</a>.</li>
-<li value="5" class="Element602">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element602">Set the serial configuration to: baud rate 115200 baud, 8 data bits, no parity, and 1 stop bit in the terminal application.</li>
-<li value="7" class="Element602">Insert the SD Card into J19, SDMMC1, on the SAM A5D2 board and press the reset button. At this moment the board should boot up and display messages at the console.</li>
-<li value="8" class="Element602">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal</li>
+<li value="3" class="Element604">Configure the Development Board as given <a href="01200.html" target="topic">here</a>.</li>
+<li value="4" class="Element604">Make the demonstration setup as shown <a href="00352.html" target="topic">here</a>.</li>
+<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element604">Set the serial configuration to: baud rate 115200 baud, 8 data bits, no parity, and 1 stop bit in the terminal application.</li>
+<li value="7" class="Element604">Insert the SD Card into J19, SDMMC1, on the SAM A5D2 board and press the reset button. At this moment the board should boot up and display messages at the console.</li>
+<li value="8" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal</li>
 </ol>&nbsp;</p>
 <p class="Element10">
 <strong>For PIC32MZ Starter Kits</strong>
-<ol class="Element632">
-<li value="1" class="Element602">Configure the Development Board as given <a href="00247.html" target="topic">here</a>.</li>
-<li value="2" class="Element602">Make the demonstration setup as shown <a href="00335.html" target="topic">here</a>.</li>
-<li value="3" class="Element602">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element602">A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.</li>
-<li value="5" class="Element602">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element602">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element602">See that the initialization prints on the serial port terminal.</li>
-<li value="8" class="Element602">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
+<ol class="Element634">
+<li value="1" class="Element604">Configure the Development Board as given <a href="00247.html" target="topic">here</a>.</li>
+<li value="2" class="Element604">Make the demonstration setup as shown <a href="00352.html" target="topic">here</a>.</li>
+<li value="3" class="Element604">Build and download the demonstration project on the target board.</li>
+<li value="4" class="Element604">A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.</li>
+<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
+<li value="6" class="Element604">Set the serial baud rate to 115200 baud in the terminal application.</li>
+<li value="7" class="Element604">See that the initialization prints on the serial port terminal.</li>
+<li value="8" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
 </ol>&nbsp;</p>
 <p class="Element10">
+<strong>For SAM 9X60 EK Evaluation Kit</strong>&nbsp;</p>
+<p class="Element10">
+1. Build the demo by opening the project in the IAR Embedded Workbench&nbsp;</p>
+<p class="Element10">
+2. Copy the project output, harmony.bin, to the SD card that is used to load the executable and run it on the SAM9X60-EK board. Note: the boot loader on the SD card, boot.bin, should be configured to load the harmony.bin image, not a uboot.bin image.&nbsp;</p>
+<p class="Element10">
+3. Configure the development board as given <a href="01204.html" target="topic">here</a>.&nbsp;</p>
+<p class="Element10">
+4. Make the demonstration setup as shown <a href="00352.html" target="topic">here</a>.&nbsp;</p>
+<p class="Element10">
+5. Open a terminal application, e.g. Tera Term or Hyper-terminal, on the computer and configure the virtual COM port.&nbsp;</p>
+<p class="Element10">
+6. Set the serial configuration to: baud rate 115200, 8 data bits, no parity, and 1 stop bit.&nbsp;</p>
+<p class="Element10">
+7. Insert the SD card into J5 on the SAM 9X60 board and press the reset button which is labeled ‘SW3’ on the silkscreen. At this moment the board should boot and display messages on the terminal console.&nbsp;</p>
+<p class="Element10">
+8. When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be output to the serial port terminal.&nbsp;</p>
+<p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-
-<ul class="Element632">
-<li class="Element602">Set the UDP packet options by typing setudppacketoptions at the terminal console.</li>
-<li class="Element602">Verify the UDP packet settings by typing getudppacketoptions at the terminal console.</li>
-<li class="Element602">Send the UDP packet to the destination using the sendudppacket command.</li>
-</ul>&nbsp;</p>
+<img src="dhcp_5.png" border="0" alt="" title="">&nbsp;</p>
 <p class="Element10">
 &nbsp;</p>
 <p class="Element10">
-After the sendudppacket command is input, the demonstration will make a DNS query to look up the host name and <a href="01201.html" target="topic">send</a> a UDP packet to that host.&nbsp;</p>
+To test TCP Client, input the following command from the serial port: openurl &lt;url&gt; - The &lt;url&gt; argument must be a fully formed URL; for instance, <a href="#" onclick="openExternalLink('http://www.microchip.com');"><img src="indicator_external_link.gif" border="0" alt="" title="">http://www.microchip.com/</a>&nbsp;</p>
 <p class="Element10">
-The output message will be received by the UDP server on the port that is configured by the command setudppacketoptions.</p></div>
+After the command is input, the demonstration will make a DNS query. Then it will open a connection to the requested URL and perform a simple HTTP <span class="Element146">GET</span> command.&nbsp;</p>
+<p class="Element10">
+The response received from the server will be printed on the terminal application through the serial port.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="http_put_6.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+To test the Server part of the demonstration, the TCP Client application is required to run on the computer (SocketTest, Packet Sender etc). In this demonstration, we use the program, SocketTest (http://sockettest.sourceforge.net/). This demonstration has been tested with SocketTest v3.0.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+1. Open the SocketTest software and set the configuration as shown in the following figure.&nbsp;</p>
+<p class="Element10">
+<img src="enter_ip_7.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+2. Press the Connect button on the SocketTest software after setting the configuration. The serial terminal indicates that the connection has been established.&nbsp;</p>
+<p class="Element10">
+3. Type any message in the message box of the SocketTest program, and press the Send button. The Server running on the development board will echo back the message to the SocketTest program.&nbsp;</p>
+<p class="Element10">
+<img src="client_test_8.png" border="0" alt="" title="">&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01323.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00209.html" target="topic">Demonstrations</a> &gt; <a href="00245.html" target="topic">tcpip_udp_client</a> &gt; <a href="00248.html" target="topic">Running the Demonstration</a></div>
+<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00245.html" target="topic">tcpip_tcp_client_server</a> &gt; <a href="00248.html" target="topic">Running the Demonstration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +158,13 @@ The output message will be received by the UDP server on the port that is config
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
 <a href="00247.html" target="topic">Previous</a> | <a href="00245.html" target="topic">Up</a> | <a href="00249.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP UDP Client pic32_ethernet_starter_kit_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP TCPIP TCP Client Server pic32_ethernet_starter_kit_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

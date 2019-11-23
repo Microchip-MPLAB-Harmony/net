@@ -311,11 +311,9 @@ typedef struct _DRV_ETHPHY_CLIENT_OBJ_STRUCT
     uintptr_t               ethphyId;   // The peripheral Id associated with the object
     DRV_ETHPHY_CLIENT_STATUS    status;     // Client Status
     struct _DRV_ETHPHY_OBJ_STRUCT* hDriver; // Handle of driver that owns the client
-#if (DRV_ETHPHY_USE_DRV_MIIM)
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
     DRV_HANDLE                  miimHandle; // MMIM client handle
     DRV_MIIM_OPERATION_HANDLE   miimOpHandle;   // current MIIM op in progress; 
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
     // current operation performed by the driver
     uint16_t                    operType;     // DRV_ETHPHY_CLIENT_OP_TYPE: current operation type
     uint16_t                    operPhase;    // current phase; operation dependent
@@ -368,10 +366,8 @@ typedef struct _DRV_ETHPHY_OBJ_STRUCT
     int                 phyAddress;     // PHY SMI address
     const DRV_ETHPHY_OBJECT*    pPhyObj; // PHY object, vendor specififc functions
     DRV_ETHPHY_CLIENT_OBJ       objClients[DRV_ETHPHY_CLIENTS_NUMBER]; // array of clients
-#if (DRV_ETHPHY_USE_DRV_MIIM)
     const DRV_MIIM_OBJECT_BASE* pMiimBase;  // MIIM driver base object to use   
     SYS_MODULE_INDEX            miimIndex;  // MIIM object index 
-#endif  // (DRV_ETHPHY_USE_DRV_MIIM)
 } DRV_ETHPHY_OBJ;
 
 

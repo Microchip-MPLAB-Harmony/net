@@ -49,6 +49,7 @@
 #include <stddef.h>
 #include <stdbool.h>
 #include "crypto/crypto.h"
+#include "peripheral/nvmctrl/plib_nvmctrl.h"
 #include "peripheral/tc/plib_tc0.h"
 #include "peripheral/sdhc/plib_sdhc1.h"
 #include "system/time/sys_time.h"
@@ -75,6 +76,7 @@
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "system/debug/sys_debug.h"
+#include "wolfssl/wolfcrypt/port/pic32/crypt_wolfcryptcb.h"
 #include "system/fs/sys_fs.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "system/fs/fat_fs/src/file_system/ff.h"

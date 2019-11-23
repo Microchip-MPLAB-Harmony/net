@@ -41,9 +41,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 <#if lib_crypto?? >
 #include "crypto/crypto.h"
-#if defined(__SAMA5D2__)
-#error  "Crypto is not currently supported on SAMA5D2!"  
-#endif
 </#if>
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
@@ -1370,26 +1367,6 @@ TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_builddate(TCPIP_HTTP_NET_CONN_HANDLE c
 TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_version(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
 {
     TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)TCPIP_STACK_VERSION_STR, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_drive(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_DRIVE, false);
-    return TCPIP_HTTP_DYN_PRINT_RES_DONE;
-}
-
-TCPIP_HTTP_DYN_PRINT_RES TCPIP_HTTP_Print_fstype(TCPIP_HTTP_NET_CONN_HANDLE connHandle, const TCPIP_HTTP_DYN_VAR_DCPT *vDcpt)
-{
-<#if ((tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER?has_content) && (tcpipSysFsWrapper.TCPIP_STACK_USE_FS_WRAPPER  == true))> 
-<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE?has_content >
-<#if tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "FLASH">
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_MPFS_STRING, false);
-<#elseif tcpipSysFsWrapper.TCPIP_SYS_FS_DRIVE == "SDCARD">
-    TCPIP_HTTP_NET_DynamicWriteString(vDcpt, (const char *)SYS_FS_FATFS_STRING, false);
-</#if>
-</#if>
-</#if>
     return TCPIP_HTTP_DYN_PRINT_RES_DONE;
 }
 

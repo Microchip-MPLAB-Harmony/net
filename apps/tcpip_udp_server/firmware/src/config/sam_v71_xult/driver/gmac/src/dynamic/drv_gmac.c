@@ -1101,6 +1101,9 @@ TCPIP_MAC_RES DRV_GMAC_StatisticsGet(DRV_HANDLE hMac, TCPIP_MAC_RX_STATISTICS* p
     
 	if(pRxStatistics)
 	{
+        _DRV_GMAC_RxLock(pMACDrv);
+		DRV_PIC32CGMAC_LibRxBuffersCountGet(pMACDrv, &pMACDrv->sGmacData._rxStat.nRxPendBuffers, &pMACDrv->sGmacData._rxStat.nRxSchedBuffers);
+		_DRV_GMAC_RxUnlock(pMACDrv);
 		*pRxStatistics = pMACDrv->sGmacData._rxStat;
 	}
 	if(pTxStatistics)

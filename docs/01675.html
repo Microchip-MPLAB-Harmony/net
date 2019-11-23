@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>MIB Files</title>
+<title>Files</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01671.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01675.html" target="topic">MIB Files</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01675.html" target="topic">Files</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01673.html" target="topic">Previous</a> | <a href="01671.html" target="topic">Up</a> | <a href="01674.html" target="topic">Next</a></div>
+<a href="00004.html" target="topic">Previous</a> | <a href="01214.html" target="topic">Up</a> | <a href="01215.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server MIB Files Topic Title: MIB Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Files Topic Title: Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-MIB Files</div>
+Files</div>
 </div>
 </div>
 
@@ -49,18 +49,39 @@ MIB Files</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-SNMP describes the hierarchal storage of management objects (referred to with object IDs or OIDs) with MIB files. The Microchip SNMP server demonstration includes two MIB files:
-<ul class="Element633">
-<li class="Element603"><span class="Element146">mchip.mib</span> - This is an Abstract Syntax Notation One (ASN.1) formatted MIB file containing information about the variables used in the demonstration</li>
-<li class="Element603"><span class="Element146">snmp.mib</span> - This is a custom-formatted file that can be parsed to create Web page and header resources that can be accessed with a MCHP device</li>
-</ul>The TCP/IP Stack includes the mib2bib utility, which will compile the custom Microchip MIB script (<span class="Element146">snmp.mib</span>) to generate two files named snmp.bib and <span class="Element146">mib.h</span>. The snmp.bib file is a compressed record of management objects that will be stored with web pages and the<span class="Element146"> mib.h</span> file contains C defines for each OID. These files are included in the appropriate directories for the TCP/IP Demonstration Applications, but for a custom application the snmp.bib must be copied to the web page directory, <span class="Element146">mib.h</span> copied to the application directory and included in the project. Rebuild your project, and then rebuild and re-upload the web page. This will bundle the BIB file into the web page image, which will allow the SNMP agent to search for the required variable information with the MPFS file system.</p></div>
+This section lists the source and header files used by the library.</p></div>
+</div>
+<a name="46696C6573"></a><div class="Element14">
+Files</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01215.html" target="topic">smtpc.h</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Module for Microchip TCP/IP Stack.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01216.html" target="topic">smtpc_config.h</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTPC configuration file&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01009.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01213.html" target="topic">SNMP Module</a> &gt; <a href="01671.html" target="topic">SNMP Server (Agent)</a> &gt; <a href="01675.html" target="topic">MIB Files</a></div>
+<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01214.html" target="topic">SMTPC Module</a> &gt; <a href="01675.html" target="topic">Files</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -68,13 +89,13 @@ SNMP describes the hierarchal storage of management objects (referred to with ob
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01574.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01673.html" target="topic">Previous</a> | <a href="01671.html" target="topic">Up</a> | <a href="01674.html" target="topic">Next</a></div>
+<a href="00004.html" target="topic">Previous</a> | <a href="01214.html" target="topic">Up</a> | <a href="01215.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SNMP SNMP Server MIB Files Topic Title: MIB Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTPC Files Topic Title: Files)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

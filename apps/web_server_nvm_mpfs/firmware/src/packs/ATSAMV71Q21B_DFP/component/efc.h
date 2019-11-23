@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-04-01T08:56:33Z */
+/* file generated from device description version 2019-07-24T15:06:26Z */
 #ifndef _SAMV71_EFC_COMPONENT_H_
 #define _SAMV71_EFC_COMPONENT_H_
 

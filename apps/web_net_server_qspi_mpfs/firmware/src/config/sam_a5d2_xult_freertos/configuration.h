@@ -125,7 +125,7 @@ extern "C" {
 #define SYS_CMD_BUFFER_DMA_READY
 #define SYS_CMD_REMAP_SYS_CONSOLE_MESSAGE
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                1024
+#define SYS_CMD_RTOS_STACK_SIZE                2560
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 
@@ -166,9 +166,8 @@ extern "C" {
 #define DRV_MIIM_DRIVER_OBJECT              DRV_MIIM_OBJECT_BASE_Default
 #define DRV_MIIM_DRIVER_INDEX               DRV_MIIM_INDEX_0              
 
-
 /* MIIM RTOS Configurations*/
-#define DRV_MIIM_RTOS_STACK_SIZE           1024
+#define DRV_MIIM_RTOS_STACK_SIZE                1024
 #define DRV_MIIM_RTOS_TASK_PRIORITY             1
 
 
@@ -194,6 +193,43 @@ extern "C" {
 #define TCPIP_ICMP_ECHO_ALLOW_BROADCASTS    false
 
 
+/******************************************************************************/
+/*wolfSSL TLS Layer Configuration*/
+/******************************************************************************/
+
+#define WOLFSSL_ALT_NAMES
+#define WOLFSSL_DER_LOAD
+#define KEEP_OUR_CERT
+#define KEEP_PEER_CERT
+#define HAVE_CRL_IO
+#define HAVE_IO_TIMEOUT
+#define HAVE_FFDHE_2048
+#define HAVE_FFDHE_3072
+#define HAVE_FFDHE_4096
+#define HAVE_FFDHE_6144
+#define HAVE_FFDHE_8192
+#define TFM_NO_ASM
+#define WOLFSSL_NO_ASM
+#define SIZEOF_LONG_LONG 8
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define MICROCHIP_TCPIP
+#define WOLFSSL_DTLS
+
+
+
+    
+    
+    
+
+#define NO_ERROR_STRINGS
+    
+    
+    
+    
+    
+   
+
 
 /*** TCP Configuration ***/
 #define TCPIP_TCP_MAX_SEG_SIZE_TX		        	1460
@@ -215,6 +251,7 @@ extern "C" {
 #define TCPIP_TCP_MSL_TIMEOUT		        	    0
 #define TCPIP_TCP_QUIET_TIME		        	    0
 #define TCPIP_TCP_COMMANDS   false
+#define TCPIP_TCP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -259,10 +296,18 @@ extern "C" {
 /*** telnet Configuration ***/
 #define TCPIP_STACK_USE_TELNET_SERVER
 #define TCPIP_TELNET_MAX_CONNECTIONS    2
-#define TCPIP_TELNET_USERNAME           "admin"
-#define TCPIP_TELNET_PASSWORD           "microchip"
 #define TCPIP_TELNET_TASK_TICK_RATE     100
+#define TCPIP_TELNET_SKT_TX_BUFF_SIZE   0
+#define TCPIP_TELNET_SKT_RX_BUFF_SIZE   0
+#define TCPIP_TELNET_LISTEN_PORT        23
+#define TCPIP_TELNET_PRINT_BUFF_SIZE    200
+#define TCPIP_TELNET_LINE_BUFF_SIZE     80
+#define TCPIP_TELNET_USERNAME_SIZE      15
+#define TCPIP_TELNET_CONFIG_FLAGS       \
+                                       TCPIP_TELNET_FLAG_NONE
 
+#define TCPIP_TELNET_OBSOLETE_AUTHENTICATION false
+#define TCPIP_TELNET_AUTHENTICATION_CONN_INFO true
 
 
 
@@ -279,6 +324,7 @@ extern "C" {
 
 
 /*** IPv4 Configuration ***/
+#define TCPIP_IPV4_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -319,6 +365,7 @@ extern "C" {
 #define TCPIP_UDP_USE_TX_CHECKSUM             			true
 #define TCPIP_UDP_USE_RX_CHECKSUM             			true
 #define TCPIP_UDP_COMMANDS   false
+#define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
 
@@ -342,17 +389,6 @@ extern "C" {
 
 
 
-/*** TCPIP SYS FS Wrapper ***/
-#define SYS_FS_MAX_PATH						80
-#define LOCAL_WEBSITE_PATH_FS				"/mnt/mchpSite1"
-#define LOCAL_WEBSITE_PATH					"/mnt/mchpSite1/"
-#define SYS_FS_DRIVE						"FLASH"
-#define SYS_FS_NVM_VOL						"/dev/mtda1"
-#define SYS_FS_FATFS_STRING					"FATFS"
-#define SYS_FS_MPFS_STRING					"MPFS2"
-
-
-
 /*** HTTP NET Configuration ***/
 #define TCPIP_STACK_USE_HTTP_NET_SERVER
 #define TCPIP_HTTP_NET_MAX_HEADER_LEN		    		15
@@ -361,6 +397,7 @@ extern "C" {
 #define TCPIP_HTTP_NET_MAX_CONNECTIONS		    		4
 #define TCPIP_HTTP_NET_DEFAULT_FILE		        		"index.htm"
 #define TCPIP_HTTP_NET_FILENAME_MAX_LEN			        25
+#define TCPIP_HTTP_NET_WEB_DIR		        		    "/mnt/mchpSite1/"
 #define TCPIP_HTTP_NET_USE_POST
 #define TCPIP_HTTP_NET_USE_COOKIES
 #define TCPIP_HTTP_NET_USE_AUTHENTICATION
@@ -432,8 +469,9 @@ extern "C" {
 #define NET_PRES_NUM_SOCKETS 10
 
 /* Net Pres RTOS Configurations*/
-#define NET_PRES_RTOS_STACK_SIZE           1024
+#define NET_PRES_RTOS_STACK_SIZE                8192
 #define NET_PRES_RTOS_TASK_PRIORITY             1
+	
 
 
 
@@ -485,14 +523,13 @@ extern "C" {
 #define TCPIP_STACK_MAC_DOWN_OPERATION  true
 #define TCPIP_STACK_INTERFACE_CHANGE_SIGNALING   false
 #define TCPIP_STACK_CONFIGURATION_SAVE_RESTORE   true
+#define TCPIP_STACK_EXTERN_PACKET_PROCESS   false
 
 
 
 
-
-/*** TCP/IP Configuration ***/
 /* TCP/IP RTOS Configurations*/
-#define TCPIP_RTOS_STACK_SIZE           1024
+#define TCPIP_RTOS_STACK_SIZE                1024
 #define TCPIP_RTOS_PRIORITY             1
 
 
@@ -620,6 +657,46 @@ extern "C" {
 
 
 
+/*** wolfCrypt Library Configuration ***/
+#define MICROCHIP_PIC32
+#define MICROCHIP_MPLAB_HARMONY
+#define MICROCHIP_MPLAB_HARMONY_3
+#define HAVE_MCAPI
+#define SIZEOF_LONG_LONG 8
+#define WOLFSSL_USER_IO
+#define NO_WRITEV
+#define NO_FILESYSTEM
+#define USE_FAST_MATH
+#define NO_PWDBASED
+#define HAVE_MCAPI
+#define WOLF_CRYPTO_CB
+#define NO_MD4
+#define WOLFSSL_SHA224
+#define WOLFSSL_AES_128
+#define WOLFSSL_AES_192
+#define WOLFSSL_AES_256
+#define WOLFSSL_AES_DIRECT
+#define HAVE_AES_DECRYPT
+#define HAVE_AES_ECB
+#define HAVE_AES_CBC
+#define WOLFSSL_AES_COUNTER
+#define HAVE_AESGCM
+#define HAVE_AESCCM
+#define NO_RC4
+#define NO_HC128
+#define NO_RABBIT
+#define HAVE_ECC
+#define NO_DH
+#define NO_DSA
+#define USE_CERT_BUFFERS_2048
+#define NO_DEV_RANDOM
+#define HAVE_HASHDRBG
+#define WC_NO_HARDEN
+#define SINGLE_THREADED
+#define NO_ERROR_STRINGS
+#define NO_WOLFSSL_MEMORY
+
+
 
 #define TCPIP_INTMAC_PHY_CONFIG_FLAGS               0 \
                                                     | DRV_ETHPHY_CFG_RMII \
@@ -634,7 +711,6 @@ extern "C" {
 #define DRV_ETHPHY_NEG_INIT_TMO                     1
 #define DRV_ETHPHY_NEG_DONE_TMO                     2000
 #define DRV_ETHPHY_RESET_CLR_TMO                    500
-#define DRV_ETHPHY_USE_DRV_MIIM                     true
 
 
 
