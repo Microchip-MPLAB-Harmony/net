@@ -467,7 +467,7 @@ extern "C" {
 #define TCPIP_NTP_REPLY_TIMEOUT		        		6
 #define TCPIP_NTP_MAX_STRATUM		        		15
 #define TCPIP_NTP_TIME_STAMP_TMO				660
-#define TCPIP_NTP_SERVER		        		"ntp.microchip.com"
+#define TCPIP_NTP_SERVER		        		"pool.ntp.org"
 #define TCPIP_NTP_SERVER_MAX_LENGTH				30
 #define TCPIP_NTP_QUERY_INTERVAL				600
 #define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
