@@ -4592,7 +4592,7 @@
               <Symbols dnOrder="0">
                 <String dnOrder="0" id="TCPIP_NTP_SERVER">
                   <Values dnOrder="0">
-                    <User dnOrder="0" value="ntp.microchip.com"/>
+                    <User dnOrder="0" value="pool.ntp.org"/>
                   </Values>
                 </String>
               </Symbols>
