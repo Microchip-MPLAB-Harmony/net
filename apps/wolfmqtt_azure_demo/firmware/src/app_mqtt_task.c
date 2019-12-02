@@ -110,6 +110,7 @@ static const char*  APP_MQTT_StateStrTbl[] =
     "publish",          // APP_MQTT_STATE_PUBLISH,
     "wait_msg",         // APP_MQTT_STATE_START_WAIT,
     "wait_msg",         // APP_MQTT_STATE_WAIT_MSG,
+    "st_ping",          // APP_MQTT_STATE_START_PING,
     "ping",             // APP_MQTT_STATE_PING,
     "unsubscribe",      // APP_MQTT_STATE_START_UNSUBSCRIBE,
     "unsubscribe",      // APP_MQTT_STATE_UNSUBSCRIBE,
@@ -573,20 +574,23 @@ void APP_MQTT_Task(void)
             {   // check for timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage", MQTT_CODE_ERROR_TIMEOUT);
-                    APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-                    mqttCtx->currState = APP_MQTT_STATE_PING;
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage timeout", MQTT_CODE_ERROR_TIMEOUT);
+                    mqttCtx->currState = APP_MQTT_STATE_START_PING;
                 }
-                break;
             }
             else if(resCode < 0)
             {   // some error occurred
-                APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage", resCode) ;
+                APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage error", resCode) ;
                 // try to ping the broker
-                mqttCtx->currState = APP_MQTT_STATE_PING;
+                mqttCtx->currState = APP_MQTT_STATE_START_PING;
             }
             // else wait some more to receive the message
             break;
+
+        case APP_MQTT_STATE_START_PING:
+            SYS_CONSOLE_PRINT("MQTT Task - pinging the broker: %d\r\n", mqttCtx->waitMsgRetries);
+            APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
+            mqttCtx->currState = APP_MQTT_STATE_PING;
 
         case APP_MQTT_STATE_PING:
             resCode = MqttClient_Ping(&mqttCtx->mqttClient);
@@ -601,22 +605,21 @@ void APP_MQTT_Task(void)
             }
 
             // done with ping
-            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping", resCode);
+            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping done", resCode);
             if (resCode < 0)
             {   // error occurred
                 mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
             }
             else
-            {   // ping was successful; but still timeout for our message; retry
+            {   // ping was successful; keep on doing more retries 
                 if(mqttCtx->waitMsgRetries != 0)
                 {
                     mqttCtx->waitMsgRetries--;
                     mqttCtx->currState = APP_MQTT_STATE_START_WAIT;
-                    SYS_CONSOLE_PRINT("MQTT Task - ping retrying: %d\r\n", mqttCtx->waitMsgRetries);
                 }
                 else
                 {   // retries exhausted
-                    SYS_CONSOLE_MESSAGE("MQTT Task - ping retries exhausted, but no message received! Aborting...\r\n");
+                    SYS_CONSOLE_MESSAGE("MQTT Task - ping retries exhausted. Done!\r\n");
                     mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
                 }
             }
