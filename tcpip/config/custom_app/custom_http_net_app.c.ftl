@@ -45,6 +45,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "system/sys_random_h2_adapter.h"
 #include "system/sys_time_h2_adapter.h"
+<#if ((tcpipIPv4.TCPIP_STACK_USE_IPV4?has_content) && (tcpipIPv4.TCPIP_STACK_USE_IPV4  == true))>
+#include "tcpip/dhcp.h"
+</#if>
 #include "tcpip/tcpip.h"
 #include "tcpip/src/common/helpers.h"
 
