@@ -155,17 +155,6 @@ def instantiateComponent(tcpipDnsComponent):
     tcpipDnscHeaderFtl.setMarkup(True)
     tcpipDnscHeaderFtl.setType("STRING")
 
-    # Add dns.c file
-    tcpipDnscSourceFile = tcpipDnsComponent.createFileSymbol(None, None)
-    tcpipDnscSourceFile.setSourcePath("tcpip/src/dns.c")
-    tcpipDnscSourceFile.setOutputName("dns.c")
-    tcpipDnscSourceFile.setOverwrite(True)
-    tcpipDnscSourceFile.setDestPath("library/tcpip/src/")
-    tcpipDnscSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-    tcpipDnscSourceFile.setType("SOURCE")
-    tcpipDnscSourceFile.setEnabled(True)
-    
-    
     
 def tcpipDnsMenuVisible(symbol, event):
     if (event["value"] == True):

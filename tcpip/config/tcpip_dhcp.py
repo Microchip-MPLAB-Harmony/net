@@ -89,16 +89,6 @@ def instantiateComponent(tcpipDhcpComponent):
 	tcpipDhcpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
 	tcpipDhcpcHeaderFtl.setMarkup(True)
 	tcpipDhcpcHeaderFtl.setType("STRING")
-
-	# Add dhcp.c file
-	tcpipDhcpcSourceFile = tcpipDhcpComponent.createFileSymbol(None, None)
-	tcpipDhcpcSourceFile.setSourcePath("tcpip/src/dhcp.c")
-	tcpipDhcpcSourceFile.setOutputName("dhcp.c")
-	tcpipDhcpcSourceFile.setOverwrite(True)
-	tcpipDhcpcSourceFile.setDestPath("library/tcpip/src/")
-	tcpipDhcpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-	tcpipDhcpcSourceFile.setType("SOURCE")
-	tcpipDhcpcSourceFile.setEnabled(True)
 	
 	
 def tcpipDhcpMenuVisibleSingle(symbol, event):

@@ -700,6 +700,8 @@ typedef struct TCPIP_STACK_INIT
 #include "tcpip/ndp.h"
 </#if>
 #include "tcpip/ipv4.h"
+#include "tcpip/dhcp.h"
+#include "tcpip/dns.h"
 #include "tcpip/ipv6.h"
 <#if ((tcpipIPv6.TCPIP_STACK_USE_IPV6)?has_content && (tcpipIPv6.TCPIP_STACK_USE_IPV6) == true) >
 #include "tcpip/icmpv6.h"
@@ -716,21 +718,12 @@ typedef struct TCPIP_STACK_INIT
 <#if (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API)?has_content &&  (tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API) == true>
 #include "tcpip/berkeley_api.h"
 </#if>
-<#if (tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT)?has_content &&  (tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT) == true>
-#include "tcpip/dhcp.h"
-</#if>
 <#if (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER)?has_content &&  (tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER) == true>
 #include "tcpip/dhcps.h"
 </#if>
 <#if (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG)?has_content &&  (tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG) == true>
 #include "tcpip/zero_conf_link_local.h"
 #include "tcpip/zero_conf_multicast_dns.h"
-</#if>
-<#if ((tcpipDns.TCPIP_USE_DNS_CLIENT)?has_content && (tcpipDns.TCPIP_USE_DNS_CLIENT) == true) 
-    || ((tcpipDnss.TCPIP_USE_DNSS)?has_content && (tcpipDnss.TCPIP_USE_DNSS) == true) 
-    || ((tcpip_apps_config.TCPIP_AUTOCONFIG_ENABLE_SNTP)?has_content && (tcpip_apps_config.TCPIP_AUTOCONFIG_ENABLE_SNTP) == true)
-    >
-#include "tcpip/dns.h"
 </#if>
 <#if (tcpipDnss.TCPIP_USE_DNSS)?has_content &&  (tcpipDnss.TCPIP_USE_DNSS) == true>
 #include "tcpip/dnss.h"

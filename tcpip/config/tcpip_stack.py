@@ -748,7 +748,18 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackDhcpcHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
     tcpipStackDhcpcHeaderFile.setType("HEADER")
     tcpipStackDhcpcHeaderFile.setOverwrite(True)
-
+    
+    # Add dhcp.c file to project
+    tcpipStackDhcpcSourceFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackDhcpcSourceFile.setSourcePath("tcpip/config/dhcp.c.ftl")
+    tcpipStackDhcpcSourceFile.setOutputName("dhcp.c")
+    tcpipStackDhcpcSourceFile.setDestPath("library/tcpip/src/")
+    tcpipStackDhcpcSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackDhcpcSourceFile.setType("SOURCE")
+    tcpipStackDhcpcSourceFile.setMarkup(True)
+    tcpipStackDhcpcSourceFile.setEnabled(True)   
+    tcpipStackDhcpcSourceFile.setOverwrite(True)
+    
     # Add dhcp_manager.h file to project
     tcpipStackDhcpcManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackDhcpcManagerHeaderFile.setSourcePath("tcpip/src/dhcp_manager.h")
@@ -847,6 +858,17 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackDnscHeaderFile.setProjectPath("config/" + configName + "/library/tcpip/")
     tcpipStackDnscHeaderFile.setType("HEADER")
     tcpipStackDnscHeaderFile.setOverwrite(True)
+
+    # Add dns.c file
+    tcpipStackDnscSourceFile = tcpipStackComponent.createFileSymbol(None, None)
+    tcpipStackDnscSourceFile.setSourcePath("tcpip/config/dns.c.ftl")
+    tcpipStackDnscSourceFile.setOutputName("dns.c")
+    tcpipStackDnscSourceFile.setDestPath("library/tcpip/src/")
+    tcpipStackDnscSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipStackDnscSourceFile.setType("SOURCE")
+    tcpipStackDnscSourceFile.setMarkup(True)
+    tcpipStackDnscSourceFile.setEnabled(True)
+    tcpipStackDnscSourceFile.setOverwrite(True)
 
     # Add dns_manager.h file to project
     tcpipStackDnscManagerHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
