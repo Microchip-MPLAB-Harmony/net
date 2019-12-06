@@ -1512,10 +1512,14 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
 
 
     // the way the hw is configured
-#if defined (__PIC32MX__) || defined(__PIC32MZ__)
+#if defined (__PIC32MZW1__)
+    hwFlags =  (DEVCFG1bits.FMIIEN != 0) ?     DRV_ETHPHY_CFG_MII : DRV_ETHPHY_CFG_RMII;
+    ethRes = DRV_ETHPHY_RES_OK;
+#elif defined (__PIC32MX__) || defined(__PIC32MZ__)
+    // TODO aa: xc32 does not recognize the __PIC32MZW1__ symbol for now! 
     hwFlags = DRV_ETHPHY_CFG_RMII;
-    // @@@@ hwFlags =  (DEVCFG3bits.FMIIEN != 0) ?     DRV_ETHPHY_CFG_MII : DRV_ETHPHY_CFG_RMII;
-    // @@@@ hwFlags |= (DEVCFG3bits.FETHIO != 0) ? DRV_ETHPHY_CFG_DEFAULT : DRV_ETHPHY_CFG_ALTERNATE;
+    // TODO aa: hwFlags =  (DEVCFG3bits.FMIIEN != 0) ?     DRV_ETHPHY_CFG_MII : DRV_ETHPHY_CFG_RMII;
+    // TODO aa: hwFlags |= (DEVCFG3bits.FETHIO != 0) ? DRV_ETHPHY_CFG_DEFAULT : DRV_ETHPHY_CFG_ALTERNATE;
     ethRes = DRV_ETHPHY_RES_OK;
 #elif defined (__PIC32C__) || defined(__SAMA5D2__)
     hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)== DRV_GMAC_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;    

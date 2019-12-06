@@ -1604,16 +1604,6 @@ typedef struct
     /* MAC link MTU size */
     TCPIP_MAC_LINK_MTU      linkMtu;
     
-    // TODO aa: new capabilities
-    bool                    checksumRx;     // MAC supports checksum offload on RX
-    bool                    checksumTx;     // MAC supports checksum offload on TX
-    int                     nTxQueues;      // number of supported TX queues
-                                            // The higher queue number means the higher TX priority
-                                            // Do we need a flag to indicate that the opposite is true?
-                                            //
-    bool                    htonConvert;    // MAC supports network to host endianess conversion                                            
-    bool                    ntohConvert;    // MAC supports host to network endianess conversion                                            
-    // TODO aa: new capabilities will be added here
 }TCPIP_MAC_PARAMETERS;
 
 
