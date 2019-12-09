@@ -1163,6 +1163,8 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 			pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
 			pMacParams->macType = TCPIP_MAC_TYPE_ETH;
 			pMacParams->linkMtu = TCPIP_MAC_LINK_MTU_ETH;
+            pMacParams->checksumOffloadRx = DRV_GMAC_RX_CHKSM_OFFLOAD;
+            pMacParams->checksumOffloadTx = DRV_GMAC_TX_CHKSM_OFFLOAD;
 		}
 
 		return TCPIP_MAC_RES_OK;

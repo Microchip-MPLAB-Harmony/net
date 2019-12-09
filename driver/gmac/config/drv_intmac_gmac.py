@@ -670,6 +670,20 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthRmii.setVisible(True)
     tcpipGmacEthRmii.setDescription("RMII Connection")
     tcpipGmacEthRmii.setDefaultValue(True)
+
+    # GMAC RX Checksum offload Enable
+    drvGmacRxChksmOffload = drvGmacComponent.createBooleanSymbol("DRV_GMAC_RX_CHKSM_OFFLOAD", None)
+    drvGmacRxChksmOffload.setLabel("Enable Rx Checksum Offload")
+    drvGmacRxChksmOffload.setVisible(True)
+    drvGmacRxChksmOffload.setDescription("Enable Rx Checksum Offload")
+    drvGmacRxChksmOffload.setDefaultValue(False)
+
+    # GMAC TX Checksum offload Enable
+    drvGmacTxChksmOffload = drvGmacComponent.createBooleanSymbol("DRV_GMAC_TX_CHKSM_OFFLOAD", None)
+    drvGmacTxChksmOffload.setLabel("Enable Tx Checksum Offload")
+    drvGmacTxChksmOffload.setVisible(True)
+    drvGmacTxChksmOffload.setDescription("Enable Tx Checksum Offload")
+    drvGmacTxChksmOffload.setDefaultValue(False)
     
     # GMAC Module ID
     tcpipEmacModuleId = drvGmacComponent.createStringSymbol("TCPIP_INTMAC_MODULE_ID", None)

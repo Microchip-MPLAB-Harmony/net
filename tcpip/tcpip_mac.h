@@ -1603,6 +1603,11 @@ typedef struct
 
     /* MAC link MTU size */
     TCPIP_MAC_LINK_MTU      linkMtu;
+	
+	/* Rx Checksum offload Enable */
+    bool    checksumOffloadRx;
+    /* Tx Checksum offload Enable */
+    bool    checksumOffloadTx;
     
 }TCPIP_MAC_PARAMETERS;
 
