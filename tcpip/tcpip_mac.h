@@ -1101,7 +1101,37 @@ typedef enum
 
 }TCPIP_MAC_SYNCH_REQUEST;
 
+// *****************************************************************************
+/* TCP/IP MAC Checksum calculation offloading
 
+  Summary:
+    Defines the possible MAC checksum offloading capabilities.
+
+  Description:
+    Lists different TCP/IP layer checksum calculation supported by MAC
+    
+  Remarks:
+    Multiple values can be OR-ed together
+
+*/
+typedef enum
+{
+    /* No IP/TCP/UDP Checksum calculation by MAC driver */
+    TCPIP_MAC_CHECKSUM_NONE     = 0x00,
+            
+    /* TCP Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_TCP      = 0x01,
+            
+    /* UDP Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_UDP      = 0x02,
+            
+    /* IPv4 Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_IPV4      = 0x04,            
+            
+    /* IPv6 Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_IPV6      = 0x08,             
+            
+}TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS;
 
 // *****************************************************************************
 /*  Handle to a heap
@@ -1605,9 +1635,9 @@ typedef struct
     TCPIP_MAC_LINK_MTU      linkMtu;
 	
 	/* Rx Checksum offload Enable */
-    bool    checksumOffloadRx;
+    TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadRx;
     /* Tx Checksum offload Enable */
-    bool    checksumOffloadTx;
+    TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
     
 }TCPIP_MAC_PARAMETERS;
 
