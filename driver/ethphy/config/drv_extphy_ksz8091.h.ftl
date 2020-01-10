@@ -41,18 +41,17 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
-
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS               \
-<#if TCPIP_INTMAC_PHY_CONFIG_RMII>
-                                                    DRV_ETHPHY_CFG_RMII | \
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS              	( 0 \
+<#if TCPIP_INTMAC_PHY_CONFIG_RMII>				
+                                                    | DRV_ETHPHY_CFG_RMII \
 </#if>
 <#if TCPIP_INTMAC_PHY_CONFIG_ALTERNATE?has_content && TCPIP_INTMAC_PHY_CONFIG_ALTERNATE == true>
-                                                    DRV_ETHPHY_CFG_ALTERNATE | \
+                                                    | DRV_ETHPHY_CFG_ALTERNATE \
 </#if>
 <#if TCPIP_INTMAC_PHY_CONFIG_AUTO?has_content && TCPIP_INTMAC_PHY_CONFIG_AUTO == true>
-                                                    DRV_ETHPHY_CFG_AUTO | \
+                                                    | DRV_ETHPHY_CFG_AUTO \
 </#if>
-                                                    0 
+                                                    )
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            ${TCPIP_INTMAC_PHY_LINK_INIT_DELAY}
 #define TCPIP_INTMAC_PHY_ADDRESS                    ${TCPIP_INTMAC_PHY_ADDRESS}
