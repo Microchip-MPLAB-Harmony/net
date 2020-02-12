@@ -39,27 +39,34 @@ def webPagePathParsing(path):
 	# Get the Root PATH 
 	ORG_PATH = path
 	clearFileSymbols()
+	#split webpage curent web page path
+	webPagePath = path.split("\\")
+	#get the last directory from the given web page path
+	lastDirectory = webPagePath[len(webPagePath)-1]
+	#get the current root web page directory path
+	webPageRootPath = ORG_PATH.split(lastDirectory)[0]
+	
 	for (root, dirs, fileNames) in os.walk(ORG_PATH):
 		for fileName in fileNames:
-			file = os.path.join(root,fileName)
+			relativeFilePath = os.path.join(root,fileName)
 			#file = file[file.find(ORG_PATH):]
 			#Replace the module path from the Root path with empty string
-			file = file.replace(Module.path, "")
+			file = relativeFilePath.replace(webPageRootPath, "")
 			sepWebpageDir = file[file.find(os.path.sep):]
 			htmFile = sepWebpageDir.replace(os.path.sep, "",1)
 			# Get the Webpage file symbol and each symbol is for the each file
 			webpageListFile = createWebPageFileSymbol(count)
+			# To allow the web pages outside the net repo
+			webpageListFile.setRelative(False)
 			#Set the source path
-			webpageListFile.setSourcePath(file)
+			webpageListFile.setSourcePath(relativeFilePath)
 			webpageListFile.setOutputName(htmFile)
-			
 			fileList = file.split(os.path.sep)
 			#set the destination path , the location where the webpage file will be copied
-			#destPath = ".."+os.path.sep+".."+os.path.sep+fileList[0]
 			destPath = ".."+os.path.sep+".."+os.path.sep+"web_pages"
-			#print("destination path: "+ destPath)
 			webpageListFile.setDestPath(destPath)
 			fileList = fileList[0:len(fileList)-1]
+			fileList[0] = "web_pages"
 			folderPath = ""
 			for fileStr in fileList:
 				folderPath += fileStr+os.path.sep
@@ -79,8 +86,10 @@ ORG_PATH = tcpipHttpNetWebDirSymbol
 count = 0
 
 mytcpipHttpNetComponent = tcpipHttpNetComponent
+global symbolList
 symbolList = []
 fileCount = 0
+global MAX_NUMBER_WEBPAGE_FILES
 MAX_NUMBER_WEBPAGE_FILES = 100
 del symbolList[:]
 
@@ -94,6 +103,7 @@ for fileCount in range(MAX_NUMBER_WEBPAGE_FILES):
 	mySym.setEnabled(False)
 	symbolList.append(mySym)
 	fileCount +=1
+	
 
 #default webapge path and diretory parsing
 webPagePathParsing(ORG_PATH)
