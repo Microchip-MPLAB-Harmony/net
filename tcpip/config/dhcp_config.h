@@ -84,4 +84,25 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 // default value is 128
 #define TCPIP_DHCP_BOOT_FILE_NAME_SIZE      128
 
+
+// Enable the time server option
+// Default is 0
+#define TCPIP_DHCP_USE_OPTION_TIME_SERVER       0
+
+// Max number of time server addresses to store
+// Should be less than 256!
+// Only if TCPIP_DHCP_USE_OPTION_TIME_SERVER is enabled
+#define TCPIP_DHCP_TIME_SERVER_ADDRESSES        1
+
+// Enable the NTP server option
+// Default is 0
+#define TCPIP_DHCP_USE_OPTION_NTP_SERVER       0
+
+// Max number of NTP server addresses to store
+// Should be less than 256!
+// Only if TCPIP_DHCP_USE_OPTION_NTP_SERVER is enabled
+#define TCPIP_DHCP_NTP_SERVER_ADDRESSES        1 
+
+
+
 #endif  // _DCHP_CONFIG_H_

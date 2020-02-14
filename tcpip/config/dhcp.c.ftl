@@ -68,7 +68,14 @@ typedef struct
 	IPV4_ADDR				dhcpDNS;		// DHCP obtained primary DNS server
 	IPV4_ADDR				dhcpDNS2;		// DHCP obtained secondary DNS server
 	#endif	
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+	IPV4_ADDR				timeServers[TCPIP_DHCP_TIME_SERVER_ADDRESSES];	// DHCP obtained time servers
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+	IPV4_ADDR				ntpServers[TCPIP_DHCP_NTP_SERVER_ADDRESSES];	// DHCP obtained time servers
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
     TCPIP_UINT32_VAL        transactionID;  // current transaction ID
+    TCPIP_DHCP_HOST_NAME_CALLBACK   nameCallback;   // get host name callback
     // unaligned data
     uint16_t                dhcpTmo;        // current DHCP timeout        
     uint16_t                dhcpTmoBase;    // DHCP base timeout
@@ -81,7 +88,6 @@ typedef struct
 #else
 	uint16_t		        smState;		// DHCP client state machine variable: TCPIP_DHCP_STATUS
 #endif  // TCPIP_DHCP_DEBUG_MASK
-    TCPIP_DHCP_HOST_NAME_CALLBACK   nameCallback;   // get host name callback
 	union
 	{
 	    struct
@@ -107,10 +113,18 @@ typedef struct
 			uint8_t Mask           : 1;	    // Subnet mask is valid
 			uint8_t DNS            : 1;	    // Primary DNS is valid
 			uint8_t DNS2           : 1;	    // Secondary DNS is valid
-			uint8_t reserved       : 3;	    // unused
+			uint8_t tServer        : 1;	    // Time Server addresses are valid
+			uint8_t ntpServer      : 1;	    // Time Server addresses are valid
+			uint8_t reserved       : 1;	    // unused
 		};
 		uint8_t val;
 	} validValues;
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+    uint8_t     tServerNo;          // number of stored valid time servers in timeServers 
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+    uint8_t     ntpServerNo;          // number of stored valid time servers in ntpServers 
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
 
 #if defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
     uint8_t     bootFileName[TCPIP_DHCP_BOOT_FILE_NAME_SIZE];
@@ -146,6 +160,12 @@ static int                      _DHCPOptionProcessSrvIdent(DHCP_CLIENT_VARS* pCl
 static int                      _DHCPOptionProcessLease(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
 static int                      _DHCPOptionProcessRenewT(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
 static int                      _DHCPOptionProcessRebindT(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+static int                      _DHCPOptionProcessTimeServer(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+static int                      _DHCPOptionProcessNtpServer(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
 
 static int                      _DHCPOptionProcessEnd(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData);
 
@@ -268,6 +288,12 @@ static const TCPIP_DHCP_OPTION_PROC_ENTRY   _DHCPOptProcTbl[] =
     {  TCPIP_DHCP_IP_LEASE_TIME,        _DHCPOptionProcessLease },
     {  TCPIP_DHCP_RENEW_TIME,           _DHCPOptionProcessRenewT },
     {  TCPIP_DHCP_REBIND_TIME,          _DHCPOptionProcessRebindT },
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+    {  TCPIP_DHCP_TIME_SERVER,          _DHCPOptionProcessTimeServer },
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+    {  TCPIP_DHCP_NTP_SERVER,           _DHCPOptionProcessNtpServer },
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
     {  TCPIP_DHCP_END_OPTION,           _DHCPOptionProcessEnd },
 
 };
@@ -305,6 +331,12 @@ static const uint8_t _DHCPRequestParamsTbl[] =
     TCPIP_DHCP_SUBNET_MASK,         // request a subnet mask
     TCPIP_DHCP_ROUTER,              // request for a router
     TCPIP_DHCP_DNS,                 // request for DNS
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+    TCPIP_DHCP_TIME_SERVER,         // request for Time Servers 
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+    TCPIP_DHCP_NTP_SERVER,         // request for NTP Servers 
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
     // Add more parameters here if needed
 };
 
@@ -1704,6 +1736,66 @@ static int _DHCPOptionProcessRouter(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION
     return -1;
 }
 
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+static int _DHCPOptionProcessTimeServer(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData)
+{
+    if(pOptData->optSize >= sizeof(TCPIP_DHCP_OPTION_TIME_SERVER))
+    {
+        TCPIP_DHCP_OPTION_TIME_SERVER* pOptTServer = (TCPIP_DHCP_OPTION_TIME_SERVER*)pOptData->pOpt;
+        uint8_t nServers = pOptTServer->len / sizeof(pOptTServer->tServer);
+        uint8_t nRem = pOptTServer->len - nServers * sizeof(pOptTServer->tServer);
+
+        if(nRem == 0 && nServers > 0)
+        {
+            if(pClient->flags.bOfferReceived == 0)
+            {   // the offered time server IP is needed
+                if(nServers > sizeof(pClient->timeServers) / sizeof(*pClient->timeServers))
+                {
+                    nServers = sizeof(pClient->timeServers) / sizeof(*pClient->timeServers);
+                }
+
+                memcpy(pClient->timeServers, pOptTServer->tServer, nServers * sizeof*(pClient->timeServers)); 
+                pClient->validValues.tServer = 1;
+                pClient->tServerNo = nServers;
+            }
+            return 2 + pOptTServer->len;
+        }
+    }
+
+    return -1;
+}
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+static int _DHCPOptionProcessNtpServer(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData)
+{
+    if(pOptData->optSize >= sizeof(TCPIP_DHCP_OPTION_NTP_SERVER))
+    {
+        TCPIP_DHCP_OPTION_NTP_SERVER* pOptNtpServer = (TCPIP_DHCP_OPTION_NTP_SERVER*)pOptData->pOpt;
+        uint8_t nServers = pOptNtpServer->len / sizeof(pOptNtpServer->ntpServer);
+        uint8_t nRem = pOptNtpServer->len - nServers * sizeof(pOptNtpServer->ntpServer);
+
+        if(nRem == 0 && nServers > 0)
+        {
+            if(pClient->flags.bOfferReceived == 0)
+            {   // the offered time server IP is needed
+                if(nServers > sizeof(pClient->ntpServers) / sizeof(*pClient->ntpServers))
+                {
+                    nServers = sizeof(pClient->ntpServers) / sizeof(*pClient->ntpServers);
+                }
+
+                memcpy(pClient->ntpServers, pOptNtpServer->ntpServer, nServers * sizeof*(pClient->ntpServers)); 
+                pClient->validValues.ntpServer = 1;
+                pClient->ntpServerNo = nServers;
+            }
+            return 2 + pOptNtpServer->len;
+        }
+    }
+
+    return -1;
+}
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+
 static int _DHCPOptionProcessDns(DHCP_CLIENT_VARS* pClient, TCPIP_DHCP_OPTION_PROCESS_DATA* pOptData)
 {
     if(pOptData->optSize >= sizeof(TCPIP_DHCP_OPTION_DATA_DNS1))
@@ -2708,18 +2800,21 @@ static UDP_SOCKET _DHCPOpenSocket(void)
 
 bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
 {
+    if(pDhcpInfo)
+    {
+        memset(pDhcpInfo, 0, sizeof(*pDhcpInfo));
+    }
+
     TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
-    if(DHCPClients && pNetIf && pDhcpInfo)
+    if(DHCPClients && pNetIf)
     {
         DHCP_CLIENT_VARS* pClient = DHCPClients + TCPIP_STACK_NetIxGet(pNetIf);
 
-        memset(pDhcpInfo, 0, sizeof(*pDhcpInfo));
-
-        pDhcpInfo->dhcpTime = _DHCPSecondCountGet();
-        if(pClient->flags.bDHCPEnabled == true)
+        if(pClient->flags.bDHCPEnabled == true && (pDhcpInfo->status = pClient->smState) >= TCPIP_DHCP_BOUND)
         {
-            if((pDhcpInfo->status = pClient->smState) >= TCPIP_DHCP_BOUND)
+            if(pDhcpInfo)
             {
+                pDhcpInfo->dhcpTime = _DHCPSecondCountGet();
                 pDhcpInfo->leaseStartTime = pClient->tRequest;
                 pDhcpInfo->leaseDuration = pClient->tExpSeconds;
                 pDhcpInfo->renewTime = pClient->tRequest + pClient->t1Seconds;
@@ -2730,11 +2825,26 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
                 pDhcpInfo->bootFileName = (const char*)pClient->bootFileName;
 #else
                 pDhcpInfo->bootFileName = 0;
+#if (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+                if(pClient->validValues.tServer != 0)
+                {
+                    pDhcpInfo->timeServersNo = pClient->tServerNo;
+                    pDhcpInfo->timeServers = pClient->timeServers;
+                }
+#endif  // (TCPIP_DHCP_USE_OPTION_TIME_SERVER != 0)
+#if (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+                if(pClient->validValues.ntpServer != 0)
+                {
+                    pDhcpInfo->ntpServersNo = pClient->ntpServerNo;
+                    pDhcpInfo->ntpServers = pClient->ntpServers;
+                }
+#endif  // (TCPIP_DHCP_USE_OPTION_NTP_SERVER != 0)
+
 #endif // defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
             }
+
+            return true;
         }
-        
-        return true;
     }
 
     return false;
