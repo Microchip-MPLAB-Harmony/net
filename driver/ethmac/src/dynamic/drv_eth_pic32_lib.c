@@ -237,9 +237,9 @@ int DRV_ETH_RxSetBufferSize(DRV_ETHERNET_REGISTERS* eth, int rxBuffSize)
 
 void DRV_ETH_MACSetAddress(DRV_ETHERNET_REGISTERS* eth, uint8_t *bAddress)
 {
-    eth->EMACxSA0.w = (uint16_t)*(bAddress + 0) + ((uint16_t)*(bAddress + 1) << 8);
+    eth->EMACxSA0.w = (uint16_t)*(bAddress + 4) + ((uint16_t)*(bAddress + 5) << 8);
     eth->EMACxSA1.w = (uint16_t)*(bAddress + 2) + ((uint16_t)*(bAddress + 3) << 8);
-    eth->EMACxSA2.w = (uint16_t)*(bAddress + 4) + ((uint16_t)*(bAddress + 5) << 8);
+    eth->EMACxSA2.w = (uint16_t)*(bAddress + 0) + ((uint16_t)*(bAddress + 1) << 8);
 }
 
 void DRV_ETH_MACGetAddress(DRV_ETHERNET_REGISTERS* eth, uint8_t *bAddress )
