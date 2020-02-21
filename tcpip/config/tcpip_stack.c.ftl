@@ -247,6 +247,46 @@ const TCPIP_IGMP_MODULE_CONFIG tcpipIGMPInitData =
 <#assign emac_phy_type = drvExtPhyLan8740.TCPIP_EMAC_PHY_TYPE>
 <#assign use_phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_USE_RESET_CALLBACK>
 <#assign phy_reset_callback = drvExtPhyLan8740.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN8700")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN8700"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "LAN8700")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "LAN8700"))>
+<#assign emac_phy_type = drvExtPhyLan8700.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyLan8700.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyLan8700.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN8720")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN8720"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "LAN8720")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "LAN8720"))>
+<#assign emac_phy_type = drvExtPhyLan8720.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyLan8720.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyLan8720.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "LAN9303")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "LAN9303"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "LAN9303")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "LAN9303"))>
+<#assign emac_phy_type = drvExtPhyLan9303.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyLan9303.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyLan9303.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8041")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8041"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "KSZ8041")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "KSZ8041"))>
+<#assign emac_phy_type = drvExtPhyKsz8041.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyKsz8041.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyKsz8041.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "KSZ8863")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "KSZ8863"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "KSZ8863")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "KSZ8863"))>
+<#assign emac_phy_type = drvExtPhyKsz8863.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyKsz8863.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyKsz8863.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "DP83640")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "DP83640"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "DP83640")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "DP83640"))>
+<#assign emac_phy_type = drvExtPhyDp83640.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyDp83640.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyDp83640.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "DP83848")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "DP83848"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "DP83848")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "DP83848"))>
+<#assign emac_phy_type = drvExtPhyDp83848.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyDp83848.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyDp83848.DRV_ETHPHY_RESET_CALLBACK>
+<#elseif (((drvGmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvGmac.DRV_INTMAC_PHY_TYPE  == "IP101GR")) || (((drvPic32mEthmac.DRV_INTMAC_PHY_TYPE)?has_content) && (drvPic32mEthmac.DRV_INTMAC_PHY_TYPE  == "IP101GR"))
+	|| (((drvEmac0.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac0.DRV_MAC_PHY_TYPE  == "IP101GR")) || (((drvEmac1.DRV_MAC_PHY_TYPE)?has_content) && (drvEmac1.DRV_MAC_PHY_TYPE  == "IP101GR"))>
+<#assign emac_phy_type = drvExtPhyIp101gr.TCPIP_EMAC_PHY_TYPE>
+<#assign use_phy_reset_callback = drvExtPhyIp101gr.DRV_ETHPHY_USE_RESET_CALLBACK>
+<#assign phy_reset_callback = drvExtPhyIp101gr.DRV_ETHPHY_RESET_CALLBACK>
 </#if>
 
 /*** ETH PHY Initialization Data ***/

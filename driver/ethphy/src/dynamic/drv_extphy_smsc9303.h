@@ -5,7 +5,7 @@
     Microchip Technology Inc.
     
   File Name:
-    eth_pic32_ext_phy_smsc9303.h
+    drv_extphy_smsc9303.h
 
   Summary:
     SMSC LAN9303 definitions

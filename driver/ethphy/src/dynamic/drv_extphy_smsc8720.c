@@ -91,13 +91,13 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
 {
     union
     {
-        uint32_t    w;
         struct
         {
             uint16_t low;
             uint16_t high;
         };
-    }vendorData = {};
+        uint32_t    w;
+    }vendorData;
 
     uint16_t    phyReg = 0;
     uint16_t    mdixConfPhase = 0;
@@ -143,22 +143,23 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
             }
 
             // got PHY_REG_SPECIAL_CTRL result
-            // not used bits should be 0
+            // mask off not used bits
             phyReg &= _SPECIALCTRL_XPOL_MASK;
+
             if(oFlags & TCPIP_ETH_OPEN_MDIX_AUTO)
-            {   // enable Auto-MDIX
+            {	// enable Auto-MDIX
                 phyReg &= ~_SPECIALCTRL_AMDIXCTRL_MASK;
             }
             else
-            {   // no Auto-MDIX
-                phyReg |= _SPECIALCTRL_AMDIXCTRL_MASK;    // disable Auto-MDIX
+            {	// no Auto-MDIX
+                phyReg |= _SPECIALCTRL_AMDIXCTRL_MASK;	// disable Auto-MDIX
                 if(oFlags & TCPIP_ETH_OPEN_MDIX_SWAP)
                 {
-                    phyReg |= _SPECIALCTRL_CH_SELECT_MASK; // swap
+                    phyReg |= _SPECIALCTRL_CH_SELECT_MASK;	// swap  - MDIX
                 }
                 else
                 {
-                    phyReg &= ~_SPECIALCTRL_CH_SELECT_MASK;    // normal
+                    phyReg &= ~_SPECIALCTRL_CH_SELECT_MASK;	// normal - MDI
                 }
             }
             // save value for the next state
@@ -166,7 +167,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
             vendorData.high = phyReg;
             pBaseObj->DRV_ETHPHY_VendorDataSet(hClientObj, vendorData.w);
             return DRV_ETHPHY_RES_PENDING;
-
+            
         case 2:
             phyReg = vendorData.high;
             // update the PHY_REG_SPECIAL_CTRL Register
@@ -188,6 +189,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
             // shouldn't happen
             return DRV_ETHPHY_RES_OPERATION_ERR; 
     }
+
 }
 
 
@@ -209,8 +211,9 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
  *****************************************************************************/
 static unsigned int DRV_EXTPHY_SMIClockGet(const DRV_ETHPHY_OBJECT_BASE* pBaseObj, DRV_HANDLE handle)
 {
-    return 2500000;     //  2.5 MHz max clock supported
+	return 2500000;		//  2.5 MHz max clock supported
 }
+
 
 // the DRV_ETHPHY_OBJECT
 

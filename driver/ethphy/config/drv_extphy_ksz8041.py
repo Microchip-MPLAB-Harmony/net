@@ -21,8 +21,6 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
-    
-__TCPIP_DIR = "D:/06_Repo/05_H3/h3/net"
 def instantiateComponent(drvExtPhyKsz8041Component):
     print("KSZ8041 PHY Driver Component")
     configName = Variables.get("__CONFIGURATION_NAME")
@@ -73,7 +71,12 @@ def instantiateComponent(drvExtPhyKsz8041Component):
         drvExtPhyKsz8041ConfigAuto.setDescription("Use The Fuses Configuration")
         drvExtPhyKsz8041ConfigAuto.setDefaultValue(True)    
     
-
+    
+    # External PHY Type
+    drvExtPhyKsz8041PhyType = drvExtPhyKsz8041Component.createStringSymbol("TCPIP_EMAC_PHY_TYPE", None)
+    drvExtPhyKsz8041PhyType.setVisible(False)   
+    drvExtPhyKsz8041PhyType.setDefaultValue("KSZ8041")
+    
     # Driver PHY Instances Number
     drvExtPhyKsz8041InstanceNum= drvExtPhyKsz8041Component.createIntegerSymbol("DRV_ETHPHY_INSTANCES_NUMBER", None)
     drvExtPhyKsz8041InstanceNum.setLabel("PHY Instances Number") 
@@ -180,9 +183,7 @@ def instantiateComponent(drvExtPhyKsz8041Component):
     drvExtPhyKsz8041RegHeaderFile.setType("HEADER")
     drvExtPhyKsz8041RegHeaderFile.setOverwrite(True)
     drvExtPhyKsz8041RegHeaderFile.setEnabled(True)
-    #drvExtPhyKsz8041RegHeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])    
 
-    # file TCPIP_MAC_PHY_KSZ8041_H "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.h" to "$PROJECT_HEADER_FILES/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.h"
     #Add drv_extphy_ksz8041.h file to project
     drvExtPhyKsz8041HeaderFile = drvExtPhyKsz8041Component.createFileSymbol(None, None)
     drvExtPhyKsz8041HeaderFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_ksz8041.h")
@@ -191,7 +192,7 @@ def instantiateComponent(drvExtPhyKsz8041Component):
     drvExtPhyKsz8041HeaderFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyKsz8041HeaderFile.setType("HEADER")
     drvExtPhyKsz8041HeaderFile.setOverwrite(True)
-    # drvExtPhyKsz8041HeaderFile.setDependencies(drvGmacGenHeaderFile, ["TCPIP_USE_ETH_MAC"])
+    drvExtPhyKsz8041HeaderFile.setEnabled(True)
 
     # file TCPIP_ETH_PHY_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_ethphy.c" to         "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_ethphy.c"
     # Add drv_ethphy.c file
@@ -203,11 +204,7 @@ def instantiateComponent(drvExtPhyKsz8041Component):
     drvExtPhySourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhySourceFile.setType("SOURCE")
     drvExtPhySourceFile.setEnabled(True)
-    #drvExtPhySourceFile.setDependencies(tcpipGmacGenSourceFile, ["TCPIP_USE_ETH_MAC"])
 
-    # ifblock TCPIP_EMAC_PHY_TYPE = "KSZ8041"
-    # file TCPIP_MAC_PHY_KSZ8041_C "$HARMONY_VERSION_PATH/framework/driver/ethphy/src/dynamic/drv_extphy_ksz8041.c" to "$PROJECT_SOURCE_FILES/framework/driver/ethphy/drv_extphy_ksz8041.c"
-    # endif
     # Add drv_extphy_ksz8041.c file
     drvExtPhyKsz8041SourceFile = drvExtPhyKsz8041Component.createFileSymbol(None, None)
     drvExtPhyKsz8041SourceFile.setSourcePath("driver/ethphy/src/dynamic/drv_extphy_ksz8041.c")
@@ -217,7 +214,6 @@ def instantiateComponent(drvExtPhyKsz8041Component):
     drvExtPhyKsz8041SourceFile.setProjectPath("config/" + configName + "/driver/ethphy/src/dynamic/")
     drvExtPhyKsz8041SourceFile.setType("SOURCE")
     drvExtPhyKsz8041SourceFile.setEnabled(True)
-    # drvExtPhyKsz8041SourceFile.setDependencies(drvExtPhyKsz8041GenSourceFile, ["TCPIP_USE_ETH_MAC","TCPIP_EMAC_PHY_TYPE"])
 
     
 def drvExtPhyKsz8041MenuVisibleSingle(symbol, event):
