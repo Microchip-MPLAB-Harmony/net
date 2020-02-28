@@ -152,6 +152,7 @@ extern const char *const ddnsServiceHosts[];
     static uint8_t DDNSData[100];
 #endif
 
+<#if ((TCPIP_HTTP_NET_DYNVAR_PROCESS?has_content) && (TCPIP_HTTP_NET_DYNVAR_PROCESS  == true))>
 // Sticky status message variable.
 // This is used to indicated whether or not the previous POST operation was
 // successful.  The application uses these to store status messages when a
@@ -159,8 +160,23 @@ extern const char *const ddnsServiceHosts[];
 // after a redirect, when connection instance data has already been lost.
 static bool lastSuccess = false;
 
-// Stick status message variable.  See lastSuccess for details.
+// Sticky status message variable.  See lastSuccess for details.
 static bool lastFailure = false;
+<#else>
+#if (HTTP_APP_USE_EMAIL != 0) || defined(TCPIP_STACK_USE_DYNAMICDNS_CLIENT)
+// Sticky status message variable.
+// This is used to indicated whether or not the previous POST operation was
+// successful.  The application uses these to store status messages when a
+// POST operation redirects.  This lets the application provide status messages
+// after a redirect, when connection instance data has already been lost.
+static bool lastSuccess = false;
+
+#if (HTTP_APP_USE_EMAIL != 0) || defined(HTTP_APP_USE_RECONFIG)
+// Sticky status message variable.  See lastSuccess for details.
+static bool lastFailure = false;
+
+#endif
+</#if>
 
 /****************************************************************************
   Section:
