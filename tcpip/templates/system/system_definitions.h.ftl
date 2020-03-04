@@ -36,3 +36,7 @@
 <#if (drvMiim.DRV_MIIM_USE_DRIVER)?has_content && (drvMiim.DRV_MIIM_USE_DRIVER) == true>
 #include "driver/miim/drv_miim.h"
 </#if>
+
+<#if (drvExtMacEncx24j600.DRV_ENCX24J600_USE_DRIVER)?has_content && (drvExtMacEncx24j600.DRV_ENCX24J600_USE_DRIVER == true)>
+#include "driver/encx24j600/drv_encx24j600.h"
+</#if>

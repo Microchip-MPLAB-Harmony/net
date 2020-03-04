@@ -80,90 +80,116 @@ def instantiateComponent(tcpipAutoConfigDriverComponent):
     tcpipAutoConfigMIIM_Driver.setDescription("Enable MIIM_Driver")
     tcpipAutoConfigMIIM_Driver.setDependencies(tcpipAutoConfigMIIMDriverEnable, ["TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver"])        
     
+    # PHY driver menu
+    tcpipAutoConfigPhyMenu = tcpipAutoConfigDriverComponent.createMenuSymbol("TCPIP_AUTOCONFIG_PHY_MENU", None)
+    tcpipAutoConfigPhyMenu.setLabel("PHY Drivers")
+    tcpipAutoConfigPhyMenu.setVisible(True)
+    tcpipAutoConfigPhyMenu.setDescription("PHY menu") 
+    
     # Enable KSZ8041
-    tcpipAutoConfigKSZ8041 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8041", None)
+    tcpipAutoConfigKSZ8041 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8041", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigKSZ8041.setLabel("KSZ8041")
     tcpipAutoConfigKSZ8041.setVisible(True)
     tcpipAutoConfigKSZ8041.setDescription("Enable KSZ8041") 
     tcpipAutoConfigKSZ8041.setDependencies(tcpipAutoConfigKSZ8041Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8041"])  
     
     # Enable KSZ8061
-    tcpipAutoConfigKSZ8061 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8061", None)
+    tcpipAutoConfigKSZ8061 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8061", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigKSZ8061.setLabel("KSZ8061")
     tcpipAutoConfigKSZ8061.setVisible(True)
     tcpipAutoConfigKSZ8061.setDescription("Enable KSZ8061") 
     tcpipAutoConfigKSZ8061.setDependencies(tcpipAutoConfigKSZ8061Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8061"])   
 
     # Enable KSZ8081
-    tcpipAutoConfigKSZ8081 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8081", None)
+    tcpipAutoConfigKSZ8081 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8081", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigKSZ8081.setLabel("KSZ8081")
     tcpipAutoConfigKSZ8081.setVisible(True)
     tcpipAutoConfigKSZ8081.setDescription("Enable KSZ8081") 
     tcpipAutoConfigKSZ8081.setDependencies(tcpipAutoConfigKSZ8081Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8081"])   
 
     # Enable KSZ8091
-    tcpipAutoConfigKSZ8091 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8091", None)
+    tcpipAutoConfigKSZ8091 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8091", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigKSZ8091.setLabel("KSZ8091")
     tcpipAutoConfigKSZ8091.setVisible(True)
     tcpipAutoConfigKSZ8091.setDescription("Enable KSZ8091") 
     tcpipAutoConfigKSZ8091.setDependencies(tcpipAutoConfigKSZ8091Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8091"])
     
     # Enable KSZ8863
-    tcpipAutoConfigKSZ8863 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8863", None)
+    tcpipAutoConfigKSZ8863 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_KSZ8863", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigKSZ8863.setLabel("KSZ8863")
     tcpipAutoConfigKSZ8863.setVisible(True)
     tcpipAutoConfigKSZ8863.setDescription("Enable KSZ8863") 
     tcpipAutoConfigKSZ8863.setDependencies(tcpipAutoConfigKSZ8863Enable, ["TCPIP_AUTOCONFIG_ENABLE_KSZ8863"]) 
     
     # Enable LAN8740
-    tcpipAutoConfigLAN8740 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8740", None)
+    tcpipAutoConfigLAN8740 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8740", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigLAN8740.setLabel("LAN8740")
     tcpipAutoConfigLAN8740.setVisible(True)
     tcpipAutoConfigLAN8740.setDescription("Enable LAN8740")
     tcpipAutoConfigLAN8740.setDependencies(tcpipAutoConfigLAN8740Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8740"])       
     
     # Enable LAN8700
-    tcpipAutoConfigLAN8700 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8700", None)
+    tcpipAutoConfigLAN8700 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8700", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigLAN8700.setLabel("LAN8700")
     tcpipAutoConfigLAN8700.setVisible(True)
     tcpipAutoConfigLAN8700.setDescription("Enable LAN8700")
     tcpipAutoConfigLAN8700.setDependencies(tcpipAutoConfigLAN8700Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8700"]) 
     
     # Enable LAN8720
-    tcpipAutoConfigLAN8720 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8720", None)
+    tcpipAutoConfigLAN8720 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN8720", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigLAN8720.setLabel("LAN8720")
     tcpipAutoConfigLAN8720.setVisible(True)
     tcpipAutoConfigLAN8720.setDescription("Enable LAN8720")
     tcpipAutoConfigLAN8720.setDependencies(tcpipAutoConfigLAN8720Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN8720"]) 
     
     # Enable LAN9303
-    tcpipAutoConfigLAN9303 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN9303", None)
+    tcpipAutoConfigLAN9303 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_LAN9303", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigLAN9303.setLabel("LAN9303")
     tcpipAutoConfigLAN9303.setVisible(True)
     tcpipAutoConfigLAN9303.setDescription("Enable LAN9303")
     tcpipAutoConfigLAN9303.setDependencies(tcpipAutoConfigLAN9303Enable, ["TCPIP_AUTOCONFIG_ENABLE_LAN9303"]) 
     
     # Enable DP83640
-    tcpipAutoConfigDP83640 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DP83640", None)
+    tcpipAutoConfigDP83640 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DP83640", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigDP83640.setLabel("DP83640")
     tcpipAutoConfigDP83640.setVisible(True)
     tcpipAutoConfigDP83640.setDescription("Enable DP83640")
     tcpipAutoConfigDP83640.setDependencies(tcpipAutoConfigDP83640Enable, ["TCPIP_AUTOCONFIG_ENABLE_DP83640"]) 
     
     # Enable DP83848
-    tcpipAutoConfigDP83848 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DP83848", None)
+    tcpipAutoConfigDP83848 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_DP83848", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigDP83848.setLabel("DP83848")
     tcpipAutoConfigDP83848.setVisible(True)
     tcpipAutoConfigDP83848.setDescription("Enable DP83848")
     tcpipAutoConfigDP83848.setDependencies(tcpipAutoConfigDP83848Enable, ["TCPIP_AUTOCONFIG_ENABLE_DP83848"]) 
     
     # Enable IP101GR
-    tcpipAutoConfigIP101GR = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IP101GR", None)
+    tcpipAutoConfigIP101GR = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_IP101GR", tcpipAutoConfigPhyMenu)
     tcpipAutoConfigIP101GR.setLabel("IP101GR")
     tcpipAutoConfigIP101GR.setVisible(True)
     tcpipAutoConfigIP101GR.setDescription("Enable IP101GR")
-    tcpipAutoConfigIP101GR.setDependencies(tcpipAutoConfigIP101GREnable, ["TCPIP_AUTOCONFIG_ENABLE_IP101GR"]) 
-    
+    tcpipAutoConfigIP101GR.setDependencies(tcpipAutoConfigIP101GREnable, ["TCPIP_AUTOCONFIG_ENABLE_IP101GR"])     
+        
+    # External Ethernet Controller driver menu
+    tcpipAutoConfigExtEthControllerMenu = tcpipAutoConfigDriverComponent.createMenuSymbol("TCPIP_AUTOCONFIG_EXT_ETH_CTRL_MENU", None)
+    tcpipAutoConfigExtEthControllerMenu.setLabel("External Ethernet Controllers")
+    tcpipAutoConfigExtEthControllerMenu.setVisible(True)
+    tcpipAutoConfigExtEthControllerMenu.setDescription("External Ethernet Controller driver menu") 
+        
+    # Enable ENCX24J600
+    tcpipAutoConfigENCX24J600 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ENCX24J600", tcpipAutoConfigExtEthControllerMenu)
+    tcpipAutoConfigENCX24J600.setLabel("ENCX24J600")
+    tcpipAutoConfigENCX24J600.setVisible(True)
+    tcpipAutoConfigENCX24J600.setDescription("Enable ENCX24J600")
+    tcpipAutoConfigENCX24J600.setDependencies(tcpipAutoConfigENCX24J600Enable, ["TCPIP_AUTOCONFIG_ENABLE_ENCX24J600"])   
+        
+    # Enable ENC28J60
+    tcpipAutoConfigENC28J60 = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_ENC28J60", tcpipAutoConfigExtEthControllerMenu)
+    tcpipAutoConfigENC28J60.setLabel("ENC28J60")
+    tcpipAutoConfigENC28J60.setVisible(True)
+    tcpipAutoConfigENC28J60.setDescription("Enable ENC28J60")
+    tcpipAutoConfigENC28J60.setDependencies(tcpipAutoConfigENC28J60Enable, ["TCPIP_AUTOCONFIG_ENABLE_ENC28J60"])   
+        
     # Enable WINC MAC
     tcpipAutoConfigWINC = tcpipAutoConfigDriverComponent.createBooleanSymbol("TCPIP_AUTOCONFIG_ENABLE_WINC", None)
     tcpipAutoConfigWINC.setLabel("WINC")
@@ -379,6 +405,32 @@ def tcpipAutoConfigIP101GREnable(symbol, event):
             Database.setSymbolValue("tcpip_driver_config", "TCPIP_AUTOCONFIG_ENABLE_MIIM_Driver", True, 2)      
     else:
         res = Database.deactivateComponents(["drvExtPhyIp101gr"])
+        
+        
+def tcpipAutoConfigENCX24J600Enable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True) and (Database.getComponentByID("drvExtMacEncx24j600") == None):
+        res = Database.activateComponents(["drvExtMacEncx24j600"],"DRIVER LAYER")  
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEncx24j600_0", "libdrvExtMacEncx24j600")
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEncx24j600_0","ENCX24J600_SPI")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvExtMacEncx24j600_0:ENCX24J600_SPI")
+    else:
+        res = Database.deactivateComponents(["drvExtMacEnc28j60"])
+     
+   
+def tcpipAutoConfigENC28J60Enable(symbol, event):
+    tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
+    tcpipAutoConfigStackGroup = Database.findGroup("TCP/IP STACK")
+    enableTcpipAutoConfigDrv(True)
+    if (event["value"] == True) and (Database.getComponentByID("drvExtMacEnc28j60") == None):
+        res = Database.activateComponents(["drvExtMacEnc28j60"],"DRIVER LAYER")  
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEnc28j60_0", "libdrvExtMacEnc28j60")
+        tcpipAutoConfigDriverGroup.setAttachmentVisible("drvExtMacEnc28j60_0","ENC28J60_SPI")
+        tcpipAutoConfigStackGroup.setAttachmentVisible("DRIVER LAYER", "drvExtMacEnc28j60_0:ENC28J60_SPI")
+    else:
+        res = Database.deactivateComponents(["drvExtMacEnc28j60"])
                       
 def tcpipAutoConfigWINCEnable(symbol, event):
     tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")

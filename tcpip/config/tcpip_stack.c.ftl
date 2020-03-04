@@ -1070,11 +1070,11 @@ const TCPIP_STACK_MODULE_CONFIG TCPIP_STACK_MODULE_CONFIG_TBL [] =
     {TCPIP_MODULE_MAC_WINC,         0},					            // TCPIP_MODULE_MAC_WINC
 </#if>
 <#if checkInterface("ENCX24J600")>
-    {TCPIP_MODULE_MAC_ENCJ600,      &drvEncX24j600InitDataIdx0},    // TCPIP_MODULE_MAC_ENCJ600
+    {TCPIP_MODULE_MAC_ENCJ600,      drvEncX24j600InitData},    // TCPIP_MODULE_MAC_ENCJ600
 </#if>
 
 <#if checkInterface("ENC28J60")>
-    {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitDataIdx0},      // TCPIP_MODULE_MAC_ENCJ60
+    {TCPIP_MODULE_MAC_ENCJ60,       &drvEnc28j60InitData},      // TCPIP_MODULE_MAC_ENCJ60
 </#if>
 </#if>
 };

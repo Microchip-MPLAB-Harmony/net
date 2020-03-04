@@ -314,6 +314,16 @@ def loadModule():
     drvExtPhyIp101grComponent.addCapability("libdrvExtPhyIp101gr","PHY",True)   
     drvExtPhyIp101grComponent.addDependency("IP101GR_MIIM_Dependency", "MIIM", None, True, True)     
     
+    #Driver for ENCX24J600
+    drvExtMacEncx24j600Component = Module.CreateGeneratorComponent("drvExtMacEncx24j600", "ENCX24J600", "/Harmony/Drivers/External Ethernet Controller", "driver/encx24j600/config/drv_encx24j600_common.py", "driver/encx24j600/config/drv_encx24j600.py")
+    drvExtMacEncx24j600Component.addCapability("libdrvExtMacEncx24j600","MAC",None, False)   
+    drvExtMacEncx24j600Component.addDependency("ENCX24J600_SPI", "DRV_SPI", None, False, True)   
+    
+    #Driver for ENC28J60
+    drvExtMacEnc28j60Component = Module.CreateGeneratorComponent("drvExtMacEnc28j60", "ENC28J60", "/Harmony/Drivers/External Ethernet Controller", "driver/enc28j60/config/drv_enc28j60_common.py", "driver/enc28j60/config/drv_enc28j60.py")
+    drvExtMacEnc28j60Component.addCapability("libdrvExtMacEnc28j60","MAC",None, False)  
+    drvExtMacEnc28j60Component.addDependency("ENC28J60_SPI", "DRV_SPI", None, False, True)   
+        
     ########################## Harmony Network Presentation Module #################################    
     netPresComponent = Module.CreateGeneratorComponent("netPres", "Presentation Layer", "/Harmony/Harmony Networking","net_pres/pres/config/netPres_common.py","net_pres/pres/config/netPres.py")
     netPresComponent.addCapability("libNetPres","net_pres",True)    

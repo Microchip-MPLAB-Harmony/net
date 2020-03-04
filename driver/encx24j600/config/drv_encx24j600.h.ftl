@@ -17,7 +17,7 @@
 -->
 
 <#----------------------------------------------------------------------------
- Copyright (C) 2014-2018 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -41,38 +41,47 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
-
-<#if CONFIG_DRV_ENCX24J600_USE_DRIVER>
+<#if (DRV_ENCX24J600_USE_DRIVER)?has_content && (DRV_ENCX24J600_USE_DRIVER == true)>
 /*** ENCX24J600 Driver Configuration ***/
 /*** Driver Compilation and static configuration options. ***/
 #define TCPIP_IF_ENCX24J600
-#define DRV_ENCX24J600_INSTANCES_NUMBER ${CONFIG_DRV_ENCX24J600_INSTANCES_NUMBER}
-#define DRV_ENCX24J600_CLIENT_INSTANCES ${CONFIG_DRV_ENCX24J600_CLIENT_INSTANCES}
-<#if CONFIG_DRV_ENCX24J600_IDX0>
-#define DRV_ENCX24J600_MAC_TX_DESCRIPTORS_IDX0 ${CONFIG_DRV_ENCX24J600_MAC_TX_DESCRIPTORS_IDX0}
-#define DRV_ENCX24J600_MAC_RX_DESCRIPTORS_IDX0 ${CONFIG_DRV_ENCX24J600_MAC_RX_DESCRIPTORS_IDX0}
-#define DRV_ENCX24J600_MAX_RX_BUFFER_IDX0 ${CONFIG_DRV_ENCX24J600_MAX_RX_BUFFER_IDX0}
-#define DRV_ENCX24J600_SPI_DRIVER_INDEX_IDX0 ${CONFIG_DRV_ENCX24J600_SPI_DRV_INDEX_IDX0}
-#define DRV_ENCX24J600_SPI_BPS_IDX0 ${CONFIG_DRV_ENCX24J600_SPI_BPS_IDX0}
-#define DRV_ENCX24J600_SPI_SS_PORT_MODULE_IDX0 ${CONFIG_DRV_ENCX24J600_SPI_SS_PORT_MODULE_IDX0}
-#define DRV_ENCX24J600_SPI_SS_PORT_CHANNEL_IDX0 ${CONFIG_DRV_ENCX24J600_SPI_SS_PORT_CHANNEL_IDX0}
-#define DRV_ENCX24J600_SPI_SS_PORT_PIN_IDX0 ${CONFIG_DRV_ENCX24J600_SPI_SS_PORT_PIN_IDX0}
-#define DRV_ENCX24J600_RX_BUFFER_SIZE_IDX0 ${CONFIG_DRV_ENCX24J600_RX_BUFFER_SIZE_IDX0}
-#define DRV_ENCX24J600_MAX_FRAME_SIZE_IDX0 ${CONFIG_DRV_ENCX24J600_MAX_FRAME_SIZE_IDX0}
-<#if CONFIG_DRV_ENCX24J600_ETHERNET_TYPE_IDX0 == "100base-T">
-#define DRV_ENCX24J600_ETHERNET_TYPE_IDX0 TCPIP_ETH_OPEN_100
-<#elseif CONFIG_DRV_ENCX24J600_ETHERNET_TYPE_IDX0 == "10base-T">
-#define DRV_ENCX24J600_ETHERNET_TYPE_IDX0 TCPIP_ETH_OPEN_10
-<#else>
-#define DRV_ENCX24J600_ETHERNET_TYPE_IDX0 TCPIP_ETH_OPEN_AUTO
-</#if>
-<#if CONFIG_DRV_ENCX24J600_DUPLEX_MODE_IDX0 == "Half Duplex">
-#define DRV_ENCX24J600_DUPLEX_MODE_IDX0 TCPIP_ETH_OPEN_HDUPLEX
-<#elseif CONFIG_DRV_ENCX24J600_DUPLEX_MODE_IDX0 == "Full Duplex">
-#define DRV_ENCX24J600_DUPLEX_MODE_IDX0 TCPIP_ETH_OPEN_FDUPLEX
-<#else>
-#define DRV_ENCX24J600_DUPLEX_MODE_IDX0 TCPIP_ETH_OPEN_AUTO
+
+#define DRV_ENCX24J600_INSTANCES_NUMBER ${__INSTANCE_COUNT}
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
+	<#assign clientInstnNum = "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_CLIENT_INSTANCES_IDX"+idx>
+	<#lt>#define DRV_ENCX24J600_CLIENT_INSTANCES_IDX${idx}		${clientInstnNum?eval}
+	<#assign txDescNum = "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_MAC_TX_DESCRIPTORS_IDX" + idx>
+	<#lt>#define DRV_ENCX24J600_MAC_TX_DESCRIPTORS_IDX${idx}		${txDescNum?eval}
+	<#assign rxDescNum = "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_MAC_RX_DESCRIPTORS_IDX" + idx>
+	<#lt>#define DRV_ENCX24J600_MAC_RX_DESCRIPTORS_IDX${idx}		${rxDescNum?eval}
+	<#assign rxDescBuffSize= "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_MAX_RX_BUFFER_IDX" + idx>
+	<#lt>#define DRV_ENCX24J600_MAX_RX_BUFFER_IDX${idx}		${rxDescBuffSize?eval}
+	<#assign rxBuffSize= "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_RX_BUFFER_SIZE_IDX" + idx>
+	<#lt>#define DRV_ENCX24J600_RX_BUFFER_SIZE_IDX${idx}		${rxBuffSize?eval}
+	<#assign frameSize= "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_MAX_FRAME_SIZE_IDX" + idx>
+	<#lt>#define DRV_ENCX24J600_MAX_FRAME_SIZE_IDX${idx}		${frameSize?eval}
+	
+	<#assign ethType = "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_ETHERNET_TYPE_IDX" + idx>
+	<#if ethType?eval == "100base-T">
+		<#lt>#define DRV_ENCX24J600_ETHERNET_TYPE_IDX${idx} TCPIP_ETH_OPEN_100
+	<#elseif ethType?eval == "10base-T">	
+		<#lt>#define DRV_ENCX24J600_ETHERNET_TYPE_IDX${idx} TCPIP_ETH_OPEN_10
+	<#else>
+		<#lt>#define DRV_ENCX24J600_ETHERNET_TYPE_IDX${idx} TCPIP_ETH_OPEN_AUTO
+	</#if>
+	
+	<#assign duplexMode = "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_DUPLEX_MODE_IDX" + idx>
+	<#if duplexMode?eval == "Half Duplex">
+		<#lt>#define DRV_ENCX24J600_DUPLEX_MODE_IDX${idx} TCPIP_ETH_OPEN_HDUPLEX
+	<#elseif duplexMode?eval == "Full Duplex">	
+		<#lt>#define DRV_ENCX24J600_DUPLEX_MODE_IDX${idx} TCPIP_ETH_OPEN_FDUPLEX
+	<#else>
+		<#lt>#define DRV_ENCX24J600_DUPLEX_MODE_IDX${idx} TCPIP_ETH_OPEN_AUTO
+	</#if>
+	<#assign chipSelectPin= "drvExtMacEncx24j600_"+idx+".DRV_ENCX24J600_SPI_CS_IDX" + idx>
+	<#lt>#define DRV_ENCX24J600_SPI_CS_IDX${idx}		${chipSelectPin?eval}
+
+</#list>
 </#if>
 
-</#if>
-</#if>
+

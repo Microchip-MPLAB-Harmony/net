@@ -17,7 +17,7 @@
 -->
 
 <#----------------------------------------------------------------------------
- Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
+Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -42,23 +42,24 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 ----------------------------------------------------------------------------->
 
 // <editor-fold defaultstate="collapsed" desc="ENC 600 Driver Initialization Data">
-<#if CONFIG_DRV_ENCX24J600_USE_DRIVER>
+
+<#if (DRV_ENCX24J600_USE_DRIVER)?has_content && (DRV_ENCX24J600_USE_DRIVER == true)>
 /* ENC 600 Driver Configuration */
-<#if CONFIG_DRV_ENCX24J600_IDX0>
-DRV_ENCX24J600_Configuration drvEncX24j600InitDataIdx0 = {
-    .txDescriptors =        DRV_ENCX24J600_MAC_TX_DESCRIPTORS_IDX0,
-    .rxDescriptors =        DRV_ENCX24J600_MAC_RX_DESCRIPTORS_IDX0,
-    .rxDescBufferSize =     DRV_ENCX24J600_MAX_RX_BUFFER_IDX0,
-    .spiDrvIndex =          DRV_ENCX24J600_SPI_DRIVER_INDEX_IDX0,
-    .spiBps =               DRV_ENCX24J600_SPI_BPS_IDX0,
-    .spiSSPortModule =      DRV_ENCX24J600_SPI_SS_PORT_MODULE_IDX0,
-    .spiSSPortChannel =     DRV_ENCX24J600_SPI_SS_PORT_CHANNEL_IDX0,
-    .spiSSPortPin =         DRV_ENCX24J600_SPI_SS_PORT_PIN_IDX0,
-    .rxBufferSize = 		DRV_ENCX24J600_RX_BUFFER_SIZE_IDX0,
-    .maxFrameSize =	        DRV_ENCX24J600_MAX_FRAME_SIZE_IDX0,
-	.ethType=			    DRV_ENCX24J600_ETHERNET_TYPE_IDX0,
-	.dupMode=				DRV_ENCX24J600_DUPLEX_MODE_IDX0,
+const DRV_ENCX24J600_Configuration drvEncX24j600InitData[] = {
+<#list 0..(__INSTANCE_COUNT?number-1) as idx>
+{
+
+    .txDescriptors =        DRV_ENCX24J600_MAC_TX_DESCRIPTORS_IDX${idx},
+    .rxDescriptors =        DRV_ENCX24J600_MAC_RX_DESCRIPTORS_IDX${idx},
+    .rxDescBufferSize =     DRV_ENCX24J600_MAX_RX_BUFFER_IDX${idx},
+    .rxBufferSize = 		DRV_ENCX24J600_RX_BUFFER_SIZE_IDX${idx},
+    .maxFrameSize =	        DRV_ENCX24J600_MAX_FRAME_SIZE_IDX${idx},
+	.ethType=			    DRV_ENCX24J600_ETHERNET_TYPE_IDX${idx},
+	.dupMode=				DRV_ENCX24J600_DUPLEX_MODE_IDX${idx},
+	.spiSetup.chipSelect =  DRV_ENCX24J600_SPI_CS_IDX${idx},
+},
+</#list>
 };
 </#if>
-</#if>
 // </editor-fold>
+
