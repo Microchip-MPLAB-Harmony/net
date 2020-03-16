@@ -282,7 +282,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
 }
 
 /****************************************************************************
- * Function:        EthPhyMIIMClock
+ * Function:        DRV_EXTPHY_SMIClockGet
  *
  * PreCondition:    None
  *

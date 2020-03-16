@@ -87,7 +87,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MIIConfigure(const DRV_ETHPHY_OBJECT_BASE* p
 
     miiConfPhase = vendorData.low;
 
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, &phyAddress);
+    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch(miiConfPhase)
     {
@@ -224,7 +224,7 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
 
     mdixConfPhase = vendorData.low;
 
-    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, &phyAddress);
+    pBaseObj->DRV_ETHPHY_PhyAddressGet(hClientObj, DRV_ETHPHY_INF_IDX_ALL_EXTERNAL, &phyAddress);
 
     switch(mdixConfPhase)
     {

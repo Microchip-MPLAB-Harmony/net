@@ -220,6 +220,7 @@ def tcpipNetMacAddrUpdate(symbol, event):
         'GMAC':         '00:04:25:1C:A0:02',
         'EMAC0':        '00:04:25:1C:A0:03',
         'EMAC1':        '00:04:25:1C:A0:04',
+		'ENC28J60':		'00:04:a3:12:34:56',
     }
     print "tcpipNetMacAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     tcpipInterfaceName = event["value"]
