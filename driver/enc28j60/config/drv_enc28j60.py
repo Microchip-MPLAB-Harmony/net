@@ -75,7 +75,11 @@ def instantiateComponent(drvExtMacEnc28j60Component, index):
     
     drvEnc28j60SpiChipSelect = drvExtMacEnc28j60Component.createStringSymbol("DRV_ENC28J60_SPI_CS_IDX" + str(index),None)
     drvEnc28j60SpiChipSelect.setLabel("SPI Chip Select")
-    drvEnc28j60SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RD9")
+    if "PIC32MX" in Variables.get("__PROCESSOR"):
+        drvEnc28j60SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RD9")
+    elif "PIC32MZ" in Variables.get("__PROCESSOR"):
+        drvEnc28j60SpiChipSelect.setDefaultValue("SYS_PORT_PIN_RE9")
+        
     drvEnc28j60SpiChipSelect.setVisible( True )
     drvEnc28j60SpiChipSelect.setDescription("Chip Select Pin for SPI interface")     
         
