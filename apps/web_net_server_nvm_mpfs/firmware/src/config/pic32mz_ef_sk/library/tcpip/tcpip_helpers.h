@@ -78,7 +78,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 	IPV4_ADDR struct.  The output result is big-endian.
 
   Precondition:
-    None.
+    IPAddress - a valid pointer to an IPV4_ADDR
 
   Parameters:
 	str         - Pointer to a dotted-quad IP address string
@@ -89,7 +89,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
   	- false - no IP address could be found, or the format was incorrect
 
  Remarks:
-    None.
+    If str == NULL, or strlen(str) == 0
+    the result will be address 0
  */
 
 bool	TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* IPAddress);
@@ -115,7 +116,8 @@ bool	TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* IPAddress);
 	
   Returns:
   	- true - an IP address was successfully converted
-  	- false - supplied buffer was not large enough
+  	- false - IPAddress == 0 or buff == 0
+              or supplied buffer was not large enough
 
  Remarks:
     None.
@@ -136,7 +138,7 @@ bool    TCPIP_Helper_IPAddressToString(const IPV4_ADDR* IPAddress, char* buff, s
 	IPV6_ADDR struct.  The output result is big-endian.
 	
   Precondition:
-	None
+	addr - valid pointer to an IPV6 Address
 
   Parameters:
 	str - Pointer to an RFC3513, Section 2.2 text representation of
@@ -151,7 +153,8 @@ bool    TCPIP_Helper_IPAddressToString(const IPV4_ADDR* IPAddress, char* buff, s
   	- false - no IP address could be found, or the format was incorrect
 
  Remarks:
-    None.    
+    If str == NULL, or strlen(str) == 0
+    the result will be address 0
  */
 
 bool    TCPIP_Helper_StringToIPv6Address (const char * str, IPV6_ADDR * addr);
@@ -177,7 +180,8 @@ bool    TCPIP_Helper_StringToIPv6Address (const char * str, IPV6_ADDR * addr);
 	
   Returns:
   	- true  - an IPv6 address was successfully converted
-  	- false - supplied buffer was not large enough
+  	- false - addr == 0 or buff == 0
+              or supplied buffer was not large enough
 
  Remarks:
     None.
@@ -199,7 +203,7 @@ bool    TCPIP_Helper_IPv6AddressToString (const IPV6_ADDR * addr, char* buff, si
 	This function verifies if the supplied IPv4 address is a broadcast address.
 	
   Precondition:
-	None.
+    IPAddress - a valid pointer to an IPV4_ADDR
 
   Parameters:
 	IPAddress - Pointer to IPV4_ADDR to check
@@ -229,7 +233,7 @@ static __inline__ bool __attribute__((always_inline)) TCPIP_Helper_IsBcastAddres
 	This function verifies if the supplied IPv4 address is a multicast address.
 	
   Precondition:
-	None.
+    IPAddress - a valid pointer to an IPV4_ADDR
 
   Parameters:
 	IPAddress - Pointer to IPV4_ADDR to check
@@ -288,7 +292,7 @@ bool      TCPIP_Helper_IsPrivateAddress(uint32_t ipv4Address);
     or "aa-bb-cc-dd-ee-ff" into an hex MAC address.
 	
   Precondition:
-	None.
+	macAddr - valid pointer to a 6 byte MAC address field
 
   Parameters:
 	str - Pointer to a colon separated MAC address string
@@ -299,7 +303,8 @@ bool      TCPIP_Helper_IsPrivateAddress(uint32_t ipv4Address);
   	- false - no MAC address could be found, or the format was incorrect
 
  Remarks:
-    None.    
+    If str == 0 or strlen(str) == 0
+    the result will be 0    
  */
 
 bool      TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6]);
@@ -325,7 +330,9 @@ bool      TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6]);
 
   Returns:
   	- true  - a MAC address was successfully decoded
-  	- false - no MAC address could be found, or the format was incorrect
+  	- false - macAddr == 0 or buff == 0
+              or supplied buffer was not large enough
+  	          or the format was incorrect
 
  Remarks:
     None.    
@@ -417,7 +424,7 @@ uint16_t TCPIP_Helper_ntohs(uint16_t nShort);
 	provided string, padded with spaces as necessary.
 
   Precondition:
-	None.
+	Name    - valid pointer to a 16 byte area to be populated
 
   Parameters:
 	Name - the string to format as a NetBIOS name.  This parameter must have
@@ -577,7 +584,8 @@ bool             TCPIP_Helper_SecurePortSet(uint16_t port, bool streamSocket, bo
 	This function encodes a binary array to Base-64.
 	
   Precondition:
-	None
+	sourceData, destData  - valid pointers
+
 
   Parameters:
 	sourceData - Pointer to a string of binary data
@@ -614,7 +622,7 @@ uint16_t TCPIP_Helper_Base64Encode(const uint8_t* sourceData, uint16_t sourceLen
 	Decodes a Base-64 array to its literal representation.
 	
   Precondition:
-	None
+	sourceData, destData  - valid pointers
 
   Parameters:
 	sourceData  - Pointer to a string of Base-64 encoded data
