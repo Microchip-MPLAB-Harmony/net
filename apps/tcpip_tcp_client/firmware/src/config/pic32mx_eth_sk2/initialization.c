@@ -496,11 +496,12 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 
 const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
     .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)CORETIMER_CallbackSet,
-    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)CORETIMER_CounterGet,
-    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)CORETIMER_FrequencyGet,
-    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)CORETIMER_CompareSet,
     .timerStart = (SYS_TIME_PLIB_START)CORETIMER_Start,
-    .timerStop = (SYS_TIME_PLIB_STOP)CORETIMER_Stop 
+    .timerStop = (SYS_TIME_PLIB_STOP)CORETIMER_Stop ,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)CORETIMER_FrequencyGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)NULL,
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)CORETIMER_CompareSet,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)CORETIMER_CounterGet,
 };
 
 const SYS_TIME_INIT sysTimeInitData =
@@ -596,7 +597,6 @@ void SYS_Initialize ( void* data )
 
   
     CLK_Initialize();
-	GPIO_Initialize();
 
     /* Configure KSEG0 as cacheable memory. This is needed for Prefetch Buffer */
     __builtin_mtc0(16, 0,(__builtin_mfc0(16, 0) | 0x3));
@@ -610,6 +610,9 @@ void SYS_Initialize ( void* data )
 
 
 
+
+
+	GPIO_Initialize();
 
     CORETIMER_Initialize();
 	UART2_Initialize();

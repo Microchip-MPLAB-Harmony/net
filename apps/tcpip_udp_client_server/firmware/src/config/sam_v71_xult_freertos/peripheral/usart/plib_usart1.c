@@ -49,7 +49,7 @@
 
 USART_OBJECT usart1Obj;
 
-void static USART1_ISR_RX_Handler( void )
+static void USART1_ISR_RX_Handler( void )
 {
     if(usart1Obj.rxBusyStatus == true)
     {
@@ -61,7 +61,6 @@ void static USART1_ISR_RX_Handler( void )
         /* Check if the buffer is done */
         if(usart1Obj.rxProcessedSize >= usart1Obj.rxSize)
         {
-
             usart1Obj.rxBusyStatus = false;
 
             /* Disable Read, Overrun, Parity and Framing error interrupts */
@@ -78,11 +77,9 @@ void static USART1_ISR_RX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
-void static USART1_ISR_TX_Handler( void )
+static void USART1_ISR_TX_Handler( void )
 {
     if(usart1Obj.txBusyStatus == true)
     {
@@ -108,8 +105,6 @@ void static USART1_ISR_TX_Handler( void )
         /* Nothing to process */
         ;
     }
-
-    return;
 }
 
 void USART1_InterruptHandler( void )
@@ -145,27 +140,22 @@ void USART1_InterruptHandler( void )
     {
         USART1_ISR_TX_Handler();
     }
-
-    return;
 }
 
-
-void static USART1_ErrorClear( void )
+static void USART1_ErrorClear( void )
 {
     uint8_t dummyData = 0u;
 
-    USART1_REGS->US_CR |= US_CR_USART_RSTSTA_Msk;
+    USART1_REGS->US_CR = US_CR_USART_RSTSTA_Msk;
 
     /* Flush existing error bytes from the RX FIFO */
-    while( US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR& US_CSR_USART_RXRDY_Msk) )
+    while( US_CSR_USART_RXRDY_Msk == (USART1_REGS->US_CSR & US_CSR_USART_RXRDY_Msk) )
     {
-        dummyData = (USART1_REGS->US_RHR& US_RHR_RXCHR_Msk);
+        dummyData = (USART1_REGS->US_RHR & US_RHR_RXCHR_Msk);
     }
 
     /* Ignore the warning */
     (void)dummyData;
-
-    return;
 }
 
 void USART1_Initialize( void )
@@ -193,8 +183,6 @@ void USART1_Initialize( void )
     usart1Obj.txProcessedSize = 0;
     usart1Obj.txBusyStatus = false;
     usart1Obj.txCallback = NULL;
-
-    return;
 }
 
 USART_ERROR USART1_ErrorGet( void )
@@ -249,6 +237,7 @@ bool USART1_SerialSetup( USART_SERIAL_SETUP *setup, uint32_t srcClkFreq )
         {
             return false;
         }
+
         if (brgVal > 65535)
         {
             /* The requested baud is so low that the ratio of srcClkFreq to baud exceeds the 16-bit register value of CD register */

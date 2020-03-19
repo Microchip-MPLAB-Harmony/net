@@ -66,21 +66,20 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define DRV_ENCX24J600_INSTANCES_NUMBER                        1
 
 
-/*********************************************************************
+/*************************************************************************
   Summary:
-    Selects the maximum number of clients.
-	
+    Selects the maximum number of clients with each instance
   Description:
     ENCX24J600 maximum number of clients
     
-    This definition selects the maximum number of clients that the ENCX24J600
-    driver can support at run-time.
-	
+    For example, DRV_ENC28J60_CLIENT_INSTANCES_IDX0 selects the maximum
+    number of clients the ENCX24J600 driver can support at run-time for
+    instance 0
   Remarks:
-    Mandatory definition.
-  *********************************************************************/
+    The instance number is suffixed with DRV_ENCX24J600_CLIENT_INSTANCES_IDX
+  *************************************************************************/
 
-#define DRV_ENCX24J600_CLIENT_INSTANCES                          1
+#define DRV_ENCX24J600_CLIENT_INSTANCES_IDXx                          1
 
 
 #endif // #ifndef _DRV_ENCX24J6600_CONFIG_TEMPLATE_H

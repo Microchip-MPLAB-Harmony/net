@@ -252,20 +252,12 @@
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -367,16 +359,16 @@
                 <logicalFolder displayName="common" name="f1" projectFiles="true">
                   <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/berkeley_api.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/sam_e70_xult_freertos/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -533,8 +525,8 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="CMSIS" vendor="ARM" version="5.0.1"/>
-        <pack name="SAME70_DFP" vendor="Microchip" version="4.0.29"/>
+        <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAME70_DFP" vendor="Microchip" version="4.2.59"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -632,6 +624,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>

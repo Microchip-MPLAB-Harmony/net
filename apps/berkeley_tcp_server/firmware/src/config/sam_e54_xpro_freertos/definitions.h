@@ -71,6 +71,7 @@
 #include "peripheral/port/plib_port.h"
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
+#include "peripheral/cmcc/plib_cmcc.h"
 #include "system/debug/sys_debug.h"
 #include "system/console/sys_console.h"
 #include "system/console/src/sys_console_uart_definitions.h"

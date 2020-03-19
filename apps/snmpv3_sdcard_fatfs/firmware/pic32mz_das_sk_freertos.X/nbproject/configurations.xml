@@ -829,7 +829,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.69"/>
+        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.2.102"/>
       </packs>
       <compileType>
         <linkerTool>

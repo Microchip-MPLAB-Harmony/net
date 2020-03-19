@@ -3492,7 +3492,10 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
 
 void TCPIP_STACK_AddressServiceDefaultSet(TCPIP_NET_IF* pNetIf)
 {
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    // keep access to IP addresses consistent
     _TCPIPStackSetIpAddress(pNetIf, &pNetIf->DefaultIPAddr, &pNetIf->DefaultMask, &pNetIf->DefaultGateway, false);
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
     _TCPIPStackSetConfig(pNetIf, false);
 }
 

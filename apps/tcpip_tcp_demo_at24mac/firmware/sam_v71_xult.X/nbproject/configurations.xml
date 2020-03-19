@@ -295,23 +295,15 @@
           <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
             <logicalFolder displayName="Core" name="f1" projectFiles="true">
               <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm7.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -325,8 +317,11 @@
       <itemPath>../src/app_commands.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder displayName="Linker Files" name="f2" projectFiles="true"/>
-    <logicalFolder displayName="Source Files" name="f3" projectFiles="true">
+    <logicalFolder displayName="Important Files" name="f2" projectFiles="true">
+      <itemPath>Makefile</itemPath>
+    </logicalFolder>
+    <logicalFolder displayName="Linker Files" name="f3" projectFiles="true"/>
+    <logicalFolder displayName="Source Files" name="f4" projectFiles="true">
       <logicalFolder displayName="config" name="f1" projectFiles="true">
         <logicalFolder displayName="sam_v71_xult" name="f1" projectFiles="true">
           <logicalFolder displayName="library" name="f1" projectFiles="true">
@@ -335,15 +330,15 @@
                 <logicalFolder displayName="common" name="f1" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_v71_xult/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -453,9 +448,6 @@
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
-    <logicalFolder displayName="Important Files" name="f4" projectFiles="true">
-      <itemPath>Makefile</itemPath>
-    </logicalFolder>
   </logicalFolder>
   <sourceRootList>
     <Elem>../src</Elem>
@@ -468,13 +460,13 @@
         <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader/>
         <targetPluginBoard/>
-        <platformTool/>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="4.0.39"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="4.2.60"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>
@@ -652,6 +644,7 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>

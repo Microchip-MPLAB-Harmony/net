@@ -859,7 +859,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 
 #if defined(__DEBUG)
-    #define SYS_DEBUG_BreakPoint()  __asm__ volatile (" sdbbp 0")
+    #define SYS_DEBUG_BreakPoint()  __asm__ __volatile__ ("bkpt #0");
 #else
     #define SYS_DEBUG_BreakPoint()
 #endif

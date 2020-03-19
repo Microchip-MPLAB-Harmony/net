@@ -96,6 +96,10 @@ void DRV_PIC32CGMAC_LibInit(DRV_GMAC_DRIVER* pMACDrv)
 	//Set network configurations like speed, full duplex, copy all frames, no broadcast, 
 	// pause enable, remove FCS, MDC clock   
     GMAC_REGS->GMAC_NCFGR = GMAC_NCFGR_SPD(1) | GMAC_NCFGR_FD(1) | GMAC_NCFGR_CLK(3)  |	GMAC_NCFGR_PEN(1)  | GMAC_NCFGR_RFCS(1);
+	if(DRV_GMAC_RX_CHKSM_OFFLOAD != TCPIP_MAC_CHECKSUM_NONE)
+    {
+        GMAC_REGS->GMAC_NCFGR |= GMAC_NCFGR_RXCOEN_Msk;
+    }
 	
 	// Set MAC address	    
     DRV_PIC32CGMAC_LibSetMacAddr((const uint8_t *)(pMACDrv->sGmacData.gmacConfig.macAddress.v));
@@ -130,6 +134,10 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
 
 	//write dma configuration to register
 	GMAC_REGS->GMAC_DCFGR = GMAC_DCFGR_DRBS((wRxBufferSize_temp >> 6)) | GMAC_DCFGR_RXBMS(3) | GMAC_DCFGR_TXPBMS(1) | GMAC_DCFGR_FBLDO(4) | GMAC_DCFGR_DDRP(1);
+	if(DRV_GMAC_TX_CHKSM_OFFLOAD != TCPIP_MAC_CHECKSUM_NONE)
+    {
+        GMAC_REGS->GMAC_DCFGR |= GMAC_DCFGR_TXCOEN_Msk;
+    }
 	
 	//enable GMAC interrupts
 	GMAC_REGS->GMAC_IER = GMAC_INT_BITS;

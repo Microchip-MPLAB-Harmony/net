@@ -49,7 +49,6 @@
 #include "device_cache.h"
 #include "system/cache/sys_cache.h"
 
-
 // *****************************************************************************
 // *****************************************************************************
 // Section: System Cache Interface Functions

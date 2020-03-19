@@ -148,7 +148,11 @@ typedef struct
     const struct DRV_ETHPHY_OBJECT_BASE_TYPE*   pPhyBase;   
 
     /* Non-volatile pointer to the PHY initialization data */
-    const struct DRV_ETHPHY_INIT*   pPhyInit;   
+    const struct DRV_ETHPHY_INIT*   pPhyInit;  
+	/* Rx Checksum offload Enable */
+    TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadRx;
+    /* Tx Checksum offload Enable */
+    TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
    
 }TCPIP_MODULE_MAC_PIC32C_CONFIG;
 

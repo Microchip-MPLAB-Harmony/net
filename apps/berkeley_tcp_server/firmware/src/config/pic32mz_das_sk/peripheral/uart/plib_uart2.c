@@ -93,7 +93,7 @@ void UART2_Initialize( void )
     /* Set up UxMODE bits */
     /* STSEL  = 0*/
     /* PDSEL = 0 */
-    /* BRGH = 1 */
+    /* BRGH = 0 */
     /* RXINV = 0 */
     /* ABAUD = 0 */
     /* LPBACK = 0 */
@@ -102,13 +102,13 @@ void UART2_Initialize( void )
     /* RUNOVF = 0 */
     /* CLKSEL = 0 */
     /* SLPEN = 0 */
-    U2MODE = 0x8;
+    U2MODE = 0x0;
 
     /* Enable UART2 Receiver, Transmitter and TX Interrupt selection */
     U2STASET = (_U2STA_UTXEN_MASK | _U2STA_URXEN_MASK | _U2STA_UTXISEL0_MASK);
 
     /* BAUD Rate register Setup */
-    U2BRG = 216;
+    U2BRG = 53;
 
     /* Disable Interrupts */
     IEC4CLR = _IEC4_U2EIE_MASK;

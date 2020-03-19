@@ -138,7 +138,7 @@ extern "C" {
 #define DRV_ENCX24J600_ETHERNET_TYPE_IDX0 TCPIP_ETH_OPEN_AUTO
 	
 #define DRV_ENCX24J600_DUPLEX_MODE_IDX0 TCPIP_ETH_OPEN_AUTO
-#define DRV_ENCX24J600_SPI_CS_IDX0		SYS_PORT_PIN_RD9
+#define DRV_ENCX24J600_SPI_CS_IDX0		SYS_PORT_PIN_RE9
 
 
 
@@ -211,7 +211,7 @@ extern "C" {
 
 /*** DHCP Configuration ***/
 #define TCPIP_STACK_USE_DHCP_CLIENT
-#define TCPIP_DHCP_TIMEOUT                          2
+#define TCPIP_DHCP_TIMEOUT                          4
 #define TCPIP_DHCP_TASK_TICK_RATE                   5
 #define TCPIP_DHCP_HOST_NAME_SIZE                   20
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68

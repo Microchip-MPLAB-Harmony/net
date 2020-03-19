@@ -53,8 +53,6 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/*  This section lists the other files that are included in this file.
-*/
 #include <stdbool.h>
 #include <stddef.h>
 
@@ -75,22 +73,22 @@
 // *****************************************************************************
 /* TWIHS Transfer Status
 
-   Summary:
+  Summary:
     TWIHS Transfer Status data type.
 
-   Description:
+  Description:
     This data type defines the TWIHS Transfer Status.
 
-   Remarks:
+  Remarks:
     None.
 */
 
 typedef enum
 {
-  /* No Error */
+    /* No Error */
     TWIHS_ERROR_NONE,
 
-  /* Slave returned Nack */
+    /* Slave returned Nack */
     TWIHS_ERROR_NACK,
 
 } TWIHS_ERROR;
@@ -98,19 +96,18 @@ typedef enum
 // *****************************************************************************
 /* TWIHS State.
 
-   Summary:
+  Summary:
     TWIHS PLib Task State.
 
-   Description:
+  Description:
     This data type defines the TWIHS PLib Task State.
 
-   Remarks:
+  Remarks:
     None.
-
 */
 
-typedef enum {
-
+typedef enum
+{
     /* TWIHS PLib Task Error State */
     TWIHS_STATE_ERROR = -1,
 
@@ -137,13 +134,13 @@ typedef enum {
 // *****************************************************************************
 /* TWIHS Callback
 
-   Summary:
+  Summary:
     TWIHS Callback Function Pointer.
 
-   Description:
+  Description:
     This data type defines the TWIHS Callback Function Pointer.
 
-   Remarks:
+  Remarks:
     None.
 */
 
@@ -156,13 +153,13 @@ typedef void (*TWIHS_CALLBACK)
 // *****************************************************************************
 /* TWIHS PLib Instance Object
 
-   Summary:
+  Summary:
     TWIHS PLib Object structure.
 
-   Description:
+  Description:
     This data structure defines the TWIHS PLib Instance Object.
 
-   Remarks:
+  Remarks:
     None.
 */
 
@@ -193,13 +190,13 @@ typedef struct
 // *****************************************************************************
 /* Transaction Request Block
 
-   Summary:
+  Summary:
     Transaction Request Block Structure.
 
-   Description:
+  Description:
     This data structure defines the Transaction Request Block.
 
-   Remarks:
+  Remarks:
     None.
 */
 
@@ -219,7 +216,3 @@ typedef struct
 // DOM-IGNORE-END
 
 #endif // PLIB_TWIHS_MASTER_H
-
-/*******************************************************************************
- End of File
-*/

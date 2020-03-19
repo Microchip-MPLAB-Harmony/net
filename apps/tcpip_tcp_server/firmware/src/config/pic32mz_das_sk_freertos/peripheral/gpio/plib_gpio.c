@@ -83,7 +83,7 @@ void GPIO_Initialize ( void )
     /* PORTK Initialization */
 
 
-    /* unlock system for PPS configuration */
+    /* Unlock system for PPS configuration */
     SYSKEY = 0x00000000;
     SYSKEY = 0xAA996655;
     SYSKEY = 0x556699AA;

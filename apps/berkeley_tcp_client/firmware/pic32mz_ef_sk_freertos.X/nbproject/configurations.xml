@@ -292,16 +292,16 @@
                 <logicalFolder displayName="common" name="f1" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/berkeley_api.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -447,13 +447,13 @@
         <targetDevice>PIC32MZ2048EFH144</targetDevice>
         <targetHeader/>
         <targetPluginBoard/>
-        <platformTool>PKOBSKDEPlatformTool</platformTool>
+        <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.10</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.0.20"/>
+        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.2.51"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -528,6 +528,9 @@
         <property key="preprocessor-macros" value=""/>
         <property key="warning-level" value=""/>
       </C32-AS>
+      <C32-CO>
+        <property key="coverage-enable" value=""/>
+      </C32-CO>
       <C32-LD>
         <property key="additional-options-use-response-files" value="false"/>
         <property key="additional-options-write-sla" value="false"/>
@@ -781,6 +784,7 @@
         <property key="SecureSegment.SegmentProgramming" value="FullChipProgramming"/>
         <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
+        <property key="firmware.download.all" value="false"/>
         <property key="memories.configurationmemory" value="true"/>
         <property key="memories.dataflash" value="true"/>
         <property key="memories.eeprom" value="true"/>

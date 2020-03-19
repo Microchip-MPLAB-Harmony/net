@@ -227,8 +227,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E3B41EBCFD65706D1E11D20E86D1BF0A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E3B41EBCFD65706D1E11D20E86D1BF0A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">8D0A781E323B9C88F674620E0871CFB9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">8D0A781E323B9C88F674620E0871CFB9</UserChecksum>
         </File>
         <File dnOrder="28">
           <Type dnOrder="0">SOURCE</Type>
@@ -731,8 +731,8 @@
           <Name dnOrder="1">drv_enc28j60.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/driver/enc28j60/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/enc28j60/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">37ADB374544501D8649F54E16AB9D8DF</GeneratedChecksum>
-          <UserChecksum dnOrder="5">37ADB374544501D8649F54E16AB9D8DF</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4E0C776DF2B06F53DCC39A4EA10CA9B4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4E0C776DF2B06F53DCC39A4EA10CA9B4</UserChecksum>
         </File>
         <File dnOrder="91">
           <Type dnOrder="0">HEADER</Type>
@@ -1907,8 +1907,8 @@
           <Name dnOrder="1">user.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="238">
           <Type dnOrder="0">HEADER</Type>

@@ -237,19 +237,22 @@ int DRV_ETH_RxSetBufferSize(DRV_ETHERNET_REGISTERS* eth, int rxBuffSize)
 
 void DRV_ETH_MACSetAddress(DRV_ETHERNET_REGISTERS* eth, uint8_t *bAddress)
 {
-    eth->EMACxSA0.w = (uint16_t)*(bAddress + 0) + ((uint16_t)*(bAddress + 1) << 8);
-    eth->EMACxSA1.w = (uint16_t)*(bAddress + 2) + ((uint16_t)*(bAddress + 3) << 8);
-    eth->EMACxSA2.w = (uint16_t)*(bAddress + 4) + ((uint16_t)*(bAddress + 5) << 8);
+    eth->EMACxSA2.STNADDR1  = *(bAddress + 0);
+    eth->EMACxSA2.STNADDR2  = *(bAddress + 1);
+    eth->EMACxSA1.STNADDR3  = *(bAddress + 2);
+    eth->EMACxSA1.STNADDR4  = *(bAddress + 3);
+    eth->EMACxSA0.STNADDR5  = *(bAddress + 4);
+    eth->EMACxSA0.STNADDR6  = *(bAddress + 5);
 }
 
 void DRV_ETH_MACGetAddress(DRV_ETHERNET_REGISTERS* eth, uint8_t *bAddress )
 {
-    *(bAddress + 0) = (uint8_t)eth->EMACxSA2.w;
-    *(bAddress + 1) = (uint8_t)(eth->EMACxSA2.w >> 8);
-    *(bAddress + 2) = (uint8_t)eth->EMACxSA1.w;
-    *(bAddress + 3) = (uint8_t)(eth->EMACxSA1.w >> 8);
-    *(bAddress + 4) = (uint8_t)eth->EMACxSA0.w;
-    *(bAddress + 5) = (uint8_t)(eth->EMACxSA0.w >> 8);
+    *(bAddress + 0) = eth->EMACxSA2.STNADDR1;
+    *(bAddress + 1) = eth->EMACxSA2.STNADDR2;
+    *(bAddress + 2) = eth->EMACxSA1.STNADDR3;
+    *(bAddress + 3) = eth->EMACxSA1.STNADDR4;
+    *(bAddress + 4) = eth->EMACxSA0.STNADDR5;
+    *(bAddress + 5) = eth->EMACxSA0.STNADDR6;
 }
 
 uint16_t DRV_ETH_FramesTxdOkCountGet(DRV_ETHERNET_REGISTERS* eth)

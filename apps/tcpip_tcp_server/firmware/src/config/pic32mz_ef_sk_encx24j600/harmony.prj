@@ -227,8 +227,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">365CA2C09828CF53E95E97F3C42770B6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">365CA2C09828CF53E95E97F3C42770B6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FAB3981FCE4123C72456CC3A6323A68B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FAB3981FCE4123C72456CC3A6323A68B</UserChecksum>
         </File>
         <File dnOrder="28">
           <Type dnOrder="0">SOURCE</Type>
@@ -555,8 +555,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">95220CDC17E296F12A20F7D5CDD8575C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">95220CDC17E296F12A20F7D5CDD8575C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">435BF7242766BA2FABA7B8674EAEF4DF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">435BF7242766BA2FABA7B8674EAEF4DF</UserChecksum>
         </File>
         <File dnOrder="69">
           <Type dnOrder="0">HEADER</Type>
@@ -1907,8 +1907,8 @@
           <Name dnOrder="1">user.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="238">
           <Type dnOrder="0">HEADER</Type>

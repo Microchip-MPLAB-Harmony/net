@@ -261,16 +261,16 @@
                 <logicalFolder displayName="common" name="f1" projectFiles="true">
                   <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/berkeley_api.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -395,7 +395,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.69"/>
+        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.2.102"/>
       </packs>
       <compileType>
         <linkerTool>

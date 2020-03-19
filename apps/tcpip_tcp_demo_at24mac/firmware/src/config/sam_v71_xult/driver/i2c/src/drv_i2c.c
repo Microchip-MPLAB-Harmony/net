@@ -369,9 +369,9 @@ static void _DRV_I2C_PLibCallbackHandler( uintptr_t contextHandle )
     /* Check if the client that submitted the request is active? */
     if (clientObj->clientHandle == transferObj->clientHandle)
     {
-        clientObj->errors = dObj->i2cPlib->errorGet();
+        transferObj->errors = dObj->i2cPlib->errorGet();
 
-        if(clientObj->errors == DRV_I2C_ERROR_NONE)
+        if(transferObj->errors == DRV_I2C_ERROR_NONE)
         {
             transferObj->event = DRV_I2C_TRANSFER_EVENT_COMPLETE;
         }
@@ -599,7 +599,6 @@ DRV_HANDLE DRV_I2C_Open(
             clientObj->transferSetup.clockSpeed = dObj->initI2CClockSpeed;
             clientObj->eventHandler             = NULL;
             clientObj->context                  = (uintptr_t)NULL;
-            clientObj->errors                   = DRV_I2C_ERROR_NONE;
 
             return ((DRV_HANDLE) clientObj->clientHandle );
         }
@@ -719,28 +718,40 @@ bool DRV_I2C_TransferSetup( const DRV_HANDLE handle, DRV_I2C_TRANSFER_SETUP* set
     return true;
 }
 
-DRV_I2C_ERROR DRV_I2C_ErrorGet( const DRV_HANDLE handle )
+DRV_I2C_ERROR DRV_I2C_ErrorGet( const DRV_I2C_TRANSFER_HANDLE transferHandle )
 {
-    DRV_I2C_CLIENT_OBJ* clientObj = NULL;
     DRV_I2C_OBJ* dObj = NULL;
+    uint32_t drvInstance = 0;
+    uint8_t transferIndex;
     DRV_I2C_ERROR errors = DRV_I2C_ERROR_NONE;
 
-    /* Validate the driver handle */
-    clientObj = _DRV_I2C_DriverHandleValidate(handle);
-    if(clientObj == NULL)
+    /* Extract driver instance value from the transfer handle */
+    drvInstance = ((transferHandle & DRV_I2C_INSTANCE_MASK) >> 8);
+
+    if(drvInstance >= DRV_I2C_INSTANCES_NUMBER)
     {
-        return DRV_I2C_ERROR_NONE;
+        return errors;
     }
 
-    dObj = &gDrvI2CObj[clientObj->drvIndex];
+    dObj = (DRV_I2C_OBJ*)&gDrvI2CObj[drvInstance];
 
     if(_DRV_I2C_ResourceLock(dObj) == false)
     {
-        return DRV_I2C_ERROR_NONE;
+        return errors;
     }
 
-    errors = clientObj->errors;
-    clientObj->errors = DRV_I2C_ERROR_NONE;
+    /* Extract transfer buffer index value from the transfer handle */
+    transferIndex = transferHandle & DRV_I2C_INDEX_MASK;
+
+    /* Validate the transferIndex and corresponding request */
+    if(transferIndex < dObj->transferObjPoolSize)
+    {
+        if(transferHandle == dObj->transferObjPool[transferIndex].transferHandle)
+        {
+            errors = dObj->transferObjPool[transferIndex].errors;
+            dObj->transferObjPool[transferIndex].errors = DRV_I2C_ERROR_NONE;
+        }
+    }
 
     _DRV_I2C_ResourceUnlock(dObj);
 
@@ -824,6 +835,7 @@ static void _DRV_I2C_WriteReadTransferAdd (
     transferObj->writeBuffer  = ( uint8_t *)writeBuffer;
     transferObj->writeSize    = writeSize;
     transferObj->clientHandle = handle;
+    transferObj->errors       = DRV_I2C_ERROR_NONE;
     transferObj->currentState = DRV_I2C_TRANSFER_OBJ_IS_IN_QUEUE;
     transferObj->event        = DRV_I2C_TRANSFER_EVENT_PENDING;
     transferObj->flag         = transferFlags;
@@ -922,31 +934,40 @@ DRV_I2C_TRANSFER_EVENT DRV_I2C_TransferStatusGet(
     DRV_I2C_OBJ* dObj = NULL;
     uint32_t drvInstance = 0;
     uint8_t transferIndex;
+    DRV_I2C_TRANSFER_EVENT  event = DRV_I2C_TRANSFER_EVENT_HANDLE_INVALID;
 
     /* Extract driver instance value from the transfer handle */
     drvInstance = ((transferHandle & DRV_I2C_INSTANCE_MASK) >> 8);
 
     if(drvInstance >= DRV_I2C_INSTANCES_NUMBER)
     {
-        return DRV_I2C_TRANSFER_EVENT_HANDLE_INVALID;
+        return event;
     }
 
     dObj = (DRV_I2C_OBJ*)&gDrvI2CObj[drvInstance];
+
+    if(_DRV_I2C_ResourceLock(dObj) == false)
+    {
+        return event;
+    }
 
     /* Extract transfer buffer index value from the transfer handle */
     transferIndex = transferHandle & DRV_I2C_INDEX_MASK;
 
     /* Validate the transferIndex and corresponding request */
-    if(transferIndex >= dObj->transferObjPoolSize)
+    if(transferIndex < dObj->transferObjPoolSize)
     {
-        return DRV_I2C_TRANSFER_EVENT_HANDLE_INVALID;
+        if(transferHandle == dObj->transferObjPool[transferIndex].transferHandle)
+        {
+            event = dObj->transferObjPool[transferIndex].event;
+        }
+        else
+        {
+            event = DRV_I2C_TRANSFER_EVENT_HANDLE_EXPIRED;
+        }
     }
-    else if(transferHandle != dObj->transferObjPool[transferIndex].transferHandle)
-    {
-        return DRV_I2C_TRANSFER_EVENT_HANDLE_EXPIRED;
-    }
-    else
-    {
-        return dObj->transferObjPool[transferIndex].event;
-    }
+
+    _DRV_I2C_ResourceUnlock(dObj);
+
+    return event;
 }

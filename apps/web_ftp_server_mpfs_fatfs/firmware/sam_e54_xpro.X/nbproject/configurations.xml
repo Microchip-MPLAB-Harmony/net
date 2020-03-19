@@ -848,7 +848,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Microchip" version="3.0.27"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="3.2.56"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>

@@ -470,7 +470,6 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_FTP_CLIENT)  && defined(TCPIP_FTPC_COMMANDS)
     {"ftpc", (SYS_CMD_FNC)_Command_FTPC_Service,   ": Connect FTP Client to Server"},
 #endif  // (TCPIP_STACK_USE_FTP_CLIENT)    
-    
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -917,6 +916,18 @@ static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
                     bootName = dhcpInfo.bootFileName;
                 }
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCP boot name: %s\r\n", bootName);
+
+                if(dhcpInfo.timeServersNo)
+                {
+                    TCPIP_Helper_IPAddressToString(dhcpInfo.timeServers, addBuff, sizeof(addBuff));
+                }
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCP Time servers: %d, %s\r\n", dhcpInfo.timeServersNo, dhcpInfo.timeServersNo ? addBuff: "None");
+
+                if(dhcpInfo.ntpServersNo)
+                {
+                    TCPIP_Helper_IPAddressToString(dhcpInfo.ntpServers, addBuff, sizeof(addBuff));
+                }
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCP NTP servers: %d, %s\r\n", dhcpInfo.ntpServersNo, dhcpInfo.ntpServersNo ? addBuff :  "None");
             }
         }
         else
@@ -5626,6 +5637,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 }
 
 #endif // defined(TCPIP_STACK_USE_FTP_CLIENT)
+
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 
 

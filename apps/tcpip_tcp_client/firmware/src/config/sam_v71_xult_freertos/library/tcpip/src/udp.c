@@ -162,7 +162,7 @@ static __inline__ bool  __attribute__((always_inline))      _RxSktIsLocked(UDP_S
 }
 
 // protected access to the socket RX queue
-static TCPIP_UDP_SIGNAL_FUNCTION _RxSktQueueAddLocked(UDP_SOCKET_DCPT* pSkt, void* pNode)
+static TCPIP_UDP_SIGNAL_FUNCTION _RxSktQueueAddLocked(UDP_SOCKET_DCPT* pSkt, void* pNode, const void** pSigParam)
 {
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler = 0;
     OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
@@ -170,6 +170,7 @@ static TCPIP_UDP_SIGNAL_FUNCTION _RxSktQueueAddLocked(UDP_SOCKET_DCPT* pSkt, voi
     if((pSkt->sigMask & TCPIP_UDP_SIGNAL_RX_DATA) != 0)
     {
         sigHandler = pSkt->sigHandler;
+        *pSigParam = pSkt->sigParam;
     }
     OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
     return sigHandler;
@@ -716,6 +717,11 @@ static void _UDPAbortSockets(uint32_t netMask, TCPIP_UDP_SIGNAL_TYPE sigType)
     TCPIP_NET_HANDLE sktNet;
     UDP_SOCKET_DCPT* pSkt;
 
+    TCPIP_UDP_SIGNAL_FUNCTION sigHandler;
+    const void*     sigParam;
+    uint16_t        sigMask;
+
+
     for(ix = 0; ix < nUdpSockets; ix++)
     {
         if((pSkt = UDPSocketDcpt[ix]) != 0)  
@@ -726,9 +732,16 @@ static void _UDPAbortSockets(uint32_t netMask, TCPIP_UDP_SIGNAL_TYPE sigType)
                 sktNet = pSkt->pSktNet; 
                 // just disconnect, don't kill sockets
                 TCPIP_UDP_Disconnect(pSkt->sktIx, true);
-                if(pSkt->sigHandler != 0 && (pSkt->sigMask & sigType) != 0)
+                // get a consistent reading
+                OSAL_CRITSECT_DATA_TYPE status = OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+                sigHandler = pSkt->sigHandler;
+                sigParam = pSkt->sigParam;
+                sigMask = pSkt->sigMask;
+                OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, status);
+
+                if(sigHandler != 0 && (sigMask & sigType) != 0)
                 {
-                    (*pSkt->sigHandler)(pSkt->sktIx, sktNet, sigType, 0);
+                    (*sigHandler)(pSkt->sktIx, sktNet, sigType, sigParam);
                 }
             }
         }
@@ -1208,6 +1221,7 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
     bool freePkt = true;
     bool    loopPkt = false;
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler = 0;
+    const void* sigParam = 0;
 
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
@@ -1235,6 +1249,7 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
         if((pSkt->sigMask & TCPIP_UDP_SIGNAL_TX_DONE) != 0)
         {
             sigHandler = pSkt->sigHandler;
+            sigParam = pSkt->sigParam;
             pktIf = pPkt->pktIf;
         }
         if(pSkt->pV4Pkt != (IPV4_PACKET*)pPkt)
@@ -1285,7 +1300,7 @@ static bool _UDPv4TxAckFnc (TCPIP_MAC_PACKET * pPkt, const void * param)
 
     if(sigHandler)
     {   // notify socket user
-        (*sigHandler)(sktIx, pktIf, TCPIP_UDP_SIGNAL_TX_DONE, 0);
+        (*sigHandler)(sktIx, pktIf, TCPIP_UDP_SIGNAL_TX_DONE, sigParam);
 
     }
 
@@ -1421,6 +1436,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     const IPV4_ADDR* pPktSrcAdd;
     const IPV4_ADDR* pPktDstAdd;
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler;
+    const void*      sigParam;
     TCPIP_MAC_PKT_ACK_RES ackRes;
 
     pUDPHdr = (UDP_HEADER*)pRxPkt->pTransportLayer;
@@ -1525,10 +1541,10 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         }
 
         // insert valid packet in the RX queue
-        sigHandler = _RxSktQueueAddLocked(pSkt, pRxPkt);
+        sigHandler = _RxSktQueueAddLocked(pSkt, pRxPkt, &sigParam);
         if(sigHandler)
         {   // notify socket user
-            (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, TCPIP_UDP_SIGNAL_RX_DATA, 0);
+            (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, TCPIP_UDP_SIGNAL_RX_DATA, sigParam);
         }
 
         // everything OK, pass to user
@@ -1798,6 +1814,7 @@ static bool _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
     UDP_SOCKET_DCPT* pSkt = (UDP_SOCKET_DCPT*)param;
     bool critLock = false;
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler = 0;
+    const void* sigParam = 0;
 
     OSAL_CRITSECT_DATA_TYPE status = 0;
 
@@ -1815,6 +1832,7 @@ static bool _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
         if((pSkt->sigMask & TCPIP_UDP_SIGNAL_TX_DONE) != 0)
         {
             sigHandler = pSkt->sigHandler;
+            sigParam = pSkt->sigParam;
             pktIf = pPkt->pktIf;
             sktIx = pSkt->sktIx;
         }
@@ -1832,7 +1850,7 @@ static bool _UDPv6TxMacAckFnc (TCPIP_MAC_PACKET* pPkt, const void * param)
     
     if(sigHandler)
     {   // notify socket user
-        (*sigHandler)(sktIx, pktIf, TCPIP_UDP_SIGNAL_TX_DONE, 0);
+        (*sigHandler)(sktIx, pktIf, TCPIP_UDP_SIGNAL_TX_DONE, sigParam);
 
     }
 
@@ -1940,6 +1958,7 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     const IPV6_ADDR*    localIP;
     const IPV6_ADDR*    remoteIP;
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
     TCPIP_MAC_PKT_ACK_RES ackRes;
 
     if(!TCPIP_IPV6_AddressesGet(pRxPkt, &localIP, &remoteIP))
@@ -2011,10 +2030,10 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_UDP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         }
 
         // insert valid packet in the RX queue
-        sigHandler = _RxSktQueueAddLocked(pSkt, pRxPkt);
+        sigHandler = _RxSktQueueAddLocked(pSkt, pRxPkt, &sigParam);
         if(sigHandler)
         {   // notify socket user
-            (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, TCPIP_UDP_SIGNAL_RX_DATA, 0);
+            (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, TCPIP_UDP_SIGNAL_RX_DATA, sigParam);
         }
 
         // let it through
@@ -3484,24 +3503,31 @@ static bool _UDPIsAvailablePort(UDP_PORT port)
 
 TCPIP_UDP_SIGNAL_HANDLE TCPIP_UDP_SignalHandlerRegister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_TYPE sigMask, TCPIP_UDP_SIGNAL_FUNCTION handler, const void* hParam)
 {
+    TCPIP_UDP_SIGNAL_HANDLE sHandle = 0;
 
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     if(handler != 0)
     {
         UDP_SOCKET_DCPT *pSkt = _UDPSocketDcpt(s);
         if(pSkt != 0 && pSkt->sigHandler == 0)
         {
             pSkt->sigHandler = handler;
+            pSkt->sigParam = hParam;
             pSkt->sigMask = sigMask;
-            return (TCPIP_UDP_SIGNAL_HANDLE)handler;
+            sHandle = (TCPIP_UDP_SIGNAL_HANDLE)handler;
             // Note: this may change if multiple notfication handlers required 
         }
     }
 
-    return 0;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return sHandle;
 }
 
 bool TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE hSig)
 {
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
     UDP_SOCKET_DCPT *pSkt = _UDPSocketDcpt(s);
 
     if(pSkt != 0)
@@ -3510,11 +3536,12 @@ bool TCPIP_UDP_SignalHandlerDeregister(UDP_SOCKET s, TCPIP_UDP_SIGNAL_HANDLE hSi
         {
             pSkt->sigHandler = 0;
             pSkt->sigMask = 0;
-            return true;
+            res = true;
         }
     }
 
-    return false;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
 }
 
 int TCPIP_UDP_SocketsNumberGet(void)
