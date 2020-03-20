@@ -214,6 +214,7 @@ typedef struct
 
     SINGLE_LIST     rxQueue;        // queued RX packets belonging to this socket
     TCPIP_UDP_SIGNAL_FUNCTION sigHandler;  // socket event handler
+    const void*     sigParam;               // event handler parameter
     uint16_t        sigMask;        // TCPIP_UDP_SIGNAL_TYPE: active events
     uint8_t         rxQueueLimit;   // max number of RX packets that can be queued at a certain time
     uint8_t         ttl;            // socket TTL value 
