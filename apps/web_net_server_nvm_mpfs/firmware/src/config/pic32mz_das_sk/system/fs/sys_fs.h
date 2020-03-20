@@ -53,6 +53,7 @@ File System Service Library Interface Declarations and Types
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+#include <stdarg.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -549,7 +550,7 @@ typedef struct
     int(*putstrn)(const char* str, uintptr_t handle);
     /* Function pointer of native file system to print a formatted string to
      * file */
-    int(*formattedprint)(uintptr_t handle, const char *str, ... );
+    int(*formattedprint)(uintptr_t handle, const char *str, va_list argList);
     /* Function pointer of native file system to test an error in a file */
     bool(*testerror)(uintptr_t handle);
     /* Function pointer of native file system to format a disk */
