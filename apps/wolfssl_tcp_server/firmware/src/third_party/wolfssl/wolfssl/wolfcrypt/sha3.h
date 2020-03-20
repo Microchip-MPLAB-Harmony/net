@@ -87,8 +87,9 @@ enum {
 #elif defined(WOLFSSL_AFALG_XILINX_SHA3)
     #include <wolfssl/wolfcrypt/port/af_alg/afalg_hash.h>
 #else
+
 /* Sha3 digest */
-typedef struct Sha3 {
+struct Sha3 {
     /* State data that is processed for each block. */
     word64 s[25];
     /* Unprocessed message data. */
@@ -104,7 +105,13 @@ typedef struct Sha3 {
 #if defined(WOLFSSL_HASH_FLAGS) || defined(WOLF_CRYPTO_CB)
     word32 flags; /* enum wc_HashFlags in hash.h */
 #endif
-} wc_Sha3;
+};
+
+#ifndef WC_SHA3_TYPE_DEFINED
+    typedef struct Sha3 wc_Sha3;
+    #define WC_SHA3_TYPE_DEFINED
+#endif
+
 #endif
 
 
@@ -137,8 +144,8 @@ WOLFSSL_API int wc_Sha3_512_GetHash(wc_Sha3*, byte*);
 WOLFSSL_API int wc_Sha3_512_Copy(wc_Sha3* src, wc_Sha3* dst);
 
 #if defined(WOLFSSL_HASH_FLAGS) || defined(WOLF_CRYPTO_CB)
-    WOLFSSL_LOCAL int wc_Sha3_SetFlags(wc_Sha3* sha3, word32 flags);
-    WOLFSSL_LOCAL int wc_Sha3_GetFlags(wc_Sha3* sha3, word32* flags);
+    WOLFSSL_API int wc_Sha3_SetFlags(wc_Sha3* sha3, word32 flags);
+    WOLFSSL_API int wc_Sha3_GetFlags(wc_Sha3* sha3, word32* flags);
 #endif
 
 #ifdef __cplusplus

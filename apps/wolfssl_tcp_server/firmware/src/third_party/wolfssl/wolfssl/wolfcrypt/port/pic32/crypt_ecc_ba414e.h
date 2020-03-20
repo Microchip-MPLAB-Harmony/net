@@ -1,23 +1,22 @@
 /**************************************************************************
-  Crypto Framework Library Source
+  Crypto Framework Library Header
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    crypto_sha1_hw.h
-
+    crypto_ecc_ba414e.h
+  
   Summary:
-    Crypto Framework Libarary interface file for hardware RNG
+    Crypto Framework Library header the ba414e ecc functions
 
   Description:
-    This file contains the interface that is required to be implemented by
-    the RNG hardware driver..
+    This header contains the function definitions for the ba414e ecc functions
 **************************************************************************/
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -40,38 +39,19 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
+//DOM-IGNORE-END
 
-#ifndef _CRYPTO_SHA1_HW_H_
-#define _CRYPTO_SHA1_HW_H_
-
-
-#if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_11105)
-#include "crypt_sha_sam11105.h"
-#endif
-
-#if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_6156)
-#include "crypt_sha_sam6156.h"
-#endif
+#ifndef _CRYPT_ECC_BA414E_H_
+#define _CRYPT_ECC_BA414E_H_
 
 #include "configuration.h"
+#include "wolfssl/wolfcrypt/cryptocb.h"
+#include "driver/driver_common.h"
 
-typedef struct 
-{
-    int devId;
-    word32 flags; /* enum wc_HashFlags in hash.h */
-#if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_11105)
-    struct icm_descriptor icm_descriptor;
-    uint8_t  buffer[SHA_BLOCK_SIZE];
-    uint32_t digest[SHA_DIGEST_SIZE/4];
-    uint64_t total_len;   /* number of bytes to be processed  */
-#endif
-#if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_6156)
-    CRYPT_SHA_SAM6156_shaDescriptor sha_descriptor;
-    uint8_t  buffer[SHA_BLOCK_SIZE];
-    uint32_t digest[SHA_DIGEST_SIZE/4];
-    uint64_t total_len;   /* number of bytes to be processed  */
-#endif
-}wc_Sha;
+int Crypt_ECC_HandleReq(int devId, wc_CryptoInfo* info, void* ctx);
 
+int Crypt_ECC_HandleEccSignReq(int devId, wc_CryptoInfo* info, void* ctx, DRV_HANDLE ba414eClient);
 
-#endif
+int Crypt_ECC_HandleEccVerifyReq(int devId, wc_CryptoInfo* info, void* ctx, DRV_HANDLE ba414eClient);
+
+#endif //_CRYPT_ECC_BA414E_H_
