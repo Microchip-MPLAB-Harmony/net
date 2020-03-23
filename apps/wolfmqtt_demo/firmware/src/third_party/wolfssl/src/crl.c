@@ -83,7 +83,7 @@ static int InitCRL_Entry(CRL_Entry* crle, DecodedCRL* dcrl, const byte* buff,
 
     XMEMCPY(crle->issuerHash, dcrl->issuerHash, CRL_DIGEST_SIZE);
     /* XMEMCPY(crle->crlHash, dcrl->crlHash, CRL_DIGEST_SIZE);
-     *   copy the hash here if needed for optimized comparisons */
+     * copy the hash here if needed for optimized comparisons */
     XMEMCPY(crle->lastDate, dcrl->lastDate, MAX_DATE_SIZE);
     XMEMCPY(crle->nextDate, dcrl->nextDate, MAX_DATE_SIZE);
     crle->lastDateFormat = dcrl->lastDateFormat;
@@ -109,7 +109,7 @@ static int InitCRL_Entry(CRL_Entry* crle, DecodedCRL* dcrl, const byte* buff,
         }
         XMEMCPY(crle->toBeSigned, buff + dcrl->certBegin, crle->tbsSz);
         XMEMCPY(crle->signature, dcrl->signature, crle->signatureSz);
-    #if !defined(NO_SKID) && defined(CRL_SKID_READY)
+    #ifndef NO_SKID
         crle->extAuthKeyIdSet = dcrl->extAuthKeyIdSet;
         if (crle->extAuthKeyIdSet)
             XMEMCPY(crle->extAuthKeyId, dcrl->extAuthKeyId, KEYID_SIZE);
@@ -121,6 +121,7 @@ static int InitCRL_Entry(CRL_Entry* crle, DecodedCRL* dcrl, const byte* buff,
     }
 
     (void)verified;
+    (void)heap;
 
     return 0;
 }
@@ -205,9 +206,9 @@ static int CheckCertCRLList(WOLFSSL_CRL* crl, DecodedCert* cert, int *pFoundEntr
             WOLFSSL_MSG("Found CRL Entry on list");
 
             if (crle->verified == 0) {
-                Signer* ca;
-            #if !defined(NO_SKID) && defined(CRL_SKID_READY)
-                byte extAuthKeyId[KEYID_SIZE]
+                Signer* ca = NULL;
+            #ifndef NO_SKID
+                byte extAuthKeyId[KEYID_SIZE];
             #endif
                 byte issuerHash[CRL_DIGEST_SIZE];
                 byte* tbs = NULL;
@@ -231,15 +232,15 @@ static int CheckCertCRLList(WOLFSSL_CRL* crl, DecodedCert* cert, int *pFoundEntr
 
                 XMEMCPY(tbs, crle->toBeSigned, tbsSz);
                 XMEMCPY(sig, crle->signature, sigSz);
-            #if !defined(NO_SKID) && defined(CRL_SKID_READY)
-                XMEMCMPY(extAuthKeyId, crle->extAuthKeyId,
+            #ifndef NO_SKID
+                XMEMCPY(extAuthKeyId, crle->extAuthKeyId,
                                                           sizeof(extAuthKeyId));
             #endif
                 XMEMCPY(issuerHash, crle->issuerHash, sizeof(issuerHash));
 
                 wc_UnLockMutex(&crl->crlLock);
 
-            #if !defined(NO_SKID) && defined(CRL_SKID_READY)
+            #ifndef NO_SKID
                 if (crle->extAuthKeyIdSet)
                     ca = GetCA(crl->cm, extAuthKeyId);
                 if (ca == NULL)
@@ -428,7 +429,7 @@ static int AddCRL(WOLFSSL_CRL* crl, DecodedCRL* dcrl, const byte* buff,
 
 /* Load CRL File of type, WOLFSSL_SUCCESS on ok */
 int BufferLoadCRL(WOLFSSL_CRL* crl, const byte* buff, long sz, int type,
-                  int noVerify)
+                  int verify)
 {
     int          ret = WOLFSSL_SUCCESS;
     const byte*  myBuffer = buff;    /* if DER ok, otherwise switch */
@@ -471,7 +472,7 @@ int BufferLoadCRL(WOLFSSL_CRL* crl, const byte* buff, long sz, int type,
 
     InitDecodedCRL(dcrl, crl->heap);
     ret = ParseCRL(dcrl, myBuffer, (word32)sz, crl->cm);
-    if (ret != 0 && !(ret == ASN_CRL_NO_SIGNER_E && noVerify)) {
+    if (ret != 0 && !(ret == ASN_CRL_NO_SIGNER_E && verify == NO_VERIFY)) {
         WOLFSSL_MSG("ParseCRL error");
     }
     else {
@@ -516,7 +517,7 @@ int wolfSSL_X509_STORE_add_crl(WOLFSSL_X509_STORE *store, WOLFSSL_X509_CRL *newc
     wc_UnLockMutex(&crl->crlLock);
 
     WOLFSSL_LEAVE("wolfSSL_X509_STORE_add_crl", WOLFSSL_SUCCESS);
-    
+
     return WOLFSSL_SUCCESS;
 }
 #endif
@@ -1022,8 +1023,8 @@ int LoadCRL(WOLFSSL_CRL* crl, const char* path, int type, int monitor)
             }
         }
 
-        if (!skip && ProcessFile(NULL, name, type, CRL_TYPE, NULL, 0, crl)
-                                                           != WOLFSSL_SUCCESS) {
+        if (!skip && ProcessFile(NULL, name, type, CRL_TYPE, NULL, 0, crl,
+                                 VERIFY) != WOLFSSL_SUCCESS) {
             WOLFSSL_MSG("CRL file load failed, continuing");
         }
 

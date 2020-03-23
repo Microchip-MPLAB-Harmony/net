@@ -201,11 +201,7 @@ void WOLFSSL_TIME(int count)
 #ifdef DEBUG_WOLFSSL
 
 #if defined(FREESCALE_MQX) || defined(FREESCALE_KSDK_MQX)
-    #if MQX_USE_IO_OLD
-        #include <fio.h>
-    #else
-        #include <nio.h>
-    #endif
+    /* see wc_port.h for fio.h and nio.h includes */
 #elif defined(WOLFSSL_SGX)
     /* Declare sprintf for ocall */
     int sprintf(char* buf, const char *fmt, ...);
@@ -277,41 +273,52 @@ void WOLFSSL_MSG(const char* msg)
         wolfssl_log(INFO_LOG , msg);
 }
 
-
+#ifndef LINE_LEN
+#define LINE_LEN 16
+#endif
 void WOLFSSL_BUFFER(const byte* buffer, word32 length)
 {
-    #define LINE_LEN 16
+    int i, buflen = (int)length, bufidx;
+    char line[(LINE_LEN * 4) + 3]; /* \t00..0F | chars...chars\0 */
 
-    if (loggingEnabled) {
-        word32 i;
-        char line[80];
+    if (!loggingEnabled) {
+        return;
+    }
 
-        if (!buffer) {
-            wolfssl_log(INFO_LOG, "\tNULL");
+    if (!buffer) {
+        wolfssl_log(INFO_LOG, "\tNULL");
+        return;
+    }
 
-            return;
-        }
-
-        sprintf(line, "\t");
+    while (buflen > 0) {
+        bufidx = 0;
+        XSNPRINTF(&line[bufidx], sizeof(line)-bufidx, "\t");
+        bufidx++;
 
         for (i = 0; i < LINE_LEN; i++) {
-            if (i < length)
-                sprintf(line + 1 + i * 3,"%02x ", buffer[i]);
-            else
-                sprintf(line + 1 + i * 3, "   ");
+            if (i < buflen) {
+                XSNPRINTF(&line[bufidx], sizeof(line)-bufidx, "%02x ", buffer[i]);
+            }
+            else {
+                XSNPRINTF(&line[bufidx], sizeof(line)-bufidx, "   ");
+            }
+            bufidx += 3;
         }
 
-        sprintf(line + 1 + LINE_LEN * 3, "| ");
+        XSNPRINTF(&line[bufidx], sizeof(line)-bufidx, "| ");
+        bufidx++;
 
-        for (i = 0; i < LINE_LEN; i++)
-            if (i < length)
-                sprintf(line + 3 + LINE_LEN * 3 + i,
+        for (i = 0; i < LINE_LEN; i++) {
+            if (i < buflen) {
+                XSNPRINTF(&line[bufidx], sizeof(line)-bufidx,
                      "%c", 31 < buffer[i] && buffer[i] < 127 ? buffer[i] : '.');
+                bufidx++;
+            }
+        }
 
         wolfssl_log(INFO_LOG, line);
-
-        if (length > LINE_LEN)
-            WOLFSSL_BUFFER(buffer + LINE_LEN, length - LINE_LEN);
+        buffer += LINE_LEN;
+        buflen -= LINE_LEN;
     }
 }
 
@@ -344,9 +351,11 @@ void WOLFSSL_LEAVE(const char* msg, int ret)
  * name where WOLFSSL_ERROR is called at.
  */
 #if defined(DEBUG_WOLFSSL) || defined(OPENSSL_ALL) || \
-    defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY)
+    defined(WOLFSSL_NGINX) || defined(WOLFSSL_HAPROXY) || \
+    defined(OPENSSL_EXTRA)
 
-#if defined(OPENSSL_EXTRA) || defined(DEBUG_WOLFSSL_VERBOSE)
+#if (defined(OPENSSL_EXTRA) && !defined(_WIN32) && !defined(NO_ERROR_QUEUE)) \
+    || defined(DEBUG_WOLFSSL_VERBOSE)
 void WOLFSSL_ERROR_LINE(int error, const char* func, unsigned int line,
         const char* file, void* usrCtx)
 #else
@@ -359,7 +368,8 @@ void WOLFSSL_ERROR(int error)
     {
         char buffer[WOLFSSL_MAX_ERROR_SZ];
 
-    #if defined(OPENSSL_EXTRA) || defined(DEBUG_WOLFSSL_VERBOSE)
+    #if (defined(OPENSSL_EXTRA) && !defined(_WIN32) && \
+            !defined(NO_ERROR_QUEUE)) || defined(DEBUG_WOLFSSL_VERBOSE)
         (void)usrCtx; /* a user ctx for future flexibility */
         (void)func;
 
@@ -473,11 +483,6 @@ int wc_PeekErrorNode(int idx, const char **file, const char **reason,
 
     if (idx < 0) {
         err = wc_last_node;
-        if (err == NULL) {
-            WOLFSSL_MSG("No Errors in queue");
-            wc_UnLockMutex(&debug_mutex);
-            return BAD_STATE_E;
-        }
     }
     else {
         int i;
@@ -491,6 +496,12 @@ int wc_PeekErrorNode(int idx, const char **file, const char **reason,
             }
             err = err->next;
         }
+    }
+
+    if (err == NULL) {
+        WOLFSSL_MSG("No Errors in queue");
+        wc_UnLockMutex(&debug_mutex);
+        return BAD_STATE_E;
     }
 
     if (file != NULL) {
@@ -563,9 +574,14 @@ int wc_PullErrorNode(const char **file, const char **reason, int *line)
  * function. debug_mutex should be locked before a call to this function. */
 int wc_AddErrorNode(int error, int line, char* buf, char* file)
 {
-
+#if defined(NO_ERROR_QUEUE)
+    (void)error;
+    (void)line;
+    (void)buf;
+    (void)file;
+    WOLFSSL_MSG("Error queue turned off, can not add nodes");
+#else
     struct wc_error_queue* err;
-
     err = (struct wc_error_queue*)XMALLOC(
             sizeof(struct wc_error_queue), wc_error_heap, DYNAMIC_TYPE_LOG);
     if (err == NULL) {
@@ -631,7 +647,7 @@ int wc_AddErrorNode(int error, int line, char* buf, char* file)
             }
         }
     }
-
+#endif
     return 0;
 }
 
@@ -658,10 +674,14 @@ void wc_RemoveErrorNode(int idx)
     if (current != NULL) {
         if (current->prev != NULL)
             current->prev->next = current->next;
+        if (current->next != NULL)
+            current->next->prev = current->prev;
         if (wc_last_node == current)
             wc_last_node = current->prev;
         if (wc_errors == current)
             wc_errors = current->next;
+        if (wc_current_node == current)
+            wc_current_node = current->next;
         XFREE(current, current->heap, DYNAMIC_TYPE_LOG);
     }
 
@@ -781,4 +801,3 @@ void wc_ERR_print_errors_fp(XFILE fp)
 #endif /* !defined(NO_FILESYSTEM) && !defined(NO_STDIO_FILESYSTEM) */
 
 #endif /* defined(OPENSSL_EXTRA) || defined(DEBUG_WOLFSSL_VERBOSE) */
-

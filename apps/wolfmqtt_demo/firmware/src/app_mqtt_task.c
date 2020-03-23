@@ -154,10 +154,9 @@ static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
 
     strncpy(mqttCtx->broker, APP_MQTT_DEFAULT_BROKER, sizeof(mqttCtx->broker) - 1);
     strncpy(mqttCtx->clientId, APP_MQTT_DEFAULT_CLIENT_ID, sizeof(mqttCtx->clientId) - 1);
-    strncpy(mqttCtx->subscribeTopicName, APP_MQTT_DEFAULT_SUBSCRIBE_TOPIC, sizeof(mqttCtx->subscribeTopicName) - 1);
-    strncpy(mqttCtx->publishTopicName, APP_MQTT_DEFAULT_PUBLISH_TOPIC, sizeof(mqttCtx->publishTopicName) - 1);
+    strncpy(mqttCtx->topicName, APP_MQTT_DEFAULT_TOPIC_NAME, sizeof(mqttCtx->topicName) - 1);
     strncpy(mqttCtx->appName, APP_MQTT_DEFAULT_APP_NAME, sizeof(mqttCtx->appName) - 1);
-    strncpy(mqttCtx->publishMessage, APP_MQTT_DEFAULT_PUBLISH_MESSAGE, sizeof(mqttCtx->publishMessage) - 1);
+    strncpy(mqttCtx->publishMessage, APP_MQTT_DEFAULT_MESSAGE, sizeof(mqttCtx->publishMessage) - 1);
     strncpy(mqttCtx->lastWill, APP_MQTT_DEFAULT_LWT_TOPIC_NAME, sizeof(mqttCtx->lastWill) - 1);
     strncpy(mqttCtx->userName, APP_MQTT_DEFAULT_USER, sizeof(mqttCtx->userName) - 1);
     strncpy(mqttCtx->password, APP_MQTT_DEFAULT_PASS, sizeof(mqttCtx->password) - 1);
@@ -173,7 +172,6 @@ static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
     mqttCtx->cleanSession = 1;
 
     mqttCtx->forceTls = 0;    // NET_PRES enables TLS, as needed
-    mqttCtx->enableAuth = APP_MQTT_DEFAULT_AUTH; 
 
 #ifdef WOLFMQTT_V5
     mqttCtx->maxPktSize = APP_MQTT_MAX_CTRL_PKT_SIZE;
@@ -414,7 +412,7 @@ void APP_MQTT_Task(void)
 
             // set the topic list
             memset(&mqttCtx->mqttSubscribe, 0, sizeof(mqttCtx->mqttSubscribe));
-            mqttCtx->mqttTopic.topic_filter = mqttCtx->subscribeTopicName;
+            mqttCtx->mqttTopic.topic_filter = mqttCtx->topicName;
             mqttCtx->mqttTopic.qos = mqttCtx->qos;
 
 #ifdef WOLFMQTT_V5
@@ -463,7 +461,7 @@ void APP_MQTT_Task(void)
             mqttCtx->mqttPublish.retain = 0;
             mqttCtx->mqttPublish.qos = mqttCtx->qos;
             mqttCtx->mqttPublish.duplicate = 0;
-            mqttCtx->mqttPublish.topic_name = mqttCtx->publishTopicName;
+            mqttCtx->mqttPublish.topic_name = mqttCtx->topicName;
             mqttCtx->mqttPublish.packet_id = APP_MQTT_NewPacketId(mqttCtx);
             mqttCtx->mqttPublish.buffer = (uint8_t*)mqttCtx->publishMessage;
             mqttCtx->mqttPublish.total_len = (uint16_t)strlen(mqttCtx->publishMessage);
@@ -572,7 +570,7 @@ void APP_MQTT_Task(void)
             {   // check the timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", MQTT_CODE_ERROR_TIMEOUT);
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping", MQTT_CODE_ERROR_TIMEOUT);
                     mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
                 }
                 break;
@@ -590,7 +588,6 @@ void APP_MQTT_Task(void)
                 {
                     mqttCtx->waitMsgRetries--;
                     mqttCtx->currState = APP_MQTT_STATE_START_WAIT;
-                    SYS_CONSOLE_PRINT("MQTT Task - ping retrying: %d\r\n", mqttCtx->waitMsgRetries);
                 }
                 else
                 {   // retries exhausted

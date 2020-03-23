@@ -115,18 +115,15 @@ typedef enum
 #define APP_MQTT_MAX_CLIENT_SIZE    32
 #define APP_MQTT_DEFAULT_CLIENT_ID  "MQTT_NET_Client"
 
-#define APP_MQTT_MAX_SUBSCRIBE_TOPIC_SIZE     32
-#define APP_MQTT_DEFAULT_SUBSCRIBE_TOPIC "MQTT_NET_Client topic"
-
-#define APP_MQTT_MAX_PUBLISH_TOPIC_SIZE   32
-#define APP_MQTT_DEFAULT_PUBLISH_TOPIC    "MQTT_NET_Client topic"
+#define APP_MQTT_MAX_TOPIC_SIZE     32
+#define APP_MQTT_DEFAULT_TOPIC_NAME "MQTT_NET_Client topic"
 
 #define APP_MQTT_MAX_LWT_SIZE       32
 #define APP_MQTT_DEFAULT_LWT_TOPIC_NAME "MQTT_NET_Client LWT topic"
 
 
-#define APP_MQTT_MAX_PUBLISH_MESSAGE_SIZE   64
-#define APP_MQTT_DEFAULT_PUBLISH_MESSAGE    "MQTT NET Demo Test Message"
+#define APP_MQTT_MAX_MESSAGE_SIZE   64
+#define APP_MQTT_DEFAULT_MESSAGE    "MQTT NET Demo Test Message"
 
 #define APP_MQTT_MAX_USER_SIZE      64
 #define APP_MQTT_DEFAULT_USER       "MQTT_NET_User"
@@ -143,7 +140,6 @@ typedef enum
 #define APP_MQTT_DEFAULT_CON_TIMEOUT    5000    // ms
 #define APP_MQTT_DEFAULT_QOS            MQTT_QOS_0
 
-#define APP_MQTT_DEFAULT_AUTH           false
 
 #define APP_MQTT_DEFAULT_CMD_TIMEOUT_MS     30000
 #define APP_MQTT_MAX_WAIT_TIMEOUT           120000
@@ -223,11 +219,10 @@ typedef struct
     char            broker[APP_MQTT_MAX_BROKER_SIZE + 1];
     char            userName[APP_MQTT_MAX_USER_SIZE + 1];
     char            password[APP_MQTT_MAX_PASS_SIZE + 1];
-    char            subscribeTopicName[APP_MQTT_MAX_SUBSCRIBE_TOPIC_SIZE + 1];
-    char            publishTopicName[APP_MQTT_MAX_PUBLISH_TOPIC_SIZE + 1];
+    char            topicName[APP_MQTT_MAX_TOPIC_SIZE + 1];
     char            clientId[APP_MQTT_MAX_CLIENT_SIZE + 1];
     char            lastWill[APP_MQTT_MAX_LWT_SIZE + 1];
-    char            publishMessage[APP_MQTT_MAX_PUBLISH_MESSAGE_SIZE + 1];
+    char            publishMessage[APP_MQTT_MAX_MESSAGE_SIZE + 1];
 
 } APP_MQTT_CONTEXT; 
 
