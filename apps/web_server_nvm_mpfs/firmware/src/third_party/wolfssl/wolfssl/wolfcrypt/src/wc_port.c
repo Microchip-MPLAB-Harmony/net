@@ -49,7 +49,9 @@
 #if defined(WOLFSSL_ATMEL) || defined(WOLFSSL_ATECC508A)
     #include <wolfssl/wolfcrypt/port/atmel/atmel.h>
 #endif
-
+#if defined(WOLFSSL_RENESAS_TSIP)
+    #include <wolfssl/wolfcrypt/port/Renesas/renesas-tsip-crypt.h>
+#endif
 #if defined(WOLFSSL_STSAFEA100)
     #include <wolfssl/wolfcrypt/port/st/stsafe.h>
 #endif
@@ -70,6 +72,14 @@
 
 #ifdef WOLF_CRYPTO_CB
     #include <wolfssl/wolfcrypt/cryptocb.h>
+#endif
+
+#ifdef HAVE_INTEL_QA_SYNC
+    #include <wolfssl/wolfcrypt/port/intel/quickassist_sync.h>
+#endif
+
+#ifdef HAVE_CAVIUM_OCTEON_SYNC
+    #include <wolfssl/wolfcrypt/port/cavium/cavium_octeon_sync.h>
 #endif
 
 #ifdef _MSC_VER
@@ -110,6 +120,16 @@ int wolfCrypt_Init(void)
         if (ret != 0) {
             WOLFSSL_MSG("Async hardware start failed");
             /* don't return failure, allow operation to continue */
+        }
+    #endif
+
+    #if defined(WOLFSSL_RENESAS_TSIP_CRYPT)
+        ret = tsip_Open( );
+        if( ret != TSIP_SUCCESS ) {
+            WOLFSSL_MSG("RENESAS TSIP Open failed");
+            /* not return 1 since WOLFSSL_SUCCESS=1*/
+            ret = -1;/* FATAL ERROR */
+            return ret;
         }
     #endif
 
@@ -206,9 +226,8 @@ int wolfCrypt_Init(void)
             return ret;
         }
 #endif
-
-        initRefCount = 1;
     }
+    initRefCount++;
 
     return ret;
 }
@@ -219,7 +238,11 @@ int wolfCrypt_Cleanup(void)
 {
     int ret = 0;
 
-    if (initRefCount == 1) {
+    initRefCount--;
+    if (initRefCount < 0)
+        initRefCount = 0;
+
+    if (initRefCount == 0) {
         WOLFSSL_ENTER("wolfCrypt_Cleanup");
 
 #ifdef HAVE_ECC
@@ -250,7 +273,9 @@ int wolfCrypt_Cleanup(void)
     #if defined(WOLFSSL_CRYPTOCELL)
         cc310_Free();
     #endif
-        initRefCount = 0; /* allow re-init */
+    #if defined(WOLFSSL_RENESAS_TSIP_CRYPT)
+        tsip_Close();
+    #endif
     }
 
     return ret;
@@ -566,7 +591,7 @@ XFILE z_fs_open(const char* filename, const char* perm)
     file = XMALLOC(sizeof(*file), NULL, DYNAMIC_TYPE_FILE);
     if (file != NULL) {
         if (fs_open(file, filename) != 0) {
-            XFREE(file);
+            XFREE(file, NULL, DYNAMIC_TYPE_FILE);
             file = NULL;
         }
     }
@@ -1148,6 +1173,19 @@ int wolfSSL_CryptHwMutexUnLock(void) {
     {
         rtp_sig_mutex_release(*m);
         return 0;
+    }
+
+    int ebsnet_fseek(int a, long b, int c)
+    {
+        int retval;
+
+        retval = vf_lseek(a, b, c);
+        if (retval > 0)
+            retval = 0;
+        else
+            retval =  -1;
+
+        return(retval);
     }
 
 #elif defined(FREESCALE_MQX) || defined(FREESCALE_KSDK_MQX)
