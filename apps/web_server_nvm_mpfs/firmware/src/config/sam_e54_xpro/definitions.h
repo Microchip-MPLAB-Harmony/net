@@ -77,6 +77,7 @@
 #include "peripheral/clock/plib_clock.h"
 #include "peripheral/nvic/plib_nvic.h"
 #include "peripheral/mpu/plib_mpu.h"
+#include "peripheral/cmcc/plib_cmcc.h"
 #include "system/debug/sys_debug.h"
 #include "wolfssl/wolfcrypt/port/pic32/crypt_wolfcryptcb.h"
 #include "system/fs/sys_fs.h"
