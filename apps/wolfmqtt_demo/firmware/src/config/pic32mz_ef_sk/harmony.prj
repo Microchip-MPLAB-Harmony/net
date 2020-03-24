@@ -27,16 +27,16 @@
           <Name dnOrder="1">app_mqtt_commands.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">5CEAB574596F2E9E575CFBB247DA3972</GeneratedChecksum>
-          <UserChecksum dnOrder="5">5CEAB574596F2E9E575CFBB247DA3972</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F2351BBFB6F207E8DBE55CA58E0BCC53</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F2351BBFB6F207E8DBE55CA58E0BCC53</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
           <Name dnOrder="1">app_mqtt_task.c</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7E6AC5E78B061C1063357A2D23EE1B13</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7E6AC5E78B061C1063357A2D23EE1B13</UserChecksum>
+          <GeneratedChecksum dnOrder="4">758701F34E6CC567F800969BB6B51F98</GeneratedChecksum>
+          <UserChecksum dnOrder="5">758701F34E6CC567F800969BB6B51F98</UserChecksum>
         </File>
         <File dnOrder="4">
           <Type dnOrder="0">SOURCE</Type>
@@ -1547,8 +1547,8 @@
           <Name dnOrder="1">app_mqtt_task.h</Name>
           <LogicalPath dnOrder="2"/>
           <PhysicalPath dnOrder="3">/../../</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E67D395BFA6FE855320C4AA36A69244C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E67D395BFA6FE855320C4AA36A69244C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">1105F3E2031150F42C531AC1D74296F5</GeneratedChecksum>
+          <UserChecksum dnOrder="5">1105F3E2031150F42C531AC1D74296F5</UserChecksum>
         </File>
         <File dnOrder="193">
           <Type dnOrder="0">HEADER</Type>
@@ -3817,7 +3817,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.1.45\atdf\PIC32MZ2048EFM144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;csp;gfx;motor_control;net;usb;wireless;"/>
     </Settings>
   </Configurator>

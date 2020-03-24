@@ -73,7 +73,8 @@ static void     CmdMqttId(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, AP
 static void     CmdMqttLwtMessage(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttUser(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttPass(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
-static void     CmdMqttTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
+static void     CmdMqttSubsTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
+static void     CmdMqttPublishTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttBroker(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttName(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttTmo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
@@ -89,6 +90,7 @@ static void     CmdMqttHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, 
 static void     CmdMqttCtrlSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttEAuth(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 #endif  //  WOLFMQTT_V5
+static void     CmdMqttTime(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 
 static bool     ConvStringtoInt(char* str, int* pRes, int lim_low, int lim_high);
 static void     MqttChangeBufferSize(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx, bool isTx);
@@ -120,7 +122,8 @@ typedef struct
 #define     CMD_MQTT_HELP_MESSAGE   "Sets the message to be published"
 #define     CMD_MQTT_HELP_USER      "Sets the MQTT connection user name"
 #define     CMD_MQTT_HELP_PASS      "Sets the MQTT connection password"
-#define     CMD_MQTT_HELP_TOPIC     "Sets the MQTT connection topic name"
+#define     CMD_MQTT_HELP_SUBSCRIBE "Sets the MQTT subscribe topic name"
+#define     CMD_MQTT_HELP_PUBLISH   "Sets the MQTT publish topic name"
 #define     CMD_MQTT_HELP_BROKER    "Sets the MQTT broker to connect to"
 #define     CMD_MQTT_HELP_NAME      "Sets the MQTT application name"
 #define     CMD_MQTT_HELP_TMO       "Sets the MQTT connection wait reply timeout"
@@ -133,6 +136,7 @@ typedef struct
 #define     CMD_MQTT_HELP_CTRL_SIZE "Sets the MQTT control packet size"
 #define     CMD_MQTT_HELP_EAUTH     "Sets the MQTT V5 enhanced authentication mode"
 #define     CMD_MQTT_HELP_HELP      "This help command"
+#define     CMD_MQTT_HELP_TIME      "Gets the SNTP time"
 
 static const CMD_MQTT_PROC_DCPT cmd_mqtt_proc_dcpt_tbl[] =
 {
@@ -141,14 +145,15 @@ static const CMD_MQTT_PROC_DCPT cmd_mqtt_proc_dcpt_tbl[] =
     {"stop",                CmdMqttStop,         2,              2,             CMD_MQTT_HELP_STOP  },
     {"stat",                CmdMqttStat,         2,              2,             CMD_MQTT_HELP_STAT  },
     {"port",                CmdMqttPort,         2,              3,             CMD_MQTT_HELP_PORT  },
-    {"qos",                 CmdMqttQos,          3,              3,             CMD_MQTT_HELP_QOS   },
+    {"qos",                 CmdMqttQos,          2,              3,             CMD_MQTT_HELP_QOS   },
     {"kalive",              CmdMqttKalive,       2,              3,             CMD_MQTT_HELP_KALIVE},
     {"id",                  CmdMqttId,           2,              3,             CMD_MQTT_HELP_ID    },
     {"lwtmsg",              CmdMqttLwtMessage,   2,              3,             CMD_MQTT_HELP_LWT_MESSAGE},
     {"message",             CmdMqttMessage,      2,              3,             CMD_MQTT_HELP_MESSAGE},
     {"user",                CmdMqttUser,         2,              3,             CMD_MQTT_HELP_USER  },
     {"pass",                CmdMqttPass,         2,              3,             CMD_MQTT_HELP_PASS  },
-    {"topic",               CmdMqttTopic,        2,              3,             CMD_MQTT_HELP_TOPIC },
+    {"subscribe",           CmdMqttSubsTopic,    2,              3,             CMD_MQTT_HELP_SUBSCRIBE },
+    {"publish",             CmdMqttPublishTopic, 2,              3,             CMD_MQTT_HELP_PUBLISH },
     {"broker",              CmdMqttBroker,       2,              3,             CMD_MQTT_HELP_BROKER},
     {"name",                CmdMqttName,         2,              3,             CMD_MQTT_HELP_NAME},
     {"tmo",                 CmdMqttTmo,          2,              3,             CMD_MQTT_HELP_TMO   },
@@ -163,6 +168,7 @@ static const CMD_MQTT_PROC_DCPT cmd_mqtt_proc_dcpt_tbl[] =
     {"eauth",               CmdMqttEAuth,        2,              3,             CMD_MQTT_HELP_EAUTH  },
 #endif  //  WOLFMQTT_V5
     {"help",                CmdMqttHelp,         2,              2,             CMD_MQTT_HELP_HELP  },
+    {"time",                CmdMqttTime,         2,              2,             CMD_MQTT_HELP_TIME  },
 };
 
 
@@ -404,16 +410,28 @@ static void CmdMqttPass(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Password is: %s\r\n", pMqttCtx->password);
 }
 
-static void CmdMqttTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
+static void CmdMqttSubsTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
 {
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     if(argc == 3)
     {
-        strncpy(pMqttCtx->topicName, argv[2], sizeof(pMqttCtx->topicName) - 1); 
+        strncpy(pMqttCtx->subscribeTopicName, argv[2], sizeof(pMqttCtx->subscribeTopicName) - 1); 
     }
 
-    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Topic is: %s\r\n", pMqttCtx->topicName);
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Subscribe Topic is: %s\r\n", pMqttCtx->subscribeTopicName);
+}
+
+static void CmdMqttPublishTopic(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(argc == 3)
+    {
+        strncpy(pMqttCtx->publishTopicName, argv[2], sizeof(pMqttCtx->publishTopicName) - 1); 
+    }
+
+    (*pCmdIO->pCmdApi->print)(cmdIoParam, "mqtt: Publish Topic is: %s\r\n", pMqttCtx->publishTopicName);
 }
 
 static void CmdMqttBroker(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
@@ -665,6 +683,23 @@ static void CmdMqttHelp(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
     }
 }
 
+
+static void CmdMqttTime(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
+{
+    uint32_t utc_seconds;
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    TCPIP_SNTP_RESULT res = TCPIP_SNTP_TimeGet(&utc_seconds, 0);
+
+    if(res == 0)
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Current Unix Timestamp is: %ld\r\n", utc_seconds);
+    }
+    else
+    {
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "Failed to get current Unix Timestamp: %d\r\n", res);
+    }
+}
 
 
 
