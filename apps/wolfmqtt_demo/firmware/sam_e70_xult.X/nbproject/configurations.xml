@@ -481,7 +481,6 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
       </logicalFolder>
-      <itemPath>../src/app_commands.h</itemPath>
       <itemPath>../src/app_mqtt_task.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
