@@ -93,6 +93,11 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
             return ASN_INPUT_E;
         }
 
+        if (i + 1 + !pad3 + !pad4 > *outLen) {
+            WOLFSSL_MSG("Bad Base64 Decode out buffer, too small");
+            return BAD_FUNC_ARG;
+        }
+
         e1 = base64Decode[e1 - BASE64_MIN];
         e2 = base64Decode[e2 - BASE64_MIN];
         e3 = (e3 == PAD) ? 0 : base64Decode[e3 - BASE64_MIN];
@@ -130,6 +135,10 @@ int Base64_Decode(const byte* in, word32 inLen, byte* out, word32* outLen)
             }
         }
     }
+/* If the output buffer has a room for an extra byte, add a null terminator */
+    if (out && *outLen > i)
+        out[i]= '\0';
+
     *outLen = i;
 
     return 0;
@@ -320,10 +329,15 @@ static int DoBase64_Encode(const byte* in, word32 inLen, byte* out,
 
     if (i != outSz && escaped != 1 && ret == 0)
         return ASN_INPUT_E;
+/* If the output buffer has a room for an extra byte, add a null terminator */
+    if (out && *outLen > i)
+        out[i]= '\0';
 
     *outLen = i;
-    if(ret == 0)
+
+    if (ret == 0)
         return getSzOnly ? LENGTH_ONLY_E : 0;
+
     return ret;
 }
 

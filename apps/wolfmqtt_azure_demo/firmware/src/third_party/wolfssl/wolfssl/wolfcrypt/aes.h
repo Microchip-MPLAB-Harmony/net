@@ -85,6 +85,11 @@
     #include <wolfssl/wolfcrypt/port/arm/cryptoCell.h>
 #endif
 
+#if defined(WOLFSSL_RENESAS_TSIP_TLS) && \
+    defined(WOLFSSL_RENESAS_TSIP_TLS_AES_CRYPT)
+    #include <wolfssl/wolfcrypt/port/Renesas/renesas-tsip-crypt.h>
+#endif
+
 #ifdef __cplusplus
     extern "C" {
 #endif
@@ -133,7 +138,7 @@ enum {
 #include "wolfssl/wolfcrypt/port/pic32/crypt_aes_hw.h"
 #endif
 
-typedef struct Aes {
+struct Aes {
     /* AESNI needs key first, rounds 2nd, not sure why yet */
     ALIGN16 word32 key[60];
     word32  rounds;
@@ -148,10 +153,18 @@ typedef struct Aes {
 #endif
 #ifdef HAVE_AESGCM
     ALIGN16 byte H[AES_BLOCK_SIZE];
+#ifdef OPENSSL_EXTRA
+    word32 aadH[4]; /* additional authenticated data GHASH */
+    word32 aadLen;  /* additional authenticated data len */
+#endif
+
 #ifdef GCM_TABLE
     /* key-based fast multiplication table. */
     ALIGN16 byte M0[256][AES_BLOCK_SIZE];
 #endif /* GCM_TABLE */
+#ifdef HAVE_CAVIUM_OCTEON_SYNC
+    word32 y0;
+#endif
 #endif /* HAVE_AESGCM */
 #ifdef WOLFSSL_AESNI
     byte use_aesni;
@@ -165,8 +178,6 @@ typedef struct Aes {
     int  idLen;
 #endif
 #ifdef WOLFSSL_ASYNC_CRYPT
-    word32 asyncKey[AES_MAX_KEY_SIZE/8/sizeof(word32)]; /* raw key */
-    word32 asyncIv[AES_BLOCK_SIZE/sizeof(word32)]; /* raw IV */
     WC_ASYNC_DEV asyncDev;
 #endif /* WOLFSSL_ASYNC_CRYPT */
 #if defined(WOLFSSL_AES_COUNTER) || defined(WOLFSSL_AES_CFB)
@@ -189,8 +200,12 @@ typedef struct Aes {
 #endif
 #endif
 #if defined(WOLF_CRYPTO_CB) || (defined(WOLFSSL_DEVCRYPTO) && \
-    (defined(WOLFSSL_DEVCRYPTO_AES) || defined(WOLFSSL_DEVCRYPTO_CBC)))
+    (defined(WOLFSSL_DEVCRYPTO_AES) || defined(WOLFSSL_DEVCRYPTO_CBC))) || \
+    (defined(WOLFSSL_ASYNC_CRYPT) && defined(WC_ASYNC_ENABLE_AES))
     word32 devKey[AES_MAX_KEY_SIZE/WOLFSSL_BIT_SIZE/sizeof(word32)]; /* raw key */
+#ifdef HAVE_CAVIUM_OCTEON_SYNC
+    int    keySet;
+#endif
 #endif
 #if defined(WOLFSSL_DEVCRYPTO) && \
     (defined(WOLFSSL_DEVCRYPTO_AES) || defined(WOLFSSL_DEVCRYPTO_CBC))
@@ -199,11 +214,20 @@ typedef struct Aes {
 #if defined(WOLFSSL_CRYPTOCELL)
     aes_context_t ctx;
 #endif
+#if defined(WOLFSSL_RENESAS_TSIP_TLS) && \
+    defined(WOLFSSL_RENESAS_TSIP_TLS_AES_CRYPT)
+    TSIP_AES_CTX ctx;
+#endif
 #if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO) && defined(WOLFSSL_HAVE_MCHP_HW_AES_DIRECT)
     crypt_aes_hw_descriptor hwDesc;
 #endif
     void*  heap; /* memory hint to use */
-} Aes;
+};
+
+#ifndef WC_AES_TYPE_DEFINED
+    typedef struct Aes Aes;
+    #define WC_AES_TYPE_DEFINED
+#endif
 
 #ifdef WOLFSSL_AES_XTS
 typedef struct XtsAes {

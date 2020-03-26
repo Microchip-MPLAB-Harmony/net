@@ -45,41 +45,6 @@
 
 #include "wolfmqtt/visibility.h"
 
-#ifdef ENABLE_MQTT_TLS
-    #if !defined(WOLFSSL_USER_SETTINGS) && !defined(USE_WINDOWS_API)
-        #include <wolfssl/options.h>
-    #endif
-    #include <wolfssl/wolfcrypt/settings.h>
-    #include <wolfssl/ssl.h>
-    #include <wolfssl/wolfcrypt/types.h>
-
-    #ifdef WOLFMQTT_MULTITHREAD
-        #include <wolfssl/wolfcrypt/wc_port.h>
-        #include <wolfssl/wolfcrypt/error-crypt.h>
-    #endif
-
-    #ifndef WOLF_TLS_DHKEY_BITS_MIN /* allow define to be overridden */
-        #ifdef WOLFSSL_MAX_STRENGTH
-            #define WOLF_TLS_DHKEY_BITS_MIN 2048
-        #else
-            #define WOLF_TLS_DHKEY_BITS_MIN 1024
-        #endif
-    #endif
-#endif
-
-#if !defined(ENABLE_MQTT_TLS) && defined(WOLFMQTT_MULTITHREAD)
-#warning "User must supply mutex components if wolfSSL is not included."
-    /*
-    User must supply these...
-        wolfSSL_Mutex
-        WOLFSSL_API int wc_InitMutex(wolfSSL_Mutex*);
-        WOLFSSL_API int wc_FreeMutex(wolfSSL_Mutex*);
-        WOLFSSL_API int wc_LockMutex(wolfSSL_Mutex*);
-        WOLFSSL_API int wc_UnLockMutex(wolfSSL_Mutex*);
-        #define BAD_MUTEX_E -106
-        */
-#endif
-
 /* configuration for Harmony */
 #ifdef MICROCHIP_MPLAB_HARMONY
     #define NO_EXIT
@@ -89,15 +54,12 @@
         #define WOLFMQTT_NONBLOCK
     #endif
 
-	#include "system_config.h"
-    #ifdef SYS_CMD_ENABLE
-        extern void SYS_CMD_PRINT(const char *format, ...);
-  
-        /* use SYS_PRINT for printf */
-        #define WOLFMQTT_CUSTOM_PRINTF
-        #define PRINTF(_f_, ...)  SYS_CMD_PRINT( (_f_ "\n"), ##__VA_ARGS__)
-    #endif
+    /* use SYS_PRINT for printf */
+    #define WOLFMQTT_CUSTOM_PRINTF
+    #define PRINTF(_f_, ...)  SYS_PRINT( (_f_ "\n"), ##__VA_ARGS__)
 
+    #include "system_config.h"
+    #include "system_definitions.h"
 #endif
 
 #ifdef _WIN32
@@ -254,7 +216,6 @@ enum MqttPacketResponseCodes {
 
 /* GCC 7 has new switch() fall-through detection */
 /* default to FALL_THROUGH stub */
-#ifndef FALL_THROUGH
 #define FALL_THROUGH
 
 #if defined(__GNUC__)
@@ -262,7 +223,6 @@ enum MqttPacketResponseCodes {
         #undef  FALL_THROUGH
         #define FALL_THROUGH __attribute__ ((fallthrough));
     #endif
-#endif
 #endif
 
 #ifdef __cplusplus
