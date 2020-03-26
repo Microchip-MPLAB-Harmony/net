@@ -156,8 +156,3 @@ def tcpipTftpsGenSourceFile(sourceFile, event):
 def destroyComponent(component):
     Database.setSymbolValue("tcpipTftps", "TCPIP_USE_TFTPS_MODULE", False, 2)
     
-    
-def onAttachmentConnected(source, target):
-    if (source["id"] == "Tftps_TcpipFs_Dependency"): 
-        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT") != True):
-            Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT", True)

@@ -320,8 +320,3 @@ def tcpipSnmpEnableConfig(symbol, event):
 def destroyComponent(component):
     Database.setSymbolValue("tcpipSnmp", "TCPIP_USE_SNMP", False, 2)
     
-    
-def onAttachmentConnected(source, target):
-    if (source["id"] == "Snmp_TcpipFs_Dependency"): 
-        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT") != True):
-            Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT", True)
