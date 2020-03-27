@@ -93,14 +93,40 @@ typedef enum
     APP_MQTT_STATE_PUBLISH,
     APP_MQTT_STATE_START_WAIT,
     APP_MQTT_STATE_WAIT_MSG,
-    APP_MQTT_STATE_PING,
+    APP_MQTT_STATE_START_SUB_PING,
+    APP_MQTT_STATE_SUB_PING,
     APP_MQTT_STATE_START_UNSUBSCRIBE,
     APP_MQTT_STATE_UNSUBSCRIBE,
     APP_MQTT_STATE_CLIENT_DISCONNECT,
+    APP_MQTT_STATE_INIT_PING,
+    APP_MQTT_STATE_WAIT_TO_PING,
+    APP_MQTT_STATE_PING,
     APP_MQTT_STATE_NET_DISCONNECT,
     APP_MQTT_STATE_DONE,
     APP_MQTT_STATE_ERROR,
 } APP_MQTT_CONTEXT_STATE;
+
+// *****************************************************************************
+/* APP MQTT Command
+
+  Summary:
+    Describes the MQTT command
+
+  Description:
+    This enumerated type describes the current MQTT command
+
+  Remarks:
+    None
+ */
+
+/* MQTT client command */
+typedef enum 
+{
+    APP_MQTT_COMMAND_NONE       = 0,    // no command, invalid
+    APP_MQTT_COMMAND_SUBSCRIBE,         // subscribe/publish
+    APP_MQTT_COMMAND_PING,              // ping broker 
+
+} APP_MQTT_COMMAND;
 
 // demo app configuration
 // adjust to your needs
@@ -147,6 +173,8 @@ typedef enum
 
 #define APP_MQTT_DEFAULT_CMD_TIMEOUT_MS     30000
 #define APP_MQTT_MAX_WAIT_TIMEOUT           120000
+
+#define APP_MQTT_DEFAULT_PING_WAIT_MS       5000    // time between 2 pings, ms
 
 #define APP_MQTT_CB_MESSAGE_BUFFER_SIZE     120
 
@@ -198,6 +226,7 @@ typedef struct
     uint8_t         cleanSession;
     uint8_t         requestStop;
     uint8_t         msgReceived;
+    uint8_t         mqttCommand;    //  current APP_MQTT_COMMAND
 
     uint16_t        brokerPort;
     uint16_t        waitMsgRetries;

@@ -64,6 +64,7 @@
 static void     Command_Mqtt(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 
 static void     CmdMqttStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
+static void     CmdMqttPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttStat(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
 static void     CmdMqttPort(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx);
@@ -112,6 +113,7 @@ typedef struct
 }CMD_MQTT_PROC_DCPT;
 
 #define     CMD_MQTT_HELP_START     "Starts an MQTT/MQTT-SN connection to broker"
+#define     CMD_MQTT_HELP_PING      "Starts an MQTT/MQTT-SN connection to ping the broker"
 #define     CMD_MQTT_HELP_STOP      "Stops an ongoing MQTT connection"
 #define     CMD_MQTT_HELP_STAT      "Prints the current MQTT task state"
 #define     CMD_MQTT_HELP_PORT      "Sets the MQTT broker connection port"
@@ -142,6 +144,7 @@ static const CMD_MQTT_PROC_DCPT cmd_mqtt_proc_dcpt_tbl[] =
 {
     // string               // fnc              // minParams    // maxParams    // cmdHelp
     {"start",               CmdMqttStart,        2,              3,             CMD_MQTT_HELP_START },
+    {"ping",                CmdMqttPing,         2,              2,             CMD_MQTT_HELP_PING },
     {"stop",                CmdMqttStop,         2,              2,             CMD_MQTT_HELP_STOP  },
     {"stat",                CmdMqttStat,         2,              2,             CMD_MQTT_HELP_STAT  },
     {"port",                CmdMqttPort,         2,              3,             CMD_MQTT_HELP_PORT  },
@@ -250,12 +253,30 @@ static void CmdMqttStart(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP
         }
     }
 
+    pMqttCtx->mqttCommand = APP_MQTT_COMMAND_SUBSCRIBE;
     pMqttCtx->currState = useSN ? APP_MQTT_STATE_BEGIN_SN : APP_MQTT_STATE_BEGIN;
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "MQTT%sdemo has been started\r\n", useSN ? "-SN " : " ");
 #else
+    pMqttCtx->mqttCommand = APP_MQTT_COMMAND_SUBSCRIBE;
     pMqttCtx->currState = APP_MQTT_STATE_BEGIN;
-    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT demo has been started\r\n");
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT pub/sub demo has been started\r\n");
 #endif  // WOLFMQTT_SN
+}
+
+static void CmdMqttPing(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
+{
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+
+    if(pMqttCtx->currState != APP_MQTT_STATE_IDLE)
+    {
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT demo is already running\r\n");
+        return;
+    }
+
+    // restart the test
+    pMqttCtx->mqttCommand = APP_MQTT_COMMAND_PING;
+    pMqttCtx->currState = APP_MQTT_STATE_BEGIN;
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "MQTT ping demo has been started\r\n");
 }
 
 static void CmdMqttStop(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_MQTT_CONTEXT* pMqttCtx)
@@ -700,8 +721,6 @@ static void CmdMqttTime(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv, APP_
         (*pCmdIO->pCmdApi->print)(cmdIoParam, "Failed to get current Unix Timestamp: %d\r\n", res);
     }
 }
-
-
 
 // other helpers
 
