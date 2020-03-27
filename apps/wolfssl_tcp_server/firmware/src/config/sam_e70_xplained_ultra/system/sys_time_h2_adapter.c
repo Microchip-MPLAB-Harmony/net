@@ -47,7 +47,7 @@ uint32_t SYS_TMR_TickCountGet(void)
         gTickConv = SYS_TIME_MSToCount(1);
     }
 
-    return (uint32_t)SYS_TIME_Counter64Get() / gTickConv;
+    return (uint32_t)(SYS_TIME_Counter64Get() / (uint64_t)gTickConv);
 }
 
 uint64_t SYS_TMR_TickCountGetLong(void)
@@ -57,7 +57,7 @@ uint64_t SYS_TMR_TickCountGetLong(void)
         gTickConv = SYS_TIME_MSToCount(1);
     }
 
-	return SYS_TIME_Counter64Get() / gTickConv;
+	return SYS_TIME_Counter64Get() / (uint64_t)gTickConv;
 }
 
 uint32_t SYS_TMR_TickCounterFrequencyGet ( void )
