@@ -52,8 +52,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef __TCPIP_MAC_H_
 #define __TCPIP_MAC_H_
 #include <stdint.h>
+#include <stddef.h>
 #include <stdbool.h>
-
+#include "system/system_module.h"
 #include "driver/driver_common.h"
 
 // DOM-IGNORE-BEGIN
@@ -1101,7 +1102,37 @@ typedef enum
 
 }TCPIP_MAC_SYNCH_REQUEST;
 
+// *****************************************************************************
+/* TCP/IP MAC Checksum calculation offloading
 
+  Summary:
+    Defines the possible MAC checksum offloading capabilities.
+
+  Description:
+    Lists different TCP/IP layer checksum calculation supported by MAC
+    
+  Remarks:
+    Multiple values can be OR-ed together
+
+*/
+typedef enum
+{
+    /* No IP/TCP/UDP Checksum calculation by MAC driver */
+    TCPIP_MAC_CHECKSUM_NONE     = 0x00,
+            
+    /* TCP Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_TCP      = 0x01,
+            
+    /* UDP Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_UDP      = 0x02,
+            
+    /* IPv4 Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_IPV4      = 0x04,            
+            
+    /* IPv6 Checksum calculation by MAC driver */        
+    TCPIP_MAC_CHECKSUM_IPV6      = 0x08,             
+            
+}TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS;
 
 // *****************************************************************************
 /*  Handle to a heap
@@ -1603,6 +1634,11 @@ typedef struct
 
     /* MAC link MTU size */
     TCPIP_MAC_LINK_MTU      linkMtu;
+	
+	/* Rx Checksum offload Enable */
+    TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadRx;
+    /* Tx Checksum offload Enable */
+    TCPIP_MAC_CHECKSUM_OFFLOAD_FLAGS    checksumOffloadTx;
     
 }TCPIP_MAC_PARAMETERS;
 

@@ -185,8 +185,8 @@ extern "C" {
 #define WMQTT_NET_GLUE_FORCE_TLS			false
 #define WMQTT_NET_GLUE_IPV6					false
 #define WMQTT_NET_GLUE_MAX_BROKER_NAME		64
-#define WMQTT_NET_GLUE_DEBUG_ENABLE			true
-#define WMQTT_NET_GLUE_ERROR_STRINGS		true
+#define WMQTT_NET_GLUE_DEBUG_ENABLE			false
+#define WMQTT_NET_GLUE_ERROR_STRINGS		false
 #define WMQTT_NET_GLUE_MALLOC				malloc
 #define WMQTT_NET_GLUE_FREE					free
 #define WMQTT_NET_SKT_TX_BUFF				2048

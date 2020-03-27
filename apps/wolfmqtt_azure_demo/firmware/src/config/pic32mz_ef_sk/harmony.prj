@@ -1036,7 +1036,7 @@
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
           <GeneratedChecksum dnOrder="4">7CFBAFDC502BA145633AC84B3B38E5A6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7CFBAFDC502BA145633AC84B3B38E5A6</UserChecksum>
+          <UserChecksum dnOrder="5">D99EA0DB5B873F6F7D9142CC838F6AEB</UserChecksum>
         </File>
         <File dnOrder="129">
           <Type dnOrder="0">SOURCE</Type>
@@ -1699,8 +1699,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">59020FC7E3720C1EB1FA2B0D91D850BB</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E5ADF49F442EDEB2ACB976F7F9833503</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6194087378E8A89F270238D403EE2DBB</GeneratedChecksum>
+          <UserChecksum dnOrder="5">DC23C9C70744CE9DF9503872A9BD7484</UserChecksum>
         </File>
         <File dnOrder="212">
           <Type dnOrder="0">HEADER</Type>
