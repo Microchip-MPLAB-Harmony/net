@@ -1,23 +1,22 @@
 /**************************************************************************
-  Crypto Framework Library Source
+  Crypto Framework Library Header
 
   Company:
     Microchip Technology Inc.
 
   File Name:
-    CryptoLib_ZpEccAddSub_pb.h
-
+    crypto_ecc_ba414e.h
+  
   Summary:
-    Crypto Framework Libarary interface file for hardware Cryptography
+    Crypto Framework Library header the ba414e ecc functions
 
   Description:
-    This file provides an example for interfacing with the PUKCC module
-    on the SAME5x device family.
+    This header contains the function definitions for the ba414e ecc functions
 **************************************************************************/
 
 //DOM-IGNORE-BEGIN
 /*****************************************************************************
- Copyright (C) 2013-2019 Microchip Technology Inc. and its subsidiaries.
+ Copyright (C) 2013-2018 Microchip Technology Inc. and its subsidiaries.
 
 Microchip Technology Inc. and its subsidiaries.
 
@@ -40,26 +39,19 @@ FULLEST EXTENT ALLOWED BY LAW, MICROCHIP'S TOTAL LIABILITY ON ALL CLAIMS IN
 ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY, 
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
-
 //DOM-IGNORE-END
 
-#ifndef _CRYPTOLIBZPECCADDSUB_INCLUDED
-#define _CRYPTOLIBZPECCADDSUB_INCLUDED
+#ifndef _CRYPT_ECC_BA414E_H_
+#define _CRYPT_ECC_BA414E_H_
 
-// Structure definition
-typedef struct _CRYPTOLIB_ZpEccAddSub {
-	nu1 nu1ModBase;
-	nu1 nu1CnsBase;
-	u2  u2ModLength;
+#include "configuration.h"
+#include "wolfssl/wolfcrypt/cryptocb.h"
+#include "driver/driver_common.h"
 
-	nu1 nu1PointABase;
-	nu1 nu1PointBBase;
-	nu1 nu1Workspace;
-	nu1 __Padding1;
-	u2  u2Operator;
-} _PUKCL_ZPECCADDSUB, *_PPUKCL_ZPECCADDSUB;
+int Crypt_ECC_HandleReq(int devId, wc_CryptoInfo* info, void* ctx);
 
-#define PUKCL_ZPECCADD 0x0000
-#define PUKCL_ZPECCSUB 0x0010
+int Crypt_ECC_HandleEccSignReq(int devId, wc_CryptoInfo* info, void* ctx, DRV_HANDLE ba414eClient);
 
-#endif // _CRYPTOLIBZPECCADDSUB_INCLUDED
+int Crypt_ECC_HandleEccVerifyReq(int devId, wc_CryptoInfo* info, void* ctx, DRV_HANDLE ba414eClient);
+
+#endif //_CRYPT_ECC_BA414E_H_

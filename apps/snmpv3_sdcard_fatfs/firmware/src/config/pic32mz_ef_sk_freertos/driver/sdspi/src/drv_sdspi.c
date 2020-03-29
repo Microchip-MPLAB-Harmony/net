@@ -506,6 +506,22 @@ static bool _DRV_SDSPI_ReadCSD(DRV_SDSPI_OBJ* const dObj)
     return isSuccess;
 }
 
+static bool _DRV_SDSPI_ReadCID(DRV_SDSPI_OBJ* const dObj)
+{
+    bool isSuccess = false;
+
+    if (_DRV_SDSPI_CommandSend(dObj, DRV_SDSPI_SEND_CID, 0x00) == true)
+    {
+        /* Data token(1) + CID(16) + CRC(2) + Dummy(1) = 20 Bytes */
+        if (_DRV_SDSPI_SPIRead(dObj, (void*)dObj->cmdRespBuffer, _DRV_SDSPI_CID_READ_SIZE) == true)
+        {
+            memcpy(dObj->cidData, (const void*)dObj->cmdRespBuffer, _DRV_SDSPI_CID_READ_SIZE);
+            isSuccess = true;
+        }
+    }
+    return isSuccess;
+}
+
 static bool _DRV_SDSPI_TurnOffCRC(DRV_SDSPI_OBJ* const dObj)
 {
     /* Turn off CRC7 if we can, might be an invalid cmd on some cards (CMD59). */
@@ -1111,6 +1127,19 @@ static void _DRV_SDSPI_MediaInitialize( SYS_MODULE_OBJ object )
             }
             else
             {
+                dObj->mediaInitState = DRV_SDSPI_INIT_READ_CID;
+            }
+            /* Fall through */
+
+        case DRV_SDSPI_INIT_READ_CID:
+            /* Send CMD 10 (0x4A) */
+            if (_DRV_SDSPI_ReadCID(dObj) == false)
+            {
+                dObj->mediaInitState = DRV_SDSPI_INIT_ERROR;
+                break;
+            }
+            else
+            {
                 dObj->mediaInitState = DRV_SDSPI_INIT_TURN_OFF_CRC;
             }
             /* Fall through */
@@ -1154,7 +1183,6 @@ static void _DRV_SDSPI_MediaInitialize( SYS_MODULE_OBJ object )
 static DRV_SDSPI_ATTACH _DRV_SDSPI_MediaCommandDetect ( SYS_MODULE_OBJ object )
 {
     DRV_SDSPI_OBJ* dObj;
-    uint16_t r2Response;
     DRV_SDSPI_ATTACH isCardAttached = DRV_SDSPI_IS_DETACHED;
 
     dObj = (DRV_SDSPI_OBJ*)_DRV_SDSPI_INSTANCE_GET(object);
@@ -1180,13 +1208,15 @@ static DRV_SDSPI_ATTACH _DRV_SDSPI_MediaCommandDetect ( SYS_MODULE_OBJ object )
 
         case DRV_SDSPI_CMD_DETECT_CHECK_FOR_DETACH:
             /* Make sure no read/write transfer is currently in progress */
-            if (_DRV_SDSPI_CommandSend (dObj, DRV_SDSPI_SEND_STATUS, 0x00) == true)
+            if (_DRV_SDSPI_CommandSend(dObj, DRV_SDSPI_SEND_CID, 0x00) == true)
             {
-                /* For status command SD card will respond with R2 type packet */
-                r2Response = (((uint16_t)dObj->cmdResponse[1] << 16) | ((uint16_t)dObj->cmdResponse[0])) ;
-                if ((r2Response & 0xEC0C) == 0x0000)
+                /* Data token(1) + CID(16) + CRC(2) + Dummy(1) = 20 Bytes */
+                if (_DRV_SDSPI_SPIRead(dObj, (void*)dObj->cmdRespBuffer, _DRV_SDSPI_CID_READ_SIZE) == true)
                 {
-                    isCardAttached = DRV_SDSPI_IS_ATTACHED;
+                    if (memcmp(dObj->cidData, (const void*)dObj->cmdRespBuffer, _DRV_SDSPI_CID_READ_SIZE - 1) == 0)
+                    {
+                        isCardAttached = DRV_SDSPI_IS_ATTACHED;
+                    }
                 }
             }
         default:

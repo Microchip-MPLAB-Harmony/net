@@ -63,13 +63,7 @@
 #endif
 
 #ifdef SHOW_GEN
-    #if defined(FREESCALE_MQX) || defined(FREESCALE_KSDK_MQX)
-        #if MQX_USE_IO_OLD
-            #include <fio.h>
-        #else
-            #include <nio.h>
-        #endif
-    #else
+    #ifndef NO_STDIO_FILESYSTEM
         #include <stdio.h>
     #endif
 #endif
@@ -85,6 +79,8 @@ WOLFSSL_LOCAL int sp_ModExp_1536(mp_int* base, mp_int* exp, mp_int* mod,
 WOLFSSL_LOCAL int sp_ModExp_2048(mp_int* base, mp_int* exp, mp_int* mod,
     mp_int* res);
 WOLFSSL_LOCAL int sp_ModExp_3072(mp_int* base, mp_int* exp, mp_int* mod,
+    mp_int* res);
+WOLFSSL_LOCAL int sp_ModExp_4096(mp_int* base, mp_int* exp, mp_int* mod,
     mp_int* res);
 #ifdef __cplusplus
     } /* extern "C" */
@@ -572,6 +568,8 @@ void mp_rshb (mp_int *c, int x)
     mp_digit r, rr;
     mp_digit D = x;
 
+    if (mp_iszero(c)) return;
+
     /* mask */
     mask = (((mp_digit)1) << D) - 1;
 
@@ -845,8 +843,20 @@ int mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
   int dr;
 
   /* modulus P must be positive */
-  if (P->sign == MP_NEG) {
+  if (mp_iszero(P) || P->sign == MP_NEG) {
      return MP_VAL;
+  }
+  if (mp_isone(P)) {
+     mp_set(Y, 0);
+     return MP_OKAY;
+  }
+  if (mp_iszero(X)) {
+     mp_set(Y, 1);
+     return MP_OKAY;
+  }
+  if (mp_iszero(G)) {
+     mp_set(Y, 0);
+     return MP_OKAY;
   }
 
   /* if exponent X is negative we have to recurse */
@@ -885,6 +895,12 @@ int mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
      return MP_VAL;
 #endif
   }
+
+#ifdef BN_MP_EXPTMOD_BASE_2
+  if (G->used == 1 && G->dp[0] == 2) {
+    return mp_exptmod_base_2(X, P, Y);
+  }
+#endif
 
 /* modified diminished radix reduction */
 #if defined(BN_MP_REDUCE_IS_2K_L_C) && defined(BN_MP_REDUCE_2K_L_C) && \
@@ -927,6 +943,11 @@ int mp_exptmod (mp_int * G, mp_int * X, mp_int * P, mp_int * Y)
 #endif
 }
 
+int mp_exptmod_ex (mp_int * G, mp_int * X, int digits, mp_int * P, mp_int * Y)
+{
+    (void)digits;
+    return mp_exptmod(G, X, P, Y);
+}
 
 /* b = |a|
  *
@@ -957,8 +978,8 @@ int wolfcrypt_mp_invmod(mp_int * a, mp_int * b, mp_int * c)
 int mp_invmod (mp_int * a, mp_int * b, mp_int * c)
 #endif
 {
-  /* b cannot be negative */
-  if (b->sign == MP_NEG || mp_iszero(b) == MP_YES) {
+  /* b cannot be negative or zero, and can not divide by 0 (1/a mod b) */
+  if (b->sign == MP_NEG || mp_iszero(b) == MP_YES || mp_iszero(a) == MP_YES) {
     return MP_VAL;
   }
 
@@ -1136,23 +1157,28 @@ int mp_invmod_slow (mp_int * a, mp_int * b, mp_int * c)
   /* init temps */
   if ((res = mp_init_multi(&x, &y, &u, &v,
                            &A, &B)) != MP_OKAY) {
-     return res;
+    return res;
   }
 
   /* init rest of tmps temps */
   if ((res = mp_init_multi(&C, &D, 0, 0, 0, 0)) != MP_OKAY) {
-     mp_clear(&x);
-     mp_clear(&y);
-     mp_clear(&u);
-     mp_clear(&v);
-     mp_clear(&A);
-     mp_clear(&B);
-     return res;
+    mp_clear(&x);
+    mp_clear(&y);
+    mp_clear(&u);
+    mp_clear(&v);
+    mp_clear(&A);
+    mp_clear(&B);
+    return res;
   }
 
   /* x = a, y = b */
   if ((res = mp_mod(a, b, &x)) != MP_OKAY) {
-      goto LBL_ERR;
+    goto LBL_ERR;
+  }
+  if (mp_isone(&x)) {
+    mp_set(c, 1);
+    res = MP_OKAY;
+    goto LBL_ERR;
   }
   if ((res = mp_copy (b, &y)) != MP_OKAY) {
     goto LBL_ERR;
@@ -1189,10 +1215,10 @@ top:
     if (mp_isodd (&A) == MP_YES || mp_isodd (&B) == MP_YES) {
       /* A = (A+y)/2, B = (B-x)/2 */
       if ((res = mp_add (&A, &y, &A)) != MP_OKAY) {
-         goto LBL_ERR;
+        goto LBL_ERR;
       }
       if ((res = mp_sub (&B, &x, &B)) != MP_OKAY) {
-         goto LBL_ERR;
+        goto LBL_ERR;
       }
     }
     /* A = A/2, B = B/2 */
@@ -1214,10 +1240,10 @@ top:
     if (mp_isodd (&C) == MP_YES || mp_isodd (&D) == MP_YES) {
       /* C = (C+y)/2, D = (D-x)/2 */
       if ((res = mp_add (&C, &y, &C)) != MP_OKAY) {
-         goto LBL_ERR;
+        goto LBL_ERR;
       }
       if ((res = mp_sub (&D, &x, &D)) != MP_OKAY) {
-         goto LBL_ERR;
+        goto LBL_ERR;
       }
     }
     /* C = C/2, D = D/2 */
@@ -1897,7 +1923,7 @@ int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
 
 #ifdef WOLFSSL_SMALL_STACK
   M = (mp_int*) XMALLOC(sizeof(mp_int) * TAB_SIZE, NULL,
-                                                       DYNAMIC_TYPE_TMP_BUFFER);
+                                                       DYNAMIC_TYPE_BIGINT);
   if (M == NULL)
     return MP_MEM;
 #endif
@@ -1930,7 +1956,7 @@ int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
   /* init first cell */
   if ((err = mp_init_size(&M[1], P->alloc)) != MP_OKAY) {
 #ifdef WOLFSSL_SMALL_STACK
-     XFREE(M, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+     XFREE(M, NULL, DYNAMIC_TYPE_BIGINT);
 #endif
 
      return err;
@@ -1945,7 +1971,7 @@ int mp_exptmod_fast (mp_int * G, mp_int * X, mp_int * P, mp_int * Y,
       mp_clear(&M[1]);
 
 #ifdef WOLFSSL_SMALL_STACK
-      XFREE(M, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+      XFREE(M, NULL, DYNAMIC_TYPE_BIGINT);
 #endif
 
       return err;
@@ -2187,11 +2213,175 @@ LBL_M:
   }
 
 #ifdef WOLFSSL_SMALL_STACK
-  XFREE(M, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+  XFREE(M, NULL, DYNAMIC_TYPE_BIGINT);
 #endif
 
   return err;
 }
+
+#ifdef BN_MP_EXPTMOD_BASE_2
+#if DIGIT_BIT < 16
+    #define WINSIZE    3
+#elif DIGIT_BIT < 32
+    #define WINSIZE    4
+#elif DIGIT_BIT < 64
+    #define WINSIZE    5
+#elif DIGIT_BIT < 128
+    #define WINSIZE    6
+#endif
+int mp_exptmod_base_2(mp_int * X, mp_int * P, mp_int * Y)
+{
+  mp_digit buf, mp;
+  int      err = MP_OKAY, bitbuf, bitcpy, bitcnt, digidx, x, y;
+#ifdef WOLFSSL_SMALL_STACK
+  mp_int  *res = NULL;
+#else
+  mp_int   res[1];
+#endif
+  int     (*redux)(mp_int*,mp_int*,mp_digit);
+
+  /* automatically pick the comba one if available (saves quite a few
+     calls/ifs) */
+#ifdef BN_FAST_MP_MONTGOMERY_REDUCE_C
+  if (((P->used * 2 + 1) < (int)MP_WARRAY) &&
+       P->used < (1 << ((CHAR_BIT * sizeof (mp_word)) - (2 * DIGIT_BIT)))) {
+     redux = fast_mp_montgomery_reduce;
+  } else
+#endif
+  {
+#ifdef BN_MP_MONTGOMERY_REDUCE_C
+     /* use slower baseline Montgomery method */
+     redux = mp_montgomery_reduce;
+#else
+     return MP_VAL;
+#endif
+  }
+
+#ifdef WOLFSSL_SMALL_STACK
+  res = (mp_int*)XMALLOC(sizeof(mp_int), NULL, DYNAMIC_TYPE_TMP_BUFFER);
+  if (res == NULL) {
+     return MP_MEM;
+  }
+#endif
+
+  /* now setup montgomery  */
+  if ((err = mp_montgomery_setup(P, &mp)) != MP_OKAY) {
+     goto LBL_M;
+  }
+
+  /* setup result */
+  if ((err = mp_init(res)) != MP_OKAY) {
+     goto LBL_M;
+  }
+
+  /* now we need R mod m */
+  if ((err = mp_montgomery_calc_normalization(res, P)) != MP_OKAY) {
+     goto LBL_RES;
+  }
+
+  /* Get the top bits left over after taking WINSIZE bits starting at the
+   * least-significant.
+   */
+  digidx = X->used - 1;
+  bitcpy = (X->used * DIGIT_BIT) % WINSIZE;
+  if (bitcpy > 0) {
+     bitcnt = (int)DIGIT_BIT - bitcpy;
+     buf    = X->dp[digidx--];
+     bitbuf = (int)(buf >> bitcnt);
+     /* Multiply montgomery representation of 1 by 2 ^ top */
+     err = mp_mul_2d(res, bitbuf, res);
+     if (err != MP_OKAY) {
+        goto LBL_RES;
+     }
+     err = mp_mod(res, P, res);
+     if (err != MP_OKAY) {
+        goto LBL_RES;
+     }
+     /* Move out bits used */
+     buf  <<= bitcpy;
+     bitcnt++;
+  }
+  else {
+     bitcnt = 1;
+     buf    = 0;
+  }
+
+  /* empty window and reset  */
+  bitbuf = 0;
+  bitcpy = 0;
+
+  for (;;) {
+    /* grab next digit as required */
+    if (--bitcnt == 0) {
+      /* if digidx == -1 we are out of digits so break */
+      if (digidx == -1) {
+        break;
+      }
+      /* read next digit and reset bitcnt */
+      buf    = X->dp[digidx--];
+      bitcnt = (int)DIGIT_BIT;
+    }
+
+    /* grab the next msb from the exponent */
+    y       = (int)(buf >> (DIGIT_BIT - 1)) & 1;
+    buf   <<= (mp_digit)1;
+    /* add bit to the window */
+    bitbuf |= (y << (WINSIZE - ++bitcpy));
+
+    if (bitcpy == WINSIZE) {
+      /* ok window is filled so square as required and multiply  */
+      /* square first */
+      for (x = 0; x < WINSIZE; x++) {
+        err = mp_sqr(res, res);
+        if (err != MP_OKAY) {
+          goto LBL_RES;
+        }
+        err = (*redux)(res, P, mp);
+        if (err != MP_OKAY) {
+          goto LBL_RES;
+        }
+      }
+
+      /* then multiply by 2^bitbuf */
+      err = mp_mul_2d(res, bitbuf, res);
+      if (err != MP_OKAY) {
+         goto LBL_RES;
+      }
+      err = mp_mod(res, P, res);
+      if (err != MP_OKAY) {
+         goto LBL_RES;
+      }
+
+      /* empty window and reset */
+      bitcpy = 0;
+      bitbuf = 0;
+    }
+  }
+
+  /* fixup result if Montgomery reduction is used
+   * recall that any value in a Montgomery system is
+   * actually multiplied by R mod n.  So we have
+   * to reduce one more time to cancel out the factor
+   * of R.
+   */
+  err = (*redux)(res, P, mp);
+  if (err != MP_OKAY) {
+     goto LBL_RES;
+  }
+
+  /* swap res with Y */
+  mp_copy(res, Y);
+
+LBL_RES:mp_clear (res);
+LBL_M:
+#ifdef WOLFSSL_SMALL_STACK
+  XFREE(res, NULL, DYNAMIC_TYPE_TMP_BUFFER);
+#endif
+  return err;
+}
+
+#undef WINSIZE
+#endif /* BN_MP_EXPTMOD_BASE_2 */
 
 
 /* setups the montgomery reduction stuff */
@@ -2656,7 +2846,7 @@ int mp_set_bit (mp_int * a, int b)
 {
     int i = b / DIGIT_BIT, res;
 
-    if (a->used < (int)(i + 1)) {
+    if (a->dp == NULL || a->used < (int)(i + 1)) {
         /* grow a to accommodate the single bit */
         if ((res = mp_grow (a, i + 1)) != MP_OKAY) {
             return res;
@@ -4457,6 +4647,11 @@ static int mp_prime_miller_rabin (mp_int * a, mp_int * b, int *result)
       err = sp_ModExp_3072(b, &r, a, &y);
   else
 #endif
+#ifdef WOLFSSL_SP_4096
+  if (mp_count_bits(a) == 4096)
+      err = sp_ModExp_4096(b, &r, a, &y);
+  else
+#endif
 #endif
       err = mp_exptmod (b, &r, a, &y);
   if (err != MP_OKAY)
@@ -4539,10 +4734,15 @@ int mp_prime_is_prime (mp_int * a, int t, int *result)
     return MP_VAL;
   }
 
+  if (mp_isone(a)) {
+      *result = MP_NO;
+      return MP_OKAY;
+  }
+
   /* is the input equal to one of the primes in the table? */
   for (ix = 0; ix < PRIME_SIZE; ix++) {
       if (mp_cmp_d(a, ltm_prime_tab[ix]) == MP_EQ) {
-         *result = 1;
+         *result = MP_YES;
          return MP_OKAY;
       }
   }
@@ -4600,6 +4800,11 @@ int mp_prime_is_prime_ex (mp_int * a, int t, int *result, WC_RNG *rng)
   /* valid value of t? */
   if (t <= 0 || t > PRIME_SIZE) {
     return MP_VAL;
+  }
+
+  if (mp_isone(a)) {
+    *result = MP_NO;
+    return MP_OKAY;
   }
 
   /* is the input equal to one of the primes in the table? */
@@ -5058,7 +5263,13 @@ int mp_toradix (mp_int *a, char *str, int radix)
         *str++ = mp_s_rmap[d];
         ++digs;
     }
-
+#ifndef WC_DISABLE_RADIX_ZERO_PAD
+    /* For hexadecimal output, add zero padding when number of digits is odd */
+    if ((digs & 1) && (radix == 16)) {
+        *str++ = mp_s_rmap[0];
+        ++digs;
+    }
+#endif
     /* reverse the digits of the string.  In this case _s points
      * to the first digit [excluding the sign] of the number]
      */
@@ -5107,4 +5318,3 @@ void mp_dump(const char* desc, mp_int* a, byte verbose)
 #endif /* USE_FAST_MATH */
 
 #endif /* NO_BIG_INT */
-
