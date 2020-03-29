@@ -12,8 +12,8 @@
 
   Description:
     This file contains Microchip File System (MPFS) APIs. It is mainly used for
-	accessing web pages and other files from internal program memory or an
-	external serial EEPROM memory.
+    accessing web pages and other files from internal program memory or an
+    external serial EEPROM memory.
 *******************************************************************************/
 //DOM-IGNORE-BEGIN
 /*******************************************************************************
@@ -47,6 +47,7 @@
 // *****************************************************************************
 
 #include "system/fs/mpfs/src/mpfs_local.h"
+#include "system/cache/sys_cache.h"
 
 
 /****************************************************************************
@@ -54,13 +55,13 @@
   ***************************************************************************/
 
 /* Array of File Objects. */
-static MPFS_FILE_OBJ gSysMpfsFileObj[SYS_FS_MAX_FILES];
+static MPFS_FILE_OBJ CACHE_ALIGN gSysMpfsFileObj[SYS_FS_MAX_FILES];
 
 /* Current File Record */
-static MPFS_FILE_RECORD gSysMpfsFileRecord;
+static MPFS_FILE_RECORD CACHE_ALIGN gSysMpfsFileRecord;
 
 /* MPFS Object. */
-static SYS_MPFS_OBJECT gSysMpfsObj = 
+static SYS_MPFS_OBJECT CACHE_ALIGN gSysMpfsObj =
 {
     0xFF, /* Disk Number. */
 
@@ -200,8 +201,8 @@ static int MPFSFindFile
     uint8_t *ptr = NULL;
     int32_t index = 0;
     uint16_t hash = 0;
-    uint16_t hashBuffer[16] = {0};
-    uint8_t fileName[FAT_FS_MAX_LFN];
+    uint16_t __ALIGNED(CACHE_LINE_SIZE) hashBuffer[CACHE_LINE_SIZE] = {0};
+    uint8_t __ALIGNED(CACHE_LINE_SIZE) fileName[(FAT_FS_MAX_LFN + ((FAT_FS_MAX_LFN%CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (FAT_FS_MAX_LFN%CACHE_LINE_SIZE)) : 0))];
 
     /* Calculate the hash value for the file name. */
     ptr = file;
@@ -224,6 +225,7 @@ static int MPFSFindFile
             {
                 temp = 8;
             }
+            SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)hashBuffer, temp << 1);
 
             if (MPFSGetArray (diskNum, address, temp << 1, (uint8_t *)hashBuffer) == false)
             {
@@ -235,9 +237,11 @@ static int MPFSFindFile
         if (hashBuffer[index & 0x07] == hash)
         {
             address = 8 + (gSysMpfsObj.numFiles * 2) + (index * 22);
+            SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)fileRecord, 22);
             MPFSGetArray (diskNum, address, 22, (uint8_t *)fileRecord);
             temp = strlen ((const char *)file);
 
+            SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)fileName, temp);
             if (MPFSGetArray (diskNum, fileRecord->fileNameOffset, temp, (uint8_t *)fileName) == false)
             {
                 return -1;
@@ -423,8 +427,8 @@ int MPFS_Open
 int MPFS_Read
 (
     uintptr_t handle,
-    void* buff, 
-    uint32_t btr, 
+    void* buff,
+    uint32_t btr,
     uint32_t *br
 )
 {
@@ -497,9 +501,9 @@ int MPFS_Close
         return MPFS_INVALID_PARAMETER;
     }
 
-	gSysMpfsFileObj[index].currentOffset = MPFS_INVALID;
-	gSysMpfsFileObj[index].bytesRemaining = 0;
-	gSysMpfsFileObj[index].handle = MPFS_INVALID_HANDLE;
+    gSysMpfsFileObj[index].currentOffset = MPFS_INVALID;
+    gSysMpfsFileObj[index].bytesRemaining = 0;
+    gSysMpfsFileObj[index].handle = MPFS_INVALID_HANDLE;
     return MPFS_OK;
 }
 
@@ -518,7 +522,7 @@ uint32_t MPFS_GetSize
 
     MPFSGetFileRecord (handle);
 
-	return gSysMpfsFileRecord.length;
+    return gSysMpfsFileRecord.length;
 }
 
 /* This function returns the current file position. */
@@ -631,7 +635,7 @@ int MPFS_Stat
 
 int MPFS_Seek
 (
-    uintptr_t handle, 
+    uintptr_t handle,
     uint32_t dwOffset
 )
 {
@@ -649,7 +653,7 @@ int MPFS_Seek
     {
         return 1;
     }
-    
+
     index = handle & 0xFFFF;
 
     gSysMpfsFileObj[index].currentOffset = gSysMpfsFileRecord.dataOffset + dwOffset;
@@ -660,8 +664,8 @@ int MPFS_Seek
 
 int MPFS_DirOpen
 (
-	uintptr_t handle,  /* Pointer to directory object to create */
-	const char *path  /* Pointer to the directory path */
+    uintptr_t handle,  /* Pointer to directory object to create */
+    const char *path  /* Pointer to the directory path */
 )
 {
     uint8_t diskNum = 0;
@@ -695,7 +699,7 @@ int MPFS_DirOpen
 
 int MPFS_DirClose
 (
-	uintptr_t handle
+    uintptr_t handle
 )
 {
     if ((handle == MPFS_INVALID_HANDLE) || (handle != gSysMpfsObj.dirHandle))
@@ -713,15 +717,16 @@ int MPFS_DirClose
 
 int MPFS_DirRead
 (
-	uintptr_t handle,
-	uintptr_t statPtr
+    uintptr_t handle,
+    uintptr_t statPtr
 )
 {
     uint16_t fileLen = 0;
     uint8_t diskNum = 0;
     uint32_t address = 0;
-    MPFS_FILE_RECORD fileRecord;
-    uint8_t fileName[FAT_FS_MAX_LFN];
+
+    MPFS_FILE_RECORD __ALIGNED(CACHE_LINE_SIZE) fileRecord;
+    uint8_t __ALIGNED(CACHE_LINE_SIZE) fileName[(FAT_FS_MAX_LFN + ((FAT_FS_MAX_LFN%CACHE_LINE_SIZE)? (CACHE_LINE_SIZE - (FAT_FS_MAX_LFN%CACHE_LINE_SIZE)) : 0))];
 
     MPFS_STATUS *stat = (MPFS_STATUS *)statPtr;
 
@@ -748,6 +753,7 @@ int MPFS_DirRead
     {
         /* Fetch the file record. */
         address = 8 + (gSysMpfsObj.numFiles * 2) + (gSysMpfsObj.fileIndex * 22);
+        SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)&fileRecord, 22);
         if (MPFSGetArray (diskNum, address, 22, (uint8_t *)&fileRecord) == false)
         {
             /* Failed to fetch the file record. */
@@ -756,6 +762,7 @@ int MPFS_DirRead
 
         /* Since the length of the file is not known, fetch FAT_FS_MAX_LFN
          * number of bytes starting the from the file name offset. */
+        SYS_CACHE_InvalidateDCache_by_Addr((uint32_t *)fileName, FAT_FS_MAX_LFN);
         if (MPFSGetArray (diskNum, fileRecord.fileNameOffset, FAT_FS_MAX_LFN, (uint8_t *)fileName) == false)
         {
             /* Failed to fetch the file name. */
