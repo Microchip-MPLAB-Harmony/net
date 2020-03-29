@@ -52,7 +52,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "crypt_sha_sam6156.h"
 #endif
 
-typedef struct 
+struct wc_Sha512
 {
     int devId;
     word32 flags; /* enum wc_HashFlags in hash.h */
@@ -63,7 +63,13 @@ typedef struct
     uint32_t digest[SHA512_DIGEST_SIZE/4];
     uint64_t total_len;   /* number of bytes to be processed  */
 #endif
-}wc_Sha512;
+};
+
+#ifndef WC_SHA512_TYPE_DEFINED
+    typedef struct wc_Sha512 wc_Sha512;
+    #define WC_SHA512_TYPE_DEFINED
+#endif
+
 
 
 #endif
