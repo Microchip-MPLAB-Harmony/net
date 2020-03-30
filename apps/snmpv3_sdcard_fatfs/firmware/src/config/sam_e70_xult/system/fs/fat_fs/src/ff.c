@@ -3494,7 +3494,7 @@ FRESULT f_findnext (
     FILINFO *fno = (FILINFO *)fileInfo;
 
 	for (;;) {
-		res = f_readdir(handle, fno);		/* Get a directory item */
+		res = (FRESULT)f_readdir(handle, (uintptr_t)fno);		/* Get a directory item */
 		if (res != FR_OK || !fno || !fno->fname[0]) break;	/* Terminate if any error or end of directory */
 #if FAT_FS_USE_LFN
 		if (fno->lfname && pattern_matching(dp->pat, fno->lfname, 0, 0)) break;	/* Test for LFN if exist */
@@ -3528,7 +3528,7 @@ int f_findfirst (
 	dp->pat = pattern;		/* Save pointer to pattern string */
 	res = f_opendir(handle, path);		/* Open the target directory */
 	if (res == FR_OK)
-		res = f_findnext(handle, fno);	/* Find the first item */
+		res = f_findnext(handle, (uintptr_t)fno);	/* Find the first item */
 	return res;
 }
 
@@ -4781,10 +4781,10 @@ int f_puts (
 int f_printf (
 	uintptr_t handle,			/* Pointer to the file object */
 	const TCHAR* fmt,	/* Pointer to the format string */
-	...					/* Optional arguments... */
+	va_list argList					/* Optional arguments... */
 )
 {
-	va_list arp = (va_list){0};
+	va_list arp = argList;
 	uint8_t f = 0, r = 0;
 	uint32_t nw = 0, i = 0, j = 0, w = 0;
 	uint32_t v = 0;
@@ -4794,8 +4794,6 @@ int f_printf (
 
 	pb.handle = handle;				/* Initialize output buffer */
 	pb.nchr = pb.idx = 0;
-
-	va_start(arp, fmt);
 
 	for (;;) {
 		c = *fmt++;
@@ -4867,7 +4865,6 @@ int f_printf (
 		while (j++ < w) putc_bfd(&pb, d);
 	}
 
-	va_end(arp);
 
 	if (   pb.idx >= 0		/* Flush buffered characters to the file */
 		&& f_write(pb.handle, pb.buf, (uint32_t)pb.idx, &nw) == FR_OK
