@@ -89,14 +89,17 @@ typedef enum
     /* 4-bit bus mode */
     DRV_SDMMC_BUS_WIDTH_4_BIT,
 
+    /* 8-bit bus mode (only for emmc) */
+    DRV_SDMMC_BUS_WIDTH_8_BIT
+
 } DRV_SDMMC_BUS_WIDTH;
 
 typedef enum
 {
-    /* SD card default speed - 25 MHz */
+    /* SD card default speed - 25/26 MHz */
     DRV_SDMMC_SPEED_MODE_DEFAULT = 0,
 
-    /* SD card high speed - 50 MHz */
+    /* SD card high speed - 50/52 MHz */
     DRV_SDMMC_SPEED_MODE_HIGH
 
 } DRV_SDMMC_SPEED_MODE;
@@ -107,7 +110,10 @@ typedef enum
     DRV_SDMMC_CD_METHOD_USE_SDCD = 0,
 
     /* Use command/response method to detect card insertion/removal */
-    DRV_SDMMC_CD_METHOD_POLLING
+    DRV_SDMMC_CD_METHOD_POLLING,
+
+    /* No card detection method (only for EMMC) */
+    DRV_SDMMC_CD_METHOD_NONE,
 
 }DRV_SDMMC_CD_METHOD;
 
@@ -132,6 +138,15 @@ typedef enum
     DRV_SDMMC_DATA_TRANSFER_DIR_WRITE = 0,
     DRV_SDMMC_DATA_TRANSFER_DIR_READ
 }DRV_SDMMC_DATA_TRANSFER_DIR;
+
+typedef enum
+{
+    /* SD Memory  */
+    DRV_SDMMC_PROTOCOL_SD,
+
+    /* eMMC device */
+    DRV_SDMMC_PROTOCOL_EMMC
+}DRV_SDMMC_PROTOCOL;
 
 typedef struct
 {
@@ -231,11 +246,14 @@ typedef struct _DRV_SDMMC_INIT
     /* Pointer to the buffer pool */
     uintptr_t                   bufferObjPool;
 
-    /* Card detection method */
-    DRV_SDMMC_CD_METHOD         cardDetectionMethod;
+    /* SDMMC Protocol */
+    DRV_SDMMC_PROTOCOL       	  protocol;
 
     /* Rate at which card insertion/removal is checked if polling method is selected */
     uint32_t                    cardDetectionPollingIntervalMs;
+
+    /* Card detection method */
+    DRV_SDMMC_CD_METHOD         cardDetectionMethod;
 
     /* Whether SD Card detection is enabled or not */
     bool                        isCardDetectEnabled;
