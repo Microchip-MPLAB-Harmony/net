@@ -142,6 +142,11 @@ bool TCPIP_Helper_StringToIPAddress(const char* str, IPV4_ADDR* addr)
 	dwVal.Val = 0;
     addr->Val = 0;
 
+    if(str == 0 || strlen(str) == 0)
+    {
+        return true;
+    }
+
 	while((i = *str++))
 	{
 		if(currentOctet > 3u)
@@ -268,7 +273,8 @@ bool TCPIP_Helper_StringToIPv6Address(const char * addStr, IPV6_ADDR * addr)
 
     if(addStr == 0 || (len = strlen(addStr)) == 0)
     {
-        return false;
+        memset(addr, 0, sizeof(*addr));
+        return true;
     }
 
     while(isspace(*addStr))
@@ -520,6 +526,11 @@ bool TCPIP_Helper_StringToMACAddress(const char* str, uint8_t macAddr[6])
     TCPIP_UINT16_VAL    hexDigit;
     int         ix;
     
+    if(str == 0 || strlen(str) == 0)
+    {
+        memset(macAddr, 0, sizeof(TCPIP_MAC_ADDR));
+        return true;
+    }
 
     beg = str;
     for(ix=0; ix<6; ix++)

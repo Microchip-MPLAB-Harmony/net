@@ -237,25 +237,19 @@
             <path>\driver\ethphy\src\dynamic\drv_extphy_smsc8740.h</path>
             <path>\system\debug\sys_debug.h</path>
             <path>\system\console\sys_console.h</path>
+            <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_version.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_compiler.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_iccarm.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_gcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_armcc.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_armclang.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_armclang_ltm.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\Core\Include\tz_context.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\core_cm7.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core\Include\mpu_armv7.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\Core\Include\cmsis_version.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_e70_xult_iar">
-            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\icmp.c</path>
             <path>\library\tcpip\src\tcp.c</path>
-            <path>\library\tcpip\src\dhcp.c</path>
             <path>\peripheral\efc\plib_efc.c</path>
             <path>\library\tcpip\src\arp.c</path>
             <path>\peripheral\tc\plib_tc0.c</path>
@@ -266,6 +260,8 @@
             <path>\peripheral\usart\plib_usart1.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
+            <path>\library\tcpip\src\dhcp.c</path>
+            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\helpers.c</path>
             <path>\library\tcpip\src\hash_fnv.c</path>
             <path>\library\tcpip\src\oahash.c</path>

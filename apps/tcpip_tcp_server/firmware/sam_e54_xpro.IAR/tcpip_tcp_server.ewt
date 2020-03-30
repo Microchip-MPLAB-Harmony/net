@@ -2389,15 +2389,6 @@
                 <name>$PROJ_DIR$\..\src\app.h</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\library\tcpip\arp.h</name>
             </file>
             <file>
@@ -3008,9 +2999,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\ATSAME54P20A_DFP\component\trng.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\packs\CMSIS\CMSIS\Core\Include\tz_context.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_e54_xpro_iar\library\tcpip\udp.h</name>
