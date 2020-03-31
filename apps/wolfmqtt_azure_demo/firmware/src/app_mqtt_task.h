@@ -261,6 +261,7 @@ typedef struct
     uint32_t        tmoTick;        // tick when the wait expires
     char*           pClientId;
     uint16_t        keepAliveSec;
+    uint16_t        pingCount;
 
 #ifdef WOLFMQTT_V5
     uint16_t        maxPktSize;     // max packet accepted

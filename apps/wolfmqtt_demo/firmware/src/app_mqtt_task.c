@@ -215,6 +215,7 @@ void APP_MQTT_Task(void)
 #ifdef WOLFMQTT_V5
     MqttProp* mqttProp;
 #endif  // WOLFMQTT_V5
+    char ping_res_buff[40];
 
 
     int resCode;
@@ -416,6 +417,7 @@ void APP_MQTT_Task(void)
             SYS_CONSOLE_PRINT("MQTT Task - Connect Ack: Assigned Client ID: %s", mqttCtx->pClientId);
 #endif  //  defined(WOLFMQTT_V5) && defined(WOLFMQTT_PROPERTY_CB)
 
+            mqttCtx->pingCount = 0; 
             if(mqttCtx->mqttCommand == APP_MQTT_COMMAND_PING)
             {   // skip the pub/subscribe; jump to ping
                 mqttCtx->currState = APP_MQTT_STATE_INIT_PING;
@@ -593,7 +595,8 @@ void APP_MQTT_Task(void)
             }
 
             // done with ping
-            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping done", resCode);
+            sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
+            APP_MQTT_ClientResult(mqttCtx, ping_res_buff, resCode);
             if (resCode < 0)
             {   // error occurred
                 mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
@@ -679,7 +682,8 @@ void APP_MQTT_Task(void)
             }
 
             // done with ping
-            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping done", resCode);
+            sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
+            APP_MQTT_ClientResult(mqttCtx, ping_res_buff, resCode);
             if (resCode < 0)
             {   // error occurred
                 mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
