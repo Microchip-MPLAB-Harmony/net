@@ -147,8 +147,8 @@
           <Name dnOrder="1">drv_enc28j60_rx_packet.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/enc28j60/src/dynamic/packet/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D191792610E54AFFD81AA1BF45FBE96A</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D191792610E54AFFD81AA1BF45FBE96A</UserChecksum>
+          <GeneratedChecksum dnOrder="4">4C650EDC511697D12E9538F9B24FC514</GeneratedChecksum>
+          <UserChecksum dnOrder="5">4C650EDC511697D12E9538F9B24FC514</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">SOURCE</Type>
@@ -403,8 +403,8 @@
           <Name dnOrder="1">sys_time_h2_adapter.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EC278E60715FC3B2C34D2AA7E7458989</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EC278E60715FC3B2C34D2AA7E7458989</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F849420C740D2B32346B4B4D9F46C136</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F849420C740D2B32346B4B4D9F46C136</UserChecksum>
         </File>
         <File dnOrder="50">
           <Type dnOrder="0">SOURCE</Type>
@@ -731,8 +731,8 @@
           <Name dnOrder="1">drv_enc28j60.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/driver/enc28j60/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/enc28j60/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4E0C776DF2B06F53DCC39A4EA10CA9B4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4E0C776DF2B06F53DCC39A4EA10CA9B4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">37ADB374544501D8649F54E16AB9D8DF</GeneratedChecksum>
+          <UserChecksum dnOrder="5">37ADB374544501D8649F54E16AB9D8DF</UserChecksum>
         </File>
         <File dnOrder="91">
           <Type dnOrder="0">HEADER</Type>
@@ -1411,8 +1411,8 @@
           <Name dnOrder="1">snmpv3_private.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DE7EFA8F60D8D733D267CF2D4FD5C4FE</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DE7EFA8F60D8D733D267CF2D4FD5C4FE</UserChecksum>
+          <GeneratedChecksum dnOrder="4">3337D044F519EA39F86B10A570514DE4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">3337D044F519EA39F86B10A570514DE4</UserChecksum>
         </File>
         <File dnOrder="176">
           <Type dnOrder="0">HEADER</Type>
@@ -1555,8 +1555,8 @@
           <Name dnOrder="1">sys_time_h2_adapter.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_enc28j60/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0F2B8202108999FB3CA1740D7B968F69</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0F2B8202108999FB3CA1740D7B968F69</UserChecksum>
+          <GeneratedChecksum dnOrder="4">79AA7BE3EB9B1A8D7C8686C28318198D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">79AA7BE3EB9B1A8D7C8686C28318198D</UserChecksum>
         </File>
         <File dnOrder="194">
           <Type dnOrder="0">HEADER</Type>
@@ -1964,7 +1964,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.1.45\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

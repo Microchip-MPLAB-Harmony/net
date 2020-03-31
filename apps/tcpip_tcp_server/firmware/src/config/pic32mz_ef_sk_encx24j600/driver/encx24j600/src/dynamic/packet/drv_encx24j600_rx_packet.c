@@ -50,7 +50,7 @@ bool    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)
      return true;
 }
 
-
+CACHE_ALIGN DRV_ENCx24J600_RSV rsv_temp;
 int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst, DRV_ENCX24J600_RX_PACKET_INFO *pkt)
 {
     uintptr_t ret;
@@ -85,7 +85,9 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
         }
         case DRV_ENCX24J600_RX_READ_RSV:
         {
-            ret = (*pDrvInst->busVTable->fpDataRd)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, ( uint8_t *)&(pkt->rsv), sizeof(DRV_ENCx24J600_RSV));
+            
+            ret = (*pDrvInst->busVTable->fpDataRd)(pDrvInst, DRV_ENCX24J600_PTR_RXRD, ( uint8_t *)&rsv_temp, sizeof(DRV_ENCx24J600_RSV));
+            
             if (ret == 0)
             {
                 break;
@@ -99,21 +101,21 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             {
                 break;
             }
-            if (pkt->rsv.rxByteCount > pDrvInst->drvCfg.maxFrameSize)
+            if (rsv_temp.rxByteCount > pDrvInst->drvCfg.maxFrameSize)
             {
                 pkt->retry++;
                 pkt->state = DRV_ENCX24J600_RX_SET_ERXRDPTR;
                 //SYS_CONSOLE_PRINT("Received a frame that is too large: %d\r\n", pkt->rsv.rxByteCount);
                 break;
             }
-            if (pkt->rsv.rxByteCount < 0x40)  // Don't accept runts
+            if (rsv_temp.rxByteCount < 0x40)  // Don't accept runts
             {
                 pkt->retry++;
                 pkt->state = DRV_ENCX24J600_RX_SET_ERXRDPTR;
                 //SYS_CONSOLE_PRINT("Received a frame that is too small: %d\r\n", pkt->rsv.rxByteCount);
                 break;
             }
-            if ((pkt->rsv.pNextPacket < pDrvInst->encMemRxStart) || (pkt->rsv.pNextPacket > pDrvInst->encMemRxEnd))
+            if ((rsv_temp.pNextPacket < pDrvInst->encMemRxStart) || (rsv_temp.pNextPacket > pDrvInst->encMemRxEnd))
             {
                 pkt->retry++;
                 pkt->state = DRV_ENCX24J600_RX_SET_ERXRDPTR;
@@ -122,6 +124,7 @@ int32_t DRV_ENCX24J600_RxPacketTask(struct _DRV_ENCX24J600_DriverInfo * pDrvInst
             }
 
             //SYS_CONSOLE_PRINT("RX Packet @ %x Len %d next %x\r\n", pDrvInst->rxPtrVal, pkt->rsv.rxByteCount, pkt->rsv.pNextPacket);
+            memcpy(( uint8_t *)&(pkt->rsv),&rsv_temp, sizeof(pkt->rsv));
             pDrvInst->rxPtrVal = pkt->rsv.pNextPacket;
             pkt->state = DRV_ENCX24J600_RX_READ_PKT;
             pkt->retry = 0;

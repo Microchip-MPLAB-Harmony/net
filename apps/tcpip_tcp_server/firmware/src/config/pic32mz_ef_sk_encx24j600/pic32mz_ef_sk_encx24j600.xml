@@ -1884,15 +1884,7 @@
                 </Boolean>
               </Symbols>
             </UniqueComponent>
-            <UniqueComponent dnOrder="1" id="tcpipDhcp">
-              <Symbols dnOrder="0">
-                <Integer dnOrder="0" id="TCPIP_DHCP_TIMEOUT">
-                  <Values dnOrder="0">
-                    <User dnOrder="0" value="4"/>
-                  </Values>
-                </Integer>
-              </Symbols>
-            </UniqueComponent>
+            <UniqueComponent dnOrder="1" id="tcpipDhcp"/>
             <UniqueComponent dnOrder="2" id="tcpipDns"/>
           </Children>
         </GroupComponent>
@@ -1993,8 +1985,8 @@
             <UniqueComponent dnOrder="3" id="tcpipStack"/>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="Core_SysConsole_Dependency" namespace="tcpipStack"/>
-            <Attachment dnOrder="1" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvExtMacEncx24j600_0:libdrvExtMacEncx24j600" targetComponentID="DRIVER LAYER"/>
+            <Attachment dnOrder="0" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvExtMacEncx24j600_0:libdrvExtMacEncx24j600" targetComponentID="DRIVER LAYER"/>
+            <Attachment dnOrder="1" id="Core_SysConsole_Dependency" namespace="tcpipStack"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
@@ -2015,8 +2007,8 @@
             </UniqueComponent>
           </Children>
           <Attachments dnOrder="1">
-            <Attachment dnOrder="0" id="ENCX24J600_SPI" namespace="drvExtMacEncx24j600_0" targetAttachmentID="TCP/IP STACK:drvExtMacEncx24j600_0:ENCX24J600_SPI" targetComponentID="TCP/IP STACK"/>
-            <Attachment dnOrder="1" id="libdrvExtMacEncx24j600" namespace="drvExtMacEncx24j600_0" targetAttachmentID="tcpipNetConfig_0:NETCONFIG_MAC_Dependency" targetComponentID="BASIC CONFIGURATION"/>
+            <Attachment dnOrder="0" id="libdrvExtMacEncx24j600" namespace="drvExtMacEncx24j600_0" targetAttachmentID="tcpipNetConfig_0:NETCONFIG_MAC_Dependency" targetComponentID="BASIC CONFIGURATION"/>
+            <Attachment dnOrder="1" id="ENCX24J600_SPI" namespace="drvExtMacEncx24j600_0" targetAttachmentID="TCP/IP STACK:drvExtMacEncx24j600_0:ENCX24J600_SPI" targetComponentID="TCP/IP STACK"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="NETWORK LAYER" dnOrder="3" id="NETWORK LAYER">
@@ -2109,15 +2101,30 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="0" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="tcpipDhcp" x="320" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipDns" x="460" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_apps_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
+    <ComponentGraph dnOrder="1" id="TCP/IP STACK">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
+        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
+        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="540" y="20"/>
+        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
+        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="2" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="3" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="HarmonyCore" x="437" y="29"/>
         <ElementPosition dnOrder="1" id="TCP/IP STACK" x="468" y="458"/>
@@ -2133,18 +2140,12 @@
         <ElementPosition dnOrder="11" id="uart2" x="54" y="279"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="DRIVER LAYER">
+    <ComponentGraph dnOrder="4" id="BASIC CONFIGURATION">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="drvExtMacEncx24j600" x="280" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpip_driver_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="3"/>
-    <ComponentGraph dnOrder="4" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
     <ComponentGraph dnOrder="5" id="NETWORK LAYER">
@@ -2155,21 +2156,12 @@
         <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="6" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="6" id="DRIVER LAYER">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipDhcp" x="320" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipDns" x="460" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_apps_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="drvExtMacEncx24j600" x="280" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="TCP/IP STACK">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
-        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
-        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="540" y="20"/>
-        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
-        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
+    <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="7"/>
   </UserData>
 </Configuration>
