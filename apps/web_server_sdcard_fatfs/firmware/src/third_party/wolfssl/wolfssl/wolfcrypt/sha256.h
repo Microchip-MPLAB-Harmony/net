@@ -91,7 +91,7 @@
 
 #if defined(_MSC_VER)
     #define SHA256_NOINLINE __declspec(noinline)
-#elif defined(__GNUC__)
+#elif defined(__IAR_SYSTEMS_ICC__) || defined(__GNUC__)
     #define SHA256_NOINLINE __attribute__((noinline))
 #else
     #define SHA256_NOINLINE
@@ -125,12 +125,16 @@ enum {
     #include "wolfssl/wolfcrypt/port/af_alg/afalg_hash.h"
 #elif defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO) && defined(WOLFSSL_HAVE_MCHP_HW_SHA264)
 #include "wolfssl/wolfcrypt/port/pic32/crypt_sha256_hw.h"
+#elif defined(WOLFSSL_RENESAS_TSIP_CRYPT) && \
+   !defined(NO_WOLFSSL_RENESAS_TSIP_CRYPT_HASH)
+    #include "wolfssl/wolfcrypt/port/Renesas/renesas-tsip-crypt.h"
 #else
+
 /* wc_Sha256 digest */
-typedef struct wc_Sha256 {
+struct wc_Sha256 {
 #ifdef FREESCALE_LTC_SHA
     ltc_hash_ctx_t ctx;
-#elif defined(STM32_HASH)
+#elif defined(STM32_HASH_SHA2)
     STM32_HASH_Context stmCtx;
 #else
     /* alignment on digest and buffer speeds up ARMv8 crypto operations */
@@ -170,7 +174,12 @@ typedef struct wc_Sha256 {
 #if defined(WOLFSSL_HASH_FLAGS) || defined(WOLF_CRYPTO_CB)
     word32 flags; /* enum wc_HashFlags in hash.h */
 #endif
-} wc_Sha256;
+};
+
+#ifndef WC_SHA256_TYPE_DEFINED
+    typedef struct wc_Sha256 wc_Sha256;
+    #define WC_SHA256_TYPE_DEFINED
+#endif
 
 #endif
 
@@ -191,8 +200,8 @@ WOLFSSL_API void wc_Sha256SizeSet(wc_Sha256*, word32);
 #endif
 
 #if defined(WOLFSSL_HASH_FLAGS) || defined(WOLF_CRYPTO_CB)
-    WOLFSSL_LOCAL int wc_Sha256SetFlags(wc_Sha256* sha256, word32 flags);
-    WOLFSSL_LOCAL int wc_Sha256GetFlags(wc_Sha256* sha256, word32* flags);
+    WOLFSSL_API int wc_Sha256SetFlags(wc_Sha256* sha256, word32 flags);
+    WOLFSSL_API int wc_Sha256GetFlags(wc_Sha256* sha256, word32* flags);
 #endif
 
 #ifdef WOLFSSL_SHA224
@@ -217,7 +226,10 @@ enum {
 };
 
 
-typedef wc_Sha256 wc_Sha224;
+#ifndef WC_SHA224_TYPE_DEFINED
+    typedef struct wc_Sha256 wc_Sha224;
+    #define WC_SHA224_TYPE_DEFINED
+#endif
 #endif /* HAVE_FIPS */
 
 WOLFSSL_API int wc_InitSha224(wc_Sha224*);
@@ -230,8 +242,8 @@ WOLFSSL_API int wc_Sha224GetHash(wc_Sha224*, byte*);
 WOLFSSL_API int wc_Sha224Copy(wc_Sha224* src, wc_Sha224* dst);
 
 #if defined(WOLFSSL_HASH_FLAGS) || defined(WOLF_CRYPTO_CB)
-    WOLFSSL_LOCAL int wc_Sha224SetFlags(wc_Sha224* sha224, word32 flags);
-    WOLFSSL_LOCAL int wc_Sha224GetFlags(wc_Sha224* sha224, word32* flags);
+    WOLFSSL_API int wc_Sha224SetFlags(wc_Sha224* sha224, word32 flags);
+    WOLFSSL_API int wc_Sha224GetFlags(wc_Sha224* sha224, word32* flags);
 #endif
 
 #endif /* WOLFSSL_SHA224 */
