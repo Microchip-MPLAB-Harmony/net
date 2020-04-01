@@ -382,7 +382,7 @@ typedef NET_PRES_SIGNAL_HANDLE (*NET_PRES_TransHandlerRegister)(NET_PRES_SKT_HAN
  */
 
 typedef bool (*NET_PRES_TransSignalHandlerDeregister)(NET_PRES_SKT_HANDLE_T handle, 
-               NET_PRES_SIGNAL_FUNCTION hSig);
+               NET_PRES_SIGNAL_HANDLE hSig);
 
 // *****************************************************************************
 /* Presentation Layer Transport Layer Read Function Pointer Prototype
