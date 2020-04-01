@@ -304,7 +304,7 @@ typedef struct _tag_MAC_DATA_SEGMENT
     uint8_t                  segClientData[4];
 
     /*  Additional client segment payload; Ignored by the MAC driver. */
-    //uint8_t                  segClientLoad[0];
+    /*  uint8_t                  segClientLoad[0]; */
 }TCPIP_MAC_DATA_SEGMENT;
 
 
