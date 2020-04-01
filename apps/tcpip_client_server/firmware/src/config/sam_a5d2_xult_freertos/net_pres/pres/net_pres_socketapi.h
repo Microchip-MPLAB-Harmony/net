@@ -196,6 +196,9 @@ typedef enum {
     NET_PRES_SKT_UNKNOWN_ERROR = -4,
     NET_PRES_SKT_INVALID_SOCKET = -5,  
     NET_PRES_SKT_ENC_NEGO_FAILED = -6,
+    NET_PRES_SKT_HANDLER_BUSY = -7,     // a signal handler already registered
+    NET_PRES_SKT_HANDLER_ERROR = -8,    // no such signal handler
+    NET_PRES_SKT_HANDLER_TRANSP_ERROR = -9,    // transport layer signal operation failed
 }NET_PRES_SKT_ERROR_T;
 
 //*****************************************************************************

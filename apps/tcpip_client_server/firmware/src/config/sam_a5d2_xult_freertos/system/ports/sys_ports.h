@@ -135,10 +135,10 @@
 
 typedef enum
 {
-    SYS_PORT_A = PIOA_BASE_ADDRESS,
-    SYS_PORT_B = PIOB_BASE_ADDRESS,
-    SYS_PORT_C = PIOC_BASE_ADDRESS,
-    SYS_PORT_D = PIOD_BASE_ADDRESS,
+    SYS_PORT_A = (uint32_t)&(PIO_REGS->PIO_GROUP[0]),
+    SYS_PORT_B = (uint32_t)&(PIO_REGS->PIO_GROUP[1]),
+    SYS_PORT_C = (uint32_t)&(PIO_REGS->PIO_GROUP[2]),
+    SYS_PORT_D = (uint32_t)&(PIO_REGS->PIO_GROUP[3]),
 } SYS_PORT;
 
 
