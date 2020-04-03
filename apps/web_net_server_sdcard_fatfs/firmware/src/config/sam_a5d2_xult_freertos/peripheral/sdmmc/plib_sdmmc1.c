@@ -54,6 +54,7 @@
 #define SDMMC1_MULTCLK_FREQUENCY                0
 
 #define SDMMC1_MAX_SUPPORTED_SDCLK_FREQUENCY    50000000UL
+
 #define SDMMC1_MAX_SUPPORTED_DIVIDER            0x3FF
 
 #define SDMMC1_MAX_BLOCK_SIZE                   0x200
@@ -229,7 +230,7 @@ void SDMMC1_BusWidthSet ( SDMMC_BUS_WIDTH busWidth )
 {
     if (busWidth == SDMMC_BUS_WIDTH_4_BIT)
     {
-       SDMMC1_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DW_4_BIT;
+        SDMMC1_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DW_4_BIT;
     }
     else
     {
@@ -257,11 +258,6 @@ bool SDMMC1_IsCmdLineBusy ( void )
 bool SDMMC1_IsDatLineBusy ( void )
 {
     return (((SDMMC1_REGS->SDMMC_PSR & SDMMC_PSR_CMDINHD_Msk) == SDMMC_PSR_CMDINHD_Msk)? true : false);
-}
-
-bool SDMMC1_IsWriteProtected ( void )
-{
-    return (SDMMC1_REGS->SDMMC_PSR & SDMMC_PSR_WRPPL_Msk) ? false : true;
 }
 
 bool SDMMC1_IsCardAttached ( void )
@@ -585,34 +581,33 @@ void SDMMC1_CommandSend (
 void SDMMC1_ModuleInit( void )
 {
     /* Reset module*/
-    SDMMC1_REGS->SDMMC_SRR |= SDMMC_SRR_SWRSTALL_Msk;
+    SDMMC1_REGS->SDMMC_SRR = SDMMC_SRR_SWRSTALL_Msk;
     while((SDMMC1_REGS->SDMMC_SRR & SDMMC_SRR_SWRSTALL_Msk) == SDMMC_SRR_SWRSTALL_Msk);
-
-    /* Clear the normal and error interrupt status flags */
-    SDMMC1_REGS->SDMMC_EISTR = SDMMC_EISTR_SD_SDIO_Msk;
-    SDMMC1_REGS->SDMMC_NISTR = SDMMC_NISTR_SD_SDIO_Msk;
-
-    /* Enable all the normal interrupt status and error status generation */
-    SDMMC1_REGS->SDMMC_NISTER = SDMMC_NISTER_SD_SDIO_Msk;
-    SDMMC1_REGS->SDMMC_EISTER = SDMMC_EISTER_SD_SDIO_Msk;
 
     /* Set timeout control register */
     SDMMC1_REGS->SDMMC_TCR = SDMMC_TCR_DTCVAL(0xE);
 
-    /* Enable ADMA2 (Check CA0R capability register first) */
-    SDMMC1_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DMASEL(2);
+    /* Configure maximum AHB burst size */
+	SDMMC1_REGS->SDMMC_ACR = SDMMC_ACR_BMAX_INCR16;
+
+    /* Enable ADMA2 */
+    SDMMC1_REGS->SDMMC_HC1R = SDMMC_HC1R_SD_SDIO_DMASEL_ADMA32;
+    
+    /* Clear the normal and error interrupt status flags */
+    SDMMC1_REGS->SDMMC_EISTR = SDMMC_EISTR_SD_SDIO_Msk;
+    SDMMC1_REGS->SDMMC_NISTR = SDMMC_NISTR_SD_SDIO_Msk;
+
+    /* Enable normal and error interrupts that are used  */
+    SDMMC1_REGS->SDMMC_NISTER = SDMMC_NISTER_SD_SDIO_Msk;
+    SDMMC1_REGS->SDMMC_EISTER = SDMMC_EISTER_SD_SDIO_Msk;
 
     /* Set SD Bus Power On */
+    /* (NOTE: Perform a read/modify write to preserve the values of the 
+        reserved bits */
     SDMMC1_REGS->SDMMC_PCR |= SDMMC_PCR_SDBPWR_Msk;
-
+    
     /* Set initial clock to 400 KHz*/
     SDMMC1_ClockSet (SDMMC_CLOCK_FREQ_400_KHZ);
-
-    /* Clear the high speed bit and set the data width to 1-bit mode */
-    SDMMC1_REGS->SDMMC_HC1R &= ~(SDMMC_HC1R_SD_SDIO_HSEN_Msk | SDMMC_HC1R_SD_SDIO_DW_Msk);
-
-    /* Enable card inserted and card removed interrupt signals */
-    SDMMC1_REGS->SDMMC_NISIER = (SDMMC_NISIER_SD_SDIO_CINS_Msk | SDMMC_NISIER_SD_SDIO_CREM_Msk);
 }
 
 void SDMMC1_Initialize( void )
