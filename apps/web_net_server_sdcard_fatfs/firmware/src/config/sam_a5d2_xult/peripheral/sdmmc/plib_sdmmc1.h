@@ -65,8 +65,6 @@ bool SDMMC1_IsCmdLineBusy ( void );
 
 bool SDMMC1_IsDatLineBusy ( void );
 
-bool SDMMC1_IsWriteProtected ( void );
-
 bool SDMMC1_IsCardAttached ( void );
 
 bool SDMMC1_ClockSet ( uint32_t freq );
