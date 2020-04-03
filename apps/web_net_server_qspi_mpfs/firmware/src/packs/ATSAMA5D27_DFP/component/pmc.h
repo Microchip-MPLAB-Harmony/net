@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-13T17:45:36Z */
+/* file generated from device description version 2019-12-06T14:18:30Z */
 #ifndef _SAMA5D2_PMC_COMPONENT_H_
 #define _SAMA5D2_PMC_COMPONENT_H_
 

@@ -44,6 +44,7 @@
 #include "plib_qspi0.h"
 #include "string.h" // memmove
 
+
 void QSPI0_Initialize(void)
 {
     // Reset and Disable the qspi Module
@@ -53,10 +54,19 @@ void QSPI0_Initialize(void)
         ;   // spin lock
     }
 
-    // Set Mode Register values
-    QSPI0_REGS->QSPI_MR = ( QSPI_MR_SMM_MEMORY );
+    /* DLYCS  = 0x0 */
+    /* DLYBCT = 0x0 */
+    /* NBBITS = 0x8 */
+    /* CSMODE = 0x0 */
+    /* WDRBT  = 0 */
+    /* LLB    = 0 */
+    /* SMM    = MEMORY */
+    QSPI0_REGS->QSPI_MR = ( QSPI_MR_SMM_MEMORY | QSPI_MR_NBBITS(0x8));
 
-    // Set serial clock register
+    /* CPOL = 0 */
+    /* CPHA = 0 */
+    /* SCBR = 4 */
+    /* DLYBS = 0 */
     QSPI0_REGS->QSPI_SCR = (QSPI_SCR_SCBR(4))  ;
 
     // Enable the qspi Module
