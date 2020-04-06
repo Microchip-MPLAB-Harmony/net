@@ -1738,13 +1738,12 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackSysClkAdapterHeaderFile.setMarkup(True)
 
     tcpipStackSysTimeAdapterHeaderFile = tcpipStackComponent.createFileSymbol(None, None)
-    tcpipStackSysTimeAdapterHeaderFile.setSourcePath("sys_adapter/templates/system/sys_time_h2_adapter.h.ftl")
+    tcpipStackSysTimeAdapterHeaderFile.setSourcePath("sys_adapter/sys_time_h2_adapter.h")
     tcpipStackSysTimeAdapterHeaderFile.setOutputName("sys_time_h2_adapter.h")
     tcpipStackSysTimeAdapterHeaderFile.setDestPath("system/")
     tcpipStackSysTimeAdapterHeaderFile.setProjectPath("config/" + configName + "/system/")
     tcpipStackSysTimeAdapterHeaderFile.setType("HEADER")
     tcpipStackSysTimeAdapterHeaderFile.setOverwrite(True)
-    tcpipStackSysTimeAdapterHeaderFile.setMarkup(True)
     
     tcpipStackSysTimeAdapterSourceFile = tcpipStackComponent.createFileSymbol(None, None)
     tcpipStackSysTimeAdapterSourceFile.setSourcePath("sys_adapter/sys_time_h2_adapter.c")

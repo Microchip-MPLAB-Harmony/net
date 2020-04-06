@@ -112,7 +112,14 @@ typedef int16_t UDP_SOCKET;
     Structure containing the information about a UDP socket
 
   Remarks:
-    None
+    The information in this structure will be updated based on the current packet received by the socket.
+    For example, members like:
+        hNet
+        remotePort
+        remoteIPaddress
+    could change from one packet to another.
+    This depends on how the socket is configured (allowed to receive on all interfaces, from all ports, etc.).
+    See UDP_SOCKET_OPTION for details.
 
 */
 typedef struct
@@ -978,7 +985,7 @@ bool                TCPIP_UDP_Disconnect(UDP_SOCKET hUDP, bool flushRxQueue);
 	
   Description:
     This function will fill a user passed UDP_SOCKET_INFO structure
-    with status of the selected socket.
+    with current status of the selected socket.
     
 
   Precondition:

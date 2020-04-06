@@ -2092,8 +2092,7 @@ SYS_FS_RESULT SYS_FS_FilePrintf
     int fileStatus = SYS_FS_ERROR_NOT_READY;
     SYS_FS_OBJ *fileObj = (SYS_FS_OBJ *)handle;
     int res = 0;
-    va_list ap = (va_list){0};
-    const char *ptr;
+    va_list ap = (va_list){0};    
     OSAL_RESULT osalResult = OSAL_RESULT_FALSE;
 
     /* Validate the parameters. */
@@ -2122,9 +2121,8 @@ SYS_FS_RESULT SYS_FS_FilePrintf
     osalResult = OSAL_MUTEX_Lock(&(fileObj->mountPoint->mutexDiskVolume), OSAL_WAIT_FOREVER);
     if (osalResult == OSAL_RESULT_TRUE)
     {
-        va_start (ap, string);
-        ptr = va_arg(ap, const char*);
-        res = fileObj->mountPoint->fsFunctions->formattedprint(fileObj->nativeFSFileObj, string, ptr);
+        va_start (ap, string);        
+        res = fileObj->mountPoint->fsFunctions->formattedprint(fileObj->nativeFSFileObj, string, ap);
         va_end (ap);
 
         /* Release the acquired mutex. */

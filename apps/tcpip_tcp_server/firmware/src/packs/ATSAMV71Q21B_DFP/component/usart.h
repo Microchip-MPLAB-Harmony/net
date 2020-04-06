@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-07-24T15:06:26Z */
+/* file generated from device description version 2019-08-30T06:12:01Z */
 #ifndef _SAMV71_USART_COMPONENT_H_
 #define _SAMV71_USART_COMPONENT_H_
 

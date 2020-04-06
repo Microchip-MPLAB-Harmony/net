@@ -705,7 +705,4 @@ def tcpipHttpNetCustomSlSet(symbol, event):
     else:
         symbol.setValue(False,2)
 
-def onAttachmentConnected(source, target):
-    if (source["id"] == "HttpNet_TcpipFs_Dependency"): 
-        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT") != True):
-            Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT", True)
+

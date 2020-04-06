@@ -1627,8 +1627,8 @@
           <Name dnOrder="1">tftps_private.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_das_sk/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0D6D02195C20BFF828814F7A9D456141</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0D6D02195C20BFF828814F7A9D456141</UserChecksum>
+          <GeneratedChecksum dnOrder="4">93955E68585F91EE382E3EFCEDB120EE</GeneratedChecksum>
+          <UserChecksum dnOrder="5">93955E68585F91EE382E3EFCEDB120EE</UserChecksum>
         </File>
         <File dnOrder="203">
           <Type dnOrder="0">HEADER</Type>
@@ -1724,8 +1724,8 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.0.81\atdf\PIC32MZ2064DAS169.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;net;"/>
     </Settings>
   </Configurator>
 </Configuration>

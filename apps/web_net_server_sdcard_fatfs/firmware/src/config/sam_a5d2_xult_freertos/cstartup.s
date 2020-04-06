@@ -28,7 +28,7 @@
         SECTION FIQ_STACK:DATA:NOROOT(2)
         SECTION ABT_STACK:DATA:NOROOT(2)
         SECTION UND_STACK:DATA:NOROOT(2)
-        SECTION SYS_STACK:DATA:NOROOT(2)
+        SECTION SVC_STACK:DATA:NOROOT(3)
         SECTION CSTACK:DATA:NOROOT(3)
 
 //------------------------------------------------------------------------------
@@ -270,12 +270,12 @@ __iar_program_start:
         ldr     sp, =SFE(UND_STACK)
         bic     sp, sp, #0x7
 
-        ; Set up the system mode stack pointer
+        ; Set up the user/system mode stack pointer
 
         bic     r0, r0, #MODE_MSK
         orr     r0, r0, #ARM_MODE_SYS
         msr     CPSR_c, r0
-        ldr     sp, =SFE(SYS_STACK)
+        ldr     sp, =SFE(CSTACK)
         bic     sp, sp, #0x7
 
         ; Set up the supervisor mode stack pointer
@@ -283,7 +283,7 @@ __iar_program_start:
         bic     r0 ,r0, #MODE_MSK
         orr     r0 ,r0, #ARM_MODE_SVC
         msr     cpsr_c, r0
-        ldr     sp, =SFE(CSTACK)
+        ldr     sp, =SFE(SVC_STACK)
         bic     sp, sp, #0x7
 
         ; Execute relocations & zero BSS

@@ -25,10 +25,35 @@
 #include "../net_pres_encryptionproviderapi.h"
 #include "../net_pres_socketapi.h"
 #include "../net_pres_transportapi.h"
+#include "system/console/sys_console.h"
 #include "net_pres_local.h"
 
+
+// local data
 NET_PRES_InternalData sNetPresData;
 NET_PRES_SocketData sNetPresSockets[NET_PRES_NUM_SOCKETS];
+
+
+// basic level  debugging
+#if ((NET_PRES_DEBUG_LEVEL & NET_PRES_DEBUG_MASK_BASIC) != 0)
+static volatile int _NET_PRES_StayAssertLoop = 0;
+static void _NET_PRES_AssertCond(bool cond, const char* message, int lineNo)
+{
+    if(cond == false)
+    {
+        SYS_CONSOLE_PRINT("NET_PRES Assert: %s, in line: %d, \r\n", message, lineNo);
+        while(_NET_PRES_StayAssertLoop != 0);
+    }
+}
+
+#else
+#define _NET_PRES_AssertCond(cond, message, lineNo)
+#endif  // (NET_PRES_DEBUG_LEVEL)
+
+
+// local prototypes
+static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
+
 
 SYS_MODULE_OBJ NET_PRES_Initialize( const SYS_MODULE_INDEX index,
                                            const SYS_MODULE_INIT * const init )
@@ -824,6 +849,23 @@ uint16_t NET_PRES_SocketDiscard(NET_PRES_SKT_HANDLE_T handle)
     
 }
 
+// socket handle it's a transport handle, actually
+static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param)
+{
+    NET_PRES_SocketData * pSkt = (NET_PRES_SocketData*)param;
+    _NET_PRES_AssertCond(pSkt->transHandle == handle,  __func__, __LINE__);
+    _NET_PRES_AssertCond(pSkt->sigHandle != 0,  __func__, __LINE__);
+    _NET_PRES_AssertCond(pSkt->usrSigFnc != 0,  __func__, __LINE__);
+
+    // call the user handler
+    if(pSkt->usrSigFnc != 0)
+    {
+        uint16_t sktIx = (pSkt - sNetPresSockets) + 1; 
+        (*pSkt->usrSigFnc)(sktIx, hNet, sigType, pSkt->usrSigParam);
+    }
+
+}
+
 
 NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_T handle, uint16_t sigMask, NET_PRES_SIGNAL_FUNCTION handler, const void* hParam)
 {
@@ -833,15 +875,39 @@ NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_
         return 0;
     }
 
+    if (handler == 0)
+    {
+        pSkt->lastError = NET_PRES_SKT_HANDLER_ERROR;
+        return 0;
+    }
+
     NET_PRES_TransHandlerRegister fp = pSkt->transObject->fpHandlerRegister;
     if (fp == NULL)
     {
         pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
-        return NULL;
+        return 0;
     }
-    return (*fp)(pSkt->transHandle, sigMask, handler, hParam);    
+
+    if(pSkt->sigHandle != 0)
+    {   // one socket has just one signal handler
+        pSkt->lastError = NET_PRES_SKT_HANDLER_BUSY;
+        return 0;
+    }
+
+    pSkt->usrSigFnc = handler;
+    pSkt->usrSigParam = hParam;
+    pSkt->sigHandle = (*fp)(pSkt->transHandle, sigMask, NET_PRES_SignalHandler, pSkt);    
+
+    if(pSkt->sigHandle == 0)
+    {   // failed
+        pSkt->lastError = NET_PRES_SKT_HANDLER_TRANSP_ERROR;
+    }
+
+
+    return pSkt->sigHandle;
 
 }
+
 bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL_HANDLE hSig)
 {
     NET_PRES_SocketData * pSkt;
@@ -856,8 +922,24 @@ bool NET_PRES_SocketSignalHandlerDeregister(NET_PRES_SKT_HANDLE_T handle, NET_PR
         pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
         return false;
     }
-    return (*fp)(handle, (NET_PRES_SIGNAL_FUNCTION) hSig);
 
+    if(pSkt->sigHandle == 0 || pSkt->sigHandle != hSig)
+    {   // no such signal handler
+        pSkt->lastError = NET_PRES_SKT_HANDLER_ERROR;
+        return false;
+    }
+
+    bool res = (*fp)(pSkt->transHandle, pSkt->sigHandle);
+    if(res)
+    {   // done
+        pSkt->sigHandle = 0;
+    }
+    else
+    {
+        pSkt->lastError = NET_PRES_SKT_HANDLER_TRANSP_ERROR;
+    }
+
+    return res;
 }
 
 bool NET_PRES_SocketIsNegotiatingEncryption(NET_PRES_SKT_HANDLE_T handle)

@@ -163,7 +163,7 @@ const DRV_SDMMC_PLIB_API drvSDMMC0PlibAPI = {
     .sdhostClockEnable = (DRV_SDMMC_PLIB_CLOCK_ENABLE)SDHC_ClockEnable,
     .sdhostResetError = (DRV_SDMMC_PLIB_RESET_ERROR)SDHC_ErrorReset,
     .sdhostIsCardAttached = (DRV_SDMMC_PLIB_IS_CARD_ATTACHED)SDHC_IsCardAttached,
-    .sdhostIsWriteProtected = (DRV_SDMMC_PLIB_IS_WRITE_PROTECTED)SDHC_IsWriteProtected,
+    .sdhostIsWriteProtected = (DRV_SDMMC_PLIB_IS_WRITE_PROTECTED)NULL,
 };
 
 /*** SDMMC Driver Initialization Data ***/
@@ -174,11 +174,12 @@ const DRV_SDMMC_INIT drvSDMMC0InitData =
     .bufferObjPoolSize              = DRV_SDMMC_QUEUE_SIZE_IDX0,
     .clientObjPool                  = (uintptr_t)&drvSDMMC0ClientObjPool[0],
     .numClients                     = DRV_SDMMC_CLIENTS_NUMBER_IDX0,
-    .cardDetectionMethod            = (DRV_SDMMC_CD_METHOD)DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
+    .protocol                       = DRV_SDMMC_PROTOCOL_SUPPORT_IDX0,
+    .cardDetectionMethod            = DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
     .cardDetectionPollingIntervalMs = 0,
     .isWriteProtectCheckEnabled     = false,
-    .speedMode                      = (DRV_SDMMC_SPEED_MODE)DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
-    .busWidth                       = (DRV_SDMMC_BUS_WIDTH)DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
+    .speedMode                      = DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
+    .busWidth                       = DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
     .isFsEnabled                    = true,
 };
 
@@ -739,11 +740,12 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 
 const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
     .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)CORETIMER_CallbackSet,
-    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)CORETIMER_CounterGet,
-    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)CORETIMER_FrequencyGet,
-    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)CORETIMER_CompareSet,
     .timerStart = (SYS_TIME_PLIB_START)CORETIMER_Start,
-    .timerStop = (SYS_TIME_PLIB_STOP)CORETIMER_Stop 
+    .timerStop = (SYS_TIME_PLIB_STOP)CORETIMER_Stop ,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)CORETIMER_FrequencyGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)NULL,
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)CORETIMER_CompareSet,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)CORETIMER_CounterGet,
 };
 
 const SYS_TIME_INIT sysTimeInitData =
@@ -839,12 +841,15 @@ void SYS_Initialize ( void* data )
 
   
     CLK_Initialize();
-	GPIO_Initialize();
+    
     /* Configure Prefetch, Wait States and ECC */
     PRECONbits.PREFEN = 3;
     PRECONbits.PFMWS = 2;
     CFGCONbits.ECCCON = 3;
 
+
+
+	GPIO_Initialize();
 
 	SDHC_Initialize();
 

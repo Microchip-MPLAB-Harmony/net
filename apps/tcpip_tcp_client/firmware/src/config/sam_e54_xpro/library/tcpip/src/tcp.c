@@ -189,6 +189,16 @@ static void _TcpCleanup(void);
 static void _TCPAbortSockets(uint32_t netMask, TCPIP_TCP_SIGNAL_TYPE sigType); 
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0) || (_TCPIP_STACK_INTERFACE_CHANGE_SIGNALING != 0)
 
+// function to get the socket signal in a consistent/safe way
+static __inline__ uint16_t __attribute__((always_inline)) _TcpSktGetSignalLocked(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_FUNCTION* pSigHandler, const void** pSigParam)
+{
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    *pSigHandler = pSkt->sigHandler;
+    *pSigParam = pSkt->sigParam;
+    uint16_t sigMask = pSkt->sigMask;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return sigMask;
+}
 
 static void _TcpAbort(TCB_STUB* pSkt, _TCP_ABORT_FLAGS abFlags, TCPIP_TCP_SIGNAL_TYPE tcpEvent);
 static _TCP_SEND_RES _TcpDisconnect(TCB_STUB* pSkt, bool signalFIN);
@@ -1573,6 +1583,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
     uint16_t            calcChkSum;
     TCB_STUB*           pSkt; 
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
+    uint16_t            sigMask;
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_TCP_SIGNAL_TYPE sktEvent = 0;
 
@@ -1632,11 +1644,12 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv4(TCPIP_MAC_PACKET* pRxPkt)
         pRxPkt->pDSeg->segLen -=  optionsSize + sizeof(*pTCPHdr);    
         _TcpHandleSeg(pSkt, pTCPHdr, tcpTotLength - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
 
-        if((sktEvent &= pSkt->sigMask) != 0)
+        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if((sktEvent &= sigMask) != 0)
         {
-            if((sigHandler = pSkt->sigHandler) != 0)
+            if(sigHandler != 0)
             {
-                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, sktEvent, pSkt->sigParam);
+                (*sigHandler)(pSkt->sktIx, pRxPkt->pktIf, sktEvent, sigParam);
             }
         }
 
@@ -3564,6 +3577,8 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
     TCB_STUB*       pSkt; 
     TCPIP_NET_HANDLE     pPktIf;
     TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
+    uint16_t            sigMask;
     TCPIP_MAC_PKT_ACK_RES ackRes;
     TCPIP_TCP_SIGNAL_TYPE sktEvent = 0;
 
@@ -3619,11 +3634,12 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_TCP_ProcessIPv6(TCPIP_MAC_PACKET* pRxPkt)
         _TcpHandleSeg(pSkt, pTCPHdr, dataLen - optionsSize - sizeof(*pTCPHdr), pRxPkt, &sktEvent);
         pPktIf = pRxPkt->pktIf;
 
-        if((sktEvent &= pSkt->sigMask) != 0)
+        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if((sktEvent &= sigMask) != 0)
         {
-            if((sigHandler = pSkt->sigHandler) != 0)
+            if(sigHandler != 0)
             {
-                (*sigHandler)(pSkt->sktIx, pPktIf, sktEvent, pSkt->sigParam);
+                (*sigHandler)(pSkt->sktIx, pPktIf, sktEvent, sigParam);
             }
         }
 
@@ -3673,6 +3689,9 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
     void*           pSendPkt;
     uint16_t 		mss = 0;
     TCP_HEADER *    header = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void*         sigParam;
+    uint16_t            sigMask;
 
 #if (TCPIP_TCP_QUIET_TIME != 0)
     if(!tcpQuietDone)
@@ -4052,9 +4071,10 @@ static _TCP_SEND_RES _TcpSend(TCB_STUB* pSkt, uint8_t vTCPFlags, uint8_t vSendFl
 
     if(sendRes == _TCP_SEND_OK && (vTCPFlags & RST) != 0 )
     {   // signal that we reset the connection
-        if(pSkt->sigHandler != 0 && (pSkt->sigMask & TCPIP_TCP_SIGNAL_TX_RST) != 0)
+        sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+        if(sigHandler != 0 && (sigMask & TCPIP_TCP_SIGNAL_TX_RST) != 0)
         {
-            (*pSkt->sigHandler)(pSkt->sktIx, pSkt->pSktNet, TCPIP_TCP_SIGNAL_TX_RST, pSkt->sigParam);
+            (*sigHandler)(pSkt->sktIx, pSkt->pSktNet, TCPIP_TCP_SIGNAL_TX_RST, sigParam);
         } 
     }
 
@@ -4388,7 +4408,9 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
     // a socket server will listen after this Close operation
     bool    sktIsKilled;
     bool    freePkt;
-    TCPIP_TCP_SIGNAL_FUNCTION sigHandler = 0;
+    TCPIP_TCP_SIGNAL_FUNCTION sigHandler;
+    const void* sigParam;
+    uint16_t    sigMask;
     TCPIP_NET_HANDLE pSktNet = 0;
     TCP_SOCKET   sktIx = 0; 
 
@@ -4445,9 +4467,10 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
         break;
     }
 
-    if((tcpEvent &= pSkt->sigMask))
+    sigMask = _TcpSktGetSignalLocked(pSkt, &sigHandler, &sigParam);
+    if((tcpEvent &= sigMask))
     {
-        if((sigHandler = pSkt->sigHandler))
+        if(sigHandler != 0)
         {
             sktIx = pSkt->sktIx;
             pSktNet = pSkt->pSktNet;
@@ -4470,7 +4493,7 @@ static void _TcpCloseSocket(TCB_STUB* pSkt, TCPIP_TCP_SIGNAL_TYPE tcpEvent)
 
     if(tcpEvent)
     {   // notify socket user
-        (*sigHandler)(sktIx, pSktNet, tcpEvent, 0);
+        (*sigHandler)(sktIx, pSktNet, tcpEvent, sigParam);
     }
 }
 
@@ -6262,26 +6285,31 @@ static bool _TCP_Flush(TCB_STUB * pSkt, void* pPkt, uint16_t hdrLen, uint16_t lo
 
 TCPIP_TCP_SIGNAL_HANDLE TCPIP_TCP_SignalHandlerRegister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_TYPE sigMask, TCPIP_TCP_SIGNAL_FUNCTION handler, const void* hParam)
 {
+    TCPIP_TCP_SIGNAL_HANDLE sHandle = 0;
 
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
     if(handler != 0)
     {
-
         TCB_STUB* pSkt = _TcpSocketChk(s);
         if(pSkt != 0 && pSkt->sigHandler == 0)
         {
             pSkt->sigHandler = handler;
             pSkt->sigMask = (uint16_t)sigMask;
             pSkt->sigParam = hParam;
-            return (TCPIP_TCP_SIGNAL_HANDLE)handler;
+            sHandle = (TCPIP_TCP_SIGNAL_HANDLE)handler;
             // Note: this may change if multiple notfication handlers required 
         }
     }
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
 
-    return 0;
+    return sHandle;
 }
 
 bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSig)
 {
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
     TCB_STUB* pSkt = _TcpSocketChk(s);
 
     if(pSkt != 0)
@@ -6290,11 +6318,12 @@ bool TCPIP_TCP_SignalHandlerDeregister(TCP_SOCKET s, TCPIP_TCP_SIGNAL_HANDLE hSi
         {
             pSkt->sigHandler = 0;
             pSkt->sigMask = 0;
-            return true;
+            res = true;
         }
     }
 
-    return false;
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
 }
 
 bool TCPIP_TCP_IsReady(void)

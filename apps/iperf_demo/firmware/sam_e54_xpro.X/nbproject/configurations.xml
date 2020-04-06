@@ -297,23 +297,15 @@
           <logicalFolder displayName="CMSIS" name="f1" projectFiles="true">
             <logicalFolder displayName="Core" name="f1" projectFiles="true">
               <logicalFolder displayName="Include" name="f1" projectFiles="true">
+                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_compiler.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_iccarm.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_gcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armcc.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_armclang_ltm.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/tz_context.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/core_cm4.h</itemPath>
                 <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/mpu_armv7.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/Core/Include/cmsis_version.h</itemPath>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder displayName="DSP" name="f2" projectFiles="true">
-              <logicalFolder displayName="Include" name="f1" projectFiles="true">
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_common_tables.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_const_structs.h</itemPath>
-                <itemPath>../src/packs/CMSIS/CMSIS/DSP/Include/arm_math.h</itemPath>
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
@@ -333,7 +325,34 @@
     <logicalFolder displayName="Source Files" name="f4" projectFiles="true">
       <logicalFolder displayName="config" name="f1" projectFiles="true">
         <logicalFolder displayName="sam_e54_xpro" name="f1" projectFiles="true">
-          <logicalFolder displayName="peripheral" name="f1" projectFiles="true">
+          <logicalFolder displayName="library" name="f1" projectFiles="true">
+            <logicalFolder displayName="tcpip" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="common" name="f1" projectFiles="true">
+                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/helpers.c</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/iperf.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/oahash.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_helpers.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
+                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder displayName="peripheral" name="f2" projectFiles="true">
             <logicalFolder displayName="nvmctrl" name="f1" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/nvmctrl/plib_nvmctrl.c</itemPath>
             </logicalFolder>
@@ -359,32 +378,6 @@
             </logicalFolder>
             <logicalFolder displayName="cmcc" name="f8" projectFiles="true">
               <itemPath>../src/config/sam_e54_xpro/peripheral/cmcc/plib_cmcc.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder displayName="library" name="f2" projectFiles="true">
-            <logicalFolder displayName="tcpip" name="f1" projectFiles="true">
-              <logicalFolder displayName="src" name="f1" projectFiles="true">
-                <logicalFolder displayName="common" name="f1" projectFiles="true">
-                  <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/helpers.c</itemPath>
-                </logicalFolder>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/icmp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/nbns.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/dhcp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/arp.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_commands.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/iperf.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/ipv4.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_heap_internal.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/hash_fnv.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/oahash.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_helpers.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_manager.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_notify.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/tcpip_packet.c</itemPath>
-                <itemPath>../src/config/sam_e54_xpro/library/tcpip/src/udp.c</itemPath>
-              </logicalFolder>
             </logicalFolder>
           </logicalFolder>
           <logicalFolder displayName="system" name="f3" projectFiles="true">
@@ -473,7 +466,7 @@
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAME54_DFP" vendor="Microchip" version="3.0.27"/>
+        <pack name="SAME54_DFP" vendor="Microchip" version="3.2.56"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
       </packs>
       <compileType>

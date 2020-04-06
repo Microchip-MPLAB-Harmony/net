@@ -101,11 +101,13 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define TCPIP_DHCP_SUBNET_MASK                (1u)	// DHCP_SUBNET_MASK Type
 #define TCPIP_DHCP_ROUTER                     (3u)	// DHCP_ROUTER Type
+#define TCPIP_DHCP_TIME_SERVER                (4u)	// DHCP_TIME_SERVER Type
 #define TCPIP_DHCP_DNS						  (6u)	// DHCP_DNS Type
 #define TCPIP_DHCP_HOST_NAME			      (12u)	// DHCP_HOST_NAME Type
 #define TCPIP_DHCP_IP_LEASE_TIME              (51u)	// DHCP_IP_LEASE_TIME Type
 #define TCPIP_DHCP_RENEW_TIME                 (58u)	// DHCP RENEW time (T1)
 #define TCPIP_DHCP_REBIND_TIME                (59u)	// DHCP REBIND time (T2)
+#define TCPIP_DHCP_NTP_SERVER                 (42u)	// DHCP_NTP_SERVER Type
 
 #define TCPIP_DHCP_END_OPTION                 (255u)	// DHCP_END_OPTION Type
 
@@ -268,6 +270,20 @@ typedef struct __attribute__((packed))
     uint8_t     len;        // >=4
     uint8_t     gateway[4];    // gateway/router address
 }TCPIP_DHCP_OPTION_DATA_ROUTER;
+
+typedef struct __attribute__((packed))
+{
+    uint8_t     opt;        // should be TCPIP_DHCP_TIME_SERVER
+    uint8_t     len;        // >=4
+    uint8_t     tServer[4]; // time server address
+}TCPIP_DHCP_OPTION_TIME_SERVER;
+
+typedef struct __attribute__((packed))
+{
+    uint8_t     opt;        // should be TCPIP_DHCP_NTP_SERVER
+    uint8_t     len;        // >=4
+    uint8_t     ntpServer[4]; // ntp server address
+}TCPIP_DHCP_OPTION_NTP_SERVER;
 
 
 typedef struct __attribute__((packed))

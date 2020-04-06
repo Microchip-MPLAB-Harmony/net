@@ -31,14 +31,13 @@ def instantiateComponent(drvExtPhyKsz8863Component):
     drvExtPhyKsz8863LinkInitDelay.setVisible(True)
     drvExtPhyKsz8863LinkInitDelay.setDescription("Delay for the Link Initialization in ms")
     drvExtPhyKsz8863LinkInitDelay.setDefaultValue(500)
-    #drvExtPhyKsz8863LinkInitDelay.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_USE_ETH_MAC"])
 
     # PHY Address
     drvExtPhyKsz8863Addr= drvExtPhyKsz8863Component.createIntegerSymbol("TCPIP_INTMAC_PHY_ADDRESS", None)
     drvExtPhyKsz8863Addr.setLabel("PHY Address") 
     drvExtPhyKsz8863Addr.setVisible(True)
     drvExtPhyKsz8863Addr.setDescription("PHY Address")
-    drvExtPhyKsz8863Addr.setDefaultValue(0)
+    drvExtPhyKsz8863Addr.setDefaultValue(1)
 
     # External PHY Connection Flags
     drvExtPhyKsz8863ConnFlag = drvExtPhyKsz8863Component.createMenuSymbol(None, None) 

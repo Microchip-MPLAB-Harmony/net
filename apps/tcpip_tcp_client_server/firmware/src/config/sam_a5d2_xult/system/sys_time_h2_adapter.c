@@ -38,3 +38,34 @@ SYS_TMR_HANDLE SYS_TMR_CallbackPeriodic ( uint32_t periodMs, uintptr_t context, 
 	return SYS_TIME_CallbackRegisterMS((SYS_TIME_CALLBACK)sy_time_h2_adapter_callback, context, periodMs, SYS_TIME_PERIODIC );
 }
 
+static uint32_t gTickConv = 0;
+
+uint32_t SYS_TMR_TickCountGet(void)
+{
+    if(gTickConv == 0)
+    {
+        gTickConv = SYS_TIME_MSToCount(1);
+    }
+
+    return (uint32_t)(SYS_TIME_Counter64Get() / (uint64_t)gTickConv);
+}
+
+uint64_t SYS_TMR_TickCountGetLong(void)
+{
+    if(gTickConv == 0)
+    {
+        gTickConv = SYS_TIME_MSToCount(1);
+    }
+
+	return SYS_TIME_Counter64Get() / (uint64_t)gTickConv;
+}
+
+uint32_t SYS_TMR_TickCounterFrequencyGet ( void )
+{
+    if(gTickConv == 0)
+    {
+        gTickConv = SYS_TIME_MSToCount(1);
+    }
+
+	return SYS_TIME_FrequencyGet() / gTickConv;
+}

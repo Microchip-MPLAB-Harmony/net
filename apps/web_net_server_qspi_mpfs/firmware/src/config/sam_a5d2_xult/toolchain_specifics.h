@@ -32,7 +32,8 @@
 #include <stdint.h>
 #define __inline__                      inline
 
-#define CACHE_ALIGN                     __ALIGNED(32)
+#define CACHE_LINE_SIZE                 (32u)
+#define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
 
 // ************************************************************************
 // H3_IAR_SYS_TYPES 

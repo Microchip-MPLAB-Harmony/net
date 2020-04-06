@@ -84,7 +84,7 @@ extern "C" {
 #define SYS_TIME_MAX_TIMERS                  5
 #define SYS_TIME_HW_COUNTER_WIDTH            32
 #define SYS_TIME_HW_COUNTER_PERIOD           4294967295U
-#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
+#define SYS_TIME_HW_COUNTER_HALF_PERIOD	     (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         200000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (620)
 
@@ -158,7 +158,7 @@ extern "C" {
 
 /* SDSPI Driver Instance 0 RTOS Configurations*/
 #define DRV_SDSPI_STACK_SIZE_IDX0               256
-#define DRV_SDSPI_PRIORITY_IDX0                 1
+#define DRV_SDSPI_PRIORITY_IDX0                     1
 
 
 
@@ -409,11 +409,10 @@ extern "C" {
 #define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
-
-
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS     			\
-                                                    DRV_ETHPHY_CFG_AUTO | \
-													0                                                    
+                                                  
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS              	( 0 \
+                                                    | DRV_ETHPHY_CFG_AUTO \
+                                                    )
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY  			500
 #define TCPIP_INTMAC_PHY_ADDRESS		    			0
@@ -470,6 +469,9 @@ extern "C" {
 #define TCPIP_SNMPV3_TARGET_ENTRY_MESSAGE_PROTOCOL_TYPE_IDX2 	SNMPV3_MSG_PROCESSING_MODEL
 #define TCPIP_SNMPV3_TARGET_ENTRY_SEC_MODEL_TYPE_IDX2 	SNMPV3_USM_SECURITY_MODEL
 #define TCPIP_SNMPV3_TARGET_ENTRY_SEC_LEVEL_IDX2 	NO_AUTH_NO_PRIV
+
+
+#define TCPIP_SNMPV3_SUPPORT_AES
 
 /***User security name length for memory validation***/
 #define TCPIP_SNMPV3_USER_SECURITY_NAME_LEN_MEM_USE (TCPIP_SNMPV3_USER_SECURITY_NAME_LEN+1)
@@ -610,6 +612,10 @@ extern "C" {
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
 #define TCPIP_DHCP_SERVER_LISTEN_PORT               67
 #define TCPIP_DHCP_CLIENT_ENABLED                   true
+#define TCPIP_DHCP_USE_OPTION_TIME_SERVER           0
+#define TCPIP_DHCP_TIME_SERVER_ADDRESSES            0
+#define TCPIP_DHCP_USE_OPTION_NTP_SERVER            0
+#define TCPIP_DHCP_NTP_SERVER_ADDRESSES             0
 
 
 
@@ -728,7 +734,7 @@ extern "C" {
 #define USE_FAST_MATH
 #define NO_PWDBASED
 #define HAVE_MCAPI
-#define WOLF_CRYPTO_CB
+#define WOLF_CRYPTO_CB  // provide call-back support
 #define WOLFSSL_HAVE_MIN
 #define WOLFSSL_HAVE_MAX
 #define NO_MD4
@@ -741,6 +747,7 @@ extern "C" {
 #define HAVE_AES_ECB
 #define HAVE_AES_CBC
 #define WOLFSSL_AES_COUNTER
+#define WOLFSSL_AES_CFB
 #define HAVE_AESGCM
 #define HAVE_AESCCM
 #define NO_RC4

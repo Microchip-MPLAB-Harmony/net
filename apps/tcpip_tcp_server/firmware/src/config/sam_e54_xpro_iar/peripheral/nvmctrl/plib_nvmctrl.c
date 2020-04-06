@@ -97,7 +97,7 @@ bool NVMCTRL_QuadWordWrite(const uint32_t *data, const uint32_t address)
     else
     {
         /* Configure Quad Word Write */
-        NVMCTRL_SetWriteMode(NVMCTRL_WMODE_ADW);
+        NVMCTRL_SetWriteMode(NVMCTRL_WMODE_AQW);
 
         /* Writing 32-bit data into the given address.  Writes to the page buffer must be 32 bits. */
         for (i = 0; i <= 3; i++)
@@ -161,7 +161,7 @@ bool NVMCTRL_PageWrite( const uint32_t *data, const uint32_t address )
     }
 
     /* If write mode is manual, */
-    if ((NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_MAN) == NVMCTRL_CTRLA_WMODE_MAN)
+    if ((NVMCTRL_REGS->NVMCTRL_CTRLA & NVMCTRL_CTRLA_WMODE_Msk) == NVMCTRL_CTRLA_WMODE_MAN)
     {
         /* Set address and command */
         NVMCTRL_REGS->NVMCTRL_CTRLB = NVMCTRL_CTRLB_CMD_WP | NVMCTRL_CTRLB_CMDEX_KEY;
@@ -184,8 +184,10 @@ bool NVMCTRL_BlockErase( uint32_t address )
 
 uint16_t NVMCTRL_ErrorGet( void )
 {
-    nvm_error |= NVMCTRL_REGS->NVMCTRL_INTFLAG;
-
+    uint16_t temp;
+    /* Store previous and current error flags */
+    temp = NVMCTRL_REGS->NVMCTRL_INTFLAG;
+    nvm_error |= temp;
     /* Clear NVMCTRL INTFLAG register */
     NVMCTRL_REGS->NVMCTRL_INTFLAG = NVMCTRL_INTFLAG_Msk;
     return nvm_error;

@@ -2477,7 +2477,6 @@
           <Attachments dnOrder="1">
             <Attachment dnOrder="0" id="Core_SysConsole_Dependency" namespace="tcpipStack"/>
             <Attachment dnOrder="1" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvEmac0:libdrvMac0" targetComponentID="DRIVER LAYER"/>
-            <Attachment dnOrder="2" id="Core_SysConsole_Dependency" namespace="tcpipStack"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
@@ -2659,7 +2658,6 @@
       </Children>
       <Attachments dnOrder="1">
         <Attachment dnOrder="0" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION"/>
-        <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION"/>
       </Attachments>
     </GroupComponent>
   </Components>

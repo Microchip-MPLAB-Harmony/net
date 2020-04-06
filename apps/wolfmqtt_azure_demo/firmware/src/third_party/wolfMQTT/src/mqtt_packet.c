@@ -419,6 +419,14 @@ int MqttEncode_Props(MqttPacketType packet, MqttProp* props, byte* buf)
             }
             case MQTT_DATA_TYPE_BINARY:
             {
+                /* Binary type is a two byte integer "length"
+                   followed by that number of bytes */
+                tmp = MqttEncode_Num(buf, cur_prop->data_bin.len);
+                rc += tmp;
+                if (buf != NULL) {
+                    buf += tmp;
+                }
+
                 tmp = MqttEncode_Data(buf, (const byte*)cur_prop->data_bin.data,
                         cur_prop->data_bin.len);
                 rc += tmp;
@@ -831,9 +839,7 @@ int MqttEncode_Publish(byte *tx_buf, int tx_buf_len, MqttPublish *publish,
         if (payload_len > (tx_buf_len - (header_len + variable_len))) {
             payload_len = (tx_buf_len - (header_len + variable_len));
         }
-        if (tx_payload != NULL) {
-            XMEMCPY(tx_payload, publish->buffer, payload_len);
-        }
+        XMEMCPY(tx_payload, publish->buffer, payload_len);
     }
     publish->intBuf_pos = 0;
     publish->intBuf_len = payload_len;
@@ -1049,14 +1055,8 @@ int MqttEncode_Subscribe(byte *tx_buf, int tx_buf_len,
     remain_len = MQTT_DATA_LEN_SIZE; /* For packet_id */
     for (i = 0; i < subscribe->topic_count; i++) {
         topic = &subscribe->topics[i];
-        if ((topic != NULL) && (topic->topic_filter != NULL)) {
-            remain_len += (int)XSTRLEN(topic->topic_filter) + MQTT_DATA_LEN_SIZE;
-            remain_len++; /* For QoS */
-        }
-        else {
-            /* Topic count is invalid */
-            return MQTT_CODE_ERROR_BAD_ARG;
-        }
+        remain_len += (int)XSTRLEN(topic->topic_filter) + MQTT_DATA_LEN_SIZE;
+        remain_len++; /* For QoS */
     }
 #ifdef WOLFMQTT_V5
     /* Determine length of properties */
@@ -1163,14 +1163,7 @@ int MqttEncode_Unsubscribe(byte *tx_buf, int tx_buf_len,
     remain_len = MQTT_DATA_LEN_SIZE; /* For packet_id */
     for (i = 0; i < unsubscribe->topic_count; i++) {
         topic = &unsubscribe->topics[i];
-        if ((topic != NULL) && (topic->topic_filter != NULL)) {
-            remain_len += (int)XSTRLEN(topic->topic_filter) +
-                                MQTT_DATA_LEN_SIZE;
-        }
-        else {
-            /* Topic count is invalid */
-            return MQTT_CODE_ERROR_BAD_ARG;
-        }
+        remain_len += (int)XSTRLEN(topic->topic_filter) + MQTT_DATA_LEN_SIZE;
     }
 #ifdef WOLFMQTT_V5
     /* Determine length of properties */
@@ -1710,6 +1703,7 @@ int MqttPacket_Read(MqttClient *client, byte* rx_buf, int rx_buf_len,
     /* Return read length */
     return client->packet.header_len + remain_read;
 }
+
 
 #ifdef WOLFMQTT_SN
 int SN_Decode_Advertise(byte *rx_buf, int rx_buf_len, SN_Advertise *gw_info)
@@ -2557,16 +2551,14 @@ int SN_Decode_Publish(byte *rx_buf, int rx_buf_len, MqttPublish *publish)
 
     flags = *rx_payload++;
 
-    publish->topic_name = (char*)rx_payload;
-    rx_payload += MQTT_DATA_LEN_SIZE;
+    rx_payload += MqttDecode_Num(rx_payload, (word16*)publish->topic_name);
 
     rx_payload += MqttDecode_Num(rx_payload, &publish->packet_id);
 
     /* Set flags */
     publish->duplicate = flags & SN_PACKET_FLAG_DUPLICATE;
 
-    publish->qos = (MqttQoS)((flags & SN_PACKET_FLAG_QOS_MASK) >>
-            SN_PACKET_FLAG_QOS_SHIFT);
+    publish->qos = (MqttQoS)((flags >> SN_PACKET_FLAG_QOS_SHIFT) & SN_PACKET_FLAG_QOS_MASK);
 
     publish->retain = flags & SN_PACKET_FLAG_RETAIN;
 
@@ -2677,7 +2669,7 @@ int SN_Encode_Unsubscribe(byte *tx_buf, int tx_buf_len,
     if ((unsubscribe->topic_type & SN_PACKET_FLAG_TOPICIDTYPE_MASK) ==
             SN_TOPIC_ID_TYPE_NORMAL) {
         /* Topic name is a string */
-        total_len = (int)XSTRLEN(unsubscribe->topicNameId);
+        total_len = MqttEncode_String(NULL, unsubscribe->topicNameId);
     }
     else {
         /* Topic ID or Short name */
@@ -2725,15 +2717,13 @@ int SN_Encode_Unsubscribe(byte *tx_buf, int tx_buf_len,
     if ((unsubscribe->topic_type & SN_PACKET_FLAG_TOPICIDTYPE_MASK) ==
             SN_TOPIC_ID_TYPE_NORMAL) {
         /* Topic name is a string */
-        XMEMCPY(tx_payload, unsubscribe->topicNameId,
-                XSTRLEN(unsubscribe->topicNameId));
+        tx_payload += MqttEncode_String(tx_payload, unsubscribe->topicNameId);
     }
     else {
         /* Topic ID or Short name */
         tx_payload += MqttEncode_Num(tx_payload,
                 (word16)unsubscribe->topicNameId[0]);
     }
-
     (void)tx_payload;
 
     /* Return total length of packet */

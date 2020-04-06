@@ -62,6 +62,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #define TCPIP_SNMPV3_DES_CRYPTO_BLOCK_SIZE 0x8
 
+// AES-CFB 128bit Init vector size 
+#define TCPIP_SNMPV3_AES_INIT_VECTOR_SIZE   16+1
+
 /* ============== */
 /* Dispatcher Primitives  */
 /* ============== */

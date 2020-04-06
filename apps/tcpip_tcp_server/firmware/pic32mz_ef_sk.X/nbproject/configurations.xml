@@ -282,15 +282,15 @@
                 <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -366,13 +366,13 @@
         <targetDevice>PIC32MZ2048EFH144</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>PKOBSKDEPlatformTool</platformTool>
+        <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.00</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.0.20"/>
+        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.2.51"/>
       </packs>
       <compileType>
         <linkerTool>

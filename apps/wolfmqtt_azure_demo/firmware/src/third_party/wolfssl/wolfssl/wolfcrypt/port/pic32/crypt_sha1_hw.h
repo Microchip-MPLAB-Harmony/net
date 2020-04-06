@@ -60,9 +60,9 @@ typedef struct
     int devId;
     word32 flags; /* enum wc_HashFlags in hash.h */
 #if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_11105)
-    struct icm_descriptor icm_descriptor __attribute__((aligned (64)));
-    uint8_t  buffer[SHA_BLOCK_SIZE]   __attribute__((aligned (64)));
-    uint32_t digest[SHA_DIGEST_SIZE/4] __attribute__((aligned (128)));
+    struct icm_descriptor icm_descriptor;
+    uint8_t  buffer[SHA_BLOCK_SIZE];
+    uint32_t digest[SHA_DIGEST_SIZE/4];
     uint64_t total_len;   /* number of bytes to be processed  */
 #endif
 #if defined(WOLFSSL_HAVE_MCHP_HW_CRYPTO_SHA_HW_6156)

@@ -252,10 +252,10 @@ int f_mkfs (uint8_t vol, uint8_t sfd, uint32_t au);				/* Create a file system o
 int f_fdisk (uint8_t pdrv, const uint32_t szt[], void* work);			/* Divide a physical drive into some partitions */
 int f_putc (TCHAR c, uintptr_t handle);										/* Put a character to the file */
 int f_puts (const TCHAR* str, uintptr_t handle);								/* Put a string to the file */
-int f_printf (uintptr_t handle, const TCHAR* str, ...);						/* Put a formatted string to the file */
+int f_printf (uintptr_t handle, const TCHAR* str, va_list argList);				/* Put a formatted string to the file */
 TCHAR* f_gets (TCHAR* buff, int len, uintptr_t handle);						/* Get a string from the file */
-int f_findfirst (uintptr_t handle, FILINFO* fno, const TCHAR* path, const TCHAR* pattern);	/* Find first file */
-int f_findnext (uintptr_t handle, FILINFO* fno);							/* Find next file */
+int f_findfirst (uintptr_t handle, uintptr_t fno, const TCHAR* path, const TCHAR* pattern);	/* Find first file */
+FRESULT f_findnext (uintptr_t handle, uintptr_t fno);							/* Find next file */
 int f_getclusters (const char *path, uint32_t *tot_sec, uint32_t *free_sec);
 
 //#define f_tell(fp) ((fp)->fptr)

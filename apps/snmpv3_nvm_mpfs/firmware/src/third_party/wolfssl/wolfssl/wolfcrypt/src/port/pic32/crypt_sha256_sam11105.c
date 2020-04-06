@@ -67,9 +67,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "wolfssl/wolfcrypt/port/pic32/crypt_sha256_hw.h"
 
-struct icm_descriptor actIcmDescriptor __attribute__((aligned (64)));
-uint8_t  actBuffer[SHA256_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
-uint32_t actDigest[SHA256_DIGEST_SIZE/4] __attribute__((aligned (128)));
+static struct icm_descriptor actIcmDescriptor __attribute__((aligned (64)));
+static uint8_t  actBuffer[SHA256_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
+static uint32_t actDigest[SHA256_DIGEST_SIZE/4] __attribute__((aligned (128)));
 
 
 int wc_InitSha256_ex(wc_Sha256* sha256, void* heap, int devId)

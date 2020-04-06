@@ -42,8 +42,6 @@
             </logicalFolder>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/driver.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/driver_common.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/driver.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/driver/driver_common.h</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="library" projectFiles="true">
             <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
@@ -217,9 +215,6 @@
               <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/sys_time_definitions.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_freertos/system/time/src/sys_time_local.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_common.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_freertos/system/system_module.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_clk_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_time_h2_adapter.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk_freertos/system/sys_random_h2_adapter.h</itemPath>
@@ -329,13 +324,14 @@
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_commands.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/iperf.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/ipv4.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/pic32mz_ef_sk_freertos/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -441,11 +437,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.0.20"/>
+        <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.2.51"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -507,9 +503,9 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
         <property key="extra-include-directories-for-preprocessor"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
         <property key="false-conditionals" value="false"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
@@ -602,6 +598,7 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
@@ -675,12 +672,15 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="UART3" value="true"/>
         <property key="UART4" value="true"/>
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
+        <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -707,6 +707,8 @@
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value=""/>
@@ -715,6 +717,10 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>

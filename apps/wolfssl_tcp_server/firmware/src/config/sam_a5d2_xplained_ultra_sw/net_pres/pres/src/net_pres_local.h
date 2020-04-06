@@ -32,6 +32,16 @@
 #ifdef __CPLUSPLUS
 extern "C" {
 #endif
+
+// NET_PRES debugging levels/masks
+// basic debugging
+#define NET_PRES_DEBUG_MASK_BASIC           (0x0001)
+
+// enableNET_PRES debugging levels
+#define NET_PRES_DEBUG_LEVEL  (NET_PRES_DEBUG_MASK_BASIC)
+
+
+    
     
     typedef struct _NET_PRES_InternalData
     {
@@ -58,6 +68,9 @@ extern "C" {
         int16_t     transHandle;
         NET_PRES_TransportObject * transObject;
         NET_PRES_EncProviderObject * provObject;
+        NET_PRES_SIGNAL_HANDLE    sigHandle;    // registered signal handle
+        NET_PRES_SIGNAL_FUNCTION  usrSigFnc;    // user signal function
+        const void*               usrSigParam;  // user signal parameter
         uint8_t providerData[8];
     }NET_PRES_SocketData;
     

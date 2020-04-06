@@ -38,19 +38,11 @@ ANY WAY RELATED TO THIS SOFTWARE WILL NOT EXCEED THE AMOUNT OF FEES, IF ANY,
 THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************/
 
-
-
-
-
-
-
-
-#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_DNS_CLIENT
-
 #include "tcpip/src/tcpip_private.h"
 
-#if defined(TCPIP_STACK_USE_DNS)
+
 #include "tcpip/src/dns_private.h"
+#define TCPIP_THIS_MODULE_ID    TCPIP_MODULE_DNS_CLIENT
 
     
 /****************************************************************************
@@ -1939,45 +1931,4 @@ bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache)
     return true;    
 }
 
-#else
-bool TCPIP_DNS_IsEnabled(TCPIP_NET_HANDLE hNet){return false;}
-bool TCPIP_DNS_Enable(TCPIP_NET_HANDLE hNet, TCPIP_DNS_ENABLE_FLAGS flags){return false;}
-bool TCPIP_DNS_Disable(TCPIP_NET_HANDLE hNet, bool clearCache){return false;}
-
-TCPIP_DNS_RESULT  TCPIP_DNS_Resolve(const char* HostName, TCPIP_DNS_RESOLVE_TYPE Type)
-{
-    return TCPIP_DNS_RES_NO_SERVICE; 
-}
-
-TCPIP_DNS_RESULT  TCPIP_DNS_IsResolved(const char* hostName, IP_MULTI_ADDRESS* hostIP, IP_ADDRESS_TYPE type)
-{
-    return TCPIP_DNS_RES_NO_SERVICE; 
-}
-
-TCPIP_DNS_RESULT  TCPIP_DNS_IsNameResolved(const char* hostName, IPV4_ADDR* hostIPv4, IPV6_ADDR* hostIPv6)
-{
-    return TCPIP_DNS_RES_NO_SERVICE; 
-}
-
-TCPIP_DNS_RESULT TCPIP_DNS_RemoveEntry(const char *hostName)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
-
-TCPIP_DNS_RESULT TCPIP_DNS_RemoveAll(void)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
-
-TCPIP_DNS_RESULT TCPIP_DNS_ClientInfoGet(TCPIP_DNS_CLIENT_INFO* pClientInfo)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
-
-TCPIP_DNS_RESULT TCPIP_DNS_EntryQuery(TCPIP_DNS_ENTRY_QUERY *pDnsQuery, int queryIndex)
-{
-    return TCPIP_DNS_RES_NO_SERVICE;
-}
-
-#endif  //#if defined(TCPIP_STACK_USE_DNS)
 

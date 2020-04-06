@@ -173,7 +173,8 @@ void _DRV_MIIM_Task(  void *pvParameters  )
 void SYS_Tasks ( void )
 {
     /* Maintain system services */
-        xTaskCreate( _SYS_CMD_Tasks,
+    
+    xTaskCreate( _SYS_CMD_Tasks,
         "SYS_CMD_TASKS",
         SYS_CMD_RTOS_STACK_SIZE,
         (void*)NULL,

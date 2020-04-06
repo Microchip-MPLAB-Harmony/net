@@ -56,6 +56,7 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define USART1_FrequencyGet()    (uint32_t)(150000000UL)
 
 /****************************** USART1 API *********************************/
@@ -89,5 +90,6 @@ void USART1_ReadCallbackRegister( USART_CALLBACK callback, uintptr_t context );
     }
 
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_USART1_H

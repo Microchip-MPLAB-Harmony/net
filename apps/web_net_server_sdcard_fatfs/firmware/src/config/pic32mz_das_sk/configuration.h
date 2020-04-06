@@ -84,7 +84,7 @@ extern "C" {
 #define SYS_TIME_MAX_TIMERS                  5
 #define SYS_TIME_HW_COUNTER_WIDTH            32
 #define SYS_TIME_HW_COUNTER_PERIOD           4294967295U
-#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
+#define SYS_TIME_HW_COUNTER_HALF_PERIOD	     (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         200000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (620)
 
@@ -143,12 +143,6 @@ extern "C" {
 // *****************************************************************************
 /* SDMMC Driver Global Configuration Options */
 #define DRV_SDMMC_INSTANCES_NUMBER                       1
-#define DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT              0
-#define DRV_SDMMC_CONFIG_SPEED_MODE_HIGH                 1
-#define DRV_SDMMC_CONFIG_BUS_WIDTH_1_BIT                 0
-#define DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT                 1
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN          0
-#define DRV_SDMMC_CONFIG_CD_METHOD_USE_POLLING           1
 
 
 
@@ -169,9 +163,10 @@ extern "C" {
 #define DRV_SDMMC_INDEX_0                                0
 #define DRV_SDMMC_CLIENTS_NUMBER_IDX0                    1
 #define DRV_SDMMC_QUEUE_SIZE_IDX0                        1
-#define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_CONFIG_SPEED_MODE_DEFAULT
-#define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_CONFIG_BUS_WIDTH_4_BIT
-#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CONFIG_CD_METHOD_USE_SDCD_PIN
+#define DRV_SDMMC_PROTOCOL_SUPPORT_IDX0                  DRV_SDMMC_PROTOCOL_SD
+#define DRV_SDMMC_CONFIG_SPEED_MODE_IDX0                 DRV_SDMMC_SPEED_MODE_DEFAULT
+#define DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0                  DRV_SDMMC_BUS_WIDTH_4_BIT
+#define DRV_SDMMC_CARD_DETECTION_METHOD_IDX0             DRV_SDMMC_CD_METHOD_USE_SDCD
 
 
 
@@ -378,6 +373,10 @@ extern "C" {
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
 #define TCPIP_DHCP_SERVER_LISTEN_PORT               67
 #define TCPIP_DHCP_CLIENT_ENABLED                   true
+#define TCPIP_DHCP_USE_OPTION_TIME_SERVER           0
+#define TCPIP_DHCP_TIME_SERVER_ADDRESSES            0
+#define TCPIP_DHCP_USE_OPTION_NTP_SERVER            0
+#define TCPIP_DHCP_NTP_SERVER_ADDRESSES             0
 
 
 
@@ -596,11 +595,10 @@ extern "C" {
 #define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
-
-
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS     			\
-                                                    DRV_ETHPHY_CFG_AUTO | \
-													0                                                    
+                                                  
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS              	( 0 \
+                                                    | DRV_ETHPHY_CFG_AUTO \
+                                                    )
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY  			500
 #define TCPIP_INTMAC_PHY_ADDRESS		    			0
@@ -626,7 +624,7 @@ extern "C" {
 #define USE_FAST_MATH
 #define NO_PWDBASED
 #define HAVE_MCAPI
-#define WOLF_CRYPTO_CB
+#define WOLF_CRYPTO_CB  // provide call-back support
 #define WOLFSSL_HAVE_MIN
 #define WOLFSSL_HAVE_MAX
 #define NO_MD4

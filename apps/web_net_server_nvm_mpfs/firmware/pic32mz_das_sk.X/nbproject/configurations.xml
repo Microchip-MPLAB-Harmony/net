@@ -189,13 +189,17 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f6" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_das_sk/peripheral/cache/plib_cache.h</itemPath>
+              <itemPath>../src/config/pic32mz_das_sk/peripheral/cache/plib_cache_pic32mz.h</itemPath>
+            </logicalFolder>
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="coretimer" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/peripheral/coretimer/plib_coretimer.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="evic" projectFiles="true">
+            <logicalFolder name="f7" displayName="evic" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/peripheral/evic/plib_evic.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="gpio" projectFiles="true">
@@ -210,16 +214,19 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f2" displayName="system" projectFiles="true">
-            <logicalFolder name="f4" displayName="command" projectFiles="true">
+            <logicalFolder name="f4" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_das_sk/system/cache/sys_cache.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/system/command/sys_command.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="console" projectFiles="true">
+            <logicalFolder name="f8" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/system/console/sys_console.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="fs" projectFiles="true">
+            <logicalFolder name="f7" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <logicalFolder name="f1" displayName="file_system" projectFiles="true">
                   <itemPath>../src/config/pic32mz_das_sk/system/fs/fat_fs/src/file_system/ff.h</itemPath>
@@ -264,12 +271,14 @@
           <itemPath>../src/config/pic32mz_das_sk/configuration.h</itemPath>
           <itemPath>../src/config/pic32mz_das_sk/system_config.h</itemPath>
           <itemPath>../src/config/pic32mz_das_sk/system_definitions.h</itemPath>
+          <itemPath>../src/config/pic32mz_das_sk/device_cache.h</itemPath>
           <itemPath>../src/config/pic32mz_das_sk/toolchain_specifics.h</itemPath>
           <itemPath>../src/config/pic32mz_das_sk/definitions.h</itemPath>
           <itemPath>../src/config/pic32mz_das_sk/config.h</itemPath>
         </logicalFolder>
       </logicalFolder>
       <logicalFolder name="f4" displayName="osal" projectFiles="true">
+        <itemPath>../src/config/pic32mz_das_sk/osal/osal_impl_basic.h</itemPath>
         <itemPath>../src/config/pic32mz_das_sk/osal/osal.h</itemPath>
         <itemPath>../src/config/pic32mz_das_sk/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/pic32mz_das_sk/osal/osal_impl_basic.h</itemPath>
@@ -325,6 +334,8 @@
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_hwInt.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_sam6149.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_aes_u2238.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_crya_saml11.h</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_ecc_ba414e.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_ecc_pukcl.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_pukcl_definitions.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/crypt_pukcl_functions.h</itemPath>
@@ -358,6 +369,7 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/cpuid.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/cryptocb.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/curve25519.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/des3.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/dh.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/dsa.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/ecc.h</itemPath>
@@ -374,6 +386,7 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/logging.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md2.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md4.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md5.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/memory.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/mem_track.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/misc.h</itemPath>
@@ -385,6 +398,7 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/poly1305.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/pwdbased.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/rabbit.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/random.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/ripemd.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/rsa.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/selftest.h</itemPath>
@@ -402,9 +416,6 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wolfmath.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/settings.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/aes.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/des3.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/md5.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/random.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha256.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha512.h</itemPath>
@@ -482,12 +493,10 @@
                   <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/common/sys_fs_shell.c</itemPath>
                   <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
-                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/icmp.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/http_net.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/nbns.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcp.c</itemPath>
-                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dhcp.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/arp.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/icmpv6.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/ndp.c</itemPath>
@@ -497,6 +506,8 @@
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/smtpc.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_heap_alloc.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_heap_internal.c</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dhcp.c</itemPath>
+                <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/dns.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/hash_fnv.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/oahash.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/library/tcpip/src/tcpip_helpers.c</itemPath>
@@ -520,13 +531,18 @@
             </logicalFolder>
           </logicalFolder>
           <logicalFolder name="f4" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f6" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_das_sk/peripheral/cache/plib_cache_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_das_sk/peripheral/cache/plib_cache.c</itemPath>
+              <itemPath>../src/config/pic32mz_das_sk/peripheral/cache/plib_cache_pic32mz.S</itemPath>
+            </logicalFolder>
             <logicalFolder name="f4" displayName="clk" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="coretimer" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/peripheral/coretimer/plib_coretimer.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="evic" projectFiles="true">
+            <logicalFolder name="f7" displayName="evic" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/peripheral/evic/plib_evic.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f5" displayName="gpio" projectFiles="true">
@@ -543,21 +559,24 @@
             <itemPath>../src/config/pic32mz_das_sk/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="command" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+              <itemPath>../src/config/pic32mz_das_sk/system/cache/sys_cache.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="command" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="console" projectFiles="true">
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/system/console/src/sys_console_local.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/pic32mz_das_sk/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk/system/console/src/sys_console_uart.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="debug" projectFiles="true">
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mz_das_sk/system/debug/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/pic32mz_das_sk/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="fs" projectFiles="true">
+            <logicalFolder name="f6" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
                 <itemPath>../src/config/pic32mz_das_sk/system/fs/fat_fs/src/ff.c</itemPath>
                 <itemPath>../src/config/pic32mz_das_sk/system/fs/fat_fs/src/diskio.c</itemPath>
@@ -627,11 +646,13 @@
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/pic32mz-crypt.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_aes_sam6149.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_aes_u2238.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_ecc_ba414e.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_ecc_pukcl.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_pukcl_functions.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_rng_sam6334.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_rng_u2242.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_rsa_pukcl.c</itemPath>
+          <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sam_u2803.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha1_sam11105.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha1_sam6156.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_sha224_sam11105.c</itemPath>
@@ -675,6 +696,7 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/logging.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md2.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md4.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md5.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/memory.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/pkcs12.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/pkcs7.c</itemPath>
@@ -702,7 +724,6 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/wolfmath.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/aes.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/des3.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/md5.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/random.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha256.c</itemPath>
@@ -739,11 +760,11 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.30</languageToolchainVersion>
+        <languageToolchainVersion>2.40</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.0.69"/>
+        <pack name="PIC32MZ-DA_DFP" vendor="Microchip" version="1.2.102"/>
       </packs>
       <compileType>
         <linkerTool>
@@ -843,7 +864,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="125000"/>
+        <property key="heap-size" value="145000"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>
@@ -899,6 +920,7 @@
         <property key="mdtcm" value=""/>
         <property key="mitcm" value=""/>
         <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
         <property key="relaxed-math" value="false"/>
         <property key="save-temps" value="false"/>
         <property key="wpo-lto" value="false"/>
@@ -975,12 +997,15 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="UART3" value="true"/>
         <property key="UART4" value="true"/>
         <property key="UART5" value="true"/>
         <property key="UART6" value="true"/>
+        <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -1007,6 +1032,8 @@
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value=""/>
@@ -1015,6 +1042,10 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>

@@ -97,7 +97,7 @@ const DRV_SDMMC_PLIB_API drvSDMMC0PlibAPI = {
     .sdhostClockEnable = (DRV_SDMMC_PLIB_CLOCK_ENABLE)SDMMC1_ClockEnable,
     .sdhostResetError = (DRV_SDMMC_PLIB_RESET_ERROR)SDMMC1_ErrorReset,
     .sdhostIsCardAttached = (DRV_SDMMC_PLIB_IS_CARD_ATTACHED)SDMMC1_IsCardAttached,
-    .sdhostIsWriteProtected = (DRV_SDMMC_PLIB_IS_WRITE_PROTECTED)SDMMC1_IsWriteProtected,
+    .sdhostIsWriteProtected = (DRV_SDMMC_PLIB_IS_WRITE_PROTECTED)NULL,
 };
 
 /*** SDMMC Driver Initialization Data ***/
@@ -108,11 +108,12 @@ const DRV_SDMMC_INIT drvSDMMC0InitData =
     .bufferObjPoolSize              = DRV_SDMMC_QUEUE_SIZE_IDX0,
     .clientObjPool                  = (uintptr_t)&drvSDMMC0ClientObjPool[0],
     .numClients                     = DRV_SDMMC_CLIENTS_NUMBER_IDX0,
-    .cardDetectionMethod            = (DRV_SDMMC_CD_METHOD)DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
+    .protocol                       = DRV_SDMMC_PROTOCOL_SUPPORT_IDX0,
+    .cardDetectionMethod            = DRV_SDMMC_CARD_DETECTION_METHOD_IDX0,
     .cardDetectionPollingIntervalMs = 0,
     .isWriteProtectCheckEnabled     = false,
-    .speedMode                      = (DRV_SDMMC_SPEED_MODE)DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
-    .busWidth                       = (DRV_SDMMC_BUS_WIDTH)DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
+    .speedMode                      = DRV_SDMMC_CONFIG_SPEED_MODE_IDX0,
+    .busWidth                       = DRV_SDMMC_CONFIG_BUS_WIDTH_IDX0,
     .isFsEnabled                    = true,
 };
 
@@ -602,12 +603,12 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
 
 const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
     .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)TC0_CH0_TimerCallbackRegister,
-    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)TC0_CH0_TimerCounterGet,
-    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TC0_CH0_TimerPeriodSet,
-    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TC0_CH0_TimerFrequencyGet,
-    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)TC0_CH0_TimerCompareSet,
     .timerStart = (SYS_TIME_PLIB_START)TC0_CH0_TimerStart,
-    .timerStop = (SYS_TIME_PLIB_STOP)TC0_CH0_TimerStop 
+    .timerStop = (SYS_TIME_PLIB_STOP)TC0_CH0_TimerStop ,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TC0_CH0_TimerFrequencyGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TC0_CH0_TimerPeriodSet,
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)TC0_CH0_TimerCompareSet,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)TC0_CH0_TimerCounterGet,
 };
 
 const SYS_TIME_INIT sysTimeInitData =
@@ -698,6 +699,8 @@ void SYS_Initialize ( void* data )
   
     CLK_Initialize();
 	PIO_Initialize();
+
+
 
 	PIT_TimerInitialize();
 

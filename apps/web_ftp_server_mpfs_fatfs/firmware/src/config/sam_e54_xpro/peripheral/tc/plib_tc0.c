@@ -88,7 +88,7 @@ void TC0_TimerInitialize( void )
     TC0_REGS->COUNT32.TC_WAVE = TC_WAVE_WAVEGEN_MPWM;
 
     /* Configure timer period */
-    TC0_REGS->COUNT32.TC_CC[0U] = 65535U;
+    TC0_REGS->COUNT32.TC_CC[0U] = 120000U;
 
     /* Clear all interrupt flags */
     TC0_REGS->COUNT32.TC_INTFLAG = TC_INTFLAG_Msk;
@@ -140,6 +140,11 @@ uint32_t TC0_Timer32bitCounterGet( void )
         /* Wait for Write Synchronization */
     }
 
+    while((TC0_REGS->COUNT32.TC_CTRLBSET & TC_CTRLBSET_CMD_Msk) != 0)
+    {
+        /* Wait for CMD to become zero */
+    }
+    
     /* Read current count value */
     return TC0_REGS->COUNT32.TC_COUNT;
 
@@ -196,7 +201,7 @@ void TC0_TimerInterruptHandler( void )
     if (TC0_REGS->COUNT32.TC_INTENSET != 0)
     {
         TC_TIMER_STATUS status;
-        status = TC0_REGS->COUNT32.TC_INTFLAG;
+        status = (TC_TIMER_STATUS) TC0_REGS->COUNT32.TC_INTFLAG;
         /* Clear interrupt flags */
         TC0_REGS->COUNT32.TC_INTFLAG = TC_INTFLAG_Msk;
         if((status != TC_TIMER_STATUS_NONE) && TC0_CallbackObject.callback != NULL)

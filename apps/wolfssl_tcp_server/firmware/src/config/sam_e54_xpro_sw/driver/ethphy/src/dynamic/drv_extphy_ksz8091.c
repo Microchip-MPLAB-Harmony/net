@@ -91,12 +91,12 @@ static DRV_ETHPHY_RESULT DRV_EXTPHY_MDIXConfigure(const DRV_ETHPHY_OBJECT_BASE* 
 {
     union
     {
+        uint32_t    w;
         struct
         {
             uint16_t low;
             uint16_t high;
         };
-        uint32_t    w;
     } vendorData = { 0 };
 
     __KSZ8091_PhyControl2Bits_t phyCtrl2;

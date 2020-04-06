@@ -147,8 +147,8 @@
           <Name dnOrder="1">drv_encx24j600_rx_packet.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/driver/encx24j600/src/dynamic/packet/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/encx24j600/src/dynamic/packet/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">F1216978E381884C4954DFD7BFC1ED56</GeneratedChecksum>
-          <UserChecksum dnOrder="5">F1216978E381884C4954DFD7BFC1ED56</UserChecksum>
+          <GeneratedChecksum dnOrder="4">46F3D36DE5071C7DF1D9CB0DA0456EDC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">46F3D36DE5071C7DF1D9CB0DA0456EDC</UserChecksum>
         </File>
         <File dnOrder="18">
           <Type dnOrder="0">SOURCE</Type>
@@ -227,8 +227,8 @@
           <Name dnOrder="1">initialization.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">365CA2C09828CF53E95E97F3C42770B6</GeneratedChecksum>
-          <UserChecksum dnOrder="5">365CA2C09828CF53E95E97F3C42770B6</UserChecksum>
+          <GeneratedChecksum dnOrder="4">FAB3981FCE4123C72456CC3A6323A68B</GeneratedChecksum>
+          <UserChecksum dnOrder="5">FAB3981FCE4123C72456CC3A6323A68B</UserChecksum>
         </File>
         <File dnOrder="28">
           <Type dnOrder="0">SOURCE</Type>
@@ -403,8 +403,8 @@
           <Name dnOrder="1">sys_time_h2_adapter.c</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">EC278E60715FC3B2C34D2AA7E7458989</GeneratedChecksum>
-          <UserChecksum dnOrder="5">EC278E60715FC3B2C34D2AA7E7458989</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F849420C740D2B32346B4B4D9F46C136</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F849420C740D2B32346B4B4D9F46C136</UserChecksum>
         </File>
         <File dnOrder="50">
           <Type dnOrder="0">SOURCE</Type>
@@ -555,8 +555,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">95220CDC17E296F12A20F7D5CDD8575C</GeneratedChecksum>
-          <UserChecksum dnOrder="5">95220CDC17E296F12A20F7D5CDD8575C</UserChecksum>
+          <GeneratedChecksum dnOrder="4">562536D7FE08571A216EC33FB4534001</GeneratedChecksum>
+          <UserChecksum dnOrder="5">562536D7FE08571A216EC33FB4534001</UserChecksum>
         </File>
         <File dnOrder="69">
           <Type dnOrder="0">HEADER</Type>
@@ -1411,8 +1411,8 @@
           <Name dnOrder="1">snmpv3_private.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">DE7EFA8F60D8D733D267CF2D4FD5C4FE</GeneratedChecksum>
-          <UserChecksum dnOrder="5">DE7EFA8F60D8D733D267CF2D4FD5C4FE</UserChecksum>
+          <GeneratedChecksum dnOrder="4">3337D044F519EA39F86B10A570514DE4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">3337D044F519EA39F86B10A570514DE4</UserChecksum>
         </File>
         <File dnOrder="176">
           <Type dnOrder="0">HEADER</Type>
@@ -1555,8 +1555,8 @@
           <Name dnOrder="1">sys_time_h2_adapter.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/system/</LogicalPath>
           <PhysicalPath dnOrder="3">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0F2B8202108999FB3CA1740D7B968F69</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0F2B8202108999FB3CA1740D7B968F69</UserChecksum>
+          <GeneratedChecksum dnOrder="4">79AA7BE3EB9B1A8D7C8686C28318198D</GeneratedChecksum>
+          <UserChecksum dnOrder="5">79AA7BE3EB9B1A8D7C8686C28318198D</UserChecksum>
         </File>
         <File dnOrder="194">
           <Type dnOrder="0">HEADER</Type>
@@ -1907,8 +1907,8 @@
           <Name dnOrder="1">user.h</Name>
           <LogicalPath dnOrder="2">config/pic32mz_ef_sk_encx24j600/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="4"/>
+          <UserChecksum dnOrder="5"/>
         </File>
         <File dnOrder="238">
           <Type dnOrder="0">HEADER</Type>
@@ -1964,7 +1964,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.1.45\atdf\PIC32MZ2048EFH144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
     </Settings>
   </Configurator>

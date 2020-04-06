@@ -1330,7 +1330,7 @@ int CRYPT_RNG_BlockGenerate(CRYPT_RNG_CTX*, unsigned char*, unsigned int);
 
 /* TDES */
 typedef struct CRYPT_TDES_CTX {
-    int holder[104];   /* This structure should be large enough to hold 
+    int holder[112];   /* This structure should be large enough to hold 
                           the internal representation, the size is checked 
                           during initialization*/
 } CRYPT_TDES_CTX;

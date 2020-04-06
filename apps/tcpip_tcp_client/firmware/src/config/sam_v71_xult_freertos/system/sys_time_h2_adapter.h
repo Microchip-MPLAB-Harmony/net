@@ -82,16 +82,14 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 /*  The following data type definitions are used by the functions in this
     interface and should be considered part it.
 */
-	//Timer COUNT to TICK conversion for tickless implementation : 150,000,000 for 1sec. Configure tick conversion for 1 msec.
-#define SYS_COUNT_TICK_CONV         150000
 
-   typedef uintptr_t SYS_TMR_HANDLE;
-   typedef void ( * SYS_TMR_CALLBACK ) ( uintptr_t context, uint32_t currTick );
-   #define SYS_TMR_HANDLE_INVALID          ( ( uintptr_t ) -1 )
+typedef uintptr_t SYS_TMR_HANDLE;
+typedef void ( * SYS_TMR_CALLBACK ) ( uintptr_t context, uint32_t currTick );
+#define SYS_TMR_HANDLE_INVALID          ( ( uintptr_t ) -1 )
 
-   typedef struct{
-	   SYS_TMR_CALLBACK   callback;
-	}SYS_TIME_H2_ADAPTER_OBJ;
+typedef struct{
+   SYS_TMR_CALLBACK   callback;
+}SYS_TIME_H2_ADAPTER_OBJ;
 
 // *****************************************************************************
 // *****************************************************************************
@@ -210,10 +208,7 @@ static __inline__ SYS_STATUS __attribute__((always_inline))  SYS_TMR_ModuleStatu
     None.
 */
 
-static __inline__ uint32_t __attribute__((always_inline)) SYS_TMR_TickCountGet(void)
-{
-	return (uint32_t)(SYS_TIME_Counter64Get()/SYS_COUNT_TICK_CONV);
-}
+uint32_t SYS_TMR_TickCountGet(void);
 
 // *****************************************************************************
 /* Function:
@@ -244,10 +239,8 @@ static __inline__ uint32_t __attribute__((always_inline)) SYS_TMR_TickCountGet(v
   Remarks:
     None.
 */
-static __inline__ uint64_t __attribute__((always_inline)) SYS_TMR_TickCountGetLong(void)
-{
-	return SYS_TIME_Counter64Get()/SYS_COUNT_TICK_CONV;
-}
+uint64_t SYS_TMR_TickCountGetLong(void);
+
 // *****************************************************************************
 /* Function:
     uint32_t SYS_TMR_TickCounterFrequencyGet ( void )
@@ -280,10 +273,7 @@ static __inline__ uint64_t __attribute__((always_inline)) SYS_TMR_TickCountGetLo
     None.
 */
 
-static __inline__ uint32_t __attribute__((always_inline)) SYS_TMR_TickCounterFrequencyGet ( void )
-{
-	return SYS_TIME_FrequencyGet()/SYS_COUNT_TICK_CONV;
-}
+uint32_t SYS_TMR_TickCounterFrequencyGet ( void );
 
 
 // *****************************************************************************

@@ -145,9 +145,7 @@ def onAttachmentConnected(source, target):
         tcpipTftpcIf = source["component"].getSymbolByID("TCPIP_TFTPC_DEFAULT_IF")
         tcpipTftpcIf.clearValue()
         tcpipTftpcIf.setValue(target["component"].getDisplayName(), 2)
-    elif (source["id"] == "Tftpc_TcpipFs_Dependency"): 
-        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT") != True):
-            Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT", True)    
+       
  
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "Tftpc_MAC_Dependency"):    

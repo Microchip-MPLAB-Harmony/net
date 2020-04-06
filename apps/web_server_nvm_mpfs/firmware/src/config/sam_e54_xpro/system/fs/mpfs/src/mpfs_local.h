@@ -110,6 +110,7 @@ typedef struct
     uint32_t timestamp;// Timestamp of file
     uint32_t microtime;// Microtime stamp of file
     uint16_t flags;// Flags for this file
+	uint8_t	 dummy[10]; // Added to align the structure size to cache line size
 } MPFS_FILE_RECORD;
 
 /* File status structure (FILINFO) */

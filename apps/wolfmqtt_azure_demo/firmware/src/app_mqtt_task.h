@@ -72,16 +72,16 @@
 // *****************************************************************************
 
 // *****************************************************************************
-/* APP MQTT Client Data
+/* APP MQTT Client state
 
   Summary:
-    Holds MQTT client data
+    Describes MQTT client context state
 
   Description:
-    This structure holds the application's data.
+    This enumerated type describes the application's state.
 
   Remarks:
-    Application strings and buffers are be defined outside this structure.
+    None
  */
 
 /* MQTT client application state */
@@ -99,15 +99,40 @@ typedef enum
     APP_MQTT_STATE_PUBLISH,
     APP_MQTT_STATE_START_WAIT,
     APP_MQTT_STATE_WAIT_MSG,
-    APP_MQTT_STATE_START_PING,
-    APP_MQTT_STATE_PING,
+    APP_MQTT_STATE_START_SUB_PING,
+    APP_MQTT_STATE_SUB_PING,
     APP_MQTT_STATE_START_UNSUBSCRIBE,
     APP_MQTT_STATE_UNSUBSCRIBE,
     APP_MQTT_STATE_CLIENT_DISCONNECT,
+    APP_MQTT_STATE_INIT_PING,
+    APP_MQTT_STATE_WAIT_TO_PING,
+    APP_MQTT_STATE_PING,
     APP_MQTT_STATE_NET_DISCONNECT,
     APP_MQTT_STATE_DONE,
     APP_MQTT_STATE_ERROR,
 } APP_MQTT_CONTEXT_STATE;
+
+// *****************************************************************************
+/* APP MQTT Command
+
+  Summary:
+    Describes the MQTT command
+
+  Description:
+    This enumerated type describes the current MQTT command
+
+  Remarks:
+    None
+ */
+
+/* MQTT client command */
+typedef enum 
+{
+    APP_MQTT_COMMAND_NONE       = 0,    // no command, invalid
+    APP_MQTT_COMMAND_SUBSCRIBE,         // subscribe/publish
+    APP_MQTT_COMMAND_PING,              // ping broker 
+
+} APP_MQTT_COMMAND;
 
 // Azure IoT demo app configuration
 // adjust to your needs
@@ -179,6 +204,8 @@ typedef enum
 #define APP_MQTT_DEFAULT_CMD_TIMEOUT_MS     30000
 #define APP_MQTT_MAX_WAIT_TIMEOUT           120000
 
+#define APP_MQTT_DEFAULT_PING_WAIT_MS       5000    // time between 2 pings, ms
+
 #define APP_MQTT_WAIT_MESSAGE_RETRIES       5
 
 #define APP_MQTT_CB_MESSAGE_BUFFER_SIZE     400
@@ -225,6 +252,7 @@ typedef struct
     uint8_t         cleanSession;
     uint8_t         requestStop;
     uint8_t         msgReceived;
+    uint8_t         mqttCommand;    //  current APP_MQTT_COMMAND
 
     uint16_t        brokerPort;
     uint16_t        waitMsgRetries;
@@ -233,6 +261,7 @@ typedef struct
     uint32_t        tmoTick;        // tick when the wait expires
     char*           pClientId;
     uint16_t        keepAliveSec;
+    uint16_t        pingCount;
 
 #ifdef WOLFMQTT_V5
     uint16_t        maxPktSize;     // max packet accepted

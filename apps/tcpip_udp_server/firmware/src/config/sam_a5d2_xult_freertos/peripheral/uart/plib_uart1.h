@@ -56,6 +56,7 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define UART1_FrequencyGet()    (uint32_t)(83000000UL)
 
 /****************************** UART1 API *********************************/
@@ -89,5 +90,6 @@ void UART1_ReadCallbackRegister( UART_CALLBACK callback, uintptr_t context );
     }
 
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_UART1_H

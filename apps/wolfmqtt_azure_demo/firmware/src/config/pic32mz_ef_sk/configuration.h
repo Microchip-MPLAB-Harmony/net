@@ -84,7 +84,7 @@ extern "C" {
 #define SYS_TIME_MAX_TIMERS                  5
 #define SYS_TIME_HW_COUNTER_WIDTH            32
 #define SYS_TIME_HW_COUNTER_PERIOD           4294967295U
-#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
+#define SYS_TIME_HW_COUNTER_HALF_PERIOD	     (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         200000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (620)
 
@@ -177,17 +177,16 @@ extern "C" {
 // #define WOLFMQTT_NO_TIMEOUT
 // #define WOLFMQTT_NO_STDIN_CAP
 
-// #define WOLFMQTT_DISCONNECT_CB
+#define WOLFMQTT_DISCONNECT_CB
 #define WOLFMQTT_NO_ERROR_STRINGS
 #define WOLFMQTT_NO_STDIO
-#define WOLFSSL_BASE64_ENCODE
 
 /*** wolMQTT Net Glue configuration ***/
 #define WMQTT_NET_GLUE_FORCE_TLS			false
 #define WMQTT_NET_GLUE_IPV6					false
 #define WMQTT_NET_GLUE_MAX_BROKER_NAME		64
-#define WMQTT_NET_GLUE_DEBUG_ENABLE			true
-#define WMQTT_NET_GLUE_ERROR_STRINGS		true
+#define WMQTT_NET_GLUE_DEBUG_ENABLE			false
+#define WMQTT_NET_GLUE_ERROR_STRINGS		false
 #define WMQTT_NET_GLUE_MALLOC				malloc
 #define WMQTT_NET_GLUE_FREE					free
 #define WMQTT_NET_SKT_TX_BUFF				2048
@@ -264,6 +263,7 @@ extern "C" {
 #define WOLFSSL_USER_IO
 #define NO_WRITEV
 #define MICROCHIP_TCPIP
+#define WOLFSSL_BASE64_ENCODE
 
 
 
@@ -312,6 +312,10 @@ extern "C" {
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
 #define TCPIP_DHCP_SERVER_LISTEN_PORT               67
 #define TCPIP_DHCP_CLIENT_ENABLED                   true
+#define TCPIP_DHCP_USE_OPTION_TIME_SERVER           0
+#define TCPIP_DHCP_TIME_SERVER_ADDRESSES            0
+#define TCPIP_DHCP_USE_OPTION_NTP_SERVER            0
+#define TCPIP_DHCP_NTP_SERVER_ADDRESSES             0
 
 
 
@@ -440,7 +444,7 @@ extern "C" {
 #define TCPIP_NTP_REPLY_TIMEOUT		        		6
 #define TCPIP_NTP_MAX_STRATUM		        		15
 #define TCPIP_NTP_TIME_STAMP_TMO				660
-#define TCPIP_NTP_SERVER		        		"ntp.microchip.com"
+#define TCPIP_NTP_SERVER		        		"pool.ntp.org"
 #define TCPIP_NTP_SERVER_MAX_LENGTH				30
 #define TCPIP_NTP_QUERY_INTERVAL				600
 #define TCPIP_NTP_FAST_QUERY_INTERVAL	    			14
@@ -461,11 +465,10 @@ extern "C" {
 #define TCPIP_UDP_EXTERN_PACKET_PROCESS   false
 
 
-
-
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS     			\
-                                                    DRV_ETHPHY_CFG_AUTO | \
-													0                                                    
+                                                  
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS              	( 0 \
+                                                    | DRV_ETHPHY_CFG_AUTO \
+                                                    )
 
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY  			500
 #define TCPIP_INTMAC_PHY_ADDRESS		    			0
@@ -491,7 +494,7 @@ extern "C" {
 #define USE_FAST_MATH
 #define NO_PWDBASED
 #define HAVE_MCAPI
-#define WOLF_CRYPTO_CB
+#define WOLF_CRYPTO_CB  // provide call-back support
 #define WOLFSSL_HAVE_MIN
 #define WOLFSSL_HAVE_MAX
 #define NO_MD4

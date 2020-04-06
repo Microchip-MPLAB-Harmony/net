@@ -44,6 +44,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "tcpip/src/tcpip_private.h"
 #if defined(TCPIP_STACK_USE_SNMPV3_SERVER)
+#ifdef TCPIP_SNMPV3_SUPPORT_DES
+#include "wolfssl/wolfcrypt/des3.h"
+#endif
+#ifdef TCPIP_SNMPV3_SUPPORT_AES
+#include "wolfssl/wolfcrypt/aes.h"
+#endif
 #include "tcpip/snmpv3.h"
 #include "tcpip/src/snmp_private.h"
 #include "tcpip/src/snmpv3_private.h"
@@ -571,7 +577,7 @@ static void _SNMPv3_PswdToLocalizedAuthKeySHAHashing(uint8_t* pswdToLocalized, u
     SNMPv3Init() and ProcessVariabels() are called.
 
   Parameters:
-    userDBIndex -  password storage poniter
+    userDBIndex -  password storage pointer
   	  	
   Return Values:
     None
@@ -826,13 +832,13 @@ uint8_t SNMPv3AuthenticateTxPduForDataIntegrity(SNMPV3_RESPONSE_WHOLEMSG* txData
     uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
 	
   Summary:
-    Incoming SNMPv3 scoped PDU decryption using AES decryption protocol.
+    Incoming SNMPv3 scoped PDU decryption using AES-CFB 128bit decryption protocol.
 	
   Description:
-    This routine decrypts SNMPV3 incoming PDU using AES protocol , but before this
+    This routine decrypts SNMPV3 incoming PDU using AES-CFB protocol , but before this
     encrypted data length is verified.If the length of the encrypted OCTECT-STRING
-    is not multiple of 8, then dryption will be halted.
-    RFC - 3414. ( section 8)
+    is not multiple of 8, then dryption will be halted.The data is decrypted in 
+    Cipher Feedback mode with 128bit blocks. RFC - 3414. ( section 8)
   	 		 		  	
   Precondition:
     SNMPv3Init() and ProcessVariabels() are called.
@@ -849,39 +855,46 @@ uint8_t SNMPv3AuthenticateTxPduForDataIntegrity(SNMPV3_RESPONSE_WHOLEMSG* txData
 ***************************************************************************/
 uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
 {
-    uint8_t* cryptoKey;
-    uint8_t* initVector;
+#ifdef TCPIP_SNMPV3_SUPPORT_AES     
+    Aes enc;
+    uint8_t initVector[TCPIP_SNMPV3_AES_INIT_VECTOR_SIZE];
+    uint8_t* privLclzdKeyPtr;
     uint8_t* snmpv3_cipher_text;
     uint16_t cipherTextLen;
     uint8_t decrypted_text[TCPIP_SNMP_MAX_MSG_SIZE];
     uint16_t temp;
+    int  ret = 0;
 	
-    AES_ROUND_KEYS_128_BIT round_keys;
-    AES_CFB_STATE_DATA current_stream;
-
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
 
     TCPIP_SNMPV3_PacketProcStubPtrsGet(&snmpv3PktProcessingMemPntr);
     snmpv3EngnDcptMemoryStubPtr=snmpv3PktProcessingMemPntr.snmpv3StkProcessingDynMemStubPtr;
 
-    cryptoKey=snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[snmpv3EngnDcptMemoryStubPtr->UserInfoDataBaseIndx].userPrivPswdLoclizdKey;
-    initVector=snmpV3AesDecryptInitVector;
+    cipherTextLen= snmpv3EngnDcptMemoryStubPtr->InPduWholeMsgBuf.scopedPduStructLen;
+    privLclzdKeyPtr=snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[snmpv3EngnDcptMemoryStubPtr->UserInfoDataBaseIndx].userPrivPswdLoclizdKey;
+    memcpy(initVector,snmpV3AesDecryptInitVector,(TCPIP_SNMPV3_AES_INIT_VECTOR_SIZE-1));
     temp=snmpv3EngnDcptMemoryStubPtr->InPduWholeMsgBuf.scopedPduOffset;
     snmpv3_cipher_text = gSnmpDcpt.udpGetBufferData.head+temp;
-    cipherTextLen= snmpv3EngnDcptMemoryStubPtr->InPduWholeMsgBuf.scopedPduStructLen;
-    memset(decrypted_text,0,sizeof(decrypted_text));
     
+    memset(decrypted_text,0,sizeof(decrypted_text));
+    /* decrypt uses AES_ENCRYPTION */
+    ret = wc_AesSetKey(&enc, privLclzdKeyPtr, AES_BLOCK_SIZE, initVector, AES_ENCRYPTION);
+    if (ret != 0)
+    {
+        return SNMPV3_MSG_PRIV_FAIL;
+    }
+    
+    ret = wc_AesCfbDecrypt(&enc, decrypted_text, snmpv3_cipher_text, cipherTextLen);
+    if (ret != 0)
+    {
+        return SNMPV3_MSG_PRIV_FAIL;
+    }
 
-    AESCreateRoundKeys(&round_keys,cryptoKey,AES_KEY_SIZE_128_BIT);
-    memcpy(current_stream.initial_vector,initVector,16);
-    AESCFBDecrypt(decrypted_text,snmpv3_cipher_text, cipherTextLen,
-                                    &round_keys, &current_stream,
-                                    AES_STREAM_START | AES_USE_CFB128);
-	
     //Copy decrypted text to already allocated WholeMsg dynamic memory Buffer.
     memcpy(snmpv3_cipher_text,decrypted_text,cipherTextLen);
 
+#endif    
     return SNMPV3_MSG_PRIV_PASS;
 }
 
@@ -890,11 +903,11 @@ uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
     uint8_t SNMPv3AESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
 	
   Summary:
-    outGoing SNMPv3 scoped PDU Encryption using AES encryption protocol.
+    outGoing SNMPv3 scoped PDU Encryption using AES-CFB encryption protocol.
 	
   Description:
-    This routine encrypts SNMPV3 outgoing PDU using AES protocol to maintain the data
-    confidentiality. The data is encrypted in Cipher Block Chaining mode. The length of the
+    This routine encrypts SNMPV3 outgoing PDU using AES-CFB protocol to maintain the data
+    confidentiality. The data is encrypted in Cipher Feedback mode with 128bit blocks. The length of the
     encrypted data should be multiple of 8 and it is not then then data is padded in the end if necessary.
     RFC - 3414. ( section 8)
   	 		 		  	
@@ -913,13 +926,14 @@ uint8_t SNMPv3AESDecryptRxedScopedPdu(void)
 ***************************************************************************/
 uint8_t SNMPv3AESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
 {	
-    uint8_t* cryptoKey;
-    uint8_t* initVector;
+#ifdef TCPIP_SNMPV3_SUPPORT_AES    
+    Aes dec;
+    uint8_t initVector[TCPIP_SNMPV3_AES_INIT_VECTOR_SIZE];
+    uint8_t* privLclzdKeyPtr;
     uint8_t* plainText;
     uint16_t plaintextLen;
     uint8_t  encrypted_text[TCPIP_SNMP_MAX_MSG_SIZE];
-    AES_ROUND_KEYS_128_BIT round_keys;
-    AES_CFB_STATE_DATA current_stream;
+    int  ret = 0;
 
     SNMPV3_PROCESSING_MEM_INFO_PTRS snmpv3PktProcessingMemPntr;
     SNMPV3_STACK_DCPT_STUB * snmpv3EngnDcptMemoryStubPtr=0;
@@ -932,23 +946,28 @@ uint8_t SNMPv3AESEncryptResponseScopedPdu(SNMPV3_RESPONSE_WHOLEMSG* plain_text)
     SNMPv3UsmAesEncryptDecrptInitVector(SNMP_RESPONSE_PDU);
 
     plaintextLen= (plain_text->scopedPduStructLen);
-    cryptoKey=snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[snmpv3EngnDcptMemoryStubPtr->UserInfoDataBaseIndx].userPrivPswdLoclizdKey;
-    initVector=snmpV3AesEncryptInitVector;
+    privLclzdKeyPtr=snmpv3EngnDcptMemoryStubPtr->UserInfoDataBase[snmpv3EngnDcptMemoryStubPtr->UserInfoDataBaseIndx].userPrivPswdLoclizdKey;
+    memcpy(initVector,snmpV3AesEncryptInitVector,(TCPIP_SNMPV3_AES_INIT_VECTOR_SIZE-1));
     plainText=(plain_text->scopedPduOffset);
 
     memset(encrypted_text,0,sizeof(encrypted_text));
 
-    AESCreateRoundKeys (&round_keys,cryptoKey,AES_KEY_SIZE_128_BIT);
+    /* Encryption uses AES_ENCRYPTION */
+    ret = wc_AesSetKey(&dec, privLclzdKeyPtr, AES_BLOCK_SIZE, initVector, AES_ENCRYPTION);
+    if (ret != 0)
+    {
+        return SNMPV3_MSG_PRIV_FAIL;
+    }
 
-    memcpy(current_stream.initial_vector,initVector,16);
-
-    AESCFBEncrypt(encrypted_text,plainText, plaintextLen,
-    &round_keys, &current_stream,
-    AES_STREAM_START | AES_USE_CFB128 );
+    ret = wc_AesCfbEncrypt(&dec, encrypted_text, plainText, plaintextLen);
+    if (ret != 0)
+    {
+        return SNMPV3_MSG_PRIV_FAIL;
+    }
 
     //Copy decrypted text to already allocated WholeMsg dynamic memory Buffer.
     memcpy(plainText,encrypted_text,plaintextLen);
-
+#endif
     return SNMPV3_MSG_PRIV_PASS;
 }
 

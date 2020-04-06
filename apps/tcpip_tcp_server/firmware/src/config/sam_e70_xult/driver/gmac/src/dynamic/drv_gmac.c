@@ -47,6 +47,7 @@ static SYS_MODULE_OBJ _DRV_GMAC_PHYInitialise(DRV_GMAC_DRIVER *pMACDrv);
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 
 static void     _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv);
+static void     _MacTxFreePacket( DRV_GMAC_DRIVER * pMACDrv);
 static void     _MACCleanup(DRV_GMAC_DRIVER * pMACDrv );
 #endif  // (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 
@@ -1163,6 +1164,8 @@ TCPIP_MAC_RES DRV_GMAC_ParametersGet(DRV_HANDLE hMac, TCPIP_MAC_PARAMETERS* pMac
 			pMacParams->processFlags = (TCPIP_MAC_PROCESS_FLAG_RX | TCPIP_MAC_PROCESS_FLAG_TX);
 			pMacParams->macType = TCPIP_MAC_TYPE_ETH;
 			pMacParams->linkMtu = TCPIP_MAC_LINK_MTU_ETH;
+            pMacParams->checksumOffloadRx = DRV_GMAC_RX_CHKSM_OFFLOAD;
+            pMacParams->checksumOffloadTx = DRV_GMAC_TX_CHKSM_OFFLOAD;
 		}
 
 		return TCPIP_MAC_RES_OK;
@@ -1268,7 +1271,9 @@ static void _MACCleanup(DRV_GMAC_DRIVER * pMACDrv )
     }
 	// RX clean up
 	_MacRxFreePacket(pMACDrv);
-
+    // TX clean up
+    _MacTxFreePacket(pMACDrv);
+    
 	_DRV_GMAC_RxDelete(pMACDrv);
 	_DRV_GMAC_TxDelete(pMACDrv);
 
@@ -1313,6 +1318,49 @@ static void _MacRxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
 			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_buffaddr.val = 0;
 			pMACDrv->sGmacData.gmac_queue[queueIdx].pRxDesc[index].rx_desc_status.val = 0;
 		}
+        __DMB();
+	}
+	
+}
+
+static void _MacTxFreePacket( DRV_GMAC_DRIVER * pMACDrv)
+{
+	DRV_PIC32CGMAC_SGL_LIST_NODE*   pTxQueueNode;
+    GMAC_QUE_LIST queueIdx;
+	uint8_t desc_idx = 0;
+    
+	//free all the x packets linked to New and Ack Queues.
+	for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
+	{	
+        //free new queue list
+        while((pTxQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxNewQueue))!= NULL)
+        {          
+            //Free the queue node
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pTxQueueNode);
+        }
+        
+        //free queue list used for transmission
+        while((pTxQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxStartQueue))!= NULL)
+        {         
+            //Free the queue node
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pTxQueueNode);
+        }
+        
+        //free queue list used for ack
+        while((pTxQueueNode = DRV_PIC32CGMAC_SingleListHeadRemove(&pMACDrv->sGmacData.gmac_queue[queueIdx]._TxAckQueue))!= NULL)
+        {      
+            //Free the queue node
+            (*pMACDrv->sGmacData._freeF)(pMACDrv->sGmacData._AllocH, pTxQueueNode);
+        }
+        
+        //set tx descriptors to default
+        for(desc_idx=0; desc_idx < pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].nTxDescCnt; desc_idx++)
+        {    
+            pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc[desc_idx].tx_desc_buffaddr = 0;
+            pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc[desc_idx].tx_desc_status.val = GMAC_TX_USED_BIT | GMAC_TX_LAST_BUFFER_BIT;
+        }
+        pMACDrv->sGmacData.gmac_queue[queueIdx].pTxDesc[desc_idx-1].tx_desc_status.val |= GMAC_TX_WRAP_BIT;
+
         __DMB();
 	}
 	

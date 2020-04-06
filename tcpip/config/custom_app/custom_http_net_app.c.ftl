@@ -108,7 +108,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define HTTP_APP_USE_RECONFIG
 
 <#if lib_crypto?? >
-#if defined(CRYPTO_CONFIG_H) && !defined( NO_MD5 )        // no MD5 if no crypto header or if crypto_config.h says NO_MD5   
+#if !defined( NO_MD5 )        // no MD5 if crypto_config.h says NO_MD5   
 // Use the MD5 Demo web page (~5kb ROM, ~160b RAM)
 #define HTTP_APP_USE_MD5
 #endif

@@ -64,9 +64,9 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "wolfssl/wolfcrypt/port/pic32/crypt_sha1_hw.h"
 #include "wolfssl/wolfcrypt/port/pic32/crypt_sha_sam11105.h"
 
-struct icm_descriptor actIcmDescriptor __attribute__((aligned (64)));
-uint8_t  actBuffer[SHA_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
-uint32_t actDigest[SHA_DIGEST_SIZE/4] __attribute__((aligned (128)));
+static struct icm_descriptor actIcmDescriptor __attribute__((aligned (64)));
+static uint8_t  actBuffer[SHA_BLOCK_SIZE] __attribute__((aligned (64)));  /* 64 bytes = 512 bits */
+static uint32_t actDigest[SHA_DIGEST_SIZE/4] __attribute__((aligned (128)));
 
 int wc_InitSha_ex(Sha* sha, void* heap, int devId)
 {

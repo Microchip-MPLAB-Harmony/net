@@ -54,7 +54,7 @@
 #define SDHC1_BASE_CLOCK_FREQUENCY       120000000
 #define SDHC1_MAX_BLOCK_SIZE                   0x200
 
-static __attribute__((__aligned__(32))) SDHC_ADMA_DESCR sdhc1DmaDescrTable[SDHC1_DMA_NUM_DESCR_LINES];
+static       SDHC_ADMA_DESCR sdhc1DmaDescrTable[SDHC1_DMA_NUM_DESCR_LINES] __ALIGNED(32);
 
 static SDHC_OBJECT sdhc1Obj;
 
@@ -105,7 +105,7 @@ void SDHC1_InterruptHandler(void)
 {
     uint16_t nistr = 0;
     uint16_t eistr = 0;
-    SDHC_XFER_STATUS xferStatus = 0;
+    SDHC_XFER_STATUS xferStatus = (SDHC_XFER_STATUS) 0;
 
     nistr = SDHC1_REGS->SDHC_NISTR;
     eistr = SDHC1_REGS->SDHC_EISTR;

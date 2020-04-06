@@ -31,7 +31,7 @@
         <path>$PROJ_DIR$\..\..\firmware\src\third_party\rtos\FreeRTOS\Source\include</path>
     </asmIncludePath>
     <defines>
-        <defines>__FPU_PRESENT=1</defines>
+        <define>__FPU_PRESENT=1</define>
     </defines>
     <linkerFile>
         <override>true</override>
@@ -265,9 +265,6 @@
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_iccarm.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\cmsis_cp15.h</path>
             <path>\..\..\packs\CMSIS\CMSIS\Core_A\Include\core_ca.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_common_tables.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_const_structs.h</path>
-            <path>\..\..\packs\CMSIS\CMSIS\DSP\Include\arm_math.h</path>
             <path>\FreeRTOSConfig.h</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\include\croutine.h</path>
             <path>\..\..\third_party\rtos\FreeRTOS\Source\include\event_groups.h</path>
@@ -289,12 +286,10 @@
             <path>\..\..\third_party\rtos\FreeRTOS\Source\portable\IAR\SAM\CA5\portmacro.h</path>
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_a5d2_xult_freertos">
-            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\icmp.c</path>
             <path>\peripheral\pit\plib_pit.c</path>
             <path>\library\tcpip\src\nbns.c</path>
             <path>\library\tcpip\src\tcp.c</path>
-            <path>\library\tcpip\src\dhcp.c</path>
             <path>\library\tcpip\src\arp.c</path>
             <path>\peripheral\tc\plib_tc0.c</path>
             <path>\system\time\src\sys_time.c</path>
@@ -304,6 +299,8 @@
             <path>\library\tcpip\src\ipv4.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
+            <path>\library\tcpip\src\dhcp.c</path>
+            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\helpers.c</path>
             <path>\library\tcpip\src\hash_fnv.c</path>
             <path>\library\tcpip\src\oahash.c</path>
@@ -322,7 +319,6 @@
             <path>\..\..\main.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
-            <path>\exceptions.c</path>
             <path>\stdio\iar_monitor.c</path>
             <path>\peripheral\mmu\plib_mmu.c</path>
             <path>\peripheral\matrix\plib_matrix.c</path>

@@ -97,10 +97,14 @@ static const char*  APP_MQTT_StateStrTbl[] =
     "publish",          // APP_MQTT_STATE_PUBLISH,
     "wait_msg",         // APP_MQTT_STATE_START_WAIT,
     "wait_msg",         // APP_MQTT_STATE_WAIT_MSG,
-    "ping",             // APP_MQTT_STATE_PING,
+    "sub_st_ping",      // APP_MQTT_STATE_START_SUB_PING,
+    "sub_ping",         // APP_MQTT_STATE_SUB_PING,
     "unsubscribe",      // APP_MQTT_STATE_START_UNSUBSCRIBE,
     "unsubscribe",      // APP_MQTT_STATE_UNSUBSCRIBE,
     "cli_disconnect",   // APP_MQTT_STATE_CLIENT_DISCONNECT,
+    "i_ping",           // APP_MQTT_STATE_INIT_PING,
+    "w_ping",           // APP_MQTT_STATE_WAIT_TO_PING,
+    "ping",             // APP_MQTT_STATE_PING,
     "net_disconnect",   // APP_MQTT_STATE_NET_DISCONNECT,
     "done",             // APP_MQTT_STATE_DONE,
 };
@@ -154,9 +158,10 @@ static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
 
     strncpy(mqttCtx->broker, APP_MQTT_DEFAULT_BROKER, sizeof(mqttCtx->broker) - 1);
     strncpy(mqttCtx->clientId, APP_MQTT_DEFAULT_CLIENT_ID, sizeof(mqttCtx->clientId) - 1);
-    strncpy(mqttCtx->topicName, APP_MQTT_DEFAULT_TOPIC_NAME, sizeof(mqttCtx->topicName) - 1);
+    strncpy(mqttCtx->subscribeTopicName, APP_MQTT_DEFAULT_SUBSCRIBE_TOPIC, sizeof(mqttCtx->subscribeTopicName) - 1);
+    strncpy(mqttCtx->publishTopicName, APP_MQTT_DEFAULT_PUBLISH_TOPIC, sizeof(mqttCtx->publishTopicName) - 1);
     strncpy(mqttCtx->appName, APP_MQTT_DEFAULT_APP_NAME, sizeof(mqttCtx->appName) - 1);
-    strncpy(mqttCtx->publishMessage, APP_MQTT_DEFAULT_MESSAGE, sizeof(mqttCtx->publishMessage) - 1);
+    strncpy(mqttCtx->publishMessage, APP_MQTT_DEFAULT_PUBLISH_MESSAGE, sizeof(mqttCtx->publishMessage) - 1);
     strncpy(mqttCtx->lastWill, APP_MQTT_DEFAULT_LWT_TOPIC_NAME, sizeof(mqttCtx->lastWill) - 1);
     strncpy(mqttCtx->userName, APP_MQTT_DEFAULT_USER, sizeof(mqttCtx->userName) - 1);
     strncpy(mqttCtx->password, APP_MQTT_DEFAULT_PASS, sizeof(mqttCtx->password) - 1);
@@ -172,6 +177,7 @@ static bool APP_MQTT_InitContext(APP_MQTT_CONTEXT* mqttCtx)
     mqttCtx->cleanSession = 1;
 
     mqttCtx->forceTls = 0;    // NET_PRES enables TLS, as needed
+    mqttCtx->enableAuth = APP_MQTT_DEFAULT_AUTH; 
 
 #ifdef WOLFMQTT_V5
     mqttCtx->maxPktSize = APP_MQTT_MAX_CTRL_PKT_SIZE;
@@ -209,6 +215,7 @@ void APP_MQTT_Task(void)
 #ifdef WOLFMQTT_V5
     MqttProp* mqttProp;
 #endif  // WOLFMQTT_V5
+    char ping_res_buff[40];
 
 
     int resCode;
@@ -410,9 +417,15 @@ void APP_MQTT_Task(void)
             SYS_CONSOLE_PRINT("MQTT Task - Connect Ack: Assigned Client ID: %s", mqttCtx->pClientId);
 #endif  //  defined(WOLFMQTT_V5) && defined(WOLFMQTT_PROPERTY_CB)
 
+            mqttCtx->pingCount = 0; 
+            if(mqttCtx->mqttCommand == APP_MQTT_COMMAND_PING)
+            {   // skip the pub/subscribe; jump to ping
+                mqttCtx->currState = APP_MQTT_STATE_INIT_PING;
+                break;
+            } 
             // set the topic list
             memset(&mqttCtx->mqttSubscribe, 0, sizeof(mqttCtx->mqttSubscribe));
-            mqttCtx->mqttTopic.topic_filter = mqttCtx->topicName;
+            mqttCtx->mqttTopic.topic_filter = mqttCtx->subscribeTopicName;
             mqttCtx->mqttTopic.qos = mqttCtx->qos;
 
 #ifdef WOLFMQTT_V5
@@ -461,7 +474,7 @@ void APP_MQTT_Task(void)
             mqttCtx->mqttPublish.retain = 0;
             mqttCtx->mqttPublish.qos = mqttCtx->qos;
             mqttCtx->mqttPublish.duplicate = 0;
-            mqttCtx->mqttPublish.topic_name = mqttCtx->topicName;
+            mqttCtx->mqttPublish.topic_name = mqttCtx->publishTopicName;
             mqttCtx->mqttPublish.packet_id = APP_MQTT_NewPacketId(mqttCtx);
             mqttCtx->mqttPublish.buffer = (uint8_t*)mqttCtx->publishMessage;
             mqttCtx->mqttPublish.total_len = (uint16_t)strlen(mqttCtx->publishMessage);
@@ -550,34 +563,40 @@ void APP_MQTT_Task(void)
             {   // check for timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage", MQTT_CODE_ERROR_TIMEOUT);
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage timeout", MQTT_CODE_ERROR_TIMEOUT);
                     APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
-                    mqttCtx->currState = APP_MQTT_STATE_PING;
+                    mqttCtx->currState = APP_MQTT_STATE_START_SUB_PING;
                 }
-                break;
             }
             else if(resCode < 0)
             {   // some error occurred
-                APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage", resCode) ;
-                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                APP_MQTT_ClientResult(mqttCtx, "MqttClient_WaitMessage error", resCode) ;
+                // try to ping the broker
+                mqttCtx->currState = APP_MQTT_STATE_START_SUB_PING;
             }
             // else wait some more to receive the message
             break;
 
-        case APP_MQTT_STATE_PING:
+        case APP_MQTT_STATE_START_SUB_PING:
+            SYS_CONSOLE_PRINT("MQTT Task - sub pinging the broker: %d\r\n", mqttCtx->waitMsgRetries);
+            APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
+            mqttCtx->currState = APP_MQTT_STATE_SUB_PING;
+
+        case APP_MQTT_STATE_SUB_PING:
             resCode = MqttClient_Ping(&mqttCtx->mqttClient);
             if (resCode == MQTT_CODE_CONTINUE)
             {   // check the timeout
                 if(APP_MQTT_CheckTimeout(mqttCtx))
                 {   // timeout
-                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping", MQTT_CODE_ERROR_TIMEOUT);
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", MQTT_CODE_ERROR_TIMEOUT);
                     mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
                 }
                 break;
             }
 
             // done with ping
-            APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping", resCode);
+            sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
+            APP_MQTT_ClientResult(mqttCtx, ping_res_buff, resCode);
             if (resCode < 0)
             {   // error occurred
                 mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
@@ -588,6 +607,7 @@ void APP_MQTT_Task(void)
                 {
                     mqttCtx->waitMsgRetries--;
                     mqttCtx->currState = APP_MQTT_STATE_START_WAIT;
+                    SYS_CONSOLE_PRINT("MQTT Task - ping retrying: %d\r\n", mqttCtx->waitMsgRetries);
                 }
                 else
                 {   // retries exhausted
@@ -626,6 +646,55 @@ void APP_MQTT_Task(void)
             mqttCtx->currState = resCode < 0 ? APP_MQTT_STATE_NET_DISCONNECT : APP_MQTT_STATE_CLIENT_DISCONNECT;
             break;
 
+        case APP_MQTT_STATE_INIT_PING:
+            SYS_CONSOLE_MESSAGE("MQTT Task - init pinging the broker\r\n");
+            APP_MQTT_StartTimeout(mqttCtx, 1);  // start pinging immediately
+            mqttCtx->requestStop = 0; 
+            mqttCtx->currState = APP_MQTT_STATE_WAIT_TO_PING;
+            break;
+            
+        case APP_MQTT_STATE_WAIT_TO_PING:
+            if(mqttCtx->requestStop)
+            {
+                SYS_CONSOLE_MESSAGE("MQTT Task - requested to stop. Exiting...\r\n");
+                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                break;
+            }
+
+            // check the timeout
+            if(APP_MQTT_CheckTimeout(mqttCtx))
+            {   // time to ping
+                APP_MQTT_StartTimeout(mqttCtx, mqttCtx->cmdTimeout);
+                mqttCtx->currState = APP_MQTT_STATE_PING;
+            }
+            break;
+
+        case APP_MQTT_STATE_PING:
+            resCode = MqttClient_Ping(&mqttCtx->mqttClient);
+            if (resCode == MQTT_CODE_CONTINUE)
+            {   // check the timeout
+                if(APP_MQTT_CheckTimeout(mqttCtx))
+                {   // timeout
+                    APP_MQTT_ClientResult(mqttCtx, "MqttClient_Ping timeout", MQTT_CODE_ERROR_TIMEOUT);
+                    mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+                }
+                break;
+            }
+
+            // done with ping
+            sprintf(ping_res_buff, "MqttClient_Ping #%d", ++mqttCtx->pingCount);
+            APP_MQTT_ClientResult(mqttCtx, ping_res_buff, resCode);
+            if (resCode < 0)
+            {   // error occurred
+                mqttCtx->currState = APP_MQTT_STATE_NET_DISCONNECT;
+            }
+            else
+            {   // ping was successful; keep pinging
+                APP_MQTT_StartTimeout(mqttCtx, APP_MQTT_DEFAULT_PING_WAIT_MS);
+                mqttCtx->currState = APP_MQTT_STATE_WAIT_TO_PING;
+            }
+            break;
+
         case APP_MQTT_STATE_CLIENT_DISCONNECT:
             resCode = MqttClient_Disconnect_ex(&mqttCtx->mqttClient, &mqttCtx->mqttDisconnect);
             if (resCode == MQTT_CODE_CONTINUE)
@@ -651,6 +720,7 @@ void APP_MQTT_Task(void)
         case APP_MQTT_STATE_DONE:
             // connection cycle ended; clean up
             WMQTT_NETGlue_Deinitialize(&mqttCtx->mqttNet);
+            mqttCtx->mqttCommand = APP_MQTT_COMMAND_NONE;
             mqttCtx->currState = APP_MQTT_STATE_IDLE;
             // print the result
             if(mqttCtx->errorCode == 0)

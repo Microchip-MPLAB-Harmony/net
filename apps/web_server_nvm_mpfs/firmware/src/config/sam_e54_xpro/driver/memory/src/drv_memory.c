@@ -576,6 +576,8 @@ static MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_HandleEraseWrite
                 dObj->ewState = DRV_MEMORY_EW_ERASE_SECTOR;
 
                 transferStatus = MEMORY_DEVICE_TRANSFER_BUSY;
+
+                break;
             }
 
             /* Fall through for read operation. */

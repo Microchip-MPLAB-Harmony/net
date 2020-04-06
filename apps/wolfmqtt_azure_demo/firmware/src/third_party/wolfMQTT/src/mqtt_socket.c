@@ -38,9 +38,9 @@
 #endif
 
 
-/* Public Functions */
+/* Private Functions */
 #ifdef ENABLE_MQTT_TLS
-int MqttSocket_TlsSocketReceive(WOLFSSL* ssl, char *buf, int sz,
+static int MqttSocket_TlsSocketReceive(WOLFSSL* ssl, char *buf, int sz,
     void *ptr)
 {
     int rc;
@@ -63,7 +63,7 @@ int MqttSocket_TlsSocketReceive(WOLFSSL* ssl, char *buf, int sz,
     return rc;
 }
 
-int MqttSocket_TlsSocketSend(WOLFSSL* ssl, char *buf, int sz,
+static int MqttSocket_TlsSocketSend(WOLFSSL* ssl, char *buf, int sz,
     void *ptr)
 {
     int rc;
@@ -86,6 +86,8 @@ int MqttSocket_TlsSocketSend(WOLFSSL* ssl, char *buf, int sz,
 }
 #endif
 
+
+/* Public Functions */
 int MqttSocket_Init(MqttClient *client, MqttNet *net)
 {
     int rc = MQTT_CODE_ERROR_BAD_ARG;
@@ -324,6 +326,7 @@ int MqttSocket_Connect(MqttClient *client, const char* host, word16 port,
         return MQTT_CODE_ERROR_BAD_ARG;
     }
 #endif
+
 
     if ((client->flags & MQTT_CLIENT_FLAG_IS_CONNECTED) == 0) {
         /* Validate port */

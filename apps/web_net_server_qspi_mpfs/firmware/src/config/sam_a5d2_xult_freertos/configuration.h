@@ -84,7 +84,7 @@ extern "C" {
 #define SYS_TIME_MAX_TIMERS                  5
 #define SYS_TIME_HW_COUNTER_WIDTH            32
 #define SYS_TIME_HW_COUNTER_PERIOD           4294967295U
-#define SYS_TIME_HW_COUNTER_HALF_PERIOD		 (SYS_TIME_HW_COUNTER_PERIOD>>1)
+#define SYS_TIME_HW_COUNTER_HALF_PERIOD	     (SYS_TIME_HW_COUNTER_PERIOD>>1)
 #define SYS_TIME_CPU_CLOCK_FREQUENCY         498000000
 #define SYS_TIME_COMPARE_UPDATE_EXECUTION_CYCLES      (2200)
 
@@ -179,6 +179,7 @@ extern "C" {
 /* Memory Driver Instance 0 RTOS Configurations*/
 #define DRV_MEMORY_STACK_SIZE_IDX0           1024
 #define DRV_MEMORY_PRIORITY_IDX0             1
+#define DRV_MEMORY_RTOS_DELAY_IDX0                         10
 
 
 
@@ -451,6 +452,10 @@ extern "C" {
 #define TCPIP_DHCP_CLIENT_CONNECT_PORT              68
 #define TCPIP_DHCP_SERVER_LISTEN_PORT               67
 #define TCPIP_DHCP_CLIENT_ENABLED                   true
+#define TCPIP_DHCP_USE_OPTION_TIME_SERVER           0
+#define TCPIP_DHCP_TIME_SERVER_ADDRESSES            0
+#define TCPIP_DHCP_USE_OPTION_NTP_SERVER            0
+#define TCPIP_DHCP_NTP_SERVER_ADDRESSES             0
 
 
 
@@ -613,6 +618,9 @@ extern "C" {
 #define TCPIP_INTMAC_MODULE_ID		    			GMAC_BASE_ADDRESS
 #define TCPIP_INTMAC_PERIPHERAL_CLK  				166000000
 
+#define DRV_GMAC_RX_CHKSM_OFFLOAD				(TCPIP_MAC_CHECKSUM_NONE)			
+#define DRV_GMAC_TX_CHKSM_OFFLOAD				(TCPIP_MAC_CHECKSUM_NONE)		
+
 #define DRV_GMAC_INSTANCES_NUMBER				1
 #define DRV_GMAC_NUMBER_OF_QUEUES				6
 #define DRV_GMAC_CLIENTS_NUMBER					1
@@ -669,7 +677,7 @@ extern "C" {
 #define USE_FAST_MATH
 #define NO_PWDBASED
 #define HAVE_MCAPI
-#define WOLF_CRYPTO_CB
+#define WOLF_CRYPTO_CB  // provide call-back support
 #define NO_MD4
 #define WOLFSSL_SHA224
 #define WOLFSSL_AES_128
@@ -697,11 +705,10 @@ extern "C" {
 #define NO_WOLFSSL_MEMORY
 
 
-
-#define TCPIP_INTMAC_PHY_CONFIG_FLAGS               0 \
+#define TCPIP_INTMAC_PHY_CONFIG_FLAGS              	( 0 \
                                                     | DRV_ETHPHY_CFG_RMII \
-
-
+                                                    )
+													
 #define TCPIP_INTMAC_PHY_LINK_INIT_DELAY            500
 #define TCPIP_INTMAC_PHY_ADDRESS                    1
 #define DRV_ETHPHY_INSTANCES_NUMBER                 1

@@ -195,7 +195,3 @@ def tcpipSmtpcGenSourceFile(sourceFile, event):
 def destroyComponent(component):
     Database.setSymbolValue("tcpipSmtpc", "TCPIP_USE_SMTPC_CLIENT", False, 2)
     
-def onAttachmentConnected(source, target):
-    if (source["id"] == "Smtpc_TcpipFs_Dependency"): 
-        if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT") != True):
-            Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_SYS_FS_CONNECT", True)

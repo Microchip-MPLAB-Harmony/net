@@ -53,7 +53,7 @@ static HSMCI_OBJECT hsmciObj;
 
 static void HSMCI_VariablesInit ( void )
 {
-    hsmciObj.errorStatus = 0;
+    hsmciObj.errorStatus = (HSMCI_ERROR_FLAGS) 0;
     hsmciObj.isCmdInProgress = false;
     hsmciObj.isDataInProgress = false;
     hsmciObj.callback = false;
@@ -61,9 +61,9 @@ static void HSMCI_VariablesInit ( void )
 
 void HSMCI_InterruptHandler(void)
 {
-    volatile uint32_t intMask = 0;
-    volatile uint32_t intFlags = 0;
-    HSMCI_XFER_STATUS xferStatus = 0;
+    uint32_t intMask = 0;
+    uint32_t intFlags = 0;
+    HSMCI_XFER_STATUS xferStatus = (HSMCI_XFER_STATUS) 0;
 
     intMask = HSMCI_REGS->HSMCI_IMR;
     intFlags = HSMCI_REGS->HSMCI_SR;
@@ -209,11 +209,11 @@ void HSMCI_DmaSetup (
 {
     HSMCI_REGS->HSMCI_DMA = HSMCI_DMA_DMAEN_Msk;
 
-    XDMAC_ChannelDisable(HSMCI_DMA_CHANNEL);
+    XDMAC_ChannelDisable((XDMAC_CHANNEL) HSMCI_DMA_CHANNEL);
 
     if (operation == HSMCI_DATA_TRANSFER_DIR_READ)
     {
-        XDMAC_ChannelSettingsSet(HSMCI_DMA_CHANNEL,
+        XDMAC_ChannelSettingsSet((XDMAC_CHANNEL) HSMCI_DMA_CHANNEL,
                             XDMAC_CC_TYPE_PER_TRAN
                             | XDMAC_CC_MBSIZE_SINGLE
                             | XDMAC_CC_DSYNC_PER2MEM
@@ -227,7 +227,7 @@ void HSMCI_DmaSetup (
         );
 
         XDMAC_ChannelTransfer(
-            HSMCI_DMA_CHANNEL,
+            (XDMAC_CHANNEL) HSMCI_DMA_CHANNEL,
             (const void *)&(HSMCI_REGS->HSMCI_FIFO[0]),
             (const void *)buffer,
             (numBytes/4)
@@ -235,7 +235,7 @@ void HSMCI_DmaSetup (
     }
     else
     {
-        XDMAC_ChannelSettingsSet(HSMCI_DMA_CHANNEL,
+        XDMAC_ChannelSettingsSet((XDMAC_CHANNEL) HSMCI_DMA_CHANNEL,
                     XDMAC_CC_TYPE_PER_TRAN
                     | XDMAC_CC_MBSIZE_SINGLE
                     | XDMAC_CC_DSYNC_MEM2PER
@@ -249,7 +249,7 @@ void HSMCI_DmaSetup (
         );
 
         XDMAC_ChannelTransfer(
-            HSMCI_DMA_CHANNEL,
+            (XDMAC_CHANNEL) HSMCI_DMA_CHANNEL,
             (const void *)buffer,
             (const void *)&(HSMCI_REGS->HSMCI_FIFO[0]),
             (numBytes/4)
@@ -362,7 +362,7 @@ void HSMCI_CommandSend (
     /* Clear the flags */
     hsmciObj.isCmdInProgress = false;
     hsmciObj.isDataInProgress = false;
-    hsmciObj.errorStatus = 0;
+    hsmciObj.errorStatus = (HSMCI_ERROR_FLAGS) 0;
 
     switch (respType)
     {

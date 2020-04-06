@@ -7,7 +7,7 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
-#include "system/fs/fat_fs/src/hardware_access/diskio.h"		/* FatFs lower layer API */
+#include "system/fs/fat_fs/src/hardware_access/diskio.h"        /* FatFs lower layer API */
 #include "system/fs/sys_fs_media_manager.h"
 #include <string.h>
 
@@ -51,28 +51,32 @@ static DRESULT disk_checkCommandStatus(uint8_t pdrv)
     {
         result = RES_PARERR;
     }
-
-    /* process the read request by blocking on the task routine that process the 
-     I/O request */
-    while (gSysFsDiskData[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_IN_PROGRESS)
+    else
     {
-        SYS_FS_MEDIA_MANAGER_TransferTask (pdrv);
+        /* process the read request by blocking on the task routine that process the
+         I/O request */
+        while (gSysFsDiskData[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_IN_PROGRESS)
+        {
+            SYS_FS_MEDIA_MANAGER_TransferTask (pdrv);
+        }
+
+
+        if (gSysFsDiskData[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_COMPLETED)
+        {
+            /* Buffer processed successfully */
+            result = RES_OK;
+        }
     }
 
 
-    if (gSysFsDiskData[pdrv].commandStatus == SYS_FS_MEDIA_COMMAND_COMPLETED)
-    {
-        /* Buffer processed successfully */
-        result = RES_OK;
-    }        
 
     return result;
 }
 
 /* Definitions of physical drive number for each drive */
-#define ATA		0	/* Example: Map ATA harddisk to physical drive 0 */
-#define MMC		1	/* Example: Map MMC/SD card to physical drive 1 */
-#define USB		2	/* Example: Map USB MSD to physical drive 2 */
+#define ATA     0   /* Example: Map ATA harddisk to physical drive 0 */
+#define MMC     1   /* Example: Map MMC/SD card to physical drive 1 */
+#define USB     2   /* Example: Map USB MSD to physical drive 2 */
 
 
 /*-----------------------------------------------------------------------*/
@@ -80,10 +84,10 @@ static DRESULT disk_checkCommandStatus(uint8_t pdrv)
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_status (
-	uint8_t pdrv		/* Physical drive nmuber to identify the drive */
+    uint8_t pdrv        /* Physical drive nmuber to identify the drive */
 )
 {
-	return 0;
+    return 0;
 }
 
 
@@ -93,14 +97,14 @@ DSTATUS disk_status (
 /*-----------------------------------------------------------------------*/
 
 DSTATUS disk_initialize (
-	uint8_t pdrv				/* Physical drive nmuber to identify the drive */
+    uint8_t pdrv                /* Physical drive nmuber to identify the drive */
 )
 {
-	switch( pdrv ) {
-	case 0:
+    switch( pdrv ) {
+    case 0:
     default:
         break;
-	}
+    }
 
     SYS_FS_MEDIA_MANAGER_RegisterTransferHandler( (void *) diskEventHandler );
     return 0;
@@ -238,9 +242,9 @@ DRESULT disk_write
 
 #if _USE_IOCTL
 DRESULT disk_ioctl (
-        uint8_t pdrv,		/* Physical drive nmuber (0..) */
-        uint8_t cmd,		/* Control code */
-        void *buff		/* Buffer to send/receive control data */
+        uint8_t pdrv,       /* Physical drive nmuber (0..) */
+        uint8_t cmd,        /* Control code */
+        void *buff      /* Buffer to send/receive control data */
         )
 {
     if (cmd == GET_SECTOR_COUNT)

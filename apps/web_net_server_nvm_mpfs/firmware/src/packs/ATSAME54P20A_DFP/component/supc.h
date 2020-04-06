@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-06-03T16:18:52Z */
+/* file generated from device description version 2019-12-06T17:54:10Z */
 #ifndef _SAME54_SUPC_COMPONENT_H_
 #define _SAME54_SUPC_COMPONENT_H_
 
