@@ -855,10 +855,14 @@ static void NET_PRES_SignalHandler(NET_PRES_SKT_HANDLE_T handle, NET_PRES_SIGNAL
     NET_PRES_SocketData * pSkt = (NET_PRES_SocketData*)param;
     _NET_PRES_AssertCond(pSkt->transHandle == handle,  __func__, __LINE__);
     _NET_PRES_AssertCond(pSkt->sigHandle != 0,  __func__, __LINE__);
+    _NET_PRES_AssertCond(pSkt->usrSigFnc != 0,  __func__, __LINE__);
 
     // call the user handler
-    uint16_t sktIx = (pSkt - sNetPresSockets) + 1; 
-    (*pSkt->usrSigFnc)(sktIx, hNet, sigType, pSkt->usrSigParam);
+    if(pSkt->usrSigFnc != 0)
+    {
+        uint16_t sktIx = (pSkt - sNetPresSockets) + 1; 
+        (*pSkt->usrSigFnc)(sktIx, hNet, sigType, pSkt->usrSigParam);
+    }
 
 }
 
@@ -871,11 +875,17 @@ NET_PRES_SIGNAL_HANDLE NET_PRES_SocketSignalHandlerRegister(NET_PRES_SKT_HANDLE_
         return 0;
     }
 
+    if (handler == 0)
+    {
+        pSkt->lastError = NET_PRES_SKT_HANDLER_ERROR;
+        return 0;
+    }
+
     NET_PRES_TransHandlerRegister fp = pSkt->transObject->fpHandlerRegister;
     if (fp == NULL)
     {
         pSkt->lastError = NET_PRES_SKT_OP_NOT_SUPPORTED;
-        return NULL;
+        return 0;
     }
 
     if(pSkt->sigHandle != 0)
