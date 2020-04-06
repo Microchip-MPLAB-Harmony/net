@@ -66,7 +66,7 @@
                 </option>
                 <option>
                     <name>OGLastSavedByProductVersion</name>
-                    <state>8.32.1.18618</state>
+                    <state>8.50.1.24770</state>
                 </option>
                 <option>
                     <name>GeneralEnableMisra</name>
@@ -116,7 +116,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -133,7 +133,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -156,7 +156,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -215,13 +215,14 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
                     <name>CCDefines</name>
                     <state>__SAM9X60__</state>
                     <state>HAVE_CONFIG_H</state>
+                    <state>WOLFSSL_IGNORE_FILE_WARN</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -478,6 +479,10 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -708,7 +713,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>22</version>
+                <version>23</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>1</debug>
                 <option>
@@ -1028,6 +1033,22 @@
                     <name>OILinkExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1172,7 +1193,7 @@
                 </option>
                 <option>
                     <name>GBECoreSlave</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1189,7 +1210,7 @@
                 </option>
                 <option>
                     <name>CoreVariant</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1212,7 +1233,7 @@
                 </option>
                 <option>
                     <name>GFPUCoreSlave2</name>
-                    <version>26</version>
+                    <version>28</version>
                     <state>12</state>
                 </option>
                 <option>
@@ -1271,7 +1292,7 @@
             <name>ICCARM</name>
             <archiveVersion>2</archiveVersion>
             <data>
-                <version>35</version>
+                <version>36</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -1279,6 +1300,7 @@
                     <state>NDEBUG</state>
                     <state>__SAM9X60__</state>
                     <state>HAVE_CONFIG_H</state>
+                    <state>WOLFSSL_IGNORE_FILE_WARN</state>
                 </option>
                 <option>
                     <name>CCPreprocFile</name>
@@ -1535,6 +1557,10 @@
                     <name>OICompilerExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>CCStackProtection</name>
+                    <state>0</state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -1765,7 +1791,7 @@
             <name>ILINK</name>
             <archiveVersion>0</archiveVersion>
             <data>
-                <version>22</version>
+                <version>23</version>
                 <wantNonLocal>1</wantNonLocal>
                 <debug>0</debug>
                 <option>
@@ -2085,6 +2111,22 @@
                     <name>OILinkExtraOption</name>
                     <state>1</state>
                 </option>
+                <option>
+                    <name>IlinkRawBinaryFile2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySymbol2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinarySegment2</name>
+                    <state></state>
+                </option>
+                <option>
+                    <name>IlinkRawBinaryAlign2</name>
+                    <state></state>
+                </option>
             </data>
         </settings>
         <settings>
@@ -2228,6 +2270,12 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_aes_u2238.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_crya_saml11.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_ecc_ba414e.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\port\pic32\crypt_ecc_pukcl.h</name>
@@ -2720,12 +2768,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\mpddrc.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\src\mpfs_local.h</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\mpi_class.h</name>
@@ -3316,6 +3358,9 @@
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_aes_u2238.c</name>
             </file>
             <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_ecc_ba414e.c</name>
+            </file>
+            <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_ecc_pukcl.c</name>
             </file>
             <file>
@@ -3329,6 +3374,9 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_rsa_pukcl.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sam_u2803.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\port\pic32\crypt_sha1_sam11105.c</name>
@@ -3431,9 +3479,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\error.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\exceptions.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\fe_low_mem.c</name>
@@ -3554,9 +3599,6 @@
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\third_party\wolfssl\wolfssl\wolfcrypt\src\memory.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\src\mpfs.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\src\net_pres.c</name>
