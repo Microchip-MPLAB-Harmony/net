@@ -105,6 +105,23 @@ static const DRV_MIIM_INIT drvMiimInitData =
     .ethphyId = DRV_MIIM_ETH_MODULE_ID,
 };
 
+// <editor-fold defaultstate="collapsed" desc="DRV_SST26 Initialization Data">
+
+const DRV_SST26_PLIB_INTERFACE drvSST26PlibAPI = {
+    .CommandWrite   = QSPI_CommandWrite,
+    .RegisterRead   = QSPI_RegisterRead,
+    .RegisterWrite  = QSPI_RegisterWrite,
+    .MemoryRead     = QSPI_MemoryRead,
+    .MemoryWrite    = QSPI_MemoryWrite
+};
+
+const DRV_SST26_INIT drvSST26InitData =
+{
+    .sst26Plib      = &drvSST26PlibAPI,
+};
+
+// </editor-fold>
+
 
 
 // *****************************************************************************
@@ -564,12 +581,12 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
 
 const SYS_TIME_PLIB_INTERFACE sysTimePlibAPI = {
     .timerCallbackSet = (SYS_TIME_PLIB_CALLBACK_REGISTER)TC0_CH0_TimerCallbackRegister,
-    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)TC0_CH0_TimerCounterGet,
-    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TC0_CH0_TimerPeriodSet,
-    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TC0_CH0_TimerFrequencyGet,
-    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)TC0_CH0_TimerCompareSet,
     .timerStart = (SYS_TIME_PLIB_START)TC0_CH0_TimerStart,
-    .timerStop = (SYS_TIME_PLIB_STOP)TC0_CH0_TimerStop 
+    .timerStop = (SYS_TIME_PLIB_STOP)TC0_CH0_TimerStop ,
+    .timerFrequencyGet = (SYS_TIME_PLIB_FREQUENCY_GET)TC0_CH0_TimerFrequencyGet,
+    .timerPeriodSet = (SYS_TIME_PLIB_PERIOD_SET)TC0_CH0_TimerPeriodSet,
+    .timerCompareSet = (SYS_TIME_PLIB_COMPARE_SET)TC0_CH0_TimerCompareSet,
+    .timerCounterGet = (SYS_TIME_PLIB_COUNTER_GET)TC0_CH0_TimerCounterGet,
 };
 
 const SYS_TIME_INIT sysTimeInitData =
@@ -662,6 +679,8 @@ void SYS_Initialize ( void* data )
 
 	PIO_Initialize();
 
+
+
 	BSP_Initialize();
  
     TC0_CH0_TimerInitialize(); 
@@ -684,6 +703,8 @@ void SYS_Initialize ( void* data )
 
     /* Initialize the MIIM Driver */
     sysObj.drvMiim = DRV_MIIM_Initialize( DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT *) &drvMiimInitData );
+
+    sysObj.drvSST26 = DRV_SST26_Initialize((SYS_MODULE_INDEX)DRV_SST26_INDEX, (SYS_MODULE_INIT *)&drvSST26InitData);
 
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
