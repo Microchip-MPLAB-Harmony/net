@@ -81,7 +81,7 @@ SUBSTITUTE GOODS, TECHNOLOGY, SERVICES, OR ANY CLAIMS BY THIRD PARTIES
  */
 static inline uint32_t cp15_read_sctlr(void)
 {
-	uint32_t sctlr;
+	uint32_t sctlr = 0;
 	asm("mrc p15, 0, %0, c1, c0, 0" : "=r"(sctlr));
 	return sctlr;
 }
@@ -101,7 +101,7 @@ static inline void cp15_write_sctlr(uint32_t value)
  */
 static inline uint32_t cp15_read_actlr(void)
 {
-	uint32_t actlr;
+	uint32_t actlr = 0;
 	asm("mrc p15, 0, %0, c1, c0, 1" : "=r"(actlr));
 	return actlr;
 }
@@ -121,7 +121,7 @@ static inline void cp15_write_actlr(uint32_t value)
  */
 static inline uint32_t cp15_read_ttbr0(uint32_t value)
 {
-	uint32_t ttbr0;
+	uint32_t ttbr0 = 0;
 	asm("mrc p15, 0, %0, c2, c0, 0" : "=r"(ttbr0));
 	return ttbr0;
 }
@@ -142,7 +142,7 @@ static inline void cp15_write_ttbr0(uint32_t value)
  */
 static inline uint32_t cp15_read_dacr(void)
 {
-	uint32_t dacr;
+	uint32_t dacr = 0;
 	asm("mrc p15, 0, %0, c3, c0, 0" : "=r"(dacr));
 	return dacr;
 }
