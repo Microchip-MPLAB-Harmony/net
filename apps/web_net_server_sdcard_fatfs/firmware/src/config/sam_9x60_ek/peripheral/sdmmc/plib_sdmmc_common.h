@@ -74,7 +74,8 @@
 typedef enum
 {
     SDMMC_BUS_WIDTH_1_BIT = 0,
-    SDMMC_BUS_WIDTH_4_BIT
+    SDMMC_BUS_WIDTH_4_BIT,
+    SDMMC_BUS_WIDTH_8_BIT
 
 } SDMMC_BUS_WIDTH;
 
@@ -101,6 +102,9 @@ typedef enum
 
     /* ACMD6 sets the card's bus width between 1-bit and 4-bit, only available when the card is unlocked */
     SDMMC_CMD_SET_BUS_WIDTH  = 6,
+
+    /* Command to switch functions in ext csd register in emmc */
+    SDMMC_CMD_SWITCH      = 6,
 
     /* Select/Deselect card message, sends the card to transfer state */
     SDMMC_CMD_SELECT_DESELECT_CARD = 7,

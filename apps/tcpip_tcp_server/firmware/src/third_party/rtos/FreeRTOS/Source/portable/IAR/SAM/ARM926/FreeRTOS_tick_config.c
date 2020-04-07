@@ -45,7 +45,7 @@ void vConfigureTickInterrupt( void )
     macro in FreeRTOSConfig.h. */
 
     /* Set FreeRTOS_Tick_Handler as callback to PIT Handler */
-    PIT_TimerCallbackSet(FreeRTOS_Tick_Handler, NULL);
+    PIT_TimerCallbackSet(FreeRTOS_Tick_Handler, 0);
 
     /* Initialize the PIT to the desired frequency - specified in PIT ticks. */
     PIT_TimerPeriodSet( PIT_TimerFrequencyGet() / configTICK_RATE_HZ );

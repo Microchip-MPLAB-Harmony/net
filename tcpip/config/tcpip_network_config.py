@@ -127,6 +127,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetDhcpFlag.addKey("DHCP_CLIENT_ENABLE", "0", "Enable DHCP Client")
     tcpipNetDhcpFlag.addKey("DHCP_SERVER_ENABLE", "1", "Enable DHCP Server")
     tcpipNetDhcpFlag.addKey("ZEROCONF_LL_ENABLE", "2", "Enable ZeroConf LL")
+    tcpipNetDhcpFlag.addKey("DHCP_NONE", "3", "None")
     tcpipNetDhcpFlag.setDisplayMode("Description")
     tcpipNetDhcpFlag.setOutputMode("Key")
     tcpipNetDhcpFlag.setDefaultValue(0)
@@ -136,6 +137,7 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetDnsFlag.setLabel("DNS Flag")
     tcpipNetDnsFlag.addKey("DNS_CLIENT_ENABLE", "0", "Enable DNS Client")
     tcpipNetDnsFlag.addKey("DNS_SERVER_ENABLE", "1", "Enable DNS Server")
+    tcpipNetDnsFlag.addKey("DNS_NONE", "2", "None")
     tcpipNetDnsFlag.setDisplayMode("Description")
     tcpipNetDnsFlag.setOutputMode("Key")
     tcpipNetDnsFlag.setDefaultValue(0)  
@@ -220,7 +222,7 @@ def tcpipNetMacAddrUpdate(symbol, event):
         'GMAC':         '00:04:25:1C:A0:02',
         'EMAC0':        '00:04:25:1C:A0:03',
         'EMAC1':        '00:04:25:1C:A0:04',
-		'ENC28J60':		'00:04:a3:12:34:56',
+        'ENC28J60':     '00:04:a3:12:34:56',
     }
     print "tcpipNetMacAddrUpdate: symbol.getValue()=" + str( symbol.getValue() )
     tcpipInterfaceName = event["value"]
