@@ -52,6 +52,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #ifndef _LINK_LISTS_H_
 #define _LINK_LISTS_H_
 
+#include "osal/osal.h"
 #include <stdbool.h>
 
 typedef struct _TAG_SGL_LIST_NODE
