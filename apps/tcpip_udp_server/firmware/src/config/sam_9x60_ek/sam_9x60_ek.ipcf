@@ -253,8 +253,6 @@
             <path>\system\fs\fat_fs\src\file_system\ff.h</path>
             <path>\system\fs\fat_fs\src\file_system\ffconf.h</path>
             <path>\system\fs\fat_fs\src\hardware_access\diskio.h</path>
-            <path>\system\fs\mpfs\mpfs.h</path>
-            <path>\system\fs\mpfs\src\mpfs_local.h</path>
             <path>\driver\ethphy\drv_ethphy.h</path>
             <path>\driver\ethphy\src\drv_ethphy_local.h</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_regs.h</path>
@@ -267,10 +265,8 @@
         </group>
         <group name="Source Files" relRoot="$PROJ_DIR$\..\..\firmware\src\config\sam_9x60_ek">
             <path>\bsp\bsp.c</path>
-            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\icmp.c</path>
             <path>\library\tcpip\src\tcp.c</path>
-            <path>\library\tcpip\src\dhcp.c</path>
             <path>\library\tcpip\src\arp.c</path>
             <path>\peripheral\tc\plib_tc0.c</path>
             <path>\system\time\src\sys_time.c</path>
@@ -282,6 +278,8 @@
             <path>\library\tcpip\src\ipv4.c</path>
             <path>\library\tcpip\src\tcpip_heap_alloc.c</path>
             <path>\library\tcpip\src\tcpip_heap_internal.c</path>
+            <path>\library\tcpip\src\dhcp.c</path>
+            <path>\library\tcpip\src\dns.c</path>
             <path>\library\tcpip\src\helpers.c</path>
             <path>\library\tcpip\src\hash_fnv.c</path>
             <path>\library\tcpip\src\oahash.c</path>
@@ -299,7 +297,6 @@
             <path>\..\..\main_sam_9x60.c</path>
             <path>\initialization.c</path>
             <path>\interrupts.c</path>
-            <path>\exceptions.c</path>
             <path>\stdio\iar_monitor.c</path>
             <path>\peripheral\mmu\plib_mmu.c</path>
             <path>\peripheral\clk\plib_clk.c</path>
@@ -316,7 +313,6 @@
             <path>\system\fs\src\sys_fs_media_manager.c</path>
             <path>\system\fs\fat_fs\src\ff.c</path>
             <path>\system\fs\fat_fs\src\diskio.c</path>
-            <path>\system\fs\mpfs\src\mpfs.c</path>
             <path>\driver\ethphy\src\dynamic\drv_ethphy.c</path>
             <path>\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</path>
             <path>\peripheral\sdmmc\plib_sdmmc0.c</path>
