@@ -11,7 +11,6 @@ define block IRQ_STACK with alignment = 8, size = 1024{};
 define block SVC_STACK with alignment = 8, size = 4096{};
 define block ABT_STACK with alignment = 8, size = 1024{};
 define block UND_STACK with alignment = 8, size = 1024{};
-define block SYS_STACK with alignment = 8, size = 4096{};
 
 define block SRAM { section .region_sram  };
 define block DDRAM { section .region_ddr };
@@ -44,7 +43,6 @@ place in DDRAM_region { block IRQ_STACK };
 place in DDRAM_region { block SVC_STACK };
 place in DDRAM_region { block ABT_STACK };
 place in DDRAM_region { block UND_STACK };
-place in DDRAM_region { block SYS_STACK };
 
 place in DDRAM_NOCACHE_region { block NO_CACHE };
 
