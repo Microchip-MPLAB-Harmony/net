@@ -54,6 +54,7 @@
 #define SDMMC0_MULTCLK_FREQUENCY                100000000
 
 #define SDMMC0_MAX_SUPPORTED_SDCLK_FREQUENCY    50000000UL
+
 #define SDMMC0_MAX_SUPPORTED_DIVIDER            0x3FF
 
 #define SDMMC0_MAX_BLOCK_SIZE                   0x200
@@ -220,7 +221,7 @@ void SDMMC0_BusWidthSet ( SDMMC_BUS_WIDTH busWidth )
 {
     if (busWidth == SDMMC_BUS_WIDTH_4_BIT)
     {
-       SDMMC0_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DW_4_BIT;
+        SDMMC0_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DW_4_BIT;
     }
     else
     {
@@ -564,32 +565,33 @@ void SDMMC0_CommandSend (
 void SDMMC0_ModuleInit( void )
 {
     /* Reset module*/
-    SDMMC0_REGS->SDMMC_SRR |= SDMMC_SRR_SWRSTALL_Msk;
+    SDMMC0_REGS->SDMMC_SRR = SDMMC_SRR_SWRSTALL_Msk;
     while((SDMMC0_REGS->SDMMC_SRR & SDMMC_SRR_SWRSTALL_Msk) == SDMMC_SRR_SWRSTALL_Msk);
-
-    /* Clear the normal and error interrupt status flags */
-    SDMMC0_REGS->SDMMC_EISTR = SDMMC_EISTR_SD_SDIO_Msk;
-    SDMMC0_REGS->SDMMC_NISTR = SDMMC_NISTR_SD_SDIO_Msk;
-
-    /* Enable all the normal interrupt status and error status generation */
-    SDMMC0_REGS->SDMMC_NISTER = SDMMC_NISTER_SD_SDIO_Msk;
-    SDMMC0_REGS->SDMMC_EISTER = SDMMC_EISTER_SD_SDIO_Msk;
 
     /* Set timeout control register */
     SDMMC0_REGS->SDMMC_TCR = SDMMC_TCR_DTCVAL(0xE);
 
-    /* Enable ADMA2 (Check CA0R capability register first) */
-    SDMMC0_REGS->SDMMC_HC1R |= SDMMC_HC1R_SD_SDIO_DMASEL(2);
+    /* Configure maximum AHB burst size */
+	SDMMC0_REGS->SDMMC_ACR = SDMMC_ACR_BMAX_INCR16;
+
+    /* Enable ADMA2 */
+    SDMMC0_REGS->SDMMC_HC1R = SDMMC_HC1R_SD_SDIO_DMASEL_ADMA32;
+    
+    /* Clear the normal and error interrupt status flags */
+    SDMMC0_REGS->SDMMC_EISTR = SDMMC_EISTR_SD_SDIO_Msk;
+    SDMMC0_REGS->SDMMC_NISTR = SDMMC_NISTR_SD_SDIO_Msk;
+
+    /* Enable normal and error interrupts that are used  */
+    SDMMC0_REGS->SDMMC_NISTER = SDMMC_NISTER_SD_SDIO_Msk;
+    SDMMC0_REGS->SDMMC_EISTER = SDMMC_EISTER_SD_SDIO_Msk;
 
     /* Set SD Bus Power On */
+    /* (NOTE: Perform a read/modify write to preserve the values of the 
+        reserved bits */
     SDMMC0_REGS->SDMMC_PCR |= SDMMC_PCR_SDBPWR_Msk;
-
+    
     /* Set initial clock to 400 KHz*/
     SDMMC0_ClockSet (SDMMC_CLOCK_FREQ_400_KHZ);
-
-    /* Clear the high speed bit and set the data width to 1-bit mode */
-    SDMMC0_REGS->SDMMC_HC1R &= ~(SDMMC_HC1R_SD_SDIO_HSEN_Msk | SDMMC_HC1R_SD_SDIO_DW_Msk);
-
 }
 
 void SDMMC0_Initialize( void )
