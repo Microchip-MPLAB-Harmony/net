@@ -268,8 +268,9 @@ void MMU_Initialize(void)
     uint32_t addr;
 
     /* Reset table entries */
-    for (addr = 0; addr < 4096; addr++)
+    for (addr = 0; addr < 4096; addr++) {
         trns_tbl[addr] = 0;
+    }
 
 	/* 0x00000000: SRAM (Remapped) */
 	trns_tbl[0x000] = TTB_SECT_ADDR(0x00000000)
