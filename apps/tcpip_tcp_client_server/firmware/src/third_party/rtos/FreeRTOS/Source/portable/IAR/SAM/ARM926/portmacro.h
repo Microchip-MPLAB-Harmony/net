@@ -62,8 +62,10 @@
 
 #elif defined(__GNUC__)
 
-#include "irqflags.h"
+#include "toolchain_specifics.h"
 #include <stdint.h>
+
+	#define CLZ                   __builtin_clz
 
 	/* Task utilities. */
 	#define portYIELD() __asm volatile ( "SWI 0" );
