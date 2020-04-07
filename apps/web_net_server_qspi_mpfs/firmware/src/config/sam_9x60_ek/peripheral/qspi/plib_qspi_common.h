@@ -54,6 +54,7 @@ Interface definition of QSPI PLIB.
 */
 
 #include <stdbool.h>
+#include <stddef.h>
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
@@ -66,6 +67,7 @@ Interface definition of QSPI PLIB.
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
+typedef void (*QSPI_CALLBACK)(uintptr_t context);  /* callbacks supported in SPI-only mode */
 
 typedef enum
 {
@@ -100,6 +102,33 @@ typedef enum
     QSPI_MEM_WRITE
 } QSPI_TRANSFER_TYPE;
 
+typedef enum
+{
+    QSPI_CLOCK_PHASE_TRAILING_EDGE = 0 << QSPI_SCR_CPHA_Pos,
+    QSPI_CLOCK_PHASE_LEADING_EDGE = 1 << QSPI_SCR_CPHA_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    QSPI_CLOCK_PHASE_INVALID = 0xFFFFFFFF
+} QSPI_CLOCK_PHASE;
+
+typedef enum
+{
+    QSPI_CLOCK_POLARITY_IDLE_LOW = 0 << QSPI_SCR_CPOL_Pos,
+    QSPI_CLOCK_POLARITY_IDLE_HIGH = 1 << QSPI_SCR_CPOL_Pos,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    QSPI_CLOCK_POLARITY_INVALID = 0xFFFFFFFF
+} QSPI_CLOCK_POLARITY;
+
+typedef enum
+{
+    QSPI_DATA_BITS_8 = QSPI_MR_NBBITS_8_BIT,
+    QSPI_DATA_BITS_16 = QSPI_MR_NBBITS_16_BIT,
+
+    /* Force the compiler to reserve 32-bit space for each enum value */
+    QSPI_DATA_BITS_INVALID = 0xFFFFFFFF
+} QSPI_DATA_BITS;
+
 typedef struct {
     /* QSPI instruction code */
     uint8_t instruction;
@@ -133,6 +162,27 @@ typedef struct {
     uint8_t dummy_cycles;
 } qspi_memory_xfer_t;
 
+typedef struct
+{
+    void*                   txBuffer;
+    void*                   rxBuffer;
+    size_t                  txSize;
+	size_t                  rxSize;
+	size_t                  dummySize;
+    size_t                  rxCount;
+    size_t                  txCount;
+    bool                    transferIsBusy;
+    QSPI_CALLBACK      		callback;
+    uintptr_t               context;
+} qspi_spi_obj;
+
+typedef struct
+{
+    uint32_t            clockFrequency;
+    QSPI_CLOCK_PHASE    clockPhase;
+    QSPI_CLOCK_POLARITY clockPolarity;
+    QSPI_DATA_BITS      dataBits;
+} QSPI_TRANSFER_SETUP;
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus // Provide C++ Compatibility
