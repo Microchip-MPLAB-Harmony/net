@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_ETHPHY_NegotiationIsComplete Function</title>
+<title>DRV_ETHPHY_ClientStatus Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00389.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00511.html" target="topic">DRV_ETHPHY_NegotiationIsComplete Function</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00774.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00388.html" target="topic">Library Interface</a> &gt; b) Client Level Functions &gt; <a href="00511.html" target="topic">DRV_ETHPHY_ClientStatus Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00563.html" target="topic">Previous</a> | <a href="00389.html" target="topic">Up</a> | <a href="00512.html" target="topic">Next</a></div>
+<a href="00512.html" target="topic">Previous</a> | <a href="00388.html" target="topic">Up</a> | <a href="00616.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_NegotiationIsComplete@DRV_HANDLE@DRV_ETHPHY_INTERFACE_INDEX@bool Topic Title: DRV_ETHPHY_NegotiationIsComplete Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_ClientStatus@DRV_HANDLE Topic Title: DRV_ETHPHY_ClientStatus Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_ETHPHY_NegotiationIsComplete Function</div>
+DRV_ETHPHY_ClientStatus Function</div>
 </div>
 </div>
 
@@ -49,14 +49,12 @@ DRV_ETHPHY_NegotiationIsComplete Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the results of a previously initiated Ethernet PHY negotiation.</p></div>
+This function gets the client-specific status of the Ethernet PHY driver associated with the given handle.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00564.html" target="topic">DRV_ETHPHY_RESULT</a> <strong><span style="color: #000000">DRV_ETHPHY_NegotiationIsComplete</span></strong>(
-    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>, 
-    <a href="00482.html" target="topic">DRV_ETHPHY_INTERFACE_INDEX</a> <strong><span style="color: #000000">portIndex</span></strong>, 
-    <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">waitComplete</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00503.html" target="topic">DRV_ETHPHY_CLIENT_STATUS</a> <strong><span style="color: #000000">DRV_ETHPHY_ClientStatus</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">handle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
@@ -65,10 +63,8 @@ Preconditions</div>
 <p class="Element10">
 
 <ul class="Element635">
-<li class="Element605">The <a href="00480.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
-<li class="Element605"><a href="00556.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid device handle.</li>
-<li class="Element605"><a href="00571.html" target="topic">DRV_ETHPHY_Setup</a> must have been called to properly configure the PHY</li>
-<li class="Element605"><a href="00563.html" target="topic">DRV_ETHPHY_RestartNegotiation</a> should have been called.</li>
+<li class="Element605">The <a href="00536.html" target="topic">DRV_ETHPHY_Initialize</a> routine must have been called.</li>
+<li class="Element605"><a href="00612.html" target="topic">DRV_ETHPHY_Open</a> must have been called to obtain a valid opened device handle.</li>
 </ul></p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -78,8 +74,7 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element635">
-<li class="Element605">DRV_ETHPHY_RES_PENDING operation is ongoing</li>
-<li class="Element605">an <a href="00564.html" target="topic">DRV_ETHPHY_RESULT</a> error code if the procedure failed.</li>
+<li class="Element605"><a href="00503.html" target="topic">DRV_ETHPHY_CLIENT_STATUS</a> value describing the current status of the driver.</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -87,24 +82,22 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Use <a href="00455.html" target="topic">DRV_ETHPHY_ClientStatus</a>() and <a href="00453.html" target="topic">DRV_ETHPHY_ClientOperationResult</a>() to check when the operation was completed and its outcome.&nbsp;</p>
+This function will not block for hardware access and will immediately return the current status.&nbsp;</p>
 <p class="Element10">
-When operation is completed but negotiation has failed, <a href="00453.html" target="topic">DRV_ETHPHY_ClientOperationResult</a> will return:&nbsp;</p>
-<p class="Element10">
-
-<ul class="Element635">
-<li class="Element605">DRV_ETHPHY_RES_NEGOTIATION_INACTIVE if no negotiation in progress</li>
-<li class="Element605">DRV_ETHPHY_RES_NEGOTIATION_NOT_STARTED if negotiation not yet started yet (means time out if waitComplete was requested)</li>
-<li class="Element605">DRV_ETHPHY_RES_NEGOTIATION_ACTIVE if negotiation ongoing</li>
-</ul>(means time out if waitComplete was requested).&nbsp;</p>
-<p class="Element10">
-See also <a href="00512.html" target="topic">DRV_ETHPHY_NegotiationResultGet</a>.</p></div>
+This function has to be used to check that a driver operation has completed. It will return DRV_ETHPHY_CLIENT_STATUS_BUSY when an operation is in progress. It will return DRV_ETHPHY_CLIENT_STATUS_READY when the operation has completed.</p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">DRV_HANDLE phyHandle;  <i><span style="color: #008000">// Returned from DRV_ETHPHY_Open</span></i>
+<a href="00503.html" target="topic">DRV_ETHPHY_CLIENT_STATUS</a> phyClientStatus;
+
+phyClientStatus = DRV_ETHPHY_ClientStatus(phyHandle);
+<strong><span style="color: #000080">if</span></strong>(DRV_ETHPHY_CLIENT_STATUS_ERROR &gt;= phyClientStatus)
+{
+    <i><span style="color: #008000">// Handle the error</span></i>
+}</pre></div></div>
 </div>
 </div>
 </div>
@@ -112,7 +105,7 @@ Example</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00684.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00389.html" target="topic">Library Interface</a> &gt; e) Other Functions &gt; <a href="00511.html" target="topic">DRV_ETHPHY_NegotiationIsComplete Function</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00774.html" target="topic">Ethernet PHY Driver Library</a> &gt; <a href="00388.html" target="topic">Library Interface</a> &gt; b) Client Level Functions &gt; <a href="00511.html" target="topic">DRV_ETHPHY_ClientStatus Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -120,13 +113,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00563.html" target="topic">Previous</a> | <a href="00389.html" target="topic">Up</a> | <a href="00512.html" target="topic">Next</a></div>
+<a href="00512.html" target="topic">Previous</a> | <a href="00388.html" target="topic">Up</a> | <a href="00616.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_NegotiationIsComplete@DRV_HANDLE@DRV_ETHPHY_INTERFACE_INDEX@bool Topic Title: DRV_ETHPHY_NegotiationIsComplete Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ETHPHY_ClientStatus@DRV_HANDLE Topic Title: DRV_ETHPHY_ClientStatus Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

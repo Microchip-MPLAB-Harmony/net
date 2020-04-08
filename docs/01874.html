@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ARP_RESULT Enumeration</title>
+<title>Library Interface</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00286.html" target="topic">ARP Module</a> &gt; <a href="01396.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01874.html" target="topic">TCPIP_ARP_RESULT Enumeration</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04299.html" target="topic">Zeroconf Module</a> &gt; <a href="01874.html" target="topic">Library Interface</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01864.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01853.html" target="topic">Next</a></div>
+<a href="01867.html" target="topic">Previous</a> | <a href="04299.html" target="topic">Up</a> | <a href="03322.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_RESULT Topic Title: TCPIP_ARP_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ZEROCONF Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ARP_RESULT Enumeration</div>
+Library Interface</div>
 </div>
 </div>
 
@@ -49,138 +49,137 @@ TCPIP_ARP_RESULT Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enumeration: TCPIP_ARP_RESULT&nbsp;</p>
+This section describes the Application Programming Interface (API) functions of the Zeroconf module.&nbsp;</p>
 <p class="Element10">
-Various definitions for success and failure codes.</p></div>
+Refer to each section for a detailed description.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">ARP_RES_OK</span></strong> = 0,
-  <strong><span style="color: #000000">ARP_RES_ENTRY_NEW</span></strong>,
-  <strong><span style="color: #000000">ARP_RES_ENTRY_SOLVED</span></strong>,
-  <strong><span style="color: #000000">ARP_RES_ENTRY_QUEUED</span></strong>,
-  <strong><span style="color: #000000">ARP_RES_ENTRY_EXIST</span></strong>,
-  <strong><span style="color: #000000">ARP_RES_PERM_QUOTA_EXCEED</span></strong>,
-  <strong><span style="color: #000000">ARP_RES_PROBE_OK</span></strong>,
-  <strong><span style="color: #000000">ARP_RES_NO_ENTRY</span></strong> = -1,
-  <strong><span style="color: #000000">ARP_RES_CACHE_FULL</span></strong> = -2,
-  <strong><span style="color: #000000">ARP_RES_TX_FAILED</span></strong> = -3,
-  <strong><span style="color: #000000">ARP_RES_BAD_INDEX</span></strong> = -4,
-  <strong><span style="color: #000000">ARP_RES_BAD_ADDRESS</span></strong> = -5,
-  <strong><span style="color: #000000">ARP_RES_NO_INTERFACE</span></strong> = -6,
-  <strong><span style="color: #000000">ARP_RES_BAD_TYPE</span></strong> = -7,
-  <strong><span style="color: #000000">ARP_RES_CONFIGURE_ERR</span></strong> = -8,
-  <strong><span style="color: #000000">ARP_RES_PROBE_FAILED</span></strong> = -9
-} TCPIP_ARP_RESULT;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<a name="6129204D756C74696361737420444E532046756E6374696F6E73"></a><div class="Element14">
+a) Multicast DNS Functions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table4">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_OK = 0&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-operation succeeded&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_ENTRY_NEW&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-operation succeeded and a new entry was added&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_ENTRY_SOLVED&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the required entry is already solved&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_ENTRY_QUEUED&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the required entry was already queued&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_ENTRY_EXIST&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the required entry was already cached&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_PERM_QUOTA_EXCEED&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-info: the quota of permanent entries was exceeded&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_PROBE_OK&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-requested probe sent&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_NO_ENTRY = -1&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no such entry exists&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_CACHE_FULL = -2&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-the cache is full and no entry could be removed to make room&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_TX_FAILED = -3&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-failed to transmit an ARP message&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_BAD_INDEX = -4&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-bad query index&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_BAD_ADDRESS = -5&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-bad IP address specified&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_NO_INTERFACE = -6&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no such interface exists&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_BAD_TYPE = -7&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-no such type is valid/exists&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_CONFIGURE_ERR = -8&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-interface is configuring now, no ARP probes&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_RES_PROBE_FAILED = -9&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-requested probe failed&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03322.html" target="topic">TCPIP_MDNS_ServiceDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DNS Service Discovery function for end-user to deregister a service advertisement, which was previously registered with the <a href="03323.html" target="topic">TCPIP_MDNS_ServiceRegister</a> function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03323.html" target="topic">TCPIP_MDNS_ServiceRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DNS Service Discovery function for end-users to register a service advertisement. The service is associated with all interfaces.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03324.html" target="topic">TCPIP_MDNS_ServiceUpdate</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DNS-Service Discovery function for end-user to update the service advertisement, which was previously registered with <a href="03323.html" target="topic">TCPIP_MDNS_ServiceRegister</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03325.html" target="topic">TCPIP_MDNS_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
+<a name="6229204C696E6B204C6F63616C2046756E6374696F6E73"></a><div class="Element14">
+b) Link Local Functions</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04230.html" target="topic">TCPIP_ZCLL_Disable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Disables Zero Configuration on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04231.html" target="topic">TCPIP_ZCLL_Enable</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Enables Zero Configuration on the specified interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04232.html" target="topic">TCPIP_ZCLL_IsEnabled</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns whether or not an interface is enabled for zero configuration&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04233.html" target="topic">TCPIP_ZCLL_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="6329204461746120547970657320616E6420436F6E7374616E7473"></a><div class="Element14">
+c) Data Types and Constants</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04295.html" target="topic">ZCLL_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Placeholder for Zero Configuration Link Layer module configuration.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01109.html" target="topic">MDNSD_ERR_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+void DisplayHostName(uint8_t *HostName);&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00286.html" target="topic">ARP Module</a> &gt; <a href="01396.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01874.html" target="topic">TCPIP_ARP_RESULT Enumeration</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04299.html" target="topic">Zeroconf Module</a> &gt; <a href="01874.html" target="topic">Library Interface</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -188,13 +187,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01864.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01853.html" target="topic">Next</a></div>
+<a href="01867.html" target="topic">Previous</a> | <a href="04299.html" target="topic">Up</a> | <a href="03322.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_RESULT Topic Title: TCPIP_ARP_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ZEROCONF Library Interface Topic Title: Library Interface)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

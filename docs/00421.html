@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>drv_ethmac.h</title>
+<title>DRV_ENC28J60_CLIENT_INSTANCES_IDXx Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00683.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00374.html" target="topic">Files</a> &gt; <a href="00421.html" target="topic">drv_ethmac.h</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00741.html" target="topic">Configuring the Library</a> &gt; <a href="00421.html" target="topic">DRV_ENC28J60_CLIENT_INSTANCES_IDXx Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00374.html" target="topic">Previous</a> | <a href="00374.html" target="topic">Up</a> | <a href="01041.html" target="topic">Next</a></div>
+<a href="00431.html" target="topic">Previous</a> | <a href="00741.html" target="topic">Up</a> | <a href="00739.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: drv_ethmac.h Topic Title: drv_ethmac.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENC28J60_CLIENT_INSTANCES_IDXx Topic Title: DRV_ENC28J60_CLIENT_INSTANCES_IDXx Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-drv_ethmac.h</div>
+DRV_ENC28J60_CLIENT_INSTANCES_IDXx Macro</div>
 </div>
 </div>
 
@@ -46,259 +46,29 @@ drv_ethmac.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
-</div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
-<div class="Element11">
-<div class="Element10">
+ENC28J60 maximum number of clients&nbsp;</p>
 <p class="Element10">
-drv_ethmac.h</p></div>
+For example, DRV_ENC28J60_CLIENT_INSTANCES_IDX0 selects the maximum number of clients the ENC28J60 driver can support at run-time for instance 0</p></div>
 </div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">DRV_ENC28J60_CLIENT_INSTANCES_IDXx</span></strong> 1</pre></div></div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Ethernet MAC Device Driver Interface&nbsp;</p>
-<p class="Element10">
-The Ethernet MAC device driver provides a simple interface to manage the Ethernet peripheral. This file defines the interface definitions and prototypes for the Ethernet MAC driver.</p></div>
-</div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00425.html" target="topic">DRV_ETHMAC_PIC32MACClose</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Closes a client instance of the PIC32 MAC Driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00426.html" target="topic">DRV_ETHMAC_PIC32MACConfigGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current MAC driver configuration. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00427.html" target="topic">DRV_ETHMAC_PIC32MACDeinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Deinitializes the PIC32 Ethernet MAC. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00428.html" target="topic">DRV_ETHMAC_PIC32MACEventAcknowledge</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Acknowledges and re-enables processed events. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00429.html" target="topic">DRV_ETHMAC_PIC32MACEventMaskSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Enables/disables the MAC events. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00430.html" target="topic">DRV_ETHMAC_PIC32MACEventPendingGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Returns the currently pending events. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00431.html" target="topic">DRV_ETHMAC_PIC32MACInitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Initializes the PIC32 Ethernet MAC. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00432.html" target="topic">DRV_ETHMAC_PIC32MACLinkCheck</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Checks current link status. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00433.html" target="topic">DRV_ETHMAC_PIC32MACOpen</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Opens a client instance of the PIC32 MAC Driver. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00434.html" target="topic">DRV_ETHMAC_PIC32MACPacketRx</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is the MAC receive function. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00435.html" target="topic">DRV_ETHMAC_PIC32MACPacketTx</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-MAC driver transmit function. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00436.html" target="topic">DRV_ETHMAC_PIC32MACParametersGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-MAC parameter get function. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00437.html" target="topic">DRV_ETHMAC_PIC32MACPowerMode</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Selects the current power mode for the Ethernet MAC. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00438.html" target="topic">DRV_ETHMAC_PIC32MACProcess</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-MAC periodic processing function. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00439.html" target="topic">DRV_ETHMAC_PIC32MACRegisterStatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current MAC hardware statistics registers. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00440.html" target="topic">DRV_ETHMAC_PIC32MACReinitialize</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Reinitializes the PIC32 Ethernet MAC. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00441.html" target="topic">DRV_ETHMAC_PIC32MACRxFilterHashTableEntrySet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Sets the current MAC hash table receive filter. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00442.html" target="topic">DRV_ETHMAC_PIC32MACStatisticsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Gets the current MAC statistics. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00443.html" target="topic">DRV_ETHMAC_PIC32MACStatus</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Provides the current status of the MAC driver module. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00444.html" target="topic">DRV_ETHMAC_PIC32MACTasks</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Maintains the EThernet MAC driver's state machine. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00445.html" target="topic">DRV_ETHMAC_Tasks_ISR</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Ethernet MAC driver interrupt function. <br><strong>Implementation:</strong> Dynamic&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00422.html" target="topic">DRV_ETHMAC_INDEX_0</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Ethernet driver index definitions.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00423.html" target="topic">DRV_ETHMAC_INDEX_1</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro DRV_ETHMAC_INDEX_1.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00424.html" target="topic">DRV_ETHMAC_INDEX_COUNT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Number of valid Ethernet driver indices.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="53747275637475726573"></a><div class="Element14">
-Structures</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03264.html" target="topic">TCPIP_MODULE_MAC_PIC32INT_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Data that's passed to the MAC at initialization time as part of the <a href="03034.html" target="topic">TCPIP_MAC_INIT</a> data structure.&nbsp;</div></td></tr></table></div></div>
-</div>
+The instance number is suffixed with DRV_ENC28J60_CLIENT_INSTANCES_IDX</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00683.html" target="topic">Ethernet MAC Driver Library</a> &gt; <a href="00374.html" target="topic">Files</a> &gt; <a href="00421.html" target="topic">drv_ethmac.h</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00741.html" target="topic">Configuring the Library</a> &gt; <a href="00421.html" target="topic">DRV_ENC28J60_CLIENT_INSTANCES_IDXx Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -306,13 +76,13 @@ Data that's passed to the MAC at initialization time as part of the <a href="030
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00374.html" target="topic">Previous</a> | <a href="00374.html" target="topic">Up</a> | <a href="01041.html" target="topic">Next</a></div>
+<a href="00431.html" target="topic">Previous</a> | <a href="00741.html" target="topic">Up</a> | <a href="00739.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: drv_ethmac.h Topic Title: drv_ethmac.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_ENC28J60_CLIENT_INSTANCES_IDXx Topic Title: DRV_ENC28J60_CLIENT_INSTANCES_IDXx Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

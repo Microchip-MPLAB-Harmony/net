@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_IPV6_PutArray Macro</title>
+<title>TCPIP_IGMP_SOURCES_PER_GROUP Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02982.html" target="topic">TCPIP_IPV6_PutArray Macro</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00905.html" target="topic">IGMP Module</a> &gt; <a href="01651.html" target="topic">Configuring the Library</a> &gt; <a href="02982.html" target="topic">TCPIP_IGMP_SOURCES_PER_GROUP Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00968.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="02957.html" target="topic">Next</a></div>
+<a href="02981.html" target="topic">Previous</a> | <a href="01651.html" target="topic">Up</a> | <a href="02986.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_PutArray Topic Title: TCPIP_IPV6_PutArray Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_SOURCES_PER_GROUP Topic Title: TCPIP_IGMP_SOURCES_PER_GROUP Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_IPV6_PutArray Macro</div>
+TCPIP_IGMP_SOURCES_PER_GROUP Macro</div>
 </div>
 </div>
 
@@ -49,68 +49,28 @@ TCPIP_IPV6_PutArray Macro</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function writes data to an outgoing packet.</p></div>
+maximum number of unicast sources per group a IGMP application can <a href="01105.html" target="topic">listen</a> to Each unicast source can be used by multiple sockets Should be prime number for best performance</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_IPV6_PutArray</span></strong>(pkt,data,len) <a href="02944.html" target="topic">TCPIP_IPV6_ArrayPutHelper</a>(pkt, data, <a href="00930.html" target="topic">IPV6_DATA_PIC_RAM</a>, len)</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-TCPIP_IPV6_Initialize is required. <a href="02954.html" target="topic">TCPIP_IPV6_InterfaceIsReady</a> should be true. The <a href="02987.html" target="topic">TCPIP_IPV6_TxIsPutReady</a> function must have returned a value greater than or equal to 'len'.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-ptrPacket&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The packet&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-dataSource&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Pointer to the data to copy to the packet&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-len&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-Length of the data&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-unsigned short - The number of bytes of data written.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_IGMP_SOURCES_PER_GROUP</span></strong> 11</pre></div></div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+TCPIP_IGMP_ASM_ALL_SOURCES may take a slot!&nbsp;</p>
+<p class="Element10">
+Should be &lt;= 32&nbsp;</p>
+<p class="Element10">
+if <a href="02990.html" target="topic">TCPIP_IGMPV2_SUPPORT_ONLY</a> is enabled then this value is ignored</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="02982.html" target="topic">TCPIP_IPV6_PutArray Macro</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00905.html" target="topic">IGMP Module</a> &gt; <a href="01651.html" target="topic">Configuring the Library</a> &gt; <a href="02982.html" target="topic">TCPIP_IGMP_SOURCES_PER_GROUP Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -118,13 +78,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00968.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="02957.html" target="topic">Next</a></div>
+<a href="02981.html" target="topic">Previous</a> | <a href="01651.html" target="topic">Up</a> | <a href="02986.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_PutArray Topic Title: TCPIP_IPV6_PutArray Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_SOURCES_PER_GROUP Topic Title: TCPIP_IGMP_SOURCES_PER_GROUP Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

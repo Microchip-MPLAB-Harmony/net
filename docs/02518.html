@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_CurrentConnectionStatusGet Function</title>
+<title>TCPIP_FTPC_FILE_OPT_TYPE Structure</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00720.html" target="topic">HTTP Module</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; <a href="01510.html" target="topic">a) Functions</a> &gt; <a href="02518.html" target="topic">TCPIP_HTTP_CurrentConnectionStatusGet Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01592.html" target="topic">FTP Client Module</a> &gt; <a href="01593.html" target="topic">Library Interface</a> &gt; <a href="01588.html" target="topic">d) Data Types and Constants</a> &gt; <a href="02518.html" target="topic">TCPIP_FTPC_FILE_OPT_TYPE Structure</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02515.html" target="topic">Previous</a> | <a href="01510.html" target="topic">Up</a> | <a href="02559.html" target="topic">Next</a></div>
+<a href="02505.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02530.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_CurrentConnectionStatusGet@HTTP_CONN_HANDLE Topic Title: TCPIP_HTTP_CurrentConnectionStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_FILE_OPT_TYPE Topic Title: TCPIP_FTPC_FILE_OPT_TYPE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_CurrentConnectionStatusGet Function</div>
+TCPIP_FTPC_FILE_OPT_TYPE Structure</div>
 </div>
 </div>
 
@@ -49,67 +49,60 @@ TCPIP_HTTP_CurrentConnectionStatusGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function returns the current HTTP status of the selected HTTP connection.</p></div>
+Structure: TCPIP_FTPC_FILE_OPT_TYPE&nbsp;</p>
+<p class="Element10">
+This data structure describes the FTPC file handling parameters.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00752.html" target="topic">HTTP_STATUS</a> <strong><span style="color: #000000">TCPIP_HTTP_CurrentConnectionStatusGet</span></strong>(
-    <a href="00723.html" target="topic">HTTP_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">struct</span></strong> {
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">serverPathName</span></strong>;
+  <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000080">char</span></strong> * <strong><span style="color: #000000">clientPathName</span></strong>;
+  <strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">store_unique</span></strong>;
+} TCPIP_FTPC_FILE_OPT_TYPE;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
+<div class="Element272">
 <div class="TableDiv">
-<table cellspacing="0" class="Table3">
+<table cellspacing="0" class="Table4">
 <tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-HTTP connection handle&nbsp;</div></td></tr></table></div></div>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char * serverPathName;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+pathname/filename to read/write at FTP Server&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+const char * clientPathName;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+pathname/filename to read/write at FTP Client&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+bool store_unique;&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+to store file at server with unique name; STOU command&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52657475726E73"></a><div class="Element14">
-Returns</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-A <a href="00752.html" target="topic">HTTP_STATUS</a> value.</p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
-</div>
-<a name="4578616D706C65"></a><div class="Element14">
-Example</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">  <a href="00752.html" target="topic">HTTP_STATUS</a> currStat =  TCPIP_HTTP_CurrentConnectionStatusGet(connHandle);</pre></div></div>
-</div>
+None</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00720.html" target="topic">HTTP Module</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; <a href="01510.html" target="topic">a) Functions</a> &gt; <a href="02518.html" target="topic">TCPIP_HTTP_CurrentConnectionStatusGet Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01592.html" target="topic">FTP Client Module</a> &gt; <a href="01593.html" target="topic">Library Interface</a> &gt; <a href="01588.html" target="topic">d) Data Types and Constants</a> &gt; <a href="02518.html" target="topic">TCPIP_FTPC_FILE_OPT_TYPE Structure</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -117,13 +110,13 @@ Example</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02515.html" target="topic">Previous</a> | <a href="01510.html" target="topic">Up</a> | <a href="02559.html" target="topic">Next</a></div>
+<a href="02505.html" target="topic">Previous</a> | <a href="01588.html" target="topic">Up</a> | <a href="02530.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_CurrentConnectionStatusGet@HTTP_CONN_HANDLE Topic Title: TCPIP_HTTP_CurrentConnectionStatusGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_FTPC_FILE_OPT_TYPE Topic Title: TCPIP_FTPC_FILE_OPT_TYPE Structure)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Running the Demonstration</title>
+<title>Building the Application</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00265.html" target="topic">web_net_server_nvm_mpfs</a> &gt; <a href="00269.html" target="topic">Running the Demonstration</a></div>
+<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00222.html" target="topic">web_server_nvm_mpfs</a> &gt; <a href="00269.html" target="topic">Building the Application</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00266.html" target="topic">Previous</a> | <a href="00265.html" target="topic">Up</a> | <a href="00223.html" target="topic">Next</a></div>
+<a href="00222.html" target="topic">Previous</a> | <a href="00222.html" target="topic">Up</a> | <a href="00223.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_net_server_nvm_mpfs_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_server_nvm_mpfs_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Running the Demonstration</div>
+Building the Application</div>
 </div>
 </div>
 
@@ -49,89 +49,121 @@ Running the Demonstration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-To view the web page hosted by the demonstration application, open a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, http://mchpboard_c or https://mchpboard_c), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00352.html" target="topic">here</a>.&nbsp;</p>
+The following table lists the MPLAB X projects available for this demonstration. These projects are available inside <span class="Element146">&lt;install-dir&gt;/net/apps/web_server_nvm_mpfs/firmware</span>.&nbsp;</p>
 <p class="Element10">
-&nbsp;</p>
+To build this project, open the &lt;project name&gt;.X project in MPLAB X IDE.</p><div class="Element15">
+MPLAB X IDE Project</div>
 <p class="Element10">
-<strong>For SAM E70/V71 Xplained Ultra, SAM E54 Xplained Pro Evaluation Kits</strong>&nbsp;</p>
+This table lists the name and location of the MPLAB X IDE project folder for the demonstration.&nbsp;</p>
 <p class="Element10">
-Please use the following procedure to run the demonstration:
-<ol class="Element634">
-<li value="1" class="Element604">Configure the Development Board as given <a href="00224.html" target="topic">here</a>. For <strong>SAM E70</strong> <strong>Xplained Ultra m</strong>ake sure jumper <strong>J805 </strong>has been removed.</li>
-<li value="2" class="Element604">Make the demonstration setup as shown <a href="00352.html" target="topic">here</a>.</li>
-<li value="3" class="Element604">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element604">A virtual COM port will be detected on the computer, when the USB cable is connected.</li>
-<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element604">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element604">Restart the demonstration by pressing the 'RESET' button on the board.</li>
-<li value="8" class="Element604">See that the initialization prints on the serial port terminal.</li>
-<li value="9" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
-</ol>&nbsp;</p>
-<p class="Element10">
-<strong>For PIC32MZ Starter Kits</strong>
-<ol class="Element634">
-<li value="1" class="Element604">Configure the Development Board as given <a href="00268.html" target="topic">here</a>.</li>
-<li value="2" class="Element604">Make the demonstration setup as shown <a href="00352.html" target="topic">here</a>.</li>
-<li value="3" class="Element604">Build and download the demonstration project on the target board.</li>
-<li value="4" class="Element604">A virtual COM port will be detected on the computer, when the USB cable is connected to USB-UART connector.</li>
-<li value="5" class="Element604">Open a standard terminal application on the computer (like Hyper-terminal or Tera Term) and configure the virtual COM port.</li>
-<li value="6" class="Element604">Set the serial baud rate to 115200 baud in the terminal application.</li>
-<li value="7" class="Element604">See that the initialization prints on the serial port terminal.</li>
-<li value="8" class="Element604">When the DHCP client is enabled in the demonstration, wait for the DHCP server to assign an IP address for the development board. This will be printed on the serial port terminal.</li>
-</ol>&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-An HTTP server is hosted by the demonstration application. Open<span style="color: #FFFFFF">_</span>a web browser and direct it to the board running the HTTP server by typing the URL in the address bar (for example, https://mchpboard_c), and then pressing <strong>Enter</strong>. Refer to Note 4 &amp; 5 <a href="00352.html" target="topic">here</a>.&nbsp;</p>
-<p class="Element10">
-&nbsp;</p>
-<p class="Element10">
-The demonstration application features following:
-<ul class="Element634">
-<li class="Element604"><i>Real-time Hardware Control and Dynamic Variables</i> - On the Overview page the LEDs can be clicked to toggle the LEDs on the Microchip hardware development board. The SWITCHes on the Microchip hardware development board can be pressed to toggle the Buttons on the web page. The dynamic variables can be updated in real-time on the HTTP server.</li>
-</ul></p><div class="Element63">
+&nbsp;</p><div class="Element63">
 <div class="TableDiv">
-<table cellspacing="0" class="Table0">
+<table cellspacing="0" class="Table2">
 <tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
+<td class="Element65" valign="top" width="9%">
+<div class="Element66">
+Project Name&nbsp;</div></td><td class="Element65" valign="top" width="6%">
+<div class="Element66">
+Target Device&nbsp;</div></td><td class="Element65" valign="top" width="14%">
+<div class="Element66">
+Target Development Board&nbsp;</div></td><td class="Element65" valign="top" width="71%">
+<div class="Element66">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
 <div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Note:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
+sam_e70_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
 <div class="Element68">
-For the LED and SWITCH functionality portion of the demonstration, configure the GPIOs connected to LEDs and Switches on Microchip hardware development board, through the Pin Configuration manager in MPLAB® Harmony Configurator (MHC).&nbsp;</div></td></tr></table></div></div>
+ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_e70_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAME70Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+SAME70 Xplained Ultra + LAN8740 PHY Daughter board&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with ATSAME70Q21B device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_v71_xult.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_v71_xult_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAMV71Q21B&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+SAMV71 Xplained Ultra&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with ATSAMV71Q21B device and on-board KSZ8061 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_e54_xpro.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with ATSAME54P20A device and on-board KSZ8091 PHY. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+sam_e54_xpro_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+ATSAME54P20A&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+SAME54 Xplained Pro&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with ATSAME54P20A device and on-board KSZ8091 PHY. This implementation is based on FreeRTOS.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+pic32mz_ef_sk.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This is a bare-metal (non-RTOS) implementation.&nbsp;</div></td></tr><tr>
+<td class="Element67" valign="top" width="9%">
+<div class="Element68">
+pic32mz_ef_sk_freertos.X&nbsp;</div></td><td class="Element67" valign="top" width="6%">
+<div class="Element68">
+PIC32MZ2048EFH144&nbsp;</div></td><td class="Element67" valign="top" width="14%">
+<div class="Element68">
+PIC32MZ EF Starter Kit&nbsp;</div></td><td class="Element67" valign="top" width="71%">
+<div class="Element68">
+Demonstrates the old TCP/IP Web Server on a development board with PIC32MZ2048EFH144 device and LAN8740 PHY daughter board. This implementation is based on FreeRTOS.&nbsp;</div></td></tr></table></div></div>
 <p class="Element10">
-
-<ul class="Element634">
-<li class="Element604"><i>Form Processing</i> - Input can be handled from the client by using the GET and POST methods (this functionality controls the on-board LEDs and is operational only on the Explorer 16 Development Board)</li>
-<li class="Element604"><i>Authentication</i> - Shows an example of the commonly used restricted access feature</li>
-<li class="Element604"><i>Cookies</i> - Shows an example of storing small text strings on the client side</li>
-<li class="Element604"><i>Server Side Includes</i> - An example of how SSI can be used to support dynamic content</li>
-<li class="Element604"><i>File Uploads</i> - Shows an example of a file upload using the POST method. The HTTP server can<span style="color: #FFFFFF">_</span>accept<span style="color: #FFFFFF">_</span>a user-defined MPFS/MPFS2 image file for web pages.</li>
-<li class="Element604"><i>Send E-mail</i> - Shows simple SMTP POST methods</li>
-<li class="Element604"><i>Dynamic DNS</i> - Exercises Dynamic DNS capabilities</li>
-<li class="Element604"><i>Network Configuration</i> - The MAC address, host name, and IP address of the evaluation kit can be viewed in the Network Configuration page and some configurations can be updated</li>
-<li class="Element604"><i>MPFS Upload</i> - A new set of web pages can be uploaded to the web server using this feature, which is accessed through <a href="#" onclick="openExternalLink('http://mchpboard_c/mpfsupload');"><img src="indicator_external_link.gif" border="0" alt="" title="">http://mchpboard_c/mpfsupload</a></li>
-</ul></p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="Note Icon.png" border="0" alt="" title=""> <strong>Notes:</strong>&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-
-<ol class="Element634">
-<li value="1" class="Element604">The location of the MPFS image is fixed at the beginning of the Flash page specified by DRV_MEMORY_DEVICE_START_ADDRESS. The size of the MPFS upload is limited to DRV_MEMORY_DEVICE_MEDIA_SIZE in the demonstration.</li>
-<li value="2" class="Element604">The HTTP File Upload functionality has to be enabled when the project is generated.</li>
-</ol>&nbsp;</div></td></tr></table></div></div>
+&nbsp;</p>
 <p class="Element10">
-<img src="web_net_server.png" border="0" alt="" title=""></p></div>
+The following Project Graph diagram shows the Harmony components included in the bare-metal TCP/IP Web Server demonstration application.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="tcpip_root_3.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="tcpip_layer_3.png" border="0" alt="" title="">&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="tcpip_app_layer_3.png" border="0" alt="" title="">&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01327.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00217.html" target="topic">Demonstrations</a> &gt; <a href="00265.html" target="topic">web_net_server_nvm_mpfs</a> &gt; <a href="00269.html" target="topic">Running the Demonstration</a></div>
+<a href="01424.html" target="topic">TCP/IP Demonstrations</a> &gt; <a href="00216.html" target="topic">Demonstrations</a> &gt; <a href="00222.html" target="topic">web_server_nvm_mpfs</a> &gt; <a href="00269.html" target="topic">Building the Application</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -139,13 +171,13 @@ For the LED and SWITCH functionality portion of the demonstration, configure the
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00266.html" target="topic">Previous</a> | <a href="00265.html" target="topic">Up</a> | <a href="00223.html" target="topic">Next</a></div>
+<a href="00222.html" target="topic">Previous</a> | <a href="00222.html" target="topic">Up</a> | <a href="00223.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_net_server_nvm_mpfs_run Topic Title: Running the Demonstration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: APPS TCPIP web_server_nvm_mpfs_build Topic Title: Building the Application)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

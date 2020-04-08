@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Support</title>
+<title>DRV_MIIM_Reinitialize Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00709.html" target="topic">Support</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01116.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Library Interface</a> &gt; <a href="00415.html" target="topic">a) Functions</a> &gt; <a href="00709.html" target="topic">DRV_MIIM_Reinitialize Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01038.html" target="topic">Previous</a> | <a href="00697.html" target="topic">Next</a></div>
+<a href="00708.html" target="topic">Previous</a> | <a href="00415.html" target="topic">Up</a> | <a href="00712.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Support Topic Title: Support)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Reinitialize@SYS_MODULE_OBJ@SYS_MODULE_INIT * const Topic Title: DRV_MIIM_Reinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Support</div>
+DRV_MIIM_Reinitialize Function</div>
 </div>
 </div>
 
@@ -49,56 +49,49 @@ Support</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This section provides support information for MPLAB Harmony.</p></div>
+This function reinitializes the driver and refreshes any associated hardware settings using the initialization data given, but it will not interrupt any ongoing operations.</p></div>
 </div>
-<a name="546F70696373"></a><div class="Element14">
-Topics</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">DRV_MIIM_Reinitialize</span></strong>(
+    SYS_MODULE_OBJ <strong><span style="color: #000000">object</span></strong>, 
+    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INIT * <strong><span style="color: #000080">const</span></strong> <strong><span style="color: #000000">init</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="35%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00697.html" target="topic">Using the Help</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic contains general information that is useful to know to maximize using the MPLAB Harmony help.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00704.html" target="topic">Help Features</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Describes the features available in the Help files provided in MPLAB Harmony.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00710.html" target="topic">Microchip Website</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides general information on the Microchip website.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00706.html" target="topic">Microchip Forums</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information on the Microchip Web Forums.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00701.html" target="topic">Customer Support</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic provides information for obtaining support from Microchip.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00699.html" target="topic">Contact Microchip Technology</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Worldwide sales and service contact information for Microchip Technology Inc.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="35%">
-<div class="Element203">
-<a href="00703.html" target="topic">Glossary</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This topic contains a glossary of general MPLAB Harmony terms.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+The <a href="00677.html" target="topic">DRV_MIIM_Initialize</a> function must have been called before calling this routine and a valid SYS_MODULE_OBJ must have been returned.</p></div>
+</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+None.</p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">This function can be called multiple times to reinitialize the module.</li>
+<li class="Element605">This operation can be used to refresh any supported hardware registers as specified by the initialization data or to change the power state of the module.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">This function is currently NOT IMPLEMENTED.</li>
+</ul></p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
 </div>
 </div>
 </div>
@@ -106,7 +99,7 @@ This topic contains a glossary of general MPLAB Harmony terms.&nbsp;</div></td><
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00709.html" target="topic">Support</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01116.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Library Interface</a> &gt; <a href="00415.html" target="topic">a) Functions</a> &gt; <a href="00709.html" target="topic">DRV_MIIM_Reinitialize Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -114,13 +107,13 @@ This topic contains a glossary of general MPLAB Harmony terms.&nbsp;</div></td><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01038.html" target="topic">Previous</a> | <a href="00697.html" target="topic">Next</a></div>
+<a href="00708.html" target="topic">Previous</a> | <a href="00415.html" target="topic">Up</a> | <a href="00712.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Support Topic Title: Support)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Reinitialize@SYS_MODULE_OBJ@SYS_MODULE_INIT * const Topic Title: DRV_MIIM_Reinitialize Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

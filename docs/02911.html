@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_IPV4_MacPacketTransmit Function</title>
+<title>TCPIP_ICMP_EchoRequestCancel Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00856.html" target="topic">IPv4 Module</a> &gt; <a href="01579.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02911.html" target="topic">TCPIP_IPV4_MacPacketTransmit Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00858.html" target="topic">ICMP Module</a> &gt; <a href="01636.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02911.html" target="topic">TCPIP_ICMP_EchoRequestCancel Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02940.html" target="topic">Previous</a> | <a href="01579.html" target="topic">Up</a> | <a href="02926.html" target="topic">Next</a></div>
+<a href="02910.html" target="topic">Previous</a> | <a href="01636.html" target="topic">Up</a> | <a href="00869.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_MacPacketTransmit@TCPIP_MAC_PACKET*@TCPIP_NET_HANDLE@IPV4_ADDR* Topic Title: TCPIP_IPV4_MacPacketTransmit Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequestCancel@TCPIP_ICMP_REQUEST_HANDLE Topic Title: TCPIP_ICMP_EchoRequestCancel Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_IPV4_MacPacketTransmit Function</div>
+TCPIP_ICMP_EchoRequestCancel Function</div>
 </div>
 </div>
 
@@ -49,51 +49,19 @@ TCPIP_IPV4_MacPacketTransmit Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The function is a helper to transmit a fully constructed MAC packet over an interface. The MAC packet is supposed to have all the fields properly constructed (including the TCPIP_MAC_ETHERNET_HEADER fields). The MAC packet does not need ARP resolution since the DestMACAddr is already known. The packet acknowledge function should be properly set (it will be called by the MAC driver once the packet is transmitted).</p></div>
+This function allows a stack client to cancel a pending ICMP echo request. The request should have been previously scheduled with <a href="02910.html" target="topic">TCPIP_ICMP_EchoRequest</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_IPV4_MacPacketTransmit</span></strong>(
-    <a href="03062.html" target="topic">TCPIP_MAC_PACKET</a>* <strong><span style="color: #000000">pPkt</span></strong>, 
-    <a href="03295.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">hNet</span></strong>, 
-    IPV4_ADDR* <strong><span style="color: #000000">pDestAddress</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="00861.html" target="topic">ICMP_ECHO_RESULT</a> <strong><span style="color: #000000">TCPIP_ICMP_EchoRequestCancel</span></strong>(
+    <a href="02915.html" target="topic">TCPIP_ICMP_REQUEST_HANDLE</a> <strong><span style="color: #000000">icmpHandle</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-pPkt should have been properly formatted and constructed into a valid MAC packet that can go out over an interface pDestAddress - valid pointer</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pPkt&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-the packet to be transmitted&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hNet&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-interface over which the packet is to be transmitted&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-pDestAddress&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-the IPv4 packet destination address It is used only for routing purposes, to decide if the packet is routed internally or sent to the network interface&nbsp;</div></td></tr></table></div></div>
-</div>
+The TCP/IP Stack must be initialized and up and running. Valid handle obtained using <a href="02910.html" target="topic">TCPIP_ICMP_EchoRequest</a>.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -102,8 +70,12 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element634">
-<li class="Element604">true - if the packet was handed to the MAC or queued internally</li>
-<li class="Element604">false - the packet cannot be transmitted (wrong interface, etc.) </li>
+<li class="Element604">ICMP_ECHO_OK - Indicates the cancel request was successful</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element634">
+<li class="Element604">ICMP_ECHO_BAD_HANDLE - No such request is currently scheduled Invalid handle </li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -111,16 +83,21 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Only single packets can be transmitted. Chained packets are not supported for now.&nbsp;</p>
-<p class="Element10">
-The packet could be composed of multiple fragments. If the transmission fails, some fragments could have been transmitted while other failed. The flag TCPIP_MAC_PKT_FLAG_QUEUED could be used to determine which fragments didn't make it through.</p></div>
+None</p></div>
+</div>
+<a name="4578616D706C65"></a><div class="Element14">
+Example</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element13"><div class="Element12"><pre class="Element12"></pre></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00856.html" target="topic">IPv4 Module</a> &gt; <a href="01579.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02911.html" target="topic">TCPIP_IPV4_MacPacketTransmit Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00858.html" target="topic">ICMP Module</a> &gt; <a href="01636.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02911.html" target="topic">TCPIP_ICMP_EchoRequestCancel Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +105,13 @@ The packet could be composed of multiple fragments. If the transmission fails, s
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02940.html" target="topic">Previous</a> | <a href="01579.html" target="topic">Up</a> | <a href="02926.html" target="topic">Next</a></div>
+<a href="02910.html" target="topic">Previous</a> | <a href="01636.html" target="topic">Up</a> | <a href="00869.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV4_MacPacketTransmit@TCPIP_MAC_PACKET*@TCPIP_NET_HANDLE@IPV4_ADDR* Topic Title: TCPIP_IPV4_MacPacketTransmit Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ICMP_EchoRequestCancel@TCPIP_ICMP_REQUEST_HANDLE Topic Title: TCPIP_ICMP_EchoRequestCancel Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Library</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00768.html" target="topic">ICMP Module</a> &gt; <a href="01533.html" target="topic">Building the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00352.html" target="topic">DHCP Server Module</a> &gt; <a href="01533.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02803.html" target="topic">Previous</a> | <a href="00768.html" target="topic">Up</a> | <a href="01539.html" target="topic">Next</a></div>
+<a href="01536.html" target="topic">Previous</a> | <a href="00352.html" target="topic">Up</a> | <a href="02080.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPSERVER Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Library</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,81 +49,105 @@ Building the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/tcpip</span>.</p><div class="Element15">
-Interface File(s)</div>
+The configuration of the DHCP Server TCP/IP Stack is based on the file <span class="Element146"><a href="00357.html" target="topic">dhcps_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
 <p class="Element10">
-This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
+This header file contains the configuration selection for the DHCP Server TCP/IP Stack. Based on the selections made, the DHCP Server TCP/IP Stack may support the selected features. These configuration settings will apply to all instances of the DHCP Server TCP/IP Stack.&nbsp;</p>
+<p class="Element10">
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01424.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table2">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element65" valign="top" width="32%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
-<div class="Element66">
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="32%">
-<div class="Element68">
-<span class="Element146">/tcpip.h</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
-<div class="Element68">
-Header file that includes all of the TCP/IP modules.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Required File(s)</div>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
-<p class="Element10">
-This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="48%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="48%">
-<div class="Element68">
-<span class="Element146">/src/icmp.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
-<div class="Element68">
-ICMP implementation file.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Optional File(s)</div>
-<p class="Element10">
-This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="24%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Module Dependencies</div>
-<p class="Element10">
-The ICMP module depends on the following modules:
-<ul class="Element634">
-<li class="Element604"><a href="01011.html" target="topic">TCP/IP Stack Library</a></li>
-<li class="Element604"><a href="00856.html" target="topic">IPv4 Module</a></li>
-</ul></p></div>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02080.html" target="topic">TCPIP_DHCPS_DEFAULT_IP_ADDRESS_RANGE_START</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+These below IPv4 DHCP server address details are default address and it is assigned to the network default network interface. for Other interfaces , tcpip_stack_init.c file should be use to configure DHCP_POOL_CONFIG[]. IPv4 Address range is starting from 100, because the from 1 to 100 is reserved. Reserved Address will be used for the gateway address. Start of IP address Range , network_config.h ipaddress and this start of IP address should be in same SUBNET RECOMENDED - network_config.h ipaddress should be 192.168.1.1 if DHCP server ip address range starts from 192.168.1.100.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02081.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_IP_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP server Address per interface. DHCP server Address selection should be in the same subnet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02082.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_NETMASK_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP server subnet Address per interface.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02083.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_PRIMARY_DNS_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP server DNS primary Address&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02084.html" target="topic">TCPIP_DHCPS_DEFAULT_SERVER_SECONDARY_DNS_ADDRESS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCP server DNS Secondary Address&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02089.html" target="topic">TCPIP_DHCPS_LEASE_DURATION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for a solved entry in the cache, in seconds the entry will be removed if the TMO elapsed and the entry has not been referenced again&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02090.html" target="topic">TCPIP_DHCPS_LEASE_ENTRIES_DEFAULT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+The Maximum Number of entries in the lease table Default total number of entries for all the the interface&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02096.html" target="topic">TCPIP_DHCPS_LEASE_REMOVED_BEFORE_ACK</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for a unsolved entry , in seconds and should be removed from the entry if there is no REQUEST after OFFER&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02097.html" target="topic">TCPIP_DHCPS_LEASE_SOLVED_ENTRY_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Timeout for a solved entry in the cache, in seconds. The entry will be removed if the TMO lapsed and the entry has not been referenced again&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02111.html" target="topic">TCPIP_DHCPS_TASK_PROCESS_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+DHCPS task processing rate, in milliseconds. The DHCPS module will process a timer event with this rate for maintaining its own queues, processing timeouts, etc. Choose it so that the other TMO are multiple of this The default value is 200 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03904.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00768.html" target="topic">ICMP Module</a> &gt; <a href="01533.html" target="topic">Building the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00352.html" target="topic">DHCP Server Module</a> &gt; <a href="01533.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -131,13 +155,13 @@ The ICMP module depends on the following modules:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02803.html" target="topic">Previous</a> | <a href="00768.html" target="topic">Up</a> | <a href="01539.html" target="topic">Next</a></div>
+<a href="01536.html" target="topic">Previous</a> | <a href="00352.html" target="topic">Up</a> | <a href="02080.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ICMP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCPSERVER Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

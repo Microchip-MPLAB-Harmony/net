@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>DRV_MIIM_Open Function</title>
+<title>DRV_GMAC_EventAcknowledge Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01026.html" target="topic">MIIM Driver Library</a> &gt; <a href="00418.html" target="topic">Library Interface</a> &gt; <a href="00416.html" target="topic">a) Functions</a> &gt; <a href="00643.html" target="topic">DRV_MIIM_Open Function</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00772.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00404.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00643.html" target="topic">DRV_GMAC_EventAcknowledge Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00621.html" target="topic">Previous</a> | <a href="00416.html" target="topic">Up</a> | <a href="00649.html" target="topic">Next</a></div>
+<a href="00651.html" target="topic">Previous</a> | <a href="00404.html" target="topic">Up</a> | <a href="00644.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Open@SYS_MODULE_INDEX@DRV_IO_INTENT Topic Title: DRV_MIIM_Open Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_EventAcknowledge@DRV_HANDLE@TCPIP_MAC_EVENT Topic Title: DRV_GMAC_EventAcknowledge Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-DRV_MIIM_Open Function</div>
+DRV_GMAC_EventAcknowledge Function</div>
 </div>
 </div>
 
@@ -49,20 +49,20 @@ DRV_MIIM_Open Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function opens the specified MIIM driver instance and provides a handle that must be provided to all other client-level operations to identify the caller and the instance of the driver.</p></div>
+This function acknowledges and re-enables processed events. Multiple events can be ORed together as they are processed together. The events acknowledged by this function should be the events that have been retrieved from the stack by calling <a href="00645.html" target="topic">DRV_GMAC_EventPendingGet</a>() or have been passed to the stack by the driver using the registered notification handler and have been processed and have to be re-enabled.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">DRV_HANDLE <strong><span style="color: #000000">DRV_MIIM_Open</span></strong>(
-    <strong><span style="color: #000080">const</span></strong> SYS_MODULE_INDEX <strong><span style="color: #000000">drvIndex</span></strong>, 
-    <strong><span style="color: #000080">const</span></strong> DRV_IO_INTENT <strong><span style="color: #000000">intent</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">DRV_GMAC_EventAcknowledge</span></strong>(
+    DRV_HANDLE <strong><span style="color: #000000">hMac</span></strong>, 
+    <a href="03104.html" target="topic">TCPIP_MAC_EVENT</a> <strong><span style="color: #000000">tcpAckEv</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The <a href="00621.html" target="topic">DRV_MIIM_Initialize</a> function must have been called before calling this function.</p></div>
+<a href="00647.html" target="topic">DRV_GMAC_Initialize</a>() should have been called. <a href="00649.html" target="topic">DRV_GMAC_Open</a>() should have been called to obtain a valid handle.</p></div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
 Returns</div>
@@ -71,8 +71,8 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element635">
-<li class="Element605">valid open-instance handle if successful (a number identifying both the caller and the module instance).</li>
-<li class="Element605">DRV_HANDLE_INVALID if an error occurs</li>
+<li class="Element605">true if events acknowledged</li>
+<li class="Element605">false if no events to be acknowledged</li>
 </ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
@@ -80,21 +80,36 @@ Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The handle returned is valid until the <a href="00611.html" target="topic">DRV_MIIM_Close</a> routine is called.&nbsp;</p>
+
+<ul class="Element635">
+<li class="Element605">All events should be acknowledged, in order to be re-enabled.</li>
+</ul>&nbsp;</p>
 <p class="Element10">
-This function will NEVER block waiting for hardware.</p></div>
+
+<ul class="Element635">
+<li class="Element605">Some events are fatal errors and should not be acknowledged ( TCPIP_MAC_EV_RX_BUSERR, TCPIP_MAC_EV_TX_BUSERR). Driver/stack re-initialization is needed under such circumstances.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">Some events are just system/application behavior and they are intended only as simple info (TCPIP_MAC_EV_RX_OVFLOW, TCPIP_MAC_EV_RX_BUFNA, TCPIP_MAC_EV_TX_ABORT, TCPIP_MAC_EV_RX_ACT).</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">The TCPIP_MAC_EV_RX_FWMARK and TCPIP_MAC_EV_RX_EWMARK events are part of the normal flow control operation (if auto flow control was enabled). They should be enabled alternatively, if needed.</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+
+<ul class="Element635">
+<li class="Element605">The events are persistent. They shouldn't be re-enabled unless they have been processed and the condition that generated them was removed. Re-enabling them immediately without proper processing will have dramatic effects on system performance.</li>
+</ul></p></div>
 </div>
 <a name="4578616D706C65"></a><div class="Element14">
 Example</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element13"><div class="Element12"><pre class="Element12">DRV_HANDLE  handle;
-
-handle = DRV_MIIM_Open(<a href="00616.html" target="topic">DRV_MIIM_INDEX_0</a>, 0);
-<strong><span style="color: #000080">if</span></strong> (DRV_HANDLE_INVALID == handle)
-{
-    <i><span style="color: #008000">// Unable to open the driver</span></i>
-}</pre></div></div>
+<div class="Element13"><div class="Element12"><pre class="Element12">    DRV_GMAC_EventAcknowledge( hMac, stackNewEvents );</pre></div></div>
 </div>
 </div>
 </div>
@@ -102,7 +117,7 @@ handle = DRV_MIIM_Open(<a href="00616.html" target="topic">DRV_MIIM_INDEX_0</a>,
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01477.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01026.html" target="topic">MIIM Driver Library</a> &gt; <a href="00418.html" target="topic">Library Interface</a> &gt; <a href="00416.html" target="topic">a) Functions</a> &gt; <a href="00643.html" target="topic">DRV_MIIM_Open Function</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00772.html" target="topic">Ethernet GMAC Driver Library</a> &gt; <a href="00404.html" target="topic">Library Interface</a> &gt; d) Event Functions &gt; <a href="00643.html" target="topic">DRV_GMAC_EventAcknowledge Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +125,13 @@ handle = DRV_MIIM_Open(<a href="00616.html" target="topic">DRV_MIIM_INDEX_0</a>,
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00621.html" target="topic">Previous</a> | <a href="00416.html" target="topic">Up</a> | <a href="00649.html" target="topic">Next</a></div>
+<a href="00651.html" target="topic">Previous</a> | <a href="00404.html" target="topic">Up</a> | <a href="00644.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_Open@SYS_MODULE_INDEX@DRV_IO_INTENT Topic Title: DRV_MIIM_Open Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_GMAC_EventAcknowledge@DRV_HANDLE@TCPIP_MAC_EVENT Topic Title: DRV_GMAC_EventAcknowledge Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

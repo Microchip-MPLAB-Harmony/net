@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_SocketOptionsGet Function</title>
+<title>NET_PRES_EncProviderConnect Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01157.html" target="topic">NET_PRES_SocketOptionsGet Function</a></div>
+<a href="01131.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01145.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01157.html" target="topic">NET_PRES_EncProviderConnect Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01156.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01158.html" target="topic">Next</a></div>
+<a href="01151.html" target="topic">Previous</a> | <a href="01145.html" target="topic">Up</a> | <a href="01158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOptionsGet@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_OPTION_TYPE@void* Topic Title: NET_PRES_SocketOptionsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderConnect Topic Title: NET_PRES_EncProviderConnect Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_SocketOptionsGet Function</div>
+NET_PRES_EncProviderConnect Type</div>
 </div>
 </div>
 
@@ -49,21 +49,19 @@ NET_PRES_SocketOptionsGet Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Various options can be obtained at the <a href="01305.html" target="topic">socket</a> level. This function calls directly to the transport layer's OptionGet function, if it exists.</p></div>
+Presentation Encryption Provider Connect Prototype&nbsp;</p>
+<p class="Element10">
+This function is used by the presentation layer to pump the encryption negotiation. While negotiation is ongoing, the presentation layer's task function will continue to call the function until negotiation ends.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NET_PRES_SocketOptionsGet</span></strong>(
-    <a href="01118.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
-    <a href="01119.html" target="topic">NET_PRES_SKT_OPTION_TYPE</a> <strong><span style="color: #000000">option</span></strong>, 
-    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">optParam</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <a href="01171.html" target="topic">NET_PRES_EncSessionStatus</a> (* <strong><span style="color: #000000">NET_PRES_EncProviderConnect</span></strong>)(<strong><span style="color: #000080">void</span></strong> * providerData);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A <a href="01305.html" target="topic">socket</a> needs to have been opened by <a href="01156.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
+A connection must have already been created.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -80,19 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+providerData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The <a href="01305.html" target="topic">socket</a> to set options for.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-option&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The specific option to set, this is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-optParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The option value, which is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
+A pointer to the buffer that keeps the providerData returned from the Open call.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -102,8 +90,10 @@ Returns</div>
 <p class="Element10">
 
 <ul class="Element635">
-<li class="Element605">true - Indicates success</li>
-<li class="Element605">false - Indicates failure</li>
+<li class="Element605">NET_PRES_ENC_SS_CLIENT_NEGOTIATING - Client is still negotiating the connection</li>
+<li class="Element605">NET_PRES_ENC_SS_SERVER_NEGOTIATING - Server is still negotiating the connection</li>
+<li class="Element605">NET_PRES_ENC_SS_OPEN - Negotiation is complete and data can be securely transmitted</li>
+<li class="Element605">NET_PRES_ENC_SS_FAILED - Negotiation failed</li>
 </ul></p></div>
 </div>
 </div>
@@ -111,7 +101,7 @@ Returns</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01157.html" target="topic">NET_PRES_SocketOptionsGet Function</a></div>
+<a href="01131.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01145.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01157.html" target="topic">NET_PRES_EncProviderConnect Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -119,13 +109,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01156.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01158.html" target="topic">Next</a></div>
+<a href="01151.html" target="topic">Previous</a> | <a href="01145.html" target="topic">Up</a> | <a href="01158.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketOptionsGet@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_OPTION_TYPE@void* Topic Title: NET_PRES_SocketOptionsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderConnect Topic Title: NET_PRES_EncProviderConnect Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

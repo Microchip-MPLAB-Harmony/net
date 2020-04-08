@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Core Functionality</title>
+<title>Configuring the Library</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04143.html" target="topic">UDP Module</a> &gt; <a href="01767.html" target="topic">Using the Library</a> &gt; <a href="01760.html" target="topic">How the Library Works</a> &gt; <a href="01757.html" target="topic">Core Functionality</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01305.html" target="topic">SMTP Module</a> &gt; <a href="01757.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01760.html" target="topic">Previous</a> | <a href="01760.html" target="topic">Up</a> | <a href="01756.html" target="topic">Next</a></div>
+<a href="01765.html" target="topic">Previous</a> | <a href="01305.html" target="topic">Up</a> | <a href="03451.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Core Functionality</div>
+Configuring the Library</div>
 </div>
 </div>
 
@@ -49,20 +49,63 @@ Core Functionality</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following flow diagram provides an overview for the use of the UDP module:&nbsp;</p>
+The configuration of the SMPT TCP/IP Stack Library is based on the file <span class="Element146"><a href="01307.html" target="topic">smtp_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
 <p class="Element10">
-<img src="TCPIP UDP udp_diagram.png" border="0" alt="" title="">&nbsp;</p>
+This header file contains the configuration selection for the SMTP TCP/IP Stack Library. Based on the selections made, the SMTP TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the SMTP TCP/IP Stack Library.&nbsp;</p>
 <p class="Element10">
-Server/listening sockets are opened using <a href="04097.html" target="topic">TCPIP_UDP_ServerOpen</a>. Client sockets are opened using <a href="04068.html" target="topic">TCPIP_UDP_ClientOpen</a>. A client <a href="01305.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>needs to have a remote address specified before it can transmit data.&nbsp;</p>
-<p class="Element10">
-Once the <a href="01305.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>is opened, you can immediately begin transmitting data. To transmit a segment, call <a href="04094.html" target="topic">TCPIP_UDP_PutIsReady</a> to determine how many bytes can be written. Then, use any of the <a href="04065.html" target="topic">TCPIP_UDP_ArrayPut</a> family of functions to write data to the<span style="color: #FFFFFF">_</span><a href="01305.html" target="topic">socket</a>. Once all data has been written, call <a href="04076.html" target="topic">TCPIP_UDP_Flush</a> to build and transmit the packet. Since each UDP <a href="01305.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>has its own TX buffer, the sequence previously described can be executed in multiple steps. That data that is written in the <a href="01305.html" target="topic">socket</a><span style="color: #FFFFFF">_</span>is persistent and it will be stored until <a href="04076.html" target="topic">TCPIP_UDP_Flush</a> is called.</p></div>
+This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01424.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03451.html" target="topic">TCPIP_SMTP_MAX_WRITE_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+the max size of data to be written in a discrete string/array email operation: <a href="03455.html" target="topic">TCPIP_SMTP_StringPut</a>/<a href="03430.html" target="topic">TCPIP_SMTP_ArrayPut</a>. Excess characters will be discarded. Note that the higher this value, the greater the size of the underlying TCP <a href="01402.html" target="topic">socket</a> TX buffer Adjust as needed. Normally should not exceed 512 characters.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03454.html" target="topic">TCPIP_SMTP_SERVER_REPLY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+How long to wait before assuming the connection has been dropped (default 8 seconds)&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03456.html" target="topic">TCPIP_SMTP_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+SMTP task rate, milliseconds The default value is 55 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03904.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03459.html" target="topic">TCPIP_SMTP_WRITE_READY_SPACE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+the minimum amount of data to ask from the transport/encryption layer when querying the write space&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04143.html" target="topic">UDP Module</a> &gt; <a href="01767.html" target="topic">Using the Library</a> &gt; <a href="01760.html" target="topic">How the Library Works</a> &gt; <a href="01757.html" target="topic">Core Functionality</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01305.html" target="topic">SMTP Module</a> &gt; <a href="01757.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -70,13 +113,13 @@ Once the <a href="01305.html" target="topic">socket</a><span style="color: #FFFF
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01760.html" target="topic">Previous</a> | <a href="01760.html" target="topic">Up</a> | <a href="01756.html" target="topic">Next</a></div>
+<a href="01765.html" target="topic">Previous</a> | <a href="01305.html" target="topic">Up</a> | <a href="03451.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP UDP Core Functionality Topic Title: Core Functionality)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

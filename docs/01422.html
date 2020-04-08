@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Building the Library</title>
+<title>tcp.h</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00354.html" target="topic">DHCP Client Module</a> &gt; <a href="01422.html" target="topic">Building the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01421.html" target="topic">TCP Module</a> &gt; <a href="01811.html" target="topic">Files</a> &gt; <a href="01422.html" target="topic">tcp.h</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01967.html" target="topic">Previous</a> | <a href="00354.html" target="topic">Up</a> | <a href="01429.html" target="topic">Next</a></div>
+<a href="01811.html" target="topic">Previous</a> | <a href="01811.html" target="topic">Up</a> | <a href="01433.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcp.h Topic Title: tcp.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Building the Library</div>
+tcp.h</div>
 </div>
 </div>
 
@@ -46,84 +46,521 @@ Building the Library</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="4465736372697074696F6E"></a><div class="Element11">
+<a name="436F6D70616E79"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The following three tables list and describe the header (<span class="Element146">.h</span>) and source (<span class="Element146">.c</span>) files that implement this library. The parent folder for these files is <span class="Element146">&lt;install-dir&gt;/net/tcpip</span>.</p><div class="Element15">
-Interface File(s)</div>
+Microchip Technology Inc.</p></div>
+</div>
+<a name="46696C65204E616D65"></a><div class="Element14">
+File Name</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This table lists and describes the header files that must be included (i.e., using <span class="Element146">#include</span>) by any code that uses this library. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="32%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="68%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="32%">
-<div class="Element68">
-<span class="Element146">/tcpip.h</span>&nbsp;</div></td><td class="Element67" valign="top" width="68%">
-<div class="Element68">
-Header file that includes all of the TCP/IP modules.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Required File(s)</div>
-<div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table0">
-<tr>
-<td class="Element67" valign="top" width="10%" style="border:none;">
-<div class="Element68">
-<img src="MHC_Logo_Medium.png" border="0" alt="" title="">&nbsp;</div></td><td class="Element67" valign="top" width="90%" style="border:none;">
-<div class="Element68">
-<span style="color: #008000"><strong><i>All of the required files listed in the following table are automatically added into the MPLAB X IDE project by the MHC when the library is selected for use.</i></strong></span>&nbsp;</div></td></tr></table></div></div>
+tcp.h</p></div>
+</div>
+<a name="4465736372697074696F6E"></a><div class="Element14">
+Description</div>
+<div class="Element11">
+<div class="Element10">
 <p class="Element10">
-This table lists and describes the source and header files that must <i>always</i> be included in the MPLAB X IDE project to build this library. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="48%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="52%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="48%">
-<div class="Element68">
-<span class="Element146">/src/dhcp.c</span>&nbsp;</div></td><td class="Element67" valign="top" width="52%">
-<div class="Element68">
-DHCP implementation file.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Optional File(s)</div>
+Transmission Control Protocol (TCP) Communications Layer API Header File&nbsp;</p>
 <p class="Element10">
-This table lists and describes the source and header files that may optionally be included if required for the desired implementation. </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="24%">
-<div class="Element66">
-Source File Name&nbsp;</div></td><td class="Element65" valign="top" width="76%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="24%">
-<div class="Element68">
-N/A&nbsp;</div></td><td class="Element67" valign="top" width="76%">
-<div class="Element68">
-No optional files are available for this library.&nbsp;</div></td></tr></table></div></div>
-<div class="Element15">
-Module Dependencies</div>
-<p class="Element10">
-The DHCP module depends on the following modules:
+
 <ul class="Element635">
-<li class="Element605"><a href="01011.html" target="topic">TCP/IP Stack Library</a></li>
-<li class="Element605"><a href="04143.html" target="topic">UDP Module</a></li>
-</ul></p></div>
+<li class="Element605">Provides reliable, handshaked transport of application stream oriented data with flow control</li>
+<li class="Element605">Reference: RFC 793</li>
+</ul>&nbsp;</p></div>
+</div>
+<a name="456E756D65726174696F6E73"></a><div class="Element14">
+Enumerations</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01426.html" target="topic">TCP_ADJUST_FLAGS</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP adjust RX and TX buffers flags.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01443.html" target="topic">TCP_OPTION_THRES_FLUSH_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+List of the <a href="01402.html" target="topic">socket</a> half threshold TX flush types.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01461.html" target="topic">TCP_SOCKET_OPTION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP Socket run-time options.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03994.html" target="topic">TCPIP_TCP_SIGNAL_TYPE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP run time signal/event types.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04016.html" target="topic">TCPIP_TCP_STATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP <a href="01402.html" target="topic">socket</a> state.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="46756E6374696F6E73"></a><div class="Element14">
+Functions</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03940.html" target="topic">TCPIP_TCP_Abort</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Aborts a connection.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03941.html" target="topic">TCPIP_TCP_ArrayFind</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Searches for a string in the TCP RX buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03942.html" target="topic">TCPIP_TCP_ArrayGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reads an array of data bytes from a TCP <a href="01402.html" target="topic">socket</a>'s RX buffer/FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03943.html" target="topic">TCPIP_TCP_ArrayPeek</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Reads a specified number of data bytes from the TCP RX buffer/FIFO without removing them from the buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03944.html" target="topic">TCPIP_TCP_ArrayPut</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Writes an array from a buffer to a TCP <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03946.html" target="topic">TCPIP_TCP_Bind</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Binds a <a href="01402.html" target="topic">socket</a> to a local address.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03947.html" target="topic">TCPIP_TCP_ClientOpen</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Opens a TCP <a href="01402.html" target="topic">socket</a> as a client.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03948.html" target="topic">TCPIP_TCP_Close</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Disconnects an open <a href="01402.html" target="topic">socket</a> and destroys the <a href="01402.html" target="topic">socket</a> handle, releasing the associated resources.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03951.html" target="topic">TCPIP_TCP_Connect</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Connects a client <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03953.html" target="topic">TCPIP_TCP_Discard</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Discards any pending data in the RCP RX FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03954.html" target="topic">TCPIP_TCP_Disconnect</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Disconnects an open <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03957.html" target="topic">TCPIP_TCP_FifoRxFreeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines how many bytes are free in the RX buffer/FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03959.html" target="topic">TCPIP_TCP_FifoSizeAdjust</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Adjusts the relative sizes of the RX and TX buffers.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03960.html" target="topic">TCPIP_TCP_FifoTxFreeGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines how many bytes are free and could be written in the TCP TX FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03961.html" target="topic">TCPIP_TCP_FifoTxFullGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines how many bytes are pending in the TCP TX FIFO.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03963.html" target="topic">TCPIP_TCP_Find</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Searches for a byte in the TCP RX buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03964.html" target="topic">TCPIP_TCP_Flush</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Immediately transmits all pending TX data.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03965.html" target="topic">TCPIP_TCP_Get</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Retrieves a single byte to a TCP <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03966.html" target="topic">TCPIP_TCP_GetIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines how many bytes can be read from the TCP RX buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03967.html" target="topic">TCPIP_TCP_IsConnected</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines if a <a href="01402.html" target="topic">socket</a> has an established connection.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03968.html" target="topic">TCPIP_TCP_IsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the current status of the TCP module&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03980.html" target="topic">TCPIP_TCP_OptionsGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Allows getting the options for a <a href="01402.html" target="topic">socket</a> like: current RX/TX buffer size, etc.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03981.html" target="topic">TCPIP_TCP_OptionsSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Allows setting options to a <a href="01402.html" target="topic">socket</a> like adjust RX/TX buffer size, etc.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03983.html" target="topic">TCPIP_TCP_PacketHandlerDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deregisters a previously registered packet handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03984.html" target="topic">TCPIP_TCP_PacketHandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets a new packet processing handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03985.html" target="topic">TCPIP_TCP_Peek</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Peaks at one byte in the TCP RX buffer/FIFO without removing it from the buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03987.html" target="topic">TCPIP_TCP_Put</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Writes a single byte to a TCP <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03988.html" target="topic">TCPIP_TCP_PutIsReady</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines how much free space is available in the TCP TX buffer.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03990.html" target="topic">TCPIP_TCP_RemoteBind</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Binds a <a href="01402.html" target="topic">socket</a> to a remote address.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03991.html" target="topic">TCPIP_TCP_ServerOpen</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Opens a TCP <a href="01402.html" target="topic">socket</a> as a server.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04006.html" target="topic">TCPIP_TCP_SignalHandlerDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Deregisters a previously registered TCP <a href="01402.html" target="topic">socket</a> signal handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04007.html" target="topic">TCPIP_TCP_SignalHandlerRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Registers a TCP <a href="01402.html" target="topic">socket</a> signal handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04010.html" target="topic">TCPIP_TCP_SocketInfoGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Obtains information about a currently open <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04011.html" target="topic">TCPIP_TCP_SocketNetGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Gets the current network interface of an TCP <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04012.html" target="topic">TCPIP_TCP_SocketNetSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the interface for an TCP <a href="01402.html" target="topic">socket</a>&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04013.html" target="topic">TCPIP_TCP_SocketsNumberGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Returns the number of existent TCP sockets.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04014.html" target="topic">TCPIP_TCP_SocketTraceSet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Sets the current <a href="01402.html" target="topic">socket</a> trace status.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04030.html" target="topic">TCPIP_TCP_StringPut</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Writes a null-terminated string to a TCP <a href="01402.html" target="topic">socket</a>.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04031.html" target="topic">TCPIP_TCP_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Standard TCP/IP stack module task function.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="04033.html" target="topic">TCPIP_TCP_WasReset</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Self-clearing semaphore indicating <a href="01402.html" target="topic">socket</a> reset.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="4D6163726F73"></a><div class="Element14">
+Macros</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="00925.html" target="topic">INVALID_SOCKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Invalid <a href="01402.html" target="topic">socket</a> indicator macro.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03958.html" target="topic">TCPIP_TCP_FifoRxFullGet</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Determines how many bytes are pending in the RX buffer/FIFO.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01435.html" target="topic">TCP_OPTION_KEEP_ALIVE_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Socket keep alive options&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01439.html" target="topic">TCP_OPTION_LINGER_DATA</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Socket <a href="01102.html" target="topic">linger</a> options.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01449.html" target="topic">TCP_SOCKET_INFO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP <a href="01402.html" target="topic">socket</a> information.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03975.html" target="topic">TCPIP_TCP_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP module run-time configuration/initialization data.&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="5479706573"></a><div class="Element14">
+Types</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01447.html" target="topic">TCP_PORT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a TCP Port number.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="01448.html" target="topic">TCP_SOCKET</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a TCP Socket.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03982.html" target="topic">TCPIP_TCP_PACKET_HANDLER</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Pointer to a function(handler) that will get called to process an incoming TCP packet.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03986.html" target="topic">TCPIP_TCP_PROCESS_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Defines a TCP packet processing handle.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03992.html" target="topic">TCPIP_TCP_SIGNAL_FUNCTION</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP signal handler.&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="03993.html" target="topic">TCPIP_TCP_SIGNAL_HANDLE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+TCP <a href="01402.html" target="topic">socket</a> handle.&nbsp;</div></td></tr></table></div></div>
+</div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00354.html" target="topic">DHCP Client Module</a> &gt; <a href="01422.html" target="topic">Building the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01421.html" target="topic">TCP Module</a> &gt; <a href="01811.html" target="topic">Files</a> &gt; <a href="01422.html" target="topic">tcp.h</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -131,13 +568,13 @@ The DHCP module depends on the following modules:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01967.html" target="topic">Previous</a> | <a href="00354.html" target="topic">Up</a> | <a href="01429.html" target="topic">Next</a></div>
+<a href="01811.html" target="topic">Previous</a> | <a href="01811.html" target="topic">Up</a> | <a href="01433.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP DHCP Building the Library Topic Title: Building the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: tcp.h Topic Title: tcp.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

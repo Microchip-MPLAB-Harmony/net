@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_ARP_ENTRY_TYPE Enumeration</title>
+<title>Introduction</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00286.html" target="topic">ARP Module</a> &gt; <a href="01396.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01826.html" target="topic">TCPIP_ARP_ENTRY_TYPE Enumeration</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04237.html" target="topic">Telnet Module</a> &gt; <a href="01826.html" target="topic">Introduction</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01822.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01839.html" target="topic">Next</a></div>
+<a href="04237.html" target="topic">Previous</a> | <a href="04237.html" target="topic">Up</a> | <a href="01829.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_ENTRY_TYPE Topic Title: TCPIP_ARP_ENTRY_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TELNET Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_ARP_ENTRY_TYPE Enumeration</div>
+Introduction</div>
 </div>
 </div>
 
@@ -49,78 +49,42 @@ TCPIP_ARP_ENTRY_TYPE Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Enumeration: TCPIP_ARP_ENTRY_TYPE&nbsp;</p>
+Telnet, which runs over a TCP connection, provides bidirectional, interactive communication between two nodes on the Internet or on a Local Area Network. The Telnet code included with Harmony TCP/IP stack is a demonstration of the possible utilization of a Telnet server module. The server listens for a Telnet connection. When a client attempts to make one, the server will prompt the client for a username and password, and if the correct one is provided, it will<span style="color: #FFFFFF">_</span><a href="00296.html" target="topic">connect</a><span style="color: #FFFFFF">_</span>the client.&nbsp;</p>
 <p class="Element10">
-List of different ARP cache entries.</p></div>
+The server registers itself with the system command processor and acts as a communication channel capable of issuing commands and receiving replies.&nbsp;</p>
+<p class="Element10">
+From this moment on, the Telnet connection can be used for various system and TCP/IP related commands, just as the regular system console is used.&nbsp;</p>
+<p class="Element10">
+The commands currently implemented and processed by the command processor can be dynamically updated, new commands can be added, etc. See the <span class="Element146">tcpip_commands.c</span> file for the list of TCP/IP-related commands.&nbsp;</p>
+<p class="Element10">
+Based on this skeleton Telnet code, completely new behavior can be implemented for the Telnet server.</p></div>
 </div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">ARP_ENTRY_TYPE_INVALID</span></strong>,
-  <strong><span style="color: #000000">ARP_ENTRY_TYPE_PERMANENT</span></strong>,
-  <strong><span style="color: #000000">ARP_ENTRY_TYPE_COMPLETE</span></strong>,
-  <strong><span style="color: #000000">ARP_ENTRY_TYPE_INCOMPLETE</span></strong>,
-  <strong><span style="color: #000000">ARP_ENTRY_TYPE_ANY</span></strong>,
-  <strong><span style="color: #000000">ARP_ENTRY_TYPE_TOTAL</span></strong>
-} TCPIP_ARP_ENTRY_TYPE;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
+<a name="546F70696373"></a><div class="Element14">
+Topics</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element272">
+<div class="Element212">
 <div class="TableDiv">
-<table cellspacing="0" class="Table4">
+<table cellspacing="0" class="Table1">
 <tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
+<td class="Element200" valign="top" width="35%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_ENTRY_TYPE_INVALID&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-empty entry&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_ENTRY_TYPE_PERMANENT&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-entry valid and permanent&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_ENTRY_TYPE_COMPLETE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-entry valid&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_ENTRY_TYPE_INCOMPLETE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-entry not resolved yet&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_ENTRY_TYPE_ANY&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-any busy entry (PERMANENT|COMPLETE|INCOMPLETE)&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-ARP_ENTRY_TYPE_TOTAL&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-total entries - the number of entries the cache can store&nbsp;</div></td></tr></table></div></div>
+<td class="Element202" valign="top" width="35%">
+<div class="Element203">
+<a href="01829.html" target="topic">Using the Library</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+This topic describes the basic architecture of the Telnet<span style="color: #0000FF"> </span>TCP/IP Stack Library and provides information and examples on its use.&nbsp;</div></td></tr></table></div></div>
 </div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00286.html" target="topic">ARP Module</a> &gt; <a href="01396.html" target="topic">Library Interface</a> &gt; c) Data Types and Constants &gt; <a href="01826.html" target="topic">TCPIP_ARP_ENTRY_TYPE Enumeration</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04237.html" target="topic">Telnet Module</a> &gt; <a href="01826.html" target="topic">Introduction</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -128,13 +92,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01822.html" target="topic">Previous</a> | <a href="01396.html" target="topic">Up</a> | <a href="01839.html" target="topic">Next</a></div>
+<a href="04237.html" target="topic">Previous</a> | <a href="04237.html" target="topic">Up</a> | <a href="01829.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_ARP_ENTRY_TYPE Topic Title: TCPIP_ARP_ENTRY_TYPE Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP TELNET Introduction Topic Title: Introduction)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

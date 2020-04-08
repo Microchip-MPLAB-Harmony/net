@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_IPV6_DefaultRouterDelete Function</title>
+<title>TCPIP_IGMP_GroupsGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02946.html" target="topic">TCPIP_IPV6_DefaultRouterDelete Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00905.html" target="topic">IGMP Module</a> &gt; <a href="01656.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02946.html" target="topic">TCPIP_IGMP_GroupsGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02989.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="02947.html" target="topic">Next</a></div>
+<a href="02945.html" target="topic">Previous</a> | <a href="01656.html" target="topic">Up</a> | <a href="02948.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_DefaultRouterDelete@TCPIP_NET_HANDLE Topic Title: TCPIP_IPV6_DefaultRouterDelete Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_GroupsGet@IPV4_ADDR*@int@int* Topic Title: TCPIP_IGMP_GroupsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_IPV6_DefaultRouterDelete Function</div>
+TCPIP_IGMP_GroupsGet Function</div>
 </div>
 </div>
 
@@ -49,19 +49,21 @@ TCPIP_IPV6_DefaultRouterDelete Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function deletes all default routers on a given interface</p></div>
+This function return the current list of the multicast groups that are subscribed with IGMP. Additional details about a specific group could be obtained with <a href="02945.html" target="topic">TCPIP_IGMP_GroupInfoGet</a>.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">void</span></strong> <strong><span style="color: #000000">TCPIP_IPV6_DefaultRouterDelete</span></strong>(
-    <a href="03295.html" target="topic">TCPIP_NET_HANDLE</a> <strong><span style="color: #000000">netH</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><a href="02964.html" target="topic">TCPIP_IGMP_RESULT</a> <strong><span style="color: #000000">TCPIP_IGMP_GroupsGet</span></strong>(
+    IPV4_ADDR* <strong><span style="color: #000000">groupsList</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong> <strong><span style="color: #000000">listSize</span></strong>, 
+    <strong><span style="color: #000080">int</span></strong>* <strong><span style="color: #000000">pnGroups</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The IPv6 stack is initialized and the interface is up and configured.</p></div>
+The IGMP module must be initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +80,19 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-netH&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+groupsList&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The interface for which to delete the router address.&nbsp;</div></td></tr></table></div></div>
+pointer to an array of IPv4 addresses that will receive the subscribed multicast groups. Could be NULL if listSize == 0.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+listSize&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+The number of entries in the groupsList array If 0, the groupsList will not be used/populated.&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+pnGroups&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+address to store the number of all subscribed groups Could be NULL if not needed&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,21 +100,27 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+
+<ul class="Element634">
+<li class="Element604">TCPIP_IGMP_OK - if the call succeeds and the pInfo is populated</li>
+<li class="Element604">TCPIP_IGMP_GROUP_INVALID - if no such multicast group exists </li>
+<li class="Element604">TCPIP_IGMP_ARG_ERROR - pInfo is NULL</li>
+<li class="Element604">TCPIP_IGMP_IF_ERROR - no such interface</li>
+</ul></p></div>
 </div>
 <a name="52656D61726B73"></a><div class="Element14">
 Remarks</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-None.</p></div>
+None</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01589.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02946.html" target="topic">TCPIP_IPV6_DefaultRouterDelete Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00905.html" target="topic">IGMP Module</a> &gt; <a href="01656.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02946.html" target="topic">TCPIP_IGMP_GroupsGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -110,13 +128,13 @@ None.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02989.html" target="topic">Previous</a> | <a href="01589.html" target="topic">Up</a> | <a href="02947.html" target="topic">Next</a></div>
+<a href="02945.html" target="topic">Previous</a> | <a href="01656.html" target="topic">Up</a> | <a href="02948.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IPV6_DefaultRouterDelete@TCPIP_NET_HANDLE Topic Title: TCPIP_IPV6_DefaultRouterDelete Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_IGMP_GroupsGet@IPV4_ADDR*@int@int* Topic Title: TCPIP_IGMP_GroupsGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
