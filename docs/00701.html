@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Customer Support</title>
+<title>DRV_MIIM_OPERATION_FLAGS Enumeration</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="00709.html" target="topic">Support</a> &gt; <a href="00701.html" target="topic">Customer Support</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01116.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Library Interface</a> &gt; <a href="00413.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00701.html" target="topic">DRV_MIIM_OPERATION_FLAGS Enumeration</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="00706.html" target="topic">Previous</a> | <a href="00709.html" target="topic">Up</a> | <a href="00699.html" target="topic">Next</a></div>
+<a href="00700.html" target="topic">Previous</a> | <a href="00413.html" target="topic">Up</a> | <a href="00704.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Customer Support Topic Title: Customer Support)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_OPERATION_FLAGS Topic Title: DRV_MIIM_OPERATION_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Customer Support</div>
+DRV_MIIM_OPERATION_FLAGS Enumeration</div>
 </div>
 </div>
 
@@ -49,20 +49,56 @@ Customer Support</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Users of Microchip products can receive assistance through several channels:
-<ul class="Element635">
-<li class="Element605">Distributor or Representative</li>
-<li class="Element605">Local Sales Office (see <a href="00699.html" target="topic">Contact Microchip Technology</a> to locate your local sales office)</li>
-<li class="Element605">Field Application Engineer (FAE)</li>
-<li class="Element605">Technical Support (<a href="#" onclick="openExternalLink('http://support.microchip.com');"><img src="indicator_external_link.gif" border="0" alt="" title="">http://support.microchip.com</a>)</li>
-</ul></p></div>
+MIIM Driver Operation flags&nbsp;</p>
+<p class="Element10">
+This enumeration identifies the operation-specific flags supported by the MIIM driver.</p></div>
+</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
+  <strong><span style="color: #000000">DRV_MIIM_OPERATION_FLAG_NONE</span></strong>,
+  <strong><span style="color: #000000">DRV_MIIM_OPERATION_FLAG_DISCARD</span></strong>
+} DRV_MIIM_OPERATION_FLAGS;</pre></div></div>
+<a name="4D656D62657273"></a><div class="Element14">
+Members</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element272">
+<div class="TableDiv">
+<table cellspacing="0" class="Table4">
+<tr>
+<td class="Element260" valign="top" width="35%">
+<div class="Element261">
+Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
+<div class="Element265">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_OPERATION_FLAG_NONE&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+No flag specified&nbsp;</div></td></tr><tr>
+<td class="Element262" valign="top" width="35%">
+<div class="Element263">
+DRV_MIIM_OPERATION_FLAG_DISCARD&nbsp;</div></td><td class="Element266" valign="top" width="65%">
+<div class="Element267">
+Upon completion discard the operation result. The client will not poll to check the result nor will need notification This allows dummy operations, discarded as they complete&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Currently only 8 bit flags are supported.&nbsp;</p>
+<p class="Element10">
+Multiple flags can be simultaneously set.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="00709.html" target="topic">Support</a> &gt; <a href="00701.html" target="topic">Customer Support</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="01116.html" target="topic">MIIM Driver Library</a> &gt; <a href="00417.html" target="topic">Library Interface</a> &gt; <a href="00413.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00701.html" target="topic">DRV_MIIM_OPERATION_FLAGS Enumeration</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -70,13 +106,13 @@ Users of Microchip products can receive assistance through several channels:
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="00706.html" target="topic">Previous</a> | <a href="00709.html" target="topic">Up</a> | <a href="00699.html" target="topic">Next</a></div>
+<a href="00700.html" target="topic">Previous</a> | <a href="00413.html" target="topic">Up</a> | <a href="00704.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HARMONY Customer Support Topic Title: Customer Support)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: DRV_MIIM_OPERATION_FLAGS Topic Title: DRV_MIIM_OPERATION_FLAGS Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

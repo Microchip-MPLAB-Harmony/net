@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>zero_conf_multicast_dns.h</title>
+<title>TCPIP_UDP_OptionsSet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04194.html" target="topic">Zeroconf Module</a> &gt; <a href="01775.html" target="topic">Files</a> &gt; <a href="04193.html" target="topic">zero_conf_multicast_dns.h</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04248.html" target="topic">UDP Module</a> &gt; <a href="01859.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04193.html" target="topic">TCPIP_UDP_OptionsSet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04192.html" target="topic">Previous</a> | <a href="01775.html" target="topic">Up</a> | <a href="01017.html" target="topic">Next</a></div>
+<a href="04192.html" target="topic">Previous</a> | <a href="01859.html" target="topic">Up</a> | <a href="04217.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: zero_conf_multicast_dns.h Topic Title: zero_conf_multicast_dns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_OptionsSet@UDP_SOCKET@UDP_SOCKET_OPTION@void* Topic Title: TCPIP_UDP_OptionsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-zero_conf_multicast_dns.h</div>
+TCPIP_UDP_OptionsSet Function</div>
 </div>
 </div>
 
@@ -46,102 +46,98 @@ zero_conf_multicast_dns.h</div>
 
 <!-- Begin Page Content -->
 <a name="PageContent"></a><div class="Element58">
-<a name="436F6D70616E79"></a><div class="Element11">
+<a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Microchip Technology Inc.</p></div>
+Various options can be set at the <a href="01402.html" target="topic">socket</a> level.</p></div>
 </div>
-<a name="46696C65204E616D65"></a><div class="Element14">
-File Name</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_UDP_OptionsSet</span></strong>(
+    <a href="04263.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>, 
+    <a href="04279.html" target="topic">UDP_SOCKET_OPTION</a> <strong><span style="color: #000000">option</span></strong>, 
+    <strong><span style="color: #000080">void</span></strong>* <strong><span style="color: #000000">optParam</span></strong>
+);</pre></div></div>
+<a name="507265636F6E646974696F6E73"></a><div class="Element14">
+Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-zero_conf_multicast_dns.h</p></div>
+UDP <a href="01402.html" target="topic">socket</a> should have been opened with <a href="04202.html" target="topic">TCPIP_UDP_ServerOpen</a>()/<a href="04173.html" target="topic">TCPIP_UDP_ClientOpen</a>()(). hUDP - valid <a href="01402.html" target="topic">socket</a></p></div>
 </div>
-<a name="4465736372697074696F6E"></a><div class="Element14">
-Description</div>
+<a name="506172616D6574657273"></a><div class="Element14">
+Parameters</div>
 <div class="Element11">
 <div class="Element10">
-<p class="Element10">
-Zero Configuration (Zeroconf) Multicast DNS and Service Discovery Module for Microchip TCP/IP Stack&nbsp;</p>
-<p class="Element10">
-Zero configuration (Zeroconf), provides a mechanism to ease the configuration of a device on a network. It also provides for a more human-like naming convention, instead of relying on IP addresses alone. Zeroconf also goes by the names Bonjour (Apple) and Avahi (Linux), and is an IETF standard.</p></div>
-</div>
-<a name="456E756D65726174696F6E73"></a><div class="Element14">
-Enumerations</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
+<div class="Element312">
 <div class="TableDiv">
-<table cellspacing="0" class="Table1">
+<table cellspacing="0" class="Table3">
 <tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
+<td class="Element300" valign="top" width="35%">
+<div class="Element301">
+Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
+<div class="Element305">
 Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01019.html" target="topic">MDNSD_ERR_CODE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-void DisplayHostName(uint8_t *HostName);&nbsp;</div></td></tr></table></div></div>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+<a href="01402.html" target="topic">socket</a> to set options for&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+option&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+specific option to be set&nbsp;</div></td></tr><tr>
+<td class="Element302" valign="top" width="35%">
+<div class="Element303">
+optParam&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+<div class="Element307">
+the option value; this is option dependent:
+<ul class="Element635">
+<li class="Element605">UDP_OPTION_STRICT_PORT - boolean enable/disable</li>
+<li class="Element605">UDP_OPTION_STRICT_NET - boolean enable/disable</li>
+<li class="Element605">UDP_OPTION_STRICT_ADDRESS - boolean enable/disable</li>
+<li class="Element605">UDP_OPTION_BROADCAST - <a href="04264.html" target="topic">UDP_SOCKET_BCAST_TYPE</a></li>
+<li class="Element605">UDP_OPTION_BUFFER_POOL - boolean enable/disable &nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
-<a name="46756E6374696F6E73"></a><div class="Element14">
-Functions</div>
+<a name="52657475726E73"></a><div class="Element14">
+Returns</div>
 <div class="Element11">
 <div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03219.html" target="topic">TCPIP_MDNS_ServiceDeregister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS Service Discovery function for end-user to deregister a service advertisement, which was previously registered with the <a href="03220.html" target="topic">TCPIP_MDNS_ServiceRegister</a> function.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03220.html" target="topic">TCPIP_MDNS_ServiceRegister</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS Service Discovery function for end-users to register a service advertisement. The service is associated with all interfaces.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03221.html" target="topic">TCPIP_MDNS_ServiceUpdate</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-DNS-Service Discovery function for end-user to update the service advertisement, which was previously registered with <a href="03220.html" target="topic">TCPIP_MDNS_ServiceRegister</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_method.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="03222.html" target="topic">TCPIP_MDNS_Task</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div></div>
+<p class="Element10">
+
+<ul class="Element636">
+<li class="Element606">true - Indicates success</li>
+<li class="Element606">false - Indicates failure</li>
+</ul></p></div>
 </div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+Changing the UDP_OPTION_BUFFER_POOL will discard the data in the current <a href="01402.html" target="topic">socket</a> buffer </li>
+<li class="Element605">UDP_OPTION_TX_BUFF - 16-bit value in bytes of the TX buffer &nbsp;</p>
+<p class="Element10">
+the UDP_OPTION_TX_BUFF will discard the data in the current <a href="01402.html" target="topic">socket</a> buffer </li>
+<li class="Element605">UDP_OPTION_TX_QUEUE_LIMIT - 8-bit value of the TX queue limit</li>
+<li class="Element605">UDP_OPTION_RX_QUEUE_LIMIT - 8-bit value of the RX queue limit</li>
+<li class="Element605">UDP_OPTION_RX_AUTO_ADVANCE - boolean enable/disable</li>
+<li class="Element605">UDP_OPTION_TX_TTL - 8-bit value of TTL</li>
+<li class="Element605">UDP_OPTION_MULTICAST - pointer to a <a href="04259.html" target="topic">UDP_OPTION_MULTICAST_DATA</a> structure</li>
+<li class="Element605">UDP_OPTION_TOS - 8-bit value of the TOS</li>
+<li class="Element605">UDP_OPTION_DF - boolean - true: no fragmentation allowed; false: fragmentation allowed</li>
+</ul>&nbsp;</p>
+<p class="Element10">
+This function provides the run-time functionality required to implement some of the standard BSD <a href="01402.html" target="topic">socket</a> options API.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04194.html" target="topic">Zeroconf Module</a> &gt; <a href="01775.html" target="topic">Files</a> &gt; <a href="04193.html" target="topic">zero_conf_multicast_dns.h</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04248.html" target="topic">UDP Module</a> &gt; <a href="01859.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04193.html" target="topic">TCPIP_UDP_OptionsSet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -149,13 +145,13 @@ Standard TCP/IP stack module task function.&nbsp;</div></td></tr></table></div><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04192.html" target="topic">Previous</a> | <a href="01775.html" target="topic">Up</a> | <a href="01017.html" target="topic">Next</a></div>
+<a href="04192.html" target="topic">Previous</a> | <a href="01859.html" target="topic">Up</a> | <a href="04217.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: zero_conf_multicast_dns.h Topic Title: zero_conf_multicast_dns.h)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_OptionsSet@UDP_SOCKET@UDP_SOCKET_OPTION@void* Topic Title: TCPIP_UDP_OptionsSet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

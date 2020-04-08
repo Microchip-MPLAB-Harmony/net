@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_HTTP_NET_ConnectionDiscard Function</title>
+<title>TCPIP_Helper_UDPSecurePortGet Function</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00719.html" target="topic">HTTP Net Module</a> &gt; <a href="01526.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02595.html" target="topic">TCPIP_HTTP_NET_ConnectionDiscard Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02595.html" target="topic">TCPIP_Helper_UDPSecurePortGet Function</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02592.html" target="topic">Previous</a> | <a href="01526.html" target="topic">Up</a> | <a href="02597.html" target="topic">Next</a></div>
+<a href="02594.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="02571.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionDiscard@TCPIP_HTTP_NET_CONN_HANDLE Topic Title: TCPIP_HTTP_NET_ConnectionDiscard Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_UDPSecurePortGet@uint16_t Topic Title: TCPIP_Helper_UDPSecurePortGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_HTTP_NET_ConnectionDiscard Function</div>
+TCPIP_Helper_UDPSecurePortGet Function</div>
 </div>
 </div>
 
@@ -49,19 +49,19 @@ TCPIP_HTTP_NET_ConnectionDiscard Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function discards data from the connection RX buffer.</p></div>
+This function checks the internal data for detecting if the required UDP port is a secure port or not. A secure port is one that requires secure connections. The TCP/IP stack maintains an internal table with the ports that require secure connections. This table can be maintained using the <a href="02590.html" target="topic">TCPIP_Helper_SecurePortSet</a>() function.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100">uint16_t <strong><span style="color: #000000">TCPIP_HTTP_NET_ConnectionDiscard</span></strong>(
-    <a href="02586.html" target="topic">TCPIP_HTTP_NET_CONN_HANDLE</a> <strong><span style="color: #000000">connHandle</span></strong>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_Helper_UDPSecurePortGet</span></strong>(
+    uint16_t <strong><span style="color: #000000">udpPort</span></strong>
 );</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-connHandle - a valid HTTP connection.</p></div>
+TCP/IP stack properly initialized.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -78,9 +78,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-connHandle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+udpPort&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-connection handle&nbsp;</div></td></tr></table></div></div>
+The UDP port to query&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -88,14 +88,25 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The number of bytes that have been discarded from the RX buffer.</p></div>
+
+<ul class="Element634">
+<li class="Element604">true - if the port is a secure connection port</li>
+<li class="Element604">false - if port is not secure (the port is not found in the internal secure ports table)</li>
+</ul></p></div>
+</div>
+<a name="52656D61726B73"></a><div class="Element14">
+Remarks</div>
+<div class="Element11">
+<div class="Element10">
+<p class="Element10">
+The TCP/IP stack populates the internal secure port table with default values as part of the stack power up procedure. The table is not re-initialized when the stack is brought down and then restarted.</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00719.html" target="topic">HTTP Net Module</a> &gt; <a href="01526.html" target="topic">Library Interface</a> &gt; a) Functions &gt; <a href="02595.html" target="topic">TCPIP_HTTP_NET_ConnectionDiscard Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01107.html" target="topic">Manager Module</a> &gt; <a href="01716.html" target="topic">Library Interface</a> &gt; a) Helper Functions &gt; <a href="02595.html" target="topic">TCPIP_Helper_UDPSecurePortGet Function</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +114,13 @@ The number of bytes that have been discarded from the RX buffer.</p></div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02592.html" target="topic">Previous</a> | <a href="01526.html" target="topic">Up</a> | <a href="02597.html" target="topic">Next</a></div>
+<a href="02594.html" target="topic">Previous</a> | <a href="01716.html" target="topic">Up</a> | <a href="02571.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_HTTP_NET_ConnectionDiscard@TCPIP_HTTP_NET_CONN_HANDLE Topic Title: TCPIP_HTTP_NET_ConnectionDiscard Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_Helper_UDPSecurePortGet@uint16_t Topic Title: TCPIP_Helper_UDPSecurePortGet Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

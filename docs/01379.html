@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Configuring the Library</title>
+<title>SOCK_STREAM Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00179.html" target="topic">Announce Module</a> &gt; <a href="01379.html" target="topic">Configuring the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00289.html" target="topic">Berkeley Module</a> &gt; <a href="01503.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01379.html" target="topic">SOCK_STREAM Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01381.html" target="topic">Previous</a> | <a href="00179.html" target="topic">Up</a> | <a href="01804.html" target="topic">Next</a></div>
+<a href="01378.html" target="topic">Previous</a> | <a href="01503.html" target="topic">Up</a> | <a href="01403.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SOCK_STREAM Topic Title: SOCK_STREAM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Configuring the Library</div>
+SOCK_STREAM Macro</div>
 </div>
 </div>
 
@@ -49,63 +49,17 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The configuration of the Announce TCP/IP Stack Library is based on the template file <a href="01792.html" target="topic">tcpip_announce_config.h</a> with the actual symbols generated in the configuration.h.&nbsp;</p>
-<p class="Element10">
-This header file contains the configuration selection for the Announce TCP/IP Stack Library. Based on the selections made, the Announce TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the Announce TCP/IP Stack Library.&nbsp;</p>
-<p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01327.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+Connection based byte streams. Use TCP for the Internet address family.</p></div>
 </div>
-<a name="4D6163726F73"></a><div class="Element14">
-Macros</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element212">
-<div class="TableDiv">
-<table cellspacing="0" class="Table1">
-<tr>
-<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element201">
- &nbsp;</div></td><td class="Element200" valign="top" width="25%">
-<div class="Element201">
-Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
-<div class="Element205">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01804.html" target="topic">TCPIP_ANNOUNCE_MAX_PAYLOAD</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Maximum size of a payload sent once Adjust to your needs&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01811.html" target="topic">TCPIP_ANNOUNCE_TASK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-announce task rate, millseconds The default value is 333 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03799.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="01809.html" target="topic">TCPIP_ANNOUNCE_NETWORK_DIRECTED_BCAST</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-Type of the broadcast used by the Announce module This type enables the network directed broadcast If it is not defined or it's 0, the network limited broadcast is used The default is nework limited broadcast&nbsp;</div></td></tr><tr>
-<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
-<div class="Element203">
-<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
-<div class="Element203">
-<a href="00149.html" target="topic">_TCPIP_ANNOUNCE_CONFIG_H_</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
-<div class="Element207">
-This is macro _TCPIP_ANNOUNCE_CONFIG_H_.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
+<a name="43"></a><div class="Element99">
+C</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">SOCK_STREAM</span></strong> 100  <i><span style="color: #008000">//Connection based byte streams. Use TCP for the Internet address family.</span></i></pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00179.html" target="topic">Announce Module</a> &gt; <a href="01379.html" target="topic">Configuring the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00289.html" target="topic">Berkeley Module</a> &gt; <a href="01503.html" target="topic">Library Interface</a> &gt; b) Data Types and Constants &gt; <a href="01379.html" target="topic">SOCK_STREAM Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +67,13 @@ This is macro _TCPIP_ANNOUNCE_CONFIG_H_.&nbsp;</div></td></tr></table></div></di
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01381.html" target="topic">Previous</a> | <a href="00179.html" target="topic">Up</a> | <a href="01804.html" target="topic">Next</a></div>
+<a href="01378.html" target="topic">Previous</a> | <a href="01503.html" target="topic">Up</a> | <a href="01403.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP ANNOUNCE Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: SOCK_STREAM Topic Title: SOCK_STREAM Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

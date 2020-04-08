@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>TCPIP_UDP_IsConnected Function</title>
+<title>TCPIP_TFTPC_DEFAULT_IF Macro</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04143.html" target="topic">UDP Module</a> &gt; <a href="01762.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04079.html" target="topic">TCPIP_UDP_IsConnected Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04240.html" target="topic">TFTP Client Module</a> &gt; <a href="01832.html" target="topic">Configuring the Library</a> &gt; <a href="04079.html" target="topic">TCPIP_TFTPC_DEFAULT_IF Macro</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="04080.html" target="topic">Previous</a> | <a href="01762.html" target="topic">Up</a> | <a href="04067.html" target="topic">Next</a></div>
+<a href="04078.html" target="topic">Previous</a> | <a href="01832.html" target="topic">Up</a> | <a href="04094.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_IsConnected@UDP_SOCKET Topic Title: TCPIP_UDP_IsConnected Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPC_DEFAULT_IF Topic Title: TCPIP_TFTPC_DEFAULT_IF Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-TCPIP_UDP_IsConnected Function</div>
+TCPIP_TFTPC_DEFAULT_IF Macro</div>
 </div>
 </div>
 
@@ -49,53 +49,17 @@ TCPIP_UDP_IsConnected Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function determines if a <a href="01305.html" target="topic">socket</a> has an established connection to a remote node. Call this function after calling <a href="04097.html" target="topic">TCPIP_UDP_ServerOpen</a>/<a href="04068.html" target="topic">TCPIP_UDP_ClientOpen</a> to determine when the connection is set up and ready for use.</p></div>
+The default TFTP interface for multi-homed hosts.</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">TCPIP_UDP_IsConnected</span></strong>(
-    <a href="04158.html" target="topic">UDP_SOCKET</a> <strong><span style="color: #000000">hUDP</span></strong>
-);</pre></div></div>
-<a name="507265636F6E646974696F6E73"></a><div class="Element14">
-Preconditions</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-None.</p></div>
-</div>
-<a name="506172616D6574657273"></a><div class="Element14">
-Parameters</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element312">
-<div class="TableDiv">
-<table cellspacing="0" class="Table3">
-<tr>
-<td class="Element300" valign="top" width="35%">
-<div class="Element301">
-Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
-<div class="Element305">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-hUDP&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The <a href="01305.html" target="topic">socket</a> to check.&nbsp;</div></td></tr></table></div></div>
-</div>
-</div>
-<a name="52656D61726B73"></a><div class="Element14">
-Remarks</div>
-<div class="Element11">
-<div class="Element10">
-<p class="Element10">
-An UDP server or client <a href="01305.html" target="topic">socket</a> can always <a href="01205.html" target="topic">send</a> data, as long as it has a valid destination address, even if there's no remote <a href="01305.html" target="topic">socket</a> connected to it. This function will return true if the <a href="01305.html" target="topic">socket</a> is opened and currently has a valid destination. Note that this is true if a client <a href="01305.html" target="topic">socket</a> was opened with a remote host address, a <a href="01305.html" target="topic">socket</a> received data from a remote host, or a explicit remote bind was done.</p></div>
-</div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">#define</span></strong> <strong><span style="color: #000000">TCPIP_TFTPC_DEFAULT_IF</span></strong> &quot;PIC32INT&quot;</pre></div></div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04143.html" target="topic">UDP Module</a> &gt; <a href="01762.html" target="topic">Library Interface</a> &gt; a) Socket Management Functions &gt; <a href="04079.html" target="topic">TCPIP_UDP_IsConnected Function</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="04240.html" target="topic">TFTP Client Module</a> &gt; <a href="01832.html" target="topic">Configuring the Library</a> &gt; <a href="04079.html" target="topic">TCPIP_TFTPC_DEFAULT_IF Macro</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -103,13 +67,13 @@ An UDP server or client <a href="01305.html" target="topic">socket</a> can alway
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="04080.html" target="topic">Previous</a> | <a href="01762.html" target="topic">Up</a> | <a href="04067.html" target="topic">Next</a></div>
+<a href="04078.html" target="topic">Previous</a> | <a href="01832.html" target="topic">Up</a> | <a href="04094.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_UDP_IsConnected@UDP_SOCKET Topic Title: TCPIP_UDP_IsConnected Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP_TFTPC_DEFAULT_IF Topic Title: TCPIP_TFTPC_DEFAULT_IF Macro)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01208.html" target="topic">SMTP Module</a> &gt; <a href="01660.html" target="topic">Configuring the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00938.html" target="topic">Iperf Module</a> &gt; <a href="01660.html" target="topic">Configuring the Library</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,13 +26,13 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01668.html" target="topic">Previous</a> | <a href="01208.html" target="topic">Up</a> | <a href="03346.html" target="topic">Next</a></div>
+<a href="01666.html" target="topic">Previous</a> | <a href="00938.html" target="topic">Up</a> | <a href="02994.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPERF Configuring the Module Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
 Configuring the Library</div>
 </div>
@@ -49,11 +49,9 @@ Configuring the Library</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-The configuration of the SMPT TCP/IP Stack Library is based on the file <span class="Element146"><a href="01210.html" target="topic">smtp_config.h</a> with the actual symbols generated in the configuration.h.</span>&nbsp;</p>
+The configuration of the Iperf<span style="color: #000000"> </span>TCP/IP Stack is based on the template file <span class="Element146"><a href="00940.html" target="topic">iperf_config.h</a></span> with the actual symbols generated in the <span class="Element146">configuration.h</span> file.&nbsp;</p>
 <p class="Element10">
-This header file contains the configuration selection for the SMTP TCP/IP Stack Library. Based on the selections made, the SMTP TCP/IP Stack Library may support the selected features. These configuration settings will apply to all instances of the SMTP TCP/IP Stack Library.&nbsp;</p>
-<p class="Element10">
-This header can be placed anywhere; however, the path of this header needs to be present in the include search path for a successful build. Refer to the <a href="01327.html" target="topic">TCP/IP Demonstrations Help</a> section for more details.</p></div>
+This header file contains the configuration selection for the Iperf TCP/IP Stack. Based on the selections made, the Iperf<span style="color: #000000"> </span>TCP/IP Stack may support the selected features.</p></div>
 </div>
 <a name="4D6163726F73"></a><div class="Element14">
 Macros</div>
@@ -74,30 +72,75 @@ Description&nbsp;</div></td></tr><tr>
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03346.html" target="topic">TCPIP_SMTP_MAX_WRITE_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02994.html" target="topic">TCPIP_IPERF_RX_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-the max size of data to be written in a discrete string/array email operation: <a href="03350.html" target="topic">TCPIP_SMTP_StringPut</a>/<a href="03325.html" target="topic">TCPIP_SMTP_ArrayPut</a>. Excess characters will be discarded. Note that the higher this value, the greater the size of the underlying TCP <a href="01305.html" target="topic">socket</a> TX buffer Adjust as needed. Normally should not exceed 512 characters.&nbsp;</div></td></tr><tr>
+Default size of the Iperf RX buffer The default value is 4KB. The performance of a <a href="01402.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03349.html" target="topic">TCPIP_SMTP_SERVER_REPLY_TIMEOUT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02997.html" target="topic">TCPIP_IPERF_TX_BUFFER_SIZE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-How long to wait before assuming the connection has been dropped (default 8 seconds)&nbsp;</div></td></tr><tr>
+Default size of the Iperf TX buffer The default value is 4KB. The performance of a <a href="01402.html" target="topic">socket</a> is highly dependent on the size of its buffers so it's a good idea to use as large as possible buffers for the sockets that need high throughput. Bigger buffers will help obtain higher performance numbers&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03351.html" target="topic">TCPIP_SMTP_TASK_TICK_RATE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="02999.html" target="topic">TCPIP_IPERF_TX_QUEUE_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-SMTP task rate, milliseconds The default value is 55 milliseconds. The lower the rate (higher the frequency) the higher the module priority and higher module performance can be obtained The value cannot be lower than the <a href="03799.html" target="topic">TCPIP_STACK_TICK_RATE</a>.&nbsp;</div></td></tr><tr>
+for Iperf UDP client, the limit to set to avoid memory allocation overflow on slow connections&nbsp;</div></td></tr><tr>
 <td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
 <div class="Element203">
 <img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
 <div class="Element203">
-<a href="03354.html" target="topic">TCPIP_SMTP_WRITE_READY_SPACE</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<a href="03000.html" target="topic">TCPIP_IPERF_TX_WAIT_TMO</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
 <div class="Element207">
-the minimum amount of data to ask from the transport/encryption layer when querying the write space&nbsp;</div></td></tr></table></div></div>
+timeout to wait for TX channel to be ready to transmit a new packet; ms depends on the channel bandwidth&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02991.html" target="topic">TCPIP_IPERF_MAX_INSTANCES</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+maximum number of simultaneously running iperf instances&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02996.html" target="topic">TCPIP_IPERF_TIMING_ERROR_MARGIN</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+iperf timing error, ms. Accounts for timing uncertainty The higher the value, the more relaxed is the iperf timing Lower limit is 0&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_interface.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02998.html" target="topic">TCPIP_IPERF_TX_BW_LIMIT</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+Default TCP Tx Bandwidth&nbsp;</div></td></tr></table></div></div>
+</div>
+</div>
+<a name="53747275637475726573"></a><div class="Element14">
+Structures</div>
+<div class="Element11">
+<div class="Element10">
+<div class="Element212">
+<div class="TableDiv">
+<table cellspacing="0" class="Table1">
+<tr>
+<td class="Element200" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element201">
+ &nbsp;</div></td><td class="Element200" valign="top" width="25%">
+<div class="Element201">
+Name&nbsp;</div></td><td class="Element204" valign="top" width="65%">
+<div class="Element205">
+Description&nbsp;</div></td></tr><tr>
+<td class="Element202" valign="top" width="10%" style="white-space: nowrap;">
+<div class="Element203">
+<img src="indicator_structure.gif" border="0" alt="" title="">&nbsp;</div></td><td class="Element202" valign="top" width="25%">
+<div class="Element203">
+<a href="02992.html" target="topic">TCPIP_IPERF_MODULE_CONFIG</a>&nbsp;</div></td><td class="Element206" valign="top" width="65%">
+<div class="Element207">
+iPerf Configuration structure placeholder&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 </div>
@@ -105,7 +148,7 @@ the minimum amount of data to ask from the transport/encryption layer when query
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01208.html" target="topic">SMTP Module</a> &gt; <a href="01660.html" target="topic">Configuring the Library</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00938.html" target="topic">Iperf Module</a> &gt; <a href="01660.html" target="topic">Configuring the Library</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -113,13 +156,13 @@ the minimum amount of data to ask from the transport/encryption layer when query
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01668.html" target="topic">Previous</a> | <a href="01208.html" target="topic">Up</a> | <a href="03346.html" target="topic">Next</a></div>
+<a href="01666.html" target="topic">Previous</a> | <a href="00938.html" target="topic">Up</a> | <a href="02994.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP SMTP Configuring the Library Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPERF Configuring the Module Topic Title: Configuring the Library)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

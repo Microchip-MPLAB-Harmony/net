@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>HTTP_IO_RESULT Enumeration</title>
+<title>Abstraction Model</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00720.html" target="topic">HTTP Module</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; <a href="01506.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00738.html" target="topic">HTTP_IO_RESULT Enumeration</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Using the Library</a> &gt; <a href="00738.html" target="topic">Abstraction Model</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="02568.html" target="topic">Previous</a> | <a href="01506.html" target="topic">Up</a> | <a href="00724.html" target="topic">Next</a></div>
+<a href="00753.html" target="topic">Previous</a> | <a href="00753.html" target="topic">Up</a> | <a href="00749.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HTTP_IO_RESULT Topic Title: HTTP_IO_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Driver Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-HTTP_IO_RESULT Enumeration</div>
+Abstraction Model</div>
 </div>
 </div>
 
@@ -49,51 +49,24 @@ HTTP_IO_RESULT Enumeration</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-Result states for execution callbacks</p></div>
-</div>
-<a name="43"></a><div class="Element99">
-C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> <strong><span style="color: #000080">enum</span></strong> {
-  <strong><span style="color: #000000">HTTP_IO_DONE</span></strong> = 0u,
-  <strong><span style="color: #000000">HTTP_IO_NEED_DATA</span></strong>,
-  <strong><span style="color: #000000">HTTP_IO_WAITING</span></strong>
-} HTTP_IO_RESULT;</pre></div></div>
-<a name="4D656D62657273"></a><div class="Element14">
-Members</div>
-<div class="Element11">
-<div class="Element10">
-<div class="Element272">
-<div class="TableDiv">
-<table cellspacing="0" class="Table4">
-<tr>
-<td class="Element260" valign="top" width="35%">
-<div class="Element261">
-Members&nbsp;</div></td><td class="Element264" valign="top" width="65%">
-<div class="Element265">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-HTTP_IO_DONE = 0u&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Finished with procedure&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-HTTP_IO_NEED_DATA&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-More data needed to continue, call again later&nbsp;</div></td></tr><tr>
-<td class="Element262" valign="top" width="35%">
-<div class="Element263">
-HTTP_IO_WAITING&nbsp;</div></td><td class="Element266" valign="top" width="65%">
-<div class="Element267">
-Waiting for asynchronous process to complete, call again later&nbsp;</div></td></tr></table></div></div>
-</div>
+The ENC28J60 Driver library has several different layers to it, as illustrated in the following figure. The interface layer has two main sections that are used the most often: The Tasks function, and the TCP/IP Send and Receive functions.&nbsp;</p>
+<p class="Element10">
+The Tasks function manages the internal state machine which detects, resets, and then configures the ENC28J60 External MAC. It also handles the monitoring of the hardware status, sending and receiving packets.&nbsp;</p>
+<p class="Element10">
+The TCP/IP Send and Receive functions interact with the RAM-based queue of packets that are queued to <a href="01302.html" target="topic">send</a> and packets that have been queued waiting for pick-up by the stack.&nbsp;</p>
+<p class="Element10">
+The main state machine does not interface directly to the SPI bus, but instead, interfaces to a virtual bus abstraction layer that allows for the replacement of the specific underlying bus implementation.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<img src="DRV ENC28J60 Abstraction Model.png" border="0" alt="" title="">&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00720.html" target="topic">HTTP Module</a> &gt; <a href="01513.html" target="topic">Library Interface</a> &gt; <a href="01506.html" target="topic">b) Data Types and Constants</a> &gt; <a href="00738.html" target="topic">HTTP_IO_RESULT Enumeration</a></div>
+<a href="01574.html" target="topic">TCP/IP Drivers</a> &gt; <a href="00747.html" target="topic">ENC28J60 Driver Library</a> &gt; <a href="00753.html" target="topic">Using the Library</a> &gt; <a href="00738.html" target="topic">Abstraction Model</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -101,13 +74,13 @@ Waiting for asynchronous process to complete, call again later&nbsp;</div></td><
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="02568.html" target="topic">Previous</a> | <a href="01506.html" target="topic">Up</a> | <a href="00724.html" target="topic">Next</a></div>
+<a href="00753.html" target="topic">Previous</a> | <a href="00753.html" target="topic">Up</a> | <a href="00749.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: HTTP_IO_RESULT Topic Title: HTTP_IO_RESULT Enumeration)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: ENC28J60 Driver Abstraction Model Topic Title: Abstraction Model)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

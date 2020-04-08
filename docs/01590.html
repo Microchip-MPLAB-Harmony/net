@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>Library Overview</title>
+<title>How The Library Works</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01591.html" target="topic">Using the Library</a> &gt; <a href="01590.html" target="topic">Library Overview</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01592.html" target="topic">FTP Client Module</a> &gt; <a href="01596.html" target="topic">Using The Library</a> &gt; <a href="01590.html" target="topic">How The Library Works</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01582.html" target="topic">Previous</a> | <a href="01591.html" target="topic">Up</a> | <a href="01584.html" target="topic">Next</a></div>
+<a href="01594.html" target="topic">Previous</a> | <a href="01596.html" target="topic">Up</a> | <a href="01587.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv6 Library Overview Topic Title: Library Overview)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTPC How The Library Works Topic Title: How The Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-Library Overview</div>
+How The Library Works</div>
 </div>
 </div>
 
@@ -49,33 +49,28 @@ Library Overview</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-<span style="color: #000000">The library interface routines are divided into various sub-sections, which address one of the blocks or the overall operation of the IPv6 module.</span> </p><div class="Element63">
-<div class="TableDiv">
-<table cellspacing="0" class="Table2">
-<tr>
-<td class="Element65" valign="top" width="40%">
-<div class="Element66">
-Library Interface Section&nbsp;</div></td><td class="Element65" valign="top" width="60%">
-<div class="Element66">
-Description&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Functions&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-Routines for configuring IPv6&nbsp;</div></td></tr><tr>
-<td class="Element67" valign="top" width="40%">
-<div class="Element68">
-Data Types and Constants&nbsp;</div></td><td class="Element67" valign="top" width="60%">
-<div class="Element68">
-<span style="color: #000000">This section provides various definitions describing this API</span>&nbsp;</div></td></tr></table></div></div>
-</div>
+<span style="color: #000000">Files are transferred via the data connection. The control connection is used for the transfer of commands and the replies to these commands. Several commands are concerned with the transfer of data between hosts. These data transfer commands include the command which specify how the data is to be transmitted and the way in which the data is to be represented.</span>&nbsp;</p>
+<p class="Element10">
+&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The mechanism of transferring data consists of setting up the data connection to the appropriate ports and choosing the parameters for the transfer.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The passive data transfer process shall &quot;<a href="01105.html" target="topic">listen</a>&quot; on the data port prior to sending a transfer request command.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">The FTP request command determines the direction of the data transfer. The server, upon receiving the transfer request, will initiate the data connection to the port. When the connection is established, the data</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">transfer begins between DTP’s, and the server-PI sends a confirming reply to the user-PI.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">It is possible for the user to specify an alternate data port by use of the PORT command.</span>&nbsp;</p>
+<p class="Element10">
+<span style="color: #000000">In general, it is the server’s responsibility to maintain the data connection, to initiate it and to close it.</span>&nbsp;</p></div>
 </div>
 </div>
 <!-- End Page Content -->
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01011.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="00904.html" target="topic">IPv6 Module</a> &gt; <a href="01591.html" target="topic">Using the Library</a> &gt; <a href="01590.html" target="topic">Library Overview</a></div>
+<a href="01101.html" target="topic">TCP/IP Stack Libraries Help</a> &gt; <a href="01592.html" target="topic">FTP Client Module</a> &gt; <a href="01596.html" target="topic">Using The Library</a> &gt; <a href="01590.html" target="topic">How The Library Works</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -83,13 +78,13 @@ Data Types and Constants&nbsp;</div></td><td class="Element67" valign="top" widt
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01582.html" target="topic">Previous</a> | <a href="01591.html" target="topic">Up</a> | <a href="01584.html" target="topic">Next</a></div>
+<a href="01594.html" target="topic">Previous</a> | <a href="01596.html" target="topic">Up</a> | <a href="01587.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP IPv6 Library Overview Topic Title: Library Overview)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: TCPIP FTPC How The Library Works Topic Title: How The Library Works)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->

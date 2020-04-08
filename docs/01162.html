@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Frameset//EN">
 <html>
 <head>
-<title>NET_PRES_SocketRemoteBind Function</title>
+<title>NET_PRES_EncProviderMaxOutputSize Type</title>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     <meta name="generator" content="Doc-O-Matic" />
     <meta http-equiv="Content-Style-Type" content="text/css" />
@@ -18,7 +18,7 @@
 <!-- Begin Page Header -->
 <div class="Element710" id="areafixed">
 <div class="Element94">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01162.html" target="topic">NET_PRES_SocketRemoteBind Function</a></div>
+<a href="01131.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01145.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01162.html" target="topic">NET_PRES_EncProviderMaxOutputSize Type</a></div>
 <div class="Element92">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -26,15 +26,15 @@
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element2">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element90">
-<a href="01161.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01163.html" target="topic">Next</a></div>
+<a href="01274.html" target="topic">Previous</a> | <a href="01145.html" target="topic">Up</a> | <a href="01165.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element96">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRemoteBind@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_ADDR_T@NET_PRES_SKT_PORT_T@NET_PRES_ADDRESS * Topic Title: NET_PRES_SocketRemoteBind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderMaxOutputSize Topic Title: NET_PRES_EncProviderMaxOutputSize Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table><div class="Element5">
-NET_PRES_SocketRemoteBind Function</div>
+NET_PRES_EncProviderMaxOutputSize Type</div>
 </div>
 </div>
 
@@ -49,22 +49,21 @@ NET_PRES_SocketRemoteBind Function</div>
 <a name="4465736372697074696F6E"></a><div class="Element11">
 <div class="Element10">
 <p class="Element10">
-This function calls directly to the transport layer's remote bind function.</p></div>
+Presentation Encryption Provider Maximum Output Size Function Pointer Prototype&nbsp;</p>
+<p class="Element10">
+This function pointer defines the maximum output size function. Returns the maximum record layer size for plaintext data. This will correspond to either the maximum SSL/TLS record size as specified by the protocol standard, the maximum TLS fragment size as set by the TLS Max Fragment Length extension.&nbsp;</p>
+<p class="Element10">
+&nbsp;</p></div>
 </div>
 <a name="43"></a><div class="Element99">
 C</div>
-<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">bool</span></strong> <strong><span style="color: #000000">NET_PRES_SocketRemoteBind</span></strong>(
-    <a href="01118.html" target="topic">NET_PRES_SKT_HANDLE_T</a> <strong><span style="color: #000000">handle</span></strong>, 
-    <a href="01108.html" target="topic">NET_PRES_SKT_ADDR_T</a> <strong><span style="color: #000000">addrType</span></strong>, 
-    <a href="01121.html" target="topic">NET_PRES_SKT_PORT_T</a> <strong><span style="color: #000000">port</span></strong>, 
-    <a href="01061.html" target="topic">NET_PRES_ADDRESS</a> * <strong><span style="color: #000000">addr</span></strong>
-);</pre></div></div>
+<div class="Element101"><div class="Element100"><pre class="Element100"><strong><span style="color: #000080">typedef</span></strong> int32_t (* <strong><span style="color: #000000">NET_PRES_EncProviderMaxOutputSize</span></strong>)(<strong><span style="color: #000080">void</span></strong> * providerData);</pre></div></div>
 <a name="507265636F6E646974696F6E73"></a><div class="Element14">
 Preconditions</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-A <a href="01305.html" target="topic">socket</a> needs to have been opened by <a href="01156.html" target="topic">NET_PRES_SocketOpen</a>.</p></div>
+A connection must have already been created, and be in the open state. This function must be called after the SSL/TLS handshake has been completed.</p></div>
 </div>
 <a name="506172616D6574657273"></a><div class="Element14">
 Parameters</div>
@@ -81,24 +80,9 @@ Parameters&nbsp;</div></td><td class="Element304" valign="top" width="65%">
 Description&nbsp;</div></td></tr><tr>
 <td class="Element302" valign="top" width="35%">
 <div class="Element303">
-handle&nbsp;</div></td><td class="Element306" valign="top" width="65%">
+providerData&nbsp;</div></td><td class="Element306" valign="top" width="65%">
 <div class="Element307">
-The <a href="01305.html" target="topic">socket</a> to bind.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-addType&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The type of address being used. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-port&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The port to use. This is passed unaltered to the transport layer.&nbsp;</div></td></tr><tr>
-<td class="Element302" valign="top" width="35%">
-<div class="Element303">
-addr&nbsp;</div></td><td class="Element306" valign="top" width="65%">
-<div class="Element307">
-The address to bind to. This is passed unaltered to the transport layer.&nbsp;</div></td></tr></table></div></div>
+A pointer to the buffer for the provider to keep connection specific data.&nbsp;</div></td></tr></table></div></div>
 </div>
 </div>
 <a name="52657475726E73"></a><div class="Element14">
@@ -106,10 +90,10 @@ Returns</div>
 <div class="Element11">
 <div class="Element10">
 <p class="Element10">
-
+Upon success, the maximum output size will be returned. Upon error, 0 is returned:
 <ul class="Element635">
-<li class="Element605">true - Indicates success</li>
-<li class="Element605">false - Indicates failure</li>
+<li class="Element605">invalid function argument</li>
+<li class="Element605">if the SSL/TLS handshake has not been completed yet</li>
 </ul></p></div>
 </div>
 </div>
@@ -117,7 +101,7 @@ Returns</div>
 
 <!-- Begin Page Footer -->
 <div class="Element95">
-<a href="01041.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01055.html" target="topic">Library Interface</a> &gt; b) Socket Functions &gt; <a href="01162.html" target="topic">NET_PRES_SocketRemoteBind Function</a></div>
+<a href="01131.html" target="topic">Networking Presentation Layer Help</a> &gt; <a href="01145.html" target="topic">Library Interface</a> &gt; d) Data Types and Constants &gt; <a href="01162.html" target="topic">NET_PRES_EncProviderMaxOutputSize Type</a></div>
 <div class="Element93">
 <table width="100%" cellspacing="0" cellpadding="0">
 <tr><td width="25%">
@@ -125,13 +109,13 @@ Returns</div>
 MPLAB Harmony TCP/IP Help</div>
 </td><td width="25%">
 <div class="Element4">
-<a href="contents.html" target="tocidx">Contents</a> | <a href="01592.html" target="topic">Home</a></div>
+<a href="contents.html" target="tocidx">Contents</a> | <a href="01689.html" target="topic">Home</a></div>
 </td><td width="25%">
 <div class="Element91">
-<a href="01161.html" target="topic">Previous</a> | <a href="01055.html" target="topic">Up</a> | <a href="01163.html" target="topic">Next</a></div>
+<a href="01274.html" target="topic">Previous</a> | <a href="01145.html" target="topic">Up</a> | <a href="01165.html" target="topic">Next</a></div>
 </td><td width="25%">
 <div class="Element97">
-<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_SocketRemoteBind@NET_PRES_SKT_HANDLE_T@NET_PRES_SKT_ADDR_T@NET_PRES_SKT_PORT_T@NET_PRES_ADDRESS * Topic Title: NET_PRES_SocketRemoteBind Function)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
+<a href="mailto:docerrors@microchip.com&subject=MPLAB Harmony Documentation Feedback (Topic ID: NET_PRES_EncProviderMaxOutputSize Topic Title: NET_PRES_EncProviderMaxOutputSize Type)&body=Thank you for your feedback! Please include a description of your feedback, and indicate whether you are reporting an an error in the documentation or an enhancement.">Documentation Feedback</a><br> <a href="http://support.microchip.com" target="_blank">Microchip Support</a></div>
 </td></tr></table></div>
 
 <!-- End Page Footer -->
