@@ -70,6 +70,7 @@ public class MainMPFS extends javax.swing.JFrame {
         PROJECT,
     };
     public String uploadExceptionString = null;
+    public String responseExceptionString = null;
     public int percen=0;
     public int progressByteCount=0;
     public int uploadFileLength=0;
@@ -77,6 +78,8 @@ public class MainMPFS extends javax.swing.JFrame {
     AdvanceSettings advSetting;
     UploadSettings uploadSettings;
     AboutBox aboutBox;
+    public HttpURLConnection uConn_upload;
+    InputStream inStream;
     public boolean generationResult;
     public List<String> generateLog;
     public MPFS_OUTPUT_VERSION outPutVersion = MPFS_OUTPUT_VERSION.MPFS2;
@@ -178,7 +181,7 @@ public class MainMPFS extends javax.swing.JFrame {
    /*
     * XML interface file to store the Configuration details
     */
-   public String xmlOuputfile = "MPFS2SettingDetails.xml";
+   public String xmlOuputfile = "MPFS_Net_SettingDetails.xml";
 
     /** Creates new form MainMPFS */
     public MainMPFS() {
@@ -220,12 +223,12 @@ public class MainMPFS extends javax.swing.JFrame {
                 if(xmlIntrf.validateSettingsNodeInfo(XMLNodeName[iLoop])!= true)
                 {
                    //System.out.println("if File has problem \n");
-                    File invalidXmlFile = new File("mpfs2SettingDetails.bak");
+                    File invalidXmlFile = new File("MPFS_Net_SettingDetails.bak");
                     xmlFile.renameTo(invalidXmlFile);
                     xmlFile.delete();
                     xmlIntrf.defaultSettingXmlFileCreation();
                     JOptionPane.showMessageDialog(null, "Invalid XML File.\n" +
-                           "File saved as mpfs2SettingDetails.bak ."); //, "System Alert:"); //, JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
+                           "File saved as MPFS_Net_SettingDetails.bak ."); //, "System Alert:"); //, JOptionPane.OK_OPTION,JOptionPane.INFORMATION_MESSAGE);
                 }
             }
         }
@@ -249,8 +252,8 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Aug,07 2019"+"<br>";
-        String version = "Version MPFS 3.3.6";
+        aboutStr = "<html>"+"Date April,08 2020"+"<br>";
+        String version = "Version MPFS 3.6.0";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
         MainKeyEventActionIntialization();
@@ -294,7 +297,6 @@ public class MainMPFS extends javax.swing.JFrame {
             saveXmlNodeValue(eXmlNodeAttribute.SOURCE_DIRECTORY_PATH,sourceDirectoryPath,0,true);
 
         }catch(IOException E){
-
         }
 
         // project Bin File Path
@@ -735,8 +737,6 @@ public class MainMPFS extends javax.swing.JFrame {
         if(radWebDir.isSelected()){
         if(outPutVersion == MPFS_OUTPUT_VERSION.MPFS2)
         {
-            //builder ;
-            //settings = new AdvanceSettings(this);
             builder.MPFS2Builder(txtProjectDir.getText(),txtProjectImageName.getText());
             builder.DynamicTypes(advSetting.getDynamicFileStr());
             builder.NonGZipTypes(advSetting.getNoCompressionFileStr());
@@ -911,145 +911,150 @@ public class MainMPFS extends javax.swing.JFrame {
        int byteRead;
         try{
 
-        if (userName.length() > 0)
-        {
-            Authenticator.setDefault(new Authenticator() {
-            protected PasswordAuthentication getPasswordAuthentication() {
-                if(passwordAuthRetryCnt>0)
-                {
-                    return null;
+            if (userName.length() > 0)
+            {
+                Authenticator.setDefault(new Authenticator() {
+                protected PasswordAuthentication getPasswordAuthentication() {
+                    if(passwordAuthRetryCnt>0)
+                    {
+                        return null;
+                    }
+                    passwordAuthRetryCnt++;
+                    return new PasswordAuthentication(userName, pass.toCharArray());
                 }
-                passwordAuthRetryCnt++;
-                return new PasswordAuthentication(userName, pass.toCharArray());
+                });
             }
-            });
-        }
-        lblMessage.setText("Contacting device for upload...");
-        String boundary = Long.toString(System.currentTimeMillis(), 16);
-        String auth = userName+":"+pass;
-        urlPath = protocol + "://" + IPAddr + ":80/" + uploadPath;
-        URL url = new URL(urlPath);
-        URLConnection conn = url.openConnection();
-        HttpURLConnection  uConn = (HttpURLConnection)conn;
+            lblMessage.setText("Contacting device for upload...");
+            String boundary = Long.toString(System.currentTimeMillis(), 16);
+            String auth = userName+":"+pass;
+            urlPath = protocol + "://" + IPAddr + ":80/" + uploadPath;
+            URL url = new URL(urlPath);
+            URLConnection conn = url.openConnection();
+            HttpURLConnection  uConn = (HttpURLConnection)conn;
 
-        uConn.setRequestProperty("Authorization", "Basic " + new BASE64Encoder().encode(auth.getBytes()));
-        uConn.setDoOutput(true);
-        uConn.setDoInput(true);
-        uConn.setRequestProperty("MIME-version", "1.0");
-        uConn.setRequestProperty("Content-Type", "multipart/form-data;  boundary=" + boundary);
-        uConn.setRequestProperty("Expect","100-continue");
-        uConn.setRequestProperty("Accept","");
-        HttpURLConnection.setFollowRedirects(false);
-        uConn.setRequestProperty("Cache-Control", "no-cache");
-        uConn.setInstanceFollowRedirects(false);
-        //uConn.setRequestProperty("Content-Length",Integer.toString(uploadFileLength));
-        conn.connect();
-        InputStream input = uConn.getInputStream();
-//         pa =
-//               Authenticator.requestPasswordAuthentication(uploadVal.getIpAddress(),
-//               InetAddress.getByName(uploadVal.getIpAddress()), 80, "http",null,null);//,"", "ntlm");
-//
-//         if (pa != null)
-//         {
-//             System.out.println(pa.getUserName());
-//             System.out.println(pa.getPassword());
-//         }
-//         else
-//         {
-//            System.out.println("PasswordAuthentication was null !");
-//            //generateLog.add
-//         }
-         input.close();
-         uConn.disconnect();
-         if(passwordAuthRetryCnt > 1)
-         {
-            generationResult = false;
-            generateLog.add("ERROR: Could not contact remote device for upload.");
-            generateLog.add("ERROR: " + "Authentication failure");
-            ShowResultDialog("The MPFS image could not be uploaded.");
-            return;
-         }
+            uConn.setRequestProperty("Authorization", "Basic " + new BASE64Encoder().encode(auth.getBytes()));
+            uConn.setDoOutput(true);
+            uConn.setDoInput(true);
+            uConn.setRequestProperty("MIME-version", "1.0");
+            uConn.setRequestProperty("Content-Type", "multipart/form-data;  boundary=" + boundary);
+            uConn.setRequestProperty("Expect","100-continue");
+            uConn.setRequestProperty("Accept","");
+            HttpURLConnection.setFollowRedirects(false);
+            uConn.setRequestProperty("Cache-Control", "no-cache");
+            uConn.setInstanceFollowRedirects(false);
+            //uConn.setRequestProperty("Content-Length",Integer.toString(uploadFileLength));
+            conn.connect();
+            InputStream input = uConn.getInputStream();
+    //         pa =
+    //               Authenticator.requestPasswordAuthentication(uploadVal.getIpAddress(),
+    //               InetAddress.getByName(uploadVal.getIpAddress()), 80, "http",null,null);//,"", "ntlm");
+    //
+    //         if (pa != null)
+    //         {
+    //             System.out.println(pa.getUserName());
+    //             System.out.println(pa.getPassword());
+    //         }
+    //         else
+    //         {
+    //            System.out.println("PasswordAuthentication was null !");
+    //            //generateLog.add
+    //         }
+             input.close();
+             uConn.disconnect();
+             if(passwordAuthRetryCnt > 1)
+             {
+                generationResult = false;
+                generateLog.add("ERROR: Could not contact remote device for upload.");
+                generateLog.add("ERROR: " + "Authentication failure");
+                ShowResultDialog("The MPFS image could not be uploaded.");
+                return;
+             }
 
-        // to avoid java.net.ProtocolException:
-        //Cannot write output after reading input.
-        urlPath = protocol + "://" + IPAddr + "/"+uploadPath;
-        int totalNumberOfBytes=0;
-        String initialBoundaryStr = "-------------------"+boundary+"\r\n";
-        String contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\""
-                                + imageFile.getName() + "\"\r\n";
-        String contentType = "Content-Type: application/octet-stream\r\n";
-        String newLine =  "\r\n";
-        String endBoundaryStr ="\r\n"+"-----------------------"+boundary+"--\r\n";
-        totalNumberOfBytes = initialBoundaryStr.length()
-                + contentDisposition.length()
-                + contentType.length()
-                + newLine.length()
-                + endBoundaryStr.length();
-        URL url1 = new URL(urlPath);
-        HttpURLConnection uConn1 = (HttpURLConnection)url1.openConnection();
-        uConn1.setFixedLengthStreamingMode(uploadFileLength+totalNumberOfBytes);//.setChunkedStreamingMode(1024);
-        //uConn1.setChunkedStreamingMode(0);
-        uConn1.setRequestProperty("Authorization", "Basic " +
-                new BASE64Encoder().encode(auth.getBytes()));
-        uConn1.setDoOutput(true);
-        uConn1.setDoInput(true);
-        uConn1.setRequestProperty("MIME-version", "1.0");
-        uConn1.setRequestProperty("Content-Type", "multipart/form-data;  boundary=" + boundary);
-        uConn1.setRequestProperty("Expect","100-continue");
-        uConn1.setRequestProperty("Accept","");
-        uConn1.setRequestProperty("Cache-Control", "no-cache");
-        //uConn1.setRequestProperty("Content-Length",Integer.toString(uploadFileLength+2048));
+            // to avoid java.net.ProtocolException:
+            //Cannot write output after reading input.
+            urlPath = protocol + "://" + IPAddr + "/"+uploadPath;
+            int totalNumberOfBytes=0;
+            String initialBoundaryStr = "-------------------"+boundary+"\r\n";
+            String contentDisposition = "Content-Disposition: form-data; name=\"file\"; filename=\""
+                                    + imageFile.getName() + "\"\r\n";
+            String contentType = "Content-Type: application/octet-stream\r\n";
+            String newLine =  "\r\n";
+            String endBoundaryStr ="\r\n"+"-----------------------"+boundary+"--\r\n";
+            totalNumberOfBytes = initialBoundaryStr.length()
+                    + contentDisposition.length()
+                    + contentType.length()
+                    + newLine.length()
+                    + endBoundaryStr.length();
+            URL url1 = new URL(urlPath);
+            uConn_upload = (HttpURLConnection)url1.openConnection();
+            uConn_upload.setFixedLengthStreamingMode(uploadFileLength+totalNumberOfBytes);//.setChunkedStreamingMode(1024);
+            uConn_upload.setRequestProperty("Authorization", "Basic " +
+                    new BASE64Encoder().encode(auth.getBytes()));
+			uConn_upload.setRequestMethod("POST");
+            uConn_upload.setDoOutput(true);
+            uConn_upload.setDoInput(true);
+            uConn_upload.setRequestProperty("MIME-version", "1.0");
+            uConn_upload.setRequestProperty("Content-Type", "multipart/form-data;  boundary=" + boundary);
+            uConn_upload.setRequestProperty("Expect","100-continue");
+            uConn_upload.setRequestProperty("Accept","");
+            uConn_upload.setRequestProperty("Cache-Control", "no-cache");
+            //uConn_upload.setRequestProperty("Content-Length",Integer.toString(uploadFileLength+2048));
+			uConn_upload.connect();
+            lblMessage.setText("Waiting for upload to complete...");
+            FileInputStream inputFile = new FileInputStream(imageFile);
+            DataInputStream in = new DataInputStream(inputFile);
 
-        lblMessage.setText("Waiting for upload to complete...");
-        FileInputStream inputFile = new FileInputStream(imageFile);
-        DataInputStream in = new DataInputStream(inputFile);
-        //uConn1.getInputStream();
-        DataOutputStream outStream = new DataOutputStream( uConn1.getOutputStream() );
-        //System.out.println("initial outputstream Size:"+outStream.size());
+            DataOutputStream outStream = new DataOutputStream( uConn_upload.getOutputStream() );
 
-        outStream.write(initialBoundaryStr.getBytes(),0,initialBoundaryStr.length());
-        outStream.write(contentDisposition.getBytes(),0,contentDisposition.length());
-        outStream.write(contentType.getBytes(),0,contentType.length());
-        outStream.write(newLine.getBytes(),0,newLine.length());
-        int bufByte = 10000;
-        jProgressBar1.setStringPainted(false);
-        jProgressBar1.setMaximum(100);
-        jProgressBar1.setMinimum(0);
-        jProgressBar1.setValue(0);
-        if(uploadFileLength < bufByte)
-        {
-            progressVal = uploadFileLength;
-        }
-        else
-        {
-            progressVal = uploadFileLength/bufByte;
-        }
-        progressVal_temp = progressVal;
-        byte[] tempbuf = new byte[bufByte];
-        while((byteRead = in.read(tempbuf))!= -1)
-        {
-            outStream.write(tempbuf,0,byteRead);
-            progressByteCount = progressByteCount+byteRead;
-            percen++;
-            lblMessage.setText("Uploading image (" + progressByteCount + " / " + uploadFileLength + " bytes)");
-            jProgressBar1.setValue((100/progressVal)*percen);
-        }
-        outStream.write(endBoundaryStr.getBytes(),0,endBoundaryStr.length());
-        in.close();
-        outStream.flush();
-        outStream.close();
-        jProgressBar1.setValue(100);
-        //System.out.println("outputstream Size:"+outStream.size());
-        //InputStream input1 = uConn1.getInputStream();
-        lblMessage.setText("Uploading image (" + uploadFileLength + " / " + uploadFileLength + " bytes)");
-        uConn1.disconnect();
-        progressByteCount = 0;
-        percen = 0;
-        lblMessage.setText("Process Complete... See status dialog.");
+
+            outStream.write(initialBoundaryStr.getBytes(),0,initialBoundaryStr.length());
+            outStream.write(contentDisposition.getBytes(),0,contentDisposition.length());
+            outStream.write(contentType.getBytes(),0,contentType.length());
+            outStream.write(newLine.getBytes(),0,newLine.length());
+            int bufByte = 10000;
+            jProgressBar1.setStringPainted(false);
+            jProgressBar1.setMaximum(100);
+            jProgressBar1.setMinimum(0);
+            jProgressBar1.setValue(0);
+            if(uploadFileLength < bufByte)
+            {
+                progressVal = uploadFileLength;
+            }
+            else
+            {
+                progressVal = uploadFileLength/bufByte;
+            }
+            progressVal_temp = progressVal;
+            byte[] tempbuf = new byte[bufByte];
+            while((byteRead = in.read(tempbuf))!= -1)
+            {
+                outStream.write(tempbuf,0,byteRead);
+                progressByteCount = progressByteCount+byteRead;
+                percen++;
+                lblMessage.setText("Uploading image (" + progressByteCount + " / " + uploadFileLength + " bytes)");
+                jProgressBar1.setValue((100/progressVal)*percen);
+            }
+            outStream.write(endBoundaryStr.getBytes(),0,endBoundaryStr.length());
+            in.close();
+            outStream.flush();
+	        //This Below change helps Utility to wait to recive some response from the Server
+	        // This fix helps the utility to wait for the FIN message from the HTTP server
+	        try{
+	            int outputVal = uConn_upload.getResponseCode();
+	        }catch(Exception responseException){
+	            responseExceptionString = responseException.getMessage();
+	            responseExceptionString = null;
+	        }
+            outStream.close();
+            jProgressBar1.setValue(100);
+            lblMessage.setText("Uploading image (" + uploadFileLength + " / " + uploadFileLength + " bytes)");
+            uConn_upload.disconnect();
+            progressByteCount = 0;
+            percen = 0;
+            lblMessage.setText("Process Complete... See status dialog.");
         }catch(Exception uploadException)
         {
             generationResult = false;
-            //System.out.println("\r\nERROR: " + uploadException.getMessage());
             uploadExceptionString = uploadException.getMessage();
             lblMessage.setText("Waiting for upload to complete...");
         }
@@ -1058,7 +1063,7 @@ public class MainMPFS extends javax.swing.JFrame {
             // Display the results
             if ((uploadExceptionString == null) && generationResult)
             {
-                ShowResultDialog("The MPFS image upload was successfully completed.");
+                ShowResultDialog("The MPFS Net image upload was successfully completed.");
             }
             else
             {
@@ -1083,73 +1088,73 @@ public class MainMPFS extends javax.swing.JFrame {
         int byteRead;
         try{
 
-        lblMessage.setText("Contacting device for upload...");
-       // String boundary = Long.toString(System.currentTimeMillis(), 16);
-        String auth = userName+":"+pass;
-        urlPath = protocol + "://" + auth+ "@"+IPAddr + "/" + uploadPath;
+            lblMessage.setText("Contacting device for upload...");
+           // String boundary = Long.toString(System.currentTimeMillis(), 16);
+            String auth = userName+":"+pass;
+            urlPath = protocol + "://" + auth+ "@"+IPAddr + "/" + uploadPath;
 
-        URL url1 = new URL(urlPath);
-        URLConnection uConn1 = url1.openConnection();
+            URL url1 = new URL(urlPath);
+            URLConnection uConn1 = url1.openConnection();
 
-        uConn1.setDoOutput(true);
-        uConn1.setDoInput(true);
+            uConn1.setDoOutput(true);
+            uConn1.setDoInput(true);
 
-        uConn1.setRequestProperty("Cache-Control", "no-cache");
-        lblMessage.setText("Waiting for upload to complete...");
-        FileInputStream inputFile = new FileInputStream(imageFile);
-        DataInputStream in = new DataInputStream(inputFile);
-
-        DataOutputStream outStream = new DataOutputStream( uConn1.getOutputStream() );
-        int bufByte = 10000;
-        jProgressBar1.setStringPainted(false);
-        jProgressBar1.setMaximum(100);
-        jProgressBar1.setMinimum(0);
-        jProgressBar1.setValue(0);
-        progressVal = uploadFileLength/bufByte;
-        progressVal_temp = progressVal;
-        byte[] tempbuf = new byte[bufByte];
-        while((byteRead = in.read(tempbuf))!= -1)
-        {
-            outStream.write(tempbuf,0,byteRead);
-            progressByteCount = progressByteCount+byteRead;
-            percen++;
-            lblMessage.setText("Uploading image (" + progressByteCount + " / " + uploadFileLength + " bytes)");
-            jProgressBar1.setValue((100/progressVal)*percen);
-        }
-        in.close();
-        outStream.flush();
-        outStream.close();
-        jProgressBar1.setValue(100);
-        System.out.println("outputstream Size:"+outStream.size());
-        progressByteCount = 0;
-        percen = 0;
-        lblMessage.setText("Process Complete... See status dialog.");
-        }catch(Exception uploadException)
-        {
+            uConn1.setRequestProperty("Cache-Control", "no-cache");
             lblMessage.setText("Waiting for upload to complete...");
-            generationResult = false;
-            //System.out.println("\r\nERROR: " + uploadException.getMessage()+
-             //       uploadException.hashCode());
-            uploadExceptionString = uploadException.getMessage();
-        }
-        java.awt.EventQueue.invokeLater(new Runnable(){
-        public void run(){
-              // First, stop the marquee
-         lblMessage.setText("Process Complete... See status dialog.");
+            FileInputStream inputFile = new FileInputStream(imageFile);
+            DataInputStream in = new DataInputStream(inputFile);
 
-        // Display the results
-        if ((uploadExceptionString == null) && generationResult)
-        {
-            ShowResultDialog("The MPFS image upload was successfully completed.");
-        }
-        else
-        {
-            generationResult = false;
-            generateLog.add("ERROR: Could not contact remote device for upload.");
-            generateLog.add("The remote server returned an error: " + uploadExceptionString);
-            ShowResultDialog("The MPFS image could not be uploaded.");
-        }
-        uploadExceptionString = null;
+            DataOutputStream outStream = new DataOutputStream( uConn1.getOutputStream() );
+            int bufByte = 10000;
+            jProgressBar1.setStringPainted(false);
+            jProgressBar1.setMaximum(100);
+            jProgressBar1.setMinimum(0);
+            jProgressBar1.setValue(0);
+            progressVal = uploadFileLength/bufByte;
+            progressVal_temp = progressVal;
+            byte[] tempbuf = new byte[bufByte];
+            while((byteRead = in.read(tempbuf))!= -1)
+            {
+                outStream.write(tempbuf,0,byteRead);
+                progressByteCount = progressByteCount+byteRead;
+                percen++;
+                lblMessage.setText("Uploading image (" + progressByteCount + " / " + uploadFileLength + " bytes)");
+                jProgressBar1.setValue((100/progressVal)*percen);
+            }
+            in.close();
+            outStream.flush();
+            outStream.close();
+            jProgressBar1.setValue(100);
+            System.out.println("outputstream Size:"+outStream.size());
+            progressByteCount = 0;
+            percen = 0;
+            lblMessage.setText("Process Complete... See status dialog.");
+            }catch(Exception uploadException)
+            {
+                lblMessage.setText("Waiting for upload to complete...");
+                generationResult = false;
+                //System.out.println("\r\nERROR: " + uploadException.getMessage()+
+                 //       uploadException.hashCode());
+                uploadExceptionString = uploadException.getMessage();
+            }
+            java.awt.EventQueue.invokeLater(new Runnable(){
+            public void run(){
+                  // First, stop the marquee
+             lblMessage.setText("Process Complete... See status dialog.");
+
+            // Display the results
+            if ((uploadExceptionString == null) && generationResult)
+            {
+                ShowResultDialog("The MPFS image upload was successfully completed.");
+            }
+            else
+            {
+                generationResult = false;
+                generateLog.add("ERROR: Could not contact remote device for upload.");
+                generateLog.add("The remote server returned an error: " + uploadExceptionString);
+                ShowResultDialog("The MPFS image could not be uploaded.");
+            }
+            uploadExceptionString = null;
         //jProgressBar1.setValue(0);
         }
         });
@@ -1377,11 +1382,17 @@ public class MainMPFS extends javax.swing.JFrame {
         jPanel2.setVisible(false);
         jPanel3.setVisible(false);
         this.setSize(638, 300);
-        projectBinFilePath = projectDirectoryPath+File.separator+ "mpfs_img2.bin";
+        String preBuildimageName = txtProjectImageName.getText();
+        if(preBuildimageName.endsWith(".bin")== false)
+        {
+            preBuildimageName = preBuildimageName.concat(".bin");
+        }
+        projectBinFilePath = projectDirectoryPath+File.separator+ preBuildimageName;
         File projectBinFile = new File(projectBinFilePath);
         if(projectBinFile.exists() == false)
         {
-           projectBinFilePath = defaultHarmonyProjectBinFilePath;
+            JOptionPane.showMessageDialog(null,"The BinFile " +preBuildimageName +" is not present for " + projectDirectoryPath,
+                            "MPFS Error Message", JOptionPane.ERROR_MESSAGE);
         }
         TextSrcDir.setText(projectBinFilePath);
         chkBoxUpload.setEnabled(false);
@@ -1390,15 +1401,14 @@ public class MainMPFS extends javax.swing.JFrame {
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
         txtUploadPath.setEnabled(true);
         btnUploadSetting.setEnabled(true);
-       if(radWebDir.isSelected())
-       {
+        if(radWebDir.isSelected())
+        {
             saveXmlNodeValue(eXmlNodeAttribute.START_DIRECTORY_RAD_BOTTON,null,1,true);
-       }
-         else
-       {
+        }
+          else
+        {
             saveXmlNodeValue(eXmlNodeAttribute.START_DIRECTORY_RAD_BOTTON,null,1,false);
-       }
-
+        }
     }//GEN-LAST:event_radPreBuildDirActionPerformed
 
     private void radBinActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_radBinActionPerformed
