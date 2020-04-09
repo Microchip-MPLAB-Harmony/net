@@ -100,10 +100,10 @@ def instantiateComponent(tcpipTcpComponent):
 
     # Close Wait Timeout in ms
     tcpipTcpCloseWaitTimeout = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_CLOSE_WAIT_TIMEOUT", None)
-    tcpipTcpCloseWaitTimeout.setLabel("Close Wait Time-out - ms")
+    tcpipTcpCloseWaitTimeout.setLabel("OBSOLETE! Close Wait Time-out - ms. Should be 0!")
     tcpipTcpCloseWaitTimeout.setVisible(True)
-    tcpipTcpCloseWaitTimeout.setDescription("Close Wait Timeout in ms")
-    tcpipTcpCloseWaitTimeout.setDefaultValue(200)
+    tcpipTcpCloseWaitTimeout.setDescription("OBSOLETE! Close Wait Timeout in ms. Should be 0!")
+    tcpipTcpCloseWaitTimeout.setDefaultValue(0)
     #tcpipTcpCloseWaitTimeout.setDependencies(tcpipTcpMenuVisibleSingle, ["TCPIP_USE_TCP"])
 
     # Maximum number of retries
