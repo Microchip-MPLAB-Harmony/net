@@ -3158,7 +3158,7 @@ static void _ftpcErrorUpdate(TCPIP_FTPC_DCPT_TYPE* pDcpt)
     ftpcCtrlEvent(pDcpt,TCPIP_FTPC_CTRL_EVENT_FAILURE,0,0);
     // returns the state machine to default home
     pDcpt->ftpcState = TCPIP_FTPC_STATE_HOME; 
-    SYS_CONSOLE_PRINT("FTPC ERROR : %d\n\r", pDcpt->error);
+    SYS_CONSOLE_PRINT("FTPC ERROR : %d\r\n", pDcpt->error);
 }
 
 // Disconnect Control socket and remove the descriptor

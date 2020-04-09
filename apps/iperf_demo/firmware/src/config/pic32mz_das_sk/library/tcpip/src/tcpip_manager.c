@@ -287,6 +287,8 @@ static void _TCPIPStackSignalTmo(void);
 
 static bool _TCPIPStackCreateTimer(void);
 
+static bool _TCPIPStack_AdjustTimeouts(void);
+
 static void _TCPIP_SelectDefaultNet(TCPIP_NET_IF* pDownIf);
 
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
@@ -610,10 +612,11 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
     newTcpipErrorEventCnt = 0;
     newTcpipStackEventCnt = 0;
     newTcpipTickAvlbl = 0;
+    stackTaskRate = 0;
 
     memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
 
-    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \n\r");
+    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \r\n");
 
     tcpip_stack_status = SYS_STATUS_BUSY;
     if((tcpip_stack_init_cb = ((TCPIP_STACK_INIT*)init)->initCback) == 0)
@@ -909,7 +912,7 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
     }
 
 
-    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \n\r", initFail);
+    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \r\n", initFail);
     TCPIP_STACK_KillStack();
     return false;
 
@@ -1347,6 +1350,7 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
 // create the stack tick timer
 static bool _TCPIPStackCreateTimer(void)
 {
+    bool createRes = false;
 
     tcpip_stack_tickH = SYS_TMR_CallbackPeriodic(TCPIP_STACK_TICK_RATE, 0, _TCPIP_STACK_TickHandler);
     if(tcpip_stack_tickH != SYS_TMR_HANDLE_INVALID)
@@ -1355,13 +1359,38 @@ static bool _TCPIPStackCreateTimer(void)
         uint32_t rateMs = ((sysRes * TCPIP_STACK_TICK_RATE) + 999 )/1000;    // round up
         stackTaskRate = (rateMs * 1000) / sysRes;
         // SYS_TMR_CallbackPeriodicSetRate(tcpip_stack_tickH, rateMs);
-        return true;
+        // adjust module timeouts
+        createRes = _TCPIPStack_AdjustTimeouts();
     }
 
+    if(createRes == false)
+    {
+        SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Tick registration failed: %d\r\n", TCPIP_STACK_TICK_RATE);
+    }
 
-    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Tick registration failed: %d\r\n", TCPIP_STACK_TICK_RATE);
-    return false;
+    return createRes;
 
+}
+
+// makes sure that the modules have a proper timeout value
+// when the stackTaskRate is calculated
+static bool _TCPIPStack_AdjustTimeouts(void)
+{
+    int     modIx;
+    TCPIP_MODULE_SIGNAL_ENTRY*  pSigEntry;
+
+    pSigEntry = TCPIP_STACK_MODULE_SIGNAL_TBL + TCPIP_MODULE_LAYER1;
+    for(modIx = TCPIP_MODULE_LAYER1; modIx < sizeof(TCPIP_STACK_MODULE_SIGNAL_TBL)/sizeof(*TCPIP_STACK_MODULE_SIGNAL_TBL); modIx++, pSigEntry++)
+    {
+        if(pSigEntry->signalHandler != 0 && pSigEntry->asyncTmo != 0)
+        {
+            if(!_TCPIPStackSignalHandlerSetParams((TCPIP_STACK_MODULE)modIx, pSigEntry, pSigEntry->asyncTmo))
+            {   // should NOT happen
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
@@ -1574,7 +1603,7 @@ static bool _TCPIPStackIsRunState(void)
         {   // something went wrong...
             TCPIP_STACK_KillStack();
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization SYS TMR failed: %d - Aborting! \n\r", tmrStat);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization SYS TMR failed: %d - Aborting! \r\n", tmrStat);
             return false;
         }
     }
@@ -1671,7 +1700,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_READY;
-            SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Ended - success \n\r");
+            SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Ended - success \r\n");
         }
         else
         {   // failed initializing all interfaces;
@@ -1695,7 +1724,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \n\r", ifUpMask);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \r\n", ifUpMask);
             return false;
         }
     }
@@ -3463,7 +3492,10 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
 
 void TCPIP_STACK_AddressServiceDefaultSet(TCPIP_NET_IF* pNetIf)
 {
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    // keep access to IP addresses consistent
     _TCPIPStackSetIpAddress(pNetIf, &pNetIf->DefaultIPAddr, &pNetIf->DefaultMask, &pNetIf->DefaultGateway, false);
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
     _TCPIPStackSetConfig(pNetIf, false);
 }
 
@@ -3904,7 +3936,7 @@ bool _TCPIPStackSignalHandlerSetParams(TCPIP_STACK_MODULE modId, tcpipSignalHand
 {
     TCPIP_MODULE_SIGNAL_ENTRY* pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle;
     if((pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle) != 0 && pSignalEntry->signalHandler != 0)
-    {   // minimim sanity check
+    {   // minimum sanity check
 		if ((asyncTmoMs != 0) && (asyncTmoMs < stackTaskRate))
 		{
             asyncTmoMs = stackTaskRate;
