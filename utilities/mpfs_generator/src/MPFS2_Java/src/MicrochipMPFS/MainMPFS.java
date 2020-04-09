@@ -79,7 +79,7 @@ public class MainMPFS extends javax.swing.JFrame {
     UploadSettings uploadSettings;
     AboutBox aboutBox;
     public HttpURLConnection uConn_upload;
-    InputStream inStream;
+    int outputUploadResponse=0;
     public boolean generationResult;
     public List<String> generateLog;
     public MPFS_OUTPUT_VERSION outPutVersion = MPFS_OUTPUT_VERSION.MPFS2;
@@ -252,7 +252,7 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date April,08 2020"+"<br>";
+        aboutStr = "<html>"+"Date April,10 2020"+"<br>";
         String version = "Version MPFS 3.6.0";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
@@ -1037,14 +1037,14 @@ public class MainMPFS extends javax.swing.JFrame {
             outStream.write(endBoundaryStr.getBytes(),0,endBoundaryStr.length());
             in.close();
             outStream.flush();
-	        //This Below change helps Utility to wait to recive some response from the Server
-	        // This fix helps the utility to wait for the FIN message from the HTTP server
-	        try{
-	            int outputVal = uConn_upload.getResponseCode();
-	        }catch(Exception responseException){
-	            responseExceptionString = responseException.getMessage();
-	            responseExceptionString = null;
-	        }
+            //This Below change helps Utility to wait to recive some response from the Server
+            // This fix helps the utility to wait for the FIN message from the HTTP server
+            try{
+                outputUploadResponse = uConn_upload.getResponseCode();
+            }catch(Exception responseException){
+                responseExceptionString = responseException.getMessage();
+                responseExceptionString = null;
+            }
             outStream.close();
             jProgressBar1.setValue(100);
             lblMessage.setText("Uploading image (" + uploadFileLength + " / " + uploadFileLength + " bytes)");
@@ -1057,6 +1057,13 @@ public class MainMPFS extends javax.swing.JFrame {
             generationResult = false;
             uploadExceptionString = uploadException.getMessage();
             lblMessage.setText("Waiting for upload to complete...");
+        }
+        finally
+        {
+            if(outputUploadResponse == HttpURLConnection.HTTP_OK)
+            {
+                uConn_upload.disconnect();
+            }
         }
         java.awt.EventQueue.invokeLater(new Runnable(){
             public void run(){
