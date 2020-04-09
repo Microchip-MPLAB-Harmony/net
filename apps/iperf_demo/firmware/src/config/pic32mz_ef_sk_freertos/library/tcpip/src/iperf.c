@@ -1336,7 +1336,7 @@ static void GenericTxEnd(tIperfState* pIState)
 
             IPV4_ADDR lclAddress;
 
-            (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "\n\riperf: instance %d started ...\r\n", pIState - gIperfState);
+            (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: instance %d started ...\r\n", pIState - gIperfState);
 
             lclAddress.Val = TCPIP_STACK_NetAddress(pIState->pNetIf);
 
@@ -1591,7 +1591,7 @@ static void StateMachineTcpRx(tIperfState* pIState)
           IPV4_ADDR lclAddress;
           
           // This is the first rx pkt.
-          (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "\n\riperf: instance %d session started ...\r\n", pIState - gIperfState);
+          (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: instance %d session started ...\r\n", pIState - gIperfState);
 
           pIState->startTime = SYS_TMR_TickCountGet();
           pIState->lastCheckTime = 	pIState->startTime;
@@ -1953,7 +1953,7 @@ static void StateMachineUdpRx(tIperfState* pIState)
           // The first pkt is used to set up the server,
           // does not count as a data pkt.
 
-          (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "\n\riperf: instance %d session started ...\r\n", pIState - gIperfState);
+          (pIState->pCmdIO->pCmdApi->print)(cmdIoParam, "\r\niperf: instance %d session started ...\r\n", pIState - gIperfState);
 
           if ( pIState->pktId != 0 )
           {

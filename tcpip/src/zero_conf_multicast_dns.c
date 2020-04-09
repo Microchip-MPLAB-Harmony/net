@@ -2080,12 +2080,12 @@ static void _mDNSResponder(DNSDesc_t *pDNSdesc)
                 if (count == 0)
                 {
                     packetSize = _mDNSSendRRSize(&pDNSdesc->mResponderCtx.rr_list[i], true);
-                    //SYS_CONSOLE_PRINT("Packet Size %d count = %d\n\r", packetSize, count);
+                    //SYS_CONSOLE_PRINT("Packet Size %d count = %d\r\n", packetSize, count);
                 }
                 else
                 {
                     packetSize += _mDNSSendRRSize(&pDNSdesc->mResponderCtx.rr_list[i], false);
-                    //SYS_CONSOLE_PRINT("Packet Size %d count = %d\n\r", packetSize, count);
+                    //SYS_CONSOLE_PRINT("Packet Size %d count = %d\r\n", packetSize, count);
 
                 }
                count++;

@@ -470,7 +470,6 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
 #if defined(TCPIP_STACK_USE_FTP_CLIENT)  && defined(TCPIP_FTPC_COMMANDS)
     {"ftpc", (SYS_CMD_FNC)_Command_FTPC_Service,   ": Connect FTP Client to Server"},
 #endif  // (TCPIP_STACK_USE_FTP_CLIENT)    
-    
 };
 
 bool TCPIP_Commands_Initialize(const TCPIP_STACK_MODULE_CTRL* const stackCtrl, const TCPIP_COMMAND_MODULE_CONFIG* const pCmdInit)
@@ -761,7 +760,7 @@ static int _Command_DHCPLeaseInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** 
         nextLease = TCPIP_DHCPS_LeaseEntryGet(netH, &leaseEntry, prevLease);
         if(!nextLease)
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, " \n\r No more entry present \r\n", 0);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, " \r\n No more entry present \r\n", 0);
         }
         if(nextLease)
         {   // valid info
@@ -917,6 +916,18 @@ static int _CommandDhcpOptions(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** arg
                     bootName = dhcpInfo.bootFileName;
                 }
                 (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCP boot name: %s\r\n", bootName);
+
+                if(dhcpInfo.timeServersNo)
+                {
+                    TCPIP_Helper_IPAddressToString(dhcpInfo.timeServers, addBuff, sizeof(addBuff));
+                }
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCP Time servers: %d, %s\r\n", dhcpInfo.timeServersNo, dhcpInfo.timeServersNo ? addBuff: "None");
+
+                if(dhcpInfo.ntpServersNo)
+                {
+                    TCPIP_Helper_IPAddressToString(dhcpInfo.ntpServers, addBuff, sizeof(addBuff));
+                }
+                (*pCmdIO->pCmdApi->print)(cmdIoParam, "DHCP NTP servers: %d, %s\r\n", dhcpInfo.ntpServersNo, dhcpInfo.ntpServersNo ? addBuff :  "None");
             }
         }
         else
@@ -2610,7 +2621,7 @@ static int _Command_HeapInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
             int currLowHitMem = 0;
             int currHiHitMem = 0;
 
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TCPIP Heap distribution: \n\r");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "TCPIP Heap distribution: \r\n");
 
             for(ix = 0; ix < nEntries; ix++)
             {
@@ -2624,22 +2635,22 @@ static int _Command_HeapInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                     {
                         if(entryPrint == 0)
                         {
-                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "[%4d,    %5d]:\n\r", distEntry.lowLimit, distEntry.highLimit);
-                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tcurr hits: %d, \n\r", distEntry.currHits);
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "[%4d,    %5d]:\r\n", distEntry.lowLimit, distEntry.highLimit);
+                            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tcurr hits: %d, \r\n", distEntry.currHits);
                             currLowHitMem += distEntry.currHits * distEntry.lowLimit;
                             currHiHitMem += distEntry.currHits * distEntry.highLimit;
                             entryPrint = 1;
                         }
-                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: %d, \thits: %d, \n\r", pMDist->modId, pMDist->modHits);
+                        (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: %d, \thits: %d, \r\n", pMDist->modId, pMDist->modHits);
                     }
                 }
                 if(distEntry.gHits)
                 {
-                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: xx \thits: %d, \n\r", distEntry.gHits);
+                    (*pCmdIO->pCmdApi->print)(cmdIoParam, "\t mod: xx \thits: %d, \r\n", distEntry.gHits);
                 }
             }
 
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "curr Low Lim: %d, curr Hi Lim: %d, max Free: %d, min Free: %d\n\r", currLowHitMem, currHiHitMem, heapSize - currLowHitMem, heapSize - currHiHitMem);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "curr Low Lim: %d, curr Hi Lim: %d, max Free: %d, min Free: %d\r\n", currLowHitMem, currHiHitMem, heapSize - currLowHitMem, heapSize - currHiHitMem);
         }
 #endif  // defined(TCPIP_STACK_DRAM_DEBUG_ENABLE) 
 
@@ -5626,6 +5637,7 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
 }
 
 #endif // defined(TCPIP_STACK_USE_FTP_CLIENT)
+
 #endif // defined(TCPIP_STACK_COMMAND_ENABLE)
 
 

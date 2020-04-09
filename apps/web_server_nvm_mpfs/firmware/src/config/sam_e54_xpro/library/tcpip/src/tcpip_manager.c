@@ -616,7 +616,7 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
 
     memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
 
-    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \n\r");
+    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \r\n");
 
     tcpip_stack_status = SYS_STATUS_BUSY;
     if((tcpip_stack_init_cb = ((TCPIP_STACK_INIT*)init)->initCback) == 0)
@@ -912,7 +912,7 @@ static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
     }
 
 
-    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \n\r", initFail);
+    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \r\n", initFail);
     TCPIP_STACK_KillStack();
     return false;
 
@@ -1603,7 +1603,7 @@ static bool _TCPIPStackIsRunState(void)
         {   // something went wrong...
             TCPIP_STACK_KillStack();
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization SYS TMR failed: %d - Aborting! \n\r", tmrStat);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization SYS TMR failed: %d - Aborting! \r\n", tmrStat);
             return false;
         }
     }
@@ -1700,7 +1700,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_READY;
-            SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Ended - success \n\r");
+            SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Ended - success \r\n");
         }
         else
         {   // failed initializing all interfaces;
@@ -1724,7 +1724,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \n\r", ifUpMask);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \r\n", ifUpMask);
             return false;
         }
     }

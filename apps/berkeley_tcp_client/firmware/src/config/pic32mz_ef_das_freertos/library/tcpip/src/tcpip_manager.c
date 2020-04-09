@@ -227,6 +227,8 @@ static const TCPIP_FRAME_PROCESS_ENTRY TCPIP_FRAME_PROCESS_TBL [] =
 
 static SYS_STATUS       tcpip_stack_status = SYS_STATUS_UNINITIALIZED;
 
+static TCPIP_STACK_INIT_CALLBACK tcpip_stack_init_cb;    // callback to be called at init
+
 static TCPIP_STACK_HEAP_CONFIG  tcpip_heap_config = { 0 };      // copy of the heap that the stack uses
 
 
@@ -273,6 +275,10 @@ static TCPIP_MODULE_SIGNAL  _TCPIPStackManagerSignalClear(TCPIP_MODULE_SIGNAL cl
 
 static void     TCPIP_STACK_KillStack(void);
 
+static bool     _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init);
+
+static void     _TCPIP_InitCallback(TCPIP_STACK_INIT_CALLBACK cback);
+
 #if !defined(TCPIP_STACK_APP_EXECUTE_MODULE_TASKS)
 static void _TCPIPStackExecuteModules(void);
 #endif  // !defined(TCPIP_STACK_APP_EXECUTE_MODULE_TASKS)
@@ -280,6 +286,10 @@ static void _TCPIPStackExecuteModules(void);
 static void _TCPIPStackSignalTmo(void);
 
 static bool _TCPIPStackCreateTimer(void);
+
+static bool _TCPIPStack_AdjustTimeouts(void);
+
+static void _TCPIP_SelectDefaultNet(TCPIP_NET_IF* pDownIf);
 
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
 static void _TCPIPCopyMacAliasIf(TCPIP_NET_IF* pAliasIf, TCPIP_NET_IF* pPriIf);
@@ -467,7 +477,10 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #endif
 #if defined(TCPIP_STACK_USE_TFTP_SERVER)
     {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
-#endif    
+#endif   
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
+#endif 
     // Add other stack modules here
      
 };
@@ -569,13 +582,81 @@ static const TCPIP_STACK_MODULE_ENTRY  TCPIP_STACK_MODULE_ENTRY_TBL [] =
 #if defined(TCPIP_STACK_USE_SMTPC)
     {TCPIP_MODULE_SMTPC,        (tcpipModuleInitFunc)TCPIP_SMTPC_Initialize},          // TCPIP_MODULE_SMTPC
 #endif
-    
+#if defined(TCPIP_STACK_USE_TFTP_SERVER)
+    {TCPIP_MODULE_TFTP_SERVER,  (tcpipModuleInitFunc)TCPIP_TFTPS_Initialize,        TCPIP_TFTPS_Deinitialize},          // TCPIP_MODULE_TFTP_SERVER
+#endif   
+#if defined(TCPIP_STACK_USE_FTP_CLIENT)
+    {TCPIP_MODULE_FTP_CLIENT,   (tcpipModuleInitFunc)TCPIP_FTPC_Initialize,        TCPIP_FTPC_Deinitialize},          // TCPIP_MODULE_FTP_CLIENT
+#endif 
     // Add other stack modules here
      
 };
 #endif  // (TCPIP_STACK_DOWN_OPERATION != 0)
 
 SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MODULE_INIT * const init)
+{
+
+    if(tcpipNetIf != 0)
+    {   // already up and running
+        return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
+    }
+
+    if(init == 0)
+    {   // no initialization data passed
+        return SYS_MODULE_OBJ_INVALID;
+    }
+
+    // start stack initialization
+    totTcpipEventsCnt = 0;
+
+    newTcpipErrorEventCnt = 0;
+    newTcpipStackEventCnt = 0;
+    newTcpipTickAvlbl = 0;
+    stackTaskRate = 0;
+
+    memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
+
+    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \r\n");
+
+    tcpip_stack_status = SYS_STATUS_BUSY;
+    if((tcpip_stack_init_cb = ((TCPIP_STACK_INIT*)init)->initCback) == 0)
+    {   // perform the immediate initialization
+        bool init_res = _TCPIP_DoInitialize((const TCPIP_STACK_INIT*)init);
+        return init_res ? (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data : SYS_MODULE_OBJ_INVALID;
+    }
+
+    // continue initialization in TCPIP_STACK_Task()
+    return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
+
+}
+
+// calls the user initialization callback
+// as part of the stack initialization
+static void _TCPIP_InitCallback(TCPIP_STACK_INIT_CALLBACK cback)
+{
+    const TCPIP_STACK_INIT* pInit;
+
+    int cRes = (*cback)(&pInit);
+
+    if(cRes > 0)
+    {   // pending
+        return;
+    }
+
+    if (cRes == 0 && pInit != 0)
+    {   // we're good to go
+        _TCPIP_DoInitialize(pInit);
+    }
+    else
+    {   // some error has occurred
+        tcpip_stack_status = SYS_STATUS_UNINITIALIZED;
+    }
+}
+
+// performs the stack initialization
+// returns true if succesful
+// false otherwise
+static bool _TCPIP_DoInitialize(const TCPIP_STACK_INIT * init)
 {
     int                     netIx, ix;
     int                     initFail;
@@ -590,46 +671,25 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
     const TCPIP_MAC_OBJECT*  pPriMac; 
     IPV4_ADDR               dupIpAddr;
 
-    if(tcpipNetIf != 0)
-    {   // already up and running
-        return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
-    }
 
-    if(init == 0)
-    {   // no initialization data passed
-        return SYS_MODULE_OBJ_INVALID;
-    }
-
-    pUsrConfig = ((TCPIP_STACK_INIT*)init)->pNetConf;
-    nNets = ((TCPIP_STACK_INIT*)init)->nNets;
-    pModConfig = ((TCPIP_STACK_INIT*)init)->pModConfig;
-    nModules = ((TCPIP_STACK_INIT*)init)->nModules;
+    pUsrConfig = init->pNetConf;
+    nNets = init->nNets;
+    pModConfig = init->pModConfig;
+    nModules = init->nModules;
 
     // minimum sanity check
     if(nNets == 0 || pUsrConfig == 0 || pUsrConfig->pMacObject == 0 || pModConfig == 0 || nModules == 0)
     {   // cannot run with no interface/init data
-        return SYS_MODULE_OBJ_INVALID;
+        return false;
     }
 
     // snapshot of the initialization data
-    tcpip_init_data = *((TCPIP_STACK_INIT*)init);
+    tcpip_init_data = *init;
     
-    SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Started \n\r");
-
-
     while(true)
     {
         initFail = 0;
 
-        totTcpipEventsCnt = 0;
-
-        newTcpipErrorEventCnt = 0;
-        newTcpipStackEventCnt = 0;
-        newTcpipTickAvlbl = 0;
-
-        // start stack initialization
-
-        memset(&tcpip_stack_ctrl_data, 0, sizeof(tcpip_stack_ctrl_data));
 
         // find the heap settings
         pHeapConfig = _TCPIP_STACK_FindModuleData(TCPIP_MODULE_MANAGER, pModConfig, nModules);
@@ -743,7 +803,12 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             break;
         }
 
-        tcpipDefIf.defaultNet = 0;          // delete the old default
+        // delete the old defaults
+        tcpipDefIf.defaultNet = 0;
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+        tcpipDefIf.defaultMcastNet = 0;
+#endif
+
         // initialize the signal handlers
         memset(TCPIP_STACK_MODULE_SIGNAL_TBL, 0x0, sizeof(TCPIP_STACK_MODULE_SIGNAL_TBL));
         stackAsyncSignalCount = 0;
@@ -791,19 +856,11 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             }
 
             // interface success
-            // set the default interfaces
-            if(tcpipDefIf.defaultNet == 0)
-            {
-                tcpipDefIf.defaultNet = pIf;    // set as the 1st valid interface
-#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
-                tcpipDefIf.defaultMcastNet = pIf;    // set as the 1st valid interface
-#endif
-            }
         }
 
         // start the aliases, if any
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-        pUsrConfig = ((TCPIP_STACK_INIT*)init)->pNetConf;
+        pUsrConfig = init->pNetConf;
         for(netIx = 0, pIf = tcpipNetIf; netIx < nNets && !initFail; netIx++, pIf++, pUsrConfig++)
         {
             if(_TCPIPStackNetIsPrimary(pIf))
@@ -851,17 +908,16 @@ SYS_MODULE_OBJ TCPIP_STACK_Initialize(const SYS_MODULE_INDEX index, const SYS_MO
             SYS_ERROR_PRINT(SYS_ERROR_WARNING, TCPIP_STACK_HDR_MESSAGE "Dynamic memory is low: %d\r\n", heapLeft);
         }
 #endif  // !defined (TCPIP_STACK_USE_EXTERNAL_HEAP)
-        // continue initialization in TCPIP_STACK_Task()
-        tcpip_stack_status = SYS_STATUS_BUSY;
-        return (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data;
+        return true;
     }
 
 
-    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \n\r", initFail);
+    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed %d - Aborting! \r\n", initFail);
     TCPIP_STACK_KillStack();
-    return SYS_MODULE_OBJ_INVALID;
+    return false;
 
 }
+
 
 /*********************************************************************
  * Function:        bool TCPIP_STACK_BringNetUp(TCPIP_NET_IF* pNetIf, const TCPIP_NETWORK_CONFIG* pNetConf, const TCPIP_STACK_MODULE_CONFIG* pModConfig, int nModules)
@@ -1086,8 +1142,6 @@ bool TCPIP_STACK_NetUp(TCPIP_NET_HANDLE netH, const TCPIP_NETWORK_CONFIG* pUsrCo
 
 bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
 {
-    int netIx;
-    TCPIP_NET_IF *pIf, *pNewIf;
     TCPIP_NET_IF* pDownIf = _TCPIPStackHandleToNet(netH);
 
     if(pDownIf)
@@ -1097,10 +1151,9 @@ bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
             // kill interface
             // if this is primary, kill all its aliases
 #if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            bool priIsDown = false;
             if(_TCPIPStackNetIsPrimary(pDownIf))
             {
-                priIsDown = true;
+                TCPIP_NET_IF *pIf;
                 for(pIf = _TCPIPStackNetGetAlias(pDownIf); pIf != 0; pIf = _TCPIPStackNetGetAlias(pIf)) 
                 {
                     TCPIP_STACK_BringNetDown(&tcpip_stack_ctrl_data, pIf, TCPIP_STACK_ACTION_IF_DOWN, TCPIP_MAC_POWER_DOWN);
@@ -1108,33 +1161,7 @@ bool TCPIP_STACK_NetDown(TCPIP_NET_HANDLE netH)
             }
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
             TCPIP_STACK_BringNetDown(&tcpip_stack_ctrl_data, pDownIf, TCPIP_STACK_ACTION_IF_DOWN, TCPIP_MAC_POWER_DOWN);
-
-
-#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            if(tcpipDefIf.defaultNet == 0 || tcpipDefIf.defaultNet == pDownIf || 
-                        (priIsDown && _TCPIPStackNetGetPrimary(tcpipDefIf.defaultNet) == _TCPIPStackNetGetPrimary(pDownIf)))
-#else
-            if(tcpipDefIf.defaultNet == 0 || tcpipDefIf.defaultNet == pDownIf)
-#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
-            {   // since this interface is going down change the default interface
-                pNewIf = 0;
-                for(netIx = 0, pIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pIf++)
-                {
-                    if(pIf->Flags.bInterfaceEnabled && pIf != pDownIf)
-                    {   // select this one
-                        pNewIf = pIf;
-                        break;
-                    }
-                }
-                tcpipDefIf.defaultNet = pNewIf;
-#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
-                if(tcpipDefIf.defaultMcastNet == pDownIf)
-                {
-                    tcpipDefIf.defaultMcastNet = pNewIf;
-                }
-#endif
-            }
-
+            _TCPIP_SelectDefaultNet(pDownIf);
         }
         return true;
     }
@@ -1323,6 +1350,7 @@ static void TCPIP_STACK_BringNetDown(TCPIP_STACK_MODULE_CTRL* stackCtrlData, TCP
 // create the stack tick timer
 static bool _TCPIPStackCreateTimer(void)
 {
+    bool createRes = false;
 
     tcpip_stack_tickH = SYS_TMR_CallbackPeriodic(TCPIP_STACK_TICK_RATE, 0, _TCPIP_STACK_TickHandler);
     if(tcpip_stack_tickH != SYS_TMR_HANDLE_INVALID)
@@ -1331,13 +1359,38 @@ static bool _TCPIPStackCreateTimer(void)
         uint32_t rateMs = ((sysRes * TCPIP_STACK_TICK_RATE) + 999 )/1000;    // round up
         stackTaskRate = (rateMs * 1000) / sysRes;
         // SYS_TMR_CallbackPeriodicSetRate(tcpip_stack_tickH, rateMs);
-        return true;
+        // adjust module timeouts
+        createRes = _TCPIPStack_AdjustTimeouts();
     }
 
+    if(createRes == false)
+    {
+        SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Tick registration failed: %d\r\n", TCPIP_STACK_TICK_RATE);
+    }
 
-    SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Tick registration failed: %d\r\n", TCPIP_STACK_TICK_RATE);
-    return false;
+    return createRes;
 
+}
+
+// makes sure that the modules have a proper timeout value
+// when the stackTaskRate is calculated
+static bool _TCPIPStack_AdjustTimeouts(void)
+{
+    int     modIx;
+    TCPIP_MODULE_SIGNAL_ENTRY*  pSigEntry;
+
+    pSigEntry = TCPIP_STACK_MODULE_SIGNAL_TBL + TCPIP_MODULE_LAYER1;
+    for(modIx = TCPIP_MODULE_LAYER1; modIx < sizeof(TCPIP_STACK_MODULE_SIGNAL_TBL)/sizeof(*TCPIP_STACK_MODULE_SIGNAL_TBL); modIx++, pSigEntry++)
+    {
+        if(pSigEntry->signalHandler != 0 && pSigEntry->asyncTmo != 0)
+        {
+            if(!_TCPIPStackSignalHandlerSetParams((TCPIP_STACK_MODULE)modIx, pSigEntry, pSigEntry->asyncTmo))
+            {   // should NOT happen
+                return false;
+            }
+        }
+    }
+    return true;
 }
 
 void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
@@ -1352,13 +1405,19 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
     TCPIP_EVENT_LIST_NODE* tNode;
 #endif  // defined(TCPIP_STACK_USE_EVENT_NOTIFICATION) && (TCPIP_STACK_USER_NOTIFICATION != 0)   
 
-    if(object != (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data || tcpipNetIf == 0)
+    if(object != (SYS_MODULE_OBJ)&tcpip_stack_ctrl_data)
     {   // invalid handle/nothing to do
         return;
     }
 
     if(tcpip_stack_status != SYS_STATUS_BUSY && tcpip_stack_status != SYS_STATUS_READY)
     {   // some error state
+        return;
+    }
+
+    if(tcpipNetIf == 0)
+    {   // call the user callback...
+        _TCPIP_InitCallback(tcpip_stack_init_cb);
         return;
     }
 
@@ -1375,6 +1434,9 @@ void TCPIP_STACK_Task(SYS_MODULE_OBJ object)
     }
     TCPIP_Commands_ExecTimeUpdate();
 #endif // defined(TCPIP_STACK_TIME_MEASUREMENT)
+
+    // assign a default interface, if needed
+    _TCPIP_SelectDefaultNet(0);
 
     // check stack signals
     eventPending = TCPIP_STACK_CheckEventsPending();
@@ -1541,7 +1603,7 @@ static bool _TCPIPStackIsRunState(void)
         {   // something went wrong...
             TCPIP_STACK_KillStack();
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization SYS TMR failed: %d - Aborting! \n\r", tmrStat);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization SYS TMR failed: %d - Aborting! \r\n", tmrStat);
             return false;
         }
     }
@@ -1638,7 +1700,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_READY;
-            SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Ended - success \n\r");
+            SYS_CONSOLE_MESSAGE(TCPIP_STACK_HDR_MESSAGE "Initialization Ended - success \r\n");
         }
         else
         {   // failed initializing all interfaces;
@@ -1662,7 +1724,7 @@ static bool _TCPIPStackIsRunState(void)
                 }
             }
             tcpip_stack_status = SYS_STATUS_ERROR;
-            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \n\r", ifUpMask);
+            SYS_ERROR_PRINT(SYS_ERROR_ERROR, TCPIP_STACK_HDR_MESSAGE "Initialization failed: 0x%x - Aborting! \r\n", ifUpMask);
             return false;
         }
     }
@@ -1764,6 +1826,20 @@ static uint32_t _TCPIPProcessMacPackets(bool signal)
         // get the packet type
         frameType = TCPIP_Helper_ntohs(pMacHdr->Type);
 
+#if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+        TCPIP_NET_IF* pNetIf = (TCPIP_NET_IF*)pRxPkt->pktIf;
+        TCPIP_STACK_PACKET_HANDLER pktHandler = pNetIf->pktHandler;
+        if(pktHandler != 0)
+        {
+            bool was_processed = (*pktHandler)(pNetIf, pRxPkt, frameType, pNetIf->pktHandlerParam);
+            if(was_processed)
+            {
+                TCPIP_PKT_FlightLogAcknowledge(pRxPkt, TCPIP_THIS_MODULE_ID, TCPIP_MAC_PKT_ACK_EXTERN);
+                continue;
+            }
+        }
+            
+#endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
         frameFound = false;
         pFrameEntry = TCPIP_FRAME_PROCESS_TBL;
         for(frameIx = 0; frameIx < sizeof(TCPIP_FRAME_PROCESS_TBL) / sizeof(*TCPIP_FRAME_PROCESS_TBL); frameIx++, pFrameEntry++)
@@ -1919,6 +1995,90 @@ bool TCPIP_STACK_NetDefaultSet(TCPIP_NET_HANDLE netH)
     }
 
     return false;
+}
+
+// selects a default interface if needed
+// the default interface could become 0 
+// when a network interface is going down, for example
+// if pDownIf != 0 specifies a going down interface
+static void _TCPIP_SelectDefaultNet(TCPIP_NET_IF* pDownIf)
+{
+    int netIx;
+    TCPIP_NET_IF *pIf, *pNewIf;
+    bool searchDefault = false;
+
+    if(tcpipDefIf.defaultNet == 0)
+    {   // need search
+        searchDefault = true;
+    }
+    else if(tcpipDefIf.defaultNet == pDownIf)
+    {   // interface is going down; replace
+        tcpipDefIf.defaultNet = 0;
+        searchDefault = true;
+    }
+    else if(pDownIf != 0)
+    {
+#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+        if((_TCPIPStackNetGetPrimary(tcpipDefIf.defaultNet) == _TCPIPStackNetGetPrimary(pDownIf)))
+        {
+            tcpipDefIf.defaultNet = 0;
+            searchDefault = true;
+        }
+#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    }
+
+    // repeat for the multicast interface
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+    if(tcpipDefIf.defaultMcastNet == 0)
+    {   // need search
+        searchDefault = true;
+    }
+    else if(tcpipDefIf.defaultMcastNet == pDownIf)
+    {   // interface is going down; replace
+        tcpipDefIf.defaultMcastNet = 0;
+        searchDefault = true;
+    }
+    else if(pDownIf != 0)
+    {
+#if (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+        if((_TCPIPStackNetGetPrimary(tcpipDefIf.defaultMcastNet) == _TCPIPStackNetGetPrimary(pDownIf)))
+        {
+            tcpipDefIf.defaultMcastNet = 0;
+            searchDefault = true;
+        }
+#endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+    }
+#endif  // defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+
+
+    if(searchDefault)
+    {
+        pNewIf = 0;
+        for(netIx = 0, pIf = tcpipNetIf; netIx < tcpip_stack_ctrl_data.nIfs; netIx++, pIf++)
+        {
+            if(pIf->Flags.bInterfaceEnabled)
+            {   // select this one
+                pNewIf = pIf;
+                break;
+            }
+        }
+
+        if(pNewIf != 0)
+        {   // favor a primary interface
+            pNewIf = _TCPIPStackNetGetPrimary(pNewIf); 
+        }
+        if(tcpipDefIf.defaultNet == 0)
+        {
+            tcpipDefIf.defaultNet = pNewIf;
+        }
+#if defined(TCPIP_STACK_USE_IPV4) && defined(TCPIP_STACK_USE_IGMP)
+        if(tcpipDefIf.defaultMcastNet == 0)
+        {
+            tcpipDefIf.defaultMcastNet = pNewIf;
+        }
+#endif
+    }
+
 }
 
 TCPIP_NET_HANDLE TCPIP_STACK_NetMulticastGet(void)
@@ -3332,7 +3492,10 @@ static bool _LoadNetworkConfig(const TCPIP_NETWORK_CONFIG* pUsrConfig, TCPIP_NET
 
 void TCPIP_STACK_AddressServiceDefaultSet(TCPIP_NET_IF* pNetIf)
 {
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    // keep access to IP addresses consistent
     _TCPIPStackSetIpAddress(pNetIf, &pNetIf->DefaultIPAddr, &pNetIf->DefaultMask, &pNetIf->DefaultGateway, false);
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
     _TCPIPStackSetConfig(pNetIf, false);
 }
 
@@ -3773,7 +3936,7 @@ bool _TCPIPStackSignalHandlerSetParams(TCPIP_STACK_MODULE modId, tcpipSignalHand
 {
     TCPIP_MODULE_SIGNAL_ENTRY* pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle;
     if((pSignalEntry = (TCPIP_MODULE_SIGNAL_ENTRY*)handle) != 0 && pSignalEntry->signalHandler != 0)
-    {   // minimim sanity check
+    {   // minimum sanity check
 		if ((asyncTmoMs != 0) && (asyncTmoMs < stackTaskRate))
 		{
             asyncTmoMs = stackTaskRate;
@@ -4261,6 +4424,44 @@ static void _TCPIPCopyMacAliasIf(TCPIP_NET_IF* pAliasIf, TCPIP_NET_IF* pPriIf)
 }
 
 #endif  // (_TCPIP_STACK_ALIAS_INTERFACE_SUPPORT)
+
+// external packet processing
+#if (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
+TCPIP_STACK_PROCESS_HANDLE TCPIP_STACK_PacketHandlerRegister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PACKET_HANDLER pktHandler, const void* handlerParam)
+{
+    TCPIP_STACK_PROCESS_HANDLE pHandle = 0;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNetUp(hNet);
+
+    if(pNetIf != 0 && pNetIf->pktHandler == 0)
+    {
+        pNetIf->pktHandlerParam = handlerParam;
+        pNetIf->pktHandler = pktHandler;
+        pHandle = pktHandler;
+    }
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return pHandle;
+}
+
+bool TCPIP_STACK_PacketHandlerDeregister(TCPIP_NET_HANDLE hNet, TCPIP_STACK_PROCESS_HANDLE pktHandle)
+{
+    bool res = false;
+    OSAL_CRITSECT_DATA_TYPE critSect =  OSAL_CRIT_Enter(OSAL_CRIT_TYPE_LOW);
+
+    TCPIP_NET_IF* pNetIf = _TCPIPStackHandleToNet(hNet);
+
+    if(pNetIf != 0 && pNetIf->pktHandler == pktHandle)
+    {
+        pNetIf->pktHandler = 0;
+        res = true;
+    } 
+
+    OSAL_CRIT_Leave(OSAL_CRIT_TYPE_LOW, critSect);
+    return res;
+}
+
+#endif  // (TCPIP_STACK_EXTERN_PACKET_PROCESS != 0)
 
 // debugging features
 //
