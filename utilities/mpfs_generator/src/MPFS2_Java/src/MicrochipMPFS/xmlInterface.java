@@ -111,16 +111,6 @@ public class xmlInterface {
         doc = docBuilder.newDocument();
         Element rootElement = doc.createElement("Settings");
         doc.appendChild(rootElement);
-// Source directory details ----
-//        Element DefaultSourceDirectory = doc.createElement("Setting");
-//        DefaultSourceDirectory.setAttribute("Name", "DefaultSourceDirectory");
-//        DefaultSourceDirectory.setAttribute("Type", "String");
-//        DefaultSourceDirectory.setAttribute("Scope", "User");
-//        Element value = doc.createElement("Value");
-//        //value.appendChild(doc.createTextNode("C:\\Microchip Solutions\\TCPIP\\Demo App\\WebPages2"));
-//        value.appendChild(doc.createTextNode(MPFS2.defaultSourceDirectoryPath));
-//        DefaultSourceDirectory.appendChild(value);
-//        rootElement.appendChild(DefaultSourceDirectory);
 
         Element SourceDirectory_new = doc.createElement("Setting");
         //SourceDirectory_new.appendChild(value);
@@ -134,224 +124,121 @@ public class xmlInterface {
         SourceDirectory_new.appendChild(value);
         rootElement.appendChild(SourceDirectory_new);
 
-//        Element SourceDirectory_old = doc.createElement("Setting");
-//        //SourceDirectory_new.appendChild(value);
-//        SourceDirectory_old.setAttribute("Name", "SourceDirectory_old");
-//        SourceDirectory_old.setAttribute("Type", "String");
-//        SourceDirectory_old.setAttribute("Scope", "User");
-//        value = doc.createElement("Value");
-//        //value.appendChild(doc.createTextNode("..//..//..//TCPIP Demo App//WebPages2"));
-//        value.appendChild(doc.createTextNode(MPFS2.sourceDirectoryPath_old));
-//        SourceDirectory_old.appendChild(value);
-//        rootElement.appendChild(SourceDirectory_old);
-// Project Directory Path details ----
-//        Element DefaultProjectDirectory = doc.createElement("Setting");
-//        DefaultProjectDirectory.setAttribute("Name", "DefaultProjectDirectory");
-//        DefaultProjectDirectory.setAttribute("Type", "String");
-//        DefaultProjectDirectory.setAttribute("Scope", "User");
-//        value = doc.createElement("Value");
-//        //value.appendChild(doc.createTextNode("C:\\Microchip Solutions\\TCPIP\\Demo App\\WebPages2"));
-//        value.appendChild(doc.createTextNode(MPFS2.defaultProjectDirectoryPath));
-//        DefaultProjectDirectory.appendChild(value);
-//        rootElement.appendChild(DefaultProjectDirectory);
-
         Element projectDirectory_new = doc.createElement("Setting");
-        //SourceDirectory_new.appendChild(value);
         projectDirectory_new.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.PROJECT_DIRECTORY_PATH));
         projectDirectory_new.setAttribute("Type", "String");
-        //projectDirectory_new.setAttribute("Scope", "User");
         value = doc.createElement("Value");
-        //value.appendChild(doc.createTextNode("..//..//..//TCPIP//Demo App//WebPages2"));
         value.appendChild(doc.createTextNode(MPFS2.projectDirectoryPath));
         projectDirectory_new.appendChild(value);
         rootElement.appendChild(projectDirectory_new);
 
-//        Element projectDirectory_old = doc.createElement("Setting");
-//        //SourceDirectory_new.appendChild(value);
-//        projectDirectory_old.setAttribute("Name", "ProjectDirectory_old");
-//        projectDirectory_old.setAttribute("Type", "String");
-//        projectDirectory_old.setAttribute("Scope", "User");
-//        value = doc.createElement("Value");
-//        //value.appendChild(doc.createTextNode("..//..//..//TCPIP Demo App//WebPages2"));
-//        value.appendChild(doc.createTextNode(MPFS2.projectDirectoryPath_old));
-//        projectDirectory_old.appendChild(value);
-//        rootElement.appendChild(projectDirectory_old);
-//Project Bin file Path
-//        Element DefaultProjectBinFile = doc.createElement("Setting");
-//        DefaultProjectBinFile.setAttribute("Name", "DefaultProjectBinFile");
-//        DefaultProjectBinFile.setAttribute("Type", "String");
-//        DefaultProjectBinFile.setAttribute("Scope", "User");
-//        value = doc.createElement("Value");
-//        //value.appendChild(doc.createTextNode("C:\\Microchip Solutions\\TCPIP\\Demo App\\WebPages2"));
-//        value.appendChild(doc.createTextNode(MPFS2.defaultProjectBinFilePath));
-//        DefaultProjectBinFile.appendChild(value);
-//        rootElement.appendChild(DefaultProjectBinFile);
-
         Element projectBinFile_new = doc.createElement("Setting");
-        //SourceDirectory_new.appendChild(value);
         projectBinFile_new.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.PROJECT_BIN_FILE_PATH));
         projectBinFile_new.setAttribute("Type", "String");
-        //projectBinFile_new.setAttribute("Scope", "User");
         value = doc.createElement("Value");
-        //value.appendChild(doc.createTextNode("..//..//..//TCPIP//Demo App//WebPages2"));
         value.appendChild(doc.createTextNode(MPFS2.projectBinFilePath));
         projectBinFile_new.appendChild(value);
         rootElement.appendChild(projectBinFile_new);
 
-//        Element projectBinFile_old = doc.createElement("Setting");
-//        //SourceDirectory_new.appendChild(value);
-//        projectBinFile_old.setAttribute("Name", "ProjectBinFile_old");
-//        projectBinFile_old.setAttribute("Type", "String");
-//        projectBinFile_old.setAttribute("Scope", "User");
-//        value = doc.createElement("Value");
-//        //value.appendChild(doc.createTextNode("..//..//..//TCPIP Demo App//WebPages2"));
-//        value.appendChild(doc.createTextNode(MPFS2.projectBinFilePath_old));
-//        projectBinFile_old.appendChild(value);
-//        rootElement.appendChild(projectBinFile_old);
 
-// <Setting Name="StartWithDirectory" Type="boolean" Scope="User">
-//      <Value>True</Value>
-//    </Setting>
         Element radStartDirectory = doc.createElement("Setting");
         radStartDirectory.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.START_DIRECTORY_RAD_BOTTON));
         radStartDirectory.setAttribute("Type","Boolean");
-       // radStartDirectory.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("True"));
         radStartDirectory.appendChild(value);
         rootElement.appendChild(radStartDirectory);
 
-//<Setting Name="ImageName" Type="String" Scope="User">
-//      <Value>MPFSImg2</Value>
-//    </Setting>
         Element generateImageName = doc.createElement("Setting");
         generateImageName.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.IMAGE_NAME));
         generateImageName.setAttribute("Type","String");
-       // generateImageName.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("MPFSImg2"));
         generateImageName.appendChild(value);
         rootElement.appendChild(generateImageName);
 
-// <Setting Name="UploadImageAfterGenerate" Type="Boolean" Scope="User">
-//      <Value>True</Value>
-//    </Setting>
         Element uploadImgAfterGenerate = doc.createElement("Setting");
         uploadImgAfterGenerate.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UPLOAD_BIN_IMAGE_CHKBOX));
         uploadImgAfterGenerate.setAttribute("Type","Boolean");
-        //uploadImgAfterGenerate.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("True"));
         uploadImgAfterGenerate.appendChild(value);
         rootElement.appendChild(uploadImgAfterGenerate);
 
-//<Setting Name="OutputFormat" Type="Byte" Scope="User">
-//      <Value>0</Value>
-//    </Setting>
         Element outputImageFormat = doc.createElement("Setting");
         outputImageFormat.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.OUTPUT_IMAGE_FORMAT_RAD_BOTTON));
         outputImageFormat.setAttribute("Type","Byte");
-        //outputImageFormat.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("0"));
         outputImageFormat.appendChild(value);
         rootElement.appendChild(outputImageFormat);
-//    <Setting Name="UploadProtocol" Type="Byte" Scope="User">
-//      <Value">1</Value>
-//    </Setting>
+
         Element uploadProtocol = doc.createElement("Setting");
         uploadProtocol.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UPLOAD_PROTOCOL));
         uploadProtocol.setAttribute("Type","Byte");
-        //uploadProtocol.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("1"));
         uploadProtocol.appendChild(value);
         rootElement.appendChild(uploadProtocol);
-//    <Setting Name="DynamicFiles" Type="System.String" Scope="User">
-//      <Value Profile="(Default)">*.htm, *.html, *.cgi, *.xml</Value>
-//    </Setting>
+
         Element dynamicFiles = doc.createElement("Setting");
         dynamicFiles.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.DYNAMIC_FILES));
         dynamicFiles.setAttribute("Type","String");
-        //dynamicFiles.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("*.htm, *.html, *.cgi, *.xml"));
         dynamicFiles.appendChild(value);
         rootElement.appendChild(dynamicFiles);
 
-//    <Setting Name="NoCompressFiles" Type="System.String" Scope="User">
-//      <Value Profile="(Default)">*.inc, snmp.bib</Value>
-//    </Setting>
         Element noCompressFiles = doc.createElement("Setting");
         noCompressFiles.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.NO_COMPRESS_FILE_LIST));
         noCompressFiles.setAttribute("Type","String");
-       // noCompressFiles.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("snmp.bib,*.bin"));
         noCompressFiles.appendChild(value);
         rootElement.appendChild(noCompressFiles);
 
-//<Setting Name="UploadAddress" Type="String" Scope="User">
-//      <Value>MCHPBOARD</Value>
-//    </Setting>
         Element uploadAddress = doc.createElement("Setting");
         uploadAddress.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UPLOAD_ADDRESS));
         uploadAddress.setAttribute("Type","String");
-       // uploadAddress.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("MCHPBOARD"));
         uploadAddress.appendChild(value);
         rootElement.appendChild(uploadAddress);
-//    <Setting Name="UploadPath" Type="String" Scope="User">
-//      <Value>mpfsupload</Value>
-//    </Setting>
         Element uploadPath = doc.createElement("Setting");
         uploadPath.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UPLOAD_IMAGE_PATH));
         uploadPath.setAttribute("Type","String");
-       // uploadPath.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("mpfsupload"));
         uploadPath.appendChild(value);
         rootElement.appendChild(uploadPath);
-//    <Setting Name="UploadUser" Type="String" Scope="User">
-//      <Value>admin</Value>
-//    </Setting>
         Element uploadUserName = doc.createElement("Setting");
         uploadUserName.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UPLOAD_USER_NAME));
         uploadUserName.setAttribute("Type","String");
-       // uploadUserName.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("admin"));
         uploadUserName.appendChild(value);
         rootElement.appendChild(uploadUserName);
-//    <Setting Name="UploadPass" Type="String" Scope="User">
-//      <Value>microchip</Value>
-//    </Setting>
         Element uploadUserPasswd = doc.createElement("Setting");
         uploadUserPasswd.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UPLOAD_PASSWORD));
         uploadUserPasswd.setAttribute("Type","String");
-       // uploadUserPasswd.setAttribute("Scope","User");
         value = doc.createElement("Value");
         value.appendChild(doc.createTextNode("microchip"));
         uploadUserPasswd.appendChild(value);
         rootElement.appendChild(uploadUserPasswd);
         
-// <Setting Name="UnifiedStack" Type="Boolean" Scope="User">
-//      <Value>0</value>
-//</Setting>
         Element unifiedStack = doc.createElement("Setting");
         unifiedStack.setAttribute("Name",
                 (String)MPFS2.xmlAttrInfoMap.get(MainMPFS.eXmlNodeAttribute.UNIFIEDSTACK_USE));
@@ -362,29 +249,17 @@ public class xmlInterface {
         rootElement.appendChild(unifiedStack);
 
         try
-        {
-        // write the content into xml file
-            //fos = new FileOutputStream(xmlOutputFile);
+        {// File Saved
             transformerFactory = TransformerFactory.newInstance();
             transformer = transformerFactory.newTransformer();
             DOMSource source = new DOMSource(doc);
             StreamResult result = new StreamResult(xmlOutputFile);
-
-            // Output to console for testing
-            // StreamResult result = new StreamResult(System.out);
-
             transformer.transform(source, result);
-
-            //System.out.println("File saved!");
 	} 
         catch (TransformerException tfe) 
         {
             tfe.printStackTrace();
         }
-//        catch (FileNotFoundException ex)
-//        {
-//            errorMessage = ex.getMessage();
-//        }
     }
 // Node Name = " Setting" , Attr =  " DefaultSourceSetting ", Value = " Path "
     boolean modifyExistingXmlFile(String nodeName,String sAttr, String sValue)

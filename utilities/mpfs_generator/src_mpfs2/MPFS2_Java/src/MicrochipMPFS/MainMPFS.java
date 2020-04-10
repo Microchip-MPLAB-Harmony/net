@@ -70,6 +70,7 @@ public class MainMPFS extends javax.swing.JFrame {
         PROJECT,
     };
     public String uploadExceptionString = null;
+    public String responseExceptionString = null;
     public int percen=0;
     public int progressByteCount=0;
     public int uploadFileLength=0;
@@ -77,6 +78,8 @@ public class MainMPFS extends javax.swing.JFrame {
     AdvanceSettings advSetting;
     UploadSettings uploadSettings;
     AboutBox aboutBox;
+    HttpURLConnection uConn_upload;
+    int outputUploadResponse=0;
     public boolean generationResult;
     public List<String> generateLog;
     public MPFS_OUTPUT_VERSION outPutVersion = MPFS_OUTPUT_VERSION.MPFS2;
@@ -255,7 +258,7 @@ public class MainMPFS extends javax.swing.JFrame {
         uploadSettings =  new UploadSettings(this,true);
         aboutBox = new AboutBox(this,true);
         txtUploadPath.setText(uploadSettings.getUploadPathStr());
-        aboutStr = "<html>"+"Date Mar,27 2020"+"<br>";
+        aboutStr = "<html>"+"Date April,10 2020"+"<br>";
         String version = "Version MPFS 3.4.0";
         lebelAbout.setText(aboutStr+version+"</html>");
         UIManager.put("Button.defaultButtonFollowsFocus", Boolean.TRUE);
@@ -1097,27 +1100,27 @@ public class MainMPFS extends javax.swing.JFrame {
                 + newLine.length()
                 + endBoundaryStr.length();
         URL url1 = new URL(urlPath);
-        HttpURLConnection uConn1 = (HttpURLConnection)url1.openConnection();
-        uConn1.setFixedLengthStreamingMode(uploadFileLength+totalNumberOfBytes);//.setChunkedStreamingMode(1024);
-        //uConn1.setChunkedStreamingMode(0);
-        uConn1.setRequestProperty("Authorization", "Basic " +
-                new BASE64Encoder().encode(auth.getBytes()));
-        uConn1.setDoOutput(true);
-        uConn1.setDoInput(true);
-        uConn1.setRequestProperty("MIME-version", "1.0");
-        uConn1.setRequestProperty("Content-Type", "multipart/form-data;  boundary=" + boundary);
-        uConn1.setRequestProperty("Expect","100-continue");
-        uConn1.setRequestProperty("Accept","");
-        uConn1.setRequestProperty("Cache-Control", "no-cache");
-        //uConn1.setRequestProperty("Content-Length",Integer.toString(uploadFileLength+2048));
+        //HttpURLConnection 
+        uConn_upload = (HttpURLConnection)url1.openConnection();
+        uConn_upload.setFixedLengthStreamingMode(uploadFileLength+totalNumberOfBytes);//.setChunkedStreamingMode(1024);
 
+        uConn_upload.setRequestProperty("Authorization", "Basic " +
+                new BASE64Encoder().encode(auth.getBytes()));
+        uConn_upload.setRequestMethod("POST");
+        uConn_upload.setDoOutput(true);
+        uConn_upload.setDoInput(true);
+        uConn_upload.setRequestProperty("MIME-version", "1.0");
+        uConn_upload.setRequestProperty("Content-Type", "multipart/form-data;  boundary=" + boundary);
+        uConn_upload.setRequestProperty("Expect","100-continue");
+        uConn_upload.setRequestProperty("Accept","");
+        uConn_upload.setRequestProperty("Cache-Control", "no-cache");
+        uConn_upload.connect();
+        
         lblMessage.setText("Waiting for upload to complete...");
         FileInputStream inputFile = new FileInputStream(imageFile);
         DataInputStream in = new DataInputStream(inputFile);
-        //uConn1.getInputStream();
-        DataOutputStream outStream = new DataOutputStream( uConn1.getOutputStream() );
-        //System.out.println("initial outputstream Size:"+outStream.size());
-
+        DataOutputStream outStream = new DataOutputStream( uConn_upload.getOutputStream() );
+      
         outStream.write(initialBoundaryStr.getBytes(),0,initialBoundaryStr.length());
         outStream.write(contentDisposition.getBytes(),0,contentDisposition.length());
         outStream.write(contentType.getBytes(),0,contentType.length());
@@ -1135,6 +1138,7 @@ public class MainMPFS extends javax.swing.JFrame {
         {
             progressVal = uploadFileLength/bufByte;
         }
+        
         progressVal_temp = progressVal;
         byte[] tempbuf = new byte[bufByte];
         while((byteRead = in.read(tempbuf))!= -1)
@@ -1143,26 +1147,42 @@ public class MainMPFS extends javax.swing.JFrame {
             progressByteCount = progressByteCount+byteRead;
             percen++;
             lblMessage.setText("Uploading image (" + progressByteCount + " / " + uploadFileLength + " bytes)");
-            jProgressBar1.setValue((100/progressVal)*percen);
+            jProgressBar1.setValue((100/progressVal)*percen);            
         }
         outStream.write(endBoundaryStr.getBytes(),0,endBoundaryStr.length());
         in.close();
         outStream.flush();
+        //This Below change helps Utility to wait to recive some response from the Server
+        // This fix helps the utility to wait for the FIN message from the HTTP server
+        try{
+            outputUploadResponse = uConn_upload.getResponseCode();
+        }catch(Exception responseException){
+            responseExceptionString = responseException.getMessage();
+            responseExceptionString = null;
+        }
         outStream.close();
+
         jProgressBar1.setValue(100);
-        //System.out.println("outputstream Size:"+outStream.size());
-        //InputStream input1 = uConn1.getInputStream();
         lblMessage.setText("Uploading image (" + uploadFileLength + " / " + uploadFileLength + " bytes)");
-        uConn1.disconnect();
+        
+        uConn_upload.disconnect();
+        
         progressByteCount = 0;
         percen = 0;
         lblMessage.setText("Process Complete... See status dialog.");
+        
         }catch(Exception uploadException)
         {
             generationResult = false;
-            //System.out.println("\r\nERROR: " + uploadException.getMessage());
             uploadExceptionString = uploadException.getMessage();
             lblMessage.setText("Waiting for upload to complete...");
+        }
+        finally
+        {
+            if(outputUploadResponse == HttpURLConnection.HTTP_OK)
+            {
+                uConn_upload.disconnect();
+            }
         }
         java.awt.EventQueue.invokeLater(new Runnable(){
             public void run(){
@@ -1179,7 +1199,6 @@ public class MainMPFS extends javax.swing.JFrame {
                 ShowResultDialog("The MPFS2 image could not be uploaded.");
             }
              uploadExceptionString = null;
-             //jProgressBar1.setValue(0);
             }
           });
    }
