@@ -66,7 +66,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define DRV_PHY_DEBUG_MASK_BASIC        (0x0001)
 
 // enable IPV4 debugging levels
-#define DRV_PHY_DEBUG_LEVEL  (DRV_PHY_DEBUG_MASK_BASIC)
+#define DRV_PHY_DEBUG_LEVEL  (0)
 
 
 // *****************************************************************************
