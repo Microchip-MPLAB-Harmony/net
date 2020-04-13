@@ -89,6 +89,7 @@ typedef enum
 
     HTTP_MPFS_FORM,              // Show the MPFS Upload form
     HTTP_MPFS_UP,                // An MPFS Upload is being processed
+    HTTP_MPFS_SIGNATURE,         // MPFS Upload looking for signature
     HTTP_MPFS_OK,                // An MPFS Upload was successful  
 	HTTP_MPFS_WAIT,              // An MPFS Upload waiting for the write operation to complete
 	HTTP_MPFS_ERROR,             // An MPFS Upload was not a valid image

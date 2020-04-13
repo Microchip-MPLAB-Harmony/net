@@ -143,6 +143,7 @@ extern void TCPIP_HTTP_Print(HTTP_CONN_HANDLE connHandle,uint32_t callbackID);
         #if defined(TCPIP_HTTP_FILE_UPLOAD_ENABLE)
         "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/html\r\n\r\n<html><body style=\"margin:100px\"><form method=post action=\"/" TCPIP_HTTP_FILE_UPLOAD_NAME "\" enctype=\"multipart/form-data\"><b>MPFS Image Upload</b><p><input type=file name=i size=40> &nbsp; <input type=submit value=\"Upload\"></form></body></html>",
         "",
+        "",
         "HTTP/1.1 200 OK\r\nConnection: close\r\nContent-Type: text/html\r\n\r\n<html><body style=\"margin:100px\"><b>MPFS Update Successful</b><p><a href=\"/\">Site main page</a></body></html>",
         "",
         "HTTP/1.1 500 Internal Server Error\r\nConnection: close\r\nContent-Type: text/html\r\n\r\n<html><body style=\"margin:100px\"><b>MPFS Image Corrupt or Wrong Version</b><p><a href=\"/" TCPIP_HTTP_FILE_UPLOAD_NAME "\">Try again?</a></body></html>",
@@ -2136,7 +2137,7 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
 {
     uint8_t nvmBuffer[sizeof(MPFS_SIGNATURE) - 1];  // large enough to hold the MPFS signature
     uint16_t lenA, lenB;
-    uint32_t nSectors;
+    uint32_t nSectors=0;
     uint32_t mpfsAllocSize;
 
     switch(pHttpCon->httpStatus)
@@ -2146,47 +2147,50 @@ static HTTP_IO_RESULT TCPIP_HTTP_MPFSUpload(HTTP_CONN* pHttpCon)
             pHttpCon->uploadSectNo = 0;
             lenA = TCPIP_TCP_ArrayFind(pHttpCon->socket, (const uint8_t*)"\r\n\r\n", 4, 0, 0, false);
 
-            if(lenA != 0xffff)
-            {// Found it, so remove all data up to and including
-                lenA = TCPIP_TCP_ArrayGet(pHttpCon->socket, NULL, lenA + 4);
-                pHttpCon->byteCount -= (lenA + 4);
-
-                // Make sure first 6 bytes are also in
-                if(TCPIP_TCP_GetIsReady(pHttpCon->socket) < sizeof(MPFS_SIGNATURE) - 1 )
-                {
-                    return HTTP_IO_NEED_DATA;
-                }
-                lenA = TCPIP_TCP_ArrayGet(pHttpCon->socket, nvmBuffer, sizeof(MPFS_SIGNATURE) - 1);
-                pHttpCon->byteCount -= lenA;
-                if(memcmp(nvmBuffer, (const void*)MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE)-1) == 0)
-                {   // Read as Ver 2.1
-                    // allocate the buffer size as a multiple of sector size
-                    mpfsAllocSize = ((MPFS_UPLOAD_WRITE_BUFFER_SIZE + (SYS_FS_MEDIA_SECTOR_SIZE - 1)) / SYS_FS_MEDIA_SECTOR_SIZE) * SYS_FS_MEDIA_SECTOR_SIZE;
-                    if(pHttpCon->uploadBufferStart == 0)
-                    {
-                        pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
-                        SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
-                    }
-
-                    if(pHttpCon->uploadBufferStart != 0)
-                    {
-                        pHttpCon->uploadBufferEnd = pHttpCon->uploadBufferStart + mpfsAllocSize;
-                        memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
-                        pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
-
-                        pHttpCon->httpStatus = HTTP_MPFS_OK;
-                        return HTTP_IO_WAITING;
-                    }
-                }
-                pHttpCon->httpStatus = HTTP_MPFS_ERROR;
-                return HTTP_IO_WAITING;
-            }
-            else
-            {// Otherwise, remove as much as possible
+            if(lenA == 0xffff)
+            {// no EOL found, remove as much as possible
                 lenA = TCPIP_TCP_ArrayGet(pHttpCon->socket, NULL, TCPIP_TCP_GetIsReady(pHttpCon->socket) - 4);
                 pHttpCon->byteCount -= lenA;
+                break;
             }
-            break;
+
+            // Found the EOL separator, remove all data up to and including
+            lenA = TCPIP_TCP_ArrayGet(pHttpCon->socket, NULL, lenA + 4);
+            pHttpCon->byteCount -= (lenA + 4);
+
+            pHttpCon->httpStatus = HTTP_MPFS_SIGNATURE;
+            // intentional no break
+
+        case HTTP_MPFS_SIGNATURE:
+
+            // Make sure first 6 bytes are also in
+            if(TCPIP_TCP_GetIsReady(pHttpCon->socket) < sizeof(MPFS_SIGNATURE) - 1 )
+            {
+                return HTTP_IO_NEED_DATA;
+            }
+            lenA = TCPIP_TCP_ArrayGet(pHttpCon->socket, nvmBuffer, sizeof(MPFS_SIGNATURE) - 1);
+            pHttpCon->byteCount -= lenA;
+            if(memcmp(nvmBuffer, (const void*)MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE)-1) == 0)
+            {   // Read as Ver 2.1
+                // allocate the buffer size as a multiple of sector size
+                mpfsAllocSize = ((MPFS_UPLOAD_WRITE_BUFFER_SIZE + (SYS_FS_MEDIA_SECTOR_SIZE - 1)) / SYS_FS_MEDIA_SECTOR_SIZE) * SYS_FS_MEDIA_SECTOR_SIZE;
+                if(pHttpCon->uploadBufferStart == 0)
+                {
+                    pHttpCon->uploadBufferStart = (uint8_t*)(*http_malloc_fnc)(mpfsAllocSize);
+                    SYS_FS_Unmount(MPFS_UPLOAD_MOUNT_PATH);
+                }
+
+                if(pHttpCon->uploadBufferStart != 0)
+                {
+                    pHttpCon->uploadBufferEnd = pHttpCon->uploadBufferStart + mpfsAllocSize;
+                    memcpy(pHttpCon->uploadBufferStart, MPFS_SIGNATURE, sizeof(MPFS_SIGNATURE) - 1);
+                    pHttpCon->uploadBufferCurr = pHttpCon->uploadBufferStart + sizeof(MPFS_SIGNATURE) - 1;
+                    pHttpCon->httpStatus = HTTP_MPFS_OK;
+                    return HTTP_IO_WAITING;
+                }
+            }
+            pHttpCon->httpStatus = HTTP_MPFS_ERROR;
+            return HTTP_IO_WAITING;
 
         case HTTP_MPFS_ERROR:
             if(pHttpCon->uploadBufferStart != 0)
