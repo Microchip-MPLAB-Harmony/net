@@ -128,8 +128,7 @@ typedef enum
 #define GMAC_INT_TX_ERR_BITS  \
 	(GMAC_IER_TUR_Msk  | GMAC_IER_RLEX_Msk  | GMAC_IER_TFC_Msk  | GMAC_IER_HRESP_Msk )
 // TX interrupts
-#define GMAC_INT_TX_BITS  \
-	(GMAC_INT_TX_ERR_BITS | GMAC_IER_TCOMP_Msk )
+#define GMAC_INT_TX_BITS  (GMAC_INT_TX_ERR_BITS)
 // Interrupt Status bits
 #define GMAC_INT_RX_STATUS_BITS  \
 	(GMAC_ISR_RCOMP_Msk  | GMAC_ISR_RXUBR_Msk  | GMAC_ISR_ROVR_Msk )
@@ -415,7 +414,40 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibInitTransfer(DRV_GMAC_DRIVER* pMACDrv,GM
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
 DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxInit(DRV_GMAC_DRIVER* pMACDrv);
+/*******************************************************************************
+  Function:
+      DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv)
 
+  Summary:
+    GMAC receive side filter initialization
+  Description:
+    This function performs the initialization of Rx Queue filter initialization
+
+  Precondition:
+    None.
+
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+  
+  Returns:
+    DRV_PIC32CGMAC_RES_OK               - success
+ 
+  Example:
+    <code>
+    if(DRV_PIC32CGMAC_LibRxQueFilterInit(pMACDrv) != DRV_PIC32CGMAC_RES_OK)
+    {
+        // Handle error
+    }
+    </code>
+  Remarks:
+    This function should be called before the DRV_PIC32CGMAC_LibMACOpen()
+    routine.
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibRxQueFilterInit(DRV_GMAC_DRIVER* pMACDrv);
 /*******************************************************************************
   Function:
       DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv)
@@ -485,6 +517,30 @@ DRV_PIC32CGMAC_RESULT DRV_PIC32CGMAC_LibTxInit(DRV_GMAC_DRIVER* pMACDrv);
     <b><c>void EthInit(void)</c></b>
   ************************************************************************/
 void DRV_PIC32CGMAC_LibTransferEnable (DRV_GMAC_DRIVER* pMACDrv);
+
+/*******************************************************************************
+  Function:
+      void DRV_PIC32CGMAC_LibSetInterruptSrc (DRV_GMAC_DRIVER* pMACDrv)
+
+  Summary:
+    Update GMAC Queue structure with interrupt source
+  Description:
+
+  Precondition:
+    None
+  Parameters:
+    pMACDrv -  GMAC device driver structure.
+  Returns:
+    None
+
+  Remarks:
+    None
+
+    Replaces:
+
+    <b><c>void EthInit(void)</c></b>
+  ************************************************************************/
+void DRV_PIC32CGMAC_LibSetInterruptSrc(DRV_GMAC_DRIVER* pMACDrv);
 
 /*******************************************************************************
   Function:
