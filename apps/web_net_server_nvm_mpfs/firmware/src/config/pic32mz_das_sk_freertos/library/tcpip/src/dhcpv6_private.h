@@ -110,7 +110,7 @@ typedef enum
 
 
 // enable DHCP debugging levels
-#define TCPIP_DHCPV6_DEBUG_LEVEL  (TCPIP_DHCPV6_DEBUG_MASK_BASIC | TCPIP_DHCPV6_DEBUG_MASK_IN | TCPIP_DHCPV6_DEBUG_MASK_IA_STATE | TCPIP_DHCPV6_DEBUG_MASK_CLIENT_STATE)
+#define TCPIP_DHCPV6_DEBUG_LEVEL  (0)
 
 
 // don't spit out IAs that don't have valid IAs...?
