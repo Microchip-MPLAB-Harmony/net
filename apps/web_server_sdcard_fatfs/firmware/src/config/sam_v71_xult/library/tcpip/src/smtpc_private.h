@@ -65,7 +65,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 
 // enable SMTPC debugging levels
-#define TCPIP_SMTPC_DEBUG_LEVEL  (TCPIP_SMTPC_DEBUG_MASK_BASIC)
+#define TCPIP_SMTPC_DEBUG_LEVEL                 (0)
 
 // extra guard space needed for the plain line buffer size
 // extra 4 bytes are needed: . at beg, crLF + 0 at end
