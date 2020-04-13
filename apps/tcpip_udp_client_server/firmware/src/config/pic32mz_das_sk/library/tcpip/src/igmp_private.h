@@ -65,7 +65,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_IGMP_DEBUG_MASK_THREAD_LOCK     (0x0020)
 
 // enable IPV4 debugging levels
-#define TCPIP_IGMP_DEBUG_LEVEL  (TCPIP_IGMP_DEBUG_MASK_BASIC)
+#define TCPIP_IGMP_DEBUG_LEVEL                (0)
 
 // step to advance for hash collision
 #define TCPIP_IGMP_GROUP_HASH_PROBE_STEP           1
