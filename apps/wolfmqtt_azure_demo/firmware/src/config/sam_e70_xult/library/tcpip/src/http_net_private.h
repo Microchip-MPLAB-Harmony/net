@@ -62,7 +62,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_HTTP_NET_DEBUG_MASK_CONN_TMO        (0x0080)
 
 // enable HTTP debugging levels
-#define TCPIP_HTTP_NET_DEBUG_LEVEL  (TCPIP_HTTP_NET_DEBUG_MASK_BASIC | TCPIP_HTTP_NET_DEBUG_MASK_CHUNK_INFO)
+#define TCPIP_HTTP_NET_DEBUG_LEVEL                (0)
 
 
 // the maximum length of a chunk header for a 32 bit chunk length:
