@@ -38,7 +38,7 @@ extern "C" {
 #define NET_PRES_DEBUG_MASK_BASIC           (0x0001)
 
 // enableNET_PRES debugging levels
-#define NET_PRES_DEBUG_LEVEL  (NET_PRES_DEBUG_MASK_BASIC)
+#define NET_PRES_DEBUG_LEVEL  (0)
 
 
     
