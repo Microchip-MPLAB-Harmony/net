@@ -50,7 +50,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_DNS_DEBUG_MASK_EVENTS          (0x0002)
 
 // enable DNS debugging levels
-#define TCPIP_DNS_DEBUG_LEVEL  (TCPIP_DNS_DEBUG_MASK_BASIC)
+#define TCPIP_DNS_DEBUG_LEVEL               (0)
 
 
 /* Max number of DNS servers supported*/
