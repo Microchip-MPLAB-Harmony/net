@@ -98,6 +98,8 @@ static int              sntpInitCount = 0;
 
 static char             sntpServerName[TCPIP_NTP_SERVER_MAX_LENGTH + 1];
 
+static uint32_t         SNTPTimer;
+
 static uint32_t         sntp_reply_timeout;
 static uint32_t         sntp_tstamp_timeout;
 static uint32_t         sntp_query_interval;
@@ -340,6 +342,16 @@ static __inline__ void __attribute__((always_inline)) TCPIP_SNTP_SetError(TCPIP_
 }
 
 
+static void TCPIP_SNTP_SetErrorState(TCPIP_SNTP_STATE newState, TCPIP_SNTP_RESULT errorRes, TCPIP_SNTP_EVENT errorEvent, bool setTime)
+{
+    TCPIP_SNTP_SetNewState(newState);
+    TCPIP_SNTP_SetError(errorRes, errorEvent);
+
+    if(setTime)
+    {
+        SNTPTimer = SYS_TMR_TickCountGet();
+    }
+}
 
 #if (TCPIP_STACK_DOWN_OPERATION != 0)
 static void TCPIP_SNTP_Cleanup(void);
@@ -529,7 +541,6 @@ static void TCPIP_SNTP_Process(void)
 {
     NTP_PACKET          pkt;
     TCPIP_DNS_RESULT    dnsRes;
-    static uint32_t     SNTPTimer;
     TCPIP_NET_IF*       pNetIf;
     bool                dataAvlbl;
     bool                bindRes;
@@ -548,14 +559,14 @@ static void TCPIP_SNTP_Process(void)
             break;
 
         case SM_HOME:
-            pNetIf = _TCPIPStackAnyNetLinked(false);
-            if(pNetIf == 0 || _TCPIPStackIsConfig(pNetIf) != 0)
-            {   // not yet up and running
+            if(sntpServerName[0] == 0)
+            {   // no active server name
                 break;
             }
 
-            if(strlen(sntpServerName) == 0)
-            {   // no active serve name
+            pNetIf = _TCPIPStackAnyNetLinked(false);
+            if(pNetIf == 0 || _TCPIPStackIsConfig(pNetIf) != 0 || TCPIP_STACK_NetAddressGet(pNetIf) == 0)
+            {   // not yet up and running
                 break;
             }
 
@@ -581,8 +592,15 @@ static void TCPIP_SNTP_Process(void)
             }
 #endif  // defined (TCPIP_STACK_USE_IPV4)
 
-            TCPIP_DNS_Resolve(sntpServerName, ntpConnection == IP_ADDRESS_TYPE_IPV6 ? TCPIP_DNS_TYPE_AAAA : TCPIP_DNS_TYPE_A);
-            TCPIP_SNTP_SetNewState(SM_WAIT_DNS);
+            dnsRes = TCPIP_DNS_Resolve(sntpServerName, ntpConnection == IP_ADDRESS_TYPE_IPV6 ? TCPIP_DNS_TYPE_AAAA : TCPIP_DNS_TYPE_A);
+            if(dnsRes < 0)
+            {   // some DNS error occurred; retry after waiting a while
+                TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_DNS_ERR, TCPIP_SNTP_EVENT_DNS_ERROR, true);
+            }
+            else
+            {
+                TCPIP_SNTP_SetNewState(SM_WAIT_DNS);
+            }
             break;
 
         case SM_WAIT_DNS:
@@ -594,9 +612,7 @@ static void TCPIP_SNTP_Process(void)
             }
             else if(dnsRes < 0)
             {   // some DNS error occurred; retry after waiting a while
-                SNTPTimer = SYS_TMR_TickCountGet();
-                TCPIP_SNTP_SetNewState(SM_SHORT_WAIT);
-                TCPIP_SNTP_SetError(SNTP_RES_NTP_DNS_ERR, TCPIP_SNTP_EVENT_DNS_ERROR);
+                TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_DNS_ERR, TCPIP_SNTP_EVENT_DNS_ERROR, true);
             }
             else
             {
@@ -615,8 +631,7 @@ static void TCPIP_SNTP_Process(void)
 
             if(pSntpIf == 0)
             {   // wait some more
-                TCPIP_SNTP_SetNewState(SM_SHORT_WAIT);
-                TCPIP_SNTP_SetError(SNTP_RES_NTP_IF_ERR, TCPIP_SNTP_EVENT_IF_ERROR); 
+                TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_IF_ERR, TCPIP_SNTP_EVENT_IF_ERROR, false);
                 break;
             }
             // bind socket to the (new) connection type 
@@ -635,8 +650,7 @@ static void TCPIP_SNTP_Process(void)
             }
             else
             {
-                TCPIP_SNTP_SetNewState(SM_SHORT_WAIT);
-                TCPIP_SNTP_SetError(SNTP_RES_NTP_DNS_ERR, TCPIP_SNTP_EVENT_SKT_ERROR);
+                TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_SKT_ERR, TCPIP_SNTP_EVENT_SKT_ERROR, false);
             }
             break;
 
@@ -645,10 +659,9 @@ static void TCPIP_SNTP_Process(void)
             // Make certain the socket can be written to
             if(!TCPIP_UDP_TxPutIsReady(sntpSocket, sizeof(pkt)))
             {   // Wait no more than 1 sec
-                if((SYS_TMR_TickCountGet() - SNTPTimer > 1*SYS_TMR_TickCounterFrequencyGet()))
+                if((SYS_TMR_TickCountGet() - SNTPTimer > 1 * SYS_TMR_TickCounterFrequencyGet()))
                 {
-                    TCPIP_SNTP_SetNewState(SM_DNS_RESOLVED);
-                    TCPIP_SNTP_SetError(SNTP_RES_SKT_ERR, TCPIP_SNTP_EVENT_SKT_ERROR); 
+                    TCPIP_SNTP_SetErrorState(SM_DNS_RESOLVED, SNTP_RES_SKT_ERR, TCPIP_SNTP_EVENT_SKT_ERROR, false);
                     break;
                 }
             }
@@ -670,6 +683,12 @@ static void TCPIP_SNTP_Process(void)
 
         case SM_UDP_RECV:
             // Look for a response time packet
+            if (!TCPIP_UDP_IsConnected(sntpSocket))
+            {
+                TCPIP_SNTP_SetErrorState(SM_SHORT_WAIT, SNTP_RES_NTP_CONN_ERR, TCPIP_SNTP_EVENT_SKT_ERROR, false);
+                break;
+            }
+
             if(!TCPIP_UDP_GetIsReady(sntpSocket))
             {
                 if((SYS_TMR_TickCountGet()) - SNTPTimer <= sntp_reply_timeout )
