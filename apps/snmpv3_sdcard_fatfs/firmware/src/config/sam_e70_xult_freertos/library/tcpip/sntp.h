@@ -99,8 +99,8 @@ typedef enum
     // error codes
     SNTP_RES_BUSY               = -1,   // module is busy
     SNTP_RES_TSTAMP_ERROR       = -2,   // no timestamp is available, server not contacted
-    SNTP_RES_TSTAMP_STALE       = -3,   //timestamp is stale, there's no recent timestamp
-    SNTP_RES_SKT_ERR            = -4,   // NTP socket could not be opened
+    SNTP_RES_TSTAMP_STALE       = -3,   // timestamp is stale, there's no recent timestamp
+    SNTP_RES_SKT_ERR            = -4,   // NTP socket operation error
     SNTP_RES_SKT_BIND_ERR       = -5,   // NTP socket bind failed
     SNTP_RES_NTP_SERVER_TMO     = -6,   // NTP server could not be accessed
     SNTP_RES_NTP_VERSION_ERR    = -7,   // wrong NTP version received

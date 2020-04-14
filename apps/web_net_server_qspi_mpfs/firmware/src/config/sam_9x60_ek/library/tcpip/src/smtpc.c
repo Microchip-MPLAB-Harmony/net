@@ -428,8 +428,8 @@ static bool _SMTPCDebugCond(bool cond, const char* message, int lineNo)
 }
 
 #else
-#define _SMTPCAssertCond(cond, message, lineNo)  (1)
-#define _SMTPCDebugCond(cond, message, lineNo)  (1)
+#define _SMTPCAssertCond(cond, message, lineNo)
+#define _SMTPCDebugCond(cond, message, lineNo)
 #endif  // (TCPIP_SMTPC_DEBUG_LEVEL & TCPIP_SMTPC_DEBUG_MASK_BASIC)
 
 
@@ -2177,8 +2177,9 @@ static TCPIP_SMTPC_STATUS smtpCommandParam(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, TCPI
     {
         _SMTPCAssertCond(0 < cmdType && cmdType < sizeof(smtpCmdStrTbl) / sizeof(*smtpCmdStrTbl), __func__, __LINE__);
         smtpCmdStr = smtpCmdStrTbl[cmdType];
-        if(!_SMTPCAssertCond(smtpCmdStr != 0 && strlen(smtpCmdStr) != 0, __func__, __LINE__))
+        if(smtpCmdStr == 0 || smtpCmdStr[0] == 0)
         {   // should not happen!
+            _SMTPCAssertCond(false, __func__, __LINE__);
             return smtpcErrorStop(pDcpt, TCPIP_SMTPC_RES_INTERNAL_ERROR, TCPIP_SMTPC_DCPT_FLAG_RETRY_NONE);
         }
     }
@@ -2233,7 +2234,10 @@ static TCPIP_SMTPC_STATUS smtpClientWriteCmd(TCPIP_SMTPC_MESSAGE_DCPT* pDcpt, co
     if(NET_PRES_SocketWriteIsReady(pDcpt->skt, nBytes, 0) >= nBytes)
     {
         int sentBytes = NET_PRES_SocketWrite(pDcpt->skt, sBuff, nBytes);
-        _SMTPCAssertCond(sentBytes == nBytes, __func__, __LINE__);
+        if(sentBytes != nBytes)
+        {
+            _SMTPCAssertCond(false, __func__, __LINE__);
+        }
         NET_PRES_SocketFlush(pDcpt->skt);
         _SMTPCDbgMailStrToSrv(pDcpt, (char*)sBuff, nBytes);
         // advance
