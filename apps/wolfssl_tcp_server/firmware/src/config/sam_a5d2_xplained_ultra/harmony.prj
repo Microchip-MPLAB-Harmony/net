@@ -387,8 +387,8 @@
           <Name dnOrder="1">drv_miim.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/driver/miim/src/dynamic/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/miim/src/dynamic/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">C15C861FB76A8ACBC2713A251E0EF9A0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">C15C861FB76A8ACBC2713A251E0EF9A0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">452AF6092E9A9A68BAD3B176C2BE68EC</GeneratedChecksum>
+          <UserChecksum dnOrder="5">452AF6092E9A9A68BAD3B176C2BE68EC</UserChecksum>
         </File>
         <File dnOrder="48">
           <Type dnOrder="0">SOURCE</Type>
@@ -635,8 +635,8 @@
           <Name dnOrder="1">net_pres.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/net_pres/pres/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/net_pres/pres/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">7A5A45D9BC6103F3AA96AB52401B40D9</GeneratedChecksum>
-          <UserChecksum dnOrder="5">7A5A45D9BC6103F3AA96AB52401B40D9</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6860090C65B69EEC815687C8F67F4020</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6860090C65B69EEC815687C8F67F4020</UserChecksum>
         </File>
         <File dnOrder="79">
           <Type dnOrder="0">SOURCE</Type>
@@ -859,8 +859,8 @@
           <Name dnOrder="1">sntp.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">57C681B08DF9CB8345BD62AC3CDD2252</GeneratedChecksum>
-          <UserChecksum dnOrder="5">57C681B08DF9CB8345BD62AC3CDD2252</UserChecksum>
+          <GeneratedChecksum dnOrder="4">BDA42A6D21227C83C788C38893B1E152</GeneratedChecksum>
+          <UserChecksum dnOrder="5">BDA42A6D21227C83C788C38893B1E152</UserChecksum>
         </File>
         <File dnOrder="107">
           <Type dnOrder="0">SOURCE</Type>
@@ -1067,8 +1067,8 @@
           <Name dnOrder="1">tcpip_commands.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D6D1E3623A5ABFC0B965936000E54A45</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D6D1E3623A5ABFC0B965936000E54A45</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D3C08ECDC07D8F2D1165B749B15E77F3</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D3C08ECDC07D8F2D1165B749B15E77F3</UserChecksum>
         </File>
         <File dnOrder="133">
           <Type dnOrder="0">SOURCE</Type>
@@ -1099,8 +1099,8 @@
           <Name dnOrder="1">tcpip_manager.c</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2CBE78F07560B782E0047073E998B8D4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2CBE78F07560B782E0047073E998B8D4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F80BCF8335C0235AB966D0C4BAE26738</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F80BCF8335C0235AB966D0C4BAE26738</UserChecksum>
         </File>
         <File dnOrder="137">
           <Type dnOrder="0">SOURCE</Type>
@@ -1787,8 +1787,8 @@
           <Name dnOrder="1">configuration.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">C873A5EC246AD0DF41FE799EFBFF507F</GeneratedChecksum>
-          <UserChecksum dnOrder="5">C873A5EC246AD0DF41FE799EFBFF507F</UserChecksum>
+          <GeneratedChecksum dnOrder="4">5FEF75F991AC670CC7539CBDE4720C49</GeneratedChecksum>
+          <UserChecksum dnOrder="5">5FEF75F991AC670CC7539CBDE4720C49</UserChecksum>
         </File>
         <File dnOrder="223">
           <Type dnOrder="0">HEADER</Type>
@@ -2147,8 +2147,8 @@
           <Name dnOrder="1">dhcpv6_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">6E702380CD8DF690879006BDF9AE8539</GeneratedChecksum>
-          <UserChecksum dnOrder="5">6E702380CD8DF690879006BDF9AE8539</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F7D266FF9186BC1E2184A8E752D584A6</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F7D266FF9186BC1E2184A8E752D584A6</UserChecksum>
         </File>
         <File dnOrder="268">
           <Type dnOrder="0">HEADER</Type>
@@ -2171,8 +2171,8 @@
           <Name dnOrder="1">dns_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">4DEDBE631D502F12049918309E0B4CE0</GeneratedChecksum>
-          <UserChecksum dnOrder="5">4DEDBE631D502F12049918309E0B4CE0</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F0635D5847B5F5099E603AD14BEF302C</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F0635D5847B5F5099E603AD14BEF302C</UserChecksum>
         </File>
         <File dnOrder="271">
           <Type dnOrder="0">HEADER</Type>
@@ -2227,8 +2227,8 @@
           <Name dnOrder="1">drv_ethphy_local.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/driver/ethphy/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/ethphy/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">0C44C7ABE3EAAA00A06187C725F40595</GeneratedChecksum>
-          <UserChecksum dnOrder="5">0C44C7ABE3EAAA00A06187C725F40595</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B42335B8FC997454960091169EBF91A9</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B42335B8FC997454960091169EBF91A9</UserChecksum>
         </File>
         <File dnOrder="278">
           <Type dnOrder="0">HEADER</Type>
@@ -2283,8 +2283,8 @@
           <Name dnOrder="1">drv_miim_local.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/driver/miim/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/driver/miim/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1EF1EE715C49735F516572B5E4CF614E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1EF1EE715C49735F516572B5E4CF614E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">0DD9CA00E21465590C91C9416A54C485</GeneratedChecksum>
+          <UserChecksum dnOrder="5">0DD9CA00E21465590C91C9416A54C485</UserChecksum>
         </File>
         <File dnOrder="285">
           <Type dnOrder="0">HEADER</Type>
@@ -2467,8 +2467,8 @@
           <Name dnOrder="1">http.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">1B4E5B48352AA6CF2D284B12BDF70EE4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">1B4E5B48352AA6CF2D284B12BDF70EE4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">F463D75CFC0C272C50306100AAA5DAE8</GeneratedChecksum>
+          <UserChecksum dnOrder="5">F463D75CFC0C272C50306100AAA5DAE8</UserChecksum>
         </File>
         <File dnOrder="308">
           <Type dnOrder="0">HEADER</Type>
@@ -2499,8 +2499,8 @@
           <Name dnOrder="1">http_net_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">A021624B44D7F5175B9F42A182B99F5E</GeneratedChecksum>
-          <UserChecksum dnOrder="5">A021624B44D7F5175B9F42A182B99F5E</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D542B2350D663A9C61D426CBE0E2FC0E</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D542B2350D663A9C61D426CBE0E2FC0E</UserChecksum>
         </File>
         <File dnOrder="312">
           <Type dnOrder="0">HEADER</Type>
@@ -2587,8 +2587,8 @@
           <Name dnOrder="1">igmp_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E674CDA1D8E8CDF7B9BEA40F367FC52D</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E674CDA1D8E8CDF7B9BEA40F367FC52D</UserChecksum>
+          <GeneratedChecksum dnOrder="4">E6BB26DEE5988E2DF54A7AE1A1D13EA1</GeneratedChecksum>
+          <UserChecksum dnOrder="5">E6BB26DEE5988E2DF54A7AE1A1D13EA1</UserChecksum>
         </File>
         <File dnOrder="323">
           <Type dnOrder="0">HEADER</Type>
@@ -2907,8 +2907,8 @@
           <Name dnOrder="1">net_pres_local.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/net_pres/pres/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/net_pres/pres/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">2E8B07BC790703F8021D32879C34D073</GeneratedChecksum>
-          <UserChecksum dnOrder="5">2E8B07BC790703F8021D32879C34D073</UserChecksum>
+          <GeneratedChecksum dnOrder="4">42B97A2C6FA6CBF712077A348ABE4874</GeneratedChecksum>
+          <UserChecksum dnOrder="5">42B97A2C6FA6CBF712077A348ABE4874</UserChecksum>
         </File>
         <File dnOrder="363">
           <Type dnOrder="0">HEADER</Type>
@@ -3395,8 +3395,8 @@
           <Name dnOrder="1">smtpc_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">BF806C3F0EA8D605505127511F2B4460</GeneratedChecksum>
-          <UserChecksum dnOrder="5">BF806C3F0EA8D605505127511F2B4460</UserChecksum>
+          <GeneratedChecksum dnOrder="4">D4D661DE4353D67F4763BE692178A078</GeneratedChecksum>
+          <UserChecksum dnOrder="5">D4D661DE4353D67F4763BE692178A078</UserChecksum>
         </File>
         <File dnOrder="424">
           <Type dnOrder="0">HEADER</Type>
@@ -3459,8 +3459,8 @@
           <Name dnOrder="1">sntp.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">E1D1E98ACEB569A50C6133C5BF94F9A8</GeneratedChecksum>
-          <UserChecksum dnOrder="5">E1D1E98ACEB569A50C6133C5BF94F9A8</UserChecksum>
+          <GeneratedChecksum dnOrder="4">B84BE4564C3D4A01E79D50799B3B7F80</GeneratedChecksum>
+          <UserChecksum dnOrder="5">B84BE4564C3D4A01E79D50799B3B7F80</UserChecksum>
         </File>
         <File dnOrder="432">
           <Type dnOrder="0">HEADER</Type>
@@ -3699,8 +3699,8 @@
           <Name dnOrder="1">tcp_private.h</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="3">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">81741B23206E7F5A6713FEEDB28D32F4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">81741B23206E7F5A6713FEEDB28D32F4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6F1AA8A498C89FEDE3EE06530EFB8BE4</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6F1AA8A498C89FEDE3EE06530EFB8BE4</UserChecksum>
         </File>
         <File dnOrder="462">
           <Type dnOrder="0">HEADER</Type>
@@ -4171,8 +4171,8 @@
           <Name dnOrder="1">ddr.icf</Name>
           <LogicalPath dnOrder="2">config/sam_a5d2_xplained_ultra/</LogicalPath>
           <PhysicalPath dnOrder="3">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="4">D9866A4EF7FC5F6432106D449E3F2CD4</GeneratedChecksum>
-          <UserChecksum dnOrder="5">D9866A4EF7FC5F6432106D449E3F2CD4</UserChecksum>
+          <GeneratedChecksum dnOrder="4">6781370C8653F67D5F7DB56527B76F51</GeneratedChecksum>
+          <UserChecksum dnOrder="5">6781370C8653F67D5F7DB56527B76F51</UserChecksum>
         </File>
         <File dnOrder="521">
           <Type dnOrder="0">IMPORTANT</Type>
@@ -4190,7 +4190,7 @@
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;csp;gfx;motor_control;net;usb;wireless;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;cryptoauthlib;csp;gfx;motor_control;net;usb;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>
