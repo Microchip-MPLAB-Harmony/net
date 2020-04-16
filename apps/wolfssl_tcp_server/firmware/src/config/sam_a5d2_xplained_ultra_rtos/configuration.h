@@ -228,7 +228,7 @@ extern "C" {
 #define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
 #define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
 #define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
-#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT                    0
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		0
 #define TCPIP_TCP_MAX_RETRIES		            		5
 #define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
 #define TCPIP_TCP_MAX_SYN_RETRIES		        	3
@@ -311,7 +311,7 @@ extern "C" {
 #define NET_PRES_NUM_SOCKETS 10
 
 /* Net Pres RTOS Configurations*/
-#define NET_PRES_RTOS_STACK_SIZE                2560
+#define NET_PRES_RTOS_STACK_SIZE                8192
 #define NET_PRES_RTOS_TASK_PRIORITY             1
 	
 #define FREERTOS
