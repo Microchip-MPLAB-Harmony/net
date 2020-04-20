@@ -121,7 +121,7 @@ def instantiateComponent(tcpipDnsComponent):
     tcpipDnscHostNameLenMax.setLabel("Host Name Length")
     tcpipDnscHostNameLenMax.setVisible(True)
     tcpipDnscHostNameLenMax.setDescription("DNS Client Host Name Length")
-    tcpipDnscHostNameLenMax.setDefaultValue(32)
+    tcpipDnscHostNameLenMax.setDefaultValue(64)
     #tcpipDnscHostNameLenMax.setDependencies(tcpipDnsMenuVisible, ["TCPIP_USE_DNS_CLIENT"])
 
     # Maximum Number of Interfaces Considered for DNS resolution

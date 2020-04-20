@@ -111,7 +111,8 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO      (3)
 
 // Max DNS host name size
-#define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN  32
+// Use an appropriate value, depending on the names that need to be solved
+#define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN       (64)
 
 // allow DNS client user notification
 // if enabled, the TCPIP_DNS_HandlerRegister/TCPIP_DNS_HandlerDeRegister
