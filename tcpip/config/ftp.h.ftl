@@ -44,27 +44,41 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 <#if TCPIP_USE_FTP_MODULE == true>
 /*** FTP Configuration ***/
 #define TCPIP_STACK_USE_FTP_SERVER
-#define TCPIP_FTP_USER_NAME_LEN		    			${TCPIP_FTP_USER_NAME_LEN}
-#define TCPIP_FTP_PASSWD_LEN		    			${TCPIP_FTP_PASSWD_LEN}
-#define TCPIP_FTP_MAX_CONNECTIONS				${TCPIP_FTP_MAX_CONNECTIONS}
-#define TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE				${TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE}
-#define TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE				${TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE}
-#define TCPIP_FTPS_TASK_TICK_RATE	    			${TCPIP_FTPS_TASK_TICK_RATE}
-#define TCPIP_FTP_USER_NAME		        		"${TCPIP_FTP_USER_NAME}"
-#define TCPIP_FTP_PASSWORD		        		"${TCPIP_FTP_PASSWORD}"
-#define TCPIP_FTP_TIMEOUT						${TCPIP_FTP_TIMEOUT}
+#define TCPIP_FTP_USER_NAME_LEN                 ${TCPIP_FTP_USER_NAME_LEN}
+#define TCPIP_FTP_MAX_CONNECTIONS               ${TCPIP_FTP_MAX_CONNECTIONS}
+#define TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE         ${TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE}
+#define TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE         ${TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE}
+#define TCPIP_FTPS_TASK_TICK_RATE               ${TCPIP_FTPS_TASK_TICK_RATE}
+#define TCPIP_FTP_TIMEOUT                       ${TCPIP_FTP_TIMEOUT}
+
+#define TCPIP_FTPS_COMMAND_LISTEN_PORT          ${TCPIP_FTPS_COMMAND_LISTEN_PORT}
+#define TCPIP_FTPS_DATA_LISTEN_PORT             ${TCPIP_FTPS_DATA_LISTEN_PORT}
 <#if TCPIP_FTP_MOUNT_POINT?has_content>
-#define TCPIP_FTP_MOUNT_POINT					"${TCPIP_FTP_MOUNT_POINT}"
+#define TCPIP_FTP_MOUNT_POINT                   "${TCPIP_FTP_MOUNT_POINT}"
 <#else>
-#define TCPIP_FTP_MOUNT_POINT 					"\"
+#define TCPIP_FTP_MOUNT_POINT                   "\"
 </#if>
 
 /***Comment this line out to disable MPFS***/
 <#if TCPIP_FTP_PUT_ENABLED == true>
-#define TCPIP_FTP_PUT_ENABLED	
-</#if>
+#define TCPIP_FTP_PUT_ENABLED   
 </#if>
 
+<#if TCPIP_FTPS_AUTH_CONFIG == "Run Time Authentication">
+#define TCPIP_FTPS_OBSOLETE_AUTHENTICATION false
+<#if TCPIP_FTPS_AUTHENTICATION_CONN_INFO>
+#define TCPIP_FTPS_AUTHENTICATION_CONN_INFO true
+<#else>
+#define TCPIP_FTPS_AUTHENTICATION_CONN_INFO false
+</#if>
+<#else>
+#define TCPIP_FTPS_OBSOLETE_AUTHENTICATION true
+#define TCPIP_FTP_USER_NAME                     "${TCPIP_FTP_USER_NAME}"
+#define TCPIP_FTP_PASSWORD                      "${TCPIP_FTP_PASSWORD}"
+#define TCPIP_FTP_PASSWD_LEN                    ${TCPIP_FTP_PASSWD_LEN}
+</#if>
+
+</#if>
 <#--
 /*******************************************************************************
  End of File
