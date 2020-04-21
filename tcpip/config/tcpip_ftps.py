@@ -21,6 +21,20 @@
 * THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 *****************************************************************************"""
 
+TCPIP_FTPS_AUTH_TYPES = ["Run Time Authentication", "(OBSOLETE) Init Time Authentication"]
+
+def tcpipFtpsAuthInfoVisible(symbol, event):
+    if (event["value"] == "Run Time Authentication"):
+        symbol.setVisible(True)
+    else:
+        symbol.setVisible(False)
+
+def tcpipFtpsObsAuthVisible(symbol, event):
+    if (event["value"] == "Run Time Authentication"):
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
+
     
 def instantiateComponent(tcpipFtpsComponent):
     print("TCPIP FTP Server Component")
@@ -34,6 +48,22 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsModule.setDefaultValue(True)
     #tcpipFtpsModule.setDependencies(tcpipFtpsModuleMenuVisible, ["tcpipIPv4.TCPIP_STACK_USE_IPV4", "tcpipTcp.TCPIP_USE_TCP"])
 
+    # FTPs Command Listening Port
+    tcpipFtpsCmdPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_COMMAND_LISTEN_PORT", None)
+    tcpipFtpsCmdPort.setLabel("FTP Server Command Listening Port")
+    tcpipFtpsCmdPort.setVisible(True)
+    tcpipFtpsCmdPort.setDescription("FTP Server Command Listening Port")
+    tcpipFtpsCmdPort.setDefaultValue(21)
+    #tcpipFtpsCmdPort.setDependencies(tcpipFtpsModuleMenuVisible, ["TCPIP_USE_FTP_MODULE"])
+
+    # FTPs Data Listening Port
+    tcpipFtpsDataPort = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_DATA_LISTEN_PORT", None)
+    tcpipFtpsDataPort.setLabel("FTP Data Listening Port")
+    tcpipFtpsDataPort.setVisible(True)
+    tcpipFtpsDataPort.setDescription("FTP Server Data Listening Port")
+    tcpipFtpsDataPort.setDefaultValue(20)
+    #tcpipFtpsDataPort.setDependencies(tcpipFtpsModuleMenuVisible, ["TCPIP_USE_FTP_MODULE"])
+
     # Maximum Length for User Name
     tcpipFtpsUsrNameMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_USER_NAME_LEN", None)
     tcpipFtpsUsrNameMaxLen.setLabel("Maximum Length for User Name")
@@ -41,14 +71,6 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsUsrNameMaxLen.setDescription("Maximum Length for User Name")
     tcpipFtpsUsrNameMaxLen.setDefaultValue(10)
     #tcpipFtpsUsrNameMaxLen.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
-
-    # Maximum Length of FTP Login Password
-    tcpipFtpsLoginPswdMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_PASSWD_LEN", None)
-    tcpipFtpsLoginPswdMaxLen.setLabel("Maximum Length of FTP Login Password")
-    tcpipFtpsLoginPswdMaxLen.setVisible(True)
-    tcpipFtpsLoginPswdMaxLen.setDescription("Maximum Length of FTP Login Password")
-    tcpipFtpsLoginPswdMaxLen.setDefaultValue(10)
-    #tcpipFtpsLoginPswdMaxLen.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
 
     # Maximum Number of FTP Connections Allowed per Interface
     tcpipFtpsConnMaxNum = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_MAX_CONNECTIONS", None)
@@ -90,22 +112,45 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsTimeout.setDefaultValue(180)
     #tcpipFtpsTimeout.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
 
+    # FTP Authentication Selection
+    tcpipFtpsAuth= tcpipFtpsComponent.createComboSymbol("TCPIP_FTPS_AUTH_CONFIG", None, TCPIP_FTPS_AUTH_TYPES)
+    tcpipFtpsAuth.setLabel("Select FTP Authentication")
+    tcpipFtpsAuth.setVisible(True)
+    tcpipFtpsAuth.setDescription("FTP Authentication Selection")
+    tcpipFtpsAuth.setDefaultValue("Run Time Authentication")
+
+    # FTP Connection info Authentication
+    tcpipFtpsAuthInfo = tcpipFtpsComponent.createBooleanSymbol("TCPIP_FTPS_AUTHENTICATION_CONN_INFO", tcpipFtpsAuth)
+    tcpipFtpsAuthInfo.setLabel("Connection Info Used for Authentication ")
+    tcpipFtpsAuthInfo.setVisible(True)
+    tcpipFtpsAuthInfo.setDescription("Connection Info is Passed to the Authentication Handler")
+    tcpipFtpsAuthInfo.setDefaultValue(True)
+    tcpipFtpsAuthInfo.setDependencies(tcpipFtpsAuthInfoVisible, ["TCPIP_FTPS_AUTH_CONFIG"])
+
 
     # FTP Login User Name
-    tcpipFtpsLoginUsrName = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_USER_NAME", None)
+    tcpipFtpsLoginUsrName = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_USER_NAME", tcpipFtpsAuth)
     tcpipFtpsLoginUsrName.setLabel("FTP Login User Name")
     tcpipFtpsLoginUsrName.setVisible(True)
     tcpipFtpsLoginUsrName.setDescription("FTP Login User Name")
     tcpipFtpsLoginUsrName.setDefaultValue("Microchip")
-    #tcpipFtpsLoginUsrName.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
+    tcpipFtpsLoginUsrName.setDependencies(tcpipFtpsObsAuthVisible, ["TCPIP_FTPS_AUTH_CONFIG"])
 
     # FTP Login Password
-    tcpipFtpsLoginUsrName = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_PASSWORD", None)
+    tcpipFtpsLoginUsrName = tcpipFtpsComponent.createStringSymbol("TCPIP_FTP_PASSWORD", tcpipFtpsAuth)
     tcpipFtpsLoginUsrName.setLabel("FTP Login Password")
     tcpipFtpsLoginUsrName.setVisible(True)
     tcpipFtpsLoginUsrName.setDescription("FTP Login Password")
     tcpipFtpsLoginUsrName.setDefaultValue("Harmony")
-    #tcpipFtpsLoginUsrName.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
+    tcpipFtpsLoginUsrName.setDependencies(tcpipFtpsObsAuthVisible, ["TCPIP_FTPS_AUTH_CONFIG"])
+
+    # Maximum Length of FTP Login Password
+    tcpipFtpsLoginPswdMaxLen = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTP_PASSWD_LEN", tcpipFtpsAuth)
+    tcpipFtpsLoginPswdMaxLen.setLabel("Maximum Length of FTP Login Password")
+    tcpipFtpsLoginPswdMaxLen.setVisible(True)
+    tcpipFtpsLoginPswdMaxLen.setDescription("Maximum Length of FTP Login Password")
+    tcpipFtpsLoginPswdMaxLen.setDefaultValue(10)
+    tcpipFtpsLoginPswdMaxLen.setDependencies(tcpipFtpsObsAuthVisible, ["TCPIP_FTPS_AUTH_CONFIG"])
 
     # Enable FTP File PUT Command
     tcpipFtpsFilePut = tcpipFtpsComponent.createBooleanSymbol("TCPIP_FTP_PUT_ENABLED", None)
