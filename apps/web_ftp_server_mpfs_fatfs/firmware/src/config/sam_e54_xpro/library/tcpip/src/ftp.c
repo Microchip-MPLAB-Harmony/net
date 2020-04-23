@@ -168,7 +168,7 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 #define mMIN(a, b)  ((a<b)?a:b)
 
 #if (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
-static const char TCPIP_FTP_ANNONYMOUS_USER_NAME[]    = "anonymous";
+#define TCPIP_FTP_ANNONYMOUS_USER_NAME "anonymous"
 #endif
 
 static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE | TCPIP_TCP_SIGNAL_RX_FIN;

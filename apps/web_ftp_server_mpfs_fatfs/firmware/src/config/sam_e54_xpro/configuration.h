@@ -409,7 +409,7 @@ extern "C" {
 #define TCPIP_FTP_MOUNT_POINT                   "/mnt/mchpDrive1/"
 
 /***Comment this line out to disable MPFS***/
-#define TCPIP_FTP_PUT_ENABLED	
+#define TCPIP_FTP_PUT_ENABLED   
 
 #define TCPIP_FTPS_OBSOLETE_AUTHENTICATION false
 #define TCPIP_FTPS_AUTHENTICATION_CONN_INFO true
