@@ -243,7 +243,7 @@ extern "C" {
 #define TCPIP_TCP_DELAYED_ACK_TIMEOUT		    		100
 #define TCPIP_TCP_FIN_WAIT_2_TIMEOUT		    		5000
 #define TCPIP_TCP_KEEP_ALIVE_TIMEOUT		    		10000
-#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT                    0
+#define TCPIP_TCP_CLOSE_WAIT_TIMEOUT		    		0
 #define TCPIP_TCP_MAX_RETRIES		            		5
 #define TCPIP_TCP_MAX_UNACKED_KEEP_ALIVES			6
 #define TCPIP_TCP_MAX_SYN_RETRIES		        	3
@@ -381,19 +381,22 @@ extern "C" {
 
 /*** FTP Configuration ***/
 #define TCPIP_STACK_USE_FTP_SERVER
-#define TCPIP_FTP_USER_NAME_LEN		    			10
-#define TCPIP_FTP_PASSWD_LEN		    			10
-#define TCPIP_FTP_MAX_CONNECTIONS				1
-#define TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE				0
-#define TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE				0
-#define TCPIP_FTPS_TASK_TICK_RATE	    			33
-#define TCPIP_FTP_USER_NAME		        		"Microchip"
-#define TCPIP_FTP_PASSWORD		        		"Harmony"
-#define TCPIP_FTP_TIMEOUT						180
-#define TCPIP_FTP_MOUNT_POINT					"/mnt/mchpDrive1/"
+#define TCPIP_FTP_USER_NAME_LEN                 10
+#define TCPIP_FTP_MAX_CONNECTIONS               1
+#define TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE         0
+#define TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE         0
+#define TCPIP_FTPS_TASK_TICK_RATE               33
+#define TCPIP_FTP_TIMEOUT                       180
+
+#define TCPIP_FTPS_COMMAND_LISTEN_PORT          21
+#define TCPIP_FTPS_DATA_LISTEN_PORT             20
+#define TCPIP_FTP_MOUNT_POINT                   "/mnt/mchpDrive1/"
 
 /***Comment this line out to disable MPFS***/
-#define TCPIP_FTP_PUT_ENABLED	
+#define TCPIP_FTP_PUT_ENABLED   
+
+#define TCPIP_FTPS_OBSOLETE_AUTHENTICATION false
+#define TCPIP_FTPS_AUTHENTICATION_CONN_INFO true
 
 
                                                   
@@ -426,7 +429,7 @@ extern "C" {
 #define TCPIP_DNS_CLIENT_CACHE_DEFAULT_TTL_VAL		1200
 #define TCPIP_DNS_CLIENT_CACHE_UNSOLVED_ENTRY_TMO	10
 #define TCPIP_DNS_CLIENT_LOOKUP_RETRY_TMO			5
-#define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN          64
+#define TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN			64
 #define TCPIP_DNS_CLIENT_MAX_SELECT_INTERFACES		4
 #define TCPIP_DNS_CLIENT_DELETE_OLD_ENTRIES			true
 #define TCPIP_DNS_CLIENT_USER_NOTIFICATION   false
