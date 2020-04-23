@@ -145,7 +145,6 @@ static bool TCPIP_FTP_Quit(TCPIP_FTP_DCPT* pFTPDcpt);
 static bool TCPIP_FTP_FileGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
 static bool TCPIP_FTP_MakeDirectory(TCPIP_FTP_DCPT* pFTPDcpt);
 static bool TCPIP_FTP_ExecuteCmdGet(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
-//static bool TCPIP_FTP_NameListCmd(TCPIP_FTP_DCPT* pFTPDcpt, uint8_t *cFile);
 static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt);
 static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt);
 static SYS_FS_RESULT TCPIP_FTP_RemoveFile(TCPIP_FTP_DCPT * pFTPDcpt);
@@ -168,8 +167,9 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 
 #define mMIN(a, b)  ((a<b)?a:b)
 
-
-static const char TCPIP_FTP_ANNONYMOUS_USER_NAME[]    = "anonymous";
+#if (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+#define TCPIP_FTP_ANNONYMOUS_USER_NAME "anonymous"
+#endif
 
 static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE | TCPIP_TCP_SIGNAL_RX_FIN;
 
@@ -705,32 +705,9 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
                 }
                 TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
                 TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
-//                // send MLSD TODO: HS what is this???
-//                memset(ftpMsg,0,sizeof(ftpMsg));
-//                sprintf(ftpMsg,"MLSD\r\n");
-//                if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
-//                {
-//                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-//                    pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-//                    return true;
-//                }
-//                TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-//                TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
-//
-//                 // send MLST
-//                memset(ftpMsg,0,sizeof(ftpMsg));
-//                sprintf(ftpMsg,"MLST type*;size*;modify*;\r\n");
-//                if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
-//                {
-//                    pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_NONE;
-//                    pFTPDcpt->ftpSm = TCPIP_FTP_SM_CONNECTED;
-//                    return true;
-//                }
-//                TCPIP_TCP_StringPut(pFTPDcpt->ftpCmdskt, (const uint8_t*)ftpMsg);
-//                TCPIP_TCP_Flush(pFTPDcpt->ftpCmdskt);
 
                 // End of FEAT fetures support
-                 memset(ftpMsg,0,sizeof(ftpMsg));
+                memset(ftpMsg,0,sizeof(ftpMsg));
                 sprintf(ftpMsg,"211 End\r\n");
                 if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(ftpMsg))
                 {
@@ -924,7 +901,6 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
                                                             remoteSockInfo.localIPaddress.v4Add.v[3],
                                                             dataSockInfo.localPort>>8 & 0xFF,
                                                             dataSockInfo.localPort & 0xFF);
-            //strcat(&sTCPIPFTPRespStr[pFTPDcpt->ftpResponse],passiveMsg);
             pFTPDcpt->ftpDataPort = dataSockInfo.localPort;
 
             if(TCPIP_TCP_PutIsReady(pFTPDcpt->ftpCmdskt) < strlen(passiveMsg))
@@ -1071,11 +1047,6 @@ static bool TCPIP_FTP_CmdsExecute(TCPIP_FTP_CMD cmd, TCPIP_FTP_DCPT* pFTPDcpt)
         }
 
         break;
-/*
-        case TCPIP_FTP_CMD_NLST:
-            return TCPIP_FTP_NameListCmd(pFTPDcpt, pFTPDcpt->ftp_argv[1]);
-            break;
-*/
     default:
         pFTPDcpt->ftpResponse = TCPIP_FTP_RESP_UNKNOWN;
         break;
