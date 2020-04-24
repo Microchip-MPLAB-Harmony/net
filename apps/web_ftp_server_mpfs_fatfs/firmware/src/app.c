@@ -85,11 +85,11 @@ APP_LED_STATE LEDstate = APP_LED_STATE_OFF;
 // Section: Application Callback Functions
 // *****************************************************************************
 // *****************************************************************************
-
+#if (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)  
 /* TODO:  Add any necessary callback functions.
 */
 static bool APP_FTPAuthHandler(const char* user, const char* password, const TCPIP_FTP_CONN_INFO* pInfo, const void* hParam);
-
+#endif
 
 // *****************************************************************************
 // *****************************************************************************
@@ -161,21 +161,6 @@ void APP_Tasks ( void )
 
     switch(appData.state)
     {
-//        case APP_MOUNT_DISK_MEDIA_NVM:
-//            if(SYS_FS_Mount(APP_SYS_FS_NVM_VOL, APP_SYS_FS_NVM_MOUNT_POINT, APP_SYS_FS_NVM_TYPE, 0, NULL) == 0)
-//            {
-//                SYS_CONSOLE_PRINT("SYS_Initialize: The %s File System is mounted\r\n", APP_SYS_FS_NVM_TYPE_STRING);
-//                appData.state = APP_MOUNT_DISK_MEDIA_SD;
-//            }
-//            break;
-//        case APP_MOUNT_DISK_MEDIA_SD:
-//            if(SYS_FS_Mount(APP_SYS_FS_SD_VOL, APP_SYS_FS_SDCARD_MOUNT_POINT, APP_SYS_FS_SDCARD_TYPE, 0, NULL) == 0)
-//            {
-//                SYS_CONSOLE_PRINT("SYS_Initialize: The %s File System is mounted\r\n", APP_SYS_FS_SDCARD_TYPE_STRING);
-//                appData.state = APP_TCPIP_WAIT_INIT;
-//            }
-//            break;
-
         case APP_TCPIP_WAIT_INIT:
             tcpipStat = TCPIP_STACK_Status(sysObj.tcpip);
             if(tcpipStat < 0)
@@ -226,12 +211,13 @@ void APP_Tasks ( void )
                 // register the application HTTP processing
                 HTTP_APP_Initialize();
 #endif
+#if (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)              
                 appData.ftpHandle = TCPIP_FTP_AuthenticationRegister(APP_FTPAuthHandler, 0);
                 if(appData.ftpHandle == 0)
                 {
                     SYS_CONSOLE_MESSAGE("Failed to register FTP authentication handler!\r\n");
                 }
-                                
+#endif            
                 appData.state = APP_TCPIP_TRANSACT;
             }
 
@@ -280,6 +266,7 @@ void APP_Tasks ( void )
     }
 }
 
+#if (TCPIP_FTPS_OBSOLETE_AUTHENTICATION == 0)  
 // Implement the authentication handler
 // This trivial example does a simple string comparison
 // The application should implement a more secure aproach:
@@ -294,7 +281,7 @@ static bool APP_FTPAuthHandler(const char* user, const char* password, const TCP
 
     return false;
 }
-
+#endif
 /*******************************************************************************
  End of File
  */

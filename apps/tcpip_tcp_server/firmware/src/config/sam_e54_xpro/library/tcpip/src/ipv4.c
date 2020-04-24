@@ -1616,7 +1616,10 @@ static TCPIP_MAC_PKT_ACK_RES TCPIP_IPV4_RxFragmentInsert(TCPIP_MAC_PACKET* pRxPk
                 // ok, we can copy
                 uint8_t* startAdd = pCurrPkt->pTransportLayer + (lb + ld);
                 int copyBytes = TCPIP_Helper_PacketCopy(pCurrPkt, pDestSeg->segLoad + pDestSeg->segLen, &startAdd, le, true);
-                _IPv4AssertCond(copyBytes == le, __func__, __LINE__);
+                if(copyBytes != le)
+                {
+                    _IPv4AssertCond(false, __func__, __LINE__);
+                }
                 pDestSeg->segLen += le;
                 pRxPkt->totTransportLen += le;
             }

@@ -502,11 +502,11 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 /*** FTP Server Initialization Data ***/
 const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
 { 
+    .cmdPort            = TCPIP_FTPS_COMMAND_LISTEN_PORT, 
+    .dataPort           = TCPIP_FTPS_DATA_LISTEN_PORT, 
     .nConnections       = TCPIP_FTP_MAX_CONNECTIONS,
     .dataSktTxBuffSize	= TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE,
     .dataSktRxBuffSize	= TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE,
-    .userName			= TCPIP_FTP_USER_NAME,
-    .password		    = TCPIP_FTP_PASSWORD,
 	.mountPath			= TCPIP_FTP_MOUNT_POINT,
 };
 
@@ -754,12 +754,12 @@ void SYS_Initialize ( void* data )
 
     EVSYS_Initialize();
 
-    sysObj.drvMemory0 = DRV_MEMORY_Initialize((SYS_MODULE_INDEX)DRV_MEMORY_INDEX_0, (SYS_MODULE_INIT *)&drvMemory0InitData);
 
 
     /* Initialize the MIIM Driver */
     sysObj.drvMiim = DRV_MIIM_Initialize( DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT *) &drvMiimInitData );
 
+    sysObj.drvMemory0 = DRV_MEMORY_Initialize((SYS_MODULE_INDEX)DRV_MEMORY_INDEX_0, (SYS_MODULE_INIT *)&drvMemory0InitData);
     
 
     sysObj.drvSDMMC0 = DRV_SDMMC_Initialize(DRV_SDMMC_INDEX_0,(SYS_MODULE_INIT *)&drvSDMMC0InitData);

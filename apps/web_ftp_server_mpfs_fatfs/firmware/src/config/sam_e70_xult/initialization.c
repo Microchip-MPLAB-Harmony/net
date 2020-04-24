@@ -535,11 +535,11 @@ const TCPIP_MODULE_MAC_PIC32C_CONFIG tcpipMACPIC32CINTInitData =
 /*** FTP Server Initialization Data ***/
 const TCPIP_FTP_MODULE_CONFIG tcpipFTPInitData =
 { 
+    .cmdPort            = TCPIP_FTPS_COMMAND_LISTEN_PORT, 
+    .dataPort           = TCPIP_FTPS_DATA_LISTEN_PORT, 
     .nConnections       = TCPIP_FTP_MAX_CONNECTIONS,
     .dataSktTxBuffSize	= TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE,
     .dataSktRxBuffSize	= TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE,
-    .userName			= TCPIP_FTP_USER_NAME,
-    .password		    = TCPIP_FTP_PASSWORD,
 	.mountPath			= TCPIP_FTP_MOUNT_POINT,
 };
 
