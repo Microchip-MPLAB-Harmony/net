@@ -263,7 +263,7 @@ typedef struct _tag_IGMP_QUERY_REPORT_NODE
     uint8_t                              queryType;     // TCPIP_IGMP_QUERY_TYPE value
     uint16_t                             nQSources;     // number of qSources in report node!; i.e. 1 for a GSQ, GSSQ; 
     uint32_t                             tTransmit;     // time when the next transmission occurs
-    TCPIP_IGMP_QUERY_SOURCES             qSources[0];   // if GSQ or GSSQ, there 's only one set of sources (for that group address)
+    TCPIP_IGMP_QUERY_SOURCES             qSources[];    // if GSQ or GSSQ, there 's only one set of sources (for that group address)
                                                         // for GQ though, it can be up to TCPIP_IGMP_MCAST_GROUPS 
 }TCPIP_IGMP_QUERY_REPORT_NODE;
 
@@ -344,7 +344,7 @@ typedef struct
     };
     uint8_t     qqic;               // Querier's Query Interval Code
     uint16_t    nSources;           // number of sources
-    uint32_t    sources[0];         // sources for this query
+    uint32_t    sources[];          // sources for this query
 }TCPIP_IGMPv3_QUERY_MESSAGE;
 
 typedef union
@@ -366,7 +366,7 @@ typedef struct
     uint8_t     auxLen;
     uint16_t    nSources;           // number of sources in this record
     uint32_t    groupAddress;       // multicast address it refers to
-    uint32_t    sourceAddress[0];   // source addresses part of the group
+    uint32_t    sourceAddress[];    // source addresses part of the group
 }TCPIP_IGMPv3_GROUP_RECORD;
 
 // membership IGMPv3 packet
@@ -378,7 +378,7 @@ typedef struct
     uint16_t    reserved2;
     uint16_t    nGroupRecords;   // number of group records
     //
-    TCPIP_IGMPv3_GROUP_RECORD   groupRecords[0];    // group records part of this report
+    TCPIP_IGMPv3_GROUP_RECORD   groupRecords[];     // group records part of this report
 }TCPIP_IGMPv3_REPORT_MESSAGE;
 
 // IGMP event registration

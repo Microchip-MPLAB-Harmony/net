@@ -54,7 +54,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 typedef struct
 {
     IPV4_PACKET             v4Pkt;     // safe cast to IPV4_PACKET
-    TCPIP_MAC_DATA_SEGMENT  zcSeg[0];  // zero copy data segment (only if BSD used)
+    TCPIP_MAC_DATA_SEGMENT  zcSeg[];   // zero copy data segment (only if BSD used)
 }UDP_V4_PACKET;
 
 
@@ -218,7 +218,7 @@ typedef struct
     uint16_t        sigMask;        // TCPIP_UDP_SIGNAL_TYPE: active events
     uint8_t         rxQueueLimit;   // max number of RX packets that can be queued at a certain time
     uint8_t         ttl;            // socket TTL value 
-    uint8_t         padding[0];     // padding; not used
+    uint8_t         padding[];      // padding; not used
 
 } UDP_SOCKET_DCPT;
 

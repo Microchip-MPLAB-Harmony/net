@@ -73,7 +73,7 @@ typedef union _tag_TCPIP_POOL_DATA_BLK
     struct  
     {
         union _tag_TCPIP_POOL_DATA_BLK* next;
-        void*                           data[0];                // pool data, user storage
+        void*                           data[];                // pool data, user storage
     };
 }TCPIP_POOL_DATA_BLK;   // a pool data chunk consists of linked blocks
                         // all of the same size
@@ -118,9 +118,9 @@ typedef struct _tag_TCPIP_POOL_DCPT
     OSAL_SEM_HANDLE_TYPE    poolSemaphore;          // synchronization object
                                                     // A semaphore per entry might be more efficient at run time
                                                     // However it's expensive.
-    uint8_t                 entryExpBlks[0];        // nEntries array of # of blocks to expand when an entry runs out of mem
+    uint8_t                 entryExpBlks[];         // nEntries array of # of blocks to expand when an entry runs out of mem
                                                     // 0 means no expansion
-    //TCPIP_POOL_ENTRY      poolEntry[0];           // pools themselves, different sizes
+    //TCPIP_POOL_ENTRY      poolEntry[];            // pools themselves, different sizes
 }TCPIP_POOL_DCPT;   // pool descriptor: collection of pool entries
                     // Note: Must be 32 bit aligned!
 
