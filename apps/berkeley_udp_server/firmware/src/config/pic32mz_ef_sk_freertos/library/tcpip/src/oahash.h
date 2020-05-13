@@ -188,7 +188,7 @@ struct _TAG_OA_HASH_ENTRY
     uint16_t     probeCount;                    // number of steps to get to the
                                                 // key's slot
     //
-    void*       data[0];    // generic payload up to the application to use
+    void*       data[];     // generic payload up to the application to use
                             // this SHOULD include the key
 };
 

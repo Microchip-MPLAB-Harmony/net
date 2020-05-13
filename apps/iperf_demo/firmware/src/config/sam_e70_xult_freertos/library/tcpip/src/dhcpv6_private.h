@@ -308,7 +308,7 @@ typedef struct __attribute__((packed))
 {
     uint8_t     msg_type;       // a TCPIP_DHCPV6_MSG_TYPE value
     uint8_t     transId[3];     // transaction ID
-    uint8_t     options[0];     // variable
+    uint8_t     options[];      // variable
 }TCPIP_DHCPV6_MESSAGE_HEADER;
 
 #define TCPIP_DHCPV6_HW_TYPE                    (1u)    //  RFC 1700 - 1 for ETH hardware type
@@ -665,7 +665,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t        optCode;    // identifying the specific option type carried in this option
     uint16_t        optLen;     // length of the option-data field in this option in octets
-    uint32_t        optData[0]; // The data for the option; the format of this data depends on the definition of the option
+    uint32_t        optData[];  // The data for the option; the format of this data depends on the definition of the option
 }TCPIP_DHCPV6_OPTION_GENERIC;
 
 
@@ -674,7 +674,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t                optCode;    // = TCPIP_DHCPV6_OPT_CODE_CLIENT_ID
     uint16_t                optLen;     // = length of the DUID
-    uint16_t                duid[0];    // DUID_LL, DUID_LLT or DUID_EN
+    uint16_t                duid[];     // DUID_LL, DUID_LLT or DUID_EN
 }TCPIP_DHCPV6_OPTION_CLIENT_ID;
 
 // Server ID option format
@@ -682,7 +682,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t                optCode;    // = TCPIP_DHCPV6_OPT_CODE_SERVER_ID
     uint16_t                optLen;     // = length of the server DUID
-    uint16_t                duid[0];    //  DUID_LL, DUID_LLT or DUID_EN
+    uint16_t                duid[];     //  DUID_LL, DUID_LLT or DUID_EN
 }TCPIP_DHCPV6_OPTION_SERVER_ID;
 
 // Client/Server ID option format
@@ -690,7 +690,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t                optCode;    // = TCPIP_DHCPV6_OPT_CODE_CLIENT_ID/ TCPIP_DHCPV6_OPT_CODE_SERVER_ID
     uint16_t                optLen;     // = length of the client/server DUID
-    uint16_t                duid[0];    //  DUID_LL, DUID_LLT or DUID_EN
+    uint16_t                duid[];     //  DUID_LL, DUID_LLT or DUID_EN
 }TCPIP_DHCPV6_OPTION_ID;
 
 
@@ -731,7 +731,7 @@ typedef struct __attribute__((packed))
     uint16_t                        optCode;    // = TCPIP_DHCPV6_OPT_CODE_IA_NA
     uint16_t                        optLen;     // =12 + length of IA_NA-options field
     TCPIP_DHCPV6_OPTION_IANA_BODY   body;
-    uint8_t                         ianaOpt[0]; // Options associated with this IA_NA.
+    uint8_t                         ianaOpt[];  // Options associated with this IA_NA.
 
 }TCPIP_DHCPV6_OPTION_IANA;
 
@@ -757,7 +757,7 @@ typedef struct __attribute__((packed))
     uint16_t                        optLen;     // = 4 + length of IA_TA-options field
                                         //
     TCPIP_DHCPV6_OPTION_IATA_BODY   body;                                        
-    uint8_t                         iataOpt[0]; // Options associated with this IA_TA.
+    uint8_t                         iataOpt[];  // Options associated with this IA_TA.
 
 }TCPIP_DHCPV6_OPTION_IATA;
 
@@ -787,7 +787,7 @@ typedef struct __attribute__((packed))
     uint16_t                            optCode;        // = TCPIP_DHCPV6_OPT_CODE_IA_ADDR
     uint16_t                            optLen;         // 24 + length of IAaddr-options field
     TCPIP_DHCPV6_OPTION_IA_ADDR_BODY    body;
-    uint8_t                             iaaddrOpt[0];   // options associated with this address
+    uint8_t                             iaaddrOpt[];    // options associated with this address
 }TCPIP_DHCPV6_OPTION_IA_ADDR;
 
 // Option Request option is used to identify a list of options in a
@@ -803,7 +803,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_OPTION_REQ
     uint16_t            optLen;         // 2 * number of requested options.
-    uint16_t            reqCode[0];     // option codes for options requested by the client 
+    uint16_t            reqCode[];      // option codes for options requested by the client 
 
 }TCPIP_DHCPV6_OPTION_OPTION_REQ;
 
@@ -842,7 +842,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_RELAY_MSG
     uint16_t            optLen;         // length of the DHCP relay message
-    uint8_t             relayMsg[0];    // The amount of time since the client began its current DHCP transaction.
+    uint8_t             relayMsg[];     // The amount of time since the client began its current DHCP transaction.
 
 }TCPIP_DHCPV6_OPTION_RELAY_MSG;
 
@@ -857,7 +857,7 @@ typedef struct __attribute__((packed))
     uint8_t             algorithm;
     uint8_t             rdm;            // replay detection method used
     uint64_t            replayDetect;   // replay detection information for the RDM
-    uint8_t             authInfo[0];    // authentication information, as specified by the protocol and algorithm
+    uint8_t             authInfo[];     // authentication information, as specified by the protocol and algorithm
 }TCPIP_DHCPV6_OPTION_AUTHENTICATE;
 
 
@@ -885,7 +885,7 @@ typedef struct __attribute__((packed))
     uint16_t            optCode;        // = TCPIP_DHCPV6_OPT_CODE_STATUS_CODE
     uint16_t            optLen;         // 2 + length of status-message
     uint16_t            statusCode;     // numeric code for the status encoded in this option: TCPIP_DHCPV6_SERVER_STATUS_CODE
-    uint8_t             statusMsg[0];   // UTF-8 encoded text string suitable for display to an end user
+    uint8_t             statusMsg[];       // UTF-8 encoded text string suitable for display to an end user
                                         // which MUST NOT be null-terminated.
     
 }TCPIP_DHCPV6_OPTION_STATUS_CODE;
@@ -914,7 +914,7 @@ typedef struct __attribute__((packed))
 typedef struct __attribute__((packed))
 {
     uint16_t            userClassLen;   // = length of the opaque user class data
-    uint8_t             opaqueData[0];  // The user classes carried by the client
+    uint8_t             opaqueData[];   // The user classes carried by the client
 
 }TCPIP_DHCPV6_USER_CLASS_DATA;
 
@@ -933,7 +933,7 @@ typedef struct __attribute__((packed))
 typedef struct __attribute__((packed))
 {
     uint16_t            vendorClassLen;     // = length of the opaque vendor class data
-    uint8_t             opaqueData[0];      // The vendor classes carried by the client
+    uint8_t             opaqueData[];       // The vendor classes carried by the client
 
 }TCPIP_DHCPV6_VENDOR_CLASS_DATA;
 
@@ -943,7 +943,7 @@ typedef struct __attribute__((packed))
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_VENDOR_CLASS
     uint16_t                        optLen;             // 4 + length of vendor class data field
     uint32_t                        enterpriseNo;       // The vendor’s registered Enterprise Number as registered with IANA
-    TCPIP_DHCPV6_VENDOR_CLASS_DATA  vendorClassData[0]; // The hardware configuration of the host on which the client is running
+    TCPIP_DHCPV6_VENDOR_CLASS_DATA  vendorClassData[];  // The hardware configuration of the host on which the client is running
 
 }TCPIP_DHCPV6_OPTION_VENDOR_CLASS;
 
@@ -958,7 +958,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t            optCode;        // The code for the encapsulated option
     uint16_t            optLen;         // An unsigned integer giving the length of the option-data
-    uint8_t             optionData[0];  // The data area for the encapsulated option
+    uint8_t             optionData[];   // The data area for the encapsulated option
 
 }TCPIP_DHCPV6_VENDOR_OPTION_DATA;
 
@@ -968,7 +968,7 @@ typedef struct __attribute__((packed))
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_VENDOR_OPTS
     uint16_t                        optLen;             // 4 + length of option-data field
     uint32_t                        enterpriseNo;       // The vendor’s registered Enterprise Number as registered with IANA
-    TCPIP_DHCPV6_VENDOR_OPTION_DATA vendorOptData[0];   // The hardware configuration of the host on which the client is running
+    TCPIP_DHCPV6_VENDOR_OPTION_DATA vendorOptData[];    // The hardware configuration of the host on which the client is running
 
 }TCPIP_DHCPV6_OPTION_VENDOR_OPTS;
 
@@ -979,7 +979,7 @@ typedef struct __attribute__((packed))
 {
     uint16_t                        optCode;            // = TCPIP_DHCPV6_OPT_CODE_INTERFACE_ID
     uint16_t                        optLen;             // Length of interface-id field
-    uint8_t                         interfaceId[0];     // An opaque value of arbitrary length generated by the relay agent to identify one of the
+    uint8_t                         interfaceId[];      // An opaque value of arbitrary length generated by the relay agent to identify one of the
                                                         // relay agent’s interfaces.
 }TCPIP_DHCPV6_OPTION_INTERFACE_ID;
 
@@ -1026,7 +1026,7 @@ typedef struct __attribute__((packed))
     uint16_t                        optLen;     // Length of the list of DNS recursive name servers in octets;
                                                 // must be a multiple of 16
                                                 //
-    IPV6_ADDR                       dnsAddr[0]; // 16 bytes DNS server IPV6 address
+    IPV6_ADDR                       dnsAddr[];  // 16 bytes DNS server IPV6 address
     
 }TCPIP_DHCPV6_OPTION_DNS_SERVERS;
 
@@ -1040,7 +1040,7 @@ typedef struct __attribute__((packed))
     uint16_t                        optCode;        // = TCPIP_DHCPV6_OPT_CODE_DOMAIN_LIST
     uint16_t                        optLen;         // Length of the ’searchlist’ field in octets;
                                                     //
-    uint8_t                         searchList[0];  // The specification of the list of domain names in the Domain Search List
+    uint8_t                         searchList[];   // The specification of the list of domain names in the Domain Search List
                                                     // The list of domain names in the ’searchlist’ MUST be encoded as specified in section
                                                     // "Representation and use of domain names" of RFC 3315:
                                                     //      A domain name or a list of domain names is encoded using the technique described in
@@ -1140,7 +1140,7 @@ typedef struct
 {
     int             nSets;          // number of option sets: usually ((TCPIP_DHCPV6_OPT_CODE_NUMBER - 1) / 32) + 1;
 
-    uint32_t        optionSet[0];   // [((TCPIP_DHCPV6_OPT_CODE_NUMBER - 1) / 32) + 1];   // option set;
+    uint32_t        optionSet[];    // [((TCPIP_DHCPV6_OPT_CODE_NUMBER - 1) / 32) + 1];   // option set;
                                     // each option set contains 32 option masks:
                                     // set 0: option 0  - 31
                                     // set 1: option 32 - 63
@@ -1191,7 +1191,7 @@ typedef struct _tag_TCPIP_DHCPV6_MSG_BUFFER
     uint8_t*                                pMsgData;   // pointing to message payload: normally to msgData
     uint16_t                                optLen;     // size of the carried options (whole message w/o TCPIP_DHCPV6_MESSAGE_HEADER 
     uint8_t*                                pOptData;   // pointing to option payload: TCPIP_DHCPV6_MESSAGE_HEADER->options
-    uint8_t                                 msgData[0]; // data buffer: pClient->msgBufferSize
+    uint8_t                                 msgData[];  // data buffer: pClient->msgBufferSize
 }TCPIP_DHCPV6_MSG_BUFFER;
 
 

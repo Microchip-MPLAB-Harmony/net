@@ -336,7 +336,7 @@ typedef struct _IPV6_DATA_SEGMENT_HEADER
     unsigned char memory; // Type: IPV6_DATA_NONE, IPV6_DATA_DYNAMIC_BUFFER, IPV6_DATA_NETWORK_FIFO, IPV6_DATA_PIC_RAM
     unsigned char segmentType; // Type of segment contents
     struct _IPV6_DATA_SEGMENT_HEADER * nextSegment; // Pointer to the next data segment
-    void * data[0]; // Optional buffer space
+    void * data[];  // Optional buffer space
 } IPV6_DATA_SEGMENT_HEADER;
 
 

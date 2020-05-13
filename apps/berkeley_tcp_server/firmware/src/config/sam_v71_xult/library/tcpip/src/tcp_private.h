@@ -209,7 +209,7 @@ typedef struct
 
     uint8_t ttl;                    // socket TTL value
     uint8_t tos;                    // socket TOS value
-    uint8_t pad[0];                 // padding; not used
+    uint8_t pad[];                  // padding; not used
 } TCB_STUB;
 
 #endif  // _TCP_PRIVATE_H_

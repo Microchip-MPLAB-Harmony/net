@@ -155,7 +155,7 @@ typedef struct
         uint8_t     optCopied:  1;      // option copied to all fragments
     };
     uint8_t         optLength;          // size of the entire option
-    uint16_t        optData[0];         // option specific variable data
+    uint16_t        optData[];          // option specific variable data
 }IPV4_OPTION_FIELD;
 
 // *****************************************************************************
@@ -211,7 +211,7 @@ typedef struct
     uint16_t HeaderChecksum;
     IPV4_ADDR SourceAddress;
     IPV4_ADDR DestAddress;
-    uint32_t  options[0];
+    uint32_t  options[];
 } IPV4_HEADER;
 
 

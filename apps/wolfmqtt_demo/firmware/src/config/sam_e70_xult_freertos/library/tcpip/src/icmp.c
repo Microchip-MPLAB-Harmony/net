@@ -58,7 +58,7 @@ typedef struct
 	uint16_t wChecksum;
 	uint16_t wIdentifier;
 	uint16_t wSequenceNumber;
-	uint32_t wData[0];      // payload
+	uint32_t wData[];      // payload
 } ICMP_PACKET;
 
 #define ICMP_TYPE_ECHO_REQUEST      8   // ICMP server is requested echo - type

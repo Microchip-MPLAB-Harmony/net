@@ -336,7 +336,7 @@ typedef struct __attribute__((packed))
 {
     uint8_t     opt;        // should be TCPIP_DHCP_PARAM_REQUEST_LIST
     uint8_t     len;        // length of the following options
-    uint8_t     optList[0]; // option list
+    uint8_t     optList[];  // option list
 }TCPIP_DHCP_OPTION_DATA_REQUEST_LIST;
 
 
@@ -344,7 +344,7 @@ typedef struct __attribute__((packed))
 {
     uint8_t     opt;        // should be TCPIP_DHCP_HOST_NAME
     uint8_t     len;        // length of the hostname field
-    uint8_t     hostname[0]; // host name
+    uint8_t     hostname[]; // host name
 }TCPIP_DHCP_OPTION_DATA_HOST_NAME;
 
 

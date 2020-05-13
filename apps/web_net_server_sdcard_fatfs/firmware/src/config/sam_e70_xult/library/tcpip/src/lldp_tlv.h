@@ -62,7 +62,7 @@ typedef struct __attribute__((packed))
         };
         uint16_t    type_length;        // compressed format
     };
-    uint8_t        data[0];            // variable data
+    uint8_t        data[];             // variable data
 }TCPIP_LLDP_TLV;
 
 
