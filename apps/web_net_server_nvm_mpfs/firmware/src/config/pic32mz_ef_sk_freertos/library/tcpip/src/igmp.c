@@ -1060,6 +1060,7 @@ static void TCPIP_IGMP_SourceChangeTimeout(void)
             // find a pending SLC report for this group
             groupAddress.Val = pRNode->repGroup;
             pFilt = _IGMP_FindScheduledScReport(groupAddress, ifIx, &pAllow, &pBlock, false);
+            (void)pFilt;
             _IGMPAssertCond(pFilt == 0, __func__, __LINE__);
             if(pAllow)
             {
@@ -3009,6 +3010,7 @@ static TCPIP_IGMP_QUERY_REPORT_NODE* _IGMP_FindScheduledQueryReport(TCPIP_IGMP_Q
                if(remove)
                {
                    pRemN = (TCPIP_IGMP_QUERY_REPORT_NODE*)TCPIP_Helper_SingleListNextRemove(pList, (SGL_LIST_NODE*)pPrev);
+                   (void)pRemN;
                    _IGMPAssertCond(pRemN == pQNode, __func__, __LINE__);
                }
                return pQNode;
