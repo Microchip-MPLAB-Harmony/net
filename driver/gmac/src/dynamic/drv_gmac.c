@@ -36,11 +36,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 // All pause capabilities our MAC supports
 #define DRV_GMAC_PAUSE_CPBL_MASK     (TCPIP_ETH_PAUSE_TYPE_ALL)
-
-#define DRV_GMAC_DUMMY_PRIORITY (0xFF)
-
-#define DRV_GMAC_NO_ACTIVE_QUEUE (0xFF)
-
 /******************************************************************************
  * Prototypes
  ******************************************************************************/
@@ -147,29 +142,9 @@ static uint32_t _DRV_GMAC_GetRxIPHdrCSErrorFrameCount(void);
 static uint32_t _DRV_GMAC_GetRxTCPCSErrorFrameCount(void);
 static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void);
 
-//Map Packet Priority to GMAC Queue number
-static bool _DRV_GMAC_SetPriorityToQueueNum(DRV_GMAC_DRIVER * pMACDrv);
-//Get Packet Priority from GMAC Queue number 
-static uint8_t _DRV_GMAC_GetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST queueIdx);
-//Disable all GMAC interrupts specified in queue mask
-static void _DRV_GMAC_Interrupt_Disable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat);
-//Enable all GMAC interrupts specified in queue mask
-static void _DRV_GMAC_Interrupt_Enable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask);
-//Clear all GMAC interrupts status specified in queue mask
-static void _DRV_GMAC_InterruptStatus_Clear(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask);
-//Restore all GMAC interrupts specified in queue mask
-static void _DRV_GMAC_Interrupt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat);
-
 //Transform TCPIP MAC filters to GMAC filters
 static GMAC_RX_FILTERS _DRV_GMAC_MacToEthFilter(TCPIP_MAC_RX_FILTER_TYPE macFilter);
-
-// Get highest priority active queue number
-static uint8_t _DRV_GMAC_GetPriorityQue();
-// Clear highest priority active queue 
-static void _DRV_GMAC_ClearPriorityQue(GMAC_QUE_LIST queueIdx);
-
-//Priority Queue Event Status 
-extern uint32_t      drvGmacQueEvents;     
+   
 /******************************************************************************
  * PIC32C GMAC object implementation
  ******************************************************************************/
@@ -399,7 +374,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 		}
 	}
 	
-    if(!_DRV_GMAC_SetPriorityToQueueNum(pMACDrv))
+    if(!DRV_PIC32CGMAC_LibSetPriorityToQueueNum(pMACDrv))
     {
         return SYS_MODULE_OBJ_INVALID; //return invalid
     }
@@ -425,7 +400,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 		uint32_t rxfilter= 0;
 
 		// start the initialization sequence
-		_DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+		DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
 			
  		initRes = _DRV_GMAC_PHYInitialise(pMACDrv);
  		if(initRes != TCPIP_MAC_RES_OK)
@@ -482,8 +457,8 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
             }
         }
 		
-        _DRV_GMAC_InterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
-        _DRV_GMAC_Interrupt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
+        DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+        DRV_PIC32CGMAC_LibInterrupt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
 		
 		
 		DRV_PIC32CGMAC_LibTransferEnable(pMACDrv); //enable Transmit and Receive of GMAC
@@ -797,7 +772,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
     static GMAC_QUE_LIST    queueIndex = DRV_GMAC_NO_ACTIVE_QUEUE;    
 
     //get highest priority active queue index
-    queueIndex = _DRV_GMAC_GetPriorityQue();      
+    queueIndex = DRV_PIC32CGMAC_LibGetPriorityQue();      
     
     //if any any active queue?
     while(queueIndex != DRV_GMAC_NO_ACTIVE_QUEUE)
@@ -815,9 +790,9 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
         else 
         {
             //clear que event status     
-            _DRV_GMAC_ClearPriorityQue(queueIndex);
+            DRV_PIC32CGMAC_LibClearPriorityQue(queueIndex);
             //get highest priority active queue index
-            queueIndex = _DRV_GMAC_GetPriorityQue(); 
+            queueIndex = DRV_PIC32CGMAC_LibGetPriorityQue(); 
                            
 
         }
@@ -889,7 +864,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
 			*ppPktStat = (TCPIP_MAC_PACKET_RX_STAT*)&pRxPktStat;
 		}
 
-        pRxPkt->pktPriority = _DRV_GMAC_GetPriorityFromQueueNum(pMACDrv, queueIndex);
+        pRxPkt->pktPriority = DRV_PIC32CGMAC_LibGetPriorityFromQueueNum(pMACDrv, queueIndex);
 		// success
 		return pRxPkt;
 	}
@@ -1325,9 +1300,9 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 static void _MACDeinit(DRV_GMAC_DRIVER * pMACDrv )
 {
-    _DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+     DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
 	 DRV_PIC32CGMAC_LibClose(pMACDrv, DRV_PIC32CGMAC_CLOSE_DEFAULT);
-    _DRV_GMAC_InterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+     DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
     
 	 DRV_GMAC_EventDeInit((DRV_HANDLE)pMACDrv);
 	 
@@ -1651,8 +1626,8 @@ static TCPIP_MAC_RES DRV_GMAC_EventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF
 
 	pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 
-    _DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-    _DRV_GMAC_InterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+    DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+    DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
     
 	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
 	pDcpt->_TcpEnabledEvents = pDcpt->_TcpPendingEvents = TCPIP_MAC_EV_NONE;
@@ -1707,8 +1682,8 @@ static TCPIP_MAC_RES DRV_GMAC_EventDeInit(DRV_HANDLE hMac)
 
 	pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 
-    _DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-    _DRV_GMAC_InterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+    DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+    DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
 
 	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
 	pDcpt->_TcpNotifyFnc = 0;
@@ -1781,7 +1756,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{   // already have some active
-            _DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+            DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
 		}
 
 		pDcpt->_TcpEnabledEvents |= macEvMask;        // add more
@@ -1814,7 +1789,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
                 }
             }
             
-            _DRV_GMAC_Interrupt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
+            DRV_PIC32CGMAC_LibInterrupt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
 		}
 	}
 	else
@@ -1827,7 +1802,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{   // already have some active
-            _DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+            DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 		}
 
 		pDcpt->_TcpEnabledEvents &= ~macEvMask;     // clear some of them
@@ -1852,7 +1827,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{
-            _DRV_GMAC_Interrupt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+            DRV_PIC32CGMAC_LibInterrupt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 		}
 	}
 
@@ -1923,7 +1898,7 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 		ethAckEv=_XtlEventsTcp2Eth(tcpAckEv);
 
         // stop ints for a while
-        _DRV_GMAC_Interrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+        DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 
 		pDcpt->_TcpPendingEvents &= ~tcpAckEv;         // no longer pending
 		pDcpt->_EthPendingEvents &= ~ethAckEv;         // no longer pending
@@ -1943,7 +1918,7 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
             
         }
 
-        _DRV_GMAC_Interrupt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+        DRV_PIC32CGMAC_LibInterrupt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
         
 		return true;
 	}
@@ -2344,164 +2319,6 @@ static uint32_t _DRV_GMAC_GetRxUDPCSErrorFrameCount(void)
 {
 	
 	return GMAC_REGS->GMAC_UCE;
-}
-
-static bool _DRV_GMAC_SetPriorityToQueueNum(DRV_GMAC_DRIVER* pMACDrv) 
-{   
-    GMAC_QUE_LIST   queueIdx;
-    uint8_t index_count = 0;       
-        
-    if(pMACDrv->sGmacData.gmacConfig.macTxPrioNum < DRV_GMAC_NUMBER_OF_QUEUES)
-    {
-        for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
-        {
-            pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[queueIdx] = DRV_GMAC_DUMMY_PRIORITY;
-            if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueTxEnable == true)
-            {
-                pMACDrv->sGmacData.gmacConfig.txPrioNumToQueIndx[index_count] = queueIdx;
-                index_count++;
-            }
-        }        
-    }
-    else
-    {
-        return false; //return failure
-    }
-    
-    index_count = 0;
-    if(pMACDrv->sGmacData.gmacConfig.macRxPrioNum < DRV_GMAC_NUMBER_OF_QUEUES)
-    {
-        for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
-        {
-            pMACDrv->sGmacData.gmacConfig.rxPrioNumToQueIndx[queueIdx] = 0xff;
-            if(pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueRxEnable == true)
-            {
-                pMACDrv->sGmacData.gmacConfig.rxPrioNumToQueIndx[index_count] = queueIdx;
-                index_count++;
-            }
-        } 
-    }
-    else
-    {
-        return false; //return failure
-    }
-    
-    // successful
-    return true;
-}
-
-static uint8_t _DRV_GMAC_GetPriorityFromQueueNum(DRV_GMAC_DRIVER* pMACDrv, GMAC_QUE_LIST queueIdx) 
-{
-    uint8_t index_count = 0;  
-    uint8_t pktPriority = 0; 
-    
-    while(index_count < DRV_GMAC_NUMBER_OF_QUEUES)
-    {
-        if(pMACDrv->sGmacData.gmacConfig.rxPrioNumToQueIndx[index_count] == queueIdx)
-        {
-            pktPriority = index_count;
-            break;
-        }
-        index_count++;
-    }
-    return pktPriority;
-}
-
-
-static void _DRV_GMAC_Interrupt_Disable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat)
-{
-    GMAC_QUE_LIST queueIdx;
-    
-    for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
-    {
-        if(queMask & (1 << queueIdx))
-        {
-            if(queStat)
-            {
-                queStat[queueIdx] = SYS_INT_SourceDisable(pMACDrv->sGmacData.gmac_queue[queueIdx]._queIntSrc);
-            }
-            else
-            {
-                SYS_INT_SourceDisable(pMACDrv->sGmacData.gmac_queue[queueIdx]._queIntSrc);
-            }
-            
-        }
-    }
-}
-
-
-static void _DRV_GMAC_InterruptStatus_Clear(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask)
-{
-    GMAC_QUE_LIST queueIdx;
-    
-    for(queueIdx = GMAC_QUE_0; queueIdx < DRV_GMAC_NUMBER_OF_QUEUES; queueIdx++)
-    {
-        if(queMask & (1 << queueIdx))
-        {
-            SYS_INT_SourceStatusClear(pMACDrv->sGmacData.gmac_queue[queueIdx]._queIntSrc);                        
-        }
-    }
-    
-}
-
-static void _DRV_GMAC_Interrupt_Enable(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask)
-{
-    int8_t queueIdx = 0;
-    
-    //start processing high priority Queue first
-    for(queueIdx = DRV_GMAC_NUMBER_OF_QUEUES -1; queueIdx >= (int32_t)GMAC_QUE_0; queueIdx--)
-    {
-        if(queMask & (1 << queueIdx))
-        {
-            if((pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueTxEnable == true) ||
-              (pMACDrv->sGmacData.gmacConfig.gmac_queue_config[queueIdx].queueRxEnable == true))
-            {
-                SYS_INT_SourceEnable(pMACDrv->sGmacData.gmac_queue[queueIdx]._queIntSrc); 
-            }
-        }
-    }
-}
-
-static void _DRV_GMAC_Interrupt_Restore(DRV_GMAC_DRIVER *pMACDrv, uint32_t queMask, bool *queStat)
-{
-    int8_t queueIdx = 0;
-    
-    //start processing high priority Queue first
-    for(queueIdx = DRV_GMAC_NUMBER_OF_QUEUES -1; queueIdx >= (int32_t)GMAC_QUE_0; queueIdx--)
-    {
-        if(queMask & (1 << queueIdx))
-        {
-            if(queStat)
-            {
-                SYS_INT_SourceRestore(pMACDrv->sGmacData.gmac_queue[queueIdx]._queIntSrc, queStat[queueIdx]);   // re-enable 
-            }            
-        }
-    }
-}
-
-
-static uint8_t _DRV_GMAC_GetPriorityQue()
-{
-    int8_t bitPos;  
-    uint32_t queEvMask = drvGmacQueEvents;
-    for (bitPos = DRV_GMAC_NUMBER_OF_QUEUES - 1; bitPos >= 0; bitPos--)
-    {
-        if(queEvMask & (1 << bitPos))
-        {
-            return (uint8_t)bitPos;            
-        }
-    }
-    return DRV_GMAC_NO_ACTIVE_QUEUE;
-}
-
-// Clear Interrupt status of GMAC Queue
-static void _DRV_GMAC_ClearPriorityQue(GMAC_QUE_LIST queueIdx)
-{
-    bool intStat;
-    intStat = SYS_INT_Disable();
-    drvGmacQueEvents &= ~(1<<queueIdx);
-    __DMB();
-    SYS_INT_Restore(intStat);
 }
 
 /****************************************************************************
