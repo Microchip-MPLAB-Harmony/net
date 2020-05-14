@@ -460,7 +460,7 @@ extern __inline__ DRV_ETHMAC_DCPT_LIST* __attribute__((always_inline)) DRV_ETHMA
 typedef struct _TAG_DRV_ETHMAC_SGL_LIST_NODE
 {
 	struct _TAG_DRV_ETHMAC_SGL_LIST_NODE*	next;		// next node in list
-    void*                                   data[0];    // generic payload    
+    void*                                   data[];     // generic payload    
 }DRV_ETHMAC_SGL_LIST_NODE;	// generic linked list node definition
 
 
