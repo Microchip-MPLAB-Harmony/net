@@ -40,7 +40,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "../drv_encx24j600_local.h"
 #include "../drv_encx24j600_utils.h"
 #include "driver/encx24j600/src/dynamic/running_state/drv_encx24j600_reset_rx_state.h"
-#include "system/console/sys_console.h"
+#include "system/debug/sys_debug.h"
 
 
 bool    DRV_ENCX24J600_RxPacketAck(TCPIP_MAC_PACKET* pkt,  const void* param)

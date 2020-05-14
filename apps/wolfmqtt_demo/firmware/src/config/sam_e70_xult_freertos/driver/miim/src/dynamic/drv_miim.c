@@ -58,7 +58,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 #include "system/sys_time_h2_adapter.h"
 #include "system/debug/sys_debug.h"
-#include "system/console/sys_console.h"
 
 
 

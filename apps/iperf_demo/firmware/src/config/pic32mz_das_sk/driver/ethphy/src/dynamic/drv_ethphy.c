@@ -56,7 +56,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "driver/ethphy/src/drv_ethphy_local.h"
 #include "system/sys_time_h2_adapter.h"
 #include "system/debug/sys_debug.h"
-#include "system/console/sys_console.h"
 
 
 // *****************************************************************************
@@ -1510,14 +1509,17 @@ DRV_ETHPHY_RESULT DRV_ETHPHY_HWConfigFlagsGet( DRV_HANDLE handle, DRV_ETHPHY_CON
         return DRV_ETHPHY_RES_HANDLE_ERR;
     }
 
-
-    // the way the hw is configured
-#if defined (__PIC32MX__) || defined(__PIC32MZ__)
+    // get the way the hw is configured
+#if (__XC_VERSION <= 2400) && defined(__PIC32MZ) && (__PIC32_FEATURE_SET0=='W')
+    // PIC32MZW1
+    hwFlags = DRV_ETHPHY_CFG_RMII;
+    ethRes = DRV_ETHPHY_RES_OK;
+#elif defined (__PIC32MX__) || defined(__PIC32MZ__)
     hwFlags =  (DEVCFG3bits.FMIIEN != 0) ?     DRV_ETHPHY_CFG_MII : DRV_ETHPHY_CFG_RMII;
     hwFlags |= (DEVCFG3bits.FETHIO != 0) ? DRV_ETHPHY_CFG_DEFAULT : DRV_ETHPHY_CFG_ALTERNATE;
     ethRes = DRV_ETHPHY_RES_OK;
 #elif defined (__PIC32C__) || defined(__SAMA5D2__)
-    hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)== DRV_GMAC_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;    
+    hwFlags = ((GMAC_REGS->GMAC_UR & GMAC_UR_Msk)== DRV_GMAC_RMII_MODE) ?  DRV_ETHPHY_CFG_RMII : DRV_ETHPHY_CFG_MII;
     ethRes = DRV_ETHPHY_RES_OK;
 #elif defined (__SAM9X60__)
     hwFlags = DRV_ETHPHY_CFG_RMII;
