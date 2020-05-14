@@ -50,8 +50,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include <stdlib.h>
 #include "system_config.h"
 #include "system/debug/sys_debug.h"
-#include "system/console/sys_console.h"
-#include "system/command/sys_command.h"
 #include "system/time/sys_time.h"
 #include "system/sys_time_h2_adapter.h"
 #include "tcpip/tcpip_ethernet.h"

@@ -48,7 +48,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "tcpip/src/tcpip_private.h"
 #include "tcpip/tcpip_manager.h"
 
-#include "system/console/sys_console.h"
 #include "system/debug/sys_debug.h"
 #include "system/command/sys_command.h"
 

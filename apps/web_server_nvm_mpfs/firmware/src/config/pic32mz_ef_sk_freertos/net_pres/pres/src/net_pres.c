@@ -25,7 +25,7 @@
 #include "../net_pres_encryptionproviderapi.h"
 #include "../net_pres_socketapi.h"
 #include "../net_pres_transportapi.h"
-#include "system/console/sys_console.h"
+#include "system/debug/sys_debug.h"
 #include "net_pres_local.h"
 
 

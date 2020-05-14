@@ -37,9 +37,7 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 #include "configuration.h"
 #include "net_pres/pres/net_pres_socketapi.h"
 #include "tcpip/tcpip.h"
-#include "system/console/sys_console.h"
 #include "system/debug/sys_debug.h"
-#include "system/command/sys_command.h"
 #include "system/sys_time_h2_adapter.h"
 
 #include "mqtt_net_glue.h"
