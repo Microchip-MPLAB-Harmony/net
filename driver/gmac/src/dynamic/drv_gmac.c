@@ -400,7 +400,7 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
 		uint32_t rxfilter= 0;
 
 		// start the initialization sequence
-		DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+		DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
 			
  		initRes = _DRV_GMAC_PHYInitialise(pMACDrv);
  		if(initRes != TCPIP_MAC_RES_OK)
@@ -457,8 +457,8 @@ SYS_MODULE_OBJ DRV_GMAC_Initialize(const SYS_MODULE_INDEX index, const SYS_MODUL
             }
         }
 		
-        DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
-        DRV_PIC32CGMAC_LibInterrupt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
+        DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+        DRV_PIC32CGMAC_LibSysInt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
 		
 		
 		DRV_PIC32CGMAC_LibTransferEnable(pMACDrv); //enable Transmit and Receive of GMAC
@@ -777,9 +777,10 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
     //if any any active queue?
     while(queueIndex != DRV_GMAC_NO_ACTIVE_QUEUE)
     {        
-        //get Rx packet from Queue
+        _DRV_GMAC_RxLock(pMACDrv);	
+		//get Rx packet from Queue
         ethRes = DRV_PIC32CGMAC_LibRxGetPacket (pMACDrv, &pRxPkt, &buffsPerRxPkt, &pRxPktStat, queueIndex);
-        
+        _DRV_GMAC_RxUnlock(pMACDrv);
         
         //if valid rx packet?
         if(ethRes == DRV_PIC32CGMAC_RES_OK)
@@ -790,7 +791,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
         else 
         {
             //clear que event status     
-            DRV_PIC32CGMAC_LibClearPriorityQue(queueIndex);
+            DRV_PIC32CGMAC_LibClearPriorityQue(pMACDrv,queueIndex);
             //get highest priority active queue index
             queueIndex = DRV_PIC32CGMAC_LibGetPriorityQue(); 
                            
@@ -799,7 +800,7 @@ TCPIP_MAC_PACKET* DRV_GMAC_PacketRx (DRV_HANDLE hMac, TCPIP_MAC_RES* pRes, const
         
 
     }
-	_DRV_GMAC_RxUnlock(pMACDrv);
+	
 
 	if(buffsPerRxPkt > 1)
     {
@@ -1300,9 +1301,9 @@ static TCPIP_MAC_RES _MacTxPendingPackets(DRV_GMAC_DRIVER * pMACDrv, GMAC_QUE_LI
 #if (TCPIP_STACK_MAC_DOWN_OPERATION != 0)
 static void _MACDeinit(DRV_GMAC_DRIVER * pMACDrv )
 {
-     DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+     DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
 	 DRV_PIC32CGMAC_LibClose(pMACDrv, DRV_PIC32CGMAC_CLOSE_DEFAULT);
-     DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+     DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
     
 	 DRV_GMAC_EventDeInit((DRV_HANDLE)pMACDrv);
 	 
@@ -1626,8 +1627,8 @@ static TCPIP_MAC_RES DRV_GMAC_EventInit(DRV_HANDLE hMac, TCPIP_MAC_EventF eventF
 
 	pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 
-    DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-    DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+    DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+    DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
     
 	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
 	pDcpt->_TcpEnabledEvents = pDcpt->_TcpPendingEvents = TCPIP_MAC_EV_NONE;
@@ -1682,8 +1683,8 @@ static TCPIP_MAC_RES DRV_GMAC_EventDeInit(DRV_HANDLE hMac)
 
 	pMACDrv = (DRV_GMAC_DRIVER*)hMac;
 
-    DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
-    DRV_PIC32CGMAC_LibInterruptStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
+    DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+    DRV_PIC32CGMAC_LibSysIntStatus_Clear(pMACDrv, GMAC_ALL_QUE_MASK);
 
 	pDcpt = &pMACDrv->sGmacData._gmac_event_group_dcpt;
 	pDcpt->_TcpNotifyFnc = 0;
@@ -1756,7 +1757,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{   // already have some active
-            DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
+            DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, NULL);
 		}
 
 		pDcpt->_TcpEnabledEvents |= macEvMask;        // add more
@@ -1776,20 +1777,14 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
                 {
                     ethEvents = ethEvents & (~GMAC_EV_RX_ALL);
                 }
-                
-                if(queIdx == (uint32_t)GMAC_QUE_0)
-                {
-                    GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status	
-                    GMAC_REGS->GMAC_IER = ethEvents;
-                }
-                else
-                {
-                    GMAC_REGS->GMAC_ISRPQ[queIdx-1];
-                    GMAC_REGS->GMAC_IERPQ[queIdx-1] = ethEvents;
-                }
+                //Read ISR register to clear the interrupt status	
+                DRV_PIC32CGMAC_LibReadInterruptStatus(queIdx);
+                //Enable GMAC interrupts
+                DRV_PIC32CGMAC_LibEnableInterrupt(queIdx, ethEvents);
+
             }
             
-            DRV_PIC32CGMAC_LibInterrupt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
+            DRV_PIC32CGMAC_LibSysInt_Enable(pMACDrv, GMAC_ALL_QUE_MASK);
 		}
 	}
 	else
@@ -1802,7 +1797,7 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{   // already have some active
-            DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+            DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 		}
 
 		pDcpt->_TcpEnabledEvents &= ~macEvMask;     // clear some of them
@@ -1812,22 +1807,17 @@ bool DRV_GMAC_EventMaskSet(DRV_HANDLE hMac, TCPIP_MAC_EVENT macEvMask, bool enab
 		pDcpt->_EthPendingEvents &= ~ethClrEvents;
 		
         for(queIdx = GMAC_QUE_0; queIdx < DRV_GMAC_NUMBER_OF_QUEUES; queIdx++)
-        {
-            if(queIdx == (uint32_t)GMAC_QUE_0)
-            {
-		GMAC_REGS->GMAC_IDR = ethClrEvents;		
-		GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status
-            }
-            else
-            {
-                GMAC_REGS->GMAC_IDRPQ[queIdx-1] = ethClrEvents;		
-                GMAC_REGS->GMAC_ISRPQ[queIdx-1];
-            }
+        {            
+            //Disable GMAC interrupts
+            DRV_PIC32CGMAC_LibDisableInterrupt(queIdx, ethClrEvents);
+            //Read ISR register to clear the interrupt status	
+            DRV_PIC32CGMAC_LibReadInterruptStatus(queIdx);
+
         }
 
 		if(pDcpt->_TcpEnabledEvents != 0)
 		{
-            DRV_PIC32CGMAC_LibInterrupt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+            DRV_PIC32CGMAC_LibSysInt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 		}
 	}
 
@@ -1898,27 +1888,21 @@ bool DRV_GMAC_EventAcknowledge(DRV_HANDLE hMac, TCPIP_MAC_EVENT tcpAckEv)
 		ethAckEv=_XtlEventsTcp2Eth(tcpAckEv);
 
         // stop ints for a while
-        DRV_PIC32CGMAC_LibInterrupt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+        DRV_PIC32CGMAC_LibSysInt_Disable(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
 
 		pDcpt->_TcpPendingEvents &= ~tcpAckEv;         // no longer pending
 		pDcpt->_EthPendingEvents &= ~ethAckEv;         // no longer pending
 		
         for(queIdx = GMAC_QUE_0; queIdx < DRV_GMAC_NUMBER_OF_QUEUES; queIdx++)
-        {            
-            if(queIdx == (uint32_t)GMAC_QUE_0)
-            {
-                GMAC_REGS->GMAC_ISR;		//Read ISR register to clear the interrupt status		
-                GMAC_REGS->GMAC_IER = ethAckEv;
-            }
-            else
-            {
-                GMAC_REGS->GMAC_ISRPQ[queIdx-1];
-                GMAC_REGS->GMAC_IERPQ[queIdx-1] = ethAckEv;
-            }
+        {   
+            //Read ISR register to clear the interrupt status	
+            DRV_PIC32CGMAC_LibReadInterruptStatus(queIdx);
+            //Enable GMAC interrupts
+            DRV_PIC32CGMAC_LibEnableInterrupt(queIdx, ethAckEv);
             
         }
 
-        DRV_PIC32CGMAC_LibInterrupt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
+        DRV_PIC32CGMAC_LibSysInt_Restore(pMACDrv, GMAC_ALL_QUE_MASK, intStat);
         
 		return true;
 	}

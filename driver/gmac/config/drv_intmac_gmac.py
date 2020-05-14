@@ -59,10 +59,9 @@ tcpipGmacQueScreen2CompCOffsetStart = []
 tcpipGmacScreen2Que = []
 tcpipGmacRxQueScreen2EnableComment = []
 
+
 def instantiateComponent(drvGmacComponent):
-    global interruptVector
-    global interruptHandler
-    global interruptHandlerLock
+    global gmac_periphID
     
     print("TCPIP Ethernet MAC Component")   
     configName = Variables.get("__CONFIGURATION_NAME")      
@@ -261,7 +260,10 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue1.setVisible(False)
         tcpipGmacTxBuffSizeQue1.setDescription("Size Of TX Buffer for Queue1. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue1.setDefaultValue(64)
-        tcpipGmacTxBuffSizeQue1.setMax(464)
+        if(gmac_periphID == "44152"): #SAMA5D2
+            tcpipGmacTxBuffSizeQue1.setMax(1536)
+        else: # SAME70 or SAMV71
+            tcpipGmacTxBuffSizeQue1.setMax(464)
         tcpipGmacTxBuffSizeQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE1"])
         
         # Max Tx Packet size support for Queue1.
@@ -269,7 +271,10 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacMaxTxPktSizeQue1.setLabel("Max Tx Packet size supported")
         tcpipGmacMaxTxPktSizeQue1.setVisible(False)
         tcpipGmacMaxTxPktSizeQue1.setDescription("Max Tx Packet size")
-        tcpipGmacMaxTxPktSizeQue1.setDefaultValue(464)
+        if(gmac_periphID == "44152"): #SAMA5D2
+            tcpipGmacMaxTxPktSizeQue1.setDefaultValue(1536)
+        else: # SAME70 or SAMV71
+            tcpipGmacMaxTxPktSizeQue1.setDefaultValue(464)
         tcpipGmacMaxTxPktSizeQue1.setReadOnly(True)
         tcpipGmacMaxTxPktSizeQue1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE1"])
         
@@ -358,15 +363,21 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacTxBuffSizeQue2.setVisible(False)
         tcpipGmacTxBuffSizeQue2.setDescription("Size Of TX Buffer for Queue2. Should Be Multiple Of 16.")
         tcpipGmacTxBuffSizeQue2.setDefaultValue(64)
-        tcpipGmacTxBuffSizeQue2.setMax(464)
+        if(gmac_periphID == "44152"): #SAMA5D2
+            tcpipGmacTxBuffSizeQue2.setMax(1536)
+        else: # SAME70 or SAMV71
+            tcpipGmacTxBuffSizeQue2.setMax(464)
         tcpipGmacTxBuffSizeQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE2"])
-                
+
         # Max Tx Packet size support for Queue2.
         tcpipGmacMaxTxPktSizeQue2 = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_MAX_TX_PKT_SIZE_QUE2", tcpipGmacQue2TxEn)
         tcpipGmacMaxTxPktSizeQue2.setLabel("Max Tx Packet size supported")
         tcpipGmacMaxTxPktSizeQue2.setVisible(False)
         tcpipGmacMaxTxPktSizeQue2.setDescription("Max Tx Packet size")
-        tcpipGmacMaxTxPktSizeQue2.setDefaultValue(464)
+        if(gmac_periphID == "44152"): #SAMA5D2
+            tcpipGmacMaxTxPktSizeQue2.setDefaultValue(1536)
+        else: # SAME70 or SAMV71
+            tcpipGmacMaxTxPktSizeQue2.setDefaultValue(464)
         tcpipGmacMaxTxPktSizeQue2.setReadOnly(True)
         tcpipGmacMaxTxPktSizeQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_TX_EN_QUE2"])
         
@@ -870,33 +881,34 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacEthFilterJumboFrameAccept.setDescription("Accept Jumbo Packets (upto 10240 bytes)")
     tcpipGmacEthFilterJumboFrameAccept.setDefaultValue(False)
 
-    # Advanced Rx Queue Filters
-    tcpipGmacRxQueFilterEnable = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_RX_QUE_FILTER_EN", tcpipEthRxFilter)
-    tcpipGmacRxQueFilterEnable.setLabel("Advanced Rx Queue Filters")
-    tcpipGmacRxQueFilterEnable.setVisible(True)
-    tcpipGmacRxQueFilterEnable.setDescription("Enable Advanced Rx Queue Filters")
-    tcpipGmacRxQueFilterEnable.setDefaultValue(False)
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
+        # Advanced Rx Queue Filters
+        tcpipGmacRxQueFilterEnable = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_RX_QUE_FILTER_EN", tcpipEthRxFilter)
+        tcpipGmacRxQueFilterEnable.setLabel("Advanced Rx Queue Filters")
+        tcpipGmacRxQueFilterEnable.setVisible(True)
+        tcpipGmacRxQueFilterEnable.setDescription("Enable Advanced Rx Queue Filters")
+        tcpipGmacRxQueFilterEnable.setDefaultValue(False)
 
-    tcpipGmacType1Filter(drvGmacComponent,tcpipGmacRxQueFilterEnable)
-    tcpipGmacType2Filter(drvGmacComponent,tcpipGmacRxQueFilterEnable)    
-    
-    # Comment for Rx Filters 
-    tcpipGmacRxQueFilterComment = drvGmacComponent.createCommentSymbol("TCPIP_GMAC_RX_FILTER_COMMENT_QUE", tcpipGmacRxQueFilterEnable)
-    tcpipGmacRxQueFilterComment.setLabel("***When 2 or more filter matches: ")
-    tcpipGmacRxQueFilterComment.setVisible(False)
-    tcpipGmacRxQueFilterComment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_QUE_FILTER_EN"])
+        tcpipGmacType1Filter(drvGmacComponent,tcpipGmacRxQueFilterEnable)
+        tcpipGmacType2Filter(drvGmacComponent,tcpipGmacRxQueFilterEnable)    
         
-    # Comment 1 for Rx Filters 
-    tcpipGmacRxQueFilterComment1 = drvGmacComponent.createCommentSymbol("TCPIP_GMAC_RX_FILTER_COMMENT1_QUE", tcpipGmacRxQueFilterEnable)
-    tcpipGmacRxQueFilterComment1.setLabel("***Type 1 filter has priority over Type 2 filter")
-    tcpipGmacRxQueFilterComment1.setVisible(False)
-    tcpipGmacRxQueFilterComment1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_QUE_FILTER_EN"])
-        
-    # Comment 2 for Rx Filters 
-    tcpipGmacRxQueFilterComment2 = drvGmacComponent.createCommentSymbol("TCPIP_GMAC_RX_FILTER_COMMENT2_QUE", tcpipGmacRxQueFilterEnable)
-    tcpipGmacRxQueFilterComment2.setLabel("***among same Type filters, lower index has priority")
-    tcpipGmacRxQueFilterComment2.setVisible(False)
-    tcpipGmacRxQueFilterComment2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_QUE_FILTER_EN"])
+        # Comment for Rx Filters 
+        tcpipGmacRxQueFilterComment = drvGmacComponent.createCommentSymbol("TCPIP_GMAC_RX_FILTER_COMMENT_QUE", tcpipGmacRxQueFilterEnable)
+        tcpipGmacRxQueFilterComment.setLabel("***When 2 or more filter matches: ")
+        tcpipGmacRxQueFilterComment.setVisible(False)
+        tcpipGmacRxQueFilterComment.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_QUE_FILTER_EN"])
+            
+        # Comment 1 for Rx Filters 
+        tcpipGmacRxQueFilterComment1 = drvGmacComponent.createCommentSymbol("TCPIP_GMAC_RX_FILTER_COMMENT1_QUE", tcpipGmacRxQueFilterEnable)
+        tcpipGmacRxQueFilterComment1.setLabel("***Type 1 filter has priority over Type 2 filter")
+        tcpipGmacRxQueFilterComment1.setVisible(False)
+        tcpipGmacRxQueFilterComment1.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_QUE_FILTER_EN"])
+            
+        # Comment 2 for Rx Filters 
+        tcpipGmacRxQueFilterComment2 = drvGmacComponent.createCommentSymbol("TCPIP_GMAC_RX_FILTER_COMMENT2_QUE", tcpipGmacRxQueFilterEnable)
+        tcpipGmacRxQueFilterComment2.setLabel("***among same Type filters, lower index has priority")
+        tcpipGmacRxQueFilterComment2.setVisible(False)
+        tcpipGmacRxQueFilterComment2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_RX_QUE_FILTER_EN"])
     
     # Ethernet Connection Flags
     tcpipEthConnFlag = drvGmacComponent.createMenuSymbol(None, None) 
@@ -1052,13 +1064,6 @@ def instantiateComponent(drvGmacComponent):
         drvGmacRmiiVal.setDefaultValue(0)
     elif (gmac_periphID == "44152"): # SAMA5D2
         drvGmacRmiiVal.setDefaultValue(1)
-        
-    # Driver GMAC Interrupt Mode
-    drvGmacIntrMode = drvGmacComponent.createBooleanSymbol("DRV_GMAC_INTERRUPT_MODE", None)
-    drvGmacIntrMode.setLabel("GMAC Interrupt Mode")
-    drvGmacIntrMode.setVisible(True)
-    drvGmacIntrMode.setDescription("Driver GMAC Interrupt Mode")
-    drvGmacIntrMode.setDefaultValue(True)
     
     interruptVector = "GMAC_INTERRUPT_ENABLE"
     interruptHandler = "GMAC_INTERRUPT_HANDLER"
@@ -1070,18 +1075,42 @@ def instantiateComponent(drvGmacComponent):
     Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
     Database.clearSymbolValue("core", interruptHandlerLock)
     Database.setSymbolValue("core", interruptHandlerLock, True, 2)
-
-    # NVIC Dynamic settings
-    drvGmacinterruptControl = drvGmacComponent.createBooleanSymbol("NVIC_GMAC_ENABLE", None)
-    drvGmacinterruptControl.setDependencies(interruptControl, ["DRV_GMAC_INTERRUPT_MODE"])
-    drvGmacinterruptControl.setVisible(False)
+    if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
+        interruptVector = "GMAC_Q1_INTERRUPT_ENABLE"
+        interruptHandlerLock = "GMAC_Q1_INTERRUPT_HANDLER_LOCK"
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        
+        interruptVector = "GMAC_Q2_INTERRUPT_ENABLE"
+        interruptHandlerLock = "GMAC_Q2_INTERRUPT_HANDLER_LOCK"
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     
-    # Driver GMAC Interrupt Source
-    drvGmacIntrSource = drvGmacComponent.createStringSymbol("DRV_GMAC_INTERRUPT_SOURCE", drvGmacIntrMode)
-    drvGmacIntrSource.setLabel("GMAC Interrupt Source")
-    drvGmacIntrSource.setVisible(False)
-    drvGmacIntrSource.setDescription("Driver GMAC Interrupt Source")
-    drvGmacIntrSource.setDefaultValue("GMAC_IRQn")
+    if(gmac_periphID == "11046"): # SAME70, SAMV71
+        interruptVector = "GMAC_Q3_INTERRUPT_ENABLE"
+        interruptHandlerLock = "GMAC_Q3_INTERRUPT_HANDLER_LOCK"
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        
+        interruptVector = "GMAC_Q4_INTERRUPT_ENABLE"
+        interruptHandlerLock = "GMAC_Q4_INTERRUPT_HANDLER_LOCK"
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
+        
+        interruptVector = "GMAC_Q5_INTERRUPT_ENABLE"
+        interruptHandlerLock = "GMAC_Q5_INTERRUPT_HANDLER_LOCK"
+        Database.clearSymbolValue("core", interruptVector)
+        Database.setSymbolValue("core", interruptVector, True, 2)
+        Database.clearSymbolValue("core", interruptHandlerLock)
+        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
     
     # PHY Connected to GMAC
     drvGmacPhyType = drvGmacComponent.createStringSymbol("DRV_INTMAC_PHY_TYPE", None)
@@ -1182,31 +1211,12 @@ def instantiateComponent(drvGmacComponent):
     drvGmacLibSourceFile.setProjectPath("config/" + configName + "/driver/gmac/src/dynamic/")
     drvGmacLibSourceFile.setType("SOURCE")
     drvGmacLibSourceFile.setEnabled(True)
-    
-global interruptVector
-global interruptHandler
-global interruptHandlerLock
-def interruptControl(gmacNVIC, event):
-    global interruptVector
-    global interruptHandler
-    Database.clearSymbolValue("core", interruptVector)
-    Database.clearSymbolValue("core", interruptHandler)
-    Database.clearSymbolValue("core", interruptHandlerLock)
-    if (event["value"] == True):
-        Database.setSymbolValue("core", interruptVector, True, 2)
-        Database.setSymbolValue("core", interruptHandler, "GMAC_InterruptHandler", 2)
-        Database.setSymbolValue("core", interruptHandlerLock, True, 2)
-    else :
-        Database.setSymbolValue("core", interruptVector, False, 2)
-        Database.setSymbolValue("core", interruptHandler, "GMAC_Handler", 2)
-        Database.setSymbolValue("core", interruptHandlerLock, False, 2)
+
         
 def tcpipEthMacMenuVisibleSingle(symbol, event):
-    if (event["value"] == True):
-        print("EthMac Menu Visible.")       
+    if (event["value"] == True):      
         symbol.setVisible(True)
     else:
-        print("EthMac Menu Invisible.")
         symbol.setVisible(False)
 
 
@@ -1280,16 +1290,9 @@ def tcpipGmacQueScreen1(symbol, event):
         else:
             symbol.setVisible(False)
     else:
-        count  = event["value"]
+        count  = event["value"]       
         
-        print "*********** niyas: *************"
-        print symbol.getID()
-        symCom = symbol.getComponent()
-        # queIndex = int(symbol.getID().replace("TCPIP_GMAC_SCREEN1_COUNT_QUE", "")) 
-        # print "queIndex: " + str(queIndex)    
-        print "count: " + str(count)
-        # print "que_count: " + str(screen1_que_filter_count[queIndex])
-        print "screen1_filter_count: " + str(screen1_filter_count)              
+        symCom = symbol.getComponent()               
         
         if(count > screen1_filter_count):    
             if (screen1_filter_count < screen1_filter_max_count):
@@ -1319,14 +1322,7 @@ def tcpipGmacQueScreen2(symbol, event):
     else:
         count  = event["value"]
         
-        print "*********** niyas: *************"
-        print symbol.getID()
-        symCom = symbol.getComponent()
-        # queIndex = int(symbol.getID().replace("TCPIP_GMAC_SCREEN2_COUNT_QUE", "")) 
-        # print "queIndex: " + str(queIndex)    
-        print "count: " + str(count)
-        # print "que_count: " + str(screen2_que_filter_count[queIndex])
-        print "screen2_filter_count: " + str(screen2_filter_count)
+        symCom = symbol.getComponent() 
        
         if(count > screen2_filter_count):    
             if (screen2_filter_count < screen2_filter_max_count):
@@ -1344,7 +1340,8 @@ def tcpipGmacQueScreen2(symbol, event):
                     screen2_filter_count = screen2_filter_count - 1
             
     
-def tcpipGmacType1Filter(parent,menu):        
+def tcpipGmacType1Filter(parent,menu):     
+    global gmac_periphID   
     # Queue1 Screen 1 filter count
     tcpipGmacQueScreen1Cnt = parent.createIntegerSymbol("TCPIP_GMAC_SCREEN1_COUNT_QUE", menu)
     tcpipGmacQueScreen1Cnt.setLabel("TYPE 1 Filter count")
@@ -1371,9 +1368,10 @@ def tcpipGmacType1Filter(parent,menu):
         tcpipGmacScreen1Que[index].addKey("GMAC_QUE_0", "0", "Rx Queue 0")
         tcpipGmacScreen1Que[index].addKey("GMAC_QUE_1", "1", "Rx Queue 1")
         tcpipGmacScreen1Que[index].addKey("GMAC_QUE_2", "2", "Rx Queue 2")
-        tcpipGmacScreen1Que[index].addKey("GMAC_QUE_3", "3", "Rx Queue 3")
-        tcpipGmacScreen1Que[index].addKey("GMAC_QUE_4", "4", "Rx Queue 4")
-        tcpipGmacScreen1Que[index].addKey("GMAC_QUE_5", "5", "Rx Queue 5")
+        if(gmac_periphID == "11046"): # SAME70 or SAMV71
+            tcpipGmacScreen1Que[index].addKey("GMAC_QUE_3", "3", "Rx Queue 3")
+            tcpipGmacScreen1Que[index].addKey("GMAC_QUE_4", "4", "Rx Queue 4")
+            tcpipGmacScreen1Que[index].addKey("GMAC_QUE_5", "5", "Rx Queue 5")
         tcpipGmacScreen1Que[index].setDisplayMode("Description")
         tcpipGmacScreen1Que[index].setOutputMode("Value")            
         tcpipGmacScreen1Que[index].setDefaultValue(0)           
@@ -1403,6 +1401,7 @@ def tcpipGmacType1Filter(parent,menu):
         tcpipGmacQueScreen1UDPPortNum[index].setDependencies(tcpipEthMacMenuVisibleSingle, [tcpipGmacQueScreen1UDPE[index].getID()])
             
 def tcpipGmacType2Filter(parent,menu):
+    global gmac_periphID
     # Queue1 Screen 2 filter count
     tcpipGmacQueScreen2Cnt = parent.createIntegerSymbol("TCPIP_GMAC_SCREEN2_COUNT_QUE" , menu)
     tcpipGmacQueScreen2Cnt.setLabel("TYPE 2 Filter count")
@@ -1429,9 +1428,10 @@ def tcpipGmacType2Filter(parent,menu):
         tcpipGmacScreen2Que[index].addKey("GMAC_QUE_0", "0", "Rx Queue 0")
         tcpipGmacScreen2Que[index].addKey("GMAC_QUE_1", "1", "Rx Queue 1")
         tcpipGmacScreen2Que[index].addKey("GMAC_QUE_2", "2", "Rx Queue 2")
-        tcpipGmacScreen2Que[index].addKey("GMAC_QUE_3", "3", "Rx Queue 3")
-        tcpipGmacScreen2Que[index].addKey("GMAC_QUE_4", "4", "Rx Queue 4")
-        tcpipGmacScreen2Que[index].addKey("GMAC_QUE_5", "5", "Rx Queue 5")
+        if(gmac_periphID == "11046"): # SAME70 or SAMV71
+            tcpipGmacScreen2Que[index].addKey("GMAC_QUE_3", "3", "Rx Queue 3")
+            tcpipGmacScreen2Que[index].addKey("GMAC_QUE_4", "4", "Rx Queue 4")
+            tcpipGmacScreen2Que[index].addKey("GMAC_QUE_5", "5", "Rx Queue 5")
         tcpipGmacScreen2Que[index].setDisplayMode("Description")
         tcpipGmacScreen2Que[index].setOutputMode("Value")            
         tcpipGmacScreen2Que[index].setDefaultValue(0)           

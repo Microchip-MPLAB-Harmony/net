@@ -112,10 +112,7 @@ def drvEncx24j600InstnDuplexModeSelect(symbol, event):
 
     print symbol.getID()
     print event["value"]
-    # if (event["value"] == 1):
     symbol.setValue(event["value"])
-    # else if(event["value"] == 1):
-        # symbol.setVisible(False)
 
 
 #Set symbols of other components

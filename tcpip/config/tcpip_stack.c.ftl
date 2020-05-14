@@ -354,7 +354,6 @@ const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpipEMAC0InitData =
     .macIntSrc                         = DRV_EMAC0_INTERRUPT_SOURCE,
     .macRxFilters                      = DRV_EMAC0_RX_FILTERS,
     /** QUEUE Intialization **/
-    //niyas .queueEnable                       = true,
     .rxDeviceMaxDescriptors            = DRV_EMAC0_RX_DEVICE_MAX_DESCRIPTORS0,
     .nRxDescCnt                        = DRV_EMAC0_RX_DESCRIPTORS_COUNT_QUE0,
     .nTxDescCnt                        = DRV_EMAC0_TX_DESCRIPTORS_COUNT_QUE0,
@@ -382,7 +381,6 @@ const TCPIP_MODULE_MAC_SAM9X60_CONFIG tcpipEMAC1InitData =
     .macIntSrc                         = DRV_EMAC1_INTERRUPT_SOURCE,
     .macRxFilters                      = DRV_EMAC1_RX_FILTERS,
     /** QUEUE Intialization **/
-    //niyas .queueEnable                       = true,
     .rxDeviceMaxDescriptors            = DRV_EMAC1_RX_DEVICE_MAX_DESCRIPTORS0,
     .nRxDescCnt                        = DRV_EMAC1_RX_DESCRIPTORS_COUNT_QUE0,
     .nTxDescCnt                        = DRV_EMAC1_TX_DESCRIPTORS_COUNT_QUE0,

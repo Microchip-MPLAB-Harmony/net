@@ -69,7 +69,7 @@ const TCPIP_MAC_OBJECT DRV_ENCX24J600_MACObject =
 
 // Local information
 static DRV_ENCX24J600_DriverInfo drvEncX24J600DrvInst[DRV_ENCX24J600_INSTANCES_NUMBER] __attribute__((aligned(4)));
-static DRV_ENCX24J600_ClientInfo drvEncX24J600ClntInst[DRV_ENCX24J600_CLIENT_INSTANCES_IDX0]; //niyas
+static DRV_ENCX24J600_ClientInfo drvEncX24J600ClntInst[DRV_ENCX24J600_CLIENT_INSTANCES_IDX0]; //todo
 static uint8_t drvEncX24J600NumOfDrivers = 0;
 static OSAL_MUTEX_HANDLE_TYPE  drvEncX24J600ClntMutex;
 

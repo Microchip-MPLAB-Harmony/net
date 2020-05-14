@@ -179,12 +179,15 @@ typedef struct
 typedef struct DRV_GMAC_RXQUE_FILTER_INIT
 {
     uint8_t type1FiltCount;
+#if (TCPIP_GMAC_SCREEN1_COUNT_QUE)
     /* Configuration for GMAC Rx Queue Type 1 Filter*/
     DRV_GMAC_TYPE1_FILTER_INIT   type1FiltInit[TCPIP_GMAC_SCREEN1_COUNT_QUE]; 
+#endif
     uint8_t type2FiltCount;
+#if (TCPIP_GMAC_SCREEN2_COUNT_QUE)
     /* Configuration for GMAC Rx Queue Type 2 Filter*/
     DRV_GMAC_TYPE2_FILTER_INIT   type2FiltInit[TCPIP_GMAC_SCREEN2_COUNT_QUE];
-    
+#endif    
 }DRV_GMAC_RXQUE_FILTER_INIT;
 
 /*  GMAC Initialization Data
