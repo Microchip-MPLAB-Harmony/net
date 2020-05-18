@@ -146,6 +146,7 @@ typedef struct
     uint32_t                    renewTime;          // the time for moving to renew state, seconds
     uint32_t                    rebindTime;         // the time for moving to rebind state, seconds
     IPV4_ADDR                   dhcpAddress;        // IPv4 address obtained by DHCP 
+    IPV4_ADDR                   subnetMask;         // IPv4 sub net mask obtained by DHCP 
     IPV4_ADDR                   serverAddress;      // IPv4 address of the server that granted the lease  
     const char*                 bootFileName;       // pointer to the bootfile name that was returned by the server
                                                     // This will be 0 if TCPIP_DHCP_STORE_BOOT_FILE_NAME option is not enabled!
