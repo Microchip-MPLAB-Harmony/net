@@ -146,9 +146,18 @@ typedef struct
     uint32_t                    renewTime;          // the time for moving to renew state, seconds
     uint32_t                    rebindTime;         // the time for moving to rebind state, seconds
     IPV4_ADDR                   dhcpAddress;        // IPv4 address obtained by DHCP 
+    IPV4_ADDR                   subnetMask;         // IPv4 sub net mask obtained by DHCP 
     IPV4_ADDR                   serverAddress;      // IPv4 address of the server that granted the lease  
     const char*                 bootFileName;       // pointer to the bootfile name that was returned by the server
                                                     // This will be 0 if TCPIP_DHCP_STORE_BOOT_FILE_NAME option is not enabled!
+    uint8_t                     timeServersNo;      // number of time servers available
+                                                    // This will be 0 if TCPIP_DHCP_USE_OPTION_TIME_SERVER option is not enabled
+    uint8_t                     ntpServersNo;       // number of NTP servers available
+                                                    // This will be 0 if TCPIP_DHCP_USE_OPTION_NTP_SERVER option is not enabled
+    const IPV4_ADDR*            timeServers;        // pointer to array of addresses for the time servers
+                                                    // size is given by timeServersNo
+    const IPV4_ADDR*            ntpServers;         // pointer to array of addresses for the NTP servers
+                                                    // size is given by ntpServersNo
 }TCPIP_DHCP_INFO;
 
 // *****************************************************************************
@@ -587,12 +596,12 @@ bool             TCPIP_DHCP_HandlerDeRegister(TCPIP_DHCP_HANDLE hDhcp);
   Parameters:
     hNet      - Interface to query.
     pDhcpInfo - storage to return the DHCP info
+                Could be NULL if not needed
 
   Returns:
     - true	- if the interface is enabled and exists and the DHCP client service 
-	          information filled in the supplied storage
-    - false	- if the specified interface is not enabled, does not exist, or does not 
-	          have a DHCP client
+	          is enabled on that interface and a lease is acquired
+    - false	- otherwise
  */
 bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo);
 

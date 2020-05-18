@@ -2819,6 +2819,7 @@ bool TCPIP_DHCP_InfoGet(TCPIP_NET_HANDLE hNet, TCPIP_DHCP_INFO* pDhcpInfo)
                 pDhcpInfo->renewTime = pClient->tRequest + pClient->t1Seconds;
                 pDhcpInfo->rebindTime = pClient->tRequest + pClient->t2Seconds;
                 pDhcpInfo->dhcpAddress.Val = pClient->dhcpIPAddress.Val;
+                pDhcpInfo->subnetMask.Val = pClient->dhcpMask.Val;
                 pDhcpInfo->serverAddress.Val = pClient->serverAddress.Val;
 #if defined TCPIP_DHCP_STORE_BOOT_FILE_NAME
                 pDhcpInfo->bootFileName = (const char*)pClient->bootFileName;
