@@ -41,7 +41,7 @@ def instantiateComponent(drvPic32mEthmacComponent):
     drvEthmac.setLabel("Use Internal Ethernet MAC Driver?")
     drvEthmac.setVisible(False)
     drvEthmac.setDescription("Use Internal Ethernet MAC Driver?")
-    drvEthmac.setDefaultValue(True)	
+    drvEthmac.setDefaultValue(True) 
     if "PIC32MZ" in Variables.get("__PROCESSOR"):
         # Enable RMII mode
         Database.setSymbolValue("core", "CONFIG_FMIIEN", "OFF", 1)
@@ -423,6 +423,19 @@ def instantiateComponent(drvPic32mEthmacComponent):
     elif "PIC32MX" in Variables.get("__PROCESSOR"):
         tcpipEthmacIntrSource.setDefaultValue("_ETHERNET_IRQ")
     
+    
+    tcpipEthmacheapdependency = ["TCPIP_EMAC_TX_DESCRIPTORS", "TCPIP_EMAC_RX_DESCRIPTORS", 
+                                 "TCPIP_EMAC_RX_BUFF_SIZE", "TCPIP_EMAC_RX_DEDICATED_BUFFERS", 
+                                 "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK" ]    
+        
+    # ETHMAC Heap Size
+    tcpipEthmacHeapSize = drvPic32mEthmacComponent.createIntegerSymbol("DRV_ETHMAC_HEAP_SIZE", None)
+    tcpipEthmacHeapSize.setLabel("ETHMAC Heap Size (bytes)")     
+    tcpipEthmacHeapSize.setVisible(False)
+    tcpipEthmacHeapSize.setDefaultValue(tcpipEthmacHeapCalc())
+    tcpipEthmacHeapSize.setReadOnly(True)
+    tcpipEthmacHeapSize.setDependencies(tcpipEthmacHeapUpdate, tcpipEthmacheapdependency)    
+    
     #Add to system_config.h
     tcpipEthmacHeaderFtl = drvPic32mEthmacComponent.createFileSymbol(None, None)
     tcpipEthmacHeaderFtl.setSourcePath("driver/ethmac/config/drv_intmac_ethmac.h.ftl")
@@ -585,3 +598,21 @@ def onAttachmentConnected(source, target):
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "ETHMAC_PHY_Dependency"): 
         Database.clearSymbolValue("drvPic32mEthmac", "DRV_INTMAC_PHY_TYPE")
+
+def tcpipEthmacHeapCalc(): 
+    nTxDescriptors = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_TX_DESCRIPTORS")
+    nRxDescriptors = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_RX_DESCRIPTORS")
+    rxBuffSize = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_RX_BUFF_SIZE")
+    nRxDedicatedBuffers = Database.getSymbolValue("drvPic32mEthmac","TCPIP_EMAC_RX_DEDICATED_BUFFERS")
+    
+    heap_size = ((nTxDescriptors + nRxDescriptors) * 24) + rxBuffSize * nRxDedicatedBuffers
+    return heap_size    
+    
+def tcpipEthmacHeapUpdate(symbol, event): 
+    heap_size = tcpipEthmacHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
+def destroyComponent(drvPic32mEthmacComponent):
+    Database.setSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC", False, 2)

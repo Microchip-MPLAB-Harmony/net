@@ -74,6 +74,18 @@ def instantiateComponent(tcpipFtpcComponent):
     tcpipFtpcCmdEnable.setVisible(True)
     tcpipFtpcCmdEnable.setDescription("Enable FTP Client Commands")
     tcpipFtpcCmdEnable.setDefaultValue(False)
+
+    tcpipFtpcheapdependency = [ "TCPIP_FTPC_MAX_NUM_CLIENT", "TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT", 
+                                "TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT", "tcpipTcp.TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE", 
+                                "tcpipTcp.TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK" ]    
+
+    # FTPC Heap Size
+    tcpipFtpcHeapSize = tcpipFtpcComponent.createIntegerSymbol("TCPIP_FTPC_HEAP_SIZE", None)
+    tcpipFtpcHeapSize.setLabel("FTPC Heap Size (bytes)") 
+    tcpipFtpcHeapSize.setVisible(False)
+    tcpipFtpcHeapSize.setDefaultValue(tcpipFtpcHeapCalc())
+    tcpipFtpcHeapSize.setReadOnly(True)
+    tcpipFtpcHeapSize.setDependencies(tcpipFtpcHeapUpdate, tcpipFtpcheapdependency)  
     
     #Add to system_config.h
     tcpipFtpcHeaderFtl = tcpipFtpcComponent.createFileSymbol(None, None)
@@ -92,6 +104,30 @@ def instantiateComponent(tcpipFtpcComponent):
     tcpipFtpcSourceFile.setType("SOURCE")
     tcpipFtpcSourceFile.setEnabled(True)
 
+
+
+def tcpipFtpcHeapCalc(): 
+    nMaxClients = Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_MAX_NUM_CLIENT")
+    ctrlSktTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
+    ctrlSktRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
+    
+    dataTxBuffSize = Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_DATA_SKT_TX_BUFF_SIZE_DFLT")
+    if(dataTxBuffSize == 0):   
+        dataTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
+    
+    dataRxBuffSize = Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_DATA_SKT_RX_BUFF_SIZE_DFLT")
+    if(dataRxBuffSize == 0):   
+        dataRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
+    
+    heap_size = nMaxClients * (180 + ctrlSktTxBuffSize +  ctrlSktRxBuffSize + (2 * dataTxBuffSize) + (2 * dataRxBuffSize))
+    return heap_size    
+    
+def tcpipFtpcHeapUpdate(symbol, event): 
+    heap_size = tcpipFtpcHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
 def destroyComponent(component):
     Database.setSymbolValue("tcpipFtpc", "TCPIP_STACK_USE_FTP_CLIENT", False, 2)
     

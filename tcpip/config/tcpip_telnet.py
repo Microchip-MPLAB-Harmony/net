@@ -163,7 +163,17 @@ def instantiateComponent(tcpipTelnetComponent):
     tcpipTelnetTskTickRate.setDescription("Task Rate in ms")
     tcpipTelnetTskTickRate.setDefaultValue(100)
     #tcpipTelnetTskTickRate.setDependencies(tcpipTelnetMenuVisible, ["TCPIP_USE_TELNET"])
-
+    
+    tcpipTelnetheapdependency = ["TCPIP_TELNET_MAX_CONNECTIONS", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # Telnet Heap Size
+    tcpipTelnetHeapSize = tcpipTelnetComponent.createIntegerSymbol("TCPIP_TELNET_HEAP_SIZE", None)
+    tcpipTelnetHeapSize.setLabel("Telnet Heap Size (bytes)") 
+    tcpipTelnetHeapSize.setVisible(False)
+    tcpipTelnetHeapSize.setDefaultValue(tcpipTelnetHeapCalc())
+    tcpipTelnetHeapSize.setReadOnly(True)
+    tcpipTelnetHeapSize.setDependencies(tcpipTelnetHeapUpdate, tcpipTelnetheapdependency)   
+    
     #Add to system_config.h
     tcpipTelnetHeaderFtl = tcpipTelnetComponent.createFileSymbol(None, None)
     tcpipTelnetHeaderFtl.setSourcePath("tcpip/config/telnet.h.ftl")
@@ -193,5 +203,16 @@ def tcpipTelnetMenuVisible(symbol, event):
 def tcpipTelnetGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
 
+def tcpipTelnetHeapCalc(): 
+    maxNumConn = Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_MAX_CONNECTIONS")
+    heap_size = maxNumConn * 28
+    return heap_size    
+    
+def tcpipTelnetHeapUpdate(symbol, event): 
+    heap_size = tcpipTelnetHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
 def destroyComponent(component):
     Database.setSymbolValue("tcpipTelnet", "TCPIP_USE_TELNET", False, 2)

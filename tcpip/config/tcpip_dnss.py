@@ -92,6 +92,18 @@ def instantiateComponent(tcpipDnssComponent):
     tcpipDnssDeleteOldLease.setDefaultValue(True)
     #tcpipDnssDeleteOldLease.setDependencies(tcpipDnssMenuVisible, ["TCPIP_USE_DNSS"])
 
+    tcpipDnssheapdependency = [ "tcpipIPv6.TCPIP_STACK_USE_IPV6", "TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS", 
+                                "TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS", "TCPIP_DNSS_HOST_NAME_LEN", 
+                                "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
+        
+    # DNS Server Heap Size
+    tcpipDnssHeapSize = tcpipDnssComponent.createIntegerSymbol("TCPIP_DNSS_HEAP_SIZE", None)
+    tcpipDnssHeapSize.setLabel("DNS Server Heap Size (bytes)") 
+    tcpipDnssHeapSize.setVisible(False)
+    tcpipDnssHeapSize.setDefaultValue(tcpipDnssHeapCalc())
+    tcpipDnssHeapSize.setReadOnly(True)
+    tcpipDnssHeapSize.setDependencies(tcpipDnssHeapUpdate, tcpipDnssheapdependency)
+    
     #Add to system_config.h
     tcpipDnssHeaderFtl = tcpipDnssComponent.createFileSymbol(None, None)
     tcpipDnssHeaderFtl.setSourcePath("tcpip/config/dnss.h.ftl")
@@ -111,6 +123,23 @@ def instantiateComponent(tcpipDnssComponent):
     #tcpipDnssSourceFile.setDependencies(tcpipDnssGenSourceFile, ["TCPIP_USE_DNSS"])
     
     
+
+def tcpipDnssHeapCalc(): 
+    IPv4EntriesPerDNSName = Database.getSymbolValue("tcpipDnss","TCPIP_DNSS_CACHE_PER_IPV4_ADDRESS")
+    if((Database.getSymbolValue("tcpipIPv6", "TCPIP_STACK_USE_IPV6") == True)): 
+        IPv6EntriesPerDNSName = Database.getSymbolValue("tcpipDnss","TCPIP_DNSS_CACHE_PER_IPV6_ADDRESS")
+    else:
+        IPv6EntriesPerDNSName = 0
+    hostNameLen = Database.getSymbolValue("tcpipDnss","TCPIP_DNSS_HOST_NAME_LEN")
+    
+    heap_size = 40 + ((IPv4EntriesPerDNSName + IPv6EntriesPerDNSName) * (40 + (IPv4EntriesPerDNSName * 4) + (IPv6EntriesPerDNSName * 16)  + hostNameLen))
+    return heap_size    
+    
+def tcpipDnssHeapUpdate(symbol, event): 
+    heap_size = tcpipDnssHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
     
 def tcpipDnssMenuVisible(symbol, event):
     if (event["value"] == True):

@@ -158,8 +158,18 @@ def instantiateComponent(tcpipFtpsComponent):
     tcpipFtpsFilePut.setVisible(True)
     tcpipFtpsFilePut.setDescription("Enable FTP File PUT Command")
     tcpipFtpsFilePut.setDefaultValue(True)
-    #tcpipFtpsFilePut.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])
-
+    #tcpipFtpsFilePut.setDependencies(tcpipFtpsMenuVisible, ["TCPIP_USE_FTP_MODULE"])    
+    
+    tcpipFtpsheapdependency = ["tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]  
+        
+    # FTPS Heap Size
+    tcpipFtpsHeapSize = tcpipFtpsComponent.createIntegerSymbol("TCPIP_FTPS_HEAP_SIZE", None)
+    tcpipFtpsHeapSize.setLabel("FTP Server Heap Size (bytes)")  
+    tcpipFtpsHeapSize.setVisible(False)
+    tcpipFtpsHeapSize.setDefaultValue(tcpipFtpsHeapCalc())
+    tcpipFtpsHeapSize.setReadOnly(True)
+    tcpipFtpsHeapSize.setDependencies(tcpipFtpsHeapUpdate, tcpipFtpsheapdependency)   
+    
     #Add to system_config.h
     tcpipFtpsHeaderFtl = tcpipFtpsComponent.createFileSymbol(None, None)
     tcpipFtpsHeaderFtl.setSourcePath("tcpip/config/ftp.h.ftl")
@@ -203,7 +213,18 @@ def tcpipFtpsModuleMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
         tcpipDependentSymbol.setVisible(True)
     else:
         tcpipDependentSymbol.setVisible(False)
-        
+
+def tcpipFtpsHeapCalc(): 
+    #heap allocation added in TCP module; hence 0     
+    heap_size = 0
+    return heap_size    
+    
+def tcpipFtpsHeapUpdate(symbol, event): 
+    heap_size = tcpipFtpsHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
 def tcpipFtpsGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
 

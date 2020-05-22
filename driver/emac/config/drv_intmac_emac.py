@@ -248,7 +248,21 @@ def sendStateChangeMessage( aRecipient, aState ):
                                         # 'State':aState,
                                     # }
                                 # )
-
+def emacHeapCalc():
+    global macComponentId
+    rx_static_buffers = Database.getSymbolValue( macComponentId, 'RX_STATIC_BUFFERS_0' )
+    rx_alloc_count = Database.getSymbolValue( macComponentId, 'RX_BUFFER_ALLOCATION_0' )
+    rx_alloc_thres = Database.getSymbolValue( macComponentId, 'RX_BUFFER_ALLOCATION_THRESHOLD_0' )
+    rx_buffer_size = Database.getSymbolValue( macComponentId, 'RX_BUFFER_SIZE_0' )
+    
+    heapsize = (rx_static_buffers + rx_alloc_count + rx_alloc_thres) * rx_buffer_size
+    return heapsize
+ 
+def drvEmacHeapUpdate(symbol, event): 
+    heap_size = emacHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
 
 def instantiateComponent( macComponent ):
     global atdfMacInstanceName
@@ -632,7 +646,21 @@ def instantiateComponent( macComponent ):
     phyType.setLabel( "External PHY Device" )
     phyType.setDefaultValue( "" )
     phyType.setReadOnly( True )
-
+    
+    emacheapdependency = ["RX_STATIC_BUFFERS_0","RX_BUFFER_ALLOCATION_THRESHOLD_0", 
+                          "RX_BUFFER_ALLOCATION_0", "RX_BUFFER_SIZE_0", 
+                          "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
+    
+    # Driver EMAC Heap Size
+    drvEmacHeapSize = macComponent.createIntegerSymbol("DRV_EMAC_HEAP_SIZE", None)
+    drvEmacHeapSize.setLabel("EMAC Heap Size (bytes)") 
+    drvEmacHeapSize.setVisible(False)
+    drvEmacHeapSize.setDescription("EMAC Heap Size")
+    drvEmacHeapSize.setDefaultValue(emacHeapCalc())
+    drvEmacHeapSize.setReadOnly(True)
+    drvEmacHeapSize.setDependencies(drvEmacHeapUpdate, emacheapdependency)
+    
+    
     ## File Generation and deployment #########################################
     macFName =              atdfMacModule.lower()
     basePath =              "/driver/" + macFName + "/"

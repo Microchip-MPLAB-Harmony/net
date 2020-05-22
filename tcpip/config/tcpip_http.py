@@ -260,6 +260,18 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpCustomTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
     tcpipHttpCustomTemplateSl.setDependencies(tcpipHttpCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
     
+    
+    tcpipHttpheapdependency = ["TCPIP_HTTP_MAX_CONNECTIONS", "TCPIP_HTTP_MAX_DATA_LEN", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # HTTP Heap Size
+    tcpipHttpHeapSize = tcpipHttpComponent.createIntegerSymbol("TCPIP_HTTP_HEAP_SIZE", None)
+    tcpipHttpHeapSize.setLabel("HTTP Heap Size (bytes)") 
+    tcpipHttpHeapSize.setVisible(False)
+    tcpipHttpHeapSize.setDefaultValue(tcpipHttpHeapCalc())
+    tcpipHttpHeapSize.setReadOnly(True)
+    tcpipHttpHeapSize.setDependencies(tcpipHttpHeapUpdate, tcpipHttpheapdependency)   
+    
+    
     #Add to system_config.h
     tcpipHttpHeaderFtl = tcpipHttpComponent.createFileSymbol(None, None)
     tcpipHttpHeaderFtl.setSourcePath("tcpip/config/http.h.ftl")
@@ -314,6 +326,19 @@ def instantiateComponent(tcpipHttpComponent):
     tcpipHttpMpfsImg2SourceFile.setDependencies(tcpipHttpGenSourceFile, ["TCPIP_HTTP_CUSTOM_TEMPLATE_SL"])
 
 
+def tcpipHttpHeapCalc(): 
+    nConnections = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_MAX_CONNECTIONS")
+    dataLen = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_MAX_DATA_LEN")
+    heap_size = nConnections * (360 + dataLen)
+    return heap_size    
+    
+def tcpipHttpHeapUpdate(symbol, event): 
+    heap_size = tcpipHttpHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
+    
 # make Http Server option visible
 def tcpipHttpSrvVisible(tcpipDependentSymbol, tcpipIPSymbol):   
     tcpipHttpNet = Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER")

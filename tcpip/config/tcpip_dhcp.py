@@ -99,14 +99,23 @@ def instantiateComponent(tcpipDhcpComponent):
     tcpipDhcpcNtpServerMax.setDefaultValue(0)
     #tcpipDhcpcServerListenPort.setDependencies(tcpipDhcpMenuVisibleSingle, ["TCPIP_STACK_USE_DHCP_CLIENT"])
 
+    tcpipDhcpcheapdependency = ["tcpipNetConfig.TCPIP_STACK_NETWORK_INTERAFCE_COUNT", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # DHCPC Heap Size
+    tcpipDhcpcHeapSize = tcpipDhcpComponent.createIntegerSymbol("TCPIP_DHCP_HEAP_SIZE", None)
+    tcpipDhcpcHeapSize.setLabel("DHCPC Heap Size (bytes)") 
+    tcpipDhcpcHeapSize.setVisible(False)
+    tcpipDhcpcHeapSize.setDefaultValue(tcpipDhcpcHeapCalc())
+    tcpipDhcpcHeapSize.setReadOnly(True)
+    tcpipDhcpcHeapSize.setDependencies(tcpipDhcpcHeapUpdate, tcpipDhcpcheapdependency)    
+    
     # Add to system_config.h
     tcpipDhcpcHeaderFtl = tcpipDhcpComponent.createFileSymbol(None, None)
     tcpipDhcpcHeaderFtl.setSourcePath("tcpip/config/dhcp.h.ftl")
     tcpipDhcpcHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
     tcpipDhcpcHeaderFtl.setMarkup(True)
     tcpipDhcpcHeaderFtl.setType("STRING")
-    
-    
+        
 def tcpipDhcpMenuVisibleSingle(symbol, event):
     if (event["value"] == True):
         print("DHCP Client Menu Visible.")      
@@ -127,6 +136,16 @@ def tcpipDhcpcMenuVisible(tcpipDependentSymbol, tcpipIPSymbol):
         tcpipDependentSymbol.setVisible(False)  
         print("DHCP IPv4 UDP  Menu Off.")       
 
+def tcpipDhcpcHeapCalc(): 
+    numInterface = Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
+    heap_size = numInterface * 88
+    return heap_size    
+    
+def tcpipDhcpcHeapUpdate(symbol, event): 
+    heap_size = tcpipDhcpcHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
 
 def destroyComponent(component):
     Database.setSymbolValue("tcpipDhcp", "TCPIP_STACK_USE_DHCP_CLIENT", False, 2)

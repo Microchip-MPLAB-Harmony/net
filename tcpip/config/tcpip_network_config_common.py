@@ -27,8 +27,18 @@ def instantiateComponent(tcpipNetConfigComponent):
 
     tcpipNetConfigNumMax = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_CONFIG_NUMBER_MAX", None)
     tcpipNetConfigNumMax.setLabel("Number of Instances")
-    #tcpipNetConfigNumMax.setMin(1)
-   # tcpipNetConfigNumMax.setMax(tcpipNetConfigNumMaximum)
     tcpipNetConfigNumMax.setDefaultValue(tcpipNetConfigNumMaximum)
     tcpipNetConfigNumMax.setVisible(False)
+    
+    tcpipNetConfigInterfaceCount = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_INTERAFCE_COUNT", None)
+    tcpipNetConfigInterfaceCount.setLabel("Number of Instances")
+    tcpipNetConfigInterfaceCount.setDefaultValue(1)
+    tcpipNetConfigInterfaceCount.setVisible(True)
 
+def handleMessage(messageID, args):
+    if (messageID == "NETCONFIG_INTERFACE_COUNTER_INC"):
+        netconfif_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
+        Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT", netconfif_count + 1)
+    elif (messageID == "NETCONFIG_INTERFACE_COUNTER_DEC"):
+        netconfif_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
+        Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT", netconfif_count - 1)

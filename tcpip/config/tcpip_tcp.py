@@ -192,7 +192,29 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpExtPktProcess.setVisible(True)
     tcpipTcpExtPktProcess.setDescription("Allows External Processing of RX Packets")
     tcpipTcpExtPktProcess.setDefaultValue(False)
-    
+   
+    tcpipTcpheapdependency = [  "TCPIP_TCP_MAX_SOCKETS", "TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE", "TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE", 
+                                "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttpNet.TCPIP_HTTP_NET_MAX_CONNECTIONS", 
+                                "tcpipHttpNet.TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE", "tcpipHttpNet.TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE",
+                                "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipHttp.TCPIP_HTTP_MAX_CONNECTIONS", 
+                                "tcpipHttp.TCPIP_HTTP_SKT_TX_BUFF_SIZE", "tcpipHttp.TCPIP_HTTP_SKT_RX_BUFF_SIZE",
+                                "tcpipTelnet.TCPIP_USE_TELNET", "tcpipTelnet.TCPIP_TELNET_MAX_CONNECTIONS", 
+                                "tcpipTelnet.TCPIP_TELNET_SKT_TX_BUFF_SIZE", "tcpipTelnet.TCPIP_TELNET_SKT_RX_BUFF_SIZE",
+                                "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSmtpc.TCPIP_SMTPC_MAIL_CONNECTIONS", 
+                                "tcpipSmtpc.TCPIP_SMTPC_SKT_TX_BUFF_SIZE", "tcpipSmtpc.TCPIP_SMTPC_SKT_RX_BUFF_SIZE",
+                                "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipFtps.TCPIP_FTP_MAX_CONNECTIONS", 
+                                "tcpipFtps.TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE", "tcpipFtps.TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE",
+                                "tcpipIperf.TCPIP_USE_IPERF", "tcpipIperf.TCPIP_IPERF_MAX_INSTANCES", 
+                                "tcpipIperf.TCPIP_IPERF_TX_BUFFER_SIZE", "tcpipIperf.TCPIP_IPERF_RX_BUFFER_SIZE", 
+                                "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]   
+        
+    # TCP Heap Size
+    tcpipTcpHeapSize = tcpipTcpComponent.createIntegerSymbol("TCPIP_TCP_HEAP_SIZE", None)
+    tcpipTcpHeapSize.setLabel("TCP Heap Size (bytes)")  
+    tcpipTcpHeapSize.setVisible(False)
+    tcpipTcpHeapSize.setDefaultValue(tcpipTcpHeapCalc())
+    tcpipTcpHeapSize.setReadOnly(True)
+    tcpipTcpHeapSize.setDependencies(tcpipTcpHeapUpdate, tcpipTcpheapdependency)  
 
     #Add to system_config.h
     tcpipTcpHeaderFtl = tcpipTcpComponent.createFileSymbol(None, None)
@@ -211,6 +233,120 @@ def instantiateComponent(tcpipTcpComponent):
     tcpipTcpSourceFile.setType("SOURCE")
     tcpipTcpSourceFile.setEnabled(True)
     #tcpipTcpSourceFile.setDependencies(tcpipTcpGenSourceFile, ["TCPIP_USE_TCP"])
+
+def tcpipTcpHeapCalc(): 
+    nSockets = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_MAX_SOCKETS")
+    sktTxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_TX_SIZE")
+    sktRxBuffSize = Database.getSymbolValue("tcpipTcp","TCPIP_TCP_SOCKET_DEFAULT_RX_SIZE")
+    nHTTP_NET_Connections = 0 
+    nHTTP_Connections = 0
+    nTelnetConnections = 0
+    nMailConnections = 0
+    nFTPSConnections = 0
+    nIperfInstances = 0
+    sktTxBuffSize_HTTPNET = 0
+    sktRxBuffSize_HTTPNET = 0    
+    sktTxBuffSize_HTTP = 0
+    sktRxBuffSize_HTTP = 0    
+    sktTxBuffSize_Telnet = 0
+    sktRxBuffSize_Telnet = 0    
+    sktTxBuffSize_Smtpc = 0
+    sktRxBuffSize_Smtpc = 0    
+    sktTxBuffSize_Ftps = 0
+    sktRxBuffSize_Ftps = 0    
+    sktTxBuffSize_iperf = 0
+    sktRxBuffSize_iperf = 0
+    
+    if(Database.getSymbolValue("tcpipHttpNet","TCPIP_STACK_USE_HTTP_NET_SERVER") == True):
+        if(Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_MAX_CONNECTIONS") != None):
+            nHTTP_NET_Connections = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_MAX_CONNECTIONS")
+        if(Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE") != None):
+            sktTxBuffSize_HTTPNET = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_SKT_TX_BUFF_SIZE")
+            if(sktTxBuffSize_HTTPNET == 0):
+                sktTxBuffSize_HTTPNET = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE") != None):
+            sktRxBuffSize_HTTPNET = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_SKT_RX_BUFF_SIZE")
+            if(sktRxBuffSize_HTTPNET == 0):
+                sktRxBuffSize_HTTPNET = sktRxBuffSize
+    
+    if(Database.getSymbolValue("tcpipHttp","TCPIP_STACK_USE_HTTP_SERVER") == True):    
+        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_MAX_CONNECTIONS") != None):
+            nHTTP_Connections = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_MAX_CONNECTIONS")
+        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_TX_BUFF_SIZE")!= None):    
+            sktTxBuffSize_HTTP = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_TX_BUFF_SIZE")
+            if(sktTxBuffSize_HTTP == 0):
+                sktTxBuffSize_HTTP = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_RX_BUFF_SIZE")!= None):
+            sktRxBuffSize_HTTP = Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_SKT_RX_BUFF_SIZE")
+            if(sktRxBuffSize_HTTP == 0):
+                sktRxBuffSize_HTTP = sktRxBuffSize
+    
+    if(Database.getSymbolValue("tcpipTelnet","TCPIP_USE_TELNET") == True):  
+        if(Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_MAX_CONNECTIONS") != None):
+            nTelnetConnections = Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_MAX_CONNECTIONS")
+        if(Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_SKT_TX_BUFF_SIZE") != None):    
+            sktTxBuffSize_Telnet = Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_SKT_TX_BUFF_SIZE")
+            if(sktTxBuffSize_Telnet == 0):
+                sktTxBuffSize_Telnet = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_SKT_RX_BUFF_SIZE") != None):
+            sktRxBuffSize_Telnet = Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_SKT_RX_BUFF_SIZE")
+            if(sktRxBuffSize_Telnet == 0):
+                sktRxBuffSize_Telnet = sktRxBuffSize
+    
+    if(Database.getSymbolValue("tcpipSmtpc","TCPIP_USE_SMTPC_CLIENT") == True):
+        if(Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_MAIL_CONNECTIONS") != None):
+            nMailConnections = Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_MAIL_CONNECTIONS")
+        if(Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_SKT_TX_BUFF_SIZE") != None):
+            sktTxBuffSize_Smtpc = Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_SKT_TX_BUFF_SIZE")
+            if(sktTxBuffSize_Smtpc == 0):
+                sktTxBuffSize_Smtpc = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_SKT_RX_BUFF_SIZE") != None):
+            sktRxBuffSize_Smtpc = Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_SKT_RX_BUFF_SIZE")
+            if(sktRxBuffSize_Smtpc == 0):
+                sktRxBuffSize_Smtpc = sktRxBuffSize
+    
+    if(Database.getSymbolValue("tcpipFtps","TCPIP_USE_FTP_MODULE") == True): 
+        if(Database.getSymbolValue("tcpipFtps","TCPIP_FTP_MAX_CONNECTIONS") != None):
+            nFTPSConnections = Database.getSymbolValue("tcpipFtps","TCPIP_FTP_MAX_CONNECTIONS")
+        if(Database.getSymbolValue("tcpipFtps","TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE") != None):
+            sktTxBuffSize_Ftps = Database.getSymbolValue("tcpipFtps","TCPIP_FTP_DATA_SKT_TX_BUFF_SIZE")
+            if(sktTxBuffSize_Ftps == 0):
+                sktTxBuffSize_Ftps = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipFtps","TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE") != None):
+            sktRxBuffSize_Ftps = Database.getSymbolValue("tcpipFtps","TCPIP_FTP_DATA_SKT_RX_BUFF_SIZE")
+            if(sktRxBuffSize_Ftps == 0):
+                sktRxBuffSize_Ftps = sktRxBuffSize
+    
+    if(Database.getSymbolValue("tcpipIperf","TCPIP_USE_IPERF") == True): 
+        if(Database.getSymbolValue("tcpipIperf","TCPIP_IPERF_MAX_INSTANCES") != None):
+            nIperfInstances = Database.getSymbolValue("tcpipIperf","TCPIP_IPERF_MAX_INSTANCES")
+        if(Database.getSymbolValue("tcpipIperf","TCPIP_IPERF_TX_BUFFER_SIZE") != None):
+            sktTxBuffSize_iperf = Database.getSymbolValue("tcpipIperf","TCPIP_IPERF_TX_BUFFER_SIZE")
+            if(sktTxBuffSize_iperf == 0):
+                sktTxBuffSize_iperf = sktTxBuffSize
+        if(Database.getSymbolValue("tcpipIperf","TCPIP_IPERF_RX_BUFFER_SIZE") != None):
+            sktRxBuffSize_iperf = Database.getSymbolValue("tcpipIperf","TCPIP_IPERF_RX_BUFFER_SIZE")
+            if(sktRxBuffSize_iperf == 0):
+                sktRxBuffSize_iperf = sktRxBuffSize
+    
+    ownSockets = (nSockets - nHTTP_NET_Connections - nHTTP_Connections - nTelnetConnections - nMailConnections - nFTPSConnections  - nIperfInstances)
+    
+    heap_size = ownSockets * (sktTxBuffSize + sktRxBuffSize) + (nSockets * 132) \
+                + nHTTP_NET_Connections * (176 + sktTxBuffSize_HTTPNET + sktRxBuffSize_HTTPNET) \
+                + nHTTP_Connections * (176 + sktTxBuffSize_HTTP + sktRxBuffSize_HTTP) \
+                + nTelnetConnections * (sktTxBuffSize_Telnet + sktRxBuffSize_Telnet) \
+                + nMailConnections * (176 + sktTxBuffSize_Smtpc + sktRxBuffSize_Smtpc) \
+                + nFTPSConnections * (sktTxBuffSize_Ftps + sktRxBuffSize_Ftps) \
+                + nIperfInstances * (sktTxBuffSize_iperf + sktRxBuffSize_iperf)
+                    
+    return heap_size    
+    
+def tcpipTcpHeapUpdate(symbol, event): 
+    heap_size = tcpipTcpHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+
 
 def tcpipTcpMenuVisibleSingle(symbol, event):
     if (event["value"] == True):

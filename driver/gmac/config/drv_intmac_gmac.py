@@ -132,7 +132,10 @@ def instantiateComponent(drvGmacComponent):
     tcpipGmacRxBuffAllocCountQue0.setDefaultValue(1)
     tcpipGmacRxBuffAllocCountQue0.setMin(1)
     tcpipGmacRxBuffAllocCountQue0.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_0"]) 
-        
+    
+    # SAME70/V71 has 6 Priority Queue
+    # SAMA5D2 has 3 Priority Queue
+    # SAME54 has only 1 Queue
     if(gmac_periphID == "11046") or (gmac_periphID == "44152"): # SAME70 or SAMV71 or SAMA5D2
         # GMAC Queue 1  
         tcpipGmacQue1 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_1", None)
@@ -263,7 +266,8 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxBuffAllocCountQue2.setDefaultValue(1)
         tcpipGmacRxBuffAllocCountQue2.setMin(1)
         tcpipGmacRxBuffAllocCountQue2.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_2"]) 
-            
+        
+    if(gmac_periphID == "11046"): # SAME70 or SAMV71         
         # GMAC Queue 3
         tcpipGmacQue3 = drvGmacComponent.createBooleanSymbol("TCPIP_GMAC_QUEUE_3", None)
         tcpipGmacQue3.setLabel("GMAC Queue 3")
@@ -458,6 +462,38 @@ def instantiateComponent(drvGmacComponent):
         tcpipGmacRxBuffAllocCountQue5.setDefaultValue(1)
         tcpipGmacRxBuffAllocCountQue5.setMin(1)
         tcpipGmacRxBuffAllocCountQue5.setDependencies(tcpipEthMacMenuVisibleSingle, ["TCPIP_GMAC_QUEUE_5"])
+        
+        gmacheapdependency = [  "TCPIP_GMAC_QUEUE_0","TCPIP_GMAC_RX_EN_QUE0","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0",
+                                "TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0","TCPIP_GMAC_RX_BUFF_SIZE_QUE0",
+                                "TCPIP_GMAC_TX_EN_QUE0","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0","TCPIP_GMAC_QUEUE_1","TCPIP_GMAC_RX_EN_QUE1",
+                                "TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE1","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE1",
+                                "TCPIP_GMAC_RX_BUFF_SIZE_QUE1","TCPIP_GMAC_TX_EN_QUE1","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1","TCPIP_GMAC_QUEUE_2",
+                                "TCPIP_GMAC_RX_EN_QUE2","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE2",
+                                "TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE2","TCPIP_GMAC_RX_BUFF_SIZE_QUE2","TCPIP_GMAC_TX_EN_QUE2",
+                                "TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2","TCPIP_GMAC_QUEUE_3","TCPIP_GMAC_RX_EN_QUE3","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3",
+                                "TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE3","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE3","TCPIP_GMAC_RX_BUFF_SIZE_QUE3",
+                                "TCPIP_GMAC_TX_EN_QUE3","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3","TCPIP_GMAC_QUEUE_4","TCPIP_GMAC_RX_EN_QUE4",
+                                "TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE4","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE4",
+                                "TCPIP_GMAC_RX_BUFF_SIZE_QUE4","TCPIP_GMAC_TX_EN_QUE4","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4",
+                                "TCPIP_GMAC_QUEUE_5","TCPIP_GMAC_RX_EN_QUE5","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE5",
+                                "TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE5","TCPIP_GMAC_RX_BUFF_SIZE_QUE5","TCPIP_GMAC_TX_EN_QUE5",
+                                "TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5","tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
+    
+    if(gmac_periphID == "44152"): # SAMA5D2
+        gmacheapdependency = [  "TCPIP_GMAC_QUEUE_0","TCPIP_GMAC_RX_EN_QUE0","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0",
+                                "TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0","TCPIP_GMAC_RX_BUFF_SIZE_QUE0","TCPIP_GMAC_TX_EN_QUE0",
+                                "TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0","TCPIP_GMAC_QUEUE_1","TCPIP_GMAC_RX_EN_QUE1","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1",
+                                "TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE1","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE1","TCPIP_GMAC_RX_BUFF_SIZE_QUE1",
+                                "TCPIP_GMAC_TX_EN_QUE1","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1","TCPIP_GMAC_QUEUE_2","TCPIP_GMAC_RX_EN_QUE2",
+                                "TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE2","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE2",
+                                "TCPIP_GMAC_RX_BUFF_SIZE_QUE2","TCPIP_GMAC_TX_EN_QUE2","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2",
+                                "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
+    
+    if(gmac_periphID == "U2005"): # SAME54
+        gmacheapdependency = [  "TCPIP_GMAC_QUEUE_0","TCPIP_GMAC_RX_EN_QUE0","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0",
+                                "TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0","TCPIP_GMAC_RX_BUFF_SIZE_QUE0","TCPIP_GMAC_TX_EN_QUE0",
+                                "TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]
+        
 
     # GMAC TX descriptors Dummy Count
     tcpipGmacTxDescCountDummmy = drvGmacComponent.createIntegerSymbol("TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY", None)
@@ -730,7 +766,7 @@ def instantiateComponent(drvGmacComponent):
     elif (gmac_periphID == "U2005"): # SAME54
         drvGmacQueueNum.setDefaultValue(1)
     elif (gmac_periphID == "44152"): # SAMA5D2
-        drvGmacQueueNum.setDefaultValue(6)
+        drvGmacQueueNum.setDefaultValue(3)
     
     # Driver GMAC RMII Mode Selection Value
     drvGmacRmiiVal = drvGmacComponent.createIntegerSymbol("DRV_GMAC_RMII_VALUE", None)
@@ -779,6 +815,15 @@ def instantiateComponent(drvGmacComponent):
     drvGmacPhyType.setDescription("PHY Connected to GMAC")
     drvGmacPhyType.setDefaultValue("")
     drvGmacPhyType.setReadOnly(True)
+    
+    # Driver GMAC Heap Size
+    drvGmacHeapSize = drvGmacComponent.createIntegerSymbol("DRV_GMAC_HEAP_SIZE", None)
+    drvGmacHeapSize.setLabel("GMAC Heap Size (bytes)") 
+    drvGmacHeapSize.setVisible(False)
+    drvGmacHeapSize.setDescription("GMAC Heap Size")
+    drvGmacHeapSize.setDefaultValue(gmacHeapCalc())
+    drvGmacHeapSize.setReadOnly(True)
+    drvGmacHeapSize.setDependencies(drvGmacHeapUpdate, gmacheapdependency)
     
     #Add to system_config.h
     tcpipGmacHeaderFtl = drvGmacComponent.createFileSymbol(None, None)
@@ -912,3 +957,89 @@ def onAttachmentDisconnected(source, target):
     if (source["id"] == "GMAC_PHY_Dependency"): 
         Database.clearSymbolValue("drvGmac", "DRV_INTMAC_PHY_TYPE")
 
+def gmacHeapCalc():
+    heapsize = 0
+    # Rx Section Heap Calculation
+    #Queue 0
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_0") == True)): # and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_EN_QUE0") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE0") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE0") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE0")) * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_QUE0") + 128 + 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY") * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_DUMMY") + 128 + 16))
+    
+    #Queue 1    
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_1") == True)): # and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_EN_QUE1") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE1") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE1") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE1")) * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_QUE1") + 128 + 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY") * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_DUMMY") + 128 + 16))
+    
+    #Queue 2    
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_2") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_EN_QUE2") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE2") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE2") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE2")) * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_QUE2") + 128 + 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY") * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_DUMMY") + 128 + 16))   
+
+    #Queue 3    
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_3") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_EN_QUE3") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE3") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE3") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE3")) * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_QUE3") + 128 + 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY") * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_DUMMY") + 128 + 16)) 
+
+    #Queue 4    
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_4") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_EN_QUE4") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE4") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE4") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE4")) * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_QUE4") + 128 + 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY") * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_DUMMY") + 128 + 16))  
+    
+    #Queue 5    
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_5") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_EN_QUE5") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_QUE5") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_ADDL_BUFF_COUNT_QUE5") + Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_COUNT_THRESHOLD_QUE5")) * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_QUE5") + 128 + 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_DESCRIPTORS_COUNT_DUMMY") * (Database.getSymbolValue("drvGmac","TCPIP_GMAC_RX_BUFF_SIZE_DUMMY") + 128 + 16))  
+        
+    # Tx Section Heap Calculation
+    #Queue 0
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_0") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_EN_QUE0") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE0") * 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY") * 16)
+ 
+    #Queue 1
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_1") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_EN_QUE1") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE1") * 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY") * 16)
+
+    #Queue 2
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_2") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_EN_QUE2") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE2") * 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY") * 16)
+
+    #Queue 3
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_3") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_EN_QUE3") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE3") * 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY") * 16)
+
+    #Queue 4
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_4") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_EN_QUE4") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE4") * 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY") * 16)
+
+    #Queue 5
+    if((Database.getSymbolValue("drvGmac","TCPIP_GMAC_QUEUE_5") == True)): #  and (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_EN_QUE5") == True)):
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_QUE5") * 16)
+    else:
+        heapsize = heapsize + (Database.getSymbolValue("drvGmac","TCPIP_GMAC_TX_DESCRIPTORS_COUNT_DUMMY") * 16)        
+    
+    return heapsize
+ 
+def drvGmacHeapUpdate(symbol, event): 
+    heap_size = gmacHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+
+def destroyComponent(drvGmacComponent):
+    Database.setSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC", False, 2)

@@ -162,6 +162,16 @@ def instantiateComponent(tcpipSmtpcComponent):
     tcpipSmtpcMailCommand.setDefaultValue(False)
     #tcpipSmtpcMailCommand.setDependencies(tcpipSmtpcMenuVisibleSingle, ["TCPIP_USE_SMTPC_CLIENT"])
 
+    tcpipSmtpcheapdependency = ["TCPIP_SMTPC_MAIL_CONNECTIONS", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # SMTPC Heap Size
+    tcpipSmtpcHeapSize = tcpipSmtpcComponent.createIntegerSymbol("TCPIP_SMTPC_HEAP_SIZE", None)
+    tcpipSmtpcHeapSize.setLabel("SMTPC Heap Size (bytes)") 
+    tcpipSmtpcHeapSize.setVisible(False)
+    tcpipSmtpcHeapSize.setDefaultValue(tcpipSmtpcHeapCalc())
+    tcpipSmtpcHeapSize.setReadOnly(True)
+    tcpipSmtpcHeapSize.setDependencies(tcpipSmtpcHeapUpdate, tcpipSmtpcheapdependency)  
+    
     #Add to system_config.h
     tcpipSmtpcHeaderFtl = tcpipSmtpcComponent.createFileSymbol(None, None)
     tcpipSmtpcHeaderFtl.setSourcePath("tcpip/config/smtpc.h.ftl")
@@ -192,6 +202,17 @@ def tcpipSmtpcMenuVisibleSingle(symbol, event):
 def tcpipSmtpcGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
 
+def tcpipSmtpcHeapCalc(): 
+    numMailConn = Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_MAIL_CONNECTIONS")
+    heap_size = numMailConn * 176
+    return heap_size    
+    
+def tcpipSmtpcHeapUpdate(symbol, event): 
+    heap_size = tcpipSmtpcHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
 def destroyComponent(component):
     Database.setSymbolValue("tcpipSmtpc", "TCPIP_USE_SMTPC_CLIENT", False, 2)
     

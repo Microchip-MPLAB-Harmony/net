@@ -148,6 +148,18 @@ def instantiateComponent(tcpipDnsComponent):
     tcpipDnscUsrNotification.setDefaultValue(False)
     #tcpipDnscUsrNotification.setDependencies(tcpipDnsMenuVisible, ["TCPIP_USE_DNS_CLIENT"])
 
+    tcpipDnscheapdependency = ["TCPIP_DNS_CLIENT_CACHE_ENTRIES", "TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS", 
+                               "TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS", "TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN", 
+                               "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # DNS Client Heap Size
+    tcpipDnscHeapSize = tcpipDnsComponent.createIntegerSymbol("TCPIP_DNS_CLIENT_HEAP_SIZE", None)
+    tcpipDnscHeapSize.setLabel("DNS Client Heap Size (bytes)") 
+    tcpipDnscHeapSize.setVisible(False)
+    tcpipDnscHeapSize.setDefaultValue(tcpipDnscHeapCalc())
+    tcpipDnscHeapSize.setReadOnly(True)
+    tcpipDnscHeapSize.setDependencies(tcpipDnscHeapUpdate, tcpipDnscheapdependency)
+    
     #Add to system_config.h
     tcpipDnscHeaderFtl = tcpipDnsComponent.createFileSymbol(None, None)
     tcpipDnscHeaderFtl.setSourcePath("tcpip/config/dns.h.ftl")
@@ -163,6 +175,20 @@ def tcpipDnsMenuVisible(symbol, event):
     else:
         print("DNS Client Menu Invisible.")
         symbol.setVisible(False)    
+
+def tcpipDnscHeapCalc(): 
+    cacheEntries = Database.getSymbolValue("tcpipDns","TCPIP_DNS_CLIENT_CACHE_ENTRIES")
+    nIPv4Entries = Database.getSymbolValue("tcpipDns","TCPIP_DNS_CLIENT_CACHE_PER_IPV4_ADDRESS")
+    nIPv6Entries = Database.getSymbolValue("tcpipDns","TCPIP_DNS_CLIENT_CACHE_PER_IPV6_ADDRESS")
+    hostNameLen = Database.getSymbolValue("tcpipDns","TCPIP_DNS_CLIENT_MAX_HOSTNAME_LEN")
+    heap_size = 40 + (cacheEntries * 44) + (cacheEntries *  ((nIPv4Entries * 4) + (nIPv6Entries * 16)) + hostNameLen)
+    return heap_size    
+    
+def tcpipDnscHeapUpdate(symbol, event): 
+    heap_size = tcpipDnscHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
 
 def destroyComponent(component):
     Database.setSymbolValue("tcpipDns", "TCPIP_USE_DNS_CLIENT", False, 2)       
