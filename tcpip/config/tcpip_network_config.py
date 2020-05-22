@@ -26,9 +26,8 @@ tcpipNetConfigNumMaximum = 10
 tcpipNetConfigNumPrev = 1
 
 ##############################################################
-
 def instantiateComponent(tcpipNetConfigComponent, index):
-    print("TCPIP TCP Component")
+    
     configName = Variables.get("__CONFIGURATION_NAME")  
     print(tcpipNetConfigComponent.getID())
 
@@ -37,6 +36,9 @@ def instantiateComponent(tcpipNetConfigComponent, index):
     tcpipNetConfigIndex = tcpipNetConfigComponent.createIntegerSymbol("INDEX", None)
     tcpipNetConfigIndex.setVisible(False)
     tcpipNetConfigIndex.setDefaultValue(index)  
+    
+    netconfig_interface_counter_dict = {}
+    netconfig_interface_counter_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_INTERFACE_COUNTER_INC", netconfig_interface_counter_dict)
     
     # Network interface Number
     tcpipNetConfigNum = tcpipNetConfigComponent.createIntegerSymbol("TCPIP_STACK_NETWORK_CONFIG_NUMBER", None)
@@ -336,4 +338,8 @@ def onAttachmentDisconnected(source, target):
     if (source["id"] == "NETCONFIG_MAC_Dependency"):    
         tcpipNetConfigIndex = int(source["component"].getID().strip("tcpipNetConfig_"))
         source["component"].clearSymbolValue("TCPIP_NETWORK_DEFAULT_INTERFACE_NAME_IDX"+str(tcpipNetConfigIndex))
-            
+  
+    
+def destroyComponent(tcpipNetConfigComponent):
+    netconfig_interface_counter_dict = {}
+    netconfig_interface_counter_dict = Database.sendMessage("tcpipNetConfig", "NETCONFIG_INTERFACE_COUNTER_DEC", netconfig_interface_counter_dict)

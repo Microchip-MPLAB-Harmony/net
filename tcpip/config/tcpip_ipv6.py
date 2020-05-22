@@ -175,6 +175,16 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIpv6ExtPktProcess.setDescription("Allows External Processing of RX Packets")
     tcpipIpv6ExtPktProcess.setDefaultValue(False)
     
+    tcpipIpv6heapdependency = ["tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # IPv6 Heap Size
+    tcpipIpv6HeapSize = tcpipIPv6Component.createIntegerSymbol("TCPIP_IPV6_HEAP_SIZE", None)
+    tcpipIpv6HeapSize.setLabel("IPv6 Heap Size (bytes)") 
+    tcpipIpv6HeapSize.setVisible(False)
+    tcpipIpv6HeapSize.setDefaultValue(tcpipIpv6HeapCalc())
+    tcpipIpv6HeapSize.setReadOnly(True)
+    tcpipDhcpcHeapSize.setDependencies(tcpipIpv6HeapUpdate, tcpipIpv6heapdependency)
+    
     #Add to system_config.h
     tcpipIPv6HeaderFtl = tcpipIPv6Component.createFileSymbol(None, None)
     tcpipIPv6HeaderFtl.setSourcePath("tcpip/config/ipv6.h.ftl")
@@ -203,7 +213,17 @@ def tcpipIPv6MenuVisible(symbol, event):
         
 def tcpipIpv6GenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
-
+    
+def tcpipIpv6HeapCalc():     
+    heap_size = 1024
+    return heap_size    
+    
+def tcpipIpv6HeapUpdate(symbol, event): 
+    heap_size = tcpipIpv6HeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
 def destroyComponent(component):
     Database.setSymbolValue("tcpipIPv6", "TCPIP_STACK_USE_IPV6", False, 2)
     

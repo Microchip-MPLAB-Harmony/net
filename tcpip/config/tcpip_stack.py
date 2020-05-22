@@ -42,7 +42,7 @@ def instantiateComponent(tcpipStackComponent):
     res = Database.activateComponents(["HarmonyCore"])
     
     processor = Variables.get("__PROCESSOR")
-
+    
     # Enable dependent Harmony core components
     # Enable "Generate Harmony Driver Common Files" option in MHC
     if (Database.getSymbolValue("HarmonyCore", "ENABLE_DRV_COMMON") == False):
@@ -259,6 +259,48 @@ def instantiateComponent(tcpipStackComponent):
     tcpipStackHeapStackDramSize.setDefaultValue(39250)
     tcpipStackHeapStackDramSize.setDependencies(tcpipStackHeapInternMenuVisible, ["TCPIP_STACK_USE_HEAP_CONFIG"])
 
+    tcpipHeapRecommendlist = [  "drvGmac.TCPIP_USE_ETH_MAC", "drvGmac.DRV_GMAC_HEAP_SIZE",
+                                "drvPic32mEthmac.TCPIP_USE_ETH_MAC", "drvPic32mEthmac.DRV_ETHMAC_HEAP_SIZE",
+                                "drvEmac0.TCPIP_USE_EMAC0", "drvEmac0.DRV_EMAC_HEAP_SIZE",
+                                "drvEmac1.TCPIP_USE_EMAC1", "drvEmac1.DRV_EMAC_HEAP_SIZE",
+                                "tcpipDhcp.TCPIP_STACK_USE_DHCP_CLIENT", "tcpipDhcp.TCPIP_DHCP_HEAP_SIZE",
+                                "tcpipZeroConf.TCPIP_USE_LINK_ZERO_CONFIG", "tcpipZeroConf.TCPIP_ZC_MDNS_HEAP_SIZE", 
+                                "tcpipBerkeleyApi.TCPIP_STACK_USE_BERKELEY_API", "tcpipBerkeleyApi.TCPIP_BSD_HEAP_SIZE",
+                                "tcpipArp.TCPIP_USE_ARP", "tcpipArp.TCPIP_ARP_HEAP_SIZE", 
+                                "tcpipSmtpc.TCPIP_USE_SMTPC_CLIENT", "tcpipSmtpc.TCPIP_SMTPC_HEAP_SIZE", 
+                                "tcpipTelnet.TCPIP_USE_TELNET", "tcpipTelnet.TCPIP_TELNET_HEAP_SIZE", 
+                                "tcpipDns.TCPIP_USE_DNS_CLIENT", "tcpipDns.TCPIP_DNS_CLIENT_HEAP_SIZE", 
+                                "tcpipDhcps.TCPIP_STACK_USE_DHCP_SERVER", "tcpipDhcps.TCPIP_DHCP_SERVER_HEAP_SIZE", 
+                                "tcpipFtps.TCPIP_USE_FTP_MODULE", "tcpipFtps.TCPIP_FTPS_HEAP_SIZE", 
+                                "tcpipHttp.TCPIP_STACK_USE_HTTP_SERVER", "tcpipHttp.TCPIP_HTTP_HEAP_SIZE",
+                                "tcpipHttpNet.TCPIP_STACK_USE_HTTP_NET_SERVER", "tcpipHttpNet.TCPIP_HTTP_NET_HEAP_SIZE",
+                                "tcpipIPv6.TCPIP_STACK_USE_IPV6", "tcpipIPv6.TCPIP_IPV6_HEAP_SIZE",
+                                "tcpipSnmpv3.TCPIP_USE_SNMPv3", "tcpipSnmpv3.TCPIP_SNMPV3_HEAP_SIZE",
+                                "tcpipDnss.TCPIP_USE_DNSS", "tcpipDnss.TCPIP_DNSS_HEAP_SIZE",
+                                "tcpipFtpc.TCPIP_STACK_USE_FTP_CLIENT", "tcpipFtpc.TCPIP_FTPC_HEAP_SIZE",
+                                "tcpipSnmp.TCPIP_USE_SNMP", "tcpipSnmp.TCPIP_SNMP_HEAP_SIZE",
+                                "tcpipTftpc.TCPIP_USE_TFTPC_MODULE", "tcpipTftpc.TCPIP_TFTPC_HEAP_SIZE",
+                                "tcpipUdp.TCPIP_USE_UDP", "tcpipUdp.TCPIP_UDP_HEAP_SIZE",
+                                "tcpipTcp.TCPIP_USE_TCP", "tcpipTcp.TCPIP_TCP_HEAP_SIZE"] 
+                                
+    # TCP/IP Stack Recommended Heap Size
+    tcpipStackHeapRecommendSize = tcpipStackComponent.createIntegerSymbol("TCPIP_STACK_HEAP_SIZE_RECOMMEND", None)
+    tcpipStackHeapRecommendSize.setLabel("TCP/IP Heap Size Estimate(in kilobytes)")
+    tcpipStackHeapRecommendSize.setVisible(True)
+    tcpipStackHeapRecommendSize.setDescription("TCP/IP Heap Size Estimate(in kilobytes)")
+    tcpipStackHeapRecommendSize.setDefaultValue(39250)
+    tcpipStackHeapRecommendSize.setReadOnly(True)
+    tcpipStackHeapRecommendSize.setDependencies(tcpipStackHeapUpdate, tcpipHeapRecommendlist)
+    
+    tcpipStackHeapRecommendComment = tcpipStackComponent.createCommentSymbol("TCPIP_STACK_HEAP_SIZE_COMMENT",None)
+    tcpipStackHeapRecommendComment.setLabel("***Worst-case estimate; refer Heap Estimation documentation")
+    tcpipStackHeapRecommendComment.setVisible( True )
+    
+    tcpipStackHeapSizeMask = tcpipStackComponent.createBooleanSymbol("TCPIP_STACK_HEAP_CALC_MASK", tcpipStackHeapRecommendSize)
+    tcpipStackHeapSizeMask.setLabel("Module-wise Heap Estimate(show with each module)")
+    tcpipStackHeapSizeMask.setVisible(True)
+    tcpipStackHeapSizeMask.setDefaultValue(False)
+    
     # Number of Heap Pool Entries
     tcpipStackHeapPoolEntryNum = tcpipStackComponent.createIntegerSymbol("TCPIP_HEAP_POOL_ENTRIES_NUMBER", tcpipStackHeap)
     tcpipStackHeapPoolEntryNum.setLabel("Number of Heap Pool Entries")
@@ -1992,10 +2034,142 @@ def tcpipStackRTOSTaskDelayMenu(symbol, event):
     else:
         symbol.setVisible(False)
 
+
+def tcpipHeapCalc():    
+    heapsize = 0
+    
+    # TCPIP_MODULE_MANAGER
+    numInterface = Database.getSymbolValue("tcpipNetConfig","TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
+    heapsize = numInterface * 140
+    
+    # GMAC
+    if((Database.getSymbolValue("drvGmac", "TCPIP_USE_ETH_MAC") == True)): 
+        if(Database.getSymbolValue("drvGmac","DRV_GMAC_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvGmac","DRV_GMAC_HEAP_SIZE")
+        
+    # ETHMAC    
+    if((Database.getSymbolValue("drvPic32mEthmac", "TCPIP_USE_ETH_MAC") == True)):
+        if(Database.getSymbolValue("drvPic32mEthmac","DRV_ETHMAC_HEAP_SIZE") != None): 
+            heapsize = heapsize + Database.getSymbolValue("drvPic32mEthmac","DRV_ETHMAC_HEAP_SIZE")
+    # EMAC0
+    if((Database.getSymbolValue("drvEmac0", "TCPIP_USE_EMAC0") == True)): 
+        if(Database.getSymbolValue("drvEmac0","DRV_EMAC_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvEmac0","DRV_EMAC_HEAP_SIZE")
+
+    # EMAC1
+    if((Database.getSymbolValue("drvEmac1", "TCPIP_USE_EMAC1") == True)): 
+        if(Database.getSymbolValue("drvEmac1","DRV_EMAC_HEAP_SIZE") != None):        
+            heapsize = heapsize + Database.getSymbolValue("drvEmac1","DRV_EMAC_HEAP_SIZE")
+            
+    # DHCP Client    
+    if((Database.getSymbolValue("tcpipDhcp", "TCPIP_STACK_USE_DHCP_CLIENT") == True)): 
+        if(Database.getSymbolValue("tcpipDhcp","TCPIP_DHCP_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipDhcp","TCPIP_DHCP_HEAP_SIZE") 
+        
+    # ZCLL & MDNS  
+    if((Database.getSymbolValue("tcpipZeroConf", "TCPIP_USE_LINK_ZERO_CONFIG") == True)): 
+        if(Database.getSymbolValue("tcpipZeroConf","TCPIP_ZC_MDNS_HEAP_SIZE") != None): 
+            heapsize = heapsize + Database.getSymbolValue("tcpipZeroConf","TCPIP_ZC_MDNS_HEAP_SIZE") 
+    
+    # Berkeley Api  
+    if((Database.getSymbolValue("tcpipBerkeleyApi", "TCPIP_STACK_USE_BERKELEY_API") == True)): 
+        if(Database.getSymbolValue("tcpipBerkeleyApi","TCPIP_BSD_HEAP_SIZE")!= None): 
+            heapsize = heapsize + Database.getSymbolValue("tcpipBerkeleyApi","TCPIP_BSD_HEAP_SIZE")    
+
+    # ARP 
+    if((Database.getSymbolValue("tcpipArp", "TCPIP_USE_ARP") == True)): 
+        if(Database.getSymbolValue("tcpipArp","TCPIP_ARP_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipArp","TCPIP_ARP_HEAP_SIZE") 
+
+    # SMTPC 
+    if((Database.getSymbolValue("tcpipSmtpc", "TCPIP_USE_SMTPC_CLIENT") == True)): 
+        if(Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipSmtpc","TCPIP_SMTPC_HEAP_SIZE")   
+
+    # Telnet 
+    if((Database.getSymbolValue("tcpipTelnet", "TCPIP_USE_TELNET") == True)): 
+        if(Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_HEAP_SIZE")  != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipTelnet","TCPIP_TELNET_HEAP_SIZE")  
+
+    # DNS Client 
+    if((Database.getSymbolValue("tcpipDns", "TCPIP_USE_DNS_CLIENT") == True)): 
+        if(Database.getSymbolValue("tcpipDns","TCPIP_DNS_CLIENT_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipDns","TCPIP_DNS_CLIENT_HEAP_SIZE")  
+
+    # DHCP Server
+    if((Database.getSymbolValue("tcpipDhcps", "TCPIP_STACK_USE_DHCP_SERVER") == True)): 
+        if(Database.getSymbolValue("tcpipDhcps","TCPIP_DHCP_SERVER_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipDhcps","TCPIP_DHCP_SERVER_HEAP_SIZE")  
+
+    # FTP Server
+    if((Database.getSymbolValue("tcpipFtps", "TCPIP_USE_FTP_MODULE") == True)): 
+        if(Database.getSymbolValue("tcpipFtps","TCPIP_FTPS_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipFtps","TCPIP_FTPS_HEAP_SIZE")  
+
+    # HTTP Server
+    if((Database.getSymbolValue("tcpipHttp", "TCPIP_STACK_USE_HTTP_SERVER") == True)): 
+        if(Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipHttp","TCPIP_HTTP_HEAP_SIZE")  
+
+    # HTTP NET Server
+    if((Database.getSymbolValue("tcpipHttpNet", "TCPIP_STACK_USE_HTTP_NET_SERVER") == True)): 
+        if(Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_HEAP_SIZE")  
+
+    # IPv6 Server
+    if((Database.getSymbolValue("tcpipIPv6", "TCPIP_STACK_USE_IPV6") == True)): 
+        if(Database.getSymbolValue("tcpipIPv6","TCPIP_IPV6_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipIPv6","TCPIP_IPV6_HEAP_SIZE")  
+    
+    # SNMP Server
+    if((Database.getSymbolValue("tcpipSnmp", "TCPIP_USE_SNMP") == True)): 
+        if(Database.getSymbolValue("tcpipSnmp","TCPIP_SNMP_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipSnmp","TCPIP_SNMP_HEAP_SIZE")  
+
+    # SNMPv3 Server
+    if((Database.getSymbolValue("tcpipSnmpv3", "TCPIP_USE_SNMPv3") == True)): 
+        if(Database.getSymbolValue("tcpipSnmpv3","TCPIP_SNMPV3_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipSnmpv3","TCPIP_SNMPV3_HEAP_SIZE")  
+
+    # DNS Server
+    if((Database.getSymbolValue("tcpipDnss", "TCPIP_USE_DNSS") == True)): 
+        if(Database.getSymbolValue("tcpipDnss","TCPIP_DNSS_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipDnss","TCPIP_DNSS_HEAP_SIZE")  
+
+    # FTP Client
+    if((Database.getSymbolValue("tcpipFtpc", "TCPIP_STACK_USE_FTP_CLIENT") == True)): 
+        if(Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipFtpc","TCPIP_FTPC_HEAP_SIZE")  
+
+    # TFTP Client
+    if((Database.getSymbolValue("tcpipTftpc", "TCPIP_USE_TFTPC_MODULE") == True)): 
+        if(Database.getSymbolValue("tcpipTftpc","TCPIP_TFTPC_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipTftpc","TCPIP_TFTPC_HEAP_SIZE")  
+
+    # UDP
+    if((Database.getSymbolValue("tcpipUdp", "TCPIP_USE_UDP") == True)): 
+        if(Database.getSymbolValue("tcpipUdp","TCPIP_UDP_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipUdp","TCPIP_UDP_HEAP_SIZE") 
+
+    # TCP
+    if((Database.getSymbolValue("tcpipTcp", "TCPIP_USE_TCP") == True)): 
+        if(Database.getSymbolValue("tcpipTcp","TCPIP_TCP_HEAP_SIZE") != None):
+            heapsize = heapsize + Database.getSymbolValue("tcpipTcp","TCPIP_TCP_HEAP_SIZE") 
+            
+    return heapsize
+
+
+def tcpipStackHeapUpdate(symbol, event):
+    heap_size = tcpipHeapCalc()
+    # to nearest Kilobytes
+    heap_size = (heap_size + 512)/1024
+    symbol.setValue(heap_size)
+   
+
 def genRtosTask(symbol, event):
     symbol.setEnabled((Database.getSymbolValue("HarmonyCore", "SELECT_RTOS") != "BareMetal"))       
-
-def destroyComponent(component):
+    
+def destroyComponent(tcpipStackComponent):
     Database.setSymbolValue("tcpipStack", "USE_TCPIP_STACK", False, 2)
 
 

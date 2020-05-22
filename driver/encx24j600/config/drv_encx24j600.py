@@ -109,8 +109,7 @@ def instantiateComponent(drvExtMacEncx24j600Component, index):
     drvEncx24j600SpiComment.setVisible( True )
 
 def drvEncx24j600InstnDuplexModeSelect(symbol, event):
-    
-    print "************niyas"
+
     print symbol.getID()
     print event["value"]
     # if (event["value"] == 1):

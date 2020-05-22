@@ -101,6 +101,17 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcRetryMax.setDefaultValue(3)
     #tcpipTftpcRetryMax.setDependencies(tcpipTftpcMenuVisibleSingle, ["TCPIP_USE_TFTPC_MODULE"])
 
+    tcpipTftpcheapdependency = ["TCPIP_TFTPC_FILENAME_LEN", "tcpipUdp.TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE", 
+                                "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"] 
+    
+    # TFTP Client Heap Size
+    tcpipTftpcHeapSize = tcpipTftpcComponent.createIntegerSymbol("TCPIP_TFTPC_HEAP_SIZE", None)
+    tcpipTftpcHeapSize.setLabel("TFTP Client Heap Size (bytes)") 
+    tcpipTftpcHeapSize.setVisible(False)
+    tcpipTftpcHeapSize.setDefaultValue(tcpipTftpcHeapCalc())
+    tcpipTftpcHeapSize.setReadOnly(True)
+    tcpipTftpcHeapSize.setDependencies(tcpipTftpcHeapUpdate, tcpipTftpcheapdependency)  
+    
     #Add to system_config.h
     tcpipTftpcHeaderFtl = tcpipTftpcComponent.createFileSymbol(None, None)
     tcpipTftpcHeaderFtl.setSourcePath("tcpip/config/tftpc.h.ftl")
@@ -119,6 +130,22 @@ def instantiateComponent(tcpipTftpcComponent):
     tcpipTftpcSourceFile.setEnabled(True)
     #tcpipTftpcSourceFile.setDependencies(tcpipTftpcGenSourceFile, ["TCPIP_USE_TFTPC_MODULE"])
 
+def tcpipTftpcHeapCalc():   
+    
+    min_TFTPC_tx_size = 528 + Database.getSymbolValue("tcpipTftpc","TCPIP_TFTPC_FILENAME_LEN")
+    udpsktTxBuffSize = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE")
+    if(udpsktTxBuffSize >= min_TFTPC_tx_size):
+        min_TFTPC_tx_size = 0
+        
+    heap_size = min_TFTPC_tx_size        
+    return heap_size    
+    
+def tcpipTftpcHeapUpdate(symbol, event): 
+    heap_size = tcpipTftpcHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+    
 # make Reboot Server option visible
 def tcpipTftpcModuleVisible(tcpipDependentSymbol, tcpipIPSymbol):
     tcpipIPv4 = Database.getSymbolValue("tcpipIPv4","TCPIP_STACK_USE_IPV4")

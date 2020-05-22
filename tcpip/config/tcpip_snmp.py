@@ -205,6 +205,16 @@ def instantiateComponent(tcpipSnmpComponent):
     tcpipSnmpCustTemplateSl.setVisible(False)   
     tcpipSnmpCustTemplateSl.setDefaultValue((Database.getSymbolValue("sys_fs", "SYS_FS_MPFS") == True))
     tcpipSnmpCustTemplateSl.setDependencies(tcpipSnmpCustomSlSet, ["sys_fs.SYS_FS_MPFS"])
+
+    tcpipSnmpheapdependency = ["tcpipUdp.TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"] 
+    
+    # SNMP Heap Size
+    tcpipSnmpHeapSize = tcpipSnmpComponent.createIntegerSymbol("TCPIP_SNMP_HEAP_SIZE", None)
+    tcpipSnmpHeapSize.setLabel("SNMP Heap Size (bytes)") 
+    tcpipSnmpHeapSize.setVisible(False)
+    tcpipSnmpHeapSize.setDefaultValue(tcpipSnmpHeapCalc())
+    tcpipSnmpHeapSize.setReadOnly(True)
+    tcpipSnmpHeapSize.setDependencies(tcpipSnmpHeapUpdate, tcpipSnmpheapdependency)  
     
     # Add snmp.c file
     tcpipSnmpSourceFile = tcpipSnmpComponent.createFileSymbol(None, None)
@@ -257,6 +267,22 @@ def instantiateComponent(tcpipSnmpComponent):
     tcpipSnmpMpfsImg2SourceFile.setMarkup(True)
     tcpipSnmpMpfsImg2SourceFile.setEnabled(False)
     tcpipSnmpMpfsImg2SourceFile.setDependencies(tcpipSnmpGenSourceFile, ["TCPIP_SNMP_CUSTOM_TEMPLATE_SL"])
+
+
+def tcpipSnmpHeapCalc():     
+    min_SNMP_tx_size = 480
+    udpsktTxBuffSize = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE")
+    if(udpsktTxBuffSize >= min_SNMP_tx_size):
+        min_SNMP_tx_size = 0
+        
+    heap_size = 120 + min_SNMP_tx_size        
+    return heap_size    
+    
+def tcpipSnmpHeapUpdate(symbol, event): 
+    heap_size = tcpipSnmpHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
         
 def tcpipSnmpMenuVisibleSingle(symbol, event):
     if (event["value"] == True):

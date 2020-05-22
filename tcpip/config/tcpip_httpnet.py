@@ -496,6 +496,20 @@ def instantiateComponent(tcpipHttpNetComponent):
     #tcpipHttpNetFreeFunct.setDefaultValue("")
     #tcpipHttpNetFreeFunct.setDependencies(tcpipHttpNetMenuVisibleSingle, ["TCPIP_STACK_USE_HTTP_NET_SERVER"])
 
+
+    tcpipHttpNetheapdependency = [  "TCPIP_HTTP_NET_MAX_CONNECTIONS", "TCPIP_HTTP_NET_MAX_DATA_LEN", 
+                                    "TCPIP_HTTP_NET_CHUNKS_NUMBER", "TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER", 
+                                    "TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER", "TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE", 
+                                    "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # HTTP NET Heap Size
+    tcpipHttpNetHeapSize = tcpipHttpNetComponent.createIntegerSymbol("TCPIP_HTTP_NET_HEAP_SIZE", None)
+    tcpipHttpNetHeapSize.setLabel("HTTP NET Heap Size (bytes)") 
+    tcpipHttpNetHeapSize.setVisible(False)
+    tcpipHttpNetHeapSize.setDefaultValue(tcpipHttpNetHeapCalc())
+    tcpipHttpNetHeapSize.setReadOnly(True)
+    tcpipHttpNetHeapSize.setDependencies(tcpipHttpNetHeapUpdate, tcpipHttpNetheapdependency)  
+
     #Add to system_config.h
     tcpipHttpNetHeaderFtl = tcpipHttpNetComponent.createFileSymbol(None, None)
     tcpipHttpNetHeaderFtl.setSourcePath("tcpip/config/http_net.h.ftl")
@@ -676,7 +690,6 @@ def tcpipHttpNetWebServerPathVisible(tcpipDependentSymbol, tcpipIPSymbol):
         tcpipDependentSymbol.setVisible(False)
 
 
-
 def tcpipHttpNetMenuVisibleSingle(symbol, event):
     if (event["value"] == True):
         print("TFTPC Menu Visible.")
@@ -695,9 +708,6 @@ def tcpipHttpNetBase64DecodeOpt(symbol, event):
 def tcpipHttpNetGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
 
-def destroyComponent(component):
-    Database.setSymbolValue("tcpipHttpNet", "TCPIP_STACK_USE_HTTP_NET_SERVER", False, 2)
-
 def tcpipHttpNetCustomSlSet(symbol, event):
     symbol.clearValue()
     if (event["value"] == True):
@@ -706,3 +716,22 @@ def tcpipHttpNetCustomSlSet(symbol, event):
         symbol.setValue(False,2)
 
 
+def tcpipHttpNetHeapCalc(): 
+    nConnections = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_MAX_CONNECTIONS")
+    dataLen = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_MAX_DATA_LEN")
+    nChunks = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_CHUNKS_NUMBER")
+    nDescriptors = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_DYNVAR_DESCRIPTORS_NUMBER")
+    nFileBuffers = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_FILE_PROCESS_BUFFERS_NUMBER")
+    fileBufferSize = Database.getSymbolValue("tcpipHttpNet","TCPIP_HTTP_NET_FILE_PROCESS_BUFFER_SIZE")
+    
+    heap_size = (nConnections * (352 + dataLen)) + (nChunks * 80) + (nDescriptors * 16) + (nFileBuffers * (fileBufferSize + 32)) 
+    return heap_size    
+    
+def tcpipHttpNetHeapUpdate(symbol, event): 
+    heap_size = tcpipHttpNetHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
+
+def destroyComponent(component):
+    Database.setSymbolValue("tcpipHttpNet", "TCPIP_STACK_USE_HTTP_NET_SERVER", False, 2)

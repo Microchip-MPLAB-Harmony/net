@@ -121,6 +121,19 @@ def instantiateComponent(tcpipUdpComponent):
     tcpipUdpExtPktProcess.setVisible(True)
     tcpipUdpExtPktProcess.setDescription("Allows External Processing of RX Packets")
     tcpipUdpExtPktProcess.setDefaultValue(False)
+
+    tcpipUdpheapdependency = [  "TCPIP_UDP_MAX_SOCKETS", "TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT", 
+                                "TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE", "TCPIP_UDP_USE_POOL_BUFFERS", 
+                                "TCPIP_UDP_SOCKET_POOL_BUFFERS", "TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE", 
+                                "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+             
+    # UDP Heap Size
+    tcpipUdpHeapSize = tcpipUdpComponent.createIntegerSymbol("TCPIP_UDP_HEAP_SIZE", None)
+    tcpipUdpHeapSize.setLabel("UDP Heap Size (bytes)") 
+    tcpipUdpHeapSize.setVisible(False)
+    tcpipUdpHeapSize.setDefaultValue(tcpipUdpHeapCalc())
+    tcpipUdpHeapSize.setReadOnly(True)
+    tcpipUdpHeapSize.setDependencies(tcpipUdpHeapUpdate, tcpipUdpheapdependency)   
     
     #Add to system_config.h
     tcpipUdpHeaderFtl = tcpipUdpComponent.createFileSymbol(None, None)
@@ -139,6 +152,29 @@ def instantiateComponent(tcpipUdpComponent):
     tcpipUdpSourceFile.setType("SOURCE")
     tcpipUdpSourceFile.setEnabled(True)
     #tcpipUdpSourceFile.setDependencies(tcpipUdpGenSourceFile, ["TCPIP_USE_UDP"])
+
+
+def tcpipUdpHeapCalc(): 
+    nSockets = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_MAX_SOCKETS")
+    nTxQueueLmt = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_SOCKET_DEFAULT_TX_QUEUE_LIMIT")
+    sktTxBuffSize = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_SOCKET_DEFAULT_TX_SIZE")
+    
+    poolBuffers = 0
+    poolBufferSize = 0
+    if(Database.getSymbolValue("tcpipUdp","TCPIP_UDP_USE_POOL_BUFFERS") == True):
+        poolBuffers = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_SOCKET_POOL_BUFFERS")
+        poolBufferSize = Database.getSymbolValue("tcpipUdp","TCPIP_UDP_SOCKET_POOL_BUFFER_SIZE") 
+        if(poolBufferSize < 256):
+            poolBufferSize = 256
+    
+    heap_size = nSockets * ( 4 + 96 + (nTxQueueLmt * sktTxBuffSize))+ (poolBuffers * poolBufferSize)
+    return heap_size    
+    
+def tcpipUdpHeapUpdate(symbol, event): 
+    heap_size = tcpipUdpHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
 
 def tcpipUdpMenuVisibleSingle(symbol, event):
     if (event["value"] == True):

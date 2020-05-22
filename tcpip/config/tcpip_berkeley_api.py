@@ -23,51 +23,71 @@
 
     
 def instantiateComponent(tcpipBerkeleyApiComponent):
-	print("TCPIP UDP Component")
-	configName = Variables.get("__CONFIGURATION_NAME")
-	
-	# Enable Berkeley API
-	tcpipBerkeleyApi = tcpipBerkeleyApiComponent.createBooleanSymbol("TCPIP_STACK_USE_BERKELEY_API", None)
-	tcpipBerkeleyApi.setLabel("Berkeley API")
-	tcpipBerkeleyApi.setVisible(False)
-	tcpipBerkeleyApi.setDescription("Enable Berkeley API")
-	tcpipBerkeleyApi.setDefaultValue(True)
+    print("TCPIP Berkeley Api Component")
+    configName = Variables.get("__CONFIGURATION_NAME")
+    
+    # Enable Berkeley API
+    tcpipBerkeleyApi = tcpipBerkeleyApiComponent.createBooleanSymbol("TCPIP_STACK_USE_BERKELEY_API", None)
+    tcpipBerkeleyApi.setLabel("Berkeley API")
+    tcpipBerkeleyApi.setVisible(False)
+    tcpipBerkeleyApi.setDescription("Enable Berkeley API")
+    tcpipBerkeleyApi.setDefaultValue(True)
 
-	# Maximum Number of Simultaneous Sockets Supported
-	tcpipBerkeleyBsdSktsMaxNum = tcpipBerkeleyApiComponent.createIntegerSymbol("TCPIP_BSD_MAX_BSD_SOCKETS", None)
-	tcpipBerkeleyBsdSktsMaxNum.setLabel("Max Number of Simultaneous Sockets Supported")
-	tcpipBerkeleyBsdSktsMaxNum.setVisible(True)
-	tcpipBerkeleyBsdSktsMaxNum.setDescription("Maximum Number of Simultaneous Sockets Supported")
-	tcpipBerkeleyBsdSktsMaxNum.setDefaultValue(4)
+    # Maximum Number of Simultaneous Sockets Supported
+    tcpipBerkeleyBsdSktsMaxNum = tcpipBerkeleyApiComponent.createIntegerSymbol("TCPIP_BSD_MAX_BSD_SOCKETS", None)
+    tcpipBerkeleyBsdSktsMaxNum.setLabel("Max Number of Simultaneous Sockets Supported")
+    tcpipBerkeleyBsdSktsMaxNum.setVisible(True)
+    tcpipBerkeleyBsdSktsMaxNum.setDescription("Maximum Number of Simultaneous Sockets Supported")
+    tcpipBerkeleyBsdSktsMaxNum.setDefaultValue(4)
 
+    tcpipBerkeleyheapdependency = ["TCPIP_BSD_MAX_BSD_SOCKETS", "tcpipStack.TCPIP_STACK_HEAP_CALC_MASK"]    
+        
+    # Berkeley Heap Size
+    tcpipBerkeleyHeapSize = tcpipBerkeleyApiComponent.createIntegerSymbol("TCPIP_BSD_HEAP_SIZE", None)
+    tcpipBerkeleyHeapSize.setLabel("BSD Heap Size (bytes)") 
+    tcpipBerkeleyHeapSize.setVisible(False)
+    tcpipBerkeleyHeapSize.setDefaultValue(tcpipBerkeleyHeapCalc())
+    tcpipBerkeleyHeapSize.setReadOnly(True)
+    tcpipBerkeleyHeapSize.setDependencies(tcpipBerkeleyHeapSizeHeapUpdate, tcpipBerkeleyheapdependency) 
 
-	# Add berkeley_api.c file
-	tcpipBerkeleyApiSourceFile = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
-	tcpipBerkeleyApiSourceFile.setSourcePath("tcpip/src/berkeley_api.c")
-	tcpipBerkeleyApiSourceFile.setOutputName("berkeley_api.c")
-	tcpipBerkeleyApiSourceFile.setOverwrite(True)
-	tcpipBerkeleyApiSourceFile.setDestPath("library/tcpip/src/")
-	tcpipBerkeleyApiSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
-	tcpipBerkeleyApiSourceFile.setType("SOURCE")
-	tcpipBerkeleyApiSourceFile.setEnabled(True)
+    # Add berkeley_api.c file
+    tcpipBerkeleyApiSourceFile = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
+    tcpipBerkeleyApiSourceFile.setSourcePath("tcpip/src/berkeley_api.c")
+    tcpipBerkeleyApiSourceFile.setOutputName("berkeley_api.c")
+    tcpipBerkeleyApiSourceFile.setOverwrite(True)
+    tcpipBerkeleyApiSourceFile.setDestPath("library/tcpip/src/")
+    tcpipBerkeleyApiSourceFile.setProjectPath("config/" + configName + "/library/tcpip/src/")
+    tcpipBerkeleyApiSourceFile.setType("SOURCE")
+    tcpipBerkeleyApiSourceFile.setEnabled(True)
 
-	tcpipBerkeleyApiHeaderFtl = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
-	tcpipBerkeleyApiHeaderFtl.setSourcePath("tcpip/config/berkeley_api.h.ftl")
-	tcpipBerkeleyApiHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
-	tcpipBerkeleyApiHeaderFtl.setMarkup(True)
-	tcpipBerkeleyApiHeaderFtl.setType("STRING")	
-	
+    tcpipBerkeleyApiHeaderFtl = tcpipBerkeleyApiComponent.createFileSymbol(None, None)
+    tcpipBerkeleyApiHeaderFtl.setSourcePath("tcpip/config/berkeley_api.h.ftl")
+    tcpipBerkeleyApiHeaderFtl.setOutputName("core.LIST_SYSTEM_CONFIG_H_MIDDLEWARE_CONFIGURATION")
+    tcpipBerkeleyApiHeaderFtl.setMarkup(True)
+    tcpipBerkeleyApiHeaderFtl.setType("STRING") 
+    
 def tcpipBerkeleyApiMenuVisible(symbol, event):
-	if (event["value"] == True):
-		print("BerkeleyApi Menu Visible.")		
-		symbol.setVisible(True)
-	else:
-		print("BerkeleyApi Menu Invisible.")
-		symbol.setVisible(False)	
-		
+    if (event["value"] == True):
+        print("BerkeleyApi Menu Visible.")      
+        symbol.setVisible(True)
+    else:
+        print("BerkeleyApi Menu Invisible.")
+        symbol.setVisible(False)    
+        
 def tcpipBerkeleyApiGenSourceFile(sourceFile, event):
-	sourceFile.setEnabled(event["value"])
-	
+    sourceFile.setEnabled(event["value"])
+    
+
+def tcpipBerkeleyHeapCalc(): 
+    maxNumSkt = Database.getSymbolValue("tcpipBerkeleyApi","TCPIP_BSD_MAX_BSD_SOCKETS")
+    heap_size = maxNumSkt * 64
+    return heap_size    
+    
+def tcpipBerkeleyHeapSizeHeapUpdate(symbol, event): 
+    heap_size = tcpipBerkeleyHeapCalc()
+    symbol.setValue(heap_size)
+    if(event["id"] == "TCPIP_STACK_HEAP_CALC_MASK"):
+        symbol.setVisible(event["value"])
 
 def destroyComponent(component):
-	Database.setSymbolValue("tcpipBerkeleyApi", "TCPIP_STACK_USE_BERKELEY_API", False, 2)
+    Database.setSymbolValue("tcpipBerkeleyApi", "TCPIP_STACK_USE_BERKELEY_API", False, 2)
