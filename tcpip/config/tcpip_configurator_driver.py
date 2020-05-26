@@ -244,11 +244,9 @@ def enableTcpipAutoConfigDrv(enable):
             res = Database.activateComponents(["tcpip_basic_config"], "BASIC CONFIGURATION", False)         
             
         if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
-            
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True, 2)             
-
+            setVal("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True)
+        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):            
+            setVal("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True)
 #################Business Logic- Driver Layer ######################################### 
 def tcpipAutoConfigGMACEnable(symbol, event):
     tcpipAutoConfigDriverGroup = Database.findGroup("DRIVER LAYER")
@@ -438,6 +436,7 @@ def tcpipAutoConfigWINCEnable(symbol, event):
     enableTcpipAutoConfigDrv(True)
     if (event["value"] == True):
         res = Database.activateComponents(["drvWifiWinc"],"DRIVER LAYER")   
+        #Todo: change to Database.sendMessage(); but need handleMessage() in drvWifiWinc
         Database.setSymbolValue("drvWifiWinc", "DRV_WIFI_WINC_DRIVER_MODE", "Ethernet Mode")
         Database.setSymbolValue("drvWifiWinc", "DRV_WIFI_WINC_USE_TCPIP_STACK", True)
         tcpipAutoConfigDriverGroup.setAttachmentVisible("drvWifiWinc", "libdrvWincMac")
@@ -446,3 +445,24 @@ def tcpipAutoConfigWINCEnable(symbol, event):
         res = Database.connectDependencies(autoConnectTableWINC)        
     else:
         res = Database.deactivateComponents(["drvWifiWinc"])            
+
+#Set symbols of other components
+def setVal(component, symbol, value):
+    triggerDict = {"Component":component,"Id":symbol, "Value":value}
+    if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
+        print "Set Symbol Failure"
+        return False
+    else:
+        return True
+
+#Handle messages from other components
+def handleMessage(messageID, args):
+    retDict= {}
+    if (messageID == "SET_SYMBOL"):
+        print "handleMessage: Set Symbol"
+        retDict= {"Return": "Success"}
+        Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    else:
+        retDict= {"Return": "UnImplemented Command"}
+    return retDict
+    

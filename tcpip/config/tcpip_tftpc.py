@@ -177,6 +177,27 @@ def onAttachmentConnected(source, target):
 def onAttachmentDisconnected(source, target):
     if (source["id"] == "Tftpc_MAC_Dependency"):    
         source["component"].clearSymbolValue("TCPIP_TFTPC_DEFAULT_IF")
-    
+
+#Set symbols of other components
+def setVal(component, symbol, value):
+    triggerDict = {"Component":component,"Id":symbol, "Value":value}
+    if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
+        print "Set Symbol Failure"
+        return False
+    else:
+        return True
+
+#Handle messages from other components
+def handleMessage(messageID, args):
+    retDict= {}
+    if (messageID == "SET_SYMBOL"):
+        print "handleMessage: Set Symbol"
+        retDict= {"Return": "Success"}
+        Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    else:
+        retDict= {"Return": "UnImplemented Command"}
+    return retDict
+      
+      
 def destroyComponent(component):
     Database.setSymbolValue("tcpipTftpc", "TCPIP_USE_TFTPC_MODULE", False, 2)
