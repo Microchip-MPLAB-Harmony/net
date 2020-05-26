@@ -174,5 +174,27 @@ def tcpipAutoConfigTcpipCmdEnable(symbol, event):
         res = Database.connectDependencies(autoConnectTableCmd)
         series = ATDF.getNode("/avr-tools-device-file/devices/device").getAttribute("series")
         if(series == "SAME54") or (series == "SAME70") or (series == "SAMV71")or (series == "SAMA5D2"):
+            #Todo: change to Database.sendMessage(); but need handleMessage() in sys_command
             Database.setSymbolValue("sys_command", "SYS_COMMAND_PRINT_BUFFER_SIZE", 2560)
         
+
+#Set symbols of other components
+def setVal(component, symbol, value):
+    triggerDict = {"Component":component,"Id":symbol, "Value":value}
+    if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
+        print "Set Symbol Failure"
+        return False
+    else:
+        return True
+
+#Handle messages from other components
+def handleMessage(messageID, args):
+    retDict= {}
+    if (messageID == "SET_SYMBOL"):
+        print "handleMessage: Set Symbol"
+        retDict= {"Return": "Success"}
+        Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    else:
+        retDict= {"Return": "UnImplemented Command"}
+    return retDict
+    

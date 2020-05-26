@@ -308,3 +308,23 @@ def genRtosTask(symbol, event):
     
 def drvMiimGenSourceFile(sourceFile, event):
     sourceFile.setEnabled(event["value"])
+
+#Set symbols of other components
+def setVal(component, symbol, value):
+    triggerDict = {"Component":component,"Id":symbol, "Value":value}
+    if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
+        print "Set Symbol Failure"
+        return False
+    else:
+        return True
+
+#Handle messages from other components
+def handleMessage(messageID, args):
+    retDict= {}
+    if (messageID == "SET_SYMBOL"):
+        print "handleMessage: Set Symbol"
+        retDict= {"Return": "Success"}
+        Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    else:
+        retDict= {"Return": "UnImplemented Command"}
+    return retDict

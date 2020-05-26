@@ -255,10 +255,10 @@ def enableTcpipAutoConfigApps(enable):
             res = Database.activateComponents(["tcpip_basic_config"], "BASIC CONFIGURATION", False)         
             
         if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True, 2)
+            setVal("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_STACK", True)
             
-        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True, 2)         
+        if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG") != True): 
+            setVal("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_NETCONFIG", True)            
 
 #################Business Logic- Application Layer #########################################        
 def tcpipAutoConfigANNOUNCEEnable(symbol, event):   
@@ -267,9 +267,9 @@ def tcpipAutoConfigANNOUNCEEnable(symbol, event):
     if (event["value"] == True):
         res = Database.activateComponents(["tcpipAnnounce"],"APPLICATION LAYER", False)     
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)   
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipAnnounce", "libtcpipAnnounce")
 
     else:
@@ -286,9 +286,9 @@ def tcpipAutoConfigBerkeleyAPIEnable(symbol, event):
             res = Database.activateComponents(["netPres"])  
         
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
         if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
             Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
     else:
@@ -301,9 +301,9 @@ def tcpipAutoConfigDDNSEnable(symbol, event):
         res = Database.activateComponents(["tcpipDdns"],"APPLICATION LAYER", False)     
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDdns", "libtcpipDdns")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipDdns"])
     
@@ -314,9 +314,9 @@ def tcpipAutoConfigDHCPCLIENTEnable(symbol, event):
         res = Database.activateComponents(["tcpipDhcp"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDhcp", "libtcpipDhcp")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipDhcp"])
     
@@ -327,9 +327,9 @@ def tcpipAutoConfigDHCPSERVEREnable(symbol, event):
         res = Database.activateComponents(["tcpipDhcps"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDhcps", "libtcpipDhcps")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipDhcps"])
     
@@ -340,7 +340,7 @@ def tcpipAutoConfigDNSCLIENTEnable(symbol, event):
         res = Database.activateComponents(["tcpipDns"],"APPLICATION LAYER", False)  
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDns", "libtcpipDns")
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipDns"])
     
@@ -351,7 +351,7 @@ def tcpipAutoConfigDNSSERVEREnable(symbol, event):
         res = Database.activateComponents(["tcpipDnss"],"APPLICATION LAYER", False)
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipDnss", "libtcpipDnss")
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipDnss"])
     
@@ -367,9 +367,9 @@ def tcpipAutoConfigFTPSERVEREnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])            
         
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
         if(Database.getComponentByID("tcpipFtps") != None):
             res = Database.deactivateComponents(["tcpipFtps"])
@@ -389,7 +389,7 @@ def tcpipAutoConfigFTPCLIENTEnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])
             
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
         if(Database.getComponentByID("tcpipFtpc") != None):
             res = Database.deactivateComponents(["tcpipFtpc"])
@@ -409,7 +409,7 @@ def tcpipAutoConfigHTTPNETSERVEREnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])
                 
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
         res = Database.deactivateComponents(["tcpipHttpNet"])
     
@@ -426,7 +426,7 @@ def tcpipAutoConfigHTTPSERVEREnable(symbol, event):
         
         res = Database.activateComponents(["lib_crypto"])
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
     else:
         res = Database.deactivateComponents(["tcpipHttp"])
     
@@ -437,9 +437,9 @@ def tcpipAutoConfigIPERFEnable(symbol, event):
         res = Database.activateComponents(["tcpipIperf"],"APPLICATION LAYER", False)    
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipIperf", "libtcpipIperf")
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipIperf"])
     
@@ -450,9 +450,9 @@ def tcpipAutoConfigNBNSEnable(symbol, event):
         res = Database.activateComponents(["tcpipNbns"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipNbns", "libtcpipNbns")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
-        if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)       
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
+        if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True): 
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)           
     else:
         res = Database.deactivateComponents(["tcpipNbns"])
     
@@ -463,9 +463,9 @@ def tcpipAutoConfigNBNSEnable(symbol, event):
         # res = Database.activateComponents(["tcpipReboot"],"APPLICATION LAYER", False)   
         # tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipReboot", "libtcpipReboot")
         # if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            # Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            # setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         # if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            # Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            # setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     # else:
         # res = Database.deactivateComponents(["tcpipReboot"])
     
@@ -485,7 +485,7 @@ def tcpipAutoConfigSMTPCLIENTEnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])
         
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_TCP", True)
         if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT") != True):
             Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_DNS_CLIENT", True, 2)
             
@@ -505,7 +505,7 @@ def tcpipAutoConfigSNMPEnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])
         
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipSnmp"])
 
@@ -517,6 +517,7 @@ def tcpipAutoConfigSNMPV3Enable(symbol, event):
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipSnmpv3", "libtcpipSnmpv3")
         if(Database.getSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_SNMP") != True):
             Database.setSymbolValue("tcpip_apps_config", "TCPIP_AUTOCONFIG_ENABLE_SNMP", True, 2)
+            
     else:
         res = Database.deactivateComponents(["tcpipSnmpv3"])
 
@@ -543,7 +544,7 @@ def tcpipAutoConfigTELNETEnable(symbol, event):
             res = Database.activateComponents(["netPres"])
             
         if(Database.getSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD") != True):
-            Database.setSymbolValue("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD", True, 2)
+            setVal("tcpip_basic_config", "TCPIP_AUTOCONFIG_ENABLE_TCPIPCMD", True)
     else:
         res = Database.deactivateComponents(["tcpipTelnet"])
     
@@ -559,9 +560,9 @@ def tcpipAutoConfigTFTPCLIENTEnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])
          
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipTftpc"])
     
@@ -577,9 +578,9 @@ def tcpipAutoConfigTFTPSERVEREnable(symbol, event):
             res = Database.activateComponents(["sys_fs"])
         
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipTftps"])
         
@@ -590,10 +591,30 @@ def tcpipAutoConfigZEROCONFEnable(symbol, event):
         res = Database.activateComponents(["tcpipZeroConf"],"APPLICATION LAYER", False) 
         tcpipAutoConfigAppsGroup.setAttachmentVisible("tcpipZeroConf", "libtcpipZeroConf")
         if(Database.getSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4") != True):
-            Database.setSymbolValue("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True, 2)
+            setVal("tcpip_network_config", "TCPIP_AUTOCONFIG_ENABLE_IPV4", True)
         if(Database.getSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP") != True):
-            Database.setSymbolValue("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True, 2)
+            setVal("tcpip_transport_config", "TCPIP_AUTOCONFIG_ENABLE_UDP", True)
     else:
         res = Database.deactivateComponents(["tcpipZeroConf"])
 
 
+#Set symbols of other components
+def setVal(component, symbol, value):
+    triggerDict = {"Component":component,"Id":symbol, "Value":value}
+    if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
+        print "Set Symbol Failure"
+        return False
+    else:
+        return True
+
+#Handle messages from other components
+def handleMessage(messageID, args):
+    retDict= {}
+    if (messageID == "SET_SYMBOL"):
+        print "handleMessage: Set Symbol"
+        retDict= {"Return": "Success"}
+        Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    else:
+        retDict= {"Return": "UnImplemented Command"}
+    return retDict
+    

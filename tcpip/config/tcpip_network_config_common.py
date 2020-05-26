@@ -34,11 +34,35 @@ def instantiateComponent(tcpipNetConfigComponent):
     tcpipNetConfigInterfaceCount.setLabel("Number of Instances")
     tcpipNetConfigInterfaceCount.setDefaultValue(1)
     tcpipNetConfigInterfaceCount.setVisible(True)
+    tcpipNetConfigInterfaceCount.setReadOnly(True)
 
+#Handle messages from other components
 def handleMessage(messageID, args):
+    retDict= {}
     if (messageID == "NETCONFIG_INTERFACE_COUNTER_INC"):
         netconfif_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
         Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT", netconfif_count + 1)
+        retDict= {"Return": "Success"}
     elif (messageID == "NETCONFIG_INTERFACE_COUNTER_DEC"):
         netconfif_count = Database.getSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT")
         Database.setSymbolValue("tcpipNetConfig", "TCPIP_STACK_NETWORK_INTERAFCE_COUNT", netconfif_count - 1)
+        retDict= {"Return": "Success"}
+    elif (messageID == "SET_SYMBOL"):
+        print "handleMessage: Set Symbol"
+        retDict= {"Return": "Success"}
+        Database.setSymbolValue(args["Component"], args["Id"], args["Value"])
+    else:
+        retDict= {"Return": "UnImplemented Command"}
+        
+    return retDict
+
+#Set symbols of other components
+def setVal(component, symbol, value):
+    triggerDict = {"Component":component,"Id":symbol, "Value":value}
+    if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
+        print "Set Symbol Failure"
+        return False
+    else:
+        return True
+
+    
