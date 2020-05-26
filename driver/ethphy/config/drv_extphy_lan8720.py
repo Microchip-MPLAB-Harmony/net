@@ -227,7 +227,7 @@ def drvExtPhyLan8720MenuVisibleSingle(symbol, event):
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}
     if(Database.sendMessage(component, "SET_SYMBOL", triggerDict) == None):
-        print "Set Symbol Failure"
+        print "Set Symbol Failure" + component + ":" + symbol + ":" + str(value)
         return False
     else:
         return True
