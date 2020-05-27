@@ -98,82 +98,84 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttLibSktDbgEn.setDefaultValue(True)
     wolfMqttLibSktDbgEn.setDependencies(wolfMqttLibMenuInvisible, ["WOLFMQTT_NO_STDIO"])
     
-    # wolfMQTT Net Glue Configurations
-    wolfMqttNetGlueMenu = wolfmqttComponent.createMenuSymbol(None, None) 
-    wolfMqttNetGlueMenu.setLabel("wolfMQTT Net Glue Configurations")
-    wolfMqttNetGlueMenu.setVisible(True)
-    wolfMqttNetGlueMenu.setDescription("wolfMQTT Net Glue Configurations")
-    
+    # Use MQTT Net Glue module
+    wolfMqttNetGlue = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE", None)
+    wolfMqttNetGlue.setLabel("Use the wolfMQTT NET Glue Module")
+    wolfMqttNetGlue.setVisible(True)
+    wolfMqttNetGlue.setDescription("Enable the wolfMQTT NET Glue Code")
+    wolfMqttNetGlue.setDefaultValue(True)
+
     # Enable TLS
-    wolfMqttNetForceTls = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_FORCE_TLS", wolfMqttNetGlueMenu)
+    wolfMqttNetForceTls = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_FORCE_TLS", wolfMqttNetGlue)
     wolfMqttNetForceTls.setLabel("MQTT Enable TLS")
     wolfMqttNetForceTls.setVisible(True)
     wolfMqttNetForceTls.setDescription("MQTT Enable TLS")
     wolfMqttNetForceTls.setDefaultValue(False)
-    wolfMqttNetForceTls.setDependencies(wolfMqttNetForceTlsEnable, ["WMQTT_NET_GLUE_FORCE_TLS"])
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
 
     # Enable IPv6
-    wolfMqttNetIPv6En = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_IPV6", wolfMqttNetGlueMenu)
+    wolfMqttNetIPv6En = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_IPV6", wolfMqttNetGlue)
     wolfMqttNetIPv6En.setLabel("MQTT Enable IPv6")
     wolfMqttNetIPv6En.setVisible(True)
     wolfMqttNetIPv6En.setDescription("MQTT Enable IPv6")
     wolfMqttNetIPv6En.setDefaultValue(False)
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
     
     # Max Broker name
-    wolfMqttNetMaxBrkrName = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_GLUE_MAX_BROKER_NAME", wolfMqttNetGlueMenu)
+    wolfMqttNetMaxBrkrName = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_GLUE_MAX_BROKER_NAME", wolfMqttNetGlue)
     wolfMqttNetMaxBrkrName.setLabel("MQTT max. broker name") 
     wolfMqttNetMaxBrkrName.setVisible(True)
     wolfMqttNetMaxBrkrName.setDescription("MQTT max. broker name")
     wolfMqttNetMaxBrkrName.setDefaultValue(64)  
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
 
     # Debug enable
-    wolfMqttNetDbgEn = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_DEBUG_ENABLE", wolfMqttNetGlueMenu)
+    wolfMqttNetDbgEn = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_DEBUG_ENABLE", wolfMqttNetGlue)
     wolfMqttNetDbgEn.setLabel("MQTT Debug Enable")
     wolfMqttNetDbgEn.setVisible(True)
     wolfMqttNetDbgEn.setDescription("MQTT Debug Enable")
     wolfMqttNetDbgEn.setDefaultValue(False)
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
 
     # Enable Error Strings
-    wolfMqttNetErrStrngEn = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_ERROR_STRINGS", wolfMqttNetGlueMenu)
+    wolfMqttNetErrStrngEn = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_ERROR_STRINGS", wolfMqttNetGlue)
     wolfMqttNetErrStrngEn.setLabel("MQTT Error String Enable")
     wolfMqttNetErrStrngEn.setVisible(True)
     wolfMqttNetErrStrngEn.setDescription("MQTT Error Strings Enable")
     wolfMqttNetErrStrngEn.setDefaultValue(True)
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
     
     # Memory allocation function
-    wolfMqttNetGlueMalloc = wolfmqttComponent.createStringSymbol("WMQTT_NET_GLUE_MALLOC", wolfMqttNetGlueMenu)
+    wolfMqttNetGlueMalloc = wolfmqttComponent.createStringSymbol("WMQTT_NET_GLUE_MALLOC", wolfMqttNetGlue)
     wolfMqttNetGlueMalloc.setLabel("MQTT Memory allocation function")
     wolfMqttNetGlueMalloc.setVisible(True)
     wolfMqttNetGlueMalloc.setDescription("Memory allocation function")
     wolfMqttNetGlueMalloc.setDefaultValue("malloc")
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
         
     # Memory free function
-    wolfMqttNetGlueFree = wolfmqttComponent.createStringSymbol("WMQTT_NET_GLUE_FREE", wolfMqttNetGlueMenu)
+    wolfMqttNetGlueFree = wolfmqttComponent.createStringSymbol("WMQTT_NET_GLUE_FREE", wolfMqttNetGlue)
     wolfMqttNetGlueFree.setLabel("MQTT Memory free function")
     wolfMqttNetGlueFree.setVisible(True)
     wolfMqttNetGlueFree.setDescription("Memory de-allocation function")
     wolfMqttNetGlueFree.setDefaultValue("free")
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
     
     # Tx Buffer size
-    wolfMqttNetSktTxBuff = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_SKT_TX_BUFF", wolfMqttNetGlueMenu)
+    wolfMqttNetSktTxBuff = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_SKT_TX_BUFF", wolfMqttNetGlue)
     wolfMqttNetSktTxBuff.setLabel("MQTT Tx Buffer Size") 
     wolfMqttNetSktTxBuff.setVisible(True)
     wolfMqttNetSktTxBuff.setDescription("MQTT Tx Buffer Size")
     wolfMqttNetSktTxBuff.setDefaultValue(2048)  
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
     
     # Rx Buffer size
-    wolfMqttNetSktRxBuff = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_SKT_RX_BUFF", wolfMqttNetGlueMenu)
+    wolfMqttNetSktRxBuff = wolfmqttComponent.createIntegerSymbol("WMQTT_NET_SKT_RX_BUFF", wolfMqttNetGlue)
     wolfMqttNetSktRxBuff.setLabel("MQTT Rx Buffer Size") 
     wolfMqttNetSktRxBuff.setVisible(True)
     wolfMqttNetSktRxBuff.setDescription("MQTT Rx Buffer Size")
     wolfMqttNetSktRxBuff.setDefaultValue(2048)
-    
-    # Generate Custom MQTT Application Template
-    wolfMqttCstmAppTmplt = wolfmqttComponent.createBooleanSymbol("WMQTT_CSTM_APP_TEMPLATE", None)
-    wolfMqttCstmAppTmplt.setLabel("Generate Custom MQTT Application Template")
-    wolfMqttCstmAppTmplt.setVisible(True)
-    wolfMqttCstmAppTmplt.setDescription("Generate MQTT Custom Application Template")
-    wolfMqttCstmAppTmplt.setDefaultValue(False)
+    wolfMqttNetForceTls.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
     
     #Add to configuration.h
     wolfMqttNetConfigFtl = wolfmqttComponent.createFileSymbol(None, None)
@@ -206,7 +208,8 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttNetGlueHeaderFile.setProjectPath("config/" + configName + "/third_party_adapter/wolfMQTT/src/")
     wolfMqttNetGlueHeaderFile.setType("HEADER")
     wolfMqttNetGlueHeaderFile.setOverwrite(True)
-    wolfMqttNetGlueHeaderFile.setEnabled(True)
+    wolfMqttNetGlueHeaderFile.setEnabled(False)
+    wolfMqttNetGlueHeaderFile.setDependencies(wolfMqttNetGlueEnabled, ["WMQTT_NET_GLUE"])
 
     # third_party_adapter/wolfMQTT/src/mqtt_net_glue.c to config/<configName>/third_party_adapter/wolfMQTT/src/mqtt_net_glue.c
     wolfMqttNetGlueSourceFile = wolfmqttComponent.createFileSymbol(None, None)
@@ -216,7 +219,8 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttNetGlueSourceFile.setDestPath("third_party_adapter/wolfMQTT/src/")
     wolfMqttNetGlueSourceFile.setProjectPath("config/" + configName + "/third_party_adapter/wolfMQTT/src/")
     wolfMqttNetGlueSourceFile.setType("SOURCE")
-    wolfMqttNetGlueSourceFile.setEnabled(True)
+    wolfMqttNetGlueSourceFile.setEnabled(False)
+    wolfMqttNetGlueSourceFile.setDependencies(wolfMqttNetGlueEnabled, ["WMQTT_NET_GLUE"])
 
     # wolfMQTT/src/mqtt_client.c to third_party/wolfMQTT/src/mqtt_client.c
     wolfMqttClientSourceFile = wolfmqttComponent.createFileSymbol(None, None)
@@ -320,6 +324,14 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttConfigHeaderFile.setOverwrite(True)
     wolfMqttConfigHeaderFile.setEnabled(True)   
         
+    # Generate Custom MQTT Application Template
+    wolfMqttCstmAppTmplt = wolfmqttComponent.createBooleanSymbol("WMQTT_CSTM_APP_TEMPLATE", wolfMqttNetGlue)
+    wolfMqttCstmAppTmplt.setLabel("Generate Custom MQTT Application Template")
+    wolfMqttCstmAppTmplt.setVisible(True)
+    wolfMqttCstmAppTmplt.setDescription("Generate MQTT Custom Application Template")
+    wolfMqttCstmAppTmplt.setDefaultValue(False)
+    wolfMqttCstmAppTmplt.setDependencies(wolfMqttNetGlueVisible, ["WMQTT_NET_GLUE"])
+    
     wolfMqttCstmCmdAppSrcFile = wolfmqttComponent.createFileSymbol(None, None)
     wolfMqttCstmCmdAppSrcFile.setSourcePath("tcpip/config/custom_app/wolfmqtt_app_template/app_mqtt_commands.c")  
     wolfMqttCstmCmdAppSrcFile.setProjectPath("")
@@ -349,8 +361,35 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttCstmTaskAppHeaderFile.setOverwrite(True)
     wolfMqttCstmTaskAppHeaderFile.setEnabled(False)   
     wolfMqttCstmTaskAppHeaderFile.setDependencies(wolfMqttCstmApp, ["WMQTT_CSTM_APP_TEMPLATE"]) 
+        
+    wolfMqttDummyTaskAppSrcFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttDummyTaskAppSrcFile.setSourcePath("tcpip/config/custom_app/wolfmqtt_app_template/app_mqtt_task_dummy.c")  
+    wolfMqttDummyTaskAppSrcFile.setProjectPath("")
+    wolfMqttDummyTaskAppSrcFile.setDestPath("../../")
+    wolfMqttDummyTaskAppSrcFile.setOutputName("app_mqtt_task.c")
+    wolfMqttDummyTaskAppSrcFile.setType("SOURCE")
+    wolfMqttDummyTaskAppSrcFile.setOverwrite(True)
+    wolfMqttDummyTaskAppSrcFile.setEnabled(False)   
+    wolfMqttDummyTaskAppSrcFile.setDependencies(wolfMqttDummyApp, ["WMQTT_CSTM_APP_TEMPLATE"])
+    
+    wolfMqttDummyTaskAppHeaderFile = wolfmqttComponent.createFileSymbol(None, None)
+    wolfMqttDummyTaskAppHeaderFile.setSourcePath("tcpip/config/custom_app/wolfmqtt_app_template/app_mqtt_task_dummy.h")  
+    wolfMqttDummyTaskAppHeaderFile.setProjectPath("")
+    wolfMqttDummyTaskAppHeaderFile.setDestPath("../../")
+    wolfMqttDummyTaskAppHeaderFile.setOutputName("app_mqtt_task.h")
+    wolfMqttDummyTaskAppHeaderFile.setType("HEADER")
+    wolfMqttDummyTaskAppHeaderFile.setOverwrite(True)
+    wolfMqttDummyTaskAppHeaderFile.setEnabled(False)   
+    wolfMqttDummyTaskAppHeaderFile.setDependencies(wolfMqttDummyApp, ["WMQTT_CSTM_APP_TEMPLATE"])
+    
 def wolfMqttLibMenuVisible(symbol, event): 
     symbol.setVisible(event["value"])
+    
+def wolfMqttNetGlueVisible(symbol, event): 
+    symbol.setVisible(event["value"])
+
+def wolfMqttNetGlueEnabled(symbol, event): 
+    symbol.setEnabled(event["value"]) 
     
 def wolfMqttLibMenuInvisible(symbol, event): 
     if (event["value"] == True):
@@ -367,6 +406,12 @@ def wolfMqttCstmApp(symbol, event):
     symbol.setEnabled(event["value"]) 
     
 
+def wolfMqttDummyApp(symbol, event):
+    if (event["value"] == True):
+        symbol.setEnabled(False) 
+    else:
+        symbol.setEnabled(True) 
+    
 #Set symbols of other components
 def setVal(component, symbol, value):
     triggerDict = {"Component":component,"Id":symbol, "Value":value}
