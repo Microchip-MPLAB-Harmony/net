@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <Package name="net">
     <Dependencies>
-        <Dependency name="core" version="v3.6.1"/>
-        <Dependency name="csp" version="v3.6.1"/>
-        <Dependency name="bsp" version="v3.6.1"/>
-        <Dependency name="dev_packs" version="v3.6.1"/>
-        <Dependency name="crypto" version="v3.5.0"/>
+        <Dependency name="core" version="v3.7.1"/>
+        <Dependency name="csp" version="v3.7.1"/>
+        <Dependency name="bsp" version="v3.7.0"/>
+        <Dependency name="dev_packs" version="v3.7.0"/>
+        <Dependency name="crypto" version="v3.5.1"/>
         <Dependency name="wolfssl" version="v4.3.0"/>
         <Dependency name="wolfMQTT" version="v1.2.0"/>
-        <Dependency name="CMSIS-FreeRTOS" version="v10.2.0"/>
+        <Dependency name="CMSIS-FreeRTOS" version="v10.3.0"/>
     </Dependencies>
 </Package>
