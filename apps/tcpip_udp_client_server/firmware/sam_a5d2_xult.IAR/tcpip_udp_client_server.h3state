@@ -1,0 +1,28 @@
+{
+    "linker": {
+        "script": "..\\src\\config\\sam_a5d2_xult\\ddr.icf"
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": []
+    }, 
+    "general": {
+        "name": "sam_a5d2_xult", 
+        "device": "ATSAMA5D27"
+    }, 
+    "compiler": {
+        "macros": [
+            "__FPU_PRESENT=1"
+        ], 
+        "includes": [
+            "..\\src\\config\\sam_a5d2_xult\\library", 
+            "..\\src\\config\\sam_a5d2_xult\\library\\tcpip\\src", 
+            "..\\src\\config\\sam_a5d2_xult\\library\\tcpip\\src\\common", 
+            "..\\src", 
+            "..\\src\\config\\sam_a5d2_xult", 
+            "..\\src\\packs\\ATSAMA5D27_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core_A\\Include", 
+            "..\\src\\packs\\CMSIS"
+        ]
+    }
+}

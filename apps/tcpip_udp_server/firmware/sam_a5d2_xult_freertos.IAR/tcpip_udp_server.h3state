@@ -1,0 +1,35 @@
+{
+    "linker": {
+        "script": "..\\src\\config\\sam_a5d2_xult_freertos\\ddr.icf"
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": [
+            "..\\src\\third_party\\rtos\\FreeRTOS\\Source\\portable\\IAR\\SAM\\CA5", 
+            "..\\src\\config\\sam_a5d2_xult_freertos", 
+            "."
+        ]
+    }, 
+    "general": {
+        "name": "sam_a5d2_xult_freertos", 
+        "device": "ATSAMA5D27"
+    }, 
+    "compiler": {
+        "macros": [
+            "__FPU_PRESENT=1"
+        ], 
+        "includes": [
+            "..\\src\\config\\sam_a5d2_xult_freertos\\library", 
+            "..\\src\\config\\sam_a5d2_xult_freertos\\library\\tcpip\\src", 
+            "..\\src\\config\\sam_a5d2_xult_freertos\\library\\tcpip\\src\\common", 
+            "..\\src", 
+            "..\\src\\config\\sam_a5d2_xult_freertos", 
+            "..\\src\\packs\\ATSAMA5D27_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core_A\\Include", 
+            "..\\src\\packs\\CMSIS", 
+            "..\\src\\third_party\\rtos\\FreeRTOS\\Source\\portable\\IAR\\SAM\\CA5", 
+            "..\\src\\third_party\\rtos\\FreeRTOS\\Source\\include", 
+            "."
+        ]
+    }
+}

@@ -56,6 +56,7 @@ SPI_OBJECT spi1Obj;
 #define SPI1_CON_MODE_32_MODE_16            (0 << _SPI1CON_MODE16_POSITION)
 #define SPI1_CON_ENHBUF                     (1 << _SPI1CON_ENHBUF_POSITION)
 #define SPI1_CON_MSSEN                      (0 << _SPI1CON_MSSEN_POSITION)
+#define SPI1_CON_SMP                        (0 << _SPI1CON_SMP_POSITION)
 
 void SPI1_Initialize ( void )
 {
@@ -92,7 +93,7 @@ void SPI1_Initialize ( void )
     ENHBUF = 1
     MSSEN = 0
     */
-    SPI1CONSET = (SPI1_CON_MSSEN | SPI1_CON_ENHBUF | SPI1_CON_MODE_32_MODE_16 | SPI1_CON_CKE | SPI1_CON_CKP | SPI1_CON_MSTEN);
+    SPI1CONSET = (SPI1_CON_MSSEN | SPI1_CON_ENHBUF | SPI1_CON_MODE_32_MODE_16 | SPI1_CON_CKE | SPI1_CON_CKP | SPI1_CON_MSTEN | SPI1_CON_SMP);
 
     /* Enable transmit interrupt when transmit buffer is completely empty (STXISEL = '01') */
     /* Enable receive interrupt when the receive buffer is not empty (SRXISEL = '01') */

@@ -57,8 +57,8 @@
 // *****************************************************************************
 
 
-/* SERCOM7 I2C baud value for 400 Khz baud rate */
-#define SERCOM7_I2CM_BAUD_VALUE			(139U)
+/* SERCOM7 I2C baud value */
+#define SERCOM7_I2CM_BAUD_VALUE         (0x8BU)
 
 #define RIGHT_ALIGNED (8U)
 
@@ -90,12 +90,12 @@ static SERCOM_I2C_OBJ sercom7I2CObj;
 
 void SERCOM7_I2C_Initialize(void)
 {
-	/* Reset the module */
+    /* Reset the module */
     SERCOM7_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_SWRST_Msk ;
-	
-	/* Wait for synchronization */
+
+    /* Wait for synchronization */
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
-	
+
     /* Enable smart mode enable */
     SERCOM7_REGS->I2CM.SERCOM_CTRLB = SERCOM_I2CM_CTRLB_SMEN_Msk;
 
@@ -103,7 +103,7 @@ void SERCOM7_I2C_Initialize(void)
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
 
     /* Baud rate - Master Baud Rate*/
-    SERCOM7_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(SERCOM7_I2CM_BAUD_VALUE);
+    SERCOM7_REGS->I2CM.SERCOM_BAUD = (SERCOM_I2CM_BAUD_BAUDLOW(SERCOM7_I2CM_BAUD_VALUE >> 8) | SERCOM_I2CM_BAUD_BAUD(SERCOM7_I2CM_BAUD_VALUE));
 
     /* Set Operation Mode (Master), SDA Hold time, run in stand by and i2c master enable */
     SERCOM7_REGS->I2CM.SERCOM_CTRLA = SERCOM_I2CM_CTRLA_MODE_I2C_MASTER | SERCOM_I2CM_CTRLA_SDAHOLD_75NS | SERCOM_I2CM_CTRLA_SPEED_STANDARD_AND_FAST_MODE | SERCOM_I2CM_CTRLA_ENABLE_Msk ;
@@ -126,57 +126,93 @@ void SERCOM7_I2C_Initialize(void)
 }
 
 bool SERCOM7_I2C_TransferSetup(SERCOM_I2C_TRANSFER_SETUP* setup, uint32_t srcClkFreq )
-{       
-    uint32_t baudValue;    
+{
+    uint32_t baudValue;
     uint32_t i2cClkSpeed;
-    
+    uint32_t i2cSpeedMode = 0;
+
     if (setup == NULL)
     {
         return false;
-    }        
-        
+    }
+
     i2cClkSpeed = setup->clkSpeed;
-    
+
     if( srcClkFreq == 0)
     {
         srcClkFreq = 120000000UL;
-    }    
-    
+    }
+
     /* Reference clock frequency must be atleast two times the baud rate */
     if (srcClkFreq < (2*i2cClkSpeed))
     {
         return false;
     }
-    
-    baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (100/1000000000.0)) + 10))/2.0);
-    
-    /* BAUD.BAUD must be non-zero */
-    if (baudValue == 0)
+
+    baudValue = (uint32_t) (((((float)srcClkFreq)/i2cClkSpeed) - ((((float)srcClkFreq) * (100/1000000000.0)) + 10)));
+
+    if (i2cClkSpeed <= 400000)
     {
-        return false;
+        /* For I2C clock speed upto 400 KHz, the value of BAUD<7:0> determines both SCL_L and SCL_H with SCL_L = SCL_H */
+        if (baudValue > (0xFF * 2))
+        {
+            /* Set baud rate to the minimum possible value */
+            baudValue = 0xFF;
+        }
+        else if (baudValue <= 1)
+        {
+            /* Baud value cannot be 0. Set baud rate to maximum possible value */
+            baudValue = 1;
+        }
+        else
+        {
+            baudValue /= 2;
+        }
     }
-    
+    else
+    {
+        /* To maintain the ratio of SCL_L:SCL_H to 2:1, the max value of BAUD_LOW<15:8>:BAUD<7:0> can be 0xFF:0x7F. Hence BAUD_LOW + BAUD can not exceed 255+127 = 382 */
+        if (baudValue >= 382)
+        {
+            /* Set baud rate to the minimum possible value while maintaining SCL_L:SCL_H to 2:1 */
+            baudValue = (0xFF << 8) | (0x7F);
+        }
+        else if (baudValue <= 3)
+        {
+            /* Baud value cannot be 0. Set baud rate to maximum possible value while maintaining SCL_L:SCL_H to 2:1 */
+            baudValue = (2 << 8) | 1;
+        }
+        else
+        {
+            /* For Fm+ mode, I2C SCL_L:SCL_H to 2:1 */
+            baudValue  = ((((baudValue * 2)/3) << 8) | (baudValue/3));
+        }
+        i2cSpeedMode = 1;
+    }
+
     /* Disable the I2C before changing the I2C clock speed */
     SERCOM7_REGS->I2CM.SERCOM_CTRLA &= ~SERCOM_I2CM_CTRLA_ENABLE_Msk;
-    
+
     /* Wait for synchronization */
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
-    
+
     /* Baud rate - Master Baud Rate*/
-    SERCOM7_REGS->I2CM.SERCOM_BAUD = SERCOM_I2CM_BAUD_BAUD(baudValue);   
+    SERCOM7_REGS->I2CM.SERCOM_BAUD = (SERCOM_I2CM_BAUD_BAUDLOW(baudValue >> 8) | SERCOM_I2CM_BAUD_BAUD(baudValue));
+
+    SERCOM7_REGS->I2CM.SERCOM_CTRLA  = ((SERCOM7_REGS->I2CM.SERCOM_CTRLA & ~SERCOM_I2CM_CTRLA_SPEED_Msk) | (SERCOM_I2CM_CTRLA_SPEED(i2cSpeedMode)));
 
     /* Re-enable the I2C module */
-    SERCOM7_REGS->I2CM.SERCOM_CTRLA |= SERCOM_I2CM_CTRLA_ENABLE_Msk; 
-    
+    SERCOM7_REGS->I2CM.SERCOM_CTRLA |= SERCOM_I2CM_CTRLA_ENABLE_Msk;
+
     /* Wait for synchronization */
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
 
     /* Since the I2C module was disabled, re-initialize the bus state to IDLE */
-    SERCOM7_REGS->I2CM.SERCOM_STATUS = SERCOM_I2CM_STATUS_BUSSTATE(0x01);    
-    
+    SERCOM7_REGS->I2CM.SERCOM_STATUS = SERCOM_I2CM_STATUS_BUSSTATE(0x01);
+
     /* Wait for synchronization */
     while(SERCOM7_REGS->I2CM.SERCOM_SYNCBUSY);
-    
+
     return true;
 }
 
@@ -651,7 +687,7 @@ void SERCOM7_I2C_InterruptHandler(void)
         {
             /* Reset the PLib objects and Interrupts */
             sercom7I2CObj.state = SERCOM_I2C_STATE_IDLE;
-            
+
             /* Generate STOP condition */
             SERCOM7_REGS->I2CM.SERCOM_CTRLB |= SERCOM_I2CM_CTRLB_CMD(3);
 
@@ -673,7 +709,7 @@ void SERCOM7_I2C_InterruptHandler(void)
             sercom7I2CObj.error = SERCOM_I2C_ERROR_NONE;
 
             SERCOM7_REGS->I2CM.SERCOM_INTFLAG = SERCOM_I2CM_INTFLAG_Msk;
-            
+
             /* Wait for the NAK and STOP bit to be transmitted out and I2C state machine to rest in IDLE state */
             while((SERCOM7_REGS->I2CM.SERCOM_STATUS & SERCOM_I2CM_STATUS_BUSSTATE_Msk) != SERCOM_I2CM_STATUS_BUSSTATE(0x01));
 

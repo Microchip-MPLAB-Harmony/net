@@ -51,7 +51,13 @@
 // *****************************************************************************
 // *****************************************************************************
 
+#include <stdbool.h>
 #include "system/system.h"
+#include "configuration.h"
+#ifdef SYS_DEBUG_USE_CONSOLE
+#include "system/console/sys_console.h"
+#endif
+
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -217,46 +223,6 @@ SYS_MODULE_OBJ SYS_DEBUG_Initialize(
 
 // *****************************************************************************
 /* Function:
-    void SYS_DEBUG_Tasks( SYS_MODULE_OBJ object )
-
-  Summary:
-    Maintains the debug module's state machine.
-
-  Description:
-    This function is used to maintain the debug module's internal state
-    machine.
-
-  Precondition:
-    The SYS_DEBUG_Initialize function must have been called.
-
-  Parameters:
-    object    - SYS DEBUG object handle, returned from SYS_DEBUG_Initialize
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    SYS_MODULE_OBJ      object;     // Returned from SYS_DEBUG_Initialize
-
-    while (true)
-    {
-        SYS_DEBUG_Tasks (object);
-
-        // Do other tasks
-    }
-    </code>
-
-  Remarks:
-    This function is normally not called directly by an application.
-    The task routine may not be called if the debug service does not require
-    maintaining an internal state machine.
-*/
-
-void SYS_DEBUG_Tasks(SYS_MODULE_OBJ object);
-
-// *****************************************************************************
-/* Function:
     SYS_STATUS SYS_DEBUG_Status ( SYS_MODULE_OBJ object )
 
   Summary:
@@ -311,102 +277,6 @@ SYS_STATUS SYS_DEBUG_Status ( SYS_MODULE_OBJ object );
 // Section: SYS DEBUG Console Functions
 // *****************************************************************************
 // *****************************************************************************
-
-// *****************************************************************************
-/* Function:
-    void SYS_DEBUG_Message(const char *message)
-
-  Summary:
-    Prints a message to the console regardless of the system error level.
-
-  Description:
-    This function prints a message to the console regardless of the system
-    error level. It can be used as an implementation of the SYS_MESSAGE and
-    SYS_DEBUG_MESSAGE macros.
-
-  Precondition:
-    SYS_DEBUG_Initialize must have returned a valid object handle.
-
-  Parameters:
-    message - Pointer to a message string to be displayed.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
-    // In sys_debug.h file: #define SYS_MESSAGE(message) SYS_DEBUG_Message(message)
-
-    SYS_MESSAGE("My Message\r\n");
-    </code>
-
-  Remarks:
-    Do not call this function directly.  Call the SYS_MESSAGE or
-    SYS_DEBUG_MESSAGE macros instead.
-
-    The default SYS_MESSAGE and SYS_DEBUG_MESSAGE macro definitions remove
-    the messages and message function calls from the source code.  To access
-    and utilize the messages, define the SYS_DEBUG_USE_CONSOLE macro or
-    override the definitions of the individual macros.
-*/
-
-void SYS_DEBUG_Message(const char *message);
-
-
-// *****************************************************************************
-/* Function:
-    void SYS_DEBUG_Print(const char *format, ...)
-
-  Summary:
-    Formats and prints a message with a variable number of arguments to the
-    console regardless of the system error level.
-
-  Description:
-    This function formats and prints a message with a variable number of
-    arguments to the console regardless of the system error level. It can be
-    used to implement the SYS_PRINT and SYS_DEBUG_PRINT macros.
-
-  Precondition:
-    SYS_DEBUG_Initialize must have returned a valid object handle.
-
-  Parameters:
-    format          - Pointer to a buffer containing the format string for
-                      the message to be displayed.
-    ...             - Zero or more optional parameters to be formated as
-                      defined by the format string.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
-    // In sys_debug.h file: #define SYS_PRINT(fmt, ...) SYS_DEBUG_Print(fmt, ##__VA_ARGS__)
-
-    // In source code
-    int result;
-
-    result = SomeOperation();
-    if (result > MAX_VALUE)
-    {
-        SYS_PRINT("Result of %d exceeds max value\r\n", result);
-    }
-    </code>
-
-  Remarks:
-    The format string and arguments follow the printf convention.
-
-    Do not call this function directly. Call the SYS_PRINT or SYS_DEBUG_PRINT
-    macros instead.
-
-    The default SYS_PRINT and SYS_DEBUG_PRINT macro definitions remove the
-    messages and message function calls.  To access and utilize the messages,
-    define the SYS_DEBUG_USE_CONSOLE macro or override the definitions of the
-    individual macros.
-*/
-
-void SYS_DEBUG_Print( const char *format, ... );
 
 // *****************************************************************************
 /* Function:
@@ -470,6 +340,42 @@ void SYS_DEBUG_ErrorLevelSet(SYS_ERROR_LEVEL level);
 
 SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
+// *****************************************************************************
+/* Function:
+   bool SYS_DEBUG_Redirect(const SYS_MODULE_INDEX index)
+
+  Summary:
+    Allows re-direction of debug system service to another console instance
+
+  Description:
+    This function re-directs calls to the Debug Service APIs to a different console
+    instance.
+
+  Precondition:
+    None.
+
+  Parameters:
+    index - The index of the console to re-direct the debug system service calls to
+
+  Returns:
+    True - If operation is successful
+    False - In case of failure
+
+  Example:
+    <code>
+    // Re-direct debug system service calls to console index 1
+    if (SYS_DEBUG_Redirect(SYS_CONSOLE_INDEX_1) == true)
+    {
+        // SYS Debug output will now be re-directed to SYS Console Instance - 1
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+bool SYS_DEBUG_Redirect(const SYS_MODULE_INDEX index);
+
+SYS_MODULE_INDEX SYS_DEBUG_ConsoleInstanceGet(void);
 
 // *****************************************************************************
 // *****************************************************************************
@@ -516,9 +422,10 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     define the SYS_DEBUG_USE_CONSOLE macro or override the definition of the
     SYS_DEBUG_MESSAGE macro.
 */
-
+#ifdef SYS_DEBUG_USE_CONSOLE
 #ifndef _SYS_DEBUG_MESSAGE
-    #define _SYS_DEBUG_MESSAGE(level, message)  do { if((level) <= SYS_DEBUG_ErrorLevelGet()) SYS_DEBUG_Message(message); }while(0)
+    #define _SYS_DEBUG_MESSAGE(level, message)  do { if((level) <= SYS_DEBUG_ErrorLevelGet()) SYS_CONSOLE_Message(SYS_DEBUG_ConsoleInstanceGet(), message); }while(0)
+#endif
 #endif
 
 // *****************************************************************************
@@ -571,9 +478,10 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
     define the SYS_DEBUG_USE_CONSOLE macro or override the definition of the
     SYS_DEBUG_PRINT macro.
 */
-
+#ifdef SYS_DEBUG_USE_CONSOLE
 #ifndef _SYS_DEBUG_PRINT
-    #define _SYS_DEBUG_PRINT(level, format, ...)    do { if((level) <= SYS_DEBUG_ErrorLevelGet()) SYS_DEBUG_Print(format, ##__VA_ARGS__); } while (0)
+    #define _SYS_DEBUG_PRINT(level, format, ...)    do { if((level) <= SYS_DEBUG_ErrorLevelGet()) SYS_CONSOLE_Print(SYS_DEBUG_ConsoleInstanceGet(), format, ##__VA_ARGS__); } while (0)
+#endif
 #endif
 
 // DOM-IGNORE-BEGIN
@@ -587,16 +495,8 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 #ifdef SYS_DEBUG_USE_CONSOLE
 
-#ifndef SYS_MESSAGE
-    #define SYS_MESSAGE(message)                SYS_DEBUG_Message(message)
-#endif
-
 #ifndef SYS_DEBUG_MESSAGE
     #define SYS_DEBUG_MESSAGE(level, message)   _SYS_DEBUG_MESSAGE(level, message)
-#endif
-
-#ifndef SYS_PRINT
-    #define SYS_PRINT(fmt, ...)                 SYS_DEBUG_Print(fmt, ##__VA_ARGS__)
 #endif
 
 #ifndef SYS_DEBUG_PRINT
@@ -605,55 +505,16 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 #endif
 
+#ifndef SYS_CONSOLE_PRINT
+    #define SYS_CONSOLE_PRINT(fmt, ...)
+#endif
+
+#ifndef SYS_CONSOLE_MESSAGE
+    #define SYS_CONSOLE_MESSAGE(message)
+#endif
+
 
 // DOM-IGNORE-END
-
-
-// *****************************************************************************
-/* Macro:
-    SYS_MESSAGE( const char* message )
-
-  Summary:
-    Prints a message to the console regardless of the system error level.
-
-  Description:
-    This macro is used to print a message to the console regardless of the
-    system error level.  It can be mapped to any desired implementation.
-
-  Precondition:
-    If mapped to the SYS_DEBUG_Message function, then the system debug service must
-    be initialized and running.
-
-  Parameters:
-    message         - Pointer to a buffer containing the message string to be
-                      displayed.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
-    // In sys_debug.h file: #define SYS_MESSAGE(message) SYS_DEBUG_Message(message)
-
-    // In source code
-    SYS_MESSAGE("My Message\r\n");
-    </code>
-
-  Remarks:
-    By default, this macro is defined as nothing, effectively removing all code
-    generated by calls to it.  To process SYS_MESSAGE calls, this macro must be
-    defined in a way that maps calls to it to the desired implementation (see
-    example, above).
-
-    This macro can be mapped to the system console service (along with other
-    system debug macros) by defining SYS_DEBUG_USE_CONSOLE in the system
-    configuration (configuration.h) instead of defining it individually.
-*/
-
-#ifndef SYS_MESSAGE
-    #define SYS_MESSAGE(message)
-#endif
 
 
 // *****************************************************************************
@@ -703,65 +564,6 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 #ifndef SYS_DEBUG_MESSAGE
     #define SYS_DEBUG_MESSAGE(level,message)
-#endif
-
-
-// *****************************************************************************
-/* Function:
-    SYS_PRINT(const char* format, ...)
-
-  Summary:
-    Formats and prints an error message with a variable number of arguments
-    regardless of the system error level.
-
-  Description:
-    This function formats and prints an error message with a variable number of
-    arguments regardless of the system error level.
-
-  Precondition:
-    If mapped to the SYS_DEBUG_Print function, then the system debug service must
-    be initialized and running.
-
-  Parameters:
-    format          - Pointer to a buffer containing the format string for
-                      the message to be displayed.
-    ...             - Zero or more optional parameters to be formated as
-                      defined by the format string.
-
-  Returns:
-    None.
-
-  Example:
-    <code>
-    // In configuration.h file: #define SYS_DEBUG_USE_CONSOLE
-    // In sys_debug.h file: #define SYS_PRINT(fmt, ...) SYS_DEBUG_Print(fmt, ##__VA_ARGS__)
-
-    // In source code
-    int result;
-
-    result = SomeOperation();
-    if (result > MAX_VALUE)
-    {
-        SYS_PRINT("Result of %d exceeds max value\r\n", result);
-        // Take appropriate action
-    }
-    </code>
-
-  Remarks:
-    The format string and arguments follow the printf convention.
-
-    By default, this macro is defined as nothing, effectively removing all code
-    generated by calls to it.  To process SYS_PRINT calls, this macro must be
-    defined in a way that maps calls to it to the desired implementation (see
-    example, above).
-
-    This macro can be mapped to the system console service (along with other
-    system debug macros) by defining SYS_DEBUG_USE_CONSOLE in the system
-    configuration (configuration.h) instead of defining it individually.
-*/
-
-#ifndef SYS_PRINT
-    #define SYS_PRINT(fmt, ...)
 #endif
 
 
@@ -859,7 +661,7 @@ SYS_ERROR_LEVEL SYS_DEBUG_ErrorLevelGet(void);
 
 
 #if defined(__DEBUG)
-    #define SYS_DEBUG_BreakPoint()  __asm__ volatile (" sdbbp 0")
+#define SYS_DEBUG_BreakPoint()  __asm__ volatile (" sdbbp 0")
 #else
     #define SYS_DEBUG_BreakPoint()
 #endif

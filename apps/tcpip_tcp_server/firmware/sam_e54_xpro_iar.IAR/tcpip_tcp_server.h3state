@@ -1,0 +1,26 @@
+{
+    "linker": {
+        "script": "..\\src\\config\\sam_e54_xpro_iar\\flash.icf"
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": []
+    }, 
+    "general": {
+        "name": "sam_e54_xpro_iar", 
+        "device": "ATSAME54P20A"
+    }, 
+    "compiler": {
+        "macros": [], 
+        "includes": [
+            "..\\src\\config\\sam_e54_xpro_iar\\library", 
+            "..\\src\\config\\sam_e54_xpro_iar\\library\\tcpip\\src", 
+            "..\\src\\config\\sam_e54_xpro_iar\\library\\tcpip\\src\\common", 
+            "..\\src", 
+            "..\\src\\config\\sam_e54_xpro_iar", 
+            "..\\src\\packs\\ATSAME54P20A_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core\\Include", 
+            "..\\src\\packs\\CMSIS"
+        ]
+    }
+}

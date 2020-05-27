@@ -28,9 +28,8 @@
 extern void main(void);
 void __iar_data_init3(void);
 
+#if (__FPU_USED == 1)
 __STATIC_INLINE void FPU_Enable(void);
-
-#if (__FPU_PRESENT)
 
 /* Enable FPU */
 __STATIC_INLINE void FPU_Enable(void)
@@ -48,7 +47,7 @@ __STATIC_INLINE void FPU_Enable(void)
         __enable_irq();
     }
 }
-#endif
+#endif /* (__FPU_USED == 1) */
 __STATIC_INLINE void TCM_Enable(void);
 __STATIC_INLINE void TCM_Configure(uint32_t tcmSize);
 __STATIC_INLINE void ICache_Enable(void);
@@ -77,10 +76,10 @@ __STATIC_INLINE void ICache_Enable(void)
 
 void Reset_Handler(void)
 {
-    #if (__FPU_PRESENT)
-    /* Enable the FPU if the application is built with -mfloat-abi=softfp or -mfloat-abi=hard */
+    #if (__FPU_USED == 1)
+    /* Enable the FPU if the application is built with --fpu option */
     FPU_Enable();
-    #endif
+    #endif /* __FPU_USED */
 
     TCM_Configure(2);
     /* Enable TCM   */

@@ -73,99 +73,29 @@
 // *****************************************************************************
 // *****************************************************************************
 
-/* SYS Console Module Index Numbers
-
-  Summary:
-    Console System Service index definitions.
-
-  Description:
-    These constants provide Console System Service index definitions.
-
-  Remarks:
-    These constants should be used in place of hard-coded numeric literals.
-
-*/
-
-#define SYS_CONSOLE_INDEX_0                 0
-#define SYS_CONSOLE_INDEX_1                 1
-#define SYS_CONSOLE_INDEX_2                 2
-#define SYS_CONSOLE_INDEX_3                 3
-
 /* These are in unistd.h */
 #define STDIN_FILENO     0
 #define STDOUT_FILENO    1
 #define STDERR_FILENO    2
 
-#ifndef SYS_CONSOLE_MESSAGE
-    #define SYS_CONSOLE_MESSAGE(message)
+#define SYS_CONSOLE_DEFAULT_INSTANCE    0
+
+/* The SYS_CONSOLE_PRINT and SYS_CONSOLE_MESSAGE macros print on the default console instance 0 */
+#ifdef SYS_CONSOLE_PRINT
+    #undef SYS_CONSOLE_PRINT
+	// Print formatted message on the default console instance
+    #define SYS_CONSOLE_PRINT(fmt, ...)                 SYS_CONSOLE_Print(SYS_CONSOLE_DEFAULT_INSTANCE, fmt, ##__VA_ARGS__)
+#else
+    #define SYS_CONSOLE_PRINT(fmt, ...)                 SYS_CONSOLE_Print(SYS_CONSOLE_DEFAULT_INSTANCE, fmt, ##__VA_ARGS__)
 #endif
 
-#ifndef SYS_CONSOLE_PRINT
-    #define SYS_CONSOLE_PRINT(fmt, ...)
+#ifdef SYS_CONSOLE_MESSAGE
+    #undef SYS_CONSOLE_MESSAGE
+	// Print message on the default console instance
+    #define SYS_CONSOLE_MESSAGE(message)                SYS_CONSOLE_Message(SYS_CONSOLE_DEFAULT_INSTANCE, message)
+#else
+    #define SYS_CONSOLE_MESSAGE(message)                SYS_CONSOLE_Message(SYS_CONSOLE_DEFAULT_INSTANCE, message)
 #endif
-
-// *****************************************************************************
-/* System Console Event
-
-  Summary:
-    Identifies the system console event for which the callback is being registered.
-
-  Description:
-    This enum is used to identify if the callback being registered is to be called
-    on a read or on a write complete event.
-*/
-typedef enum
-{
-    // System console write complete event
-    SYS_CONSOLE_EVENT_WRITE_COMPLETE,
-
-    // System console read complete event
-    SYS_CONSOLE_EVENT_READ_COMPLETE,
-
-} SYS_CONSOLE_EVENT;
-
-// *****************************************************************************
-/* Function:
-    void ( * SYS_CONSOLE_CALLBACK ) ( void* pBuffer )
-
-   Summary:
-    Pointer to a console system service callback function.
-
-   Description:
-    This data type defines a pointer to a console service callback function, thus
-    defining the function signature.
-
-   Precondition:
-    The console service must have been initialized using the SYS_CONSOLE_Initialize
-    function before attempting to register a SYS Console callback function.
-
-   Parameters:
-    pBuffer    - Pointer to the processed read/write buffer.
-                 It can be used identify the buffer that is processed by the console
-                 system service and free the buffer memory if it was allocated 
-                 dynamically.
-
-   Returns:
-    None.
-
-  Example:
-    <code>
-    void MyCallback ( void* pBuffer )
-    {
-        if (pBuffer != NULL)
-        {
-            //Free the memory pointed by pBuffer if it was allocated dynamically.
-        }
-    }
-    </code>
-
-  Remarks:
-    None.
-*/
-
-typedef void (*SYS_CONSOLE_CALLBACK) (void* pBuffer);
-
-// DOM-IGNORE-BEGIN
 
 typedef enum
 {
@@ -199,11 +129,45 @@ typedef enum
 
     SYS_CONSOLE_DEV_USB_CDC,
 
-    SYS_CONSOLE_DEV_APPIO,
-
-    SYS_CONSOLE_NR_DEVS,
+    SYS_CONSOLE_DEV_MAX,
 
 } SYS_CONSOLE_DEVICE;
+
+// *****************************************************************************
+/* Console System Service Instance Handle
+
+  Summary:
+    Handle to an instance of the console system service.
+
+  Description:
+    This data type is a handle to a specific instance of the console system service
+
+  Remarks:
+    Code outside of a specific module should consider this as an opaque type
+    (much like a void *).  Do not make any assumptions about base type as it
+    may change in the future or about the value stored in a variable of this
+    type.
+*/
+
+typedef uintptr_t SYS_CONSOLE_HANDLE;
+
+// *****************************************************************************
+/* Console System Service Handle Invalid
+
+  Summary:
+    Invalid console handle
+
+  Description:
+    This is handle value is returned in case of an unsuccessful console operation.
+
+  Remarks:
+    Do not rely on the actual value of this constant.  It may change in future
+    implementations.
+*/
+
+#define SYS_CONSOLE_HANDLE_INVALID      ((SYS_CONSOLE_HANDLE) -1 )
+
+// DOM-IGNORE-BEGIN
 
 // *****************************************************************************
 /*  Console device descriptor function prototypes
@@ -221,17 +185,23 @@ typedef enum
 
 typedef void (*SYS_CONSOLE_INIT_FPTR) (uint32_t index, const void* initData);
 
-typedef ssize_t (*SYS_CONSOLE_READ_FPTR) (uint32_t index, int fd, void* buf, size_t count);
+typedef ssize_t (*SYS_CONSOLE_READ_FPTR) (uint32_t index, void* buf, size_t count);
 
-typedef ssize_t (*SYS_CONSOLE_WRITE_FPTR) (uint32_t index, int fd, const void* buf, size_t count);
+typedef ssize_t (*SYS_CONSOLE_READ_FREE_BUFF_COUNT_GET_FPTR) (uint32_t index);
 
-typedef void (*SYS_CONSOLE_CALLBACK_REG_FPTR) (uint32_t index, SYS_CONSOLE_CALLBACK cbFunc, SYS_CONSOLE_EVENT event);
+typedef ssize_t (*SYS_CONSOLE_READ_COUNT_GET_FPTR) (uint32_t index);
+
+typedef ssize_t (*SYS_CONSOLE_WRITE_FPTR) (uint32_t index, const void* buf, size_t count);
+
+typedef ssize_t (*SYS_CONSOLE_WRITE_FREE_BUFF_COUNT_GET_FPTR) (uint32_t index);
+
+typedef ssize_t (*SYS_CONSOLE_WRITE_COUNT_GET_FPTR) (uint32_t index);
 
 typedef void (*SYS_CONSOLE_TASK_FPTR) (uint32_t index, SYS_MODULE_OBJ object);
 
 typedef SYS_CONSOLE_STATUS (*SYS_CONSOLE_STATUS_FPTR) (uint32_t index);
 
-typedef void (*SYS_CONSOLE_FLUSH_FPTR) (uint32_t index);
+typedef bool (*SYS_CONSOLE_FLUSH_FPTR) (uint32_t index);
 
 // *****************************************************************************
 /*  Console device descriptor
@@ -241,7 +211,7 @@ typedef void (*SYS_CONSOLE_FLUSH_FPTR) (uint32_t index);
     the console device descriptor structure.
 
   Description:
-    Each device must implement register its capability to the console system
+    Each device must register its capability to the console system
     service. The capability APIs must confirm to the interface expected by the
     console system service.
 
@@ -258,9 +228,15 @@ typedef struct
 
     SYS_CONSOLE_READ_FPTR read;
 
+    SYS_CONSOLE_READ_COUNT_GET_FPTR readCountGet;
+
+    SYS_CONSOLE_READ_FREE_BUFF_COUNT_GET_FPTR readFreeBufferCountGet;
+
     SYS_CONSOLE_WRITE_FPTR write;
 
-    SYS_CONSOLE_CALLBACK_REG_FPTR callbackRegister;
+    SYS_CONSOLE_WRITE_COUNT_GET_FPTR writeCountGet;
+
+    SYS_CONSOLE_WRITE_FREE_BUFF_COUNT_GET_FPTR writeFreeBufferCountGet;
 
     SYS_CONSOLE_TASK_FPTR task;
 
@@ -474,16 +450,88 @@ void SYS_CONSOLE_Tasks ( SYS_MODULE_OBJ object );
     </code>
 
   Remarks:
-    None.
+    Application must ensure that the SYS_CONSOLE_Status returns SYS_STATUS_READY
+    before performing console read/write.
 */
 
 SYS_STATUS SYS_CONSOLE_Status( SYS_MODULE_OBJ object );
 
 // *****************************************************************************
 /* Function:
+    SYS_CONSOLE_HANDLE SYS_CONSOLE_HandleGet( const SYS_MODULE_INDEX index)
+
+  Summary:
+    Returns a handle to the requested console instance
+
+  Description:
+    This function returns a handle to the requested console instance.
+
+  Preconditions:
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
+
+  Parameters:
+    index       - index of the console instance
+
+  Returns:
+    SYS_CONSOLE_HANDLE - Handle to the requested console instance
+
+  Example:
+    <code>
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+    myConsoleHandle = SYS_CONSOLE_HandleGet(SYS_CONSOLE_INDEX_0);
+    if (myConsoleHandle != SYS_CONSOLE_HANDLE_INVALID)
+    {
+        // Found a valid handle to the console instance
+
+        // Write some data over the USB console
+        SYS_CONSOLE_Write(myConsoleHandle, data, 10);
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+SYS_CONSOLE_HANDLE SYS_CONSOLE_HandleGet( const SYS_MODULE_INDEX index);
+
+// *****************************************************************************
+/* Function:
+    SYS_CONSOLE_DEVICE SYS_CONSOLE_DeviceGet( const SYS_CONSOLE_HANDLE handle)
+
+  Summary:
+    Returns the device type for a given console instance
+
+  Description:
+    This function returns the device type supported by the given console instance
+
+  Preconditions:
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
+
+  Parameters:
+    handle       - A valid handle to the console instance
+
+  Returns:
+    SYS_CONSOLE_DEVICE - Returns console device type. Returns SYS_CONSOLE_DEV_MAX in
+    case of an error.
+
+  Example:
+    <code>
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+    SYS_CONSOLE_DEVICE myConsoleDevType
+    // myConsoleHandle is assumed to be a valid console handle
+    myConsoleDevType = SYS_CONSOLE_DeviceGet(myConsoleHandle);
+    </code>
+
+  Remarks:
+    None.
+*/
+SYS_CONSOLE_DEVICE SYS_CONSOLE_DeviceGet( const SYS_CONSOLE_HANDLE handle);
+
+// *****************************************************************************
+/* Function:
     ssize_t SYS_CONSOLE_Read(
-        const SYS_MODULE_INDEX index,
-        int fd,
+        const SYS_CONSOLE_HANDLE handle,
         void* buf,
         size_t count
     )
@@ -499,40 +547,45 @@ SYS_STATUS SYS_CONSOLE_Status( SYS_MODULE_OBJ object );
     this function.
 
   Parameters:
-    index           - Console instance index
-    fd              - I/O stream handle.
-                      Maintained for backward compatibility.
-                      NULL value can be passed as a parameter.
+    handle          - Handle to the console instance
     buf             - Buffer to hold the read data.
     count           - Number of bytes to read.
 
   Returns:
-    The requested number of bytes to read is returned back if the request is
-    accepted successfully. In case of error, the returned value is less than the
-    requested number of bytes to read.
+    Return value indicates the number of bytes actually read. Returns -1 in case
+    of any error.
 
   Example:
     <code>
-    ssize_t nr;
+    ssize_t nr;     //indicates the actual number of bytes read
     char myBuffer[MY_BUFFER_SIZE];
-    nr = SYS_CONSOLE_Read( SYS_CONSOLE_INDEX_0, 0, myBuffer, MY_BUFFER_SIZE );
-    if (nr != MY_BUFFER_SIZE)
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+
+    // myConsoleHandle is assumed to be pointing to a valid console handle
+    nr = SYS_CONSOLE_Read( myConsoleHandle, myBuffer, MY_BUFFER_SIZE );
+    if (nr == -1)
     {
-        // handle error
+        // Handle error
     }
     </code>
 
   Remarks:
-    None.
+    If the data is not read out from the internal receive buffer by calling the
+    SYS_CONSOLE_Read API at regular intervals, there is a possibility of the receive
+    buffer becoming full. As a result, the new data may be lost. Hence, the
+    application must call the SYS_CONSOLE_Read API at regular intervals to avoid
+    buffer overflow condition. The SYS_CONSOLE_ReadCountGet() and the
+    SYS_CONSOLE_ReadFreeBufferCountGet() APIs may be used to know the number of
+    unread bytes available in the receive buffer and the amount of free space
+    available in the receive buffer respectively.
 */
 
-ssize_t SYS_CONSOLE_Read( const SYS_MODULE_INDEX index, int fd, void* buf, size_t count );
+ssize_t SYS_CONSOLE_Read( const SYS_CONSOLE_HANDLE handle, void* buf, size_t count );
 
 // *****************************************************************************
 /* Function:
     ssize_t SYS_CONSOLE_Write(
-        const SYS_MODULE_INDEX index,
-        int fd,
+        const SYS_CONSOLE_HANDLE handle,
         const void* buf,
         size_t count
     )
@@ -541,31 +594,121 @@ ssize_t SYS_CONSOLE_Read( const SYS_MODULE_INDEX index, int fd, void* buf, size_
     Writes data to the console device.
 
   Description:
-    This function writes data to the console device.
+    This function writes data to the console device. The function performs a deep-copy
+    of the data passed in buf.
 
   Preconditions:
     The SYS_CONSOLE_Initialize function should have been called before calling
     this function.
 
   Parameters:
-    index           - Console instance index
-    fd              - I/O stream handle.
-                      Maintained for backward compatibility.
-                      NULL value can be passed as a parameter.
+    handle          - Handle to the console instance
     buf             - Buffer holding the data to be written.
     count           - Number of bytes to write.
 
   Returns:
-    The requested number of bytes to write is returned back if the request is
-    accepted successfully. In case of error, the returned value is less than the
-    requested number of bytes to write.
+    The return value indicates the number of bytes accepted by the function. In case
+    the return value is less than the count value, the application must try to send the
+    remaining bytes in next attempt(s). Returns -1 in case of any error.
 
   Example:
     <code>
     ssize_t nr;
     char myBuffer[] = "message";
-    nr = SYS_CONSOLE_Write( SYS_CONSOLE_INDEX_0, 0, myBuffer, strlen(myBuffer) );
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+
+    // myConsoleHandle is assumed to be a valid console handle
+    nr = SYS_CONSOLE_Write( myConsoleHandle, myBuffer, strlen(myBuffer) );
+    if (nr == -1)
+    {
+        // Handle error
+    }
     if (nr != strlen(myBuffer))
+    {
+        // Try send the remaining data after some time.
+    }
+    </code>
+
+  Remarks:
+    Application may check the free space available in the transmit buffer by
+    calling the SYS_CONSOLE_WriteFreeBufferCountGet() API.
+*/
+
+ssize_t SYS_CONSOLE_Write( const SYS_CONSOLE_HANDLE handle, const void* buf, size_t count );
+
+// *****************************************************************************
+/* Function:
+    bool SYS_CONSOLE_Flush(const SYS_CONSOLE_HANDLE handle)
+
+  Summary:
+    Flushes the read and write queues for the given console instance.
+
+  Description:
+    This function flushes the read and write buffers. Any on-going transfers
+    will not be flushed.
+
+  Preconditions:
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
+
+  Parameters:
+    handle               - Handle to the console instance
+
+  Returns:
+    true                 - If the operation is successful
+    false                - In case of failure
+
+  Example:
+    <code>
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+    bool status;
+
+    // myConsoleHandle is assumed to be a valid console handle
+
+    status = SYS_CONSOLE_Flush(myConsoleHandle);
+    if (status == false)
+    {
+        // Handle error
+    }
+    </code>
+
+  Remarks:
+    This API may do nothing and return true, where the read and write are not buffered.
+*/
+
+bool SYS_CONSOLE_Flush(const SYS_CONSOLE_HANDLE handle);
+
+// *****************************************************************************
+/* Function:
+    ssize_t SYS_CONSOLE_ReadFreeBufferCountGet(const SYS_CONSOLE_HANDLE handle)
+
+  Summary:
+    Returns the amount of free space in bytes available in the receive buffer.
+
+  Description:
+    This function indicates the number of free space available in the receive buffer,
+    thereby indicating the number of bytes that can be received without overflowing
+    the receive buffer.
+
+  Preconditions:
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function.
+
+  Parameters:
+    handle           - Handle to a valid console instance
+
+  Returns:
+    The return value indicates the number of bytes of free space available in the receive
+    buffer. Returns -1 in case of any error.
+
+  Example:
+    <code>
+    ssize_t nr;
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+
+    // myConsoleHandle is assumed to be a valid console handle
+    nr = SYS_CONSOLE_ReadFreeBufferCountGet(myConsoleHandle);
+    if (nr == -1)
     {
         // Handle error
     }
@@ -575,93 +718,223 @@ ssize_t SYS_CONSOLE_Read( const SYS_MODULE_INDEX index, int fd, void* buf, size_
     None.
 */
 
-ssize_t SYS_CONSOLE_Write( const SYS_MODULE_INDEX index, int fd, const void* buf, size_t count );
+ssize_t SYS_CONSOLE_ReadFreeBufferCountGet(const SYS_CONSOLE_HANDLE handle);
 
 // *****************************************************************************
 /* Function:
-    void SYS_CONSOLE_RegisterCallback(
-        const SYS_MODULE_INDEX index,
-        SYS_CONSOLE_CALLBACK cbFunc,
-        SYS_CONSOLE_EVENT event
-    )
+    ssize_t SYS_CONSOLE_ReadCountGet(const SYS_CONSOLE_HANDLE handle)
 
   Summary:
-    Registers a callback function with the console service that will be
-    executed when the read or write request is complete (or in case of an error
-    condition during read/write).
+    Returns number of unread bytes available in the receive buffer.
 
   Description:
-    This function is used by an application to register a callback function
-    with the console service. The callback function is called in response to
-    a read/write completion (or error) event. Separate callback functions are
-    required for each event. To receive events, the callback must be registered
-    before submitting a read/write request.
+    This function indicates the number of unread bytes in the receive buffer.
 
   Preconditions:
     The SYS_CONSOLE_Initialize function should have been called before calling
     this function.
 
   Parameters:
-    index               - Console instance index
-    cbFunc              - The name of the callback function
-    event               - Enumerated list of events that can trigger a callback
+    handle           - Handle to the console instance
 
   Returns:
-    None.
+    The return value indicates the number of bytes of unread data available in the
+    receive buffer. Returns -1 in case of any error.
 
   Example:
     <code>
-    //Registering a "APP_ReadComplete" read callback function
-    SYS_CONSOLE_RegisterCallback(SYS_CONSOLE_INDEX_0, APP_ReadComplete, \
-                                 SYS_CONSOLE_EVENT_READ_COMPLETE);
+    ssize_t nUnreadBytes;
+    ssize_t nBytesRead;
+    char myBuffer[100];
+    SYS_CONSOLE_HANDLE myConsoleHandle;
 
-    //Registering a "APP_WriteComplete" write callback function
-    SYS_CONSOLE_RegisterCallback(SYS_CONSOLE_INDEX_0, APP_WriteComplete, \
-                                 SYS_CONSOLE_EVENT_WRITE_COMPLETE);
+    // Get the number of bytes available in the receive buffer.
+    nUnreadBytes = SYS_CONSOLE_ReadCountGet(myConsoleHandle);
+    if (nUnreadBytes == -1)
+    {
+        // Handle error
+    }
+    // Read the available data into the application buffer.
+    SYS_CONSOLE_Read( myConsoleHandle, 0, myBuffer, nUnreadBytes );
     </code>
 
   Remarks:
     None.
 */
 
-void SYS_CONSOLE_RegisterCallback(
-    const SYS_MODULE_INDEX index,
-    SYS_CONSOLE_CALLBACK cbFunc,
-    SYS_CONSOLE_EVENT event
-);
+ssize_t SYS_CONSOLE_ReadCountGet(const SYS_CONSOLE_HANDLE handle);
 
 // *****************************************************************************
 /* Function:
-    void SYS_CONSOLE_Flush(const SYS_MODULE_INDEX index)
+    ssize_t SYS_CONSOLE_WriteFreeBufferCountGet(const SYS_CONSOLE_HANDLE handle)
 
   Summary:
-    Flushes the read and write queues for the given console instance.
+    Returns the amount of free space in bytes in the transmit buffer.
 
   Description:
-    This function flushes queued read and write requests. The request that is
-    already in progress cannot be flushed. Only the queued pending requests will
-    be flushed.
+    This function indicates the number of bytes of free space available in the
+    transmit buffer.
+
+  Preconditions:
+    The SYS_CONSOLE_Initialize function should have been called before calling
+    this function. In some cases, application may call this API to know the
+    amount of free buffer space available in the transmit buffer before
+    calling SYS_CONSOLE_Write() API.
+
+  Parameters:
+    handle           - Handle to the console instance
+
+  Returns:
+    The return value indicates the number of bytes of free space available in the
+    transmit buffer. Returns -1 in case of any error.
+
+  Example:
+    <code>
+    ssize_t nFreeSpace;
+    char myBuffer[100];
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+
+    // Get the number of bytes of free space available in the transmit buffer.
+    nFreeSpace = SYS_CONSOLE_WriteFreeBufferCountGet(myConsoleHandle);
+    if ((nFreeSpace >= sizeof(myBuffer)) && (nFreeSpace!= -1))
+    {
+        // Write the application buffer
+        SYS_CONSOLE_Write( myConsoleHandle, myBuffer, sizeof(myBuffer) );
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+ssize_t SYS_CONSOLE_WriteFreeBufferCountGet(const SYS_CONSOLE_HANDLE handle);
+
+// *****************************************************************************
+/* Function:
+    ssize_t SYS_CONSOLE_WriteCountGet(const SYS_CONSOLE_HANDLE handle)
+
+  Summary:
+    Returns the number of bytes pending for transmission in the transmit buffer.
+
+  Description:
+    This function indicates the number of bytes pending for transmission in the
+    transmit buffer.
 
   Preconditions:
     The SYS_CONSOLE_Initialize function should have been called before calling
     this function.
 
   Parameters:
-    index               - Console instance index
+    handle           - Handle to the console instance
+
+  Returns:
+    The return value indicates the number of bytes present in the transmit buffer
+    waiting to be transmitted. Returns -1 in case of any error.
+
+  Example:
+    <code>
+    ssize_t nTxBytesPending;
+    SYS_CONSOLE_HANDLE myConsoleHandle;
+
+    nTxBytesPending = SYS_CONSOLE_WriteCountGet(myConsoleHandle);
+    if (nTxBytesPending == -1)
+    {
+        // API reported error
+    }
+    if (nTxBytesPending == 0)
+    {
+        // All the data has been written to the console
+    }
+    </code>
+
+  Remarks:
+    None.
+*/
+ssize_t SYS_CONSOLE_WriteCountGet(const SYS_CONSOLE_HANDLE handle);
+
+// *****************************************************************************
+/* Function:
+    void SYS_CONSOLE_Print(const SYS_CONSOLE_HANDLE handle, const char *format, ...)
+
+  Summary:
+    Formats and prints a message with a variable number of arguments to the
+    console
+
+  Description:
+    This function formats and prints a message with a variable number of
+    arguments to the console.
+
+  Precondition:
+    SYS_CONSOLE_Initialize must have returned a valid object handle.
+
+  Parameters:
+    handle			- Handle to a console instance
+    format          - Pointer to a buffer containing the format string for
+                      the message to be displayed.
+    ...             - Zero or more optional parameters to be formated as
+                      defined by the format string.
 
   Returns:
     None.
 
   Example:
     <code>
-    SYS_CONSOLE_Flush(SYS_CONSOLE_INDEX_0);
+	SYS_CONSOLE_HANDLE myConsoleHandle;
+	
+	myConsoleHandle = SYS_CONSOLE_HandleGet(SYS_CONSOLE_INDEX_0);
+	
+	uint8_t num_bytes_to_enter = 10;
+    
+	if (myConsoleHandle != SYS_CONSOLE_HANDLE_INVALID)
+    {
+        // Found a valid handle to the console instance
+        SYS_CONSOLE_Print(myConsoleHandle, "Enter %d characters", num_bytes_to_enter);
+    }	    
     </code>
 
   Remarks:
-    None.
+    The format string and arguments follow the printf convention.
+    Call SYS_CONSOLE_PRINT macro to print on the default console instance 0
 */
 
-void SYS_CONSOLE_Flush(const SYS_MODULE_INDEX index);
+void SYS_CONSOLE_Print(const SYS_CONSOLE_HANDLE handle, const char *format, ...);
+
+// *****************************************************************************
+/* Function:
+    void SYS_CONSOLE_Message(const SYS_CONSOLE_HANDLE handle, const char *message)
+
+  Summary:
+    Prints a message to the console
+
+  Description:
+    This function prints a message to the console
+
+  Precondition:
+    SYS_CONSOLE_Initialize must have returned a valid object handle.
+
+  Parameters:
+	handle			- Handle to a console instance
+    message 		- Pointer to a message string to be displayed.
+
+  Returns:
+    None.
+
+  Example:
+    <code>
+	
+	SYS_CONSOLE_HANDLE myConsoleHandle;
+	
+	myConsoleHandle = SYS_CONSOLE_HandleGet(SYS_CONSOLE_INDEX_0);
+	
+	if (myConsoleHandle != SYS_CONSOLE_HANDLE_INVALID)
+	{
+		SYS_CONSOLE_Message(myConsoleHandle, "Printing using SYS_Message");
+	}
+    </code>
+
+  Remarks:
+    Call SYS_CONSOLE_MESSAGE macro to print on the default console instance 0
+*/
+void SYS_CONSOLE_Message(const SYS_CONSOLE_HANDLE handle, const char *message);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus

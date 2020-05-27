@@ -1,0 +1,26 @@
+{
+    "linker": {
+        "script": "..\\src\\config\\sam_v71_xult_iar\\flash.icf"
+    }, 
+    "assembler": {
+        "macros": [], 
+        "includes": []
+    }, 
+    "general": {
+        "name": "sam_v71_xult_iar", 
+        "device": "ATSAMV71Q21B"
+    }, 
+    "compiler": {
+        "macros": [], 
+        "includes": [
+            "..\\src\\config\\sam_v71_xult_iar\\library", 
+            "..\\src\\config\\sam_v71_xult_iar\\library\\tcpip\\src", 
+            "..\\src\\config\\sam_v71_xult_iar\\library\\tcpip\\src\\common", 
+            "..\\src", 
+            "..\\src\\config\\sam_v71_xult_iar", 
+            "..\\src\\packs\\ATSAMV71Q21B_DFP", 
+            "..\\src\\packs\\CMSIS\\CMSIS\\Core\\Include", 
+            "..\\src\\packs\\CMSIS"
+        ]
+    }
+}
