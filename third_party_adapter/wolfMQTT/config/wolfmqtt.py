@@ -33,9 +33,9 @@ def instantiateComponent(wolfmqttComponent):
         Database.setSymbolValue("HarmonyCore", "ENABLE_SYS_COMMON", True)
     if(Database.getComponentByID("netPres") == None):
         res = Database.activateComponents(["netPres"])
-    # wolfMQTT Library Configurations
+    # wolfMQTT Library Configuration
     wolfMqttLibMenu = wolfmqttComponent.createMenuSymbol(None, None) 
-    wolfMqttLibMenu.setLabel("wolfMQTT Library Configurations")
+    wolfMqttLibMenu.setLabel("wolfMQTT Library Configuration")
     wolfMqttLibMenu.setVisible(True)
     wolfMqttLibMenu.setDescription("wolfMQTT Library Configurations")
 
@@ -98,12 +98,26 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttLibSktDbgEn.setDefaultValue(True)
     wolfMqttLibSktDbgEn.setDependencies(wolfMqttLibMenuInvisible, ["WOLFMQTT_NO_STDIO"])
     
+    # Enable MQTT TLS
+    wolfMqttLibTlsEn = wolfmqttComponent.createBooleanSymbol("WOLFMQTT_TLS_ENABLE", wolfMqttLibMenu)
+    wolfMqttLibTlsEn.setLabel("Enable MQTT TLS")
+    wolfMqttLibTlsEn.setVisible(False)
+    wolfMqttLibTlsEn.setDescription("Enable MQTT TLS")
+    wolfMqttLibTlsEn.setDefaultValue(False)
+    wolfMqttLibTlsEn.setDependencies(wolfMqttNetGlueInvisible, ["WMQTT_NET_GLUE"])
+    
     # Use MQTT Net Glue module
     wolfMqttNetGlue = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE", None)
     wolfMqttNetGlue.setLabel("Use the wolfMQTT NET Glue Module")
     wolfMqttNetGlue.setVisible(True)
     wolfMqttNetGlue.setDescription("Enable the wolfMQTT NET Glue Code")
     wolfMqttNetGlue.setDefaultValue(True)
+
+    # Enable NET_PRES
+    wolfMqttNetPresEnable = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_FORCE_NET_PRES", wolfMqttNetGlue)
+    wolfMqttNetPresEnable.setVisible(False)
+    wolfMqttNetPresEnable.setDefaultValue(False)
+    wolfMqttNetPresEnable.setDependencies(wolfMqttNetPresEnableFnc, ["WMQTT_NET_GLUE"])
 
     # Enable TLS
     wolfMqttNetForceTls = wolfmqttComponent.createBooleanSymbol("WMQTT_NET_GLUE_FORCE_TLS", wolfMqttNetGlue)
@@ -366,7 +380,7 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttDummyTaskAppSrcFile.setSourcePath("tcpip/config/custom_app/wolfmqtt_app_template/app_mqtt_task_dummy.c")  
     wolfMqttDummyTaskAppSrcFile.setProjectPath("")
     wolfMqttDummyTaskAppSrcFile.setDestPath("../../")
-    wolfMqttDummyTaskAppSrcFile.setOutputName("app_mqtt_task_dummy.c")
+    wolfMqttDummyTaskAppSrcFile.setOutputName("app_mqtt_task.c")
     wolfMqttDummyTaskAppSrcFile.setType("SOURCE")
     wolfMqttDummyTaskAppSrcFile.setOverwrite(True)
     wolfMqttDummyTaskAppSrcFile.setEnabled(True)   
@@ -376,7 +390,7 @@ def instantiateComponent(wolfmqttComponent):
     wolfMqttDummyTaskAppHeaderFile.setSourcePath("tcpip/config/custom_app/wolfmqtt_app_template/app_mqtt_task_dummy.h")  
     wolfMqttDummyTaskAppHeaderFile.setProjectPath("")
     wolfMqttDummyTaskAppHeaderFile.setDestPath("../../")
-    wolfMqttDummyTaskAppHeaderFile.setOutputName("app_mqtt_task_dummy.h")
+    wolfMqttDummyTaskAppHeaderFile.setOutputName("app_mqtt_task.h")
     wolfMqttDummyTaskAppHeaderFile.setType("HEADER")
     wolfMqttDummyTaskAppHeaderFile.setOverwrite(True)
     wolfMqttDummyTaskAppHeaderFile.setEnabled(True)   
@@ -387,6 +401,12 @@ def wolfMqttLibMenuVisible(symbol, event):
     
 def wolfMqttNetGlueVisible(symbol, event): 
     symbol.setVisible(event["value"])
+
+def wolfMqttNetGlueInvisible(symbol, event): 
+    if (event["value"] == True):
+        symbol.setVisible(False)
+    else:
+        symbol.setVisible(True)
 
 def wolfMqttNetGlueEnabled(symbol, event): 
     symbol.setEnabled(event["value"]) 
@@ -435,4 +455,8 @@ def handleMessage(messageID, args):
         retDict= {"Return": "UnImplemented Command"}
     return retDict
       
+def wolfMqttNetPresEnableFnc(symbol, event): 
+    if (event["value"] == True):
+        if(Database.getComponentByID("netPres") == None):
+            res = Database.activateComponents(["netPres"])  
   
