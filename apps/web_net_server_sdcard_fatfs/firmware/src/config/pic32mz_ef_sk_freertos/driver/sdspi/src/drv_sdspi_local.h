@@ -164,6 +164,7 @@ typedef enum
 /* SD Card Driver read task Status. */
 typedef enum
 {
+
     /* Initial state of the task, check for SD card attach/detach */
     DRV_SDSPI_TASK_START_POLLING_TIMER,
 

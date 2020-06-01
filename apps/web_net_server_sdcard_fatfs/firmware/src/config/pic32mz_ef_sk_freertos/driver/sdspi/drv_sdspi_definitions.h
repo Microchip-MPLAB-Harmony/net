@@ -65,7 +65,6 @@
 // Section: Data Types
 // *****************************************************************************
 // *****************************************************************************
-
 typedef enum
 {
     DRV_SDSPI_CLOCK_PHASE_VALID_TRAILING_EDGE = 0,
@@ -190,6 +189,7 @@ typedef struct
 
 } DRV_SDSPI_PLIB_INTERFACE;
 
+
 // *****************************************************************************
 /* SDSPI Driver Initialization Data
 
@@ -226,6 +226,7 @@ typedef struct
 
     /* This is the SPI receive register address. Used for DMA operation. */
     void*                           rxAddress;
+
 
     bool                            isFsEnabled;
 
