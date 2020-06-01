@@ -168,7 +168,11 @@ static void _FTPSocketRxSignalHandler(TCP_SOCKET hTCP, TCPIP_NET_HANDLE hNet, TC
 #define mMIN(a, b)  ((a<b)?a:b)
 
 #if (_FTP_USE_AUTHENTICATION_CALLBACK == 0)
+<<<<<<< HEAD
 #define TCPIP_FTP_ANNONYMOUS_USER_NAME "anonymous"
+=======
+static const char TCPIP_FTP_ANNONYMOUS_USER_NAME[]    = "anonymous";
+>>>>>>> d0356965f... web_ftp_server_mpfs_fatfs regeneration and test after updating configuration.xml file for prebuild option of mplabx to mpfs_net.jar and app.c file updated for FTP callback authentication registration [MH3-30871]
 #endif
 
 static const TCPIP_TCP_SIGNAL_TYPE ftpClientSignals = TCPIP_TCP_SIGNAL_RX_DATA | TCPIP_TCP_SIGNAL_TX_SPACE | TCPIP_TCP_SIGNAL_RX_FIN;
@@ -1438,7 +1442,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
             {
                 memset(fs_stat.fname,0,13);
                 memset(longFileName,0,sizeof(longFileName));
-                if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_FILE, &fs_stat) == SYS_FS_RES_FAILURE)
+                if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_ARC | SYS_FS_ATTR_DIR, &fs_stat) == SYS_FS_RES_FAILURE)
                 {
                     pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
                     pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;

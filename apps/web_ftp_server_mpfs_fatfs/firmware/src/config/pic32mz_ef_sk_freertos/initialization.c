@@ -149,6 +149,7 @@ const DRV_SDSPI_PLIB_INTERFACE drvSDSPI0PlibAPI = {
 const uint32_t drvSDSPI0remapDataBits[]= { 0x00000000, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0xFFFFFFFF, 0x00000400 };
 const uint32_t drvSDSPI0remapClockPolarity[] = { 0x00000000, 0x00000040 };
 const uint32_t drvSDSPI0remapClockPhase[] = { 0x00000000, 0x00000100 };
+
 /* SDSPI Driver Initialization Data */
 const DRV_SDSPI_INIT drvSDSPI0InitData =
 {
@@ -161,6 +162,7 @@ const DRV_SDSPI_INIT drvSDSPI0InitData =
 
     .remapClockPhase        = drvSDSPI0remapClockPhase,
 
+
     /* SDSPI Number of clients */
     .numClients             = DRV_SDSPI_CLIENTS_NUMBER_IDX0,
 
@@ -171,7 +173,7 @@ const DRV_SDSPI_INIT drvSDSPI0InitData =
     .chipSelectPin          = DRV_SDSPI_CHIP_SELECT_PIN_IDX0,
 
     .sdcardSpeedHz          = DRV_SDSPI_SPEED_HZ_IDX0,
-    
+
     .pollingIntervalMs      = DRV_SDSPI_POLLING_INTERVAL_MS_IDX0,
 
     .writeProtectPin        = SYS_PORT_PIN_NONE,
@@ -243,14 +245,89 @@ SYSTEM_OBJECTS sysObj;
 // Section: Library/Stack Initialization Data
 // *****************************************************************************
 // *****************************************************************************
-/*** File System Initialization Data ***/
+// <editor-fold defaultstate="collapsed" desc="File System Initialization Data">
 
 
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
 {
-	{NULL}
+    {NULL}
 };
 
+const SYS_FS_FUNCTIONS FatFsFunctions =
+{
+    .mount             = FATFS_mount,
+    .unmount           = FATFS_unmount,
+    .open              = FATFS_open,
+    .read              = FATFS_read,
+    .close             = FATFS_close,
+    .seek              = FATFS_lseek,
+    .fstat             = FATFS_stat,
+    .getlabel          = FATFS_getlabel,
+    .currWD            = FATFS_getcwd,
+    .getstrn           = FATFS_gets,
+    .openDir           = FATFS_opendir,
+    .readDir           = FATFS_readdir,
+    .closeDir          = FATFS_closedir,
+    .chdir             = FATFS_chdir,
+    .chdrive           = FATFS_chdrive,
+    .write             = FATFS_write,
+    .tell              = FATFS_tell,
+    .eof               = FATFS_eof,
+    .size              = FATFS_size,
+    .mkdir             = FATFS_mkdir,
+    .remove            = FATFS_unlink,
+    .setlabel          = FATFS_setlabel,
+    .truncate          = FATFS_truncate,
+    .chmode            = FATFS_chmod,
+    .chtime            = FATFS_utime,
+    .rename            = FATFS_rename,
+    .sync              = FATFS_sync,
+    .putchr            = FATFS_putc,
+    .putstrn           = FATFS_puts,
+    .formattedprint    = FATFS_printf,
+    .testerror         = FATFS_error,
+    .formatDisk        = (FORMAT_DISK)FATFS_mkfs,
+    .partitionDisk     = FATFS_fdisk,
+    .getCluster        = FATFS_getclusters
+};
+
+const SYS_FS_FUNCTIONS MPFSFunctions =
+{
+    .mount             = MPFS_Mount,
+    .unmount           = MPFS_Unmount,
+    .open              = MPFS_Open,
+    .read              = MPFS_Read,
+    .close             = MPFS_Close,
+    .seek              = MPFS_Seek,
+    .fstat             = MPFS_Stat,
+    .tell              = MPFS_GetPosition,
+    .eof               = MPFS_EOF,
+    .size              = MPFS_GetSize,
+    .openDir           = MPFS_DirOpen,
+    .readDir           = MPFS_DirRead,
+    .closeDir          = MPFS_DirClose,
+    .getlabel          = NULL,
+    .currWD            = NULL,
+    .getstrn           = NULL,
+    .write             = NULL,
+    .mkdir             = NULL,
+    .chdir             = NULL,
+    .remove            = NULL,
+    .setlabel          = NULL,
+    .truncate          = NULL,
+    .chdrive           = NULL,
+    .chmode            = NULL,
+    .chtime            = NULL,
+    .rename            = NULL,
+    .sync              = NULL,
+    .putchr            = NULL,
+    .putstrn           = NULL,
+    .formattedprint    = NULL,
+    .testerror         = NULL,
+    .formatDisk        = NULL,
+    .partitionDisk     = NULL,
+    .getCluster        = NULL
+};
 
 const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
 {
@@ -262,12 +339,9 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
         .nativeFileSystemType = MPFS2,
         .nativeFileSystemFunctions = &MPFSFunctions
     }
-
 };
 
-
-
-
+// </editor-fold>
 
 /* Net Presentation Layer Data Definitions */
 #include "net_pres/pres/net_pres_enc_glue.h"
@@ -707,8 +781,6 @@ const SYS_TIME_INIT sysTimeInitData =
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="SYS_CONSOLE Instance 0 Initialization Data">
 
-static QElement sysConsole0UARTRdQueueElements[SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0];
-static QElement sysConsole0UARTWrQueueElements[SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0];
 
 /* Declared in console device implementation (sys_console_uart.c) */
 extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
@@ -716,33 +788,16 @@ extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
 const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
 {
     .read = (SYS_CONSOLE_UART_PLIB_READ)UART2_Read,
+	.readCountGet = (SYS_CONSOLE_UART_PLIB_READ_COUNT_GET)UART2_ReadCountGet,
+	.readFreeBufferCountGet = (SYS_CONSOLE_UART_PLIB_READ_FREE_BUFFFER_COUNT_GET)UART2_ReadFreeBufferCountGet,
     .write = (SYS_CONSOLE_UART_PLIB_WRITE)UART2_Write,
-    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)UART2_ReadCallbackRegister,
-    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)UART2_WriteCallbackRegister,
-    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)UART2_ErrorGet,
-};
-
-
-const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
-{
-    /* Peripheral has more than one interrupt vector */
-    .isSingleIntSrc                        = false,
-
-    /* Peripheral interrupt lines */
-    .intSources.multi.usartTxCompleteInt   = _UART2_TX_VECTOR,
-    .intSources.multi.usartTxReadyInt      = -1,
-    .intSources.multi.usartRxCompleteInt   = _UART2_RX_VECTOR,
-    .intSources.multi.usartErrorInt        = _UART2_FAULT_VECTOR,
+	.writeCountGet = (SYS_CONSOLE_UART_PLIB_WRITE_COUNT_GET)UART2_WriteCountGet,
+	.writeFreeBufferCountGet = (SYS_CONSOLE_UART_PLIB_WRITE_FREE_BUFFER_COUNT_GET)UART2_WriteFreeBufferCountGet,
 };
 
 const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
 {
-    .uartPLIB = &sysConsole0UARTPlibAPI,
-    .readQueueElementsArr = sysConsole0UARTRdQueueElements,
-    .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
-    .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
-    .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSources = &sysConsole0UARTInterruptSources,
+    .uartPLIB = &sysConsole0UARTPlibAPI,    
 };
 
 const SYS_CONSOLE_INIT sysConsole0Init =
@@ -751,6 +806,8 @@ const SYS_CONSOLE_INIT sysConsole0Init =
     .consDevDesc = &sysConsoleUARTDevDesc,
     .deviceIndex = 0,
 };
+
+
 
 // </editor-fold>
 
@@ -771,6 +828,14 @@ const SYS_DEBUG_INIT debugInit =
 };
 
 
+
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local initialization functions
+// *****************************************************************************
+// *****************************************************************************
 
 
 
@@ -803,14 +868,13 @@ void SYS_Initialize ( void* data )
 
     CORETIMER_Initialize();
 	SPI1_Initialize();
-    
+
     NVM_Initialize();
 
 	UART2_Initialize();
 
 	BSP_Initialize();
 
-    sysObj.drvMemory0 = DRV_MEMORY_Initialize((SYS_MODULE_INDEX)DRV_MEMORY_INDEX_0, (SYS_MODULE_INIT *)&drvMemory0InitData);
     /* Initialize SDSPI0 Driver Instance */
     sysObj.drvSDSPI0 = DRV_SDSPI_Initialize(DRV_SDSPI_INDEX_0, (SYS_MODULE_INIT *)&drvSDSPI0InitData);
 
@@ -818,7 +882,8 @@ void SYS_Initialize ( void* data )
     /* Initialize the MIIM Driver */
     sysObj.drvMiim = DRV_MIIM_Initialize( DRV_MIIM_INDEX_0, (const SYS_MODULE_INIT *) &drvMiimInitData );
 
-    
+    sysObj.drvMemory0 = DRV_MEMORY_Initialize((SYS_MODULE_INDEX)DRV_MEMORY_INDEX_0, (SYS_MODULE_INIT *)&drvMemory0InitData);
+
 
     sysObj.sysTime = SYS_TIME_Initialize(SYS_TIME_INDEX_0, (SYS_MODULE_INIT *)&sysTimeInitData);
     sysObj.sysConsole0 = SYS_CONSOLE_Initialize(SYS_CONSOLE_INDEX_0, (SYS_MODULE_INIT *)&sysConsole0Init);

@@ -5,12 +5,9 @@
 #ifndef _FFCONF
 #define _FFCONF 64180	/* Revision ID */
 
-#include "system/fs/sys_fs.h"
-
 /*---------------------------------------------------------------------------/
 / Function Configurations
 /---------------------------------------------------------------------------*/
-
 #define _FS_READONLY	0
 /* This option switches read-only configuration. (0:Read/Write or 1:Read-only)
 /  Read-only configuration removes writing API functions, f_write(), f_sync(),
@@ -41,7 +38,6 @@
 /* This option switches filtered directory read feature and related functions,
 /  f_findfirst() and f_findnext(). (0:Disable or 1:Enable) */
 
-
 #define	_USE_MKFS		1
 /* This option switches f_mkfs() function. (0:Disable or 1:Enable) */
 
@@ -64,7 +60,7 @@
 / Locale and Namespace Configurations
 /---------------------------------------------------------------------------*/
 
-#define _CODE_PAGE	932
+#define _CODE_PAGE	437
 /* This option specifies the OEM code page to be used on the target system.
 /  Incorrect setting of the code page can cause a file open failure.
 /
@@ -93,7 +89,7 @@
 */
 
 
-#define	_USE_LFN	0
+#define	_USE_LFN	1
 #define	_MAX_LFN	255
 /* The _USE_LFN option switches the LFN feature.
 /
@@ -141,7 +137,7 @@
 / Drive/Volume Configurations
 /---------------------------------------------------------------------------*/
 
-#define _VOLUMES	1
+#define _VOLUMES	2
 /* Number of volumes (logical drives) to be used. */
 
 
@@ -216,8 +212,10 @@
 /  _NORTC_MDAY and _NORTC_YEAR have no effect. 
 /  These options have no effect at read-only configuration (_FS_READONLY == 1). */
 
+#define	_FS_MAX_FILES	25
+/* The _FS_MAX_FILES option is added to control file/directory related data structures */
 
-#define	_FS_LOCK	SYS_FS_MAX_FILES
+#define	_FS_LOCK	25
 /* The _FS_LOCK option switches file lock feature to control duplicated file open
 /  and illegal operation to open objects. This option must be 0 when _FS_READONLY
 /  is 1.
