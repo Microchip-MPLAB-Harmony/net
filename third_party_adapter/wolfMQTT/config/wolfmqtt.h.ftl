@@ -43,7 +43,6 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 
 /*** wolfMQTT configuration ***/
 #define WOLFMQTT_NONBLOCK
-// #define ENABLE_MQTT_TLS
 #define WOLFMQTT_USER_SETTINGS
 // #define WOLFMQTT_NO_TIMEOUT
 // #define WOLFMQTT_NO_STDIN_CAP
@@ -71,6 +70,12 @@ THAT YOU HAVE PAID DIRECTLY TO MICROCHIP FOR THIS SOFTWARE.
 </#if>
 <#if WOLFMQTT_NO_STDIO == false && WOLFMQTT_DEBUG_SOCKET == true>
 #define WOLFMQTT_DEBUG_SOCKET
+</#if>
+
+<#if WOLFMQTT_TLS_ENABLE == true>
+#define ENABLE_MQTT_TLS
+<#else>
+// #define ENABLE_MQTT_TLS
 </#if>
 
 /*** wolMQTT Net Glue configuration ***/

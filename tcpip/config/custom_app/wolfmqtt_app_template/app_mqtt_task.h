@@ -28,7 +28,7 @@
     Microchip Technology Inc.
 
   File Name:
-    app.h
+    app_mqtt_task.h
 
   Summary:
     This header file provides prototypes and definitions for the application.

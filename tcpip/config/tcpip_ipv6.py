@@ -183,7 +183,7 @@ def instantiateComponent(tcpipIPv6Component):
     tcpipIpv6HeapSize.setVisible(False)
     tcpipIpv6HeapSize.setDefaultValue(tcpipIpv6HeapCalc())
     tcpipIpv6HeapSize.setReadOnly(True)
-    tcpipDhcpcHeapSize.setDependencies(tcpipIpv6HeapUpdate, tcpipIpv6heapdependency)
+    tcpipIpv6HeapSize.setDependencies(tcpipIpv6HeapUpdate, tcpipIpv6heapdependency)
     
     #Add to system_config.h
     tcpipIPv6HeaderFtl = tcpipIPv6Component.createFileSymbol(None, None)
