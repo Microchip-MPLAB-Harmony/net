@@ -1438,7 +1438,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
             {
                 memset(fs_stat.fname,0,13);
                 memset(longFileName,0,sizeof(longFileName));
-                if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_ARC | SYS_FS_ATTR_DIR, &fs_stat) == SYS_FS_RES_FAILURE)
+                if(SYS_FS_DirSearch(fp, "*", SYS_FS_ATTR_FILE, &fs_stat) == SYS_FS_RES_FAILURE)
                 {
                     pFTPDcpt->ftp_shell_obj->dirClose(pFTPDcpt->ftp_shell_obj,fp);
                     pFTPDcpt->fileDescr = (int32_t) SYS_FS_HANDLE_INVALID;
