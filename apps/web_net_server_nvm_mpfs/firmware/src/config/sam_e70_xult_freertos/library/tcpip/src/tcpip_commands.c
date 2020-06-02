@@ -4254,15 +4254,26 @@ static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 #if (TCPIP_TCP_COMMANDS)
 static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 {
-    int  sktNo, ix;
+    int  sktNo, ix, startIx, stopIx;
     TCP_SOCKET_INFO sktInfo;
-
 
     const void* cmdIoParam = pCmdIO->cmdIoParam;
 
     sktNo = TCPIP_TCP_SocketsNumberGet();
+    
+    if(argc > 1)
+    {
+        startIx = atoi(argv[1]);
+        stopIx = startIx + 1;
+    }
+    else
+    {
+        startIx = 0;
+        stopIx = sktNo;
+    }
+
     (*pCmdIO->pCmdApi->print)(cmdIoParam, "TCP sockets: %d \r\n", sktNo);
-    for(ix = 0; ix < sktNo; ix++)
+    for(ix = startIx; ix < stopIx; ix++)
     {
         if(TCPIP_TCP_SocketInfoGet(ix, &sktInfo))
         {

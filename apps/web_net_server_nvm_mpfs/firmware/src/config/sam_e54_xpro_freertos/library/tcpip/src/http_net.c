@@ -1203,7 +1203,7 @@ static void TCPIP_HTTP_NET_Process(void)
 
         // If a socket is reset at any time 
         // forget about it and return to idle state.
-        if(NET_PRES_SocketWasReset(pHttpCon->socket))
+        if(NET_PRES_SocketWasReset(pHttpCon->socket) || NET_PRES_SocketWasDisconnected(pHttpCon->socket))
         {
             if(pHttpCon->flags.sktLocalReset != 0)
             {   // http initiated the disconnect; no error

@@ -391,7 +391,7 @@ void APP_Tasks(void) {
         case APP_TCPIP_WAIT_FOR_RESPONSE:
         {
             if (NET_PRES_SocketReadIsReady(appData.socket) == 0) {
-                if (NET_PRES_SocketWasReset(appData.socket)) {
+                if (NET_PRES_SocketWasReset(appData.socket) || NET_PRES_SocketWasDisconnected(appData.socket)) {
                     appData.state = APP_TCPIP_CLOSE_CONNECTION;
                 }
                 break;
@@ -444,7 +444,7 @@ void APP_Tasks(void) {
         case APP_TCPIP_WAIT_FOR_RESPONSE_SSL:
         {
             if (NET_PRES_SocketReadIsReady(appData.socket) == 0) {
-                if (NET_PRES_SocketWasReset(appData.socket)) {
+                if (NET_PRES_SocketWasReset(appData.socket) || NET_PRES_SocketWasDisconnected(appData.socket)) {
                     appData.state = APP_TCPIP_CLOSE_CONNECTION;
                 }
                 break;

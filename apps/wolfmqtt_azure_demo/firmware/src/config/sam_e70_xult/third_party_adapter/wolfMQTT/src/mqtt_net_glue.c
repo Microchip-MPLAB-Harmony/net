@@ -632,7 +632,7 @@ static WMQTT_NET_GLUE_RES WMQTT_NETGlue_CheckConnection(WMQTT_NET_CONTEXT* net_g
     {   // tmo
         return WMQTT_NET_GLUE_TIMEOUT;
     }
-    else if(NET_PRES_SocketWasReset(net_glue_ctx->sktH))
+    else if(NET_PRES_SocketWasReset(net_glue_ctx->sktH) || NET_PRES_SocketWasDisconnected(net_glue_ctx->sktH))
     {
         return WMQTT_NET_GLUE_SKT_RESET_ERR;
     }
