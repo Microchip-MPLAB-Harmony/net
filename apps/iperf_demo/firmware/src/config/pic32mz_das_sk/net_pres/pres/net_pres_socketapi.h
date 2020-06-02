@@ -196,6 +196,9 @@ typedef enum {
     NET_PRES_SKT_UNKNOWN_ERROR = -4,
     NET_PRES_SKT_INVALID_SOCKET = -5,  
     NET_PRES_SKT_ENC_NEGO_FAILED = -6,
+    NET_PRES_SKT_HANDLER_BUSY = -7,     // a signal handler already registered
+    NET_PRES_SKT_HANDLER_ERROR = -8,    // no such signal handler
+    NET_PRES_SKT_HANDLER_TRANSP_ERROR = -9,    // transport layer signal operation failed
 }NET_PRES_SKT_ERROR_T;
 
 //*****************************************************************************
@@ -394,8 +397,8 @@ bool NET_PRES_SocketIsConnected(NET_PRES_SKT_HANDLE_T handle);
 
   Description:
     This function is a self-clearing semaphore indicating whether or not
-    a socket has been disconnected since the previous call. This function calls 
-    directly to the transport layer's IsConnected function, if it exists.
+    a socket has been reset since the previous call.
+    This function calls directly to the transport layer's WasReset function, if it exists.
 
   Precondition:
     A socket needs to have been opened by NET_PRES_SocketOpen.
@@ -404,10 +407,34 @@ bool NET_PRES_SocketIsConnected(NET_PRES_SKT_HANDLE_T handle);
     handle  - The presentation layer socket handle.
 
   Return Values:
-    - true  - The socket has been disconnected since the previous call
-    - false - The socket has not been disconnected since the previous call
+    - true  - The socket has been reset since the previous call
+    - false - The socket has not been reset since the previous call
  */
 bool NET_PRES_SocketWasReset(NET_PRES_SKT_HANDLE_T handle);
+
+//*****************************************************************************
+/*
+  Summary:
+    Function indicating that the remote node disconnected the socket.
+
+  Description:
+    This function indicates that the socket has received a FIN from the remote node.
+    This signals that the remote node has finished transmitting its data.
+    At this point it is up to the socket owner to send some more data or to close the socket.
+
+    This function calls directly to the transport layer's WasDisconnected function, if it exists.
+  
+  Precondition:
+    A socket needs to have been opened by NET_PRES_SocketOpen.
+
+  Parameters:
+    handle  - The presentation layer socket handle.
+
+  Return Values:
+    - true  - The socket has received a FIN from the remote node
+    - false - The socket has not received a FIN from the remote node
+ */
+bool NET_PRES_SocketWasDisconnected(NET_PRES_SKT_HANDLE_T handle);
 
 //******************************************************************************
 /*

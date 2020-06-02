@@ -155,6 +155,7 @@ static const NET_PRES_TransportObject netPresTransObject0SS = {
     .fpOptionSet         = (NET_PRES_TransOption)TCPIP_TCP_OptionsSet,
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_TCP_IsConnected,
     .fpWasReset          = (NET_PRES_TransBool)TCPIP_TCP_WasReset,
+    .fpWasDisconnected   = (NET_PRES_TransBool)TCPIP_TCP_WasDisconnected,
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_TCP_Disconnect,
     .fpConnect           = (NET_PRES_TransBool)TCPIP_TCP_Connect,
     .fpClose             = (NET_PRES_TransClose)TCPIP_TCP_Close,

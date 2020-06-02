@@ -44,8 +44,10 @@
     .fpIsConnected       = (NET_PRES_TransBool)TCPIP_${CONN}_IsConnected,
     <#if CONN == "TCP">
     .fpWasReset          = (NET_PRES_TransBool)TCPIP_${CONN}_WasReset,
+    .fpWasDisconnected   = (NET_PRES_TransBool)TCPIP_${CONN}_WasDisconnected,
     <#else>
     .fpWasReset          = NULL,
+    .fpWasDisconnected   = NULL,
     </#if>
     .fpDisconnect        = (NET_PRES_TransBool)TCPIP_${CONN}_Disconnect,
     <#if CONN == "TCP">
