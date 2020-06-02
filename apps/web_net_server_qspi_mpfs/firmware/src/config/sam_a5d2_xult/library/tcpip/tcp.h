@@ -139,6 +139,28 @@ typedef enum
 } TCPIP_TCP_STATE;
 
 
+// *****************************************************************************
+/*
+  Enumeration:
+    TCP_SOCKET_FLAGS
+
+  Summary:
+    TCP socket flags.
+
+  Description:
+    Enumeration describing the possible flags of a TCP socket.
+*/
+
+typedef enum
+{
+    TCP_SOCKET_FLAG_NONE        = 0,        // No flag set, invalid socket
+    TCP_SOCKET_FLAG_VALID       = 0x01,     // socket exists: validity flag
+    TCP_SOCKET_FLAG_CONNECTED   = 0x02,     // socket is currently connected
+    TCP_SOCKET_FLAG_RST         = 0x04,     // remote party issued a reset
+    TCP_SOCKET_FLAG_FIN         = 0x08,     // remote party issued a FIN
+} TCP_SOCKET_FLAGS;
+
+
 
 
 // *****************************************************************************
@@ -165,6 +187,7 @@ typedef struct
     uint16_t            txSize;             // size of the TX buffer
     uint16_t            rxPending;          // bytes pending in RX buffer
     uint16_t            txPending;          // bytes pending in TX buffer
+    TCP_SOCKET_FLAGS    flags;              // socket flags
 } TCP_SOCKET_INFO;
 
 // *****************************************************************************
@@ -355,7 +378,7 @@ typedef enum
     TCPIP_TCP_SIGNAL_RX_DATA         = 0x0200,  // A data packet was successfully received and there is data 
 	                                            // available for this socket
 
-    TCPIP_TCP_SIGNAL_RX_FIN          = 0x0400,  // Remote host finished it's data and sent a FIN; 
+    TCPIP_TCP_SIGNAL_RX_FIN          = 0x0400,  // Remote host finished its data and sent a FIN; 
 
     TCPIP_TCP_SIGNAL_RX_RST          = 0x0800,  // Remote host reset the connection; 
 
@@ -798,11 +821,11 @@ bool  TCPIP_TCP_IsConnected(TCP_SOCKET hTCP);
 
   Description:
     This function is a self-clearing semaphore indicating whether or not
-    a socket has been disconnected since the previous call.  This function
-    works for all possible disconnections: a call to TCPIP_TCP_Disconnect, a FIN
-    from the remote node, or an acknowledgment timeout caused by the loss
-    of a network link.  It also returns true after the first call to TCPIP_TCP_Initialize.
-    Applications should use this function to reset their state machines.
+    a socket has been reset since the previous call.
+    This function indicates that a RST was received from the remote node,
+    a TCPIP_TCP_Disconnect was called or the socket was somehow re-initalized.
+
+    It also returns true just after the socket was opened.
 
   Precondition:
     TCP is initialized.
@@ -811,10 +834,63 @@ bool  TCPIP_TCP_IsConnected(TCP_SOCKET hTCP);
     hTCP - The socket to check.
 
   Return Values:
-    - true - The socket has been disconnected since the previous call.
-    - false - The socket has not been disconnected since the previous call.
+    - true - The socket has been reset since the previous call.
+    - false - The socket has not been reset since the previous call.
+
+  Remarks:
+    A server socket upon receiving a RST signal will go to listen state.
+
+    A client socket will be closed when RST is received.
+
+    The info that the FIN was received could be also obtained
+    by registering a signal with the socket (the preferred way).
  */
 bool   TCPIP_TCP_WasReset(TCP_SOCKET hTCP);
+
+//*****************************************************************************
+/*
+  Function:
+    bool TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP)
+
+  Summary:
+    Function indicating that the socket was disconnected from the remode node.
+
+  Description:
+    This function indicates that the socket has received a FIN from the remote node.
+    This signals that the remote node has finished transmitting its data.
+    By default, the socket will be in the CLOSE_WAIT state.
+
+    At this point it is up to the socket owner to send some more data or to close the socket.
+    
+    When done transmitting its data, the socket owner should call TCPIP_TCP_Disconnect() or TCPIP_TCP_Close().
+    TCPIP_TCP_Disconnect works for both server and client sockets.
+    The server socket will return to listen state.
+    The client socket will be closed.
+
+  Precondition:
+    TCP is initialized.
+
+  Parameters:
+    hTCP - The socket to check.
+
+  Return Values:
+    - true - The socket has received FIN
+    - false - The socket has not received FIN
+              or the socket is invalid
+
+  Remarks:
+    The obsolete symbol TCPIP_TCP_CLOSE_WAIT_TIMEOUT != 0
+    causes the socket to transition itself from CLOSE_WAIT state:
+    - to listen state for a server socket
+    - to close a client socket
+    However this behavior is not according to the standards and could be dangerous
+    especially in multi-threaded environments.
+
+    The info that the FIN was received could be also obtained
+    by registering a signal with the socket (the preferred way).
+
+ */
+bool   TCPIP_TCP_WasDisconnected(TCP_SOCKET hTCP);
 
 //******************************************************************************
 /*
@@ -977,6 +1053,31 @@ bool  TCPIP_TCP_Close(TCP_SOCKET hTCP);
     - false - if no such socket exists or the socket is not open
  */
 bool  TCPIP_TCP_SocketInfoGet(TCP_SOCKET hTCP, TCP_SOCKET_INFO* pInfo);
+
+//*****************************************************************************
+/*
+  Function:
+    TCP_SOCKET_FLAGS  TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP);
+
+  Summary:
+    Obtains the current socket flags
+
+  Description:
+    The function will return flags associated with the current socket
+
+  Precondition:
+    TCP is initialized
+
+  Parameters:
+    hTCP - The socket handle
+
+  Returns:
+    a TCP_SOCKET_FLAGS value
+
+  Remarks:
+    TCP_SOCKET_FLAG_VALID will not be set for a non existent socket 
+ */
+TCP_SOCKET_FLAGS  TCPIP_TCP_SocketFlagsGet(TCP_SOCKET hTCP);
 
 //*****************************************************************************
 /*

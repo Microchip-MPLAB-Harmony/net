@@ -1576,7 +1576,7 @@ static void StateMachineTcpRx(tIperfState* pIState)
     if( (length = TCPIP_TCP_GetIsReady(pIState->tcpServerSock)) == 0 )
     {
 
-      if ( TCPIP_TCP_WasReset(pIState->tcpServerSock)  )
+      if ( TCPIP_TCP_WasReset(pIState->tcpServerSock) || TCPIP_TCP_WasDisconnected(pIState->tcpServerSock)  )
       {
           pIState->stopTime = SYS_TMR_TickCountGet();
           IperfSetState(pIState, IPERF_TCP_RX_DONE_STATE);

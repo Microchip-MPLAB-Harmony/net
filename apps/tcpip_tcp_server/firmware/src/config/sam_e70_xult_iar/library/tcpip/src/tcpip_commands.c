@@ -4266,8 +4266,10 @@ static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
     {
         if(TCPIP_TCP_SocketInfoGet(ix, &sktInfo))
         {
-            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, rxSize: %d, txSize: %d, state: %d, rxPend: %d, txPend: %d\r\n",
-                    ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\tsktIx: %d, addType: %d, remotePort: %d, localPort: %d, flags: 0x%02x\r\n",
+                    ix, sktInfo.addressType, sktInfo.remotePort, sktInfo.localPort, sktInfo.flags);
+            (*pCmdIO->pCmdApi->print)(cmdIoParam, "\trxSize: %d, txSize: %d, state: %d, rxPend: %d, txPend: %d\r\n",
+                    sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
         }
     }
 
