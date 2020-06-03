@@ -196,7 +196,8 @@ static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_UDP_COMMANDS)
 
 #if (TCPIP_TCP_COMMANDS)
-static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
+static void _Command_TcpTrace(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv);
 #endif  // (TCPIP_TCP_COMMANDS)
 
 #if (TCPIP_PACKET_LOG_ENABLE)
@@ -452,7 +453,8 @@ static const SYS_CMD_DESCRIPTOR    tcpipCmdTbl[]=
     {"udpinfo",     (SYS_CMD_FNC)_Command_UdpInfo,              ": Check UDP statistics"},
 #endif  // (TCPIP_UDP_COMMANDS)
 #if (TCPIP_TCP_COMMANDS)
-    {"tcpinfo",     (SYS_CMD_FNC)_Command_TcpInfo,              ": Check TCP statistics"},
+    {"tcpinfo",     _Command_TcpInfo,                           ": Check TCP statistics"},
+    {"tcptrace",    _Command_TcpTrace,                          ": Enable TCP trace"},
 #endif  // (TCPIP_TCP_COMMANDS)
 #if (TCPIP_PACKET_LOG_ENABLE)
     {"plog",        (SYS_CMD_FNC)_Command_PktLog,               ": PKT flight log"},
@@ -4252,8 +4254,8 @@ static int _Command_UdpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
 
 
 #if (TCPIP_TCP_COMMANDS)
-static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
-{
+static void _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{   // tcpinfo <n>
     int  sktNo, ix, startIx, stopIx;
     TCP_SOCKET_INFO sktInfo;
 
@@ -4283,8 +4285,39 @@ static int _Command_TcpInfo(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
                     sktInfo.rxSize, sktInfo.txSize, sktInfo.state, sktInfo.rxPending, sktInfo.txPending);
         }
     }
+}
 
-    return true;
+static void _Command_TcpTrace(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** argv)
+{   // tcptrace on/off n
+
+    int     sktNo;
+    bool    traceOn;
+
+    const void* cmdIoParam = pCmdIO->cmdIoParam;
+    
+    while(argc >= 3)
+    {
+        sktNo = atoi(argv[2]);
+        if(strcmp(argv[1], "on") == 0)
+        {
+            traceOn = true;
+        }
+        else if(strcmp(argv[1], "off") == 0)
+        {
+            traceOn = false;
+        }
+        else
+        {
+            break;
+        }
+
+        bool res = TCPIP_TCP_SocketTraceSet(sktNo, traceOn);
+
+        (*pCmdIO->pCmdApi->print)(cmdIoParam, "tcp trace %s for socket: %d %s\r\n", argv[1], sktNo, res ? "success" : "failed");
+        return;
+    }
+
+    (*pCmdIO->pCmdApi->msg)(cmdIoParam, "usage: tcptrace on/off n\r\n");
 }
 
 #endif  // (TCPIP_TCP_COMMANDS)
