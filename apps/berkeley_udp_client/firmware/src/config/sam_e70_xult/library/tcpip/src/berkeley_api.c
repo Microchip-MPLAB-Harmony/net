@@ -53,7 +53,8 @@ __attribute__((section(".bss.errno"))) int errno = 0;           // initializatio
 #include <sys/errno.h>
 #endif
 
-static bool HandlePossibleTCPDisconnection(SOCKET s);
+static bool TCP_SocketWasReset(SOCKET s);
+static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort);
 
 static void TCP_SignalFunction(NET_PRES_SKT_HANDLE_T hTCP, NET_PRES_SIGNAL_HANDLE hNet, uint16_t sigType, const void* param);
 
@@ -955,7 +956,12 @@ int connect( SOCKET s, struct sockaddr* name, int namelen )
                 return 0; // already established
 
             case SKT_IN_PROGRESS:
-                if (HandlePossibleTCPDisconnection(s)) 
+                if (TCP_SocketWasReset(s)) 
+                {
+                    errno = ECONNREFUSED;
+                    return SOCKET_ERROR;
+                }
+                else if (TCP_SocketWasDisconnected(s, true))
                 {
                     errno = ECONNREFUSED;
                     return SOCKET_ERROR;
@@ -1372,7 +1378,7 @@ int sendto( SOCKET s, const char* buf, int len, int flags, const struct sockaddr
             return SOCKET_ERROR;
         }
 
-        if (HandlePossibleTCPDisconnection(s))
+        if (TCP_SocketWasReset(s))
         {
             errno = ECONNRESET;
             return SOCKET_ERROR;
@@ -1453,7 +1459,7 @@ int recv( SOCKET s, char* buf, int len, int flags )
             return SOCKET_ERROR;
         }
 
-		if(HandlePossibleTCPDisconnection(s))
+		if(TCP_SocketWasReset(s) || TCP_SocketWasDisconnected(s, false))
         {
             return 0;
         }
@@ -1863,15 +1869,14 @@ int closesocket( SOCKET s )
 
 /*****************************************************************************
   Function:
-	static bool HandlePossibleTCPDisconnection(SOCKET s)
+	static bool TCP_SocketWasReset(SOCKET s)
 	
   Summary:
 	Internal function that checks for asynchronous TCP connection state 
-	changes and resynchs the BSD socket descriptor state to match. 
 
   Description:
-	Internal function that checks for asynchronous TCP connection state 
-	changes and resynchs the BSD socket descriptor state to match. 
+	Internal function that checks for the occurrence of a TCP connection reset 
+    If reset occurred, it updates the BSD socket descriptor state to match. 
 
   Precondition:
 	None
@@ -1882,24 +1887,28 @@ int closesocket( SOCKET s )
 	    SKT_DISCONNECTED states.
 
   Returns:
-	true - Socket is disconnected
-	false - Socket is 
+	true - Socket has been reset
+	false - Socket has not been reset
 
   ***************************************************************************/
-static bool HandlePossibleTCPDisconnection(SOCKET s)
+static bool TCP_SocketWasReset(SOCKET s)
 {
 	struct BSDSocket *socket;
 	uint8_t i;
-	bool bSocketWasReset;
 
 	socket = BSDSocketArray + s;
 
-	// Nothing to do if disconnection has already been handled
+	// Nothing to do if reset has already been handled
 	if(socket->bsdState == SKT_DISCONNECTED)
+    {
 		return true;	
+    }
 
-	// Find out if a disconnect has occurred
-	bSocketWasReset = NET_PRES_SocketWasReset(socket->SocketID);
+	// Find out if a reset has occurred
+	if(!NET_PRES_SocketWasReset(socket->SocketID))
+    {   // Nothing to do if a reset has not occurred
+        return false;
+    }
 
 	// For server sockets, if the parent listening socket is still open, 
 	// then return this socket to the queue for future backlog processing.
@@ -1907,20 +1916,16 @@ static bool HandlePossibleTCPDisconnection(SOCKET s)
 	{
 		for(i = 0; i < BSD_SOCKET_COUNT; i++)
 		{
-			if(BSDSocketArray[i].bsdState != SKT_BSD_LISTEN)
-				continue;
-			if(BSDSocketArray[i].localPort == socket->localPort)
-			{
-				// Nothing to do if a disconnect has not occurred
-				if(!bSocketWasReset)
-					return false;
-
-				// Listener socket is still open, so just return to the 
-				// listening state so that the user must call accept() again to 
-				// reuse this BSD socket
-				socket->bsdState = SKT_LISTEN;
-				return true;
-			}
+			if(BSDSocketArray[i].bsdState == SKT_BSD_LISTEN)
+            {
+                if(BSDSocketArray[i].localPort == socket->localPort)
+                {   // Listener socket is still open, so just return to the 
+                    // listening state so that the user must call accept() again to 
+                    // reuse this BSD socket
+                    socket->bsdState = SKT_LISTEN;
+                    return true;
+                }
+            }
 		}
 	}
 			
@@ -1928,14 +1933,63 @@ static bool HandlePossibleTCPDisconnection(SOCKET s)
 	// should be closed so that no more clients can connect to it.  However, 
 	// we can't go to the BSD SKT_CLOSED state directly since the user still 
 	// has to call closesocket() with this s SOCKET descriptor first.
-	if(bSocketWasReset)
-	{
-		TCPIP_TCP_Abort(socket->nativeSkt, false);
-		socket->bsdState = SKT_DISCONNECTED;
-		return true;
-	}
+    TCPIP_TCP_Abort(socket->nativeSkt, false);
+    socket->bsdState = SKT_DISCONNECTED;
+    return true;
+
+}
+
+/*****************************************************************************
+  Function:
+    static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort)
 	
-	return false;
+  Summary:
+	Internal function that checks for asynchronous TCP connection state 
+
+  Description:
+	Internal function that checks for the occurrence of a TCP disconnection 
+    from the remote node.
+    If disconnect occurred, it can abort the client connection
+
+  Precondition:
+	None
+
+  Parameters:
+	s - TCP type socket descriptor returned from a previous call to socket.  
+    cliAbort - if true and the disconnect condition detected, the client socket will be aborted
+               Note: no action taken on a server socket!
+
+  Returns:
+	true - Socket has been remotely disconnected
+	false - Socket has not been remotely disconnected
+
+  ***************************************************************************/
+static bool TCP_SocketWasDisconnected(SOCKET s, bool cliAbort)
+{
+	struct BSDSocket *socket;
+
+	socket = BSDSocketArray + s;
+
+	if(socket->bsdState == SKT_DISCONNECTED)
+    {   // Nothing to do if a disconnect has already been handled
+		return true;	
+    }
+
+	// Find out if a reset has occurred
+	if(!NET_PRES_SocketWasDisconnected(socket->SocketID))
+    {   // Nothing to do if a reset has not occurred
+        return false;
+    }
+
+	// For server sockets, if the parent listening socket is still open, 
+	// then return this socket to the queue for future backlog processing.
+	if(socket->isServer == 0 && cliAbort)
+    {
+        TCPIP_TCP_Abort(socket->nativeSkt, false);
+        socket->bsdState = SKT_DISCONNECTED;
+    }
+
+    return true;
 }
 
 int _setsockopt_ip(const struct BSDSocket * s,
