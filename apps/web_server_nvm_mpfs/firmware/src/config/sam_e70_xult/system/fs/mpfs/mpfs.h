@@ -51,14 +51,19 @@
 // *****************************************************************************
 // *****************************************************************************
 
-#include "configuration.h"
-#include "system/fs/sys_fs.h"
-
 #include <stdint.h>
+#include "configuration.h"
 
-extern const SYS_FS_FUNCTIONS MPFSFunctions;
+typedef struct {
+    uint8_t pd; /* Physical drive number */
+    uint8_t pt; /* Partition: 0:Auto detect */
+} MPFS_PARTITION;
 
-typedef uint32_t MPFS_HANDLE;	// MPFS Handles are currently stored as BYTEs
+/* Volume - Partition resolution table */
+extern MPFS_PARTITION MPFS_VolToPart[SYS_FS_VOLUME_NUMBER];
+
+typedef uint32_t MPFS_HANDLE;    // MPFS Handles are currently stored as BYTEs
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: Enumerations
@@ -69,11 +74,11 @@ typedef uint32_t MPFS_HANDLE;	// MPFS Handles are currently stored as BYTEs
 /*  MPFS Results
 
   Summary:
-	Lists all the possible return values for SYS_FS_MPFS_Open function.
+    Lists all the possible return values for SYS_FS_MPFS_Open function.
 
   Description:
-	This enumeration lists all the possible return values for SYS_FS_MPFS_Open
-	function.
+    This enumeration lists all the possible return values for SYS_FS_MPFS_Open
+    function.
 
   Remarks:
 */
@@ -144,7 +149,7 @@ typedef enum
     None.
 
   Parameters:
-	diskNo - disk index in the Filesystem framework
+    diskNo - disk index in the Filesystem framework
 
   Returns:
     MPFS_RESULT - One of the possible value from MPFS_RESULT stating the status.
@@ -178,9 +183,9 @@ int MPFS_Mount ( uint8_t diskNo );
     None.
 
   Parameters:
-	cFile - A null terminated file name to open.
-	path  - Path of the specified file, Not applicable in case of MPFS
-	mode  - Mode in which the file should be opened.
+    cFile - A null terminated file name to open.
+    path  - Path of the specified file, Not applicable in case of MPFS
+    mode  - Mode in which the file should be opened.
   Returns:
     SYS_FS_HANDLE.
 
@@ -306,17 +311,17 @@ uint32_t MPFS_GetPosition ( uintptr_t handle);
 bool MPFS_EOF ( uintptr_t handle);
 /*****************************************************************************
   Function:
-	int MPFS_Seek ( uintptr_t handle, uint32_t dwOffset )
+    int MPFS_Seek ( uintptr_t handle, uint32_t dwOffset )
 
   Description:
-	Moves the current read pointer to a new location.
+    Moves the current read pointer to a new location.
 
   Precondition:
-	The file handle referenced by hMPFS is already open.
+    The file handle referenced by hMPFS is already open.
 
   Parameters:
-	hMPFS - the file handle to seek with
-	dwOffset - offset from the specified position
+    hMPFS - the file handle to seek with
+    dwOffset - offset from the specified position
 
   Returns:
     Success     - MPFS_OK
@@ -350,7 +355,7 @@ int MPFS_Stat ( const char* filewithDisk, uintptr_t stat_str );
   Function:
     int MPFS_DirOpen
     (
-	    uintptr_t handle,
+        uintptr_t handle,
         const char *path
     );
 
@@ -380,15 +385,15 @@ int MPFS_Stat ( const char* filewithDisk, uintptr_t stat_str );
 
 int MPFS_DirOpen
 (
-	uintptr_t handle,
-	const char *path
+    uintptr_t handle,
+    const char *path
 );
 
 /*****************************************************************************
   Function:
     int MPFS_DirClose
     (
-	    uintptr_t handle
+        uintptr_t handle
     );
 
   Summary
@@ -411,15 +416,15 @@ int MPFS_DirOpen
 
 int MPFS_DirClose
 (
-	uintptr_t handle
+    uintptr_t handle
 );
 
 /*****************************************************************************
   Function:
     int MPFS_DirRead
     (
-	    uintptr_t handle,
-	    uintptr_t statPtr
+        uintptr_t handle,
+        uintptr_t statPtr
     );
 
   Summary
@@ -462,8 +467,8 @@ int MPFS_DirClose
 
 int MPFS_DirRead
 (
-	uintptr_t handle,
-	uintptr_t statPtr
+    uintptr_t handle,
+    uintptr_t statPtr
 );
 
 #endif //SYS_FS_MPFS_H
