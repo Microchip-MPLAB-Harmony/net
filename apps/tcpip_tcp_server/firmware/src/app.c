@@ -227,7 +227,7 @@ void APP_Tasks ( void )
 
         case APP_TCPIP_SERVING_CONNECTION:
         {
-            if (!TCPIP_TCP_IsConnected(appData.socket))
+            if (!TCPIP_TCP_IsConnected(appData.socket) || TCPIP_TCP_WasDisconnected(appData.socket))
             {
                 appData.state = APP_TCPIP_CLOSING_CONNECTION;
                 SYS_CONSOLE_MESSAGE("Connection was closed\r\n");
