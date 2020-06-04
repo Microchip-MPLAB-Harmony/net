@@ -217,13 +217,13 @@
             <logicalFolder name="f3" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/cache/sys_cache.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="command" projectFiles="true">
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/command/sys_command.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f7" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/console/sys_console.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+            <logicalFolder name="f4" displayName="debug" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/debug/sys_debug.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="fs" projectFiles="true">
@@ -231,19 +231,19 @@
                 <logicalFolder name="f1" displayName="file_system" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/src/file_system/ff.h</itemPath>
                   <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/src/file_system/ffconf.h</itemPath>
+                  <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/file_system/ff.h</itemPath>
+                  <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/file_system/ffconf.h</itemPath>
                 </logicalFolder>
                 <logicalFolder name="f2" displayName="hardware_access" projectFiles="true">
                   <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/src/hardware_access/diskio.h</itemPath>
+                  <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/hardware_access/diskio.h</itemPath>
                 </logicalFolder>
-              </logicalFolder>
-              <logicalFolder name="f2" displayName="mpfs" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult/system/fs/mpfs/mpfs.h</itemPath>
-                <itemPath>../src/config/sam_v71_xult/system/fs/mpfs/src/mpfs_local.h</itemPath>
               </logicalFolder>
               <itemPath>../src/config/sam_v71_xult/system/fs/sys_fs.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/fs/src/sys_fs_local.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/fs/sys_fs_media_manager.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/fs/src/sys_fs_media_manager_local.h</itemPath>
+              <itemPath>../src/config/sam_v71_xult/system/fs/sys_fs_fat_interface.h</itemPath>
             </logicalFolder>
             <logicalFolder name="f2" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/int/sys_int.h</itemPath>
@@ -491,13 +491,134 @@
       <itemPath>../src/http_net_print.h</itemPath>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="sam_v71_xult" projectFiles="true">
+          <logicalFolder name="f6" displayName="bsp" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="driver" projectFiles="true">
+            <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="gmac" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="memory" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f5" displayName="library" projectFiles="true">
+            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="common" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
+            <logicalFolder name="f1" displayName="pres" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="efc" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="mpu" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="nvic" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="pio" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="tc" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="usart" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="system" projectFiles="true">
+            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="debug" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="fs" projectFiles="true">
+              <logicalFolder name="f1" displayName="mpfs" projectFiles="true">
+                <itemPath>../src/config/sam_v71_xult/system/fs/mpfs/mpfs_local.h</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="osal" projectFiles="true">
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1" displayName="ATSAMV71Q21B_DFP" projectFiles="true">
+          <logicalFolder name="f1" displayName="component" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="pio" projectFiles="true">
+          </logicalFolder>
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="CMSIS" projectFiles="true">
+          <logicalFolder name="f1" displayName="CMSIS" projectFiles="true">
+            <logicalFolder name="f1" displayName="Core" projectFiles="true">
+              <logicalFolder name="f1" displayName="Include" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f5" displayName="wolfcrypt" projectFiles="true">
+        <logicalFolder name="f1" displayName="port" projectFiles="true">
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f2" displayName="wolfssl" projectFiles="true">
+      </logicalFolder>
+    </logicalFolder>
     <logicalFolder name="f4" displayName="Important Files" projectFiles="true">
       <logicalFolder name="f1" displayName="wolfcrypt" projectFiles="true">
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/misc.c</itemPath>
       </logicalFolder>
       <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/sam_v71_xult/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_v71_xult/harmony.prj</itemPath>
+    </logicalFolder>
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="wolfcrypt" projectFiles="true">
+      </logicalFolder>
+      <itemPath>../src/config/sam_v71_xult/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_v71_xult/sam_v71_xult.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="f2" displayName="Linker Files" projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
     </logicalFolder>
     <logicalFolder name="f3" displayName="Source Files" projectFiles="true">
       <logicalFolder name="f2" displayName="config" projectFiles="true">
@@ -608,35 +729,40 @@
             <itemPath>../src/config/sam_v71_xult/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <logicalFolder name="f4" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="cache" projectFiles="true">
+            <logicalFolder name="f4" displayName="cache" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/cache/sys_cache.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f4" displayName="command" projectFiles="true">
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/command/src/sys_command.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f7" displayName="console" projectFiles="true">
-              <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console.c</itemPath>
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/sam_v71_xult/system/console/src/sys_console_local.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+            <logicalFolder name="f7" displayName="debug" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/debug/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f6" displayName="fs" projectFiles="true">
               <logicalFolder name="f1" displayName="fat_fs" projectFiles="true">
+                <logicalFolder name="f1" displayName="file_system" projectFiles="true">
+                  <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/file_system/ff.c</itemPath>
+                  <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/file_system/ffunicode.c</itemPath>
+                </logicalFolder>
+                <logicalFolder name="f2" displayName="hardware_access" projectFiles="true">
+                  <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/hardware_access/diskio.c</itemPath>
+                </logicalFolder>
                 <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/src/ff.c</itemPath>
                 <itemPath>../src/config/sam_v71_xult/system/fs/fat_fs/src/diskio.c</itemPath>
               </logicalFolder>
-              <logicalFolder name="f2" displayName="mpfs" projectFiles="true">
-                <itemPath>../src/config/sam_v71_xult/system/fs/mpfs/src/mpfs.c</itemPath>
-              </logicalFolder>
               <itemPath>../src/config/sam_v71_xult/system/fs/src/sys_fs.c</itemPath>
               <itemPath>../src/config/sam_v71_xult/system/fs/src/sys_fs_media_manager.c</itemPath>
+              <itemPath>../src/config/sam_v71_xult/system/fs/src/sys_fs_fat_interface.c</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="int" projectFiles="true">
+            <logicalFolder name="f3" displayName="int" projectFiles="true">
               <itemPath>../src/config/sam_v71_xult/system/int/src/sys_int.c</itemPath>
             </logicalFolder>
             <logicalFolder name="f1" displayName="time" projectFiles="true">
@@ -655,8 +781,12 @@
       <logicalFolder name="f1" displayName="web_pages" projectFiles="true">
         <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
           <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
+          <itemPath>../src/web_pages/dyndns/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f2" displayName="email" projectFiles="true">
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
+          <itemPath>../src/web_pages/email/index.htm</itemPath>
           <itemPath>../src/web_pages/email/index.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f3" displayName="protect" projectFiles="true">
@@ -664,8 +794,18 @@
           <itemPath>../src/web_pages/protect/index.htm</itemPath>
           <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
           <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
+          <itemPath>../src/web_pages/protect/config.htm</itemPath>
+          <itemPath>../src/web_pages/protect/index.htm</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.cgi</itemPath>
+          <itemPath>../src/web_pages/protect/reboot.htm</itemPath>
         </logicalFolder>
         <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
+          <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
           <itemPath>../src/web_pages/snmp/snmpconfig.htm</itemPath>
         </logicalFolder>
         <itemPath>../src/web_pages/auth.htm</itemPath>
@@ -786,9 +926,109 @@
       </logicalFolder>
       <itemPath>../src/http_net_print.c</itemPath>
       <itemPath>../src/custom_http_net_app.c</itemPath>
-      <itemPath>../src/mpfs_net_img.c</itemPath>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f2" displayName="config" projectFiles="true">
+        <logicalFolder name="f1" displayName="sam_v71_xult" projectFiles="true">
+          <logicalFolder name="f7" displayName="bsp" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="driver" projectFiles="true">
+            <logicalFolder name="f4" displayName="ethphy" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="gmac" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="memory" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="miim" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
+            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="common" projectFiles="true">
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
+            <logicalFolder name="f1" displayName="pres" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="efc" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="mpu" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="nvic" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="pio" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="tc" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="usart" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f6" displayName="stdio" projectFiles="true">
+          </logicalFolder>
+          <logicalFolder name="f4" displayName="system" projectFiles="true">
+            <logicalFolder name="f4" displayName="cache" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="fs" projectFiles="true">
+              <logicalFolder name="f1" displayName="mpfs" projectFiles="true">
+                <itemPath>../src/config/sam_v71_xult/system/fs/mpfs/mpfs.c</itemPath>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="int" projectFiles="true">
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
+            </logicalFolder>
+          </logicalFolder>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f1" displayName="web_pages" projectFiles="true">
+        <logicalFolder name="f1" displayName="dyndns" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="f2" displayName="email" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="f3" displayName="protect" projectFiles="true">
+        </logicalFolder>
+        <logicalFolder name="f4" displayName="snmp" projectFiles="true">
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f4" displayName="wolfcrypt" projectFiles="true">
+        <logicalFolder name="f1" displayName="port" projectFiles="true">
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder name="f3" displayName="wolfssl" projectFiles="true">
+      </logicalFolder>
     </logicalFolder>
   </logicalFolder>
   <sourceRootList>
@@ -804,13 +1044,15 @@
         <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
-        <languageToolchainVersion>2.40</languageToolchainVersion>
+        <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="4.2.60"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="4.3.66"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -868,7 +1110,7 @@
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
         <property key="extra-include-directories"
-                  value="../src/config/sam_v71_xult/library;../src/config/sam_v71_xult/library/tcpip/src;../src/config/sam_v71_xult/library/tcpip/src/common;../src;../src/config/sam_v71_xult;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/arm;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl"/>
+                  value="../src/config/sam_v71_xult/library;../src/config/sam_v71_xult/library/tcpip/src;../src/config/sam_v71_xult/library/tcpip/src/common;../src;../src/config/sam_v71_xult;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl;../src/config/sam_v71_xult/system/fs/fat_fs/file_system;../src/config/sam_v71_xult/system/fs/fat_fs/hardware_access"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -1042,6 +1284,9 @@
                   value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UpdateOptions"
                   value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack"
+                  value="Press to select which tool pack to use"/>
+        <property key="communication.interface.jtag" value="2wire"/>
         <property key="debugoptions.useswbreakpoints" value="false"/>
         <property key="hwtoolclock.frcindebug" value="false"/>
         <property key="memories.aux" value="false"/>
@@ -1058,6 +1303,8 @@
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="400000-5fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
+        <property key="programmerToGoFilePath"
+                  value="D:/isp/git/h3/net/apps/web_net_server_nvm_mpfs/firmware/sam_v71_xult.X/debug/sam_v71_xult/sam_v71_xult_ptg"/>
         <property key="programoptions.donoteraseauxmem" value="false"/>
         <property key="programoptions.eraseb4program" value="true"/>
         <property key="programoptions.ledbrightness" value="5"/>
@@ -1068,6 +1315,8 @@
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
+        <property key="programoptions.preservedataflash.ranges"
+                  value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value=""/>
@@ -1076,6 +1325,10 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
+        <property key="toolpack.updateoptions"
+                  value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion"
+                  value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>
