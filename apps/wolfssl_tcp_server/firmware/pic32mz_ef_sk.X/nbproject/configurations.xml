@@ -1,19 +1,13 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <configurationDescriptor version="65">
-  <logicalFolder name="root" displayName="root" projectFiles="true">
-    <logicalFolder name="f1" displayName="Header Files" projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="pic32mz_ef_sk" projectFiles="true">
-          <logicalFolder name="f6" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/pic32mz_ef_sk/bsp/bsp.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f7" displayName="crypto" projectFiles="true">
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/crypto.h</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="driver" projectFiles="true">
-            <logicalFolder name="f1" displayName="ethmac" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+  <logicalFolder displayName="root" name="root" projectFiles="true">
+    <logicalFolder displayName="Header Files" name="HeaderFiles" projectFiles="true">
+      <logicalFolder displayName="config" name="f1" projectFiles="true">
+        <logicalFolder displayName="pic32mz_ef_sk" name="f1" projectFiles="true">
+          <logicalFolder displayName="driver" name="f1" projectFiles="true">
+            <logicalFolder displayName="ethmac" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/_eth_dcpt_lists.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_ethmac_lib.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_eth_pic32_lib.h</itemPath>
@@ -22,9 +16,18 @@
               </logicalFolder>
               <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/drv_ethmac.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+            <logicalFolder displayName="miim" name="f2" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
+                </logicalFolder>
+                <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/drv_miim_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk/driver/miim/drv_miim.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="ethphy" name="f3" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_extphy_regs.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_extphy_smsc8740.h</itemPath>
                 </logicalFolder>
@@ -32,22 +35,72 @@
               </logicalFolder>
               <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/drv_ethphy.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim_mapping.h</itemPath>
-                </logicalFolder>
-                <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/drv_miim_local.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/pic32mz_ef_sk/driver/miim/drv_miim.h</itemPath>
-            </logicalFolder>
             <itemPath>../src/config/pic32mz_ef_sk/driver/driver.h</itemPath>
             <itemPath>../src/config/pic32mz_ef_sk/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="library" projectFiles="true">
-            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="common" projectFiles="true">
+          <logicalFolder displayName="system" name="f2" projectFiles="true">
+            <logicalFolder displayName="time" name="f1" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/time/sys_time.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/time/src/sys_time_local.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="int" name="f2" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/int/sys_int.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/int/sys_int_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="debug" name="f3" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="command" name="f4" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/command/sys_command.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="console" name="f5" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/console/sys_console.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_reset_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/system.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/system_common.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk/system/system_module.h</itemPath>
+          </logicalFolder>
+          <logicalFolder displayName="peripheral" name="f3" projectFiles="true">
+            <logicalFolder displayName="coretimer" name="f1" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/coretimer/plib_coretimer.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="uart" name="f2" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart_common.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="clk" name="f3" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="gpio" name="f4" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/gpio/plib_gpio.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="evic" name="f5" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder displayName="net_pres" name="f4" projectFiles="true">
+            <logicalFolder displayName="pres" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/src/net_pres_local.h</itemPath>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_certstore.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_socketapi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_transportapi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_enc_glue.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder displayName="library" name="f5" projectFiles="true">
+            <logicalFolder displayName="tcpip" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="common" name="f1" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
@@ -168,64 +221,11 @@
               <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
-            <logicalFolder name="f1" displayName="pres" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/src/net_pres_local.h</itemPath>
-              </logicalFolder>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_certstore.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_encryptionproviderapi.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_socketapi.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_transportapi.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_enc_glue.h</itemPath>
-            </logicalFolder>
+          <logicalFolder displayName="bsp" name="f6" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk/bsp/bsp.h</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f3" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/coretimer/plib_coretimer.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="evic" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/gpio/plib_gpio.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="uart" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart_common.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.h</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f2" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="command" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/command/sys_command.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/console/sys_console.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="debug" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/debug/sys_debug.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="int" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/int/sys_int.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/int/sys_int_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="time" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/time/sys_time.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/time/sys_time_definitions.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/time/src/sys_time_local.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_reset_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/system.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/system_common.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk/system/system_module.h</itemPath>
+          <logicalFolder displayName="crypto" name="f7" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk/crypto/crypto.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/pic32mz_ef_sk/system_config.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/system_definitions.h</itemPath>
@@ -236,20 +236,32 @@
           <itemPath>../src/config/pic32mz_ef_sk/config.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f4" displayName="osal" projectFiles="true">
+      <logicalFolder displayName="wolfssl" name="f2" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
+        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
+      </logicalFolder>
+      <logicalFolder displayName="packs" name="f3" projectFiles="true">
+        <logicalFolder displayName="PIC32MZ2048EFM144_DFP" name="f1" projectFiles="true">
+          <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
+      <logicalFolder displayName="osal" name="f4" projectFiles="true">
         <itemPath>../src/config/pic32mz_ef_sk/osal/osal.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="packs" projectFiles="true">
-        <logicalFolder name="f1"
-                       displayName="PIC32MZ2048EFM144_DFP"
-                       projectFiles="true">
-          <itemPath>../src/packs/PIC32MZ2048EFM144_DFP/device.h</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder name="f5" displayName="wolfcrypt" projectFiles="true">
-        <logicalFolder name="f1" displayName="port" projectFiles="true">
+      <logicalFolder displayName="wolfcrypt" name="f5" projectFiles="true">
+        <logicalFolder displayName="port" name="f1" projectFiles="true">
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/pic32mz-crypt.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_cf_pb.h</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/port/pic32/CryptoLib_ClearFlags_pb.h</itemPath>
@@ -379,69 +391,24 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/sha512.h</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/wc_port.h</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="wolfssl" projectFiles="true">
-        <itemPath>../src/third_party/wolfssl/wolfssl/callbacks.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/certs_test.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/crl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/error-ssl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/internal.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/ocsp.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/sniffer_error.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/ssl.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/test.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/version.h</itemPath>
-        <itemPath>../src/third_party/wolfssl/wolfssl/wolfio.h</itemPath>
-      </logicalFolder>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder name="f2" displayName="Important Files" projectFiles="true">
-      <logicalFolder name="f1" displayName="wolfcrypt" projectFiles="true">
+    <logicalFolder displayName="Important Files" name="ExternalFiles" projectFiles="true">
+      <logicalFolder displayName="wolfcrypt" name="f1" projectFiles="true">
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/misc.c</itemPath>
       </logicalFolder>
       <itemPath>Makefile</itemPath>
+      <itemPath>../src/config/pic32mz_ef_sk/harmony.prj</itemPath>
+      <itemPath>../src/config/pic32mz_ef_sk/pic32mz_ef_sk.xml</itemPath>
     </logicalFolder>
-    <logicalFolder name="f3" displayName="Linker Files" projectFiles="true">
-    </logicalFolder>
-    <logicalFolder name="f4" displayName="Source Files" projectFiles="true">
-      <logicalFolder name="f1" displayName="config" projectFiles="true">
-        <logicalFolder name="f1" displayName="pic32mz_ef_sk" projectFiles="true">
-          <logicalFolder name="f7" displayName="bsp" projectFiles="true">
-            <itemPath>../src/config/pic32mz_ef_sk/bsp/bsp.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f8" displayName="crypto" projectFiles="true">
-            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypto.c</itemPath>
-          </logicalFolder>
-          <logicalFolder name="f2" displayName="driver" projectFiles="true">
-            <logicalFolder name="f1" displayName="ethmac" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_ethmac.c</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_ethmac_lib.c</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_eth_pic32_lib.c</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder name="f3" displayName="ethphy" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="miim" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
-                  <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim.c</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f1" displayName="library" projectFiles="true">
-            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
-                <logicalFolder name="f1" displayName="common" projectFiles="true">
+    <logicalFolder displayName="Linker Files" name="LinkerScript" projectFiles="true"/>
+    <logicalFolder displayName="Source Files" name="SourceFiles" projectFiles="true">
+      <logicalFolder displayName="config" name="f1" projectFiles="true">
+        <logicalFolder displayName="pic32mz_ef_sk" name="f1" projectFiles="true">
+          <logicalFolder displayName="library" name="f1" projectFiles="true">
+            <logicalFolder displayName="tcpip" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="common" name="f1" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_ef_sk/library/tcpip/src/icmp.c</itemPath>
@@ -465,57 +432,89 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f5" displayName="net_pres" projectFiles="true">
-            <logicalFolder name="f1" displayName="pres" projectFiles="true">
-              <logicalFolder name="f1" displayName="src" projectFiles="true">
+          <logicalFolder displayName="driver" name="f2" projectFiles="true">
+            <logicalFolder displayName="ethmac" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_ethmac.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_ethmac_lib.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethmac/src/dynamic/drv_eth_pic32_lib.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder displayName="miim" name="f2" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/miim/src/dynamic/drv_miim.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder displayName="ethphy" name="f3" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
+                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_ethphy.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk/driver/ethphy/src/dynamic/drv_extphy_smsc8740.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder displayName="system" name="f3" projectFiles="true">
+            <logicalFolder displayName="time" name="f1" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/time/src/sys_time.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="console" name="f2" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart_definitions.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_local.h</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="int" name="f3" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/int/src/sys_int.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="command" name="f4" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/command/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="debug" name="f5" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/system/debug/src/sys_debug_local.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk/system/debug/src/sys_debug.c</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.c</itemPath>
+          </logicalFolder>
+          <logicalFolder displayName="peripheral" name="f4" projectFiles="true">
+            <logicalFolder displayName="coretimer" name="f1" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/coretimer/plib_coretimer.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="uart" name="f2" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="clk" name="f3" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="gpio" name="f4" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/gpio/plib_gpio.c</itemPath>
+            </logicalFolder>
+            <logicalFolder displayName="evic" name="f5" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder displayName="net_pres" name="f5" projectFiles="true">
+            <logicalFolder displayName="pres" name="f1" projectFiles="true">
+              <logicalFolder displayName="src" name="f1" projectFiles="true">
                 <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/src/net_pres.c</itemPath>
               </logicalFolder>
               <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_enc_glue.c</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk/net_pres/pres/net_pres_cert_store.c</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder name="f4" displayName="peripheral" projectFiles="true">
-            <logicalFolder name="f3" displayName="clk" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/clk/plib_clk.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/coretimer/plib_coretimer.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="evic" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/evic/plib_evic.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="gpio" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/gpio/plib_gpio.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="uart" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/peripheral/uart/plib_uart2.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder name="f6" displayName="stdio" projectFiles="true">
+          <logicalFolder displayName="stdio" name="f6" projectFiles="true">
             <itemPath>../src/config/pic32mz_ef_sk/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
-          <logicalFolder name="f3" displayName="system" projectFiles="true">
-            <logicalFolder name="f3" displayName="command" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/command/src/sys_command.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f5" displayName="console" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_local.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console.c</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart_definitions.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/console/src/sys_console_uart.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f4" displayName="debug" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/debug/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk/system/debug/src/sys_debug.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f2" displayName="int" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/int/src/sys_int.c</itemPath>
-            </logicalFolder>
-            <logicalFolder name="f1" displayName="time" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk/system/time/src/sys_time.c</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk/system/sys_time_h2_adapter.c</itemPath>
+          <logicalFolder displayName="bsp" name="f7" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk/bsp/bsp.c</itemPath>
+          </logicalFolder>
+          <logicalFolder displayName="crypto" name="f8" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk/crypto/src/crypto.c</itemPath>
           </logicalFolder>
           <itemPath>../src/config/pic32mz_ef_sk/tasks.c</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk/initialization.c</itemPath>
@@ -523,8 +522,19 @@
           <itemPath>../src/config/pic32mz_ef_sk/exceptions.c</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder name="f3" displayName="wolfcrypt" projectFiles="true">
-        <logicalFolder name="f1" displayName="port" projectFiles="true">
+      <logicalFolder displayName="wolfssl" name="f2" projectFiles="true">
+        <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/sniffer.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/ssl.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
+        <itemPath>../src/third_party/wolfssl/src/internal.c</itemPath>
+      </logicalFolder>
+      <logicalFolder displayName="wolfcrypt" name="f3" projectFiles="true">
+        <logicalFolder displayName="port" name="f1" projectFiles="true">
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/pic32mz-crypt.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_aes_sam6149.c</itemPath>
           <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/port/pic32/crypt_aes_u2238.c</itemPath>
@@ -611,17 +621,6 @@
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha256.c</itemPath>
         <itemPath>../src/third_party/wolfssl/wolfssl/wolfcrypt/src/sha512.c</itemPath>
       </logicalFolder>
-      <logicalFolder name="f2" displayName="wolfssl" projectFiles="true">
-        <itemPath>../src/third_party/wolfssl/src/crl.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/keys.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/ocsp.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/sniffer.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/ssl.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/tls.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/tls13.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/wolfio.c</itemPath>
-        <itemPath>../src/third_party/wolfssl/src/internal.c</itemPath>
-      </logicalFolder>
       <itemPath>../src/app.c</itemPath>
       <itemPath>../src/main.c</itemPath>
     </logicalFolder>
@@ -635,8 +634,8 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>PIC32MZ2048EFM144</targetDevice>
-        <targetHeader></targetHeader>
-        <targetPluginBoard></targetPluginBoard>
+        <targetHeader/>
+        <targetPluginBoard/>
         <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.40</languageToolchainVersion>
@@ -655,16 +654,16 @@
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
-          <alternateLoadableFile></alternateLoadableFile>
+          <alternateLoadableFile/>
         </loading>
         <subordinates>
         </subordinates>
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep></makeCustomizationPreStep>
+        <makeCustomizationPreStep/>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
-        <makeCustomizationPostStep></makeCustomizationPostStep>
+        <makeCustomizationPostStep/>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
@@ -677,8 +676,7 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories"
-                  value="../src/packs/PIC32MZ2048EFH144_DFP;../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFM144_DFP;../src/mips;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl"/>
+        <property key="extra-include-directories" value="../src/packs/PIC32MZ2048EFH144_DFP;../src/config/pic32mz_ef_sk/library;../src/config/pic32mz_ef_sk/library/tcpip/src;../src/config/pic32mz_ef_sk/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk;../src/packs/PIC32MZ2048EFM144_DFP;../src/third_party/wolfssl;../src/third_party/wolfssl/wolfssl"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -687,8 +685,7 @@
         <property key="place-data-into-section" value="false"/>
         <property key="post-instruction-scheduling" value="default"/>
         <property key="pre-instruction-scheduling" value="default"/>
-        <property key="preprocessor-macros"
-                  value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
+        <property key="preprocessor-macros" value="HAVE_CONFIG_H;WOLFSSL_IGNORE_FILE_WARN"/>
         <property key="strict-ansi" value="false"/>
         <property key="support-ansi" value="false"/>
         <property key="toplevel-reordering" value=""/>
@@ -869,12 +866,9 @@
         <property key="TIMER7" value="true"/>
         <property key="TIMER8" value="true"/>
         <property key="TIMER9" value="true"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
-        <property key="ToolFirmwareOption.UpdateOptions"
-                  value="ToolFirmwareOption.UseLatest"/>
-        <property key="ToolFirmwareToolPack"
-                  value="Press to select which tool pack to use"/>
+        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareOption.UpdateOptions" value="ToolFirmwareOption.UseLatest"/>
+        <property key="ToolFirmwareToolPack" value="Press to select which tool pack to use"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
         <property key="UART3" value="true"/>
@@ -893,8 +887,7 @@
         <property key="memories.exclude.configurationmemory" value="true"/>
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.instruction.ram.ranges" value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
@@ -908,8 +901,7 @@
         <property key="programoptions.pgmentry.voltage" value="low"/>
         <property key="programoptions.pgmspeed" value="Med"/>
         <property key="programoptions.preservedataflash" value="false"/>
-        <property key="programoptions.preservedataflash.ranges"
-                  value="${memories.dataflash.default}"/>
+        <property key="programoptions.preservedataflash.ranges" value="${memories.dataflash.default}"/>
         <property key="programoptions.preserveeeprom" value="false"/>
         <property key="programoptions.preserveeeprom.ranges" value=""/>
         <property key="programoptions.preserveprogram.ranges" value="1d000000-1d1fffff"/>
@@ -918,10 +910,8 @@
         <property key="programoptions.programcalmem" value="false"/>
         <property key="programoptions.programuserotp" value="false"/>
         <property key="programoptions.testmodeentrymethod" value="VDDFirst"/>
-        <property key="toolpack.updateoptions"
-                  value="toolpack.updateoptions.uselatestoolpack"/>
-        <property key="toolpack.updateoptions.packversion"
-                  value="Press to select which tool pack to use"/>
+        <property key="toolpack.updateoptions" value="toolpack.updateoptions.uselatestoolpack"/>
+        <property key="toolpack.updateoptions.packversion" value="Press to select which tool pack to use"/>
         <property key="voltagevalue" value="3.25"/>
       </ICD4Tool>
       <PICkit3PlatformTool>
@@ -955,8 +945,7 @@
         <property key="TIMER3" value="true"/>
         <property key="TIMER4" value="true"/>
         <property key="TIMER5" value="true"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
@@ -1058,8 +1047,7 @@
         <property key="TIMER7" value="true"/>
         <property key="TIMER8" value="true"/>
         <property key="TIMER9" value="true"/>
-        <property key="ToolFirmwareFilePath"
-                  value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
@@ -1081,8 +1069,7 @@
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
         <property key="memories.instruction.ram" value="true"/>
-        <property key="memories.instruction.ram.ranges"
-                  value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.instruction.ram.ranges" value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
