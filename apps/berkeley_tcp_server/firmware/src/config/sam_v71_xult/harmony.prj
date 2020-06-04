@@ -31,8 +31,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="4">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">FBCF3FC3E270657488F5B5FEA7BB94F4</GeneratedChecksum>
-          <UserChecksum dnOrder="6">FBCF3FC3E270657488F5B5FEA7BB94F4</UserChecksum>
+          <GeneratedChecksum dnOrder="5">63B53D9F47A71A0CAE13AE2C26704C43</GeneratedChecksum>
+          <UserChecksum dnOrder="6">63B53D9F47A71A0CAE13AE2C26704C43</UserChecksum>
         </File>
         <File dnOrder="3">
           <Type dnOrder="0">SOURCE</Type>
@@ -139,8 +139,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">EB0D332E6233E75AD6C9DAAD277BB3A0</GeneratedChecksum>
-          <UserChecksum dnOrder="6">EB0D332E6233E75AD6C9DAAD277BB3A0</UserChecksum>
+          <GeneratedChecksum dnOrder="5">11C541E5EEAB29B4B76E8B8D6FD5B1C7</GeneratedChecksum>
+          <UserChecksum dnOrder="6">11C541E5EEAB29B4B76E8B8D6FD5B1C7</UserChecksum>
         </File>
         <File dnOrder="15">
           <Type dnOrder="0">SOURCE</Type>
@@ -184,8 +184,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/net_pres/pres/src/</LogicalPath>
           <PhysicalPath dnOrder="4">/net_pres/pres/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B1261AD62C147913BCC27BAAB83B898D</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B1261AD62C147913BCC27BAAB83B898D</UserChecksum>
+          <GeneratedChecksum dnOrder="5">EE61FF64BB2D370011FA00877E796D2F</GeneratedChecksum>
+          <UserChecksum dnOrder="6">EE61FF64BB2D370011FA00877E796D2F</UserChecksum>
         </File>
         <File dnOrder="20">
           <Type dnOrder="0">SOURCE</Type>
@@ -409,8 +409,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="4">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">1B1623F158ADDA5CB378ECEC194D11E3</GeneratedChecksum>
-          <UserChecksum dnOrder="6">1B1623F158ADDA5CB378ECEC194D11E3</UserChecksum>
+          <GeneratedChecksum dnOrder="5">75D88F6D445AB1098C650053FFA8C15B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">75D88F6D445AB1098C650053FFA8C15B</UserChecksum>
         </File>
         <File dnOrder="45">
           <Type dnOrder="0">SOURCE</Type>
@@ -427,8 +427,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="4">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">5C80602CC9D458866EE3688319BA582A</GeneratedChecksum>
-          <UserChecksum dnOrder="6">5C80602CC9D458866EE3688319BA582A</UserChecksum>
+          <GeneratedChecksum dnOrder="5">B6A8426F54AD0500C4CE5B64FDA6640D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">B6A8426F54AD0500C4CE5B64FDA6640D</UserChecksum>
         </File>
         <File dnOrder="47">
           <Type dnOrder="0">SOURCE</Type>
@@ -1489,8 +1489,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/net_pres/pres/</LogicalPath>
           <PhysicalPath dnOrder="4">/net_pres/pres/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B8BF601318947D39C561DDEBD2664509</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B8BF601318947D39C561DDEBD2664509</UserChecksum>
+          <GeneratedChecksum dnOrder="5">311078E799B0E84F215551B723990BCC</GeneratedChecksum>
+          <UserChecksum dnOrder="6">311078E799B0E84F215551B723990BCC</UserChecksum>
         </File>
         <File dnOrder="165">
           <Type dnOrder="0">HEADER</Type>
@@ -1507,8 +1507,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/net_pres/pres/</LogicalPath>
           <PhysicalPath dnOrder="4">/net_pres/pres/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">D0235C9F5CCD90CD3E2693D28235616D</GeneratedChecksum>
-          <UserChecksum dnOrder="6">D0235C9F5CCD90CD3E2693D28235616D</UserChecksum>
+          <GeneratedChecksum dnOrder="5">49A48E22747D17062EF09B0458744E2F</GeneratedChecksum>
+          <UserChecksum dnOrder="6">49A48E22747D17062EF09B0458744E2F</UserChecksum>
         </File>
         <File dnOrder="167">
           <Type dnOrder="0">HEADER</Type>
@@ -1984,8 +1984,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/system/</LogicalPath>
           <PhysicalPath dnOrder="4">/system/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">79AA7BE3EB9B1A8D7C8686C28318198D</GeneratedChecksum>
-          <UserChecksum dnOrder="6">79AA7BE3EB9B1A8D7C8686C28318198D</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5759BC3BC97149366A972C56C337B7C0</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5759BC3BC97149366A972C56C337B7C0</UserChecksum>
         </File>
         <File dnOrder="220">
           <Type dnOrder="0">HEADER</Type>
@@ -2056,8 +2056,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/library/tcpip/</LogicalPath>
           <PhysicalPath dnOrder="4">/library/tcpip/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">0C7398B88555B96A0C908205971EAB26</GeneratedChecksum>
-          <UserChecksum dnOrder="6">0C7398B88555B96A0C908205971EAB26</UserChecksum>
+          <GeneratedChecksum dnOrder="5">39AFAB45157DCDF40A3DBB06C86D0884</GeneratedChecksum>
+          <UserChecksum dnOrder="6">39AFAB45157DCDF40A3DBB06C86D0884</UserChecksum>
         </File>
         <File dnOrder="228">
           <Type dnOrder="0">HEADER</Type>
@@ -2074,8 +2074,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_v71_xult/library/tcpip/src/</LogicalPath>
           <PhysicalPath dnOrder="4">/library/tcpip/src/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">6AB2934F86AB5E769EF7311C007EF7A3</GeneratedChecksum>
-          <UserChecksum dnOrder="6">6AB2934F86AB5E769EF7311C007EF7A3</UserChecksum>
+          <GeneratedChecksum dnOrder="5">F278644DED849A3852CF89F079E53558</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F278644DED849A3852CF89F079E53558</UserChecksum>
         </File>
         <File dnOrder="230">
           <Type dnOrder="0">HEADER</Type>
@@ -2513,7 +2513,7 @@
       <Settings dnOrder="1">
         <Setting append="true" category="C32" delimiter=";" dnOrder="0" key="extra-include-directories" security="NON_SECURE" value="../src/config/sam_v71_xult/library;../src/config/sam_v71_xult/library/tcpip/src;../src/config/sam_v71_xult/library/tcpip/src/common"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_v71_xult;../src/packs/ATSAMV71Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
-        <Setting category="C32-LD" dnOrder="2" key="heap-size" security="NON_SECURE" value="44960"/>
+        <Setting category="C32-LD" dnOrder="2" key="heap-size" security="NON_SECURE" value="64960"/>
         <Setting category="C32-LD" dnOrder="3" key="no-device-startup-code" security="NON_SECURE" value="true"/>
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="4" key="preprocessor-macros" security="NON_SECURE" value=""/>
         <Setting category="C32Global" dnOrder="5" key="mdtcm" security="NON_SECURE" value=""/>
@@ -2522,12 +2522,12 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="5">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.0.23\samv71b\atdf\ATSAMV71Q21B.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.3.66\samv71b\atdf\ATSAMV71Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;touch;usb;"/>
     </Settings>
   </Configurator>
 </Configuration>

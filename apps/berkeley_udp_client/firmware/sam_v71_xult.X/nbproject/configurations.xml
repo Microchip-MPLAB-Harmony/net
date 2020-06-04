@@ -459,7 +459,7 @@
         <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader/>
         <targetPluginBoard/>
-        <platformTool>noID</platformTool>
+        <platformTool/>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>
@@ -589,7 +589,7 @@
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-cross-reference-file" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
-        <property key="heap-size" value="44960"/>
+        <property key="heap-size" value="64960"/>
         <property key="input-libraries" value=""/>
         <property key="kseg-length" value=""/>
         <property key="kseg-origin" value=""/>

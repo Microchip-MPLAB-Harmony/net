@@ -447,7 +447,7 @@
         <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader/>
         <targetPluginBoard/>
-        <platformTool>noID</platformTool>
+        <platformTool/>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>

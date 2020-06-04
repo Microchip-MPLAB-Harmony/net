@@ -2406,11 +2406,11 @@
     </Manifest>
     <Settings dnOrder="6">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.1.49\samv71b\atdf\ATSAMV71Q21B.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAMV71_DFP\4.3.66\samv71b\atdf\ATSAMV71Q21B.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="USER_ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;touch;usb;"/>
     </Settings>
   </Configurator>
 </Configuration>
