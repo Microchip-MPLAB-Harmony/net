@@ -985,8 +985,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">1F7E409A5ABA54C7507A7230E273520A</GeneratedChecksum>
-          <UserChecksum dnOrder="6">1F7E409A5ABA54C7507A7230E273520A</UserChecksum>
+          <GeneratedChecksum dnOrder="5">3DA87A521FBD572F0EB1C3CF42F63A55</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3DA87A521FBD572F0EB1C3CF42F63A55</UserChecksum>
         </File>
         <File dnOrder="109">
           <Type dnOrder="0">SOURCE</Type>
@@ -4936,8 +4936,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5"/>
-          <UserChecksum dnOrder="6"/>
+          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
+          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
         </File>
         <File dnOrder="548">
           <Type dnOrder="0">HEADER</Type>
@@ -5076,11 +5076,11 @@
     </Manifest>
     <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\3.2.53\atdf\ATSAME54P20A.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\3.3.64\atdf\ATSAME54P20A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
-      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;csp;gfx;motor_control;net;usb;wireless;"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;cryptoauthlib;csp;gfx;motor_control;net;usb;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>
