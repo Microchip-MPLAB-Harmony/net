@@ -587,50 +587,50 @@ const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
     {NULL}
 };
 
-const SYS_FS_FUNCTIONS FatFsFunctions =
-{
-    .mount             = FATFS_mount,
-    .unmount           = FATFS_unmount,
-    .open              = FATFS_open,
-    .read              = FATFS_read,
-    .close             = FATFS_close,
-    .seek              = FATFS_lseek,
-    .fstat             = FATFS_stat,
-    .getlabel          = FATFS_getlabel,
-    .currWD            = FATFS_getcwd,
-    .getstrn           = FATFS_gets,
-    .openDir           = FATFS_opendir,
-    .readDir           = FATFS_readdir,
-    .closeDir          = FATFS_closedir,
-    .chdir             = FATFS_chdir,
-    .chdrive           = FATFS_chdrive,
-    .write             = FATFS_write,
-    .tell              = FATFS_tell,
-    .eof               = FATFS_eof,
-    .size              = FATFS_size,
-    .mkdir             = FATFS_mkdir,
-    .remove            = FATFS_unlink,
-    .setlabel          = FATFS_setlabel,
-    .truncate          = FATFS_truncate,
-    .chmode            = FATFS_chmod,
-    .chtime            = FATFS_utime,
-    .rename            = FATFS_rename,
-    .sync              = FATFS_sync,
-    .putchr            = FATFS_putc,
-    .putstrn           = FATFS_puts,
-    .formattedprint    = FATFS_printf,
-    .testerror         = FATFS_error,
-    .formatDisk        = (FORMAT_DISK)FATFS_mkfs,
-    .partitionDisk     = FATFS_fdisk,
-    .getCluster        = FATFS_getclusters
-};
 
+const SYS_FS_FUNCTIONS MPFSFunctions =
+{
+    .mount             = MPFS_Mount,
+    .unmount           = MPFS_Unmount,
+    .open              = MPFS_Open,
+    .read              = MPFS_Read,
+    .close             = MPFS_Close,
+    .seek              = MPFS_Seek,
+    .fstat             = MPFS_Stat,
+    .tell              = MPFS_GetPosition,
+    .eof               = MPFS_EOF,
+    .size              = MPFS_GetSize,
+    .openDir           = MPFS_DirOpen,
+    .readDir           = MPFS_DirRead,
+    .closeDir          = MPFS_DirClose,
+    .getlabel          = NULL,
+    .currWD            = NULL,
+    .getstrn           = NULL,
+    .write             = NULL,
+    .mkdir             = NULL,
+    .chdir             = NULL,
+    .remove            = NULL,
+    .setlabel          = NULL,
+    .truncate          = NULL,
+    .chdrive           = NULL,
+    .chmode            = NULL,
+    .chtime            = NULL,
+    .rename            = NULL,
+    .sync              = NULL,
+    .putchr            = NULL,
+    .putstrn           = NULL,
+    .formattedprint    = NULL,
+    .testerror         = NULL,
+    .formatDisk        = NULL,
+    .partitionDisk     = NULL,
+    .getCluster        = NULL
+};
 
 const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
 {
     {
-        .nativeFileSystemType = FAT,
-        .nativeFileSystemFunctions = &FatFsFunctions
+        .nativeFileSystemType = MPFS2,
+        .nativeFileSystemFunctions = &MPFSFunctions
     }
 };
 

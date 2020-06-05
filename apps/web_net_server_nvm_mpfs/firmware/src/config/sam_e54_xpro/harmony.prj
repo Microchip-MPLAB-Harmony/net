@@ -797,7 +797,7 @@
           <LogicalPath dnOrder="3"/>
           <PhysicalPath dnOrder="4">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="6">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
+          <UserChecksum dnOrder="6">E6B8053C232B571A9A4EC4654719DD9A</UserChecksum>
         </File>
         <File dnOrder="88">
           <Type dnOrder="0">SOURCE</Type>
@@ -4846,8 +4846,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5"/>
-          <UserChecksum dnOrder="6"/>
+          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
+          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
         </File>
         <File dnOrder="538">
           <Type dnOrder="0">HEADER</Type>
@@ -5005,7 +5005,7 @@
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAME54_DFP\3.3.64\atdf\ATSAME54P20A.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
       <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;cryptoauthlib;csp;gfx;motor_control;net;usb;wireless;"/>
     </Settings>
   </Configurator>

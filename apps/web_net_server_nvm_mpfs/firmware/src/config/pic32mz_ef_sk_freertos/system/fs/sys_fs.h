@@ -213,50 +213,29 @@ typedef enum
 
 // *****************************************************************************
 /* File formating partition rule
-
 Summary:
     Specifes the partitioning rule.
-
 Description:
-    This type specifies the partitioning rule. When SYS_FS_FORMAT_FAT* format
+    This type specifies the partitioning rule. When SYS_FS_FORMAT_FDISK format
     is specified, a primary partition occupying the entire disk space is
-    created and then an FAT volume is created on the partition. When SYS_FS_FORMAT_ANY
-    format is specified FAT FS code decides on the format. When SYS_FS_FORMAT_SFD
-    format is specified, the FAT volume starts from the first sector of the physical drive.
-
-    The SYS_FS_FORMAT_FAT* partitioning is usually used for hard disk, MMC,
+    created and then an FAT volume is created on the partition. When
+    SYS_FS_FORMAT_SFD format is specified, the FAT volume starts from the first
+    sector of the physical drive.
+    The SYS_FS_FORMAT_FDISK partitioning is usually used for hard disk, MMC,
     SDC, CFC and U Disk. It can divide a physical drive into one or more
     partitions with a partition table on the MBR. However Windows does not
     support multiple partition on the removable media. The SYS_FS_FORMAT_SFD is
     non-partitioned method. The FAT volume starts from the first sector on the
     physical drive without partition table. It is usually used for floppy disk,
     micro drive, optical disk, and super-floppy media.
-
-    Note: The Values mentioned below should be aligned with values in ff.h
 */
 typedef enum
 {
-    SYS_FS_FORMAT_FAT      = 0x01,
-    SYS_FS_FORMAT_FAT32    = 0x02,
-    SYS_FS_FORMAT_EXFAT    = 0x04,
-    SYS_FS_FORMAT_ANY      = 0x07,
-    SYS_FS_FORMAT_SFD      = 0x08
+    /* Format disk with multiple partition */
+    SYS_FS_FORMAT_FDISK  = 0,
+    /* Format disk with single partition */
+    SYS_FS_FORMAT_SFD    = 1
 }SYS_FS_FORMAT;
-
-// *****************************************************************************
-/* Format parameter structure */
-typedef struct {
-    /* Format option */
-    SYS_FS_FORMAT  fmt;
-    /* Number of FATs */
-    uint8_t  n_fat;
-    /* Data area alignment (sector) */
-    uint32_t align;
-    /* Number of root directory entries */
-    uint32_t n_root;
-    /* Cluster size (byte) */
-    uint32_t au_size;
-}SYS_FS_FORMAT_PARAM;
 
 // *****************************************************************************
 /* File open attributes
@@ -432,7 +411,7 @@ typedef enum
 
 } SYS_FS_EVENT;
 
-typedef int(*FORMAT_DISK)(uint8_t vol, const SYS_FS_FORMAT_PARAM* opt, void* work, uint32_t len);
+typedef int(*FORMAT_DISK)(uint8_t vol, uint8_t sfd, uint32_t au);
 
 // *****************************************************************************
 /* SYS FS Function signature structure for native file systems
@@ -624,23 +603,13 @@ typedef struct
     uint16_t    ftime;
     /* Attribute */
     uint8_t     fattrib;
+    /* Short file name (8.3 format) */
+    char        fname[13];
 #if SYS_FS_USE_LFN
-    /* Alternate file name */
-    char        altname[13];
-    /* Primary file name */
-    char        fname[SYS_FS_FILE_NAME_LEN + 1];
-
-    /* Retaining below members for portability.
-     * For FAT-FS lfname[0] will always be '\0'.
-     * Use fname instead
-    */
     /* Pointer to the LFN buffer */
     char       *lfname;
     /* Size of LFN buffer */
     uint32_t    lfsize;
-#else
-    /* Short file name (8.3 format) */
-    char        fname[13];
 #endif
 } SYS_FS_FSTAT;
 
@@ -3264,9 +3233,8 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
     SYS_FS_RESULT SYS_FS_DriveFormat
     (
         const char* drive,
-        const SYS_FS_FORMAT_PARAM* opt,
-        void* work,
-        uint32_t len
+        SYS_FS_FORMAT fmt,
+        uint32_t clusterSize
     );
 
     Summary:
@@ -3278,8 +3246,9 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
 
     If the logical drive that has to be formatted has been bound to any
     partition (1-4) by multiple partition feature, the FAT volume is created
-    into the specified partition. The physical drive must have been partitioned
-    prior to using this function.
+    into the specified partition. In this case, the second argument fmt is
+    ignored. The physical drive must have been partitioned prior to using
+    this function.
 
     Precondition:
     At least one disk must be mounted. The physical drive must have already
@@ -3290,33 +3259,10 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
                     for which the format is to be done. If this string is
                     NULL, then then current drive will be formatted. It is
                     important to end the drive name with a "/".
-    opt           - Specifies the structure holding format options. If a null
-                    pointer is given, fat code gives the function all options in default
-                    value. The format option structure has five members described below:
-                    fmt     - Specifies combination of FAT type flags, SYS_FS_FORMAT.
-                              These flags specify which FAT type to be created on the volume.
-                              If two or more types are specified, one out of them will be
-                              selected depends on the volume size and au_size.
-                              The default value is FM_ANY.
-                    au_size - Specifies size of the allocation unit (cluter) in unit of byte.
-                              The valid value is power of 2 between sector size and
-                              128 * sector size inclusive for FAT/FAT32 volume and up to 16 MB.
-                              When a zero is given, the cluster size depends on the volume size.
-                    n_align - Specifies alignment of the volume data area (file allocation pool,
-                              usually erase block boundary of flash media) in unit of sector.
-                              When a zero is given, alignment is decided on the block size.
-                    n_fat   - Specifies number of FAT copies on the FAT/FAT32 volume.
-                              Valid value for this member is 1 or 2. If the FAT type is exFAT,
-                              this member has no effect.
-                    n_root  - Specifies number of root directory entries on the FAT volume.
-                              Valid value for this member is up to 32768 and aligned to
-                              sector size / 32. If the FAT type is FAT32 or exFAT, this member
-                              has no effect.
-    work           - Pointer to the working buffer used for the format process.
-    len            - Size of the working buffer in unit of byte. It needs to be the sector size
-                     of the corresponding physical drive at least. Plenty of working buffer
-                     reduces number of write transactions to the drive and the format process
-                     will finish quickly.
+    fmt           - Format type.
+    clusterSize   - Cluster size. The value must be sector (size * n), where
+                    n is 1 to 128 and power of 2. When a zero is given, the
+                    cluster size depends on the volume size.
 
     Returns:
     SYS_FS_RES_SUCCESS - Drive format was successful.
@@ -3326,8 +3272,6 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
     Example:
     <code>
         SYS_FS_RESULT res;
-        SYS_FS_FORMAT_PARAM opt = { 0 };
-        uint8_t CACHE_ALIGN work[512];
 
         switch(appState)
         {
@@ -3344,13 +3288,7 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
                 break;
 
             case FORMAT_DRIVE:
-                opt.fmt = SYS_FS_FORMAT_FAT;
-                opt.au_size = 0;
-                opt.n_fat = 1;
-                opt.align = 0;
-                opt.n_root = 1;
-
-                res = SYS_FS_DriveFormat("/mnt/myDrive", &opt, (void *)work, 512);
+                res = SYS_FS_DriveFormat("/mnt/myDrive", SYS_FS_FORMAT_SFD, 0);
                 if(res == SYS_FS_RES_FAILURE)
                 {
                     // Format of the drive failed.
@@ -3367,9 +3305,8 @@ SYS_FS_RESULT SYS_FS_DriveLabelSet
 SYS_FS_RESULT SYS_FS_DriveFormat
 (
     const char* drive,
-    const SYS_FS_FORMAT_PARAM* opt,
-    void* work,
-    uint32_t len
+    SYS_FS_FORMAT fmt,
+    uint32_t clusterSize
 );
 
 // ******************************************************************************

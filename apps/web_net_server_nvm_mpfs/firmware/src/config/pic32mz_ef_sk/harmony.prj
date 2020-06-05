@@ -923,7 +923,7 @@
           <LogicalPath dnOrder="3"/>
           <PhysicalPath dnOrder="4">/../../</PhysicalPath>
           <GeneratedChecksum dnOrder="5">2E89E47DCE9D78E9E0A559CA4E61DAE8</GeneratedChecksum>
-          <UserChecksum dnOrder="6">2E89E47DCE9D78E9E0A559CA4E61DAE8</UserChecksum>
+          <UserChecksum dnOrder="6">E2FFE275D2E335DDFEE52E356B7210C9</UserChecksum>
         </File>
         <File dnOrder="102">
           <Type dnOrder="0">SOURCE</Type>
@@ -1093,8 +1093,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_ef_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">05E6FD39DE9775A4F0F0ECEFAB6705B1</GeneratedChecksum>
-          <UserChecksum dnOrder="6">05E6FD39DE9775A4F0F0ECEFAB6705B1</UserChecksum>
+          <GeneratedChecksum dnOrder="5">BA871D3F5CE1351BFDF48D4005A2934A</GeneratedChecksum>
+          <UserChecksum dnOrder="6">BA871D3F5CE1351BFDF48D4005A2934A</UserChecksum>
         </File>
         <File dnOrder="121">
           <Type dnOrder="0">SOURCE</Type>
@@ -4585,8 +4585,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_ef_sk/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5"/>
-          <UserChecksum dnOrder="6"/>
+          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
+          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
         </File>
         <File dnOrder="509">
           <Type dnOrder="0">HEADER</Type>
@@ -4729,11 +4729,11 @@
     </Manifest>
     <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_EF_DFP\1.1.45\atdf\PIC32MZ2048EFM144.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ-EF_DFP\1.1.45\atdf\PIC32MZ2048EFM144.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
       <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
-      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;csp;gfx;motor_control;net;usb;wireless;"/>
+      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;cryptoauthlib;csp;gfx;motor_control;net;usb;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>

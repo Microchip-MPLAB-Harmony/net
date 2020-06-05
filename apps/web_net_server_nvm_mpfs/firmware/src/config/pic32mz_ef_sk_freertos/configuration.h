@@ -117,7 +117,7 @@ extern "C" {
 #define SYS_FS_VOLUME_NUMBER              1
 
 #define SYS_FS_AUTOMOUNT_ENABLE           false
-#define SYS_FS_MAX_FILES                  1
+#define SYS_FS_MAX_FILES                  25
 #define SYS_FS_MAX_FILE_SYSTEM_TYPE       1
 #define SYS_FS_MEDIA_MAX_BLOCK_SIZE       512
 #define SYS_FS_MEDIA_MANAGER_BUFFER_SIZE  2048
@@ -129,10 +129,6 @@ extern "C" {
 #define SYS_FS_STACK_SIZE                 1024
 #define SYS_FS_PRIORITY                   1
 
-#define SYS_FS_FAT_VERSION                "v0.14"
-#define SYS_FS_FAT_READONLY               false
-#define SYS_FS_FAT_CODE_PAGE              437
-#define SYS_FS_FAT_MAX_SS                 SYS_FS_MEDIA_MAX_BLOCK_SIZE
 
 
 
