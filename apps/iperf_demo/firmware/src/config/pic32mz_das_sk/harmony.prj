@@ -3,7 +3,7 @@
   <Configurator>
     <Name dnOrder="0" value="pic32mz_das_sk"/>
     <Processor dnOrder="1" value="PIC32MZ2064DAS169"/>
-    <Harmony dnOrder="2" path="../../../.."/>
+    <Harmony dnOrder="2" path="../../.."/>
     <Folder_Name dnOrder="3" value=""/>
     <Manifest dnOrder="4">
       <Files dnOrder="0">
@@ -247,8 +247,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B1230C974F5DE8BFFFFD981DA4137F90</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B1230C974F5DE8BFFFFD981DA4137F90</UserChecksum>
+          <GeneratedChecksum dnOrder="5">3FC067EF937E4326C49622ED31B3D592</GeneratedChecksum>
+          <UserChecksum dnOrder="6">3FC067EF937E4326C49622ED31B3D592</UserChecksum>
         </File>
         <File dnOrder="27">
           <Type dnOrder="0">SOURCE</Type>
@@ -1930,8 +1930,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_das_sk/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5"/>
-          <UserChecksum dnOrder="6"/>
+          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
+          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
         </File>
         <File dnOrder="214">
           <Type dnOrder="0">HEADER</Type>
@@ -1988,12 +1988,12 @@
       </Settings>
     </Manifest>
     <Settings dnOrder="5">
-      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.5.1"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ_DA_DFP\1.0.81\atdf\PIC32MZ2064DAS169.atdf"/>
+      <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MZ-DA_DFP\1.1.98\atdf\PIC32MZ2064DAS169.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;csp;net;"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="5" key="PackageFilter" value="audio;bsp;bt;core;crypto;cryptoauthlib;csp;gfx;motor_control;net;usb;wireless;"/>
     </Settings>
   </Configurator>
 </Configuration>
