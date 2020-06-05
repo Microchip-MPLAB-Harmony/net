@@ -49,7 +49,7 @@
 
 USART_RING_BUFFER_OBJECT usart1Obj;
 
-#define USART1_READ_BUFFER_SIZE      128
+#define USART1_READ_BUFFER_SIZE      512
 /* Disable Read, Overrun, Parity and Framing error interrupts */
 #define USART1_RX_INT_DISABLE()      USART1_REGS->US_IDR = (US_IDR_USART_RXRDY_Msk | US_IDR_USART_FRAME_Msk | US_IDR_USART_PARE_Msk | US_IDR_USART_OVRE_Msk);
 /* Enable Read, Overrun, Parity and Framing error interrupts */
@@ -57,7 +57,7 @@ USART_RING_BUFFER_OBJECT usart1Obj;
 
 static uint8_t USART1_ReadBuffer[USART1_READ_BUFFER_SIZE];
 
-#define USART1_WRITE_BUFFER_SIZE     128
+#define USART1_WRITE_BUFFER_SIZE     1280
 #define USART1_TX_INT_DISABLE()      USART1_REGS->US_IDR = US_IDR_USART_TXEMPTY_Msk;
 #define USART1_TX_INT_ENABLE()       USART1_REGS->US_IER = US_IER_USART_TXEMPTY_Msk;
 
