@@ -520,6 +520,7 @@ extern "C" {
 #define SINGLE_THREADED
 #define NO_ERROR_STRINGS
 #define NO_WOLFSSL_MEMORY
+#define WOLFSSL_BASE64_ENCODE
 
 
 
