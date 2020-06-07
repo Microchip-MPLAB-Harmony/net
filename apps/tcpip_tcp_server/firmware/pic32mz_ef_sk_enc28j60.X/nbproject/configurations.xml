@@ -1,70 +1,63 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <configurationDescriptor version="65">
-  <logicalFolder displayName="root" name="root" projectFiles="true">
-    <logicalFolder displayName="Header Files" name="HeaderFiles" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="pic32mz_ef_sk_enc28j60" name="f1" projectFiles="true">
-          <logicalFolder displayName="system" name="f1" projectFiles="true">
-            <logicalFolder displayName="time" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/sys_time.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/sys_time_definitions.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/src/sys_time_local.h</itemPath>
+  <logicalFolder name="root" displayName="root" projectFiles="true">
+    <logicalFolder name="HeaderFiles"
+                   displayName="Header Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="pic32mz_ef_sk_enc28j60"
+                       projectFiles="true">
+          <logicalFolder name="f5" displayName="driver" projectFiles="true">
+            <logicalFolder name="f1" displayName="enc28j60" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <logicalFolder name="f1" displayName="bus" projectFiles="true">
+                    <logicalFolder name="f1" displayName="spi" projectFiles="true">
+                      <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/bus/spi/drv_enc28j60_spi_bus.h</itemPath>
+                    </logicalFolder>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/bus/drv_enc28j60_bus.h</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f2" displayName="closed_state" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/closed_state/drv_enc28j60_closed_state.h</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f3" displayName="initialization_state" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_initialization_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_configure_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_detect_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_reset_state.h</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f4" displayName="packet" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_tx_packet.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_rx_packet.h</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f5" displayName="running_state" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_running_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_change_duplex_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_int_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_status_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_tx_status_state.h</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_reset_rx_state.h</itemPath>
+                  </logicalFolder>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_ds_defs.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_local.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_main_state.h</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_utils.h</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/drv_enc28j60.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="int" name="f2" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/int/sys_int.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/int/sys_int_mapping.h</itemPath>
+            <logicalFolder name="f2" displayName="spi" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/drv_spi.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/drv_spi_definitions.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="ports" name="f3" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/ports/sys_ports.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/ports/sys_ports_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="dma" name="f4" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/dma/sys_dma.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/dma/sys_dma_mapping.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="debug" name="f5" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/debug/sys_debug.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="command" name="f6" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/command/sys_command.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="console" name="f7" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/sys_console.h</itemPath>
-            </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_clk_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_time_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_random_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_reset_h2_adapter.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/system.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/system_common.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/system_module.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/driver.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/driver_common.h</itemPath>
           </logicalFolder>
-          <logicalFolder displayName="peripheral" name="f2" projectFiles="true">
-            <logicalFolder displayName="coretimer" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/coretimer/plib_coretimer.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="uart" name="f2" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/uart/plib_uart_common.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/uart/plib_uart2.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="spi" name="f3" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/spi/plib_spi_common.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/spi/plib_spi1.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="clk" name="f4" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/clk/plib_clk.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="gpio" name="f5" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/gpio/plib_gpio.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="evic" name="f6" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/evic/plib_evic.h</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder displayName="library" name="f3" projectFiles="true">
-            <logicalFolder displayName="tcpip" name="f1" projectFiles="true">
-              <logicalFolder displayName="src" name="f1" projectFiles="true">
-                <logicalFolder displayName="common" name="f1" projectFiles="true">
+          <logicalFolder name="f3" displayName="library" projectFiles="true">
+            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src/common/helpers.h</itemPath>
                   <itemPath>../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src/common/sys_fs_shell.h</itemPath>
                 </logicalFolder>
@@ -185,58 +178,69 @@
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/tcpip_ethernet.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder displayName="net_pres" name="f4" projectFiles="true">
-            <logicalFolder displayName="pres" name="f1" projectFiles="true">
+          <logicalFolder name="f4" displayName="net_pres" projectFiles="true">
+            <logicalFolder name="f1" displayName="pres" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/net_pres/pres/net_pres.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/net_pres/pres/net_pres_socketapi.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/net_pres/pres/net_pres_socketapiconversion.h</itemPath>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder displayName="driver" name="f5" projectFiles="true">
-            <logicalFolder displayName="enc28j60" name="f1" projectFiles="true">
-              <logicalFolder displayName="src" name="f1" projectFiles="true">
-                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
-                  <logicalFolder displayName="bus" name="f1" projectFiles="true">
-                    <logicalFolder displayName="spi" name="f1" projectFiles="true">
-                      <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/bus/spi/drv_enc28j60_spi_bus.h</itemPath>
-                    </logicalFolder>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/bus/drv_enc28j60_bus.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="closed_state" name="f2" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/closed_state/drv_enc28j60_closed_state.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="initialization_state" name="f3" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_initialization_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_configure_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_detect_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_reset_state.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="packet" name="f4" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_tx_packet.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_rx_packet.h</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="running_state" name="f5" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_running_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_change_duplex_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_int_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_status_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_tx_status_state.h</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_reset_rx_state.h</itemPath>
-                  </logicalFolder>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_ds_defs.h</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_local.h</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_main_state.h</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_utils.h</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/drv_enc28j60.h</itemPath>
+          <logicalFolder name="f2" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/clk/plib_clk.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="spi" name="f2" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/drv_spi.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/drv_spi_definitions.h</itemPath>
+            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/coretimer/plib_coretimer.h</itemPath>
             </logicalFolder>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/driver.h</itemPath>
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/driver_common.h</itemPath>
+            <logicalFolder name="f6" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/evic/plib_evic.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/gpio/plib_gpio.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="spi" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/spi/plib_spi_common.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/spi/plib_spi1.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="uart" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/uart/plib_uart_common.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/uart/plib_uart2.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="system" projectFiles="true">
+            <logicalFolder name="f6" displayName="command" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/command/sys_command.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f7" displayName="console" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/sys_console.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="debug" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/debug/sys_debug.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f4" displayName="dma" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/dma/sys_dma.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/dma/sys_dma_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="int" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/int/sys_int.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/int/sys_int_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="ports" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/ports/sys_ports.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/ports/sys_ports_mapping.h</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/sys_time.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/sys_time_definitions.h</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/src/sys_time_local.h</itemPath>
+            </logicalFolder>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_clk_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_time_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_random_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_reset_h2_adapter.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/system.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/system_common.h</itemPath>
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/system_module.h</itemPath>
           </logicalFolder>
           <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system_config.h</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system_definitions.h</itemPath>
@@ -246,31 +250,83 @@
           <itemPath>../src/config/pic32mz_ef_sk_enc28j60/definitions.h</itemPath>
         </logicalFolder>
       </logicalFolder>
-      <logicalFolder displayName="packs" name="f2" projectFiles="true">
-        <logicalFolder displayName="PIC32MZ2048EFH144_DFP" name="f1" projectFiles="true">
-          <itemPath>../src/packs/PIC32MZ2048EFH144_DFP/device.h</itemPath>
-        </logicalFolder>
-      </logicalFolder>
-      <logicalFolder displayName="osal" name="f3" projectFiles="true">
+      <logicalFolder name="f3" displayName="osal" projectFiles="true">
         <itemPath>../src/config/pic32mz_ef_sk_enc28j60/osal/osal.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk_enc28j60/osal/osal_definitions.h</itemPath>
         <itemPath>../src/config/pic32mz_ef_sk_enc28j60/osal/osal_impl_basic.h</itemPath>
       </logicalFolder>
+      <logicalFolder name="f2" displayName="packs" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="PIC32MZ2048EFH144_DFP"
+                       projectFiles="true">
+          <itemPath>../src/packs/PIC32MZ2048EFH144_DFP/device.h</itemPath>
+        </logicalFolder>
+      </logicalFolder>
       <itemPath>../src/app.h</itemPath>
     </logicalFolder>
-    <logicalFolder displayName="Important Files" name="ExternalFiles" projectFiles="true">
+    <logicalFolder name="ExternalFiles"
+                   displayName="Important Files"
+                   projectFiles="true">
       <itemPath>Makefile</itemPath>
       <itemPath>../src/config/pic32mz_ef_sk_enc28j60/harmony.prj</itemPath>
       <itemPath>../src/config/pic32mz_ef_sk_enc28j60/pic32mz_ef_sk_enc28j60.xml</itemPath>
     </logicalFolder>
-    <logicalFolder displayName="Linker Files" name="LinkerScript" projectFiles="true"/>
-    <logicalFolder displayName="Source Files" name="SourceFiles" projectFiles="true">
-      <logicalFolder displayName="config" name="f1" projectFiles="true">
-        <logicalFolder displayName="pic32mz_ef_sk_enc28j60" name="f1" projectFiles="true">
-          <logicalFolder displayName="library" name="f1" projectFiles="true">
-            <logicalFolder displayName="tcpip" name="f1" projectFiles="true">
-              <logicalFolder displayName="src" name="f1" projectFiles="true">
-                <logicalFolder displayName="common" name="f1" projectFiles="true">
+    <logicalFolder name="LinkerScript"
+                   displayName="Linker Files"
+                   projectFiles="true">
+    </logicalFolder>
+    <logicalFolder name="SourceFiles"
+                   displayName="Source Files"
+                   projectFiles="true">
+      <logicalFolder name="f1" displayName="config" projectFiles="true">
+        <logicalFolder name="f1"
+                       displayName="pic32mz_ef_sk_enc28j60"
+                       projectFiles="true">
+          <logicalFolder name="f4" displayName="driver" projectFiles="true">
+            <logicalFolder name="f2" displayName="enc28j60" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="dynamic" projectFiles="true">
+                  <logicalFolder name="f1" displayName="bus" projectFiles="true">
+                    <logicalFolder name="f1" displayName="spi" projectFiles="true">
+                      <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/bus/spi/drv_enc28j60_spi_bus.c</itemPath>
+                    </logicalFolder>
+                  </logicalFolder>
+                  <logicalFolder name="f2" displayName="closed_state" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/closed_state/drv_enc28j60_closed_state.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f3" displayName="initialization_state" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_initialization_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_configure_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_detect_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_reset_state.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f4" displayName="packet" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_tx_packet.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_rx_packet.c</itemPath>
+                  </logicalFolder>
+                  <logicalFolder name="f5" displayName="running_state" projectFiles="true">
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_running_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_change_duplex_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_int_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_status_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_tx_status_state.c</itemPath>
+                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_reset_rx_state.c</itemPath>
+                  </logicalFolder>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_api.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_main_state.c</itemPath>
+                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_utils.c</itemPath>
+                </logicalFolder>
+              </logicalFolder>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="spi" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/src/drv_spi.c</itemPath>
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/src/drv_spi_local.h</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f1" displayName="library" projectFiles="true">
+            <logicalFolder name="f1" displayName="tcpip" projectFiles="true">
+              <logicalFolder name="f1" displayName="src" projectFiles="true">
+                <logicalFolder name="f1" displayName="common" projectFiles="true">
                   <itemPath>../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src/helpers.c</itemPath>
                 </logicalFolder>
                 <itemPath>../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src/icmp.c</itemPath>
@@ -293,95 +349,54 @@
               </logicalFolder>
             </logicalFolder>
           </logicalFolder>
-          <logicalFolder displayName="system" name="f2" projectFiles="true">
-            <logicalFolder displayName="time" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/src/sys_time.c</itemPath>
+          <logicalFolder name="f3" displayName="peripheral" projectFiles="true">
+            <logicalFolder name="f4" displayName="clk" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/clk/plib_clk.c</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="console" name="f2" projectFiles="true">
+            <logicalFolder name="f1" displayName="coretimer" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/coretimer/plib_coretimer.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f6" displayName="evic" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/evic/plib_evic.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f5" displayName="gpio" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/gpio/plib_gpio.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="spi" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/spi/plib_spi1.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="uart" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/uart/plib_uart2.c</itemPath>
+            </logicalFolder>
+          </logicalFolder>
+          <logicalFolder name="f5" displayName="stdio" projectFiles="true">
+            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/stdio/xc32_monitor.c</itemPath>
+          </logicalFolder>
+          <logicalFolder name="f2" displayName="system" projectFiles="true">
+            <logicalFolder name="f5" displayName="command" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/command/src/sys_command.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f2" displayName="console" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/src/sys_console_uart.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/src/sys_console_uart_definitions.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/src/sys_console_uart.c</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/console/src/sys_console_local.h</itemPath>
             </logicalFolder>
-            <logicalFolder displayName="int" name="f3" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/int/src/sys_int.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="dma" name="f4" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/dma/sys_dma.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="command" name="f5" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/command/src/sys_command.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="debug" name="f6" projectFiles="true">
+            <logicalFolder name="f6" displayName="debug" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/debug/src/sys_debug_local.h</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/debug/src/sys_debug.c</itemPath>
             </logicalFolder>
+            <logicalFolder name="f4" displayName="dma" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/dma/sys_dma.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f3" displayName="int" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/int/src/sys_int.c</itemPath>
+            </logicalFolder>
+            <logicalFolder name="f1" displayName="time" projectFiles="true">
+              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/time/src/sys_time.c</itemPath>
+            </logicalFolder>
             <itemPath>../src/config/pic32mz_ef_sk_enc28j60/system/sys_time_h2_adapter.c</itemPath>
-          </logicalFolder>
-          <logicalFolder displayName="peripheral" name="f3" projectFiles="true">
-            <logicalFolder displayName="coretimer" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/coretimer/plib_coretimer.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="uart" name="f2" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/uart/plib_uart2.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="spi" name="f3" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/spi/plib_spi1.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="clk" name="f4" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/clk/plib_clk.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="gpio" name="f5" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/gpio/plib_gpio.c</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="evic" name="f6" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/peripheral/evic/plib_evic.c</itemPath>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder displayName="driver" name="f4" projectFiles="true">
-            <logicalFolder displayName="spi" name="f1" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/src/drv_spi.c</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/spi/src/drv_spi_local.h</itemPath>
-            </logicalFolder>
-            <logicalFolder displayName="enc28j60" name="f2" projectFiles="true">
-              <logicalFolder displayName="src" name="f1" projectFiles="true">
-                <logicalFolder displayName="dynamic" name="f1" projectFiles="true">
-                  <logicalFolder displayName="bus" name="f1" projectFiles="true">
-                    <logicalFolder displayName="spi" name="f1" projectFiles="true">
-                      <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/bus/spi/drv_enc28j60_spi_bus.c</itemPath>
-                    </logicalFolder>
-                  </logicalFolder>
-                  <logicalFolder displayName="closed_state" name="f2" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/closed_state/drv_enc28j60_closed_state.c</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="initialization_state" name="f3" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_initialization_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_configure_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_detect_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/initialization_state/drv_enc28j60_reset_state.c</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="packet" name="f4" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_tx_packet.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/packet/drv_enc28j60_rx_packet.c</itemPath>
-                  </logicalFolder>
-                  <logicalFolder displayName="running_state" name="f5" projectFiles="true">
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_running_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_change_duplex_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_int_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_status_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_check_tx_status_state.c</itemPath>
-                    <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/running_state/drv_enc28j60_reset_rx_state.c</itemPath>
-                  </logicalFolder>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_api.c</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_main_state.c</itemPath>
-                  <itemPath>../src/config/pic32mz_ef_sk_enc28j60/driver/enc28j60/src/dynamic/drv_enc28j60_utils.c</itemPath>
-                </logicalFolder>
-              </logicalFolder>
-            </logicalFolder>
-          </logicalFolder>
-          <logicalFolder displayName="stdio" name="f5" projectFiles="true">
-            <itemPath>../src/config/pic32mz_ef_sk_enc28j60/stdio/xc32_monitor.c</itemPath>
           </logicalFolder>
           <itemPath>../src/config/pic32mz_ef_sk_enc28j60/tasks.c</itemPath>
           <itemPath>../src/config/pic32mz_ef_sk_enc28j60/initialization.c</itemPath>
@@ -402,8 +417,8 @@
       <toolsSet>
         <developmentServer>localhost</developmentServer>
         <targetDevice>PIC32MZ2048EFH144</targetDevice>
-        <targetHeader/>
-        <targetPluginBoard/>
+        <targetHeader></targetHeader>
+        <targetPluginBoard></targetPluginBoard>
         <platformTool>ICD3PlatformTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.40</languageToolchainVersion>
@@ -412,6 +427,8 @@
       <packs>
         <pack name="PIC32MZ-EF_DFP" vendor="Microchip" version="1.2.51"/>
       </packs>
+      <ScriptingSettings>
+      </ScriptingSettings>
       <compileType>
         <linkerTool>
           <linkerLibItems>
@@ -422,16 +439,16 @@
         <loading>
           <useAlternateLoadableFile>false</useAlternateLoadableFile>
           <parseOnProdLoad>false</parseOnProdLoad>
-          <alternateLoadableFile/>
+          <alternateLoadableFile></alternateLoadableFile>
         </loading>
         <subordinates>
         </subordinates>
       </compileType>
       <makeCustomizationType>
         <makeCustomizationPreStepEnabled>false</makeCustomizationPreStepEnabled>
-        <makeCustomizationPreStep/>
+        <makeCustomizationPreStep></makeCustomizationPreStep>
         <makeCustomizationPostStepEnabled>false</makeCustomizationPostStepEnabled>
-        <makeCustomizationPostStep/>
+        <makeCustomizationPostStep></makeCustomizationPostStep>
         <makeCustomizationPutChecksumInUserID>false</makeCustomizationPutChecksumInUserID>
         <makeCustomizationEnableLongLines>false</makeCustomizationEnableLongLines>
         <makeCustomizationNormalizeHexFile>false</makeCustomizationNormalizeHexFile>
@@ -444,7 +461,8 @@
         <property key="enable-symbols" value="true"/>
         <property key="enable-unroll-loops" value="false"/>
         <property key="exclude-floating-point" value="false"/>
-        <property key="extra-include-directories" value="../src/config/pic32mz_ef_sk_enc28j60/library;../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src;../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_enc28j60;../src/packs/PIC32MZ2048EFH144_DFP"/>
+        <property key="extra-include-directories"
+                  value="../src/config/pic32mz_ef_sk_enc28j60/library;../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src;../src/config/pic32mz_ef_sk_enc28j60/library/tcpip/src/common;../src;../src/config/pic32mz_ef_sk_enc28j60;../src/packs/PIC32MZ2048EFH144_DFP"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
         <property key="isolate-each-function" value="true"/>
@@ -634,7 +652,8 @@
         <property key="TIMER7" value="true"/>
         <property key="TIMER8" value="true"/>
         <property key="TIMER9" value="true"/>
-        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>
@@ -654,7 +673,8 @@
         <property key="memories.flashdata" value="true"/>
         <property key="memories.id" value="true"/>
         <property key="memories.instruction.ram" value="true"/>
-        <property key="memories.instruction.ram.ranges" value="${memories.instruction.ram.ranges}"/>
+        <property key="memories.instruction.ram.ranges"
+                  value="${memories.instruction.ram.ranges}"/>
         <property key="memories.programmemory" value="true"/>
         <property key="memories.programmemory.ranges" value="1d000000-1d1fffff"/>
         <property key="poweroptions.powerenable" value="false"/>
@@ -705,7 +725,8 @@
         <property key="TIMER3" value="true"/>
         <property key="TIMER4" value="true"/>
         <property key="TIMER5" value="true"/>
-        <property key="ToolFirmwareFilePath" value="Press to browse for a specific firmware version"/>
+        <property key="ToolFirmwareFilePath"
+                  value="Press to browse for a specific firmware version"/>
         <property key="ToolFirmwareOption.UseLatestFirmware" value="true"/>
         <property key="UART1" value="true"/>
         <property key="UART2" value="true"/>

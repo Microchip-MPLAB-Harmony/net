@@ -229,8 +229,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_das_sk/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">B1230C974F5DE8BFFFFD981DA4137F90</GeneratedChecksum>
-          <UserChecksum dnOrder="6">B1230C974F5DE8BFFFFD981DA4137F90</UserChecksum>
+          <GeneratedChecksum dnOrder="5">5703AD594F1C111BB889C740FF08A655</GeneratedChecksum>
+          <UserChecksum dnOrder="6">5703AD594F1C111BB889C740FF08A655</UserChecksum>
         </File>
         <File dnOrder="25">
           <Type dnOrder="0">SOURCE</Type>

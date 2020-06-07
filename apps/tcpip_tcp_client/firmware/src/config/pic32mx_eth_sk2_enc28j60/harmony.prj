@@ -203,7 +203,7 @@
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2_enc28j60/driver/spi/</LogicalPath>
           <PhysicalPath dnOrder="4">/driver/spi/src/</PhysicalPath>
           <GeneratedChecksum dnOrder="5">8D656DB234EC4AC97AA2EEEDE1DB8C38</GeneratedChecksum>
-          <UserChecksum dnOrder="6">8D656DB234EC4AC97AA2EEEDE1DB8C38</UserChecksum>
+          <UserChecksum dnOrder="6">64138A8D2185F31430D62983FC15C224</UserChecksum>
         </File>
         <File dnOrder="22">
           <Type dnOrder="0">SOURCE</Type>
@@ -355,8 +355,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2_enc28j60/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">710E0FA13496F622996876B37474B4B7</GeneratedChecksum>
-          <UserChecksum dnOrder="6">710E0FA13496F622996876B37474B4B7</UserChecksum>
+          <GeneratedChecksum dnOrder="5">774B534089CBBACBA8BE7CDC2974780B</GeneratedChecksum>
+          <UserChecksum dnOrder="6">774B534089CBBACBA8BE7CDC2974780B</UserChecksum>
         </File>
         <File dnOrder="39">
           <Type dnOrder="0">SOURCE</Type>
@@ -634,8 +634,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mx_eth_sk2_enc28j60/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">9B124B8065964B2FEA85001330DA49C6</GeneratedChecksum>
-          <UserChecksum dnOrder="6">9B124B8065964B2FEA85001330DA49C6</UserChecksum>
+          <GeneratedChecksum dnOrder="5">1C39E651AF9DE0BAF5F25C77236D414D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">1C39E651AF9DE0BAF5F25C77236D414D</UserChecksum>
         </File>
         <File dnOrder="70">
           <Type dnOrder="0">HEADER</Type>
@@ -2223,11 +2223,11 @@
     </Manifest>
     <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
-      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.1.215\atdf\PIC32MX795F512L.atdf"/>
+      <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\PIC32MX_DFP\1.3.231\atdf\PIC32MX795F512L.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
       <Setting dnOrder="3" key="GENERATE_BACKUP" value="true"/>
-      <Setting dnOrder="4" key="MERGE_STRATEGY" value="OVERWRITE"/>
-      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;"/>
+      <Setting dnOrder="4" key="MERGE_STRATEGY" value="ALL"/>
+      <Setting dnOrder="5" key="PackageFilter" value="bsp;core;crypto;csp;net;touch;usb;"/>
     </Settings>
   </Configurator>
 </Configuration>

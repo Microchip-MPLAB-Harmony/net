@@ -1179,7 +1179,7 @@ DRV_SPI_TRANSFER_EVENT DRV_SPI_TransferStatusGet(const DRV_SPI_TRANSFER_HANDLE t
     }
     else if(transferHandle != dObj->transferObjPool[transferIndex].transferHandle)
     {
-        SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Transfer Handle Expired");
+       // SYS_DEBUG_MESSAGE(SYS_ERROR_ERROR, "Transfer Handle Expired");
         return DRV_SPI_TRANSFER_EVENT_HANDLE_EXPIRED;
     }
     else
