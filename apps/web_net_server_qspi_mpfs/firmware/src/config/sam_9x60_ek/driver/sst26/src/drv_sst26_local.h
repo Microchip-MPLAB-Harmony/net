@@ -173,6 +173,7 @@ typedef struct
     const DRV_SST26_PLIB_INTERFACE *sst26Plib;
 } DRV_SST26_OBJECT;
 
+
 #endif //#ifndef _DRV_SST26_LOCAL_H
 
 /*******************************************************************************

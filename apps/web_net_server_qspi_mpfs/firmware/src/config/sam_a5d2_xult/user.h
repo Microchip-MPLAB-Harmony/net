@@ -33,16 +33,6 @@ extern "C" {
 // *****************************************************************************
 // *****************************************************************************
 
-#define SWITCH_Get()        PB_USER_Get()
-#define SWITCH_Get()        PB_USER_Get()
-#define SWITCH_Get()        PB_USER_Get()
-
-#define LED1_Get()          LED_GREEN_Get()
-#define LED1_Set()          LED_GREEN_On()
-#define LED1_Clear()        LED_GREEN_Off()
-#define LED1_Toggle()       LED_GREEN_Toggle()
-
-#include <device.h>
 
 //DOM-IGNORE-BEGIN
 #ifdef __cplusplus

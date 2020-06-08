@@ -331,7 +331,16 @@ bool DRV_MX25L_GeometryGet( const DRV_HANDLE handle, DRV_MX25L_GEOMETRY *geometr
 
     flash_size = DRV_MX25L_GetFlashSize(jedec_id[2]);
 
-    if (flash_size == 0)
+    if ((flash_size == 0) ||
+        (DRV_MX25L_START_ADDRESS >= flash_size))
+    {
+        return false;
+    }
+
+    flash_size = flash_size - DRV_MX25L_START_ADDRESS;
+
+    /* Flash size should be at-least of a Erase Block size */
+    if (flash_size < DRV_MX25L_ERASE_SIZE)
     {
         return false;
     }
