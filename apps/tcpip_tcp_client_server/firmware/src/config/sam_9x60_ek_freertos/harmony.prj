@@ -4,7 +4,8 @@
     <Name dnOrder="0" value="sam_9x60_ek_freertos"/>
     <Processor dnOrder="1" value="SAM9X60"/>
     <Harmony dnOrder="2" path="C:\Users\C50921\HarmonyCode"/>
-    <Manifest dnOrder="3">
+    <Project_Name dnOrder="3" value="tcpip_tcp_client_server"/>    
+    <Manifest dnOrder="4">
       <Files dnOrder="0">
         <File dnOrder="0">
           <Type dnOrder="0">SOURCE</Type>
@@ -2400,7 +2401,7 @@
         </File>
       </Files>
     </Manifest>
-    <Settings dnOrder="4">
+    <Settings dnOrder="5">
       <Setting dnOrder="0" key="CMSISPath" value=".\dev_packs\arm\CMSIS\5.6.0"/>
       <Setting dnOrder="1" key="DFPPath" value=".\dev_packs\Microchip\SAM9X60_DFP\1.1.23\atdf\SAM9X60.atdf"/>
       <Setting dnOrder="2" key="FORCE_OPTIMIZATION" value="false"/>
