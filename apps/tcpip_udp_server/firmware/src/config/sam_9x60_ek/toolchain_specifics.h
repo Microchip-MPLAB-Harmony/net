@@ -51,7 +51,7 @@ static inline void __enable_irq( void )
 #define __DMB    __arm926_dmb
 static inline void __arm926_dmb(void)
 {
-	asm("" ::: "memory");
+    asm("" ::: "memory");
 }
 #endif //__DMB
 
@@ -59,7 +59,7 @@ static inline void __arm926_dmb(void)
 #define __DSB    __arm926_dsb
 static inline void __arm926_dsb(void)
 {
-	asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
+    asm("mcr p15, 0, %0, c7, c10, 4" :: "r"(0) : "memory");
 }
 #endif //__DSB
 
@@ -67,7 +67,7 @@ static inline void __arm926_dsb(void)
 #define __ISB __arm926_isb
 static inline void __arm926_isb(void)
 {
-	asm("" ::: "memory");
+    asm("" ::: "memory");
 }
 #endif //__ISB
 
@@ -92,7 +92,7 @@ static inline void __arm926_isb(void)
 #define CACHE_ALIGN                     __ALIGNED(CACHE_LINE_SIZE)
 
 // ************************************************************************
-// H3_IAR_SYS_TYPES 
+// H3_IAR_SYS_TYPES
 
 #define ssize_t                         long
 
