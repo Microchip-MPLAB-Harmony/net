@@ -16,7 +16,7 @@
 *******************************************************************************/
 
 /*******************************************************************************
-* Copyright (C) 2019 Microchip Technology Inc. and its subsidiaries.
+* Copyright (C) 2020 Microchip Technology Inc. and its subsidiaries.
 *
 * Subject to your compliance with these terms, you may use Microchip software
 * and any derivatives exclusively with Microchip products. It is your
@@ -56,32 +56,44 @@
 // Section: Interface
 // *****************************************************************************
 // *****************************************************************************
+
 #define DBGU_FrequencyGet()    (uint32_t)(200000000UL)
 
 /****************************** DBGU API *********************************/
 
-void DBGU_Initialize(void);
+void DBGU_Initialize( void );
 
-DBGU_ERROR DBGU_ErrorGet(void);
+bool DBGU_SerialSetup( DBGU_SERIAL_SETUP *setup, uint32_t srcClkFreq );
 
-bool DBGU_SerialSetup(DBGU_SERIAL_SETUP *setup, uint32_t srcClkFreq);
+DBGU_ERROR DBGU_ErrorGet( void );
 
-bool DBGU_Write(void *buffer, const size_t size);
-
-bool DBGU_Read(void *buffer, const size_t size);
-
-bool DBGU_WriteIsBusy(void);
-
-bool DBGU_ReadIsBusy(void);
+size_t DBGU_Write(uint8_t* pWrBuffer, const size_t size );
 
 size_t DBGU_WriteCountGet(void);
 
+size_t DBGU_WriteFreeBufferCountGet(void);
+
+size_t DBGU_WriteBufferSizeGet(void);
+
+bool DBGU_WriteNotificationEnable(bool isEnabled, bool isPersistent);
+
+void DBGU_WriteThresholdSet(uint32_t nBytesThreshold);
+
+void DBGU_WriteCallbackRegister( DBGU_RING_BUFFER_CALLBACK callback, uintptr_t context);
+
+size_t DBGU_Read(uint8_t* pRdBuffer, const size_t size);
+
 size_t DBGU_ReadCountGet(void);
 
-void DBGU_WriteCallbackRegister(DBGU_CALLBACK callback, uintptr_t context);
+size_t DBGU_ReadFreeBufferCountGet(void);
 
-void DBGU_ReadCallbackRegister(DBGU_CALLBACK callback, uintptr_t context);
+size_t DBGU_ReadBufferSizeGet(void);
 
+bool DBGU_ReadNotificationEnable(bool isEnabled, bool isPersistent);
+
+void DBGU_ReadThresholdSet(uint32_t nBytesThreshold);
+
+void DBGU_ReadCallbackRegister( DBGU_RING_BUFFER_CALLBACK callback, uintptr_t context);
 
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
@@ -89,5 +101,6 @@ void DBGU_ReadCallbackRegister(DBGU_CALLBACK callback, uintptr_t context);
     }
 
 #endif
+
 // DOM-IGNORE-END
 #endif // PLIB_DBGU_H
