@@ -1,7 +1,7 @@
 /**
  * \brief Header file for ATSAMA5D27
  *
- * Copyright (c) 2019 Microchip Technology Inc. and its subsidiaries.
+ * Copyright (c) 2020 Microchip Technology Inc. and its subsidiaries.
  *
  * Subject to your compliance with these terms, you may use Microchip software and any derivatives
  * exclusively with Microchip products. It is your responsibility to comply with third party license
@@ -20,7 +20,7 @@
  *
  */
 
-/* file generated from device description version 2019-12-06T14:18:29Z */
+/* file generated from device description version 2020-03-18T12:52:54Z */
 #ifndef _SAMA5D27_H_
 #define _SAMA5D27_H_
 
@@ -77,6 +77,7 @@ typedef enum IRQn
 /******  CORTEX-A5 Processor Exceptions Numbers ******************************/
 /******  SAMA5D27 specific Interrupt Numbers ***********************************/
   SAIC_IRQn                 =   0, /**< 0   Advanced Interrupt Controller (SAIC) */
+  PMU_IRQn                  =   2, /**< 2   PMU (PMU)                           */
   PIT_IRQn                  =   3, /**< 3   Periodic Interval Timer (PIT)       */
   WDT_IRQn                  =   4, /**< 4   Watchdog Timer (WDT)                */
   GMAC_IRQn                 =   5, /**< 5   Gigabit Ethernet MAC (GMAC)         */
@@ -91,6 +92,7 @@ typedef enum IRQn
   MATRIX1_IRQn              =  14, /**< 14  AHB Bus Matrix (MATRIX1)            */
   MATRIX0_IRQn              =  15, /**< 15  AHB Bus Matrix (MATRIX0)            */
   SECUMOD_IRQn              =  16, /**< 16  Security Module (SECUMOD)           */
+  HSMC_IRQn                 =  17, /**< 17  HSMC (HSMC)                         */
   PIOA_IRQn                 =  18, /**< 18  Parallel Input/Output Controller (PIOA) */
   FLEXCOM0_IRQn             =  19, /**< 19  Flexible Serial Communication (FLEXCOM0) */
   FLEXCOM1_IRQn             =  20, /**< 20  Flexible Serial Communication (FLEXCOM1) */
@@ -109,9 +111,10 @@ typedef enum IRQn
   SPI0_IRQn                 =  33, /**< 33  Serial Peripheral Interface (SPI0)  */
   SPI1_IRQn                 =  34, /**< 34  Serial Peripheral Interface (SPI1)  */
   TC0_IRQn                  =  35, /**< 35  Timer Counter (TC0)                 */
-  TC1_IRQn                  =  36, /**< 36  Timer Counter (TC0)                 */
+  TC1_IRQn                  =  36, /**< 36  Timer Counter (TC1)                 */
   PWM_IRQn                  =  38, /**< 38  Pulse Width Modulation Controller (PWM) */
   ADC_IRQn                  =  40, /**< 40  Analog-to-Digital Converter (ADC)   */
+  UHPHS_IRQn                =  41, /**< 41  UHPHS (UHPHS)                       */
   UDPHS_IRQn                =  42, /**< 42  USB High Speed Device Port (UDPHS)  */
   SSC0_IRQn                 =  43, /**< 43  Synchronous Serial Controller (SSC0) */
   SSC1_IRQn                 =  44, /**< 44  Synchronous Serial Controller (SSC1) */
@@ -121,6 +124,7 @@ typedef enum IRQn
   PDMIC_IRQn                =  48, /**< 48  Pulse Density Modulation Interface Controller (PDMIC) */
   AIC_IRQn                  =  49, /**< 49  Advanced Interrupt Controller (AIC) */
   SFC_IRQn                  =  50, /**< 50  Secure Fuse Controller (SFC)        */
+  SECURAM_IRQn              =  51, /**< 51  SECURAM (SECURAM)                   */
   QSPI0_IRQn                =  52, /**< 52  Quad Serial Peripheral Interface (QSPI0) */
   QSPI1_IRQn                =  53, /**< 53  Quad Serial Peripheral Interface (QSPI1) */
   I2SC0_IRQn                =  54, /**< 54  Inter-IC Sound Controller (I2SC0)   */
@@ -139,9 +143,9 @@ typedef enum IRQn
   PIOD_IRQn                 =  70, /**< 70  Parallel Input/Output Controller (PIOD) */
   SDMMC0_TIMER_IRQn         =  71, /**< 71  Secure Digital MultiMedia Card Controller (SDMMC0) */
   SDMMC1_TIMER_IRQn         =  72, /**< 72  Secure Digital MultiMedia Card Controller (SDMMC1) */
-  PMC_IRQn                  =  74, /**< 74  Shared between PMC RSTC RTC (PMC)   */
   RSTC_IRQn                 =  74, /**< 74  Shared between PMC RSTC RTC (RSTC)  */
   RTC_IRQn                  =  74, /**< 74  Shared between PMC RSTC RTC (RTC)   */
+  PMC_IRQn                  =  74, /**< 74  Shared between PMC RSTC RTC (PMC)   */
   ACC_IRQn                  =  75, /**< 75  Analog Comparator Controller (ACC)  */
   RXLP_IRQn                 =  76, /**< 76  Low Power Asynchronous Receiver (RXLP) */
 
@@ -208,7 +212,7 @@ typedef struct _DeviceVectors
   void* pfnSPI0_Handler;                         /*  33 Serial Peripheral Interface (SPI0) */
   void* pfnSPI1_Handler;                         /*  34 Serial Peripheral Interface (SPI1) */
   void* pfnTC0_Handler;                          /*  35 Timer Counter (TC0) */
-  void* pfnTC1_Handler;                          /*  36 Timer Counter (TC0) */
+  void* pfnTC1_Handler;                          /*  36 Timer Counter (TC1) */
   void* pvReserved37;
   void* pfnPWM_Handler;                          /*  38 Pulse Width Modulation Controller (PWM) */
   void* pvReserved39;

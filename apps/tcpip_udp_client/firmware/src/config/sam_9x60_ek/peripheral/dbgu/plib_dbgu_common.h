@@ -121,6 +121,62 @@ typedef struct
 
 } DBGU_OBJECT ;
 
+typedef enum
+{
+    /* Threshold number of bytes are available in the receive ring buffer */
+    DBGU_EVENT_READ_THRESHOLD_REACHED = 0,
+
+    /* Receive ring buffer is full. Application must read the data out to avoid missing data on the next RX interrupt. */
+    DBGU_EVENT_READ_BUFFER_FULL,
+
+    /* DBGU error. Application must call the DBGU_ErrorGet API to get the type of error and clear the error. */
+    DBGU_EVENT_READ_ERROR,
+
+    /* Threshold number of free space is available in the transmit ring buffer */
+    DBGU_EVENT_WRITE_THRESHOLD_REACHED,
+}DBGU_EVENT;
+
+typedef void (* DBGU_RING_BUFFER_CALLBACK)(DBGU_EVENT event, uintptr_t context );
+
+
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local: **** Do Not Use ****
+// *****************************************************************************
+// *****************************************************************************
+
+typedef struct
+{
+    DBGU_RING_BUFFER_CALLBACK                           wrCallback;
+
+    uintptr_t                                           wrContext;
+
+    volatile uint32_t                                   wrInIndex;
+
+    volatile uint32_t                                   wrOutIndex;
+
+    bool                                                isWrNotificationEnabled;
+
+    uint32_t                                            wrThreshold;
+
+    bool                                                isWrNotifyPersistently;
+
+    DBGU_RING_BUFFER_CALLBACK                           rdCallback;
+
+    uintptr_t                                           rdContext;
+
+    volatile uint32_t                                   rdInIndex;
+
+    volatile uint32_t                                   rdOutIndex;
+
+    bool                                                isRdNotificationEnabled;
+
+    uint32_t                                            rdThreshold;
+
+    bool                                                isRdNotifyPersistently;
+
+} DBGU_RING_BUFFER_OBJECT;
+
 // DOM-IGNORE-BEGIN
 #ifdef __cplusplus  // Provide C++ Compatibility
 
