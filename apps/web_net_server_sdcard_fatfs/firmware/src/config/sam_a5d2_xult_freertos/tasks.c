@@ -133,6 +133,7 @@ void _DRV_SDMMC0_Tasks(  void *pvParameters  )
 
 
 
+
 // *****************************************************************************
 // *****************************************************************************
 // Section: System "Tasks" Routine
@@ -150,6 +151,7 @@ void SYS_Tasks ( void )
 {
     /* Maintain system services */
     
+
     xTaskCreate( _SYS_CMD_Tasks,
         "SYS_CMD_TASKS",
         SYS_CMD_RTOS_STACK_SIZE,
@@ -223,6 +225,7 @@ void SYS_Tasks ( void )
                 NULL,
                 1,
                 &xAPP_Tasks);
+
 
 
 

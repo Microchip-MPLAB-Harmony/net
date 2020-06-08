@@ -551,15 +551,51 @@ SYS_MODULE_OBJ TCPIP_STACK_Init()
 }
 // </editor-fold>
 
-/*** File System Initialization Data ***/
+// <editor-fold defaultstate="collapsed" desc="File System Initialization Data">
 
 
-const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] = 
+const SYS_FS_MEDIA_MOUNT_DATA sysfsMountTable[SYS_FS_VOLUME_NUMBER] =
 {
-	{NULL}
+    {NULL}
 };
 
-
+const SYS_FS_FUNCTIONS FatFsFunctions =
+{
+    .mount             = FATFS_mount,
+    .unmount           = FATFS_unmount,
+    .open              = FATFS_open,
+    .read              = FATFS_read,
+    .close             = FATFS_close,
+    .seek              = FATFS_lseek,
+    .fstat             = FATFS_stat,
+    .getlabel          = FATFS_getlabel,
+    .currWD            = FATFS_getcwd,
+    .getstrn           = FATFS_gets,
+    .openDir           = FATFS_opendir,
+    .readDir           = FATFS_readdir,
+    .closeDir          = FATFS_closedir,
+    .chdir             = FATFS_chdir,
+    .chdrive           = FATFS_chdrive,
+    .write             = FATFS_write,
+    .tell              = FATFS_tell,
+    .eof               = FATFS_eof,
+    .size              = FATFS_size,
+    .mkdir             = FATFS_mkdir,
+    .remove            = FATFS_unlink,
+    .setlabel          = FATFS_setlabel,
+    .truncate          = FATFS_truncate,
+    .chmode            = FATFS_chmod,
+    .chtime            = FATFS_utime,
+    .rename            = FATFS_rename,
+    .sync              = FATFS_sync,
+    .putchr            = FATFS_putc,
+    .putstrn           = FATFS_puts,
+    .formattedprint    = FATFS_printf,
+    .testerror         = FATFS_error,
+    .formatDisk        = (FORMAT_DISK)FATFS_mkfs,
+    .partitionDisk     = FATFS_fdisk,
+    .getCluster        = FATFS_getclusters
+};
 
 
 const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
@@ -570,6 +606,7 @@ const SYS_FS_REGISTRATION_TABLE sysFSInit [ SYS_FS_MAX_FILE_SYSTEM_TYPE ] =
     }
 };
 
+// </editor-fold>
 
 
 
@@ -599,47 +636,7 @@ const SYS_TIME_INIT sysTimeInitData =
 // </editor-fold>
 // <editor-fold defaultstate="collapsed" desc="SYS_CONSOLE Instance 0 Initialization Data">
 
-static QElement sysConsole0UARTRdQueueElements[SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0];
-static QElement sysConsole0UARTWrQueueElements[SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0];
 
-/* Declared in console device implementation (sys_console_uart.c) */
-extern const SYS_CONSOLE_DEV_DESC sysConsoleUARTDevDesc;
-
-const SYS_CONSOLE_UART_PLIB_INTERFACE sysConsole0UARTPlibAPI =
-{
-    .read = (SYS_CONSOLE_UART_PLIB_READ)DBGU_Read,
-    .write = (SYS_CONSOLE_UART_PLIB_WRITE)DBGU_Write,
-    .readCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_READ)DBGU_ReadCallbackRegister,
-    .writeCallbackRegister = (SYS_CONSOLE_UART_PLIB_REGISTER_CALLBACK_WRITE)DBGU_WriteCallbackRegister,
-    .errorGet = (SYS_CONSOLE_UART_PLIB_ERROR_GET)DBGU_ErrorGet,
-};
-
-
-const SYS_CONSOLE_UART_INTERRUPT_SOURCES sysConsole0UARTInterruptSources =
-{
-    /* Peripheral has single interrupt vector */
-    .isSingleIntSrc                        = true,
-
-    /* Peripheral interrupt line */
-    .intSources.usartInterrupt             = DBGU_IRQn,
-};
-
-const SYS_CONSOLE_UART_INIT_DATA sysConsole0UARTInitData =
-{
-    .uartPLIB = &sysConsole0UARTPlibAPI,
-    .readQueueElementsArr = sysConsole0UARTRdQueueElements,
-    .writeQueueElementsArr = sysConsole0UARTWrQueueElements,
-    .readQueueDepth = SYS_CONSOLE_UART_RD_QUEUE_DEPTH_IDX0,
-    .writeQueueDepth = SYS_CONSOLE_UART_WR_QUEUE_DEPTH_IDX0,
-    .interruptSources = &sysConsole0UARTInterruptSources,
-};
-
-const SYS_CONSOLE_INIT sysConsole0Init =
-{
-    .deviceInitData = (const void*)&sysConsole0UARTInitData,
-    .consDevDesc = &sysConsoleUARTDevDesc,
-    .deviceIndex = 0,
-};
 
 // </editor-fold>
 
@@ -663,6 +660,71 @@ const SYS_DEBUG_INIT debugInit =
 
 
 
+// *****************************************************************************
+// *****************************************************************************
+// Section: Local initialization functions
+// *****************************************************************************
+// *****************************************************************************
+/*******************************************************************************
+  Function:
+    void SYSC_Disable ( void )
+
+  Summary:
+    Disables ununsed SYSC peripherals
+
+  Remarks:
+ */
+static void SYSC_Disable( void )
+{
+    //save context and disable write protection
+    uint32_t sysc_wpmr = SYSCWP_REGS->SYSCWP_SYSC_WPMR &
+      (SYSCWP_SYSC_WPMR_WPEN_Msk | SYSCWP_SYSC_WPMR_WPITEN_Msk);
+    SYSCWP_REGS->SYSCWP_SYSC_WPMR = SYSCWP_SYSC_WPMR_WPKEY_PASSWD &
+                                    ~(SYSCWP_SYSC_WPMR_WPITEN_Msk |
+                                    SYSCWP_SYSC_WPMR_WPITEN_Msk);
+
+
+    /* ----------------------------   RTC  -------------------------------*/
+    //Disable interrupts
+    RTC_REGS->RTC_IDR = RTC_IDR_Msk;
+
+    //Clear interrupt status
+    RTC_REGS->RTC_SCCR = RTC_SCCR_Msk;
+
+    /* ----------------------------   RTT  -------------------------------*/
+    //Disable Timer and interrupt
+    uint32_t rtt_mr = RTT_REGS->RTT_MR;
+    RTT_REGS->RTT_MR = rtt_mr & ~(RTT_MR_RTTDIS_Msk | RTT_MR_RTTINCIEN_Msk);
+
+    //Clear status
+    RTT_REGS->RTT_SR;
+
+    /* ----------------------------   RSTC  ------------------------------*/
+    // Disable interrupt
+    uint32_t rstc_mr = RSTC_REGS->RSTC_MR & (RSTC_MR_ENGCLR_Msk |
+                                             RSTC_MR_ERSTL_Msk |
+                                             RSTC_MR_URSTIEN_Msk |
+                                             RSTC_MR_URSTASYNC_Msk |
+                                             RSTC_MR_SCKSW_Msk |
+                                             RSTC_MR_URSTEN_Msk);
+    rstc_mr = rstc_mr & (~RSTC_MR_URSTIEN_Msk);
+    RSTC_REGS->RSTC_MR = RSTC_MR_KEY_PASSWD | rstc_mr;
+
+    /* ----------------------------   PIT  -------------------------------*/
+    //Disable Timer and interrupt
+    uint32_t pit_mr = PIT_REGS->PIT_MR & PIT_MR_PIV_Msk;
+    PIT_REGS->PIT_MR = pit_mr & ~(PIT_MR_PITEN_Msk | PIT_MR_PITIEN_Msk);
+
+    //Clear status
+    PIT_REGS->PIT_SR;
+
+   //Context restore SYSC write protect registers
+   SYSCWP_REGS->SYSCWP_SYSC_WPMR = (SYSCWP_SYSC_WPMR_WPKEY_PASSWD | sysc_wpmr);
+}
+
+
+
+
 /*******************************************************************************
   Function:
     void SYS_Initialize ( void *data )
@@ -675,6 +737,8 @@ const SYS_DEBUG_INIT debugInit =
 
 void SYS_Initialize ( void* data )
 {
+	SYSC_Disable( );
+
   
     CLK_Initialize();
 
