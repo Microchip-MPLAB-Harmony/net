@@ -1,6 +1,6 @@
 /*
- * FreeRTOS Kernel V10.0.1
- * Copyright (C) 2017 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
+ * FreeRTOS Kernel V10.2.0
+ * Copyright (C) 2019 Amazon.com, Inc. or its affiliates.  All Rights Reserved.
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy of
  * this software and associated documentation files (the "Software"), to deal in
@@ -110,10 +110,13 @@
 #define INCLUDE_uxTaskGetStackHighWaterMark     0
 #define INCLUDE_xTaskGetIdleTaskHandle          0
 #define INCLUDE_eTaskGetState                   0
-#define INCLUDE_xEventGroupSetBitFromISR        0
 #define INCLUDE_xTimerPendFunctionCall          0
 #define INCLUDE_xTaskAbortDelay                 0
 #define INCLUDE_xTaskGetHandle                  0
+#define INCLUDE_xQueueGetMutexHolder            0
+#define INCLUDE_xSemaphoreGetMutexHolder        0
+#define INCLUDE_uxTaskGetStackHighWaterMark2    0
+#define INCLUDE_xTaskResumeFromISR              0
 
 #ifdef __ICCARM__
 void vConfigureTickInterrupt(void);
