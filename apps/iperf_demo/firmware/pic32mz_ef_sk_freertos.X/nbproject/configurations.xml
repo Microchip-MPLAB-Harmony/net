@@ -284,7 +284,6 @@
       <itemPath>Makefile</itemPath>
       <itemPath>../src/config/pic32mz_ef_sk_freertos/harmony.prj</itemPath>
       <itemPath>../src/config/pic32mz_ef_sk_freertos/pic32mz_ef_sk_freertos.xml</itemPath>
-      <itemPath>../src/config/pic32mz_ef_sk_freertos/harmony.prj</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -446,7 +445,7 @@
         <targetDevice>PIC32MZ2048EFM144</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>
@@ -516,9 +515,9 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos"/>
         <property key="extra-include-directories-for-preprocessor"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos;"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_ef_sk_freertos"/>
         <property key="false-conditionals" value="false"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
