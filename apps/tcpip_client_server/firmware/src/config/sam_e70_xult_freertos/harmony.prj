@@ -189,12 +189,12 @@
         </File>
         <File dnOrder="20">
           <Type dnOrder="0">SOURCE</Type>
-          <Name dnOrder="1">heap_2.c</Name>
+          <Name dnOrder="1">heap_3.c</Name>
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">FreeRTOS/Source/portable/MemMang/</LogicalPath>
           <PhysicalPath dnOrder="4">/../../third_party/rtos/FreeRTOS/Source/portable/MemMang/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">940A4FBBEEF11F1FDBE8FDAC00AB3CA5</GeneratedChecksum>
-          <UserChecksum dnOrder="6">940A4FBBEEF11F1FDBE8FDAC00AB3CA5</UserChecksum>
+          <GeneratedChecksum dnOrder="5">CA534469F7945C71FED771BA6EAC2EBA</GeneratedChecksum>
+          <UserChecksum dnOrder="6">CA534469F7945C71FED771BA6EAC2EBA</UserChecksum>
         </File>
         <File dnOrder="21">
           <Type dnOrder="0">SOURCE</Type>
@@ -346,8 +346,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e70_xult_freertos/peripheral/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">C57117ED7287F2351F5CCB6FEB9C1FD7</GeneratedChecksum>
-          <UserChecksum dnOrder="6">C57117ED7287F2351F5CCB6FEB9C1FD7</UserChecksum>
+          <GeneratedChecksum dnOrder="5">8ABDF9E345C68E2DD9D4130FBADDCF68</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8ABDF9E345C68E2DD9D4130FBADDCF68</UserChecksum>
         </File>
         <File dnOrder="38">
           <Type dnOrder="0">SOURCE</Type>
@@ -841,8 +841,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">734B3480506CCF35000394CEA94724D4</GeneratedChecksum>
-          <UserChecksum dnOrder="6">734B3480506CCF35000394CEA94724D4</UserChecksum>
+          <GeneratedChecksum dnOrder="5">D8676A6B2ADA44417BC8000845F64F51</GeneratedChecksum>
+          <UserChecksum dnOrder="6">D8676A6B2ADA44417BC8000845F64F51</UserChecksum>
         </File>
         <File dnOrder="93">
           <Type dnOrder="0">HEADER</Type>
@@ -2686,8 +2686,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e70_xult_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="298">
           <Type dnOrder="0">HEADER</Type>
@@ -2767,7 +2767,7 @@
         <Setting append="true" category="C32" delimiter=";" dnOrder="1" key="extra-include-directories" security="NON_SECURE" value="../src/third_party/rtos/FreeRTOS/Source/include;"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="2" key="extra-include-directories" security="NON_SECURE" value="../src/third_party/rtos/FreeRTOS/Source/portable/GCC/SAM/CM7;"/>
         <Setting append="true" category="C32" delimiter=";" dnOrder="3" key="extra-include-directories" security="NON_SECURE" value="../src;../src/config/sam_e70_xult_freertos;../src/packs/ATSAME70Q21B_DFP;../src/packs/CMSIS/CMSIS/Core/Include;../src/packs/CMSIS/"/>
-        <Setting category="C32-LD" dnOrder="4" key="heap-size" security="NON_SECURE" value="96960"/>
+        <Setting category="C32-LD" dnOrder="4" key="heap-size" security="NON_SECURE" value="146960"/>
         <Setting category="C32-LD" dnOrder="5" key="no-device-startup-code" security="NON_SECURE" value="true"/>
         <Setting append="true" category="C32-LD" delimiter=";" dnOrder="6" key="preprocessor-macros" security="NON_SECURE" value=""/>
         <Setting category="C32Global" dnOrder="7" key="mdtcm" security="NON_SECURE" value=""/>
