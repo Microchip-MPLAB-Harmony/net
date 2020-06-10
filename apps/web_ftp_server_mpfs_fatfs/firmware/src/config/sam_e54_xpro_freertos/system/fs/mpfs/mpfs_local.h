@@ -47,13 +47,12 @@ This file contains the MPFS local declarations and definitions.
 // Section: File includes
 // *****************************************************************************
 // *****************************************************************************
-#include "driver/driver_common.h"
-#include "system/fs/mpfs/mpfs.h"
-#include "system/fs/sys_fs_media_manager.h"
 #include <string.h>
 #include <stdint.h>
 #include <stdbool.h>
 #include <stddef.h>
+
+#include "system/fs/mpfs/mpfs.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -110,22 +109,27 @@ typedef struct
     uint32_t timestamp;// Timestamp of file
     uint32_t microtime;// Microtime stamp of file
     uint16_t flags;// Flags for this file
-	uint8_t	 dummy[10]; // Added to align the structure size to cache line size
+    uint8_t  dummy[10]; // Added to align the structure size to cache line size
 } MPFS_FILE_RECORD;
 
-/* File status structure (FILINFO) */
+/* File status structure when using latest FAT-FS and MPFS Together*/
 typedef struct {
     unsigned long	fsize;			/* File size */
     unsigned short	fdate;			/* Last modified date */
     unsigned short	ftime;			/* Last modified time */
     unsigned char	fattrib;		/* Attribute */
-    /* Short file name (8.3 format) */
-    char        fname[13];
-#if FAT_FS_USE_LFN
+#if SYS_FS_USE_LFN
+    /* Alternate file name */
+    char        altname[13];
+    /* Primary file name */
+    char        fname[SYS_FS_FILE_NAME_LEN + 1];
     /* Pointer to the LFN buffer */
     char       *lfname;
     /* Size of LFN buffer in TCHAR */
     uint32_t    lfsize;
+#else
+    /* Short file name (8.3 format) */
+    char        fname[13];
 #endif
 } MPFS_STATUS;
 
