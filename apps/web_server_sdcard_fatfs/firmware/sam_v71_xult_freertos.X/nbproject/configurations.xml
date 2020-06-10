@@ -527,6 +527,7 @@
       <itemPath>../src/config/sam_v71_xult_freertos/harmony.prj</itemPath>
       <itemPath>../src/config/sam_v71_xult_freertos/sam_v71_xult_freertos.xml</itemPath>
       <itemPath>../src/config/sam_v71_xult_freertos/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_v71_xult_freertos/sam_v71_xult_freertos.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -829,14 +830,14 @@
         <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>
       </toolsSet>
       <packs>
-        <pack name="SAMV71_DFP" vendor="Microchip" version="4.3.66"/>
         <pack name="CMSIS" vendor="ARM" version="5.4.0"/>
+        <pack name="SAMV71_DFP" vendor="Microchip" version="4.3.66"/>
       </packs>
       <ScriptingSettings>
       </ScriptingSettings>
