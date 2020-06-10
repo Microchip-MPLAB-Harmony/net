@@ -55,6 +55,7 @@
 #include "configuration.h"
 #include "system/command/sys_command.h"
 #include "system/console/sys_console.h"
+#include "system/debug/sys_debug.h"
 
 // *****************************************************************************
 // *****************************************************************************
@@ -87,20 +88,20 @@ typedef struct
 // VT100 control commands sent to the terminal:
 // erase to the end of the line:    ESC [ K
 // move cursor backwards:           ESC [ {COUNT} D
-// move cursor forward:		        ESC [ {COUNT} C
+// move cursor forward:             ESC [ {COUNT} C
 //
 
 
 #define         LINE_TERM       "\r\n"          // line terminator
 #define         _promptStr      ">"             // prompt string
 
-// descriptor of the command I/O node 
+// descriptor of the command I/O node
 typedef struct SYS_CMD_IO_DCPT
 {
     SYS_CMD_DEVICE_NODE devNode;
     // internally maintained data
     struct SYS_CMD_IO_DCPT* next;   // linked list node
-    const struct _KEY_SEQ_DCPT* pSeqDcpt; // current escape sequence in progress 
+    const struct _KEY_SEQ_DCPT* pSeqDcpt; // current escape sequence in progress
     int16_t         seqChars;   // # of characters from the escape sequence
     char            seqBuff[VT100_MAX_ESC_SEQ_SIZE + 2];     // 0x1b + escape sequence + \0
     char*           cmdPnt; // current pointer
@@ -143,20 +144,6 @@ static SYS_CMD_DEVICE_LIST cmdIODevList = {0, 0};
 static char printBuff[SYS_CMD_PRINT_BUFFER_SIZE] SYS_CMD_BUFFER_DMA_READY;
 static int printBuffPtr = 0;
 
-typedef struct
-{
-    char*       startBuff;  // buffer to store the ready console data
-    char*       endBuff;    // buffer to store the ready console data
-    char*       rdPtr;  // pointer to read the ready buffer
-    char*       wrPtr;  // pointer to write into the ready buffer
-    void        (*cback)(void*);    // notification with the console
-    uint32_t    ovflowCnt;      // overflow counter
-}SYS_CMD_CONSOLE_RD;    // fake descriptor for the console
-
-static char consoleReadyBuff[SYS_CMD_MAX_LENGTH + 1];   // buffer to store the ready console data
-static char consoleSchedBuff[10];                       // buffer to be scheduled for console operations...
-static SYS_CMD_CONSOLE_RD  sys_console_rd;
-
 static SYS_CMD_INIT _cmdInitData;       // data the command processor has been initialized with
 
 static SYS_CMD_DESCRIPTOR_TABLE   _usrCmdTbl[MAX_CMD_GROUP] = { {0} };    // current command table
@@ -182,7 +169,7 @@ static void _keyEndProcess(SYS_CMD_IO_DCPT* pCmdIO, const KEY_SEQ_DCPT* pSeqDcpt
 // dummy table holding the escape sequences + expected sequence size
 // detection of a sequence is done using only the first 3 characters
 #define         VT100_DETECT_SEQ_SIZE    3
-static const KEY_SEQ_DCPT keySeqTbl[] = 
+static const KEY_SEQ_DCPT keySeqTbl[] =
 {
     // keyCode      keyFnc              keySize
     {"\x1b[A",      _keyUpProcess,      sizeof("\x1b[A") - 1},
@@ -216,7 +203,6 @@ static void SendCommandPrint(const void* cmdIoParam, const char* format, ...);
 static void SendCommandCharacter(const void* cmdIoParam, char c);
 static int IsCommandReady(const void* cmdIoParam);
 static char GetCommandCharacter(const void* cmdIoParam);
-static void CommandReadCback(void* pBuffer);
 static void RunCmdTask(SYS_CMD_IO_DCPT* pCmdIO);
 
 const SYS_CMD_API sysConsoleApi =
@@ -286,12 +272,6 @@ bool SYS_CMD_Initialize(const SYS_MODULE_INIT * const init )
     SYS_CMDIO_ADD(&sysConsoleApi, &initConfig->consoleCmdIOParam, initConfig->consoleCmdIOParam);
 
     _cmdInitData.consoleIndex = initConfig->consoleIndex;
-
-    sys_console_rd.startBuff = consoleReadyBuff;
-    sys_console_rd.endBuff = consoleReadyBuff + sizeof(consoleReadyBuff);
-    sys_console_rd.rdPtr = sys_console_rd.wrPtr = sys_console_rd.startBuff;
-    sys_console_rd.cback = 0;
-    sys_console_rd.ovflowCnt = 0;
 
     return true;
 }
@@ -451,7 +431,7 @@ static void RunCmdTask(SYS_CMD_IO_DCPT* pCmdIO)
                     *pDst++ = *pSrc++;
                 }
                 pCmdIO->cmdPnt--; pCmdIO->cmdEnd--;
-                // update the display; erase to the end of line(<ESC>[K) and move cursor backwards (<ESC>[{COUNT}D) 
+                // update the display; erase to the end of line(<ESC>[K) and move cursor backwards (<ESC>[{COUNT}D)
                 *pCmdIO->cmdEnd = '\0';
                 sprintf(pCmdIO->ctrlBuff, "\b\x1b[K%s\x1b[%dD", pCmdIO->cmdPnt, len);
                 (*pCmdApi->msg)(cmdIoParam, pCmdIO->ctrlBuff);
@@ -476,7 +456,7 @@ static void RunCmdTask(SYS_CMD_IO_DCPT* pCmdIO)
                 *pDst++ = *pSrc++;
             }
             pCmdIO->cmdEnd--;
-            // update the display; erase to the end of line(<ESC>[K) and move cursor backwards (<ESC>[{COUNT}D) 
+            // update the display; erase to the end of line(<ESC>[K) and move cursor backwards (<ESC>[{COUNT}D)
             *pCmdIO->cmdEnd = '\0';
             sprintf(pCmdIO->ctrlBuff, "\x1b[K%s\x1b[%dD", pCmdIO->cmdPnt, len);
             (*pCmdApi->msg)(cmdIoParam, pCmdIO->ctrlBuff);
@@ -712,7 +692,7 @@ bool SYS_CMD_DELETE(SYS_CMD_DEVICE_NODE* pDeviceNode)
 // ignore the console handle for now, we support a single system console
 static void SendCommandMessage(const void* cmdIoParam, const char* message)
 {
-    SYS_CONSOLE_Write(_cmdInitData.consoleIndex, STDOUT_FILENO, message, strlen(message));
+    SYS_CONSOLE_Write(_cmdInitData.consoleIndex, message, strlen(message));
 }
 
 static void SendCommandPrint(const void* cmdIoParam, const char* format, ...)
@@ -755,73 +735,21 @@ static void SendCommandCharacter(const void* cmdIoParam, char c)
 {
     if (SYS_CONSOLE_Status((SYS_MODULE_OBJ)_cmdInitData.consoleIndex) == SYS_STATUS_READY)
     {
-        SYS_CONSOLE_Write(_cmdInitData.consoleIndex, STDOUT_FILENO, (const char*)&c, 1);
+        SYS_CONSOLE_Write(_cmdInitData.consoleIndex, (const char*)&c, 1);
     }
 }
 
 
 static int IsCommandReady(const void* cmdIoParam)
 {
-    int n_bytes = sys_console_rd.wrPtr - sys_console_rd.rdPtr;
-    if(n_bytes < 0)
-    {
-        n_bytes += sys_console_rd.endBuff - sys_console_rd.startBuff;
-    }
-
-    if(sys_console_rd.cback == 0)
-    {   // 1st time we're called
-        SYS_CONSOLE_RegisterCallback(_cmdInitData.consoleIndex, CommandReadCback, SYS_CONSOLE_EVENT_READ_COMPLETE);
-        // schedule the next read
-        if (SYS_CONSOLE_Status((SYS_MODULE_OBJ)_cmdInitData.consoleIndex) == SYS_STATUS_READY)
-        {
-            SYS_CONSOLE_Read(_cmdInitData.consoleIndex, 0, consoleSchedBuff, 1);
-            sys_console_rd.cback = CommandReadCback;
-        }
-    }
-
-    return n_bytes;
-}
-
-// notification called when the read is complete
-// push another ready character
-static void CommandReadCback(void* pBuffer)
-{
-    char* wrPtr = sys_console_rd.wrPtr + 1;
-    if(wrPtr == sys_console_rd.endBuff)
-    {
-        wrPtr = sys_console_rd.startBuff;
-    }
-
-    if(wrPtr == sys_console_rd.rdPtr)
-    {   // overflow
-        sys_console_rd.ovflowCnt++;
-    }
-    else
-    {
-        *wrPtr = *(char*)pBuffer;
-        sys_console_rd.wrPtr = wrPtr;
-    }
-    // start another transfer
-    SYS_CONSOLE_Read(_cmdInitData.consoleIndex, 0, consoleSchedBuff, 1);
+    return (int)SYS_CONSOLE_ReadCountGet(_cmdInitData.consoleIndex);
 }
 
 static char GetCommandCharacter(const void* cmdIoParam)
 {
-    char* rdPtr = sys_console_rd.rdPtr;
-    if(rdPtr == sys_console_rd.wrPtr)
-    {   // empty
-        return -1;
-    }
+    char new_c;
 
-    rdPtr++;
-    if(rdPtr == sys_console_rd.endBuff)
-    {
-        rdPtr = sys_console_rd.startBuff;
-    }
-
-    char new_c = *(rdPtr);
-
-    sys_console_rd.rdPtr = rdPtr;
+    SYS_CONSOLE_Read(_cmdInitData.consoleIndex, &new_c, 1);
 
     return new_c;
 }
@@ -933,7 +861,7 @@ static bool ParseCmdBuffer(SYS_CMD_IO_DCPT* pCmdIO)
 {
     int  argc = 0;
     char *argv[MAX_CMD_ARGS + 1] = {0};
-    char saveCmd[SYS_CMD_MAX_LENGTH + 1]; 
+    char saveCmd[SYS_CMD_MAX_LENGTH + 1];
     const void* cmdIoParam = pCmdIO->devNode.cmdIoParam;
 
     int            ix, grp_ix;
@@ -1036,7 +964,7 @@ static int StringToArgs(char *pRawString, char *argv[]) {
     *pRawString++ = '\0';
   }
 
-  SYS_PRINT("\n\r Too many arguments. Maximum argus supported is %d!\r\n", MAX_CMD_ARGS);
+  SYS_CONSOLE_Print(_cmdInitData.consoleIndex, "\n\r Too many arguments. Maximum argus supported is %d!\r\n", MAX_CMD_ARGS);
 
   return (0);
 }
@@ -1044,7 +972,7 @@ static int StringToArgs(char *pRawString, char *argv[]) {
 static void _keyUpProcess(SYS_CMD_IO_DCPT* pCmdIO, const KEY_SEQ_DCPT* pSeqDcpt)
 {   // up arrow
     histCmdNode *pNext;
-    
+
     if(pCmdIO->currHistN)
     {
         pNext = pCmdIO->currHistN->next;
@@ -1118,7 +1046,7 @@ static void _keyEndProcess(SYS_CMD_IO_DCPT* pCmdIO, const KEY_SEQ_DCPT* pSeqDcpt
 {   // end key
     const SYS_CMD_API* pCmdApi = pCmdIO->devNode.pCmdApi;
     const void* cmdIoParam = pCmdIO->devNode.cmdIoParam;
-    
+
     int nChars = pCmdIO->cmdEnd - pCmdIO->cmdPnt;
     if(nChars)
     {
