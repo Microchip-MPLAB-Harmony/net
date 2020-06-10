@@ -985,8 +985,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/peripheral/sercom/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/sercom/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">3DA87A521FBD572F0EB1C3CF42F63A55</GeneratedChecksum>
-          <UserChecksum dnOrder="6">3DA87A521FBD572F0EB1C3CF42F63A55</UserChecksum>
+          <GeneratedChecksum dnOrder="5">C5377145081C87C1F753D01BF935EBAF</GeneratedChecksum>
+          <UserChecksum dnOrder="6">C5377145081C87C1F753D01BF935EBAF</UserChecksum>
         </File>
         <File dnOrder="109">
           <Type dnOrder="0">SOURCE</Type>
@@ -2236,8 +2236,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">9A01A6BDA1523B73C88171E0081B846D</GeneratedChecksum>
-          <UserChecksum dnOrder="6">9A01A6BDA1523B73C88171E0081B846D</UserChecksum>
+          <GeneratedChecksum dnOrder="5">621DCDE2960BAC7B736B50BDF5C85E85</GeneratedChecksum>
+          <UserChecksum dnOrder="6">621DCDE2960BAC7B736B50BDF5C85E85</UserChecksum>
         </File>
         <File dnOrder="248">
           <Type dnOrder="0">HEADER</Type>
@@ -4936,8 +4936,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e54_xpro_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="548">
           <Type dnOrder="0">HEADER</Type>

@@ -123,7 +123,7 @@ extern "C" {
 #define SYS_CMD_BUFFER_DMA_READY
 
 /* Command System Service RTOS Configurations*/
-#define SYS_CMD_RTOS_STACK_SIZE                2048
+#define SYS_CMD_RTOS_STACK_SIZE                2560
 #define SYS_CMD_RTOS_TASK_PRIORITY             1
 
 

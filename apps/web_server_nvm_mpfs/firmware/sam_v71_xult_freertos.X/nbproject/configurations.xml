@@ -514,6 +514,7 @@
       <itemPath>../src/config/sam_v71_xult_freertos/harmony.prj</itemPath>
       <itemPath>../src/config/sam_v71_xult_freertos/sam_v71_xult_freertos.xml</itemPath>
       <itemPath>../src/config/sam_v71_xult_freertos/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_v71_xult_freertos/sam_v71_xult_freertos.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -805,7 +806,7 @@
         <targetDevice>ATSAMV71Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>
