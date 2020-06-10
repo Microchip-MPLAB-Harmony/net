@@ -4,7 +4,7 @@
 
 
 project: snmpv3_nvm_mpfs
-creation_date: 2020-05-28T06:53:34.685+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-06-10T05:28:09.523+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
 mhc_mode: IDE            # [IDE|Standalone|Headless]
 mplabx_version: v5.40        # if MPLAB X plugin only
@@ -22,11 +22,11 @@ modules:
     - {name: "ethercat", version: "unknown"}
     - {name: "ethercat_old", version: "unknown"}
     - {name: "ethercat_settu", version: "unknown"}
-    - {name: "mhc", version: "v3.4.0"}
+    - {name: "mhc", version: "v3.4.1"}
     - {name: "microchip-mplab-harmony.github.io.wiki", version: "unknown"}
-    - {name: "mplabx_plugin", version: "v3.5.0-rc.1"}
+    - {name: "mplabx_plugin", version: "v3.5.0"}
     - {name: "net", version: "unknown"}
-    - {name: "usb", version: "v3.4.0"}
+    - {name: "usb", version: "v3.5.0"}
     - {name: "wireless", version: "unknown"}
     - {name: "wolfMQTT", version: "v1.2.0"}
     - {name: "wolfssl", version: "v4.3.0-stable"}
