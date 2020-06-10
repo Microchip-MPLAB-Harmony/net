@@ -509,6 +509,7 @@
       <itemPath>../src/config/sam_e70_xplained_ultra_rtos/harmony.prj</itemPath>
       <itemPath>../src/config/sam_e70_xplained_ultra_rtos/sam_e70_xplained_ultra_rtos.xml</itemPath>
       <itemPath>../src/config/sam_e70_xplained_ultra_rtos/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_e70_xplained_ultra_rtos/sam_e70_xplained_ultra_rtos.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -788,7 +789,7 @@
         <targetDevice>ATSAME70Q21B</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>ICD4Tool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>

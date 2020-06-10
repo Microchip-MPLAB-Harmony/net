@@ -480,6 +480,7 @@
       <itemPath>../src/config/sam_e54_xpro_sw/harmony.prj</itemPath>
       <itemPath>../src/config/sam_e54_xpro_sw/sam_e54_xpro_sw.xml</itemPath>
       <itemPath>../src/config/sam_e54_xpro_sw/harmony.prj</itemPath>
+      <itemPath>../src/config/sam_e54_xpro_sw/sam_e54_xpro_sw.xml</itemPath>
     </logicalFolder>
     <logicalFolder name="LinkerScript"
                    displayName="Linker Files"
@@ -732,7 +733,7 @@
         <targetDevice>ATSAME54P20A</targetDevice>
         <targetHeader></targetHeader>
         <targetPluginBoard></targetPluginBoard>
-        <platformTool>noID</platformTool>
+        <platformTool>EdbgTool</platformTool>
         <languageToolchain>XC32</languageToolchain>
         <languageToolchainVersion>2.41</languageToolchainVersion>
         <platform>3</platform>

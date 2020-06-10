@@ -904,8 +904,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e70_xplained_ultra_rtos/peripheral/usart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/usart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">C57117ED7287F2351F5CCB6FEB9C1FD7</GeneratedChecksum>
-          <UserChecksum dnOrder="6">C57117ED7287F2351F5CCB6FEB9C1FD7</UserChecksum>
+          <GeneratedChecksum dnOrder="5">CA22114EA4D8CB9D75E50B3FBC466E53</GeneratedChecksum>
+          <UserChecksum dnOrder="6">CA22114EA4D8CB9D75E50B3FBC466E53</UserChecksum>
         </File>
         <File dnOrder="100">
           <Type dnOrder="0">SOURCE</Type>
@@ -2128,8 +2128,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e70_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">A2AC2CA8AC8B15AF22B633E27FA89769</GeneratedChecksum>
-          <UserChecksum dnOrder="6">A2AC2CA8AC8B15AF22B633E27FA89769</UserChecksum>
+          <GeneratedChecksum dnOrder="5">49E6C8E297733BC8BAD1A74FD98ECEE9</GeneratedChecksum>
+          <UserChecksum dnOrder="6">49E6C8E297733BC8BAD1A74FD98ECEE9</UserChecksum>
         </File>
         <File dnOrder="236">
           <Type dnOrder="0">HEADER</Type>
@@ -4738,8 +4738,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_e70_xplained_ultra_rtos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="526">
           <Type dnOrder="0">HEADER</Type>

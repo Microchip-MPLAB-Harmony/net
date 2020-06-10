@@ -2020,8 +2020,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_ef_sk_rtos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">6CE45830A6FDB918E636C7E2B24B9376</GeneratedChecksum>
-          <UserChecksum dnOrder="6">6CE45830A6FDB918E636C7E2B24B9376</UserChecksum>
+          <GeneratedChecksum dnOrder="5">04A903E1642BC5C21648A4760502440D</GeneratedChecksum>
+          <UserChecksum dnOrder="6">04A903E1642BC5C21648A4760502440D</UserChecksum>
         </File>
         <File dnOrder="224">
           <Type dnOrder="0">HEADER</Type>
@@ -4297,8 +4297,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_ef_sk_rtos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="477">
           <Type dnOrder="0">HEADER</Type>
