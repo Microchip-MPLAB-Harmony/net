@@ -47,12 +47,11 @@
 #include "configuration.h"
 #include "system/system.h"
 #include "system/fs/sys_fs.h"
-#include "system/fs/fat_fs/src/file_system/ff.h"
 #include "system/fs/sys_fs_media_manager.h"
 #include "osal/osal.h"
 #include <string.h>
 
-#define SYS_FS_PATH_LEN_WITH_DISK_NUM (FAT_FS_MAX_LFN + 3)
+#define SYS_FS_PATH_LEN_WITH_DISK_NUM (SYS_FS_FILE_NAME_LEN + 3)
 #ifndef SYS_FS_CWD_STRING_LEN
 #define SYS_FS_CWD_STRING_LEN (1024)
 #endif
@@ -115,7 +114,7 @@ typedef struct
     SYS_FS_ERROR errorValue;
     
     /* Name of file is stored in a buffer for future use */
-    uint8_t fileName[FAT_FS_MAX_LFN + 1] CACHE_ALIGN;
+    uint8_t fileName[SYS_FS_FILE_NAME_LEN + 1] CACHE_ALIGN;
 
 }SYS_FS_OBJ;
 
