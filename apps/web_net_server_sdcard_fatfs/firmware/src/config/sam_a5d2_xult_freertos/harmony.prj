@@ -1139,8 +1139,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult_freertos/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">ADA1F4C84E5DA958FE0695733E123344</GeneratedChecksum>
-          <UserChecksum dnOrder="6">ADA1F4C84E5DA958FE0695733E123344</UserChecksum>
+          <GeneratedChecksum dnOrder="5">8344C509C389B4881DFEFD26B1CB8116</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8344C509C389B4881DFEFD26B1CB8116</UserChecksum>
         </File>
         <File dnOrder="126">
           <Type dnOrder="0">SOURCE</Type>
