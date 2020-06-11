@@ -2083,8 +2083,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_ef_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">9087A14BD8C045BD5D8B088E27E2B5BC</GeneratedChecksum>
-          <UserChecksum dnOrder="6">9087A14BD8C045BD5D8B088E27E2B5BC</UserChecksum>
+          <GeneratedChecksum dnOrder="5">E9DABC381F74B56DBEC76884578FA700</GeneratedChecksum>
+          <UserChecksum dnOrder="6">E9DABC381F74B56DBEC76884578FA700</UserChecksum>
         </File>
         <File dnOrder="231">
           <Type dnOrder="0">HEADER</Type>
@@ -4405,8 +4405,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/pic32mz_ef_sk_freertos/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">4B3C3EF8A318908A22B78500515C3288</GeneratedChecksum>
-          <UserChecksum dnOrder="6">4B3C3EF8A318908A22B78500515C3288</UserChecksum>
+          <GeneratedChecksum dnOrder="5"/>
+          <UserChecksum dnOrder="6"/>
         </File>
         <File dnOrder="489">
           <Type dnOrder="0">HEADER</Type>
