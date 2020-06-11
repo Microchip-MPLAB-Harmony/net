@@ -284,8 +284,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_9x60_ek_freertos/peripheral/dbgu/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/dbgu/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">08183766AA99536395D5EFEE01BAF278</GeneratedChecksum>
-          <UserChecksum dnOrder="6">08183766AA99536395D5EFEE01BAF278</UserChecksum>
+          <GeneratedChecksum dnOrder="5">58E704D8579C82430A202CEC5DA2378F</GeneratedChecksum>
+          <UserChecksum dnOrder="6">58E704D8579C82430A202CEC5DA2378F</UserChecksum>
         </File>
         <File dnOrder="31">
           <Type dnOrder="0">SOURCE</Type>

@@ -248,8 +248,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult/peripheral/uart/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/uart/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">ADA1F4C84E5DA958FE0695733E123344</GeneratedChecksum>
-          <UserChecksum dnOrder="6">ADA1F4C84E5DA958FE0695733E123344</UserChecksum>
+          <GeneratedChecksum dnOrder="5">8344C509C389B4881DFEFD26B1CB8116</GeneratedChecksum>
+          <UserChecksum dnOrder="6">8344C509C389B4881DFEFD26B1CB8116</UserChecksum>
         </File>
         <File dnOrder="27">
           <Type dnOrder="0">SOURCE</Type>
@@ -635,8 +635,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_a5d2_xult/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">DD8BD62F2BC29C26C169C70782B46153</GeneratedChecksum>
-          <UserChecksum dnOrder="6">DD8BD62F2BC29C26C169C70782B46153</UserChecksum>
+          <GeneratedChecksum dnOrder="5">0DF2295E9102E176F018AF1E027B4601</GeneratedChecksum>
+          <UserChecksum dnOrder="6">0DF2295E9102E176F018AF1E027B4601</UserChecksum>
         </File>
         <File dnOrder="70">
           <Type dnOrder="0">HEADER</Type>
