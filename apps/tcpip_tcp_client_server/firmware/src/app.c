@@ -243,6 +243,12 @@ void _APP_ClientTasks()
         {
             char buffer[80];
             memset(buffer, 0, sizeof(buffer));
+            while (TCPIP_TCP_GetIsReady(appData.clientSocket))
+            {
+                TCPIP_TCP_ArrayGet(appData.clientSocket, (uint8_t*)buffer, sizeof(buffer) - 1);
+                SYS_CONSOLE_PRINT("%s", buffer);
+            }
+
             if (!TCPIP_TCP_IsConnected(appData.clientSocket) || TCPIP_TCP_WasDisconnected(appData.clientSocket))
             {
                 SYS_CONSOLE_MESSAGE("\r\nConnection Closed\r\n");
@@ -250,11 +256,6 @@ void _APP_ClientTasks()
                 appData.clientSocket = INVALID_SOCKET;
                 appData.clientState = APP_TCPIP_WAITING_FOR_COMMAND;
                 break;
-            }
-            if (TCPIP_TCP_GetIsReady(appData.clientSocket))
-            {
-                TCPIP_TCP_ArrayGet(appData.clientSocket, (uint8_t*)buffer, sizeof(buffer) - 1);
-                SYS_CONSOLE_PRINT("%s", buffer);
             }
         }
         break;
