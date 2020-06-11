@@ -212,8 +212,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_9x60_ek/peripheral/dbgu/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/dbgu/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">F568640E77CC02304AA92FA2572A9D04</GeneratedChecksum>
-          <UserChecksum dnOrder="6">F568640E77CC02304AA92FA2572A9D04</UserChecksum>
+          <GeneratedChecksum dnOrder="5">2124AED8E8AE7F9CA129511AEB5D55B3</GeneratedChecksum>
+          <UserChecksum dnOrder="6">2124AED8E8AE7F9CA129511AEB5D55B3</UserChecksum>
         </File>
         <File dnOrder="23">
           <Type dnOrder="0">SOURCE</Type>
@@ -545,8 +545,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_9x60_ek/</LogicalPath>
           <PhysicalPath dnOrder="4">/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">2902408BC129D611C3A6A2DE0D39B308</GeneratedChecksum>
-          <UserChecksum dnOrder="6">2902408BC129D611C3A6A2DE0D39B308</UserChecksum>
+          <GeneratedChecksum dnOrder="5">F01A8DFBD3DE193F8182769F5EEB64DB</GeneratedChecksum>
+          <UserChecksum dnOrder="6">F01A8DFBD3DE193F8182769F5EEB64DB</UserChecksum>
         </File>
         <File dnOrder="60">
           <Type dnOrder="0">HEADER</Type>
