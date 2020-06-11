@@ -437,8 +437,8 @@
           <Security dnOrder="2">NON_SECURE</Security>
           <LogicalPath dnOrder="3">config/sam_9x60_ek/peripheral/dbgu/</LogicalPath>
           <PhysicalPath dnOrder="4">/peripheral/dbgu/</PhysicalPath>
-          <GeneratedChecksum dnOrder="5">F568640E77CC02304AA92FA2572A9D04</GeneratedChecksum>
-          <UserChecksum dnOrder="6">F568640E77CC02304AA92FA2572A9D04</UserChecksum>
+          <GeneratedChecksum dnOrder="5">2124AED8E8AE7F9CA129511AEB5D55B3</GeneratedChecksum>
+          <UserChecksum dnOrder="6">2124AED8E8AE7F9CA129511AEB5D55B3</UserChecksum>
         </File>
         <File dnOrder="48">
           <Type dnOrder="0">SOURCE</Type>
