@@ -383,10 +383,6 @@
               <itemPath>../src/config/pic32mz_ef_sk_encx24j600/system/console/src/sys_console.c</itemPath>
               <itemPath>../src/config/pic32mz_ef_sk_encx24j600/system/console/src/sys_console_local.h</itemPath>
             </logicalFolder>
-            <logicalFolder name="f6" displayName="debug" projectFiles="true">
-              <itemPath>../src/config/pic32mz_ef_sk_encx24j600/system/debug/src/sys_debug_local.h</itemPath>
-              <itemPath>../src/config/pic32mz_ef_sk_encx24j600/system/debug/src/sys_debug.c</itemPath>
-            </logicalFolder>
             <logicalFolder name="f4" displayName="dma" projectFiles="true">
               <itemPath>../src/config/pic32mz_ef_sk_encx24j600/system/dma/sys_dma.c</itemPath>
             </logicalFolder>

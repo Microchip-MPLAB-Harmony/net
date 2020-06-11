@@ -870,33 +870,7 @@
         </InstanceComponent>
       </Instances>
     </GeneratorComponent>
-    <UniqueComponent dnOrder="8" id="sys_debug">
-      <Symbols dnOrder="0">
-        <String dnOrder="0" id="SYS_CONSOLE_DEVICE">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="sys_debug" value="SYS_CONSOLE_0"/>
-          </Values>
-        </String>
-        <String dnOrder="1" id="SYS_CONSOLE_INDEX">
-          <Values dnOrder="0">
-            <Dynamic dnOrder="0" id="sys_debug" value="0"/>
-          </Values>
-        </String>
-      </Symbols>
-      <Attachments dnOrder="1">
-        <DirectDependency dnOrder="0" id="sys_debug_SYS_CONSOLE_dependency">
-          <Attributes dnOrder="0">
-            <String dnOrder="0" id="targetComponentID">
-              <Value dnOrder="0">sys_console_0</Value>
-            </String>
-            <String dnOrder="1" id="targetAttachmentID">
-              <Value dnOrder="0">sys_console</Value>
-            </String>
-          </Attributes>
-        </DirectDependency>
-      </Attachments>
-    </UniqueComponent>
-    <UniqueComponent dnOrder="9" id="sys_time">
+    <UniqueComponent dnOrder="8" id="sys_time">
       <Symbols dnOrder="0">
         <Combo dnOrder="0" id="SYS_TIME_OPERATING_MODE">
           <Values dnOrder="0">
@@ -927,7 +901,7 @@
         </DirectDependency>
       </Attachments>
     </UniqueComponent>
-    <GroupComponent displayName="TCP/IP STACK" dnOrder="10" id="TCP/IP STACK">
+    <GroupComponent displayName="TCP/IP STACK" dnOrder="9" id="TCP/IP STACK">
       <Children dnOrder="0">
         <GroupComponent displayName="APPLICATION LAYER" dnOrder="0" id="APPLICATION LAYER">
           <Children dnOrder="0">
@@ -1076,7 +1050,7 @@
           </Children>
           <Attachments dnOrder="1">
             <Attachment dnOrder="0" id="NETCONFIG_MAC_Dependency" namespace="tcpipNetConfig_0" targetAttachmentID="drvExtMacEnc28j60_0:libdrvExtMacEnc28j60" targetComponentID="DRIVER LAYER"/>
-            <Attachment dnOrder="1" id="Core_SysConsole_Dependency" namespace="tcpipStack"/>
+            <Attachment dnOrder="1" id="Core_SysConsole_Dependency" namespace="tcpipStack" targetAttachmentID="TCP/IP STACK:tcpipStack:Core_SysConsole_Dependency" targetComponentID="TCP/IP STACK"/>
           </Attachments>
         </GroupComponent>
         <GroupComponent displayName="DRIVER LAYER" dnOrder="2" id="DRIVER LAYER">
@@ -1150,10 +1124,10 @@
       </Children>
       <Attachments dnOrder="1">
         <Attachment dnOrder="0" id="drvExtMacEnc28j60_0:ENC28J60_SPI" namespace="DRIVER LAYER" targetAttachmentID="drv_spi" targetComponentID="drv_spi_0"/>
-        <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION"/>
+        <Attachment dnOrder="1" id="tcpipStack:Core_SysConsole_Dependency" namespace="BASIC CONFIGURATION" targetAttachmentID="sys_console" targetComponentID="sys_console_0"/>
       </Attachments>
     </GroupComponent>
-    <UniqueComponent dnOrder="11" id="uart2">
+    <UniqueComponent dnOrder="10" id="uart2">
       <Symbols dnOrder="0">
         <Integer dnOrder="0" id="BRG_VALUE">
           <Values dnOrder="0">
@@ -1215,51 +1189,49 @@
     </UniqueComponent>
   </Components>
   <UserData>
-    <ComponentGraph dnOrder="0" id="TRANSPORT LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="HarmonyCore" x="357" y="20"/>
-        <ElementPosition dnOrder="1" id="TCP/IP STACK" x="603" y="185"/>
-        <ElementPosition dnOrder="2" id="core" x="240" y="20"/>
-        <ElementPosition dnOrder="3" id="core_timer" x="33" y="140"/>
-        <ElementPosition dnOrder="4" id="dfp" x="20" y="20"/>
-        <ElementPosition dnOrder="5" id="drv_spi" x="358" y="176"/>
-        <ElementPosition dnOrder="6" id="spi1" x="35" y="241"/>
-        <ElementPosition dnOrder="7" id="sys_command" x="616" y="278"/>
-        <ElementPosition dnOrder="8" id="sys_console" x="213" y="324"/>
-        <ElementPosition dnOrder="9" id="sys_debug" x="621" y="410"/>
-        <ElementPosition dnOrder="10" id="sys_time" x="208" y="94"/>
-        <ElementPosition dnOrder="11" id="uart2" x="50" y="388"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="2" id="NETWORK LAYER">
-      <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
-      </ElementPositions>
-    </ComponentGraph>
-    <ComponentGraph dnOrder="3" id="APPLICATION LAYER">
+    <ComponentGraph dnOrder="0" id="APPLICATION LAYER">
       <ElementPositions dnOrder="0">
         <ElementPosition dnOrder="0" id="tcpipDhcp" x="320" y="20"/>
         <ElementPosition dnOrder="1" id="tcpipDns" x="460" y="20"/>
         <ElementPosition dnOrder="2" id="tcpip_apps_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="4" id="TCP/IP STACK">
+    <ComponentGraph dnOrder="1" id="__ROOTVIEW">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
-        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
-        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="540" y="20"/>
-        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
-        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
+        <ElementPosition dnOrder="0" id="HarmonyCore" x="357" y="20"/>
+        <ElementPosition dnOrder="1" id="TCP/IP STACK" x="484" y="412"/>
+        <ElementPosition dnOrder="2" id="core" x="240" y="20"/>
+        <ElementPosition dnOrder="3" id="core_timer" x="33" y="140"/>
+        <ElementPosition dnOrder="4" id="dfp" x="20" y="20"/>
+        <ElementPosition dnOrder="5" id="drv_spi" x="215" y="425"/>
+        <ElementPosition dnOrder="6" id="spi1" x="33" y="489"/>
+        <ElementPosition dnOrder="7" id="sys_command" x="461" y="223"/>
+        <ElementPosition dnOrder="8" id="sys_console" x="198" y="229"/>
+        <ElementPosition dnOrder="9" id="sys_time" x="208" y="94"/>
+        <ElementPosition dnOrder="10" id="uart2" x="28" y="293"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="2" id="TRANSPORT LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipTcp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipUdp" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpip_transport_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="3" id="BASIC CONFIGURATION">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
+      </ElementPositions>
+    </ComponentGraph>
+    <ComponentGraph dnOrder="4" id="NETWORK LAYER">
+      <ElementPositions dnOrder="0">
+        <ElementPosition dnOrder="0" id="tcpipArp" x="440" y="20"/>
+        <ElementPosition dnOrder="1" id="tcpipIPv4" x="300" y="20"/>
+        <ElementPosition dnOrder="2" id="tcpipIcmp" x="580" y="20"/>
+        <ElementPosition dnOrder="3" id="tcpip_network_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
     <GraphSettings canvasHeight="400" canvasWidth="400" dnOrder="5"/>
@@ -1269,12 +1241,13 @@
         <ElementPosition dnOrder="1" id="tcpip_driver_config" x="20" y="20"/>
       </ElementPositions>
     </ComponentGraph>
-    <ComponentGraph dnOrder="7" id="BASIC CONFIGURATION">
+    <ComponentGraph dnOrder="7" id="TCP/IP STACK">
       <ElementPositions dnOrder="0">
-        <ElementPosition dnOrder="0" id="tcpipCmd" x="580" y="20"/>
-        <ElementPosition dnOrder="1" id="tcpipNetConfig" x="420" y="20"/>
-        <ElementPosition dnOrder="2" id="tcpipStack" x="240" y="20"/>
-        <ElementPosition dnOrder="3" id="tcpip_basic_config" x="20" y="20"/>
+        <ElementPosition dnOrder="0" id="APPLICATION LAYER" x="20" y="20"/>
+        <ElementPosition dnOrder="1" id="BASIC CONFIGURATION" x="680" y="20"/>
+        <ElementPosition dnOrder="2" id="DRIVER LAYER" x="540" y="20"/>
+        <ElementPosition dnOrder="3" id="NETWORK LAYER" x="380" y="20"/>
+        <ElementPosition dnOrder="4" id="TRANSPORT LAYER" x="200" y="20"/>
       </ElementPositions>
     </ComponentGraph>
   </UserData>

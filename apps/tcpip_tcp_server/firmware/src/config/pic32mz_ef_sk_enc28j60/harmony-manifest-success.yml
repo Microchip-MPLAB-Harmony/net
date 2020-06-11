@@ -4,11 +4,11 @@
 
 
 project: tcpip_tcp_server
-creation_date: 2020-06-07T12:05:31.897+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
+creation_date: 2020-06-10T22:33:13.638+05:30[Asia/Calcutta]    # ISO 8601 format: https://www.w3.org/TR/NOTE-datetime
 operating_system: Windows 10
-mhc_mode: Headless            # [IDE|Standalone|Headless]
-mplabx_version: NA        # if MPLAB X plugin only
-plugin_version: NA        # if MPLAB X plugin only
+mhc_mode: IDE            # [IDE|Standalone|Headless]
+mplabx_version: v5.40        # if MPLAB X plugin only
+plugin_version: v3.5.0        # if MPLAB X plugin only
 
 modules:
     - {name: "bsp", version: "v3.7.0"}
