@@ -3240,7 +3240,9 @@ static uint32_t _HTTP_ConnectionStringFind(TCPIP_HTTP_NET_CONN* pHttpCon, const 
     char* srchBuff = (char*)(*http_malloc_fnc)(httpPeekBufferSize + 1);
     if(srchBuff == 0)
     {
-        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR, (void*)(uint32_t)httpPeekBufferSize);
+        char eventBuff[16];
+        sprintf(eventBuff, "%d", httpPeekBufferSize + 1);
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR, eventBuff);
         return 0xffff;
     }
 
@@ -5194,8 +5196,10 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIEcho(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_H
 
     char* echoBuffer = (char*)(*http_malloc_fnc)(TCPIP_HTTP_CHUNK_HEADER_LEN + echoLen + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1);
     if(echoBuffer == 0)
-    {
-        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR, (void*)(uint32_t)(TCPIP_HTTP_CHUNK_HEADER_LEN + echoLen + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1));
+    {   // allocation failed
+        char eventBuff[16];
+        sprintf(eventBuff, "%d", (TCPIP_HTTP_CHUNK_HEADER_LEN + echoLen + TCPIP_HTTP_CHUNK_FINAL_TRAILER_LEN + 1));
+        _HTTP_Report_ConnectionEvent(pHttpCon, TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR, eventBuff);
         return TCPIP_HTTP_CHUNK_RES_SSI_ALLOC_ERR; 
     }
 
@@ -5214,7 +5218,7 @@ static TCPIP_HTTP_CHUNK_RES _HTTP_SSIEcho(TCPIP_HTTP_NET_CONN* pHttpCon, TCPIP_H
 
             // find the requested variable
             if(ssiHashDcpt == 0 || (pHE = (TCPIP_HTTP_SSI_HASH_ENTRY*)TCPIP_OAHASH_EntryLookup(ssiHashDcpt, pAttr->value)) == 0)
-            {   // the has was not yet created or no such variable exists
+            {   // the hash was not yet created or no such variable exists
                 evType = TCPIP_HTTP_NET_EVENT_SSI_VAR_UNKNOWN;
                 evInfo = pAttr->value;
             }

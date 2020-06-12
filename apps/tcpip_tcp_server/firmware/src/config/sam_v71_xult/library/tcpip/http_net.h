@@ -2320,8 +2320,8 @@ void TCPIP_HTTP_NET_DynAcknowledge(TCPIP_HTTP_NET_CONN_HANDLE connHandle,
                     - TCPIP_HTTP_NET_EVENT_SSI_COMMAND_ERROR: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_ATTRIB_ERROR: SSI command pointer
                     - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_DESCRIPTOR_ERROR: SSI command pointer
-                    - TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR: allocation size that failed
-                    - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR: allocation size that failed
+                    - TCPIP_HTTP_NET_EVENT_PEEK_ALLOC_BUFFER_ERROR: string containing allocation size that failed
+                    - TCPIP_HTTP_NET_EVENT_SSI_ALLOC_ECHO_ERROR: string containing allocation size that failed
                     
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NAME_TRUNCATED: dynamic variable name pointer
                     - TCPIP_HTTP_NET_EVENT_DYNVAR_ARG_NUMBER_TRUNCATED: dynamic variable name pointer
