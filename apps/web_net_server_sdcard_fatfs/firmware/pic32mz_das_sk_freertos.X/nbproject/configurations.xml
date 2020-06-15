@@ -888,9 +888,9 @@
         <property key="exclude-floating-point-library" value="false"/>
         <property key="expand-macros" value="false"/>
         <property key="extra-include-directories-for-assembler"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos;"/>
         <property key="extra-include-directories-for-preprocessor"
-                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos"/>
+                  value="../src/third_party/rtos/FreeRTOS/Source/portable/MPLAB/PIC32MZ;../src/third_party/rtos/FreeRTOS/Source/include;../src/config/pic32mz_das_sk_freertos;"/>
         <property key="false-conditionals" value="false"/>
         <property key="generate-16-bit-code" value="false"/>
         <property key="generate-micro-compressed-code" value="false"/>
@@ -947,6 +947,47 @@
         <property key="trace-symbols" value=""/>
         <property key="warn-section-align" value="false"/>
       </C32-LD>
+      <C32CPP>
+        <property key="additional-warnings" value="false"/>
+        <property key="addresss-attribute-use" value="false"/>
+        <property key="check-new" value="false"/>
+        <property key="eh-specs" value="true"/>
+        <property key="enable-app-io" value="false"/>
+        <property key="enable-omit-frame-pointer" value="false"/>
+        <property key="enable-symbols" value="true"/>
+        <property key="enable-unroll-loops" value="false"/>
+        <property key="exceptions" value="true"/>
+        <property key="exclude-floating-point" value="false"/>
+        <property key="extra-include-directories" value=""/>
+        <property key="generate-16-bit-code" value="false"/>
+        <property key="generate-micro-compressed-code" value="false"/>
+        <property key="isolate-each-function" value="false"/>
+        <property key="make-warnings-into-errors" value="false"/>
+        <property key="optimization-level" value=""/>
+        <property key="place-data-into-section" value="false"/>
+        <property key="post-instruction-scheduling" value="default"/>
+        <property key="pre-instruction-scheduling" value="default"/>
+        <property key="preprocessor-macros" value=""/>
+        <property key="rtti" value="true"/>
+        <property key="strict-ansi" value="false"/>
+        <property key="toplevel-reordering" value=""/>
+        <property key="unaligned-access" value=""/>
+        <property key="use-cci" value="false"/>
+        <property key="use-iar" value="false"/>
+        <property key="use-indirect-calls" value="false"/>
+      </C32CPP>
+      <C32Global>
+        <property key="common-include-directories" value=""/>
+        <property key="gp-relative-option" value=""/>
+        <property key="legacy-libc" value="true"/>
+        <property key="mdtcm" value=""/>
+        <property key="mitcm" value=""/>
+        <property key="mstacktcm" value="false"/>
+        <property key="omit-pack-options" value="1"/>
+        <property key="relaxed-math" value="false"/>
+        <property key="save-temps" value="false"/>
+        <property key="wpo-lto" value="false"/>
+      </C32Global>
       <ICD4Tool>
         <property key="ADC" value="true"/>
         <property key="AutoSelectMemRanges" value="auto"/>
