@@ -7,7 +7,7 @@
 /* storage control modules to the FatFs module with a defined API.       */
 /*-----------------------------------------------------------------------*/
 
-#include "system/fs/fat_fs/src/hardware_access/diskio.h"        /* FatFs lower layer API */
+#include "diskio.h"        /* FatFs lower layer API */
 #include "system/fs/sys_fs_media_manager.h"
 #include <string.h>
 
@@ -17,7 +17,7 @@ typedef struct
 {
     SYS_FS_MEDIA_COMMAND_STATUS commandStatus;
     SYS_FS_MEDIA_BLOCK_COMMAND_HANDLE commandHandle;
-    uint8_t alignedBuffer[FAT_FS_MAX_SS] __ALIGNED(32);
+    uint8_t alignedBuffer[FF_MAX_SS] __ALIGNED(32);
 } SYS_FS_DISK_DATA;
 
 static SYS_FS_DISK_DATA CACHE_ALIGN gSysFsDiskData[SYS_FS_MEDIA_NUMBER];
@@ -151,9 +151,9 @@ DRESULT disk_read
             }
 
             /* Copy the received data from aligned buffer to actual buffer */
-            memcpy(buff, gSysFsDiskData[pdrv].alignedBuffer, FAT_FS_MAX_SS);
+            memcpy(buff, gSysFsDiskData[pdrv].alignedBuffer, FF_MAX_SS);
 
-            buff += FAT_FS_MAX_SS;
+            buff += FF_MAX_SS;
             sector++;
         }
     }
@@ -197,7 +197,7 @@ DRESULT disk_write
         for (i = 0; i < count; i++)
         {
             /* Copy the actual buffer data into aligned buffer */
-            memcpy(gSysFsDiskData[pdrv].alignedBuffer, buff, FAT_FS_MAX_SS);
+            memcpy(gSysFsDiskData[pdrv].alignedBuffer, buff, FF_MAX_SS);
 
             gSysFsDiskData[pdrv].commandStatus = SYS_FS_MEDIA_COMMAND_IN_PROGRESS;
 
@@ -214,7 +214,7 @@ DRESULT disk_write
                 break;
             }
 
-            buff += FAT_FS_MAX_SS;
+            buff += FF_MAX_SS;
             sector++;
         }
     }
@@ -277,11 +277,15 @@ DRESULT disk_ioctl (
 #endif
 
 /****************************************************************************
- The get_fattime function is used to know the present time, which is used by
- FAT FS code. The present time should ideally be updated by a Real time clock
- hardware module. Since this module is not integrated with Harmony FS framework,
- a fixed time is set as given by the implementation of the function below   */
-uint32_t get_fattime(void)
+ * The get_fattime function is used to know the present time, which is used by
+ * FAT FS code. The present time should ideally be updated by a Real time clock
+ * hardware module. Since this module is not integrated with Harmony FS framework,
+ * a fixed time is set as given by the implementation of the function below.
+ 
+ * This Function is implemented as WEAK so that it can be overriden with
+ * implementation to get time from RTC and populate the SYS_FS_TIME structure.
+ */
+__WEAK DWORD get_fattime(void)
 {
     /* RTC should return time here */
     /* For now, just a value */

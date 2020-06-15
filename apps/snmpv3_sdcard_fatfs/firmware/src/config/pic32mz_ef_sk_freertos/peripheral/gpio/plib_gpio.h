@@ -61,6 +61,14 @@
 // *****************************************************************************
 // *****************************************************************************
 
+/*** Macros for SPI_CS pin ***/
+#define SPI_CS_Set()               (LATBSET = (1<<1))
+#define SPI_CS_Clear()             (LATBCLR = (1<<1))
+#define SPI_CS_Toggle()            (LATBINV= (1<<1))
+#define SPI_CS_Get()               ((PORTB >> 1) & 0x1)
+#define SPI_CS_OutputEnable()      (TRISBCLR = (1<<1))
+#define SPI_CS_InputEnable()       (TRISBSET = (1<<1))
+#define SPI_CS_PIN                  GPIO_PIN_RB1
 /*** Macros for LED1 pin ***/
 #define LED1_Set()               (LATHSET = (1<<0))
 #define LED1_Clear()             (LATHCLR = (1<<0))
