@@ -1412,7 +1412,6 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 strncpy((char*)fileNameList,fileHeaderStr,sizeof(fileNameList));
                 if(wCount > strlen((char *)fileNameList))
                 {
-                    //TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList, strlen((char *)fileNameList));
                     remainingBytes =0;
                     pFTPDcpt->callbackPos = 0;
                 }
@@ -1521,7 +1520,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 }
                 // transmit the remaining bytes
                 if(pFTPDcpt->callbackPos != 0)
-                {
+                {                    
                     if(wCount < remainingBytes)
                     {
                         TCPIP_TCP_ArrayPut(pFTPDcpt->ftpDataskt, fileNameList+(strlen((char *)fileNameList)-remainingBytes), wCount);
@@ -1552,7 +1551,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 memset(fileNameList,0,sizeof(fileNameList));
 
                 sprintf(FileRecordsDateTime, "%3s %02d %04d",
-                                    month[((newNode->file_stat.fdate & 0x01E0) >> 5)],
+                                    month[(((newNode->file_stat.fdate & 0x01E0) >> 5)-1)],
                                     (newNode->file_stat.fdate & 0x001F),
                                     ((newNode->file_stat.fdate & 0xFE00) >> 9) + 1980);
                 sprintf(fileRecrdTime,"%2d:%2d",
@@ -1581,7 +1580,7 @@ static bool TCPIP_FTP_CmdList(TCPIP_FTP_DCPT* pFTPDcpt)
                 {
                     sprintf((char*)fileNameList,"%-10s %3s %-8s %-8s %7s %s %s\r\n",filePermission[FileRecordInformation],link,owner,group,FileRecordssize,FileRecordsDateTime,newNode->file_stat.fname);
                 }
-
+                /* total name byte name length list */
                 lfNameLen = strlen((char *)fileNameList);
                 if(wCount > lfNameLen)
                 {
@@ -2027,7 +2026,7 @@ static bool TCPIP_FTP_LSCmd(TCPIP_FTP_DCPT* pFTPDcpt)
             memset(FileRecordsDateTime,0,sizeof(FileRecordsDateTime));
             memset(FileRecordssize,0,sizeof(FileRecordssize));
             sprintf(FileRecordsDateTime, "%02d-%02d-%04d %02d:%02d:%02d",
-                                    (fs_stat.fdate & 0x01E0) >> 5,   // month
+                                    (((fs_stat.fdate & 0x01E0) >> 5)-1),   // month
                                     (fs_stat.fdate & 0x001F),  // date
                                     ((fs_stat.fdate & 0xFE00) >> 9) + 1980, // year
                                     (fs_stat.ftime & 0xF800) >> 11,  // hour
