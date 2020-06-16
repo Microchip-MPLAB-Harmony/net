@@ -2307,7 +2307,13 @@
                             </file>
                         </group>
                         <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\system_media.h</name>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\system.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\system_common.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\system_module.h</name>
                         </file>
                         <group>
                             <name>int</name>
@@ -2316,6 +2322,18 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\int\sys_int_mapping.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>cache</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\cache\sys_cache.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>debug</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\debug\sys_debug.h</name>
                             </file>
                         </group>
                         <file>
@@ -2416,87 +2434,6 @@
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\net_pres\pres\net_pres_enc_glue.h</name>
                             </file>
-                        </group>
-                    </group>
-                    <group>
-                        <name>driver</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\driver.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\driver_common.h</name>
-                        </file>
-                        <group>
-                            <name>gmac</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\drv_gmac.h</name>
-                            </file>
-                            <group>
-                                <name>src</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\src\drv_gmac_local.h</name>
-                                </file>
-                                <group>
-                                    <name>dynamic</name>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\src\dynamic\_gmac_dcpt_lists.h</name>
-                                    </file>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\src\dynamic\drv_gmac_lib.h</name>
-                                    </file>
-                                </group>
-                            </group>
-                        </group>
-                        <group>
-                            <name>sdmmc</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\sdmmc\drv_sdmmc.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\sdmmc\src\drv_sdmmc_local.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\sdmmc\drv_sdmmc_definitions.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>miim</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\miim\drv_miim.h</name>
-                            </file>
-                            <group>
-                                <name>src</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\miim\src\drv_miim_local.h</name>
-                                </file>
-                                <group>
-                                    <name>dynamic</name>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\miim\src\dynamic\drv_miim_mapping.h</name>
-                                    </file>
-                                </group>
-                            </group>
-                        </group>
-                        <group>
-                            <name>ethphy</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\drv_ethphy.h</name>
-                            </file>
-                            <group>
-                                <name>src</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\src\drv_ethphy_local.h</name>
-                                </file>
-                                <group>
-                                    <name>dynamic</name>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\src\dynamic\drv_extphy_regs.h</name>
-                                    </file>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</name>
-                                    </file>
-                                </group>
-                            </group>
                         </group>
                     </group>
                     <file>
@@ -2871,6 +2808,81 @@
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system_definitions.h</name>
                     </file>
+                    <group>
+                        <name>driver</name>
+                        <group>
+                            <name>gmac</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\drv_gmac.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\src\drv_gmac_local.h</name>
+                                </file>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\src\dynamic\_gmac_dcpt_lists.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\gmac\src\dynamic\drv_gmac_lib.h</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
+                        <group>
+                            <name>sdmmc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\sdmmc\drv_sdmmc.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\sdmmc\src\drv_sdmmc_local.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\sdmmc\drv_sdmmc_definitions.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>miim</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\miim\drv_miim.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\miim\src\drv_miim_local.h</name>
+                                </file>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\miim\src\dynamic\drv_miim_mapping.h</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
+                        <group>
+                            <name>ethphy</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\drv_ethphy.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\src\drv_ethphy_local.h</name>
+                                </file>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\src\dynamic\drv_extphy_regs.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
+                    </group>
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\device_cache.h</name>
                     </file>
@@ -3654,6 +3666,12 @@
                             <name>int</name>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\int\src\sys_int.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>cache</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_a5d2_xult\system\cache\sys_cache.c</name>
                             </file>
                         </group>
                         <file>
