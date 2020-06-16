@@ -48,15 +48,13 @@
 // *****************************************************************************
 
 #include "driver/memory/src/drv_memory_local.h"
+#include "system/debug/sys_debug.h"
 
 // *****************************************************************************
 // *****************************************************************************
 // Section: Global objects
 // *****************************************************************************
 // *****************************************************************************
-#ifndef SYS_DEBUG_PRINT
-    #define SYS_DEBUG_PRINT(x,y)
-#endif
 
 /*************************************************
  * Hardware instance objects
@@ -674,14 +672,14 @@ static void DRV_MEMORY_SetupXfer
 
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Invalid Memory driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Invalid Memory driver handle.\n");
         return;
     }
 
     /* Check if the driver was opened with read intent */
     if (!(clientObj->intent & io_intent))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Memory Driver Opened with invalid intent.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Memory Driver Opened with invalid intent.\n");
         return;
     }
 
@@ -689,13 +687,13 @@ static void DRV_MEMORY_SetupXfer
 
     if ((buffer == NULL) && (opType != DRV_MEMORY_OPERATION_TYPE_ERASE))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Memory Driver Invalid Buffer.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Memory Driver Invalid Buffer.\n");
         return;
     }
 
     if ((nBlock == 0) || ((blockStart + nBlock) > dObj->mediaGeometryTable[geometry_type].numBlocks))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "Memory Driver Invalid Block parameters.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "Memory Driver Invalid Block parameters.\n");
         return;
     }
 
@@ -830,7 +828,7 @@ SYS_STATUS DRV_MEMORY_Status
     /* Validate the object */
     if ((object == SYS_MODULE_OBJ_INVALID) || (object >= DRV_MEMORY_INSTANCES_NUMBER))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO,"DRV_MEMORY_Status(): Invalid parameter.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO,"DRV_MEMORY_Status(): Invalid parameter.\n");
         return SYS_STATUS_UNINITIALIZED;
     }
 
@@ -888,7 +886,7 @@ DRV_HANDLE DRV_MEMORY_Open
     /* Validate the driver index */
     if (drvIndex >= DRV_MEMORY_INSTANCES_NUMBER)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Invalid driver index.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Invalid driver index.\n");
         return DRV_HANDLE_INVALID;
     }
 
@@ -899,7 +897,7 @@ DRV_HANDLE DRV_MEMORY_Open
     {
         if (DRV_MEMORY_IsReady(dObj) != SYS_STATUS_READY)
         {
-            SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is not ready.\n");
+            SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is not ready.\n");
             return DRV_HANDLE_INVALID;
         }
     }
@@ -915,7 +913,7 @@ DRV_HANDLE DRV_MEMORY_Open
     /* Check if the driver has already been opened in exclusive mode */
     if (dObj->isExclusive)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open in exclusive mode.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open in exclusive mode.\n");
         OSAL_MUTEX_Unlock( &dObj->clientMutex);
         return DRV_HANDLE_INVALID;
     }
@@ -923,7 +921,7 @@ DRV_HANDLE DRV_MEMORY_Open
     /* Driver has already been opened and cannot be opened exclusively */
     if ((dObj->numClients > 0) && (ioIntent & DRV_IO_INTENT_EXCLUSIVE))
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open. Can't be opened in exclusive mode.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_Open(): Driver is already open. Can't be opened in exclusive mode.\n");
         OSAL_MUTEX_Unlock( &dObj->clientMutex);
         return DRV_HANDLE_INVALID;
     }
@@ -964,8 +962,6 @@ DRV_HANDLE DRV_MEMORY_Open
                 }
             }
 
-            SYS_DEBUG_PRINT(SYS_ERROR_DEBUG, "DRV_MEMORY_Open(): Open successful.\n");
-
             break;
         }
     }
@@ -989,7 +985,7 @@ void DRV_MEMORY_Close
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT (SYS_ERROR_INFO, "DRV_MEMORY_Close(): Invalid handle.\n");
+        SYS_DEBUG_MESSAGE (SYS_ERROR_INFO, "DRV_MEMORY_Close(): Invalid handle.\n");
         return;
     }
 
@@ -1008,8 +1004,6 @@ void DRV_MEMORY_Close
 
         /* Release the instance specific mutex */
         OSAL_MUTEX_Unlock( &dObj->clientMutex );
-
-        SYS_DEBUG_PRINT (SYS_ERROR_DEBUG, "DRV_MEMORY_Close(): Close successful.\n");
     }
 }
 
@@ -1086,7 +1080,7 @@ MEMORY_DEVICE_TRANSFER_STATUS DRV_MEMORY_TransferStatusGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_TransferStatusGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_TransferStatusGet(): Invalid driver handle.\n");
         return MEMORY_DEVICE_TRANSFER_ERROR_UNKNOWN;
     }
 
@@ -1112,7 +1106,7 @@ DRV_MEMORY_COMMAND_STATUS DRV_MEMORY_CommandStatusGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_CommandStatusGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_CommandStatusGet(): Invalid driver handle.\n");
         return status;
     }
 
@@ -1274,7 +1268,7 @@ void DRV_MEMORY_TransferHandlerSet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_TransferHandlerSet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_TransferHandlerSet(): Invalid driver handle.\n");
         return;
     }
 
@@ -1297,7 +1291,7 @@ SYS_MEDIA_GEOMETRY * DRV_MEMORY_GeometryGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_GeometryGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_GeometryGet(): Invalid driver handle.\n");
         return NULL;
     }
 
@@ -1313,7 +1307,7 @@ bool DRV_MEMORY_IsAttached
     /* Validate the driver handle */
     if (DRV_MEMORY_DriverHandleValidate(handle) == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_IsAttached(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_IsAttached(): Invalid driver handle.\n");
         return false;
     }
 
@@ -1343,7 +1337,7 @@ uintptr_t DRV_MEMORY_AddressGet
     /* Check if the client object is valid */
     if (clientObj == NULL)
     {
-        SYS_DEBUG_PRINT(SYS_ERROR_INFO, "DRV_MEMORY_AddressGet(): Invalid driver handle.\n");
+        SYS_DEBUG_MESSAGE(SYS_ERROR_INFO, "DRV_MEMORY_AddressGet(): Invalid driver handle.\n");
         return (uintptr_t)NULL;
     }
 
