@@ -648,7 +648,7 @@ static SYS_FS_SHELL_RES Shell_GetCwd(const SYS_FS_SHELL_OBJ* pObj, char* cwdBuff
 static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char* fname, char* absBuff, size_t absBuffSize)
 {
     int f_len, cwd_len;
-    char *end_cwd, *up_cwd;
+    char *end_cwd;
 
     if(fname == 0 || (f_len = strlen(fname)) == 0)
     {
@@ -674,7 +674,7 @@ static SYS_FS_SHELL_RES Shell_FileAbsPath(SHELL_OBJ_INSTANCE *pShell, const char
         }
         else
         {   // ../ access
-            while((up_cwd = strstr(fname, "../")) == fname)
+            while(strstr(fname, "../") == fname)
             {
                 fname += 3;
                 int up_lev = 0;
