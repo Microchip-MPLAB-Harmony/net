@@ -94,17 +94,6 @@ extern "C" {
 #define APP_LED_3StateToggle()      LED3_Toggle()
 #endif
 
-// Application SYS_FS mount points
-// Adjust as needed
-#define APP_SYS_FS_SD_VOL                   "/dev/mmcblka1"
-#define APP_SYS_FS_SDCARD_MOUNT_POINT       "/mnt/mchpDrive1"
-#define APP_SYS_FS_SDCARD_TYPE              FAT
-#define APP_SYS_FS_SDCARD_TYPE_STRING       "FATFS"
-    
-#define APP_SYS_FS_NVM_VOL                  "/dev/nvma1"
-#define APP_SYS_FS_NVM_MOUNT_POINT          "/mnt/mchpDrive2"
-#define APP_SYS_FS_NVM_TYPE                 MPFS2
-#define APP_SYS_FS_NVM_TYPE_STRING          "MPFS"
 
 // *****************************************************************************
 // *****************************************************************************
