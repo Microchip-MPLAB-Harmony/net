@@ -3050,6 +3050,24 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\src\sys_time.c</name>
                             </file>
                         </group>
+                        <group>
+                            <name>console</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart_definitions.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_local.h</name>
+                            </file>
+                        </group>
                         <file>
                             <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_time_h2_adapter.c</name>
                         </file>
@@ -3078,15 +3096,6 @@
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\src\sys_debug.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>console</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_local.h</name>
                             </file>
                         </group>
                     </group>
