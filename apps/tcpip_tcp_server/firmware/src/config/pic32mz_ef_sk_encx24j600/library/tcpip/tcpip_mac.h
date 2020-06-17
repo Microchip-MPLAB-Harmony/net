@@ -164,6 +164,10 @@ typedef enum
     TCPIP_MODULE_MAC_PIC32WK        = 0x1090,
     TCPIP_MODULE_MAC_PIC32WK_0      = 0x1090,   // alternate numbered name
 
+    // Internal/Embedded PIC32MZW1 Wi-Fi MAC: room for 16 PIC32MZW1 devices
+    TCPIP_MODULE_MAC_PIC32MZW1      = 0x10A0,
+    TCPIP_MODULE_MAC_PIC32MZW1_0    = 0x10A0,   // alternate numbered name
+
     // Internal/Embedded EMAC of SAM9x60:
     TCPIP_MODULE_MAC_SAM9X60        = 0x1100,   // instance base
     TCPIP_MODULE_MAC_SAM9X60_0      = 0x1100,   // first mac instance
