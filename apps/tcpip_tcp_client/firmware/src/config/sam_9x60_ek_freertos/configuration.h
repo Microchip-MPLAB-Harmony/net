@@ -93,6 +93,7 @@ extern "C" {
 
 
 
+
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
 #define SYS_CMD_PRINT_BUFFER_SIZE          8000
@@ -370,7 +371,7 @@ extern "C" {
 
 
 /* TCP/IP RTOS Configurations*/
-#define TCPIP_RTOS_STACK_SIZE                1024
+#define TCPIP_RTOS_STACK_SIZE                2048
 #define TCPIP_RTOS_PRIORITY             1
 
 
