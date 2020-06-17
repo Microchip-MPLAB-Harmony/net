@@ -5590,11 +5590,14 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         if ((argc < 2)||(argc > 5))
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc nlist -p <server_pathname><filename_to_savelist>\r\n");
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc -p nlist test test.txt\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc nlist -p test.txt\r\n");
             return false;
         }
 
-        ftpcDataConn.ftpcIsPassiveMode = false; 	
+        ftpcDataConn.ftpcIsPassiveMode = false;
+        ftpcDataConn.ftpcDataTxBuffSize = 0;
+        ftpcDataConn.ftpcDataRxBuffSize = 0;
+        
         for(uint8_t i =1; i < argc; i++)
         {
             if(strcmp("-p",argv[i])==0)
@@ -5638,11 +5641,14 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
         if ((argc < 2)||(argc > 5))
         {
             (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Usage: ftpc ls -p <server_pathname><filename_to_savelist>\r\n");
-            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc -p ls test list.txt\r\n");
+            (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Ex: ftpc ls -p test list.txt\r\n");
             return false;
         }
 
-        ftpcDataConn.ftpcIsPassiveMode = false; 	
+        ftpcDataConn.ftpcIsPassiveMode = false;
+        ftpcDataConn.ftpcDataTxBuffSize = 0;
+        ftpcDataConn.ftpcDataRxBuffSize = 0;
+        
         for(uint8_t i =1; i < argc; i++)
         {
             if(strcmp("-p",argv[i])==0)
@@ -5677,6 +5683,27 @@ static int _Command_FTPC_Service(SYS_CMD_DEVICE_NODE* pCmdIO, int argc, char** a
     else
     {
         (*pCmdIO->pCmdApi->msg)(cmdIoParam, "FTPC - Invalid Command\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "Supported Commands are,\r\n \
+        connect - Connect to FTP Server\r\n \
+        disconnect - Disconnect from FTP Server\r\n \
+        login - Login to FTP Server\r\n \
+        pwd - Print Working Directory\r\n \
+        mkdir - Create new Directory\r\n \
+        rmdir - Remove Directory\r\n \
+        cd - Change Directory\r\n \
+        cdup - Change to root Directory\r\n \
+        quit - Exits from FTP\r\n \
+        get - Get file from FTP Server\r\n \
+        put - Send file to FTP Server\r\n \
+        dele - Delete File\r\n \
+        ls - Lists files in Current Directory\r\n \
+        nlist - Name of files in Current Directory\r\n \
+        pasv - Enable Passive FTP session\r\n \
+        port - Send port number for Active FTP session\r\n \
+        type - Set file transfer type\r\n \
+        stru - Set File Structure\r\n \
+        mode - Set Transfer mode\r\n");
+        (*pCmdIO->pCmdApi->msg)(cmdIoParam, "For command specific help, enter 'ftpc <command>'\r\n");
     }
     return false;
 }
