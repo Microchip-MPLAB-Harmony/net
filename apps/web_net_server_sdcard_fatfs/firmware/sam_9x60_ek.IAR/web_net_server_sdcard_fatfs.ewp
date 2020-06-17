@@ -3604,6 +3604,24 @@
                             </file>
                         </group>
                         <group>
+                            <name>console</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart_definitions.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_local.h</name>
+                            </file>
+                        </group>
+                        <group>
                             <name>int</name>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\src\sys_int.c</name>
@@ -3656,15 +3674,6 @@
                                     </file>
                                 </group>
                             </group>
-                        </group>
-                        <group>
-                            <name>console</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_local.h</name>
-                            </file>
                         </group>
                     </group>
                     <group>
