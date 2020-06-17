@@ -93,9 +93,10 @@ extern "C" {
 
 
 
+
 #define SYS_CMD_ENABLE
 #define SYS_CMD_DEVICE_MAX_INSTANCES       SYS_CONSOLE_DEVICE_MAX_INSTANCES
-#define SYS_CMD_PRINT_BUFFER_SIZE          8000
+#define SYS_CMD_PRINT_BUFFER_SIZE          2000
 #define SYS_CMD_BUFFER_DMA_READY
 
 /* Command System Service RTOS Configurations*/
