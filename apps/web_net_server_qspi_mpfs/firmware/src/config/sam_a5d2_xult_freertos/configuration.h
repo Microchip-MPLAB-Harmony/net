@@ -173,7 +173,8 @@ extern "C" {
 
 /* Memory Driver Instance 0 Configuration */
 #define DRV_MEMORY_INDEX_0                   0
-#define DRV_MEMORY_CLIENTS_NUMBER_IDX0       1
+#define DRV_MEMORY_CLIENTS_NUMBER_IDX0       2
+#define DRV_MEMORY_BUFFER_QUEUE_SIZE_IDX0    1
 
 /* Memory Driver Instance 0 RTOS Configurations*/
 #define DRV_MEMORY_STACK_SIZE_IDX0           1024

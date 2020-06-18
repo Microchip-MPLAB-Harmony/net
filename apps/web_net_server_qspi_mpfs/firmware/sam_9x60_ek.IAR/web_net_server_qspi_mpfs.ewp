@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml version='1.0' encoding='utf-8'?>
 <project>
     <fileVersion>3</fileVersion>
     <configuration>
@@ -190,11 +190,11 @@
                 </option>
                 <option>
                     <name>GenLocaleTags</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>GenLocaleDisplayOnly</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>DSPExtension</name>
@@ -264,15 +264,15 @@
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCDiagWarning</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCDiagError</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCObjPrefix</name>
@@ -337,7 +337,7 @@
                 </option>
                 <option>
                     <name>PreInclude</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CompilerMisraOverride</name>
@@ -523,15 +523,15 @@
                 </option>
                 <option>
                     <name>AWarnOne</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>AWarnRange1</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>AWarnRange2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>ADebug</name>
@@ -543,7 +543,6 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -651,7 +650,7 @@
                 </option>
                 <option>
                     <name>AExtraOptionsV2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>AsmNoLiteralPool</name>
@@ -693,8 +692,8 @@
             <name>CUSTOM</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <extensions></extensions>
-                <cmdline></cmdline>
+                <extensions />
+                <cmdline />
                 <hasPrio>0</hasPrio>
             </data>
         </settings>
@@ -707,8 +706,8 @@
             <name>BUILDACTION</name>
             <archiveVersion>1</archiveVersion>
             <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
+                <prebuild />
+                <postbuild />
             </data>
         </settings>
         <settings>
@@ -740,31 +739,31 @@
                 </option>
                 <option>
                     <name>IlinkKeepSymbols</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkDefines</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -800,7 +799,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkEnableRemarks</name>
@@ -808,19 +807,19 @@
                 </option>
                 <option>
                     <name>IlinkSuppressDiags</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkTreatAsRem</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkTreatAsWarn</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkTreatAsErr</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkWarningsAreErrors</name>
@@ -832,7 +831,7 @@
                 </option>
                 <option>
                     <name>IlinkExtraOptions</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkLowLevelInterfaceSlave</name>
@@ -844,7 +843,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -979,11 +978,11 @@
                 </option>
                 <option>
                     <name>IlinkStackControlFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkStackCallGraphFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CrcAlgorithm</name>
@@ -1005,7 +1004,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile_AltDefault</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkEncInput</name>
@@ -1037,19 +1036,19 @@
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign2</name>
-                    <state></state>
+                    <state />
                 </option>
             </data>
         </settings>
@@ -1062,7 +1061,7 @@
                 <debug>1</debug>
                 <option>
                     <name>IarchiveInputs</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IarchiveOverride</name>
@@ -1076,6 +1075,11 @@
         </settings>
         <settings>
             <name>BILINK</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
+        <settings>
+            <name>Coder</name>
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
@@ -1269,11 +1273,11 @@
                 </option>
                 <option>
                     <name>GenLocaleTags</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>GenLocaleDisplayOnly</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>DSPExtension</name>
@@ -1340,19 +1344,19 @@
                 </option>
                 <option>
                     <name>CCDiagSuppress</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCDiagRemark</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCDiagWarning</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCDiagError</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCObjPrefix</name>
@@ -1381,7 +1385,7 @@
                 </option>
                 <option>
                     <name>IExtraOptions</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CCLangConformance</name>
@@ -1417,7 +1421,7 @@
                 </option>
                 <option>
                     <name>PreInclude</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CompilerMisraOverride</name>
@@ -1603,15 +1607,15 @@
                 </option>
                 <option>
                     <name>AWarnOne</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>AWarnRange1</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>AWarnRange2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>ADebug</name>
@@ -1623,7 +1627,6 @@
                 </option>
                 <option>
                     <name>ADefines</name>
-                    <state></state>
                 </option>
                 <option>
                     <name>AList</name>
@@ -1731,7 +1734,7 @@
                 </option>
                 <option>
                     <name>AExtraOptionsV2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>AsmNoLiteralPool</name>
@@ -1757,7 +1760,7 @@
                 </option>
                 <option>
                     <name>OOCOutputFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>OOCCommandLineProducer</name>
@@ -1773,8 +1776,8 @@
             <name>CUSTOM</name>
             <archiveVersion>3</archiveVersion>
             <data>
-                <extensions></extensions>
-                <cmdline></cmdline>
+                <extensions />
+                <cmdline />
                 <hasPrio>0</hasPrio>
             </data>
         </settings>
@@ -1787,8 +1790,8 @@
             <name>BUILDACTION</name>
             <archiveVersion>1</archiveVersion>
             <data>
-                <prebuild></prebuild>
-                <postbuild></postbuild>
+                <prebuild />
+                <postbuild />
             </data>
         </settings>
         <settings>
@@ -1820,31 +1823,31 @@
                 </option>
                 <option>
                     <name>IlinkKeepSymbols</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkDefines</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkConfigDefines</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkMapFile</name>
@@ -1880,7 +1883,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFileSlave</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkEnableRemarks</name>
@@ -1888,19 +1891,19 @@
                 </option>
                 <option>
                     <name>IlinkSuppressDiags</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkTreatAsRem</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkTreatAsWarn</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkTreatAsErr</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkWarningsAreErrors</name>
@@ -1912,7 +1915,7 @@
                 </option>
                 <option>
                     <name>IlinkExtraOptions</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkLowLevelInterfaceSlave</name>
@@ -1924,7 +1927,7 @@
                 </option>
                 <option>
                     <name>IlinkAdditionalLibs</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkOverrideProgramEntryLabel</name>
@@ -1936,7 +1939,7 @@
                 </option>
                 <option>
                     <name>IlinkProgramEntryLabel</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>DoFill</name>
@@ -2059,11 +2062,11 @@
                 </option>
                 <option>
                     <name>IlinkStackControlFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkStackCallGraphFile</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>CrcAlgorithm</name>
@@ -2085,7 +2088,7 @@
                 </option>
                 <option>
                     <name>IlinkIcfFile_AltDefault</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkEncInput</name>
@@ -2117,19 +2120,19 @@
                 </option>
                 <option>
                     <name>IlinkRawBinaryFile2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySymbol2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinarySegment2</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IlinkRawBinaryAlign2</name>
-                    <state></state>
+                    <state />
                 </option>
             </data>
         </settings>
@@ -2142,7 +2145,7 @@
                 <debug>0</debug>
                 <option>
                     <name>IarchiveInputs</name>
-                    <state></state>
+                    <state />
                 </option>
                 <option>
                     <name>IarchiveOverride</name>
@@ -2156,6 +2159,11 @@
         </settings>
         <settings>
             <name>BILINK</name>
+            <archiveVersion>0</archiveVersion>
+            <data />
+        </settings>
+        <settings>
+            <name>Coder</name>
             <archiveVersion>0</archiveVersion>
             <data />
         </settings>
@@ -2177,66 +2185,15 @@
                     <group>
                         <name>driver</name>
                         <group>
-                            <name>ethphy</name>
-                            <group>
-                                <name>src</name>
-                                <group>
-                                    <name>dynamic</name>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</name>
-                                    </file>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_regs.h</name>
-                                    </file>
-                                </group>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\drv_ethphy_local.h</name>
-                                </file>
-                            </group>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\drv_ethphy.h</name>
-                            </file>
-                        </group>
-                        <group>
                             <name>memory</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\memory\src\drv_memory_local.h</name>
+                            </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\memory\drv_memory.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\memory\drv_memory_definitions.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\memory\src\drv_memory_local.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>miim</name>
-                            <group>
-                                <name>src</name>
-                                <group>
-                                    <name>dynamic</name>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_mapping.h</name>
-                                    </file>
-                                </group>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\drv_miim_local.h</name>
-                                </file>
-                            </group>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\drv_miim.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>sst26</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\drv_sst26.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\drv_sst26_definitions.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\src\drv_sst26_local.h</name>
                             </file>
                         </group>
                         <file>
@@ -2245,22 +2202,298 @@
                         <file>
                             <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\driver_common.h</name>
                         </file>
+                        <group>
+                            <name>miim</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\drv_miim.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\drv_miim_local.h</name>
+                                </file>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\miim\src\dynamic\drv_miim_mapping.h</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
+                        <group>
+                            <name>sst26</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\drv_sst26.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\src\drv_sst26_local.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\drv_sst26_definitions.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>ethphy</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\drv_ethphy.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\drv_ethphy_local.h</name>
+                                </file>
+                                <group>
+                                    <name>dynamic</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_regs.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_ksz8081.h</name>
+                                    </file>
+                                </group>
+                            </group>
+                        </group>
                     </group>
+                    <group>
+                        <name>peripheral</name>
+                        <group>
+                            <name>tc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\tc\plib_tc0.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\tc\plib_tc_common.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>mmu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\cp15.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>clk</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>pio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>aic</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>qspi</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi_common.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>dbgu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu_common.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.h</name>
+                            </file>
+                        </group>
+                    </group>
+                    <group>
+                        <name>system</name>
+                        <group>
+                            <name>time</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\sys_time.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\sys_time_definitions.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\src\sys_time_local.h</name>
+                            </file>
+                        </group>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system_common.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system_module.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system_media.h</name>
+                        </file>
+                        <group>
+                            <name>int</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\sys_int.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\sys_int_mapping.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>cache</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\cache\sys_cache.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>debug</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\sys_debug.h</name>
+                            </file>
+                        </group>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_clk_h2_adapter.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_time_h2_adapter.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_random_h2_adapter.h</name>
+                        </file>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_reset_h2_adapter.h</name>
+                        </file>
+                        <group>
+                            <name>command</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\command\sys_command.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>fs</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\sys_fs.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs_local.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\sys_fs_media_manager.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs_media_manager_local.h</name>
+                            </file>
+                            <group>
+                                <name>mpfs</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs_local.h</name>
+                                </file>
+                            </group>
+                        </group>
+                        <group>
+                            <name>console</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\sys_console.h</name>
+                            </file>
+                        </group>
+                    </group>
+                    <group>
+                        <name>net_pres</name>
+                        <group>
+                            <name>pres</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_certstore.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_encryptionproviderapi.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_socketapi.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_transportapi.h</name>
+                            </file>
+                            <group>
+                                <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\src\net_pres_local.h</name>
+                                </file>
+                            </group>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_socketapiconversion.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_enc_glue.h</name>
+                            </file>
+                        </group>
+                    </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\user.h</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\configuration.h</name>
+                    </file>
                     <group>
                         <name>library</name>
                         <group>
                             <name>tcpip</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_common_ports.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_mac.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_mac_object.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_manager.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_heap.h</name>
+                            </file>
                             <group>
                                 <name>src</name>
-                                <group>
-                                    <name>common</name>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\common\helpers.h</name>
-                                    </file>
-                                    <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\common\sys_fs_shell.h</name>
-                                    </file>
-                                </group>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_heap_alloc.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ndp_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ndp_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv6_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv6_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\icmp_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\icmpv6_manager.h</name>
+                                </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\arp_manager.h</name>
                                 </file>
@@ -2268,10 +2501,16 @@
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\arp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\berkeley_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\udp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ddns_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\udp_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcp_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcp_private.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcp_manager.h</name>
@@ -2286,10 +2525,13 @@
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcps_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcpv6_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\zero_conf_helper.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcpv6_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\zero_conf_link_local_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\zero_conf_manager.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dns_manager.h</name>
@@ -2316,79 +2558,31 @@
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ftpc_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\hash_fnv.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\nbns_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ddns_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\telnet_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtp_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\sntp_manager.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_private.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_net_manager.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_net_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\icmp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\icmpv6_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\igmp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\igmp_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\iperf_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv6_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv6_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\link_list.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_tlv.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\nbns_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ndp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ndp_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\oahash.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtpc_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtpc_private.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\snmp_manager.h</name>
@@ -2400,22 +2594,58 @@
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\snmpv3_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\sntp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcp_private.h</name>
-                                </file>
-                                <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_announce_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtpc_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtpc_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\igmp_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\igmp_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftpc_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftpc_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftps_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftps_private.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_reboot_manager.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\iperf_manager.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_commands_manager.h</name>
                                 </file>
+                                <group>
+                                    <name>common</name>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\common\helpers.h</name>
+                                    </file>
+                                    <file>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\common\sys_fs_shell.h</name>
+                                    </file>
+                                </group>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_heap_alloc.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\hash_fnv.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\link_list.h</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\oahash.h</name>
                                 </file>
                                 <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_helpers_private.h</name>
@@ -2436,50 +2666,56 @@
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_reboot_manager.h</name>
-                                </file>
-                                <file>
                                     <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_types.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\telnet_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\berkeley_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftpc_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcpv6_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftpc_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcpv6_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftps_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_manager.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftps_private.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_private.h</name>
                                 </file>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\udp_manager.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\udp_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\zero_conf_helper.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\zero_conf_link_local_private.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\zero_conf_manager.h</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\lldp_tlv.h</name>
                                 </file>
                             </group>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_helpers.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ndp.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ipv4.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ipv6.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\icmpv6.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\dhcpv6.h</name>
+                            </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\arp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\berkeley_api.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\udp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ddns.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcp.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\berkeley_api.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\dhcp.h</name>
@@ -2488,7 +2724,10 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\dhcps.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\dhcpv6.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\zero_conf_link_local.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\zero_conf_multicast_dns.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\dns.h</name>
@@ -2503,43 +2742,28 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ftpc.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\http.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\http_net.h</name>
-                            </file>
-                            <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\icmp.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\icmpv6.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\igmp.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\iperf.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ipv4.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ipv6.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\lldp.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\nbns.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ndp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\ddns.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\telnet.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\smtp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\smtpc.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\sntp.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\http.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\http_net.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\snmp.h</name>
@@ -2548,46 +2772,16 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\snmpv3.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\sntp.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcp.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip.h</name>
-                            </file>
-                            <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_announce.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_commands.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\lldp.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_common_ports.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\smtpc.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_ethernet.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_heap.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_helpers.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_mac.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_mac_object.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_manager.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_reboot.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\telnet.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\igmp.h</name>
                             </file>
                             <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tftpc.h</name>
@@ -2596,211 +2790,22 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tftps.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\udp.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_reboot.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\zero_conf_link_local.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\iperf.h</name>
                             </file>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\zero_conf_multicast_dns.h</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_commands.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\tcpip_ethernet.h</name>
                             </file>
                         </group>
                     </group>
-                    <group>
-                        <name>net_pres</name>
-                        <group>
-                            <name>pres</name>
-                            <group>
-                                <name>src</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\src\net_pres_local.h</name>
-                                </file>
-                            </group>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_certstore.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_enc_glue.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_encryptionproviderapi.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_socketapi.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_socketapiconversion.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_transportapi.h</name>
-                            </file>
-                        </group>
-                    </group>
-                    <group>
-                        <name>peripheral</name>
-                        <group>
-                            <name>aic</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>clk</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>dbgu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu_common.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>mmu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\cp15.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>pio</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>qspi</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi_common.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>tc</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\tc\plib_tc0.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\tc\plib_tc_common.h</name>
-                            </file>
-                        </group>
-                    </group>
-                    <group>
-                        <name>system</name>
-                        <group>
-                            <name>cache</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\cache\sys_cache.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>command</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\command\sys_command.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>console</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\sys_console.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>debug</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\sys_debug.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>fs</name>
-                            <group>
-                                <name>mpfs</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs.h</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs_local.h</name>
-                                </file>
-                            </group>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\sys_fs.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs_local.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\sys_fs_media_manager.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs_media_manager_local.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>int</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\sys_int.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\sys_int_mapping.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>time</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\sys_time.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\sys_time_definitions.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\src\sys_time_local.h</name>
-                            </file>
-                        </group>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_clk_h2_adapter.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_random_h2_adapter.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_reset_h2_adapter.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_time_h2_adapter.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system_common.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system_media.h</name>
-                        </file>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\system_module.h</name>
-                        </file>
-                    </group>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\configuration.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\definitions.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\device_cache.h</name>
-                    </file>
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system_config.h</name>
                     </file>
@@ -2808,17 +2813,38 @@
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system_definitions.h</name>
                     </file>
                     <file>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\device_cache.h</name>
+                    </file>
+                    <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\toolchain_specifics.h</name>
                     </file>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\user.h</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\definitions.h</name>
                     </file>
                 </group>
             </group>
+            <file>
+                <name>$PROJ_DIR$\..\src\http_net_print.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\drv_emac.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\drv_emac_local.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib.h</name>
+            </file>
             <group>
                 <name>packs</name>
                 <group>
                     <name>SAM9X60_DFP</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
+                    </file>
                     <group>
                         <name>component</name>
                         <file>
@@ -2957,38 +2983,17 @@
                             <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\component\xdmac.h</name>
                         </file>
                     </group>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
+                    </file>
                     <group>
                         <name>pio</name>
                         <file>
                             <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\pio\sam9x60.h</name>
                         </file>
                     </group>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\device.h</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\packs\SAM9X60_DFP\sam9x60.h</name>
-                    </file>
                 </group>
             </group>
-            <file>
-                <name>$PROJ_DIR$\..\src\app.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\drv_emac.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_dcpt_lists.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\drv_emac_local.h</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\http_net_print.h</name>
-            </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\osal\osal.h</name>
             </file>
@@ -2998,11 +3003,8 @@
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\osal\osal_impl_basic.h</name>
             </file>
-        </group>
-        <group>
-            <name>Linker File</name>
             <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</name>
+                <name>$PROJ_DIR$\..\src\app.h</name>
             </file>
         </group>
         <group>
@@ -3018,22 +3020,97 @@
                         </file>
                     </group>
                     <group>
-                        <name>driver</name>
+                        <name>library</name>
                         <group>
-                            <name>ethphy</name>
+                            <name>tcpip</name>
                             <group>
                                 <name>src</name>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\icmp.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_net.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcp.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\arp.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_commands.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\telnet.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftps.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\iperf.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtpc.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_heap_alloc.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_heap_internal.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcp.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dns.c</name>
+                                </file>
                                 <group>
-                                    <name>dynamic</name>
+                                    <name>common</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_ethphy.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\common\sys_fs_shell.c</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\helpers.c</name>
                                     </file>
                                 </group>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\hash_fnv.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\oahash.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_helpers.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_manager.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_notify.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_packet.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\sntp.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_announce.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftpc.c</name>
+                                </file>
+                                <file>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\udp.c</name>
+                                </file>
                             </group>
                         </group>
+                    </group>
+                    <group>
+                        <name>driver</name>
                         <group>
                             <name>memory</name>
                             <file>
@@ -3061,93 +3138,135 @@
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\sst26\src\drv_sst26.c</name>
                             </file>
                         </group>
-                    </group>
-                    <group>
-                        <name>library</name>
                         <group>
-                            <name>tcpip</name>
+                            <name>ethphy</name>
                             <group>
                                 <name>src</name>
                                 <group>
-                                    <name>common</name>
+                                    <name>dynamic</name>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\helpers.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_ethphy.c</name>
                                     </file>
                                     <file>
-                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\common\sys_fs_shell.c</name>
+                                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\ethphy\src\dynamic\drv_extphy_ksz8081.c</name>
                                     </file>
                                 </group>
+                            </group>
+                        </group>
+                    </group>
+                    <group>
+                        <name>peripheral</name>
+                        <group>
+                            <name>tc</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\tc\plib_tc0.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>mmu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>clk</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>pio</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>aic</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>qspi</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>dbgu</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.c</name>
+                            </file>
+                        </group>
+                    </group>
+                    <group>
+                        <name>system</name>
+                        <group>
+                            <name>time</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\src\sys_time.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>console</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart_definitions.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_local.h</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>int</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\src\sys_int.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>cache</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\cache\sys_cache.c</name>
+                            </file>
+                        </group>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_time_h2_adapter.c</name>
+                        </file>
+                        <group>
+                            <name>command</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\command\src\sys_command.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>debug</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\src\sys_debug_local.h</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\src\sys_debug.c</name>
+                            </file>
+                        </group>
+                        <group>
+                            <name>fs</name>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs.c</name>
+                            </file>
+                            <file>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs_media_manager.c</name>
+                            </file>
+                            <group>
+                                <name>mpfs</name>
                                 <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\arp.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dhcp.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\dns.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\hash_fnv.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\http_net.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\icmp.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\iperf.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\ipv4.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\oahash.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\smtpc.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\sntp.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcp.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_announce.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_commands.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_heap_alloc.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_heap_internal.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_helpers.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_manager.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_notify.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tcpip_packet.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\telnet.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftpc.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\tftps.c</name>
-                                </file>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\library\tcpip\src\udp.c</name>
+                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs.c</name>
                                 </file>
                             </group>
                         </group>
@@ -3163,138 +3282,15 @@
                                 </file>
                             </group>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_cert_store.c</name>
-                            </file>
-                            <file>
                                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_enc_glue.c</name>
                             </file>
-                        </group>
-                    </group>
-                    <group>
-                        <name>peripheral</name>
-                        <group>
-                            <name>aic</name>
                             <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\aic\plib_aic.c</name>
+                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\net_pres\pres\net_pres_cert_store.c</name>
                             </file>
                         </group>
-                        <group>
-                            <name>clk</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\clk\plib_clk.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>dbgu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\dbgu\plib_dbgu.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>mmu</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\mmu\plib_mmu.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>pio</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\pio\plib_pio.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>qspi</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\qspi\plib_qspi.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>tc</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\peripheral\tc\plib_tc0.c</name>
-                            </file>
-                        </group>
-                    </group>
-                    <group>
-                        <name>stdio</name>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\stdio\iar_monitor.c</name>
-                        </file>
-                    </group>
-                    <group>
-                        <name>system</name>
-                        <group>
-                            <name>cache</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\cache\sys_cache.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>command</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\command\src\sys_command.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>console</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_local.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart.h</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\console\src\sys_console_uart_definitions.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>debug</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\src\sys_debug.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\debug\src\sys_debug_local.h</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>fs</name>
-                            <group>
-                                <name>mpfs</name>
-                                <file>
-                                    <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\mpfs\mpfs.c</name>
-                                </file>
-                            </group>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs.c</name>
-                            </file>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\fs\src\sys_fs_media_manager.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>int</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\int\src\sys_int.c</name>
-                            </file>
-                        </group>
-                        <group>
-                            <name>time</name>
-                            <file>
-                                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\time\src\sys_time.c</name>
-                            </file>
-                        </group>
-                        <file>
-                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\system\sys_time_h2_adapter.c</name>
-                        </file>
                     </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\cstartup.s</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\tasks.c</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\initialization.c</name>
@@ -3302,49 +3298,31 @@
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\interrupts.c</name>
                     </file>
+                    <group>
+                        <name>stdio</name>
+                        <file>
+                            <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\stdio\iar_monitor.c</name>
+                        </file>
+                    </group>
                     <file>
-                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\tasks.c</name>
+                        <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\cstartup.s</name>
                     </file>
                     <file>
                         <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\vectortrap.s</name>
                     </file>
                 </group>
             </group>
+            <file>
+                <name>$PROJ_DIR$\..\src\http_net_print.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\custom_http_net_app.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\mpfs_net_img.c</name>
+            </file>
             <group>
                 <name>web_pages</name>
-                <group>
-                    <name>dyndns</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\dyndns\index.htm</name>
-                    </file>
-                </group>
-                <group>
-                    <name>email</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\email\index.htm</name>
-                    </file>
-                </group>
-                <group>
-                    <name>protect</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\protect\config.htm</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\protect\index.htm</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\protect\reboot.cgi</name>
-                    </file>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\protect\reboot.htm</name>
-                    </file>
-                </group>
-                <group>
-                    <name>snmp</name>
-                    <file>
-                        <name>$PROJ_DIR$\..\src\web_pages\snmp\snmpconfig.htm</name>
-                    </file>
-                </group>
                 <file>
                     <name>$PROJ_DIR$\..\src\web_pages\auth.htm</name>
                 </file>
@@ -3393,34 +3371,64 @@
                 <file>
                     <name>$PROJ_DIR$\..\src\web_pages\upload.htm</name>
                 </file>
+                <group>
+                    <name>dyndns</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\dyndns\index.htm</name>
+                    </file>
+                </group>
+                <group>
+                    <name>email</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\email\index.htm</name>
+                    </file>
+                </group>
+                <group>
+                    <name>protect</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\protect\config.htm</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\protect\index.htm</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\protect\reboot.cgi</name>
+                    </file>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\protect\reboot.htm</name>
+                    </file>
+                </group>
+                <group>
+                    <name>snmp</name>
+                    <file>
+                        <name>$PROJ_DIR$\..\src\web_pages\snmp\snmpconfig.htm</name>
+                    </file>
+                </group>
             </group>
             <file>
-                <name>$PROJ_DIR$\..\src\app.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\custom_http_net_app.c</name>
-            </file>
-            <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac.c</name>
-            </file>
-            <file>
-                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_statistics.c</name>
             </file>
             <file>
-                <name>$PROJ_DIR$\..\src\http_net_print.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\driver\emac\src\dynamic\drv_emac_lib_SAM9X60.c</name>
+            </file>
+            <file>
+                <name>$PROJ_DIR$\..\src\app.c</name>
             </file>
             <file>
                 <name>$PROJ_DIR$\..\src\main_sam_9x60.c</name>
             </file>
+        </group>
+        <group>
+            <name>Linker File</name>
             <file>
-                <name>$PROJ_DIR$\..\src\mpfs_net_img.c</name>
+                <name>$PROJ_DIR$\..\src\config\sam_9x60_ek\ddram.icf</name>
             </file>
         </group>
     </group>
     <file>
-        <name>$PROJ_DIR$\..\src\rawWriteSST26.c</name>
+        <name>$PROJ_DIR$\..\src\rawWrite.c</name>
     </file>
 </project>
